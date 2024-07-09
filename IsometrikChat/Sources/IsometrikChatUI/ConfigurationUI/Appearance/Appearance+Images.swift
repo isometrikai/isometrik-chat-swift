@@ -13,7 +13,18 @@ import SwiftUI
     public struct ISMChat_Images {
         
         private static func loadImageSafely(with imageName: String) -> Image {
-            return Image(imageName)
+            return Image(imageName, bundle: .isometrikChat)
+//            if let image = UIImage(named: imageName, in: .isometrikChat) {
+//                return image
+//            } else {
+//                print(
+//                    """
+//                    \(imageName) image has failed to load from the bundle please make sure it's included in your assets folder.
+//                    A default 'red' circle image has been added.
+//                    """
+//                )
+//                return UIImage.circleImage
+//            }
         }
 
         private static func loadSafely(systemName: String, assetsFallback: String) -> Image {

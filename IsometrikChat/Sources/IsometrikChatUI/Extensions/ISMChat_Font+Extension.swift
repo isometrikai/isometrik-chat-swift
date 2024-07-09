@@ -18,6 +18,7 @@ extension UIFont {
     public class func medium(size: CGFloat) -> UIFont {
         return UIFont(name: "ProductSans-Medium", size: size) ?? UIFont.systemFont(ofSize: size)
     }
+    
     public class func bold(size: CGFloat) -> UIFont {
         return UIFont(name: "ProductSans-Bold", size: size) ?? UIFont.systemFont(ofSize: size)
     }

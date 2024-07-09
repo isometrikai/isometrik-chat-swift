@@ -42,9 +42,9 @@ struct ISMContactInfoView: View {
     @State private var showFullScreenImage = false
     @State private var fullScreenImageURL: String?
     
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdk.getInstance().getAppAppearance().appearance.images
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State var userSession = ISMChatSdk.getInstance().getUserSession()
     
     //MARK:  - BODY

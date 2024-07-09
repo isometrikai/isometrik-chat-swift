@@ -8,15 +8,15 @@
 import Foundation
 
 public class ISMChat_Appearance {
-    public var appearance: Appearance
+    public var appearance: ISMAppearance
     public init(
-        appearance: Appearance = Appearance()
+        appearance: ISMAppearance = ISMAppearance()
     ) {
         self.appearance = appearance
     }
 }
 
-public class Appearance {
+public class ISMAppearance {
     public var colorPalette : ISMChat_ColorPalette
     public var fonts : ISMChat_Fonts
     public var images :  ISMChat_Images
@@ -35,7 +35,7 @@ public class Appearance {
 }
 
 
-public enum ISMChat_BubbleType{
+public enum ISMChat_BubbleType: Sendable{
     case BubbleWithTail
     case BubbleWithOutTail
 }

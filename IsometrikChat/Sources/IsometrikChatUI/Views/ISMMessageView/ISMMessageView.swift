@@ -126,10 +126,10 @@ public struct ISMMessageView: View {
     @State var mentionUsers: [ISMChat_GroupMember] = []
     @State var filteredUsers: [ISMChat_GroupMember] = []
     
-    @State var showAudioOption = ISMChatSdk.getInstance().getChatClient().getChatPageProperties().features.contains(.audio)
-    @State var showAudioCallingOption = ISMChatSdk.getInstance().getChatClient().getChatPageProperties().features.contains(.audiocall)
-    @State var showVideoCallingOption = ISMChatSdk.getInstance().getChatClient().getChatPageProperties().features.contains(.videocall)
-    @State var showGifOption = ISMChatSdk.getInstance().getChatClient().getChatPageProperties().features.contains(.gif)
+    @State var showAudioOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.audio)
+    @State var showAudioCallingOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.audiocall)
+    @State var showVideoCallingOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.videocall)
+    @State var showGifOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.gif)
     @State var showGifPicker : Bool = false
 //    @State var selectedGIF: GPHMedia?
     
@@ -151,9 +151,9 @@ public struct ISMMessageView: View {
     @State var isAnimating = false
     @State var parentMsgToScroll : MessagesDB? =  nil
     
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImages = ISMChatSdk.getInstance().getAppAppearance().appearance.images
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State var userSession = ISMChatSdk.getInstance().getUserSession()
     
     //MARK: - BODY

@@ -65,7 +65,9 @@ let package = Package(
                 .product(name: "SDWebImageSwiftUI", package: "sdwebimageswiftui"),
                 .product(name: "RealmSwift", package: "realm-swift"),
                 .product(name: "KeychainAccess", package: "keychainaccess"),
-            ]),
+            ],resources: [
+                .process("Resources/Assets.xcassets")
+            ])
         
     ]
 )

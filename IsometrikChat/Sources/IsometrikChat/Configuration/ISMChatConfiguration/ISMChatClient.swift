@@ -10,22 +10,16 @@ import Foundation
 
 public class ISMChat_Client {
     private var communicationConfig : ISMChat_CommunicationConfiguration
-    private var chatPageProperties : ISMChat_PageProperties
     private var apiManager : ISMChat_APIManager
 
     
-    public init(communicationConfig: ISMChat_CommunicationConfiguration,apiManager : ISMChat_APIManager,chatPageProperties : ISMChat_PageProperties) {
+    public init(communicationConfig: ISMChat_CommunicationConfiguration,apiManager : ISMChat_APIManager) {
         self.communicationConfig = communicationConfig
         self.apiManager = apiManager
-        self.chatPageProperties = chatPageProperties
     }
     
     public func getConfigurations() -> ISMChat_CommunicationConfiguration{
         return communicationConfig
-    }
-    
-    public func getChatPageProperties() -> ISMChat_PageProperties{
-        return chatPageProperties
     }
     
      public func getApiManager () -> ISMChat_APIManager{

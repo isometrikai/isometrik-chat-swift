@@ -16,8 +16,8 @@ struct ISMBroadCastList: View {
     @ObservedObject var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
     @ObservedObject var conversationviewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
     @EnvironmentObject var realmManager : RealmManager
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State var navigateToBrocastDetail : BroadCastListDB?
     @State var navigateToBrocastInfo : Bool = false
     @State var navigatetoCreatBroadCast : Bool = false
@@ -30,7 +30,7 @@ struct ISMBroadCastList: View {
     @State var navigateToMessageView : Bool = false
     @State var groupCastIdToNavigate : String = ""
     
-    @State var themeImage = ISMChatSdk.getInstance().getAppAppearance().appearance.images
+    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     
     //MARK:  - LIFECYCLE

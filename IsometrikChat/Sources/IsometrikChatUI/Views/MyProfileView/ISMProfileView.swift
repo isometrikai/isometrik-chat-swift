@@ -28,9 +28,9 @@ public struct ISMProfileView: View {
     @State private var userNameAlert : Bool = false
     @State private var emailAlert : Bool = false
     @State private var selectedMedia : [URL] = []
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdk.getInstance().getAppAppearance().appearance.images
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State var userSession = ISMChatSdk.getInstance().getUserSession()
     
     //MARK: - BODY

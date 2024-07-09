@@ -20,9 +20,7 @@ public class ISMChatSdk{
     private var userSession: ISMChat_UserSession?
     //mqtt session
     private var mqttSession: ISMChat_MQTTManager?
-    // app appearance
-    private var appAppearance: ISMChat_Appearance?
-    
+    //instance
     private static var sharedInstance : ISMChatSdk!
     
     public static func getInstance()-> ISMChatSdk{
@@ -53,16 +51,9 @@ public class ISMChatSdk{
         return userSession!
     }
     
-    public func getAppAppearance() -> ISMChat_Appearance{
-        if appAppearance == nil{
-            print("Create configuration before trying to access user session object.")
-        }
-        return appAppearance!
-    }
     
     
-    
-    public func appConfiguration(appConfig : ISMChat_Configuration, userConfig : ISMChat_UserConfig,conversationConfig : [ISMChat_ConversationTypeConfig],attachments : [ISMChat_ConfigAttachmentType],features : [ISMChat_ConfigFeature],customColors: ISMChat_ColorPalette, customFonts: ISMChat_Fonts,customImages: ISMChat_Images,customMessageBubbleType : ISMChat_BubbleType) {
+    public func appConfiguration(appConfig : ISMChat_Configuration, userConfig : ISMChat_UserConfig) {
         
         if appConfig.accountId.isEmpty {
             fatalError("Pass a valid accountId for isometrik sdk initialization.")
@@ -98,7 +89,7 @@ public class ISMChatSdk{
         
         
         //chatClient
-        self.chatClient = ISMChat_Client(communicationConfig: communicationConfiguration, apiManager: apiManager, chatPageProperties: ISMChat_PageProperties(attachments: attachments, features: features, conversationType: conversationConfig))
+        self.chatClient = ISMChat_Client(communicationConfig: communicationConfiguration, apiManager: apiManager)
         
         //userSession
         let userSession = ISMChat_UserSession()
@@ -113,10 +104,7 @@ public class ISMChatSdk{
         let mqttSession = ISMChat_MQTTManager(mqttConfiguration: mqttConfiguration, projectConfiguration: projectConfiguration, userdata: userConfig)
         mqttSession.connect(clientId: userSession.getUserId())
         self.mqttSession = mqttSession
-        
-        //App Appearance
-        let appearance = Appearance(colorPalette: customColors, images: customImages, fonts: customFonts,messageBubbleType: customMessageBubbleType)
-        appAppearance = ISMChat_Appearance(appearance: appearance)
+    
     }
     
     public func onTerminate() {

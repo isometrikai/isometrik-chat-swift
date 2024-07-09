@@ -17,9 +17,9 @@ struct ISMContactDetailView: View {
     let data : MetaDataDB
     @State private var presentContact : Bool = false
     @Environment(\.presentationMode) var presentationMode
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdk.getInstance().getAppAppearance().appearance.images
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     //MARK: - BODY
     var body: some View {
@@ -64,9 +64,9 @@ struct ContactSavingView: View {
     @State private var contact = CNMutableContact()
     @State private var phoneNumbers: [String] = [String()]
     @Environment(\.presentationMode) var presentationMode
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdk.getInstance().getAppAppearance().appearance.images
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     //MARK: - BODY
     var body: some View {
@@ -137,8 +137,8 @@ struct ContactSavingView: View {
 
 struct ContactDetailCell : View {
     @Binding var presentContact : Bool
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     let index : ContactDB
     var body: some View {
         VStack(spacing:0){

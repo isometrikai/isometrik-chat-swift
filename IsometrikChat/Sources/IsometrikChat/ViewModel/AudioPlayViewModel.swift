@@ -21,15 +21,19 @@ public class AudioPlayViewModel: ObservableObject {
     public var index = 0
     public let url: URL
     public var dataManager: ServiceProtocol
+    public var defaultAudioBarColor : Color
+    public var audioBarColorWhilePlaying : Color
     @Published public var player: AVPlayer!
     @Published public var session: AVAudioSession!
     @Published public var currentTime: TimeInterval = 0.0
     @Published public var totalDuration: TimeInterval = 0.2
     
-    public init(url: URL, sampels_count: Int, dataManager: ServiceProtocol = Service.shared) {
+    public init(url: URL, sampels_count: Int, dataManager: ServiceProtocol = Service.shared,defaultAudioBarColor: Color, audioBarColorWhilePlaying : Color) {
         self.url = url
         self.sample_count = sampels_count
         self.dataManager = dataManager
+        self.defaultAudioBarColor = defaultAudioBarColor
+        self.audioBarColorWhilePlaying = audioBarColorWhilePlaying
         visualizeAudio()
         do {
             session = AVAudioSession.sharedInstance()
@@ -48,7 +52,7 @@ public class AudioPlayViewModel: ObservableObject {
             self.timer = Timer.scheduledTimer(withTimeInterval: time_interval, repeats: true, block: { (timer) in
                 if self.index < self.soundSamples.count {
 //                    withAnimation(Animation.linear) {
-                        self.soundSamples[self.index].color = Color.primarypurple
+                    self.soundSamples[self.index].color = self.audioBarColorWhilePlaying
 //                    }
                     self.index += 1
                     if let currentTime = self.player.currentItem?.currentTime().seconds {
@@ -84,7 +88,7 @@ public class AudioPlayViewModel: ObservableObject {
         self.index = 0
         self.soundSamples = self.soundSamples.map { tmp -> ISMChat_AudioPreviewModel in
             var cur = tmp
-            cur.color = Color.audiobar
+            cur.color = self.defaultAudioBarColor
             return cur
         }
         self.currentTime =  0.0
@@ -125,7 +129,7 @@ public class AudioPlayViewModel: ObservableObject {
 //    }
     
     func visualizeAudio() {
-        dataManager.buffer(url: url, samplesCount: sample_count) { results in
+        dataManager.buffer(url: url, audioBarColor: self.defaultAudioBarColor, samplesCount: sample_count) { results in
             self.soundSamples = results
         }
     }

@@ -28,9 +28,9 @@ struct ISMCreateGroupConversationView: View {
     var selectUserFor : SelectUserFor = .Group
     @State var navigateTocreateGroup : Bool = false
 //    @State var navigateToMessageView : Bool = false
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdk.getInstance().getAppAppearance().appearance.images
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     let groupCastId : String?
     @EnvironmentObject var realmManager : RealmManager
     @Binding var groupCastIdToNavigate : String

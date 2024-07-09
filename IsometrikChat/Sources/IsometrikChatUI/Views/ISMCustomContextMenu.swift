@@ -24,13 +24,13 @@ struct ISMCustomContextMenu: View {
     
     @Environment(\.viewController) public var viewControllerHolder: UIViewController?
     
-    @State private var showReplyOption = ISMChatSdk.getInstance().getChatClient().getChatPageProperties().features.contains(.reply)
+    @State private var showReplyOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.reply)
     
-    @State private var showForwardOption = ISMChatSdk.getInstance().getChatClient().getChatPageProperties().features.contains(.forward)
+    @State private var showForwardOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.forward)
     
-    @State private var showEditOption = ISMChatSdk.getInstance().getChatClient().getChatPageProperties().features.contains(.edit)
+    @State private var showEditOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.edit)
     
-    @State private var showReactionsOption = ISMChatSdk.getInstance().getChatClient().getChatPageProperties().features.contains(.reaction)
+    @State private var showReactionsOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.reaction)
     
     @Binding var selectedMessageToReply : MessagesDB
     @Binding var showForward: Bool
@@ -45,7 +45,7 @@ struct ISMCustomContextMenu: View {
     
     let fromBroadCastFlow : Bool?
     
-    @State var themeImage = ISMChatSdk.getInstance().getAppAppearance().appearance.images
+    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     
     var body: some View {

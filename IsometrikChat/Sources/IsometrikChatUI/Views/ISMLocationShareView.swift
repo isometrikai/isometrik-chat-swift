@@ -29,9 +29,9 @@ struct ISMLocationShareView: View {
     @State private var searchText = ""
     @State private var predictions: [GMSAutocompletePrediction] = []
     @State private var selectedPlaceAfterSerch: GMSPlace?
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdk.getInstance().getAppAppearance().appearance.images
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     //MARK:  - LIFECYCLE
     var body: some View {

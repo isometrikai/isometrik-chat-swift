@@ -77,8 +77,8 @@ struct HashtagTextModifier: TextModifier {
     var firstNameIsValid : Bool = false
     @Binding var navigateToInfo : Bool
     @Binding var navigatetoUser : ISMChat_GroupMember
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
 
     func body(text: HashtagText) -> some View {
         let words = text.text.split(separator: " ")

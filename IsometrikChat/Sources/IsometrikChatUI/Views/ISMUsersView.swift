@@ -22,15 +22,15 @@ struct ISMUsersView: View {
 
     @State private var createconversation : ISMChat_CreateConversationResponse?
    
-    @State private var showGroupOption = ISMChatSdk.getInstance().getChatClient().getChatPageProperties().conversationType.contains(.GroupConversation)
-    @State var showBroadCastOption = ISMChatSdk.getInstance().getChatClient().getChatPageProperties().conversationType.contains(.BroadCastConversation)
+    @State private var showGroupOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.GroupConversation)
+    @State var showBroadCastOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.BroadCastConversation)
     
     @EnvironmentObject var realmManager : RealmManager
     @State var navigatetoCreatGroup : Bool = false
     @State var navigatetoCreatBroadCast : Bool = false
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdk.getInstance().getAppAppearance().appearance.images
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @Binding var groupCastIdToNavigate : String
     
     //MARK:  - LIFECYCLE

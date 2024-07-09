@@ -18,9 +18,9 @@ struct ISMAddParticipantsView: View {
     @ObservedObject var chatViewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
     var conversationId : String? = nil
     @EnvironmentObject var realmManager : RealmManager
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdk.getInstance().getAppAppearance().appearance.images
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     //MARK: - BODY
     var body: some View {

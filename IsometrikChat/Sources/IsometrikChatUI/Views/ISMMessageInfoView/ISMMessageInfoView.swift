@@ -28,9 +28,9 @@ public struct ISMMessageInfoView: View {
     @EnvironmentObject var realmManager : RealmManager
     @State var deliveredUsers : [ISMChat_User]?
     @State var readUsers : [ISMChat_User]?
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdk.getInstance().getAppAppearance().appearance.images
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     //MARK:  - LIFECYCLE
     public var body: some View {
@@ -266,8 +266,8 @@ public struct ISMMessageInfoView: View {
 struct ISMMessageInfoDetailUserSubView : View {
     
     let user : ISMChat_User
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     
     var body: some View {
         HStack(spacing: 10){

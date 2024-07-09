@@ -21,9 +21,9 @@ struct ISMForwardToContactView: View {
     @State var selectedUser : [String] = []
     @Binding var showforwardMultipleMessage : Bool
     @State var showAlertFormoreThan5 : Bool = false
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdk.getInstance().getAppAppearance().appearance.images
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     //MARK:  - LIFECYCLE
     var body: some View {

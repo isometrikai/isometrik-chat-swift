@@ -41,10 +41,10 @@ struct ISMMessageInfoSubView: View {
     let groupconversationMember : [ISMChat_GroupMember]
     @State private var pdfthumbnailImage : UIImage = UIImage()
     
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImages = ISMChatSdk.getInstance().getAppAppearance().appearance.images
-    @State var themeBubbleType = ISMChatSdk.getInstance().getAppAppearance().appearance.messageBubbleType
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @State var themeBubbleType = ISMChatSdkUI.getInstance().getAppAppearance().appearance.messageBubbleType
     @State var userSession = ISMChatSdk.getInstance().getUserSession()
     
     let fromBroadCastFlow : Bool?

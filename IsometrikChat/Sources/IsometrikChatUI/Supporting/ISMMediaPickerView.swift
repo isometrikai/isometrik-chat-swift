@@ -20,8 +20,8 @@ struct ISMMediaPickerView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.presentationMode) var presentationMode
     var isProfile : Bool = false
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     //MARK:  - LIFECYCLE
     var body: some View {
         ZStack{

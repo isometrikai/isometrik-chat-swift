@@ -13,7 +13,7 @@ import IsometrikChat
 extension ISMMessageView{
     func attachmentActionSheetButtons() -> some View {
         VStack {
-            ForEach(ISMChatSdk.getInstance().getChatClient().getChatPageProperties().attachments, id: \.self) { option in
+            ForEach(ISMChatSdkUI.getInstance().getChatProperties().attachments, id: \.self) { option in
                 Button(option.name) {
                     if isMessagingEnabled() {
                         switch option {

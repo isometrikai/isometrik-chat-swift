@@ -25,7 +25,7 @@ struct ISMAudioSubView: View {
     private var message : MessagesDB
     private var isReceived : Bool
     private var messageDeliveredType : ISMChat_MessageStatus = .Clock
-    @State var themeImage = ISMChatSdk.getInstance().getAppAppearance().appearance.images
+    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     init(audio: String,
          message : MessagesDB,
@@ -33,7 +33,11 @@ struct ISMAudioSubView: View {
          messageDeliveredType : ISMChat_MessageStatus,
          previousAudioRef: Binding<AudioPlayViewModel?>
     ) {
-        _audioVM = StateObject(wrappedValue: AudioPlayViewModel(url: URL(string: audio) ?? URL(fileURLWithPath: ""), sampels_count: 25))
+        _audioVM = StateObject(wrappedValue: AudioPlayViewModel(
+            url: URL(string: audio) ?? URL(fileURLWithPath: ""),
+            sampels_count: 25,
+            defaultAudioBarColor: ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette.audioBarDefault,
+            audioBarColorWhilePlaying: ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette.audioBarWhilePlaying))
         self.message = message
         self.isReceived = isReceived
         self.messageDeliveredType = messageDeliveredType

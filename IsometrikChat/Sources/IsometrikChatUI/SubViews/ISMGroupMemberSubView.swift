@@ -14,8 +14,8 @@ struct ISMGroupMemberSubView: View {
     let member : ISMChat_GroupMember
     var hideDisclosure : Bool? = false
     @Binding var selectedMember : ISMChat_GroupMember
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State var userSession = ISMChatSdk.getInstance().getUserSession()
     //MARK: - BODY
     var body: some View {

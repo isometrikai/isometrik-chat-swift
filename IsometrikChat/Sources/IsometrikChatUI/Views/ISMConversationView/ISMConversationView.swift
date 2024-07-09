@@ -45,7 +45,7 @@ public struct ISMConversationView : View {
     @StateObject var realmManager = RealmManager()
     @EnvironmentObject var networkMonitor: NetworkMonitor
     @ObservedObject var chatViewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @State var showBroadCastOption = ISMChatSdk.getInstance().getChatClient().getChatPageProperties().conversationType.contains(.BroadCastConversation)
+    @State var showBroadCastOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.BroadCastConversation)
     
     public let NC = NotificationCenter.default
     @State var onScreen = false
@@ -61,7 +61,7 @@ public struct ISMConversationView : View {
     @State var groupCastIdToNavigate : String = ""
     @State var navigateToBroadCastMessages : Bool = false
     
-    @State var themeImages = ISMChatSdk.getInstance().getAppAppearance().appearance.images
+    @State var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State var userSession = ISMChatSdk.getInstance().getUserSession()
     
 //    public var delegate : ChatVCDelegate? = nil

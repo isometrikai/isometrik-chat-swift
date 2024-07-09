@@ -11,7 +11,7 @@ import AVFoundation
 import SwiftUI
 
 public protocol ServiceProtocol {
-    func buffer(url: URL, samplesCount: Int, completion: @escaping([ISMChat_AudioPreviewModel]) -> ())
+    func buffer(url: URL,audioBarColor : Color, samplesCount: Int, completion: @escaping([ISMChat_AudioPreviewModel]) -> ())
 }
 
 
@@ -21,7 +21,7 @@ public class Service {
 }
 
 extension Service: ServiceProtocol {
-    public func buffer(url: URL, samplesCount: Int, completion: @escaping([ISMChat_AudioPreviewModel]) -> ()) {
+    public func buffer(url: URL,audioBarColor : Color, samplesCount: Int, completion: @escaping([ISMChat_AudioPreviewModel]) -> ()) {
         DispatchQueue.global(qos: .userInteractive).async {
             do {
                 var cur_url = url
@@ -57,7 +57,7 @@ extension Service: ServiceProtocol {
                         let power: Float = accumulator / Float(row.count)
                         let decibles = 10 * log10f(power)
                         
-                        result.append(ISMChat_AudioPreviewModel(magnitude: decibles, color: Color.audiobar))
+                        result.append(ISMChat_AudioPreviewModel(magnitude: decibles, color: audioBarColor))
                         
                     }
                     DispatchQueue.main.async {

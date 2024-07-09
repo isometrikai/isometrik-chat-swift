@@ -18,8 +18,8 @@ struct MediaSliderView: View {
     @State var description : String = ""
     @State var user : String = ""
     @EnvironmentObject var reamlManager : RealmManager
-    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     
     //MARK:  - BODY
     var body: some View {
