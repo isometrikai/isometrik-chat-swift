@@ -41,12 +41,12 @@ final class LandmarkAnnotation: NSObject, MKAnnotation {
 }
 
 
-struct ISMChat_LocationData{
-    let coordinate : CLLocationCoordinate2D
-    let title : String
-    let completeAddress : String
+public struct ISMChat_LocationData{
+    public let coordinate : CLLocationCoordinate2D
+    public let title : String
+    public let completeAddress : String
     
-    init(coordinate: CLLocationCoordinate2D? = nil, title: String? = nil, completeAddress: String? = nil) {
+    public init(coordinate: CLLocationCoordinate2D? = nil, title: String? = nil, completeAddress: String? = nil) {
         self.coordinate = coordinate ?? CLLocationCoordinate2D()
         self.title = title ?? ""
         self.completeAddress = completeAddress ?? ""

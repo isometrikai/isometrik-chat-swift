@@ -10,8 +10,8 @@ import Alamofire
 import UIKit
 
 public struct ISMChat_NetworkServices{
-    struct Urls{
-        struct BaseUrl{
+    public struct Urls{
+        public struct BaseUrl{
             static let baseUrl : String = {
                 guard
                     let API_ENDPOINT = Bundle.main.object(forInfoDictionaryKey: "API_ENDPOINT") as? String
@@ -21,54 +21,54 @@ public struct ISMChat_NetworkServices{
                 return API_ENDPOINT
             }()
         }
-        static let guestToken                    = BaseUrl.baseUrl + "/chat/user/authenticate"
-        static let register                      = BaseUrl.baseUrl + "/chat/user"
-        static let chatList                      = BaseUrl.baseUrl + "/chat/conversations"
-        static let messages                      = BaseUrl.baseUrl + "/chat/messages"
-        static let userDetail                    = BaseUrl.baseUrl + "/chat/user/details"
-        static let sendMessage                   = BaseUrl.baseUrl + "/chat/message"
-        static let deleteConversationLocal       = BaseUrl.baseUrl + "/chat/conversation/local"//Delete User
-        static let presignedUrl                  = BaseUrl.baseUrl + "/chat/messages/presignedurls"
-        static let conversationDetail            = BaseUrl.baseUrl + "/chat/conversation/details/"
-        static let messageRead                   = BaseUrl.baseUrl + "/chat/message/status/read"
-        static let messageDelivered              = BaseUrl.baseUrl + "/chat/message/status/delivery"
-        static let messageDeleteForMe            = BaseUrl.baseUrl + "/chat/messages/self"
-        static let messageDeleteForEveryone      = BaseUrl.baseUrl + "/chat/messages/everyone"
-        static let forwardMessage                = BaseUrl.baseUrl + "/chat/message/forward"
-        static let getMessagesInConersation      = BaseUrl.baseUrl + "/chat/messages/user"
-        static let getUsers                      = BaseUrl.baseUrl + "/chat/users"
-        static let createConversation            = BaseUrl.baseUrl + "/chat/conversation"
-        static let preassignedUrlCreate          = BaseUrl.baseUrl + "/chat/user/presignedurl/create"
-        static let preassignedUrlUpdate          = BaseUrl.baseUrl + "/chat/user/presignedurl/update"
-        static let markMessageAsRead             = BaseUrl.baseUrl + "/chat/messages/read"
-        static let readMessageIndicator          = BaseUrl.baseUrl + "/chat/indicator/read"
-        static let deliveredMessageIndicator     = BaseUrl.baseUrl + "/chat/indicator/delivered"
-        static let typingMessageIndicator        = BaseUrl.baseUrl + "/chat/indicator/typing"
-        static let clearChat                     = BaseUrl.baseUrl + "/chat/conversation/clear"//Clear Chat
-        static let getBlockUser                  = BaseUrl.baseUrl + "/chat/user/block"
-        static let blockUsers                    = BaseUrl.baseUrl + "/chat/user/block"
-        static let unBlockUsers                  = BaseUrl.baseUrl + "/chat/user/unblock"
-        static let getnonBlockUsers              = BaseUrl.baseUrl + "/chat/user/nonblock"
-        static let groupMembers                  = BaseUrl.baseUrl + "/chat/conversation/members"
-        static let eligibleUsers                 = BaseUrl.baseUrl + "/chat/conversation/eligible/members"
-        static let exitGroup                     = BaseUrl.baseUrl + "/chat/conversation/leave"
-        static let groupAdmin                    = BaseUrl.baseUrl + "/chat/conversation/admin"
-        static let groupTitle                    = BaseUrl.baseUrl + "/chat/conversation/title"
-        static let groupImage                    = BaseUrl.baseUrl + "/chat/conversation/image"
-        static let conversationSetting           = BaseUrl.baseUrl + "/chat/conversation/settings"
-        static let emojiReaction                 = BaseUrl.baseUrl + "/chat/reaction"
+        static public let guestToken                    = BaseUrl.baseUrl + "/chat/user/authenticate"
+        static public let register                      = BaseUrl.baseUrl + "/chat/user"
+        static public let chatList                      = BaseUrl.baseUrl + "/chat/conversations"
+        static public let messages                      = BaseUrl.baseUrl + "/chat/messages"
+        static public let userDetail                    = BaseUrl.baseUrl + "/chat/user/details"
+        static public let sendMessage                   = BaseUrl.baseUrl + "/chat/message"
+        static public let deleteConversationLocal       = BaseUrl.baseUrl + "/chat/conversation/local"//Delete User
+        static public let presignedUrl                  = BaseUrl.baseUrl + "/chat/messages/presignedurls"
+        static public let conversationDetail            = BaseUrl.baseUrl + "/chat/conversation/details/"
+        static public let messageRead                   = BaseUrl.baseUrl + "/chat/message/status/read"
+        static public let messageDelivered              = BaseUrl.baseUrl + "/chat/message/status/delivery"
+        static public let messageDeleteForMe            = BaseUrl.baseUrl + "/chat/messages/self"
+        static public let messageDeleteForEveryone      = BaseUrl.baseUrl + "/chat/messages/everyone"
+        static public let forwardMessage                = BaseUrl.baseUrl + "/chat/message/forward"
+        static public let getMessagesInConersation      = BaseUrl.baseUrl + "/chat/messages/user"
+        static public let getUsers                      = BaseUrl.baseUrl + "/chat/users"
+        static public let createConversation            = BaseUrl.baseUrl + "/chat/conversation"
+        static public let preassignedUrlCreate          = BaseUrl.baseUrl + "/chat/user/presignedurl/create"
+        static public let preassignedUrlUpdate          = BaseUrl.baseUrl + "/chat/user/presignedurl/update"
+        static public let markMessageAsRead             = BaseUrl.baseUrl + "/chat/messages/read"
+        static public let readMessageIndicator          = BaseUrl.baseUrl + "/chat/indicator/read"
+        static public let deliveredMessageIndicator     = BaseUrl.baseUrl + "/chat/indicator/delivered"
+        static public let typingMessageIndicator        = BaseUrl.baseUrl + "/chat/indicator/typing"
+        static public let clearChat                     = BaseUrl.baseUrl + "/chat/conversation/clear"//Clear Chat
+        static public let getBlockUser                  = BaseUrl.baseUrl + "/chat/user/block"
+        static public let blockUsers                    = BaseUrl.baseUrl + "/chat/user/block"
+        static public let unBlockUsers                  = BaseUrl.baseUrl + "/chat/user/unblock"
+        static public let getnonBlockUsers              = BaseUrl.baseUrl + "/chat/user/nonblock"
+        static public let groupMembers                  = BaseUrl.baseUrl + "/chat/conversation/members"
+        static public let eligibleUsers                 = BaseUrl.baseUrl + "/chat/conversation/eligible/members"
+        static public let exitGroup                     = BaseUrl.baseUrl + "/chat/conversation/leave"
+        static public let groupAdmin                    = BaseUrl.baseUrl + "/chat/conversation/admin"
+        static public let groupTitle                    = BaseUrl.baseUrl + "/chat/conversation/title"
+        static public let groupImage                    = BaseUrl.baseUrl + "/chat/conversation/image"
+        static public let conversationSetting           = BaseUrl.baseUrl + "/chat/conversation/settings"
+        static public let emojiReaction                 = BaseUrl.baseUrl + "/chat/reaction"
         //broadCast Flow
-        static let createBroadCast               = BaseUrl.baseUrl + "/chat/groupcast"
-        static let getBroadCast                  = BaseUrl.baseUrl + "/chat/groupcasts"
-        static let getBroadCastMembers           = BaseUrl.baseUrl + "/chat/groupcast/members"
-        static let postbroadCastMessage          = BaseUrl.baseUrl + "/chat/groupcast/message"
-        static let getbroadCastMessage           = BaseUrl.baseUrl + "/chat/groupcast/messages"
-        static let broadcastmessageDeleteForMe   = BaseUrl.baseUrl + "/chat/groupcast/message/self"
-        static let broadcastmessageDeleteForEveryone      = BaseUrl.baseUrl + "/chat/groupcast/message/everyone"
-        static let addmembersToBroadCast         = BaseUrl.baseUrl + "/chat/groupcast/members"
-        static let eligibleuserForGroupcast      = BaseUrl.baseUrl + "/chat/groupcast/eligible/members"
-        static let groupcastMessageDelivered     = BaseUrl.baseUrl + "/chat/groupcast/message/status/delivery"
-        static let groupcastMessageRead          = BaseUrl.baseUrl + "/chat/groupcast/message/status/read"
+        static public let createBroadCast               = BaseUrl.baseUrl + "/chat/groupcast"
+        static public let getBroadCast                  = BaseUrl.baseUrl + "/chat/groupcasts"
+        static public let getBroadCastMembers           = BaseUrl.baseUrl + "/chat/groupcast/members"
+        static public let postbroadCastMessage          = BaseUrl.baseUrl + "/chat/groupcast/message"
+        static public let getbroadCastMessage           = BaseUrl.baseUrl + "/chat/groupcast/messages"
+        static public let broadcastmessageDeleteForMe   = BaseUrl.baseUrl + "/chat/groupcast/message/self"
+        static public let broadcastmessageDeleteForEveryone      = BaseUrl.baseUrl + "/chat/groupcast/message/everyone"
+        static public let addmembersToBroadCast         = BaseUrl.baseUrl + "/chat/groupcast/members"
+        static public let eligibleuserForGroupcast      = BaseUrl.baseUrl + "/chat/groupcast/eligible/members"
+        static public let groupcastMessageDelivered     = BaseUrl.baseUrl + "/chat/groupcast/message/status/delivery"
+        static public let groupcastMessageRead          = BaseUrl.baseUrl + "/chat/groupcast/message/status/read"
     }
     
     struct ParameterConstants {
@@ -82,7 +82,7 @@ public struct ISMChat_NetworkServices{
 
 public class ISMChat_APIManager{
     
-    var configuration : ISMChat_ProjectConfig?
+    public var configuration : ISMChat_ProjectConfig?
     
     init(configuration: ISMChat_ProjectConfig) {
         self.configuration = configuration
@@ -166,11 +166,11 @@ struct ImageUplaod:Codable{
 }
 
 public struct ISMChat_ErrorData: Codable , Error{
-    let status : Int?
-    let statusCode : Int?
-    var error : String?
-    var message : String?
-    var errorCode: Int?
+    public let status : Int?
+    public let statusCode : Int?
+    public var error : String?
+    public var message : String?
+    public var errorCode: Int?
     init(message:String?,error:String?) {
         self.status = nil
         self.statusCode = nil

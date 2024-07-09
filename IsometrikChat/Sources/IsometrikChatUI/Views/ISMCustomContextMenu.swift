@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import IsometrikChat
 
 struct ISMCustomContextMenu: View {
     @Environment(\.dismiss) var dismiss
@@ -21,7 +22,7 @@ struct ISMCustomContextMenu: View {
     let pasteboard = UIPasteboard.general
     @EnvironmentObject var realmManager : RealmManager
     
-    @Environment(\.viewController) private var viewControllerHolder: UIViewController?
+    @Environment(\.viewController) public var viewControllerHolder: UIViewController?
     
     @State private var showReplyOption = ISMChatSdk.getInstance().getChatClient().getChatPageProperties().features.contains(.reply)
     

@@ -8,6 +8,7 @@
 import UIKit
 import SwiftUI
 import PDFKit
+import IsometrikChat
 
 
 struct ISMDocumentViewer: View {

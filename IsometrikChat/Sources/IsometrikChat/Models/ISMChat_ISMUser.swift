@@ -8,36 +8,36 @@
 import Foundation
 
 
-struct ISMChat_SendMsg :  Codable{
+public struct ISMChat_SendMsg :  Codable{
 //    var id: UUID?
     
-    var messageId : String?
-    var msg : String?
+    public var messageId : String?
+    public var msg : String?
    
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         messageId = try? container.decodeIfPresent(String.self, forKey: .messageId)
         msg = try? container.decodeIfPresent(String.self, forKey: .msg)
     }
 }
 
-struct ISMChat_User : Identifiable, Codable ,Hashable{
-    var id : String {userId ?? ""}
-    var visibility : Bool?
-    var userProfileImageUrl : String?
-    var userName : String?
-    var userIdentifier : String?
-    var updatedAt : Double?
-    var online : Bool?
-    var notification : Bool?
-    var msg : String?
-    var createdAt : Double?
-    var userId : String?
-    var timestamp : Double?
-    var lastSeen : Double?
-    var email : String?
-    var metaData : ISMChat_UserMetaData?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_User : Identifiable, Codable ,Hashable{
+    public var id : String {userId ?? ""}
+    public var visibility : Bool?
+    public var userProfileImageUrl : String?
+    public var userName : String?
+    public var userIdentifier : String?
+    public var updatedAt : Double?
+    public var online : Bool?
+    public var notification : Bool?
+    public var msg : String?
+    public var createdAt : Double?
+    public var userId : String?
+    public var timestamp : Double?
+    public var lastSeen : Double?
+    public var email : String?
+    public var metaData : ISMChat_UserMetaData?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         visibility = try? container.decodeIfPresent(Bool.self, forKey: .visibility)
         userProfileImageUrl = try? container.decodeIfPresent(String.self, forKey: .userProfileImageUrl)
@@ -54,7 +54,7 @@ struct ISMChat_User : Identifiable, Codable ,Hashable{
         email = try? container.decodeIfPresent(String.self, forKey: .email)
         metaData = try? container.decodeIfPresent(ISMChat_UserMetaData.self, forKey: .metaData)
     }
-    init(userId : String? = nil,userName : String? = nil,userIdentifier : String? = nil, userProfileImage : String? = nil,metaData : ISMChat_UserMetaData? = nil){
+    public init(userId : String? = nil,userName : String? = nil,userIdentifier : String? = nil, userProfileImage : String? = nil,metaData : ISMChat_UserMetaData? = nil){
         self.userId = userId
         self.userName = userName
         self.userIdentifier = userIdentifier
@@ -63,11 +63,11 @@ struct ISMChat_User : Identifiable, Codable ,Hashable{
     }
 }
 
-struct ISMChat_UserMetaData: Codable, Hashable {
-    var about: String?
-    var showlastSeen: Bool? 
+public struct ISMChat_UserMetaData: Codable, Hashable {
+    public var about: String?
+    public var showlastSeen: Bool?
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         about = try? container.decodeIfPresent(String.self, forKey: .about)
         
@@ -80,13 +80,13 @@ struct ISMChat_UserMetaData: Codable, Hashable {
     }
 }
 
-struct ISMChat_Users : Codable{
-    var users : [ISMChat_User]? = []
-    var pageToken : String?
-    var msg : String?
-    var conversationEligibleMembers : [ISMChat_User]? = []
-    var groupcastEligibleMembers : [ISMChat_User]? = []
-    init(from decoder: Decoder) throws {
+public struct ISMChat_Users : Codable{
+    public var users : [ISMChat_User]? = []
+    public var pageToken : String?
+    public var msg : String?
+    public var conversationEligibleMembers : [ISMChat_User]? = []
+    public var groupcastEligibleMembers : [ISMChat_User]? = []
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         users = try? container.decodeIfPresent([ISMChat_User].self, forKey: .users)
         pageToken = try? container.decodeIfPresent(String.self, forKey: .pageToken)

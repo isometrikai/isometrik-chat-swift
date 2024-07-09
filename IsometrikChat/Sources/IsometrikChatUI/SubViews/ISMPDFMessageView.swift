@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PDFKit
+import IsometrikChat
 
 struct ISMPDFMessageView: View {
     //MARK:  - PROPERTIES

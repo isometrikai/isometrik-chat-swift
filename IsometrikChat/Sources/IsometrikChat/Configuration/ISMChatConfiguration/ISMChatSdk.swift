@@ -46,14 +46,14 @@ public class ISMChatSdk{
         return chatClient!
     }
     
-    func getUserSession() -> ISMChat_UserSession{
+    public func getUserSession() -> ISMChat_UserSession{
         if userSession == nil{
             print("Create configuration before trying to access user session object.")
         }
         return userSession!
     }
     
-    func getAppAppearance() -> ISMChat_Appearance{
+    public func getAppAppearance() -> ISMChat_Appearance{
         if appAppearance == nil{
             print("Create configuration before trying to access user session object.")
         }
@@ -127,6 +127,5 @@ public class ISMChatSdk{
         if userSession != nil{
             self.userSession?.clearUserSession()
         }
-        ChatKeychain.shared.clear()
     }
 }

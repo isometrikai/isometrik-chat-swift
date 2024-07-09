@@ -8,66 +8,66 @@
 import Foundation
 import RealmSwift
 
-class MessagesDB: Object, ObjectKeyIdentifiable {
+public class MessagesDB: Object, ObjectKeyIdentifiable {
     
-    @Persisted(primaryKey: true) var id: ObjectId
+    @Persisted(primaryKey: true) public var id: ObjectId
     
-    @Persisted var sentAt : Double = 0
-    @Persisted var senderInfo : UserDB?
-    @Persisted var body : String = ""
-    @Persisted var userName : String = ""
-    @Persisted var userIdentifier : String = ""
-    @Persisted var userId : String = ""
-    @Persisted var userProfileImageUrl : String = ""
-    @Persisted var messageId : String = ""
-    @Persisted var mentionedUsers : RealmSwift.List<MentionedUserDB>
-    @Persisted var deliveredToAll : Bool = false
-    @Persisted var readByAll : Bool = false
-    @Persisted var customType : String = ""
-    @Persisted var action : String = ""
-    @Persisted var readBy : RealmSwift.List<MessageDeliveryStatusDB>
-    @Persisted var deliveredTo  : RealmSwift.List<MessageDeliveryStatusDB>
-    @Persisted var messageType : Int = -1
-    @Persisted var parentMessageId : String = ""
-    @Persisted var metaData : MetaDataDB?
-    @Persisted var attachments : RealmSwift.List<AttachmentDB>
-    @Persisted var initiatorIdentifier : String = ""
-    @Persisted var initiatorId : String = ""
-    @Persisted var initiatorName : String = ""
-    @Persisted var conversationId : String = ""
-    @Persisted var msgSyncStatus : String = ""
-    @Persisted var placeName : String = ""
-    @Persisted var reactionType : String = ""
-    @Persisted var reactionsCount : Int?
-    @Persisted var isDelete : Bool = false
-    @Persisted var members : RealmSwift.List<LastMessageMemberDB>
-    @Persisted var deletedMessage : Bool = false
-    @Persisted var memberName : String = ""
-    @Persisted var memberId : String = ""
-    @Persisted var memberIdentifier : String = ""
-    @Persisted var messageUpdated : Bool = false
-    @Persisted var reactions : List<ReactionDB>
-    @Persisted var missedByMembers : List<String>
-    @Persisted var meetingId  : String?
-    @Persisted var callDurations : List<ISMMeetingDuration>
-    @Persisted var audioOnly : Bool = false
-    @Persisted var autoTerminate : Bool = false
-    @Persisted var config : ISMMeetingConfig?
-    @Persisted var groupcastId : String?
+    @Persisted public var sentAt : Double = 0
+    @Persisted public var senderInfo : UserDB?
+    @Persisted public var body : String = ""
+    @Persisted public var userName : String = ""
+    @Persisted public var userIdentifier : String = ""
+    @Persisted public var userId : String = ""
+    @Persisted public var userProfileImageUrl : String = ""
+    @Persisted public var messageId : String = ""
+    @Persisted public var mentionedUsers : RealmSwift.List<MentionedUserDB>
+    @Persisted public var deliveredToAll : Bool = false
+    @Persisted public var readByAll : Bool = false
+    @Persisted public var customType : String = ""
+    @Persisted public var action : String = ""
+    @Persisted public var readBy : RealmSwift.List<MessageDeliveryStatusDB>
+    @Persisted public var deliveredTo  : RealmSwift.List<MessageDeliveryStatusDB>
+    @Persisted public var messageType : Int = -1
+    @Persisted public var parentMessageId : String = ""
+    @Persisted public var metaData : MetaDataDB?
+    @Persisted public var attachments : RealmSwift.List<AttachmentDB>
+    @Persisted public var initiatorIdentifier : String = ""
+    @Persisted public var initiatorId : String = ""
+    @Persisted public var initiatorName : String = ""
+    @Persisted public var conversationId : String = ""
+    @Persisted public var msgSyncStatus : String = ""
+    @Persisted public var placeName : String = ""
+    @Persisted public var reactionType : String = ""
+    @Persisted public var reactionsCount : Int?
+    @Persisted public var isDelete : Bool = false
+    @Persisted public var members : RealmSwift.List<LastMessageMemberDB>
+    @Persisted public var deletedMessage : Bool = false
+    @Persisted public var memberName : String = ""
+    @Persisted public var memberId : String = ""
+    @Persisted public var memberIdentifier : String = ""
+    @Persisted public var messageUpdated : Bool = false
+    @Persisted public var reactions : List<ReactionDB>
+    @Persisted public var missedByMembers : List<String>
+    @Persisted public var meetingId  : String?
+    @Persisted public var callDurations : List<ISMMeetingDuration>
+    @Persisted public var audioOnly : Bool = false
+    @Persisted public var autoTerminate : Bool = false
+    @Persisted public var config : ISMMeetingConfig?
+    @Persisted public var groupcastId : String?
 }
 
-class ReactionDB: Object, Identifiable{
-    @Persisted var id = UUID()
-    @Persisted var reactionType: String = ""
-    @Persisted var users: List<String>
+public class ReactionDB: Object, Identifiable{
+    @Persisted public var id = UUID()
+    @Persisted public var reactionType: String = ""
+    @Persisted public var users: List<String>
 }
 
-class MentionedUserDB : Object, ObjectKeyIdentifiable{
-    @Persisted var wordCount : Int?
-    @Persisted var userId : String?
-    @Persisted var order : Int?
+public class MentionedUserDB : Object, ObjectKeyIdentifiable{
+    @Persisted public var wordCount : Int?
+    @Persisted public var userId : String?
+    @Persisted public var order : Int?
 }
 
-class ISMMeetingConfig : Object, Identifiable{
-    @Persisted var pushNotifications: Bool?
+public class ISMMeetingConfig : Object, Identifiable{
+    @Persisted public var pushNotifications: Bool?
 }

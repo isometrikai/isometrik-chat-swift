@@ -11,7 +11,7 @@ import RealmSwift
 extension RealmManager{
     
     //MARK: - change group name locally
-    func changeGroupName(conversationId : String,conversationTitle : String){
+    public func changeGroupName(conversationId : String,conversationTitle : String){
         if let localRealm = localRealm {
             let taskToUpdate = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@  AND isDelete = %d", (conversationId), false))
             if !taskToUpdate.isEmpty {
@@ -24,7 +24,7 @@ extension RealmManager{
     }
     
     //MARK: - change group icon/image locally
-    func changeGroupIcon(conversationId : String,conversationIcon : String){
+    public func changeGroupIcon(conversationId : String,conversationIcon : String){
         if let localRealm = localRealm {
             let taskToUpdate = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@  AND isDelete = %d", (conversationId), false))
             if !taskToUpdate.isEmpty {
@@ -37,7 +37,7 @@ extension RealmManager{
     }
     
     //MARK: - get members count
-    func getMemberCount(convId:String) -> Int {
+    public func getMemberCount(convId:String) -> Int {
         if let localRealm = localRealm {
             let taskToUpdate = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@", (convId)))
             if !taskToUpdate.isEmpty {
@@ -48,7 +48,7 @@ extension RealmManager{
     }
     
     //MARK: - update member count
-    func updateMemberCount(convId: String,inc:Bool,dec:Bool,count:Int) {
+    public func updateMemberCount(convId: String,inc:Bool,dec:Bool,count:Int) {
           if let localRealm = localRealm {
               do {
                   let listToUpdate = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@  AND isDelete = %d", convId, false))

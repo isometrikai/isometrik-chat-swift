@@ -13,7 +13,7 @@ import AVKit
 extension ChatsViewModel{
     
     //MARK: - start recording audio
-    func startRecording() {
+    public func startRecording() {
         let recordingSession = AVAudioSession.sharedInstance()
         do {
             try recordingSession.setCategory(.playAndRecord, mode: .default)
@@ -45,7 +45,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - stop recording audio
-    func stopRecording(completion:@escaping(URL?)->()){
+    public func stopRecording(completion:@escaping(URL?)->()){
         if audioRecorder != nil{
             audioRecorder.stop()
             isRecording = false
@@ -58,7 +58,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - fetch all recording audio
-    func fetchAllRecording(completion:@escaping(URL?)->()){
+    public func fetchAllRecording(completion:@escaping(URL?)->()){
         let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let directoryContents = try! FileManager.default.contentsOfDirectory(at: path, includingPropertiesForKeys: nil)
         for i in directoryContents {

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIKit
+import IsometrikChat
 
 struct ISMContactInfoView: View {
     
@@ -49,168 +50,168 @@ struct ISMContactInfoView: View {
     //MARK:  - BODY
     var body: some View {
         VStack{
-            if showFullScreenImage {
-                // To show profile Image on tap of user Image
-                ISMChat_ImageCahcingManger.networkImage(url: fullScreenImageURL ?? "",isprofileImage: false)
-                    .resizable()
-                    .scaledToFit()
-            }else{
-                List {
-                    //Bio
-                    if isGroup == false{
-                        Section {
-                            Text(conversationDetail?.conversationDetails?.opponentDetails?.metaData?.about ?? "Hey there! I m using Wetalk.")
-                                .font(themeFonts.messageList_MessageText)
-                                .foregroundColor(themeColor.messageList_MessageText)
-                        } header: {
-                            HStack(alignment: .center){
-                                Spacer()
-                                customHeaderView()
-                                    .listRowInsets(EdgeInsets())
-                                Spacer()
-                            }
-                        }.listRowSeparatorTint(Color.border)
-                    }
-                    //media, link and doc
-                    Section {
-                        Button {
-                            navigatetoMedia = true
-                        } label: {
-                            HStack{
-                                themeImage.mediaIcon
-                                    .resizable()
-                                    .frame(width: 29,height: 29)
-                                Text("Media, Links and Docs")
-                                    .font(themeFonts.messageList_MessageText)
-                                    .foregroundColor(themeColor.messageList_MessageText)
-                                Spacer()
-                                let count = ((realmManager.medias?.count ?? 0) + (realmManager.filesMedia?.count ?? 0) + (realmManager.linksMedia?.count ?? 0))
-                                Text(count.description)
-                                    .font(themeFonts.messageList_MessageText)
-                                    .foregroundColor(themeColor.chatList_UserMessage)
-                                themeImage.disclouser
-                                    .resizable()
-                                    .frame(width: 7,height: 12)
-                            }
-                        }
-                    } header: {
-                        if isGroup == true{
-                            HStack(alignment: .center){
-                                Spacer()
-                                customHeaderView()
-                                    .listRowInsets(EdgeInsets())
-                                Spacer()
-                            }
-                        }
-                    }.listRowSeparatorTint(Color.border)
-                    
-                    if isGroup == true{
-                        Section {
-                            
-                            if conversationDetail?.conversationDetails?.usersOwnDetails?.isAdmin == true{
-                                Button {
-                                    navigatetoAddparticipant = true
-                                } label: {
-                                    HStack(spacing: 12){
-                                        
-                                        themeImage.addMembers
-                                            .resizable()
-                                            .frame(width: 29, height: 29, alignment: .center)
-                                        
-                                        Text("Add Members")
-                                            .font(themeFonts.messageList_MessageText)
-                                            .foregroundColor(themeColor.messageList_ReplyToolbarRectangle)
-                                    }
-                                }.frame(height: 50)
-                            }
-                            
-                            
-                            if let members = conversationDetail?.conversationDetails?.members{
-                                ForEach(members, id: \.self) { member in
-                                    ISMGroupMemberSubView(member: member, selectedMember: $selectedMember)
-                                        .frame(height: 50)
-                                }
-                            }
-                        } header: {
-                            HStack{
-                                Text("\(conversationDetail?.conversationDetails?.members?.count ?? 0) Members")
-                                    .font(themeFonts.contactInfoHeader)
-                                    .foregroundColor(themeColor.messageList_MessageText)
-                                    .textCase(nil)
-                                Spacer()
-                                Button {
-                                    showSearch = true
-                                } label: {
-                                    themeImage.searchMagnifingGlass
-                                        .resizable()
-                                        .frame(width: 28, height: 28, alignment: .center)
-                                        .padding(8)
-                                }
-                                
-                            }.listRowInsets(EdgeInsets())
-                        } footer: {
-                            Text("")
-                        }.listRowSeparatorTint(Color.border)
-                    }
-                    
-                    Section {
-                        let blocked = conversationDetail?.conversationDetails?.messagingDisabled
-                        let unmuted = conversationDetail?.conversationDetails?.config?.pushNotifications
-                        let contactOptions = ISMChat_ContactInfo.options(blocked: blocked ?? false,unmuted: unmuted ?? false,singleConversation: !(isGroup ?? false),onlyInfo : self.onlyInfo)
-                        ForEach(contactOptions, id: \.self) { obj in
-                            HStack {
-                                Text(obj.title)
-                                    .font(themeFonts.messageList_MessageText)
-                                    .foregroundColor(themeColor.chatList_UnreadMessageCountBackground)
-                                Button {
-                                    showingAlert = true
-                                    if obj == .BlockUser {
-                                        self.alertStr = "Do you want to Block this User?"
-                                    }else if obj == .ClearChat {
-                                        self.alertStr = "Clear All Messages?"
-                                    }else if obj == .DeleteUser {
-                                        self.alertStr = "Delete Chat?"
-                                    }else if obj == .UnBlockUser{
-                                        self.alertStr = "Do you want to UnBlock this User?"
-                                    }else if obj == .ExitGroup{
-                                        self.alertStr = "Do you want to exit this group?"
-                                    }else if obj == .MuteNotification{
-                                        self.alertStr = "Disable notifications?"
-                                    }else if obj == .UnMuteNotification{
-                                        self.alertStr = "Enable notifications?"
-                                    }
-                                    self.selectedOption = obj
-                                } label: {
-                                    
-                                }
-                            }
-                            .alert(alertStr, isPresented: $showingAlert) {
-                                Button("No", role: .cancel) { }
-                                Button("Yes", role: .destructive) {
-                                    manageFlow()
-                                }
-                            }
-                        }//.foregroundColor(Color(uiColor: colors.alert))
-                    } header: {
-                        Text("")
-                    } footer: {
-                        if isGroup == true{
-                            let dateVar = NSDate()
-                            let date = dateVar.doubletoDate(time: conversationDetail?.conversationDetails?.createdAt ?? 0)
-                            VStack(alignment: .leading){
-                                let user = userSession.getUserName() == (conversationDetail?.conversationDetails?.createdByUserName ?? "") ? ConstantStrings.you.lowercased() : (conversationDetail?.conversationDetails?.createdByUserName ?? "")
-                                Text("Group created by \(user)")
-                                    .font(themeFonts.chatList_UserMessage)
-                                    .foregroundColor(themeColor.chatList_UserMessage)
-                                Text("Created on \(date)")
-                                    .font(themeFonts.chatList_UserMessage)
-                                    .foregroundColor(themeColor.chatList_UserMessage)
-                            }.padding(.top)
-                        }
-                    }.listRowSeparatorTint(Color.border)
-                }.background(Color.backgroundView)
-                    .scrollContentBackground(.hidden)
-            }
+//            if showFullScreenImage {
+//                // To show profile Image on tap of user Image
+//                ISMChat_ImageCahcingManger.networkImage(url: fullScreenImageURL ?? "",isprofileImage: false)
+//                    .resizable()
+//                    .scaledToFit()
+//            }else{
+//                List {
+//                    //Bio
+//                    if isGroup == false{
+//                        Section {
+//                            Text(conversationDetail?.conversationDetails?.opponentDetails?.metaData?.about ?? "Hey there! I m using Wetalk.")
+//                                .font(themeFonts.messageList_MessageText)
+//                                .foregroundColor(themeColor.messageList_MessageText)
+//                        } header: {
+//                            HStack(alignment: .center){
+//                                Spacer()
+//                                customHeaderView()
+//                                    .listRowInsets(EdgeInsets())
+//                                Spacer()
+//                            }
+//                        }.listRowSeparatorTint(Color.border)
+//                    }
+//                    //media, link and doc
+//                    Section {
+//                        Button {
+//                            navigatetoMedia = true
+//                        } label: {
+//                            HStack{
+//                                themeImage.mediaIcon
+//                                    .resizable()
+//                                    .frame(width: 29,height: 29)
+//                                Text("Media, Links and Docs")
+//                                    .font(themeFonts.messageList_MessageText)
+//                                    .foregroundColor(themeColor.messageList_MessageText)
+//                                Spacer()
+//                                let count = ((realmManager.medias?.count ?? 0) + (realmManager.filesMedia?.count ?? 0) + (realmManager.linksMedia?.count ?? 0))
+//                                Text(count.description)
+//                                    .font(themeFonts.messageList_MessageText)
+//                                    .foregroundColor(themeColor.chatList_UserMessage)
+//                                themeImage.disclouser
+//                                    .resizable()
+//                                    .frame(width: 7,height: 12)
+//                            }
+//                        }
+//                    } header: {
+//                        if isGroup == true{
+//                            HStack(alignment: .center){
+//                                Spacer()
+//                                customHeaderView()
+//                                    .listRowInsets(EdgeInsets())
+//                                Spacer()
+//                            }
+//                        }
+//                    }.listRowSeparatorTint(Color.border)
+//                    
+//                    if isGroup == true{
+//                        Section {
+//                            
+//                            if conversationDetail?.conversationDetails?.usersOwnDetails?.isAdmin == true{
+//                                Button {
+//                                    navigatetoAddparticipant = true
+//                                } label: {
+//                                    HStack(spacing: 12){
+//                                        
+//                                        themeImage.addMembers
+//                                            .resizable()
+//                                            .frame(width: 29, height: 29, alignment: .center)
+//                                        
+//                                        Text("Add Members")
+//                                            .font(themeFonts.messageList_MessageText)
+//                                            .foregroundColor(themeColor.messageList_ReplyToolbarRectangle)
+//                                    }
+//                                }.frame(height: 50)
+//                            }
+//                            
+//                            
+//                            if let members = conversationDetail?.conversationDetails?.members{
+//                                ForEach(members, id: \.self) { member in
+//                                    ISMGroupMemberSubView(member: member, selectedMember: $selectedMember)
+//                                        .frame(height: 50)
+//                                }
+//                            }
+//                        } header: {
+//                            HStack{
+//                                Text("\(conversationDetail?.conversationDetails?.members?.count ?? 0) Members")
+//                                    .font(themeFonts.contactInfoHeader)
+//                                    .foregroundColor(themeColor.messageList_MessageText)
+//                                    .textCase(nil)
+//                                Spacer()
+//                                Button {
+//                                    showSearch = true
+//                                } label: {
+//                                    themeImage.searchMagnifingGlass
+//                                        .resizable()
+//                                        .frame(width: 28, height: 28, alignment: .center)
+//                                        .padding(8)
+//                                }
+//                                
+//                            }.listRowInsets(EdgeInsets())
+//                        } footer: {
+//                            Text("")
+//                        }.listRowSeparatorTint(Color.border)
+//                    }
+//                    
+//                    Section {
+//                        let blocked = conversationDetail?.conversationDetails?.messagingDisabled
+//                        let unmuted = conversationDetail?.conversationDetails?.config?.pushNotifications
+//                        let contactOptions = ISMChat_ContactInfo.options(blocked: blocked ?? false,unmuted: unmuted ?? false,singleConversation: !(isGroup ?? false),onlyInfo : self.onlyInfo)
+//                        ForEach(contactOptions, id: \.self) { obj in
+//                            HStack {
+//                                Text(obj.title)
+//                                    .font(themeFonts.messageList_MessageText)
+//                                    .foregroundColor(themeColor.chatList_UnreadMessageCountBackground)
+//                                Button {
+//                                    showingAlert = true
+//                                    if obj == .BlockUser {
+//                                        self.alertStr = "Do you want to Block this User?"
+//                                    }else if obj == .ClearChat {
+//                                        self.alertStr = "Clear All Messages?"
+//                                    }else if obj == .DeleteUser {
+//                                        self.alertStr = "Delete Chat?"
+//                                    }else if obj == .UnBlockUser{
+//                                        self.alertStr = "Do you want to UnBlock this User?"
+//                                    }else if obj == .ExitGroup{
+//                                        self.alertStr = "Do you want to exit this group?"
+//                                    }else if obj == .MuteNotification{
+//                                        self.alertStr = "Disable notifications?"
+//                                    }else if obj == .UnMuteNotification{
+//                                        self.alertStr = "Enable notifications?"
+//                                    }
+//                                    self.selectedOption = obj
+//                                } label: {
+//                                    
+//                                }
+//                            }
+//                            .alert(alertStr, isPresented: $showingAlert) {
+//                                Button("No", role: .cancel) { }
+//                                Button("Yes", role: .destructive) {
+//                                    manageFlow()
+//                                }
+//                            }
+//                        }//.foregroundColor(Color(uiColor: colors.alert))
+//                    } header: {
+//                        Text("")
+//                    } footer: {
+//                        if isGroup == true{
+//                            let dateVar = NSDate()
+//                            let date = dateVar.doubletoDate(time: conversationDetail?.conversationDetails?.createdAt ?? 0)
+//                            VStack(alignment: .leading){
+//                                let user = userSession.getUserName() == (conversationDetail?.conversationDetails?.createdByUserName ?? "") ? ConstantStrings.you.lowercased() : (conversationDetail?.conversationDetails?.createdByUserName ?? "")
+//                                Text("Group created by \(user)")
+//                                    .font(themeFonts.chatList_UserMessage)
+//                                    .foregroundColor(themeColor.chatList_UserMessage)
+//                                Text("Created on \(date)")
+//                                    .font(themeFonts.chatList_UserMessage)
+//                                    .foregroundColor(themeColor.chatList_UserMessage)
+//                            }.padding(.top)
+//                        }
+//                    }.listRowSeparatorTint(Color.border)
+//                }.background(Color.backgroundView)
+//                    .scrollContentBackground(.hidden)
+//            }
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)

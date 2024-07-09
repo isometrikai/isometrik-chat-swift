@@ -10,7 +10,7 @@ import Foundation
 extension ChatsViewModel{
     
     //MARK: - create broadcast api
-    func createBroadCast(users : [ISMChat_User],completion:@escaping(ISMChat_CreateConversationResponse?)->()){
+    public func createBroadCast(users : [ISMChat_User],completion:@escaping(ISMChat_CreateConversationResponse?)->()){
         var body : [String : Any]
         var membersAll : [[String : Any]] = []
         var membersDetail : [[String : Any]] = []
@@ -35,7 +35,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - get list of broadcasts api
-    func getBroadCastList(completion:@escaping(ISMChat_Conversations?)->()){
+    public func getBroadCastList(completion:@escaping(ISMChat_Conversations?)->()){
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.getBroadCast,httpMethod: .get) { (result : ISMChat_Response<ISMChat_Conversations?,ISMChat_ErrorData?>) in
             switch result{
             case .success(let data):
@@ -47,7 +47,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - get broadcast members api
-    func getBroadMembers(groupcastId : String,completion:@escaping(ISMChat_BroadCastMembers?)->()){
+    public func getBroadMembers(groupcastId : String,completion:@escaping(ISMChat_BroadCastMembers?)->()){
         let baseUrl = "\(ISMChat_NetworkServices.Urls.getBroadCastMembers)?groupcastId=\(groupcastId)"
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseUrl,httpMethod: .get) { (result : ISMChat_Response<ISMChat_BroadCastMembers?,ISMChat_ErrorData?>) in
             switch result{
@@ -60,7 +60,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - delete broadcast api
-    func deleteBroadCastList(groupcastId: String,completion:@escaping(Bool?)->()){
+    public func deleteBroadCastList(groupcastId: String,completion:@escaping(Bool?)->()){
         var body : [String : Any]
         body = ["groupcastId" : groupcastId] as [String : Any]
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.createBroadCast,httpMethod: .delete,params: body) { (result : ISMChat_Response<ISMChat_CreateConversationResponse?,ISMChat_ErrorData?>) in
@@ -75,7 +75,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - get broadcast messages api
-    func getBroadCastMessages(refresh : Bool? = nil,groupcastId : String,lastMessageTimestamp:String,completion:@escaping(ISMChat_Messages?)->()){
+    public func getBroadCastMessages(refresh : Bool? = nil,groupcastId : String,lastMessageTimestamp:String,completion:@escaping(ISMChat_Messages?)->()){
         var baseURL = String()
         if lastMessageTimestamp == "" {
              baseURL = "\(ISMChat_NetworkServices.Urls.getbroadCastMessage)?groupcastId=\(groupcastId)"
@@ -93,7 +93,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - update broadcast title api
-    func updateBroadCastTitle(groupcastId:String, broadcastTitle : String,completion:@escaping(ISMChat_BroadCastMembers?)->()){
+    public func updateBroadCastTitle(groupcastId:String, broadcastTitle : String,completion:@escaping(ISMChat_BroadCastMembers?)->()){
         var body : [String : Any]
         body = ["groupcastTitle" : broadcastTitle,"groupcastId" : groupcastId] as [String : Any]
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.createBroadCast,httpMethod: .patch,params: body) { (result : ISMChat_Response<ISMChat_BroadCastMembers?,ISMChat_ErrorData?>) in
@@ -107,7 +107,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - add members in broadcast api
-    func addMemberInBroadCast(members : [ISMChat_User],groupcastId : String,completion:@escaping(Bool?)->()){
+    public func addMemberInBroadCast(members : [ISMChat_User],groupcastId : String,completion:@escaping(Bool?)->()){
         var body : [String : Any]
         var membersAll : [[String : Any]] = []
         for x in members{
@@ -126,7 +126,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - remove members from broadcast api
-    func removeMemberInBroadCast(members : [String],groupcastId : String,completion:@escaping(Bool?)->()){
+    public func removeMemberInBroadCast(members : [String],groupcastId : String,completion:@escaping(Bool?)->()){
         let totalMessageId = members.joined(separator: ",")
         let baseUrl = "\(ISMChat_NetworkServices.Urls.addmembersToBroadCast)?groupcastId=\(groupcastId)&members=\(totalMessageId)"
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseUrl,httpMethod: .delete) { (result : ISMChat_Response<ISMChat_CreateConversationResponse?,ISMChat_ErrorData?>) in
@@ -140,7 +140,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - get broadcast message info if read
-    func getGroupCastMessageReadInfo(messageId : String,groupcastId : String,completion:@escaping(ISMChat_ConversationDetail?)->()){
+    public func getGroupCastMessageReadInfo(messageId : String,groupcastId : String,completion:@escaping(ISMChat_ConversationDetail?)->()){
         let baseURL = "\(ISMChat_NetworkServices.Urls.groupcastMessageRead)?groupcastId=\(groupcastId)&groupcastMessageId=\(messageId)"
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChat_Response<ISMChat_ConversationDetail?,ISMChat_ErrorData?>) in
             switch result{
@@ -153,7 +153,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - get broadcast message info if delivered
-    func getGroupCastMessageDeliveredInfo(messageId : String,groupcastId : String,completion:@escaping(ISMChat_ConversationDetail?)->()){
+    public func getGroupCastMessageDeliveredInfo(messageId : String,groupcastId : String,completion:@escaping(ISMChat_ConversationDetail?)->()){
         let baseURL = "\(ISMChat_NetworkServices.Urls.groupcastMessageDelivered)?groupcastId=\(groupcastId)&groupcastMessageId=\(messageId)"
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChat_Response<ISMChat_ConversationDetail?,ISMChat_ErrorData?>) in
             switch result{
@@ -166,7 +166,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - delete broadcast message
-    func deleteBroadCastMsg(messageDeleteType : ISMChat_DeleteMessageType,messageId : String,groupcastId : String,completion:@escaping()->()){
+    public func deleteBroadCastMsg(messageDeleteType : ISMChat_DeleteMessageType,messageId : String,groupcastId : String,completion:@escaping()->()){
         var baseURL = ""
         switch messageDeleteType{
         case .DeleteForYou:

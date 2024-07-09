@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct ISMGroupMember : Codable{
-    var msg : String?
-    var conversationMembers : [ISMChat_GroupMember]?
-    var membersCount : Int?
-    init(from decoder: Decoder) throws {
+public struct ISMGroupMember : Codable{
+    public var msg : String?
+    public var conversationMembers : [ISMChat_GroupMember]?
+    public var membersCount : Int?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         msg = try? container.decodeIfPresent(String.self, forKey: .msg)
         conversationMembers = try? container.decodeIfPresent([ISMChat_GroupMember].self, forKey: .conversationMembers)

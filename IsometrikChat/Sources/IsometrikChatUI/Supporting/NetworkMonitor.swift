@@ -9,12 +9,12 @@ import Foundation
 import SwiftUI
 import Network
 
-class NetworkMonitor: ObservableObject {
-    private let networkMonitor = NWPathMonitor()
-    private let workerQueue = DispatchQueue(label: "Monitor")
-    var isConnected = false
+public class NetworkMonitor: ObservableObject {
+    public let networkMonitor = NWPathMonitor()
+    public let workerQueue = DispatchQueue(label: "Monitor")
+    public var isConnected = false
 
-    init() {
+    public init() {
         networkMonitor.pathUpdateHandler = { path in
             self.isConnected = path.status == .satisfied
             Task {

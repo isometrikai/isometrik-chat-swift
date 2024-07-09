@@ -8,7 +8,7 @@
 import Foundation
 
 extension UserDefaults {
-    func storeCodable<T: Codable>(_ object: T, key: String) {
+    public func storeCodable<T: Codable>(_ object: T, key: String) {
         do {
             let data = try JSONEncoder().encode(object)
             UserDefaults.standard.set(data, forKey: key)
@@ -16,7 +16,7 @@ extension UserDefaults {
             print("Error encoding: \(error)")
         }
     }
-    func retrieveCodable<T: Codable>(for key: String) -> T? {
+    public func retrieveCodable<T: Codable>(for key: String) -> T? {
         do {
             guard let data = UserDefaults.standard.data(forKey: key) else {
                 return nil

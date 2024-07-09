@@ -6,8 +6,9 @@
 //
 
 import SwiftUI
+import IsometrikChat
 
-struct ISMMessageInfoView: View {
+public struct ISMMessageInfoView: View {
     
     //MARK:  - PROPERTIES
     @Environment(\.dismiss) var dismiss
@@ -32,7 +33,7 @@ struct ISMMessageInfoView: View {
     @State var themeImage = ISMChatSdk.getInstance().getAppAppearance().appearance.images
     
     //MARK:  - LIFECYCLE
-    var body: some View {
+    public var body: some View {
         ZStack{
             Color.backgroundView.edgesIgnoringSafeArea(.all)
             VStack{

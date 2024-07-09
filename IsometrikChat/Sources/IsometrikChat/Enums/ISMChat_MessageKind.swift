@@ -12,7 +12,7 @@ public enum ISMChat_MessageKind {
     case forward //1
     case reply //2
     
-    var value : Int{
+    public var value : Int{
         switch self {
         case .normal:
             return 0

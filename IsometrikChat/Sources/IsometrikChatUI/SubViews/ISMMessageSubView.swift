@@ -16,6 +16,7 @@ import GoogleMaps
 import CoreLocation
 import MapKit
 import SDWebImageSwiftUI
+import IsometrikChat
 
 struct ISMMessageSubView: View {
     
@@ -73,7 +74,7 @@ struct ISMMessageSubView: View {
    
     @EnvironmentObject var realmManager : RealmManager
     @ObservedObject var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @Environment(\.viewController) private var viewControllerHolder: UIViewController?
+    @Environment(\.viewController) public var viewControllerHolder: UIViewController?
     
     
     //MARK:  - BODY

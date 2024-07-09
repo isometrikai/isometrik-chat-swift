@@ -8,20 +8,20 @@
 import Foundation
 import Contacts
 
-struct ISMChat_Contacts: Identifiable {
-    let id: UUID
-    let contact: CNContact
-    var selected : Bool = false
+public struct ISMChat_Contacts: Identifiable {
+    public let id: UUID
+    public let contact: CNContact
+    public var selected : Bool = false
 }
 
 
-struct ISMChat_PhoneContact : Codable{
-    var id : UUID
-    var displayName : String?
-    var phones : [ISMChat_Phone]?
-    var imageUrl : String?
-    var imageData : Data?
-    init(id: UUID, displayName: String, phones: [ISMChat_Phone],imageUrl : String,imageData : Data) {
+public struct ISMChat_PhoneContact : Codable{
+    public var id : UUID
+    public var displayName : String?
+    public var phones : [ISMChat_Phone]?
+    public var imageUrl : String?
+    public var imageData : Data?
+    public init(id: UUID, displayName: String, phones: [ISMChat_Phone],imageUrl : String,imageData : Data) {
         self.id = id
         self.displayName = displayName
         self.phones = phones
@@ -31,9 +31,9 @@ struct ISMChat_PhoneContact : Codable{
 }
 
 
-struct ISMChat_Phone : Codable{
-    var number : String?
-    init(number: String) {
+public struct ISMChat_Phone : Codable{
+    public var number : String?
+    public init(number: String) {
         self.number = number
     }
 }

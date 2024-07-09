@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IsometrikChat
 
 struct UserAvatarView: View {
     var avatar: String

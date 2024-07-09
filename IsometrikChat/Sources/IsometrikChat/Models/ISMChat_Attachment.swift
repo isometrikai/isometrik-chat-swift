@@ -7,21 +7,21 @@
 
 import Foundation
 
-struct ISMChat_Attachment : Codable{
-    var attachmentType : Int?
-    var extensions : String?
-    var mediaId: Int?
-    var mediaUrl  : String?
-    var mimeType : String?
-    var name : String?
-    var size : Int?
-    var thumbnailUrl : String?
-    var latitude : Double?
-    var longitude : Double?
-    var title : String?
-    var address : String?
-    var caption : String?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_Attachment : Codable{
+    public var attachmentType : Int?
+    public var extensions : String?
+    public var mediaId: Int?
+    public var mediaUrl  : String?
+    public var mimeType : String?
+    public var name : String?
+    public var size : Int?
+    public var thumbnailUrl : String?
+    public var latitude : Double?
+    public var longitude : Double?
+    public var title : String?
+    public var address : String?
+    public var caption : String?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         attachmentType = try? container.decode(Int.self, forKey: .attachmentType)
         extensions = try? container.decode(String.self, forKey: .extensions)
@@ -37,7 +37,7 @@ struct ISMChat_Attachment : Codable{
         address = try? container.decode(String.self, forKey: .address)
         caption = try? container.decode(String.self, forKey: .caption)
     }
-    init(attachmentType : Int? = nil,extensions : String? = nil,mediaId : Int? = nil,mediaUrl : String? = nil,mimeType : String? = nil,name : String? = nil,size : Int? = nil,thumbnailUrl : String? = nil,latitude : Double? = nil,longitude : Double? = nil,title : String? = nil,address : String? = nil,caption : String? = nil) {
+    public init(attachmentType : Int? = nil,extensions : String? = nil,mediaId : Int? = nil,mediaUrl : String? = nil,mimeType : String? = nil,name : String? = nil,size : Int? = nil,thumbnailUrl : String? = nil,latitude : Double? = nil,longitude : Double? = nil,title : String? = nil,address : String? = nil,caption : String? = nil) {
         self.attachmentType = attachmentType
         self.extensions = extensions
         self.mediaId = mediaId

@@ -12,7 +12,7 @@ public enum ISMChat_ExtensionType : CaseIterable{
     case Video
     case Audio
     case Document
-    var type : String{
+    public var type : String{
         switch self {
         case .Image:
             return "png"

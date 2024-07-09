@@ -8,17 +8,18 @@
 import SwiftUI
 import AVKit
 import SDWebImageSwiftUI
+import IsometrikChat
 
 struct ISMUserMediaView: View {
     
     //MARK: - PROPERTIES
-    @State private var selectIndex = 0
-    @State private var groupMedia = [Date: [MediaDB]]()
-    @State private var groupLink = [Date: [MessagesDB]]()
+    @State public var selectIndex = 0
+    @State public var groupMedia = [Date: [MediaDB]]()
+    @State public var groupLink = [Date: [MessagesDB]]()
     @EnvironmentObject var realmManager: RealmManager
     
-    var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    var columns: [GridItem] {
+    public var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    public var columns: [GridItem] {
         Array(repeating: GridItem(.flexible(), spacing: 1, alignment: nil), count: 3)
     }
     @Environment(\.dismiss) var dismiss
@@ -27,7 +28,7 @@ struct ISMUserMediaView: View {
     @State var themeImage = ISMChatSdk.getInstance().getAppAppearance().appearance.images
     
     //MARK: - BODY
-    var body: some View {
+    public var body: some View {
         ZStack {
             Color.backgroundView.edgesIgnoringSafeArea(.all)
             VStack {

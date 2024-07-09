@@ -24,9 +24,9 @@ extension UINavigationController: UIGestureRecognizerDelegate {
     }
 }
 extension NSNotification {
-    static let refreshConvList = Notification.Name.init("refreshConvList")
-    static let localNotification = Notification.Name.init("localNotification")
-    static let memberAddAndRemove = Notification.Name.init("memberAddAndRemove")
-    static let refrestConversationListLocally = Notification.Name.init("refrestConversationListLocally")
-    static let refreshBroadCastListNotification = Notification.Name.init("refreshBroadCastList")
+    public static let refreshConvList = Notification.Name.init("refreshConvList")
+    public static let localNotification = Notification.Name.init("localNotification")
+    public static let memberAddAndRemove = Notification.Name.init("memberAddAndRemove")
+    public static let refrestConversationListLocally = Notification.Name.init("refrestConversationListLocally")
+    public static let refreshBroadCastListNotification = Notification.Name.init("refreshBroadCastList")
 }

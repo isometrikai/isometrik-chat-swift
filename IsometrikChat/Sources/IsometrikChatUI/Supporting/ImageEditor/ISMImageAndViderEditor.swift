@@ -8,6 +8,7 @@
 import SwiftUI
 import AVKit
 import Kingfisher
+import IsometrikChat
 
 
 struct ISMMediaUpload : Hashable {

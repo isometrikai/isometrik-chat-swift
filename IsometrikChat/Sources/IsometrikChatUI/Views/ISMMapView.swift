@@ -7,6 +7,7 @@
 
 import SwiftUI
 import GoogleMaps
+import IsometrikChat
 
 struct MapView: UIViewRepresentable {
     

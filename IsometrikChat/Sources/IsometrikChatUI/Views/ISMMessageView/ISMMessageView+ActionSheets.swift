@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import IsometrikChat
 
 //MARK: - ACTION SHEETS
 extension ISMMessageView{

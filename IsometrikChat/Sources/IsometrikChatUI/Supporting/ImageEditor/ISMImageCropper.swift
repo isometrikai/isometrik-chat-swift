@@ -7,44 +7,45 @@
 
 import SwiftUI
 import Mantis
+import IsometrikChat
 
-struct ISMImageCropper : UIViewControllerRepresentable{
-    typealias Coordinator = ImageEditorCoordinator
+public struct ISMImageCropper : UIViewControllerRepresentable{
+    public typealias Coordinator = ImageEditorCoordinator
     @Binding var imageUrl : URL
     @Binding var isShowing : Bool
     
-    func makeCoordinator() -> ImageEditorCoordinator {
+    public func makeCoordinator() -> ImageEditorCoordinator {
         return ImageEditorCoordinator(imageUrl: $imageUrl, isShowing: $isShowing)
     }
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+    public func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
     }
-    func makeUIViewController(context: UIViewControllerRepresentableContext<ISMImageCropper>) -> Mantis.CropViewController {
+    public func makeUIViewController(context: UIViewControllerRepresentableContext<ISMImageCropper>) -> Mantis.CropViewController {
         let editor = Mantis.cropViewController(image: UIImage(contentsOfFile: imageUrl.path) ?? UIImage())
         editor.delegate = context.coordinator
         return editor
     }
 }
 
-class ImageEditorCoordinator : NSObject, CropViewControllerDelegate{
-    func cropViewControllerDidFailToCrop(_ cropViewController: Mantis.CropViewController, original: UIImage) {
+public class ImageEditorCoordinator : NSObject, CropViewControllerDelegate{
+    public func cropViewControllerDidFailToCrop(_ cropViewController: Mantis.CropViewController, original: UIImage) {
         isShowing = false
     }
     
-    func cropViewControllerDidBeginResize(_ cropViewController: Mantis.CropViewController) {
+    public func cropViewControllerDidBeginResize(_ cropViewController: Mantis.CropViewController) {
         
     }
     
-    func cropViewControllerDidEndResize(_ cropViewController: Mantis.CropViewController, original: UIImage, cropInfo: Mantis.CropInfo) {
+    public func cropViewControllerDidEndResize(_ cropViewController: Mantis.CropViewController, original: UIImage, cropInfo: Mantis.CropInfo) {
         
     }
     
     @Binding var imageUrl : URL
     @Binding var isShowing : Bool
-    init(imageUrl: Binding<URL>, isShowing: Binding<Bool>) {
+    public init(imageUrl: Binding<URL>, isShowing: Binding<Bool>) {
         _imageUrl = imageUrl
         _isShowing = isShowing
     }
-    func cropViewControllerDidCrop(_ cropViewController: Mantis.CropViewController, cropped: UIImage, transformation: Mantis.Transformation, cropInfo: Mantis.CropInfo) {
+    public func cropViewControllerDidCrop(_ cropViewController: Mantis.CropViewController, cropped: UIImage, transformation: Mantis.Transformation, cropInfo: Mantis.CropInfo) {
         let croppedImageURL = ISMChat_Helper.createImageURL()
         if let imageData = cropped.jpegData(compressionQuality: 1.0) {
             do {
@@ -58,7 +59,7 @@ class ImageEditorCoordinator : NSObject, CropViewControllerDelegate{
         }
     }
     
-    func cropViewControllerDidCancel(_ cropViewController: Mantis.CropViewController, original: UIImage) {
+    public func cropViewControllerDidCancel(_ cropViewController: Mantis.CropViewController, original: UIImage) {
         isShowing = false
     }
 }

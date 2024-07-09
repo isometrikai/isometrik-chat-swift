@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Realm
+import IsometrikChat
 
 struct ISMReactionDetailView: View {
     

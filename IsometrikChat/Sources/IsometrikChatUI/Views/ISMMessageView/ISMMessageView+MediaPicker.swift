@@ -7,6 +7,7 @@
 
 import Foundation
 import MediaPicker
+import IsometrikChat
 
  extension ISMMessageView{
     //MARK: - IMPOTER

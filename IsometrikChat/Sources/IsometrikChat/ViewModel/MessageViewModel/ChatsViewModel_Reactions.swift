@@ -10,7 +10,7 @@ import Foundation
 extension ChatsViewModel{
     
     //MARK: - send reaction
-    func sendReaction(conversationId : String,messageId : String,emojiReaction : String,completion:@escaping(Bool?)->()){
+    public func sendReaction(conversationId : String,messageId : String,emojiReaction : String,completion:@escaping(Bool?)->()){
         var body : [String : Any]
         body = ["conversationId" : conversationId ,
                 "messageId" : messageId,
@@ -28,7 +28,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - get reactions
-    func getReaction(conversationId : String,messageId : String,emojiReaction : String,completion:@escaping(ISMChat_ReactionsData?)->()){
+    public func getReaction(conversationId : String,messageId : String,emojiReaction : String,completion:@escaping(ISMChat_ReactionsData?)->()){
         var body : [String : Any]
         body = ["conversationId" : conversationId ,
                 "messageId" : messageId] as [String : Any]
@@ -45,7 +45,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - remove reaction
-    func removeReaction(conversationId : String,messageId : String,emojiReaction : String,completion:@escaping(Bool?)->()){
+    public func removeReaction(conversationId : String,messageId : String,emojiReaction : String,completion:@escaping(Bool?)->()){
         var body : [String : Any]
         body = ["conversationId" : conversationId ,
                 "messageId" : messageId] as [String : Any]

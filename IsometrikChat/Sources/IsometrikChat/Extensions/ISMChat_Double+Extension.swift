@@ -8,7 +8,7 @@
 import Foundation
 
 extension Double{
-    func datetotime() -> String{
+    public func datetotime() -> String{
         let unixTimeStamp: Double = self / 1000.0
         let exactDate = NSDate.init(timeIntervalSince1970: unixTimeStamp)
         let dateFormatt = DateFormatter()
@@ -18,7 +18,7 @@ extension Double{
     }
 }
 extension Int{
-    func datetotime() -> String{
+    public func datetotime() -> String{
         let unixTimeStamp: Int = self / 1000
         let exactDate = NSDate.init(timeIntervalSince1970: Double(unixTimeStamp))
         let dateFormatt = DateFormatter()
@@ -28,7 +28,7 @@ extension Int{
     }
 }
 extension Double {
-    func millisecondsToTime() -> String {
+    public func millisecondsToTime() -> String {
         let totalSeconds = self / 1000
         let hours = Int(totalSeconds) / 3600
         let minutes = (Int(totalSeconds) % 3600) / 60

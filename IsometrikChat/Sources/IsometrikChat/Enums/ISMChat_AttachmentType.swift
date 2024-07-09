@@ -16,7 +16,7 @@ public enum ISMChat_AttachmentType : CaseIterable{
     case Sticker
     case Gif
     case AdminMessage
-    var type : Int{
+    public var type : Int{
         switch self {
         case .Image:
             return 0

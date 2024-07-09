@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IsometrikChat
 
 struct TextBox : Identifiable{
     var id = UUID().uuidString

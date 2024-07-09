@@ -8,7 +8,7 @@
 import Foundation
 
 
-class ISMChat_UserSession: NSObject {
+public class ISMChat_UserSession: NSObject {
 
     public static var shared = ISMChat_UserSession()
     
@@ -103,7 +103,7 @@ class ISMChat_UserSession: NSObject {
     }
 }
 
-struct ISMChat_AppConstants {
+public struct ISMChat_AppConstants {
     static let userDefaultUserToken = "ismChatSdkUserToken"
     static let userDefaultUserEmailId = "ismChatSdkUserEmail"
     static let userDefaultUserId = "ismChatSdkUserId"

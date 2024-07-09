@@ -10,18 +10,18 @@ import Combine
 import AVFoundation
 import SwiftUI
 
-protocol ServiceProtocol {
+public protocol ServiceProtocol {
     func buffer(url: URL, samplesCount: Int, completion: @escaping([ISMChat_AudioPreviewModel]) -> ())
 }
 
 
-class Service {
-    static let shared: ServiceProtocol = Service()
-    private init() { }
+public class Service {
+    static public let shared: ServiceProtocol = Service()
+    public init() { }
 }
 
 extension Service: ServiceProtocol {
-    func buffer(url: URL, samplesCount: Int, completion: @escaping([ISMChat_AudioPreviewModel]) -> ()) {
+    public func buffer(url: URL, samplesCount: Int, completion: @escaping([ISMChat_AudioPreviewModel]) -> ()) {
         DispatchQueue.global(qos: .userInteractive).async {
             do {
                 var cur_url = url

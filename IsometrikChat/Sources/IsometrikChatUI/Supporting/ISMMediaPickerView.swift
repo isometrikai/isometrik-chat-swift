@@ -9,6 +9,7 @@ import SwiftUI
 import Foundation
 import UIKit
 import YPImagePicker
+import IsometrikChat
 
 struct ISMMediaPickerView: View {
     

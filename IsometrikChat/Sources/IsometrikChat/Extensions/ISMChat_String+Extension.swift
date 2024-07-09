@@ -9,22 +9,22 @@ import Foundation
 import UIKit
 
 extension String {
-    func capitalizingFirstLetter() -> String {
+    public func capitalizingFirstLetter() -> String {
         return prefix(1).capitalized + dropFirst()
     }
 
-    mutating func capitalizeFirstLetter() {
+    mutating public func capitalizeFirstLetter() {
         self = self.capitalizingFirstLetter()
     }
     
-    func widthOfString(usingFont font: UIFont) -> CGFloat {
+    public func widthOfString(usingFont font: UIFont) -> CGFloat {
         let fontAttributes = [NSAttributedString.Key.font: font]
         let size = self.size(withAttributes: fontAttributes)
         return size.width
     }
 }
 extension String {
-    var isValidURL: Bool {
+    public var isValidURL: Bool {
         let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
         if let match = detector.firstMatch(in: self, options: [], range: NSRange(location: 0, length: self.utf16.count)) {
             // it is a link, if the match covers the whole string
@@ -37,7 +37,7 @@ extension String {
 
 
 extension String{
-    func getContactJson() -> [[String : AnyHashable]]?{
+    public func getContactJson() -> [[String : AnyHashable]]?{
         if let data = self.data(using: .utf8) {
             do {
                 // Parse the JSON data

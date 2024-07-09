@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import SDWebImageSwiftUI
+import IsometrikChat
 
 extension ISMMessageView{
     //MARK: - FORWARD MESSAGE TOOLBAR

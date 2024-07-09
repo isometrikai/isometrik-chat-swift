@@ -7,7 +7,7 @@
 
 import Foundation
 import ISMSwiftCall
-
+import IsometrikChat
 
  extension ISMMessageView{
     func messageReceived(messageInfo : ISMChat_MessageDelivered){

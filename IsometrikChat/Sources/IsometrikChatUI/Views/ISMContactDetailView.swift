@@ -9,6 +9,7 @@ import SwiftUI
 import ContactsUI
 import UIKit
 import Contacts
+import IsometrikChat
 
 struct ISMContactDetailView: View {
     

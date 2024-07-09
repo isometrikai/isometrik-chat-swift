@@ -61,27 +61,27 @@ extension Color {
 
 extension Color {
     //Login
-    static let onboardingPlaceholder = Color(hex: "#9EA4C3")
-    static let black = Color.black
-    static let forgotpassword = Color(hex: "#294566")
-    static let border = Color(hex: "#CBE3FF")
+    static public let onboardingPlaceholder = Color(hex: "#9EA4C3")
+//    static public let black = Color.black
+    static public let forgotpassword = Color(hex: "#294566")
+    static public let border = Color(hex: "#CBE3FF")
     
-    static let login1 = Color(hex: "#A399F7")
-    static let login2 = Color(hex: "#7062E9")
-    static let redMessageCount = Color(hex: "#F15C46")
-    static let backgroundView = Color(hex: "#F3F6FB")
-    static let bluetype = Color(hex: "#00A2F3")
-    static let blue1 = Color(hex: "#007AFF")
-    static let header = Color(hex: "#E2E9F4")
-    static let listBackground = Color(hex: "#E8EFF9")
-    static let docBackground = Color(hex: "#E8EFF9")
-    static let primarypurple = Color(hex: "#7062E9")
-    static let audiobar = Color(hex: "#CBE3FF")
-    static let redType = Color(hex: "#DD3719")
+    static public let login1 = Color(hex: "#A399F7")
+    static public let login2 = Color(hex: "#7062E9")
+    static public let redMessageCount = Color(hex: "#F15C46")
+    static public let backgroundView = Color(hex: "#F3F6FB")
+    static public let bluetype = Color(hex: "#00A2F3")
+    static public let blue1 = Color(hex: "#007AFF")
+    static public let header = Color(hex: "#E2E9F4")
+    static public let listBackground = Color(hex: "#E8EFF9")
+    static public let docBackground = Color(hex: "#E8EFF9")
+    static public let primarypurple = Color(hex: "#7062E9")
+    static public let audiobar = Color(hex: "#CBE3FF")
+    static public let redType = Color(hex: "#DD3719")
 }
 
 extension Color {
-    init(hex: String) {
+    public init(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
 

@@ -14,44 +14,44 @@ import AVKit
 import SwiftUI
 import Combine
 
-class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
+public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     
     //MARK:  - PROPERTIES
-    @Published var messages : [[ISMChat_Message]]?
-    @Published var allMessages : [ISMChat_Message]? = []
-    @Published var forwardToConversations : [ISMChat_ConversationsDetail] = []
-    @Published var documentSelectedFromPicker : URL?
+    @Published public var messages : [[ISMChat_Message]]?
+    @Published public var allMessages : [ISMChat_Message]? = []
+    @Published public var forwardToConversations : [ISMChat_ConversationsDetail] = []
+    @Published public var documentSelectedFromPicker : URL?
     //    @Published var cameraImageToUse : URL?
-    var skip : Int = 0
-    var skipUser : Int = 0
-    @Published var isBusy = false
+    public var skip : Int = 0
+    public var skipUser : Int = 0
+    @Published public var isBusy = false
     
     //audio recorder
-    var audioRecorder : AVAudioRecorder!
-    var audioPlayer : AVAudioPlayer!
-    var audioUrl : URL?
-    var indexOfPlayer = 0
-    @Published var isRecording : Bool = false
-    @Published var countSec = 0
-    @Published var timerCount : Timer?
-    @Published var blinkingCount : Timer?
-    @Published var timerValue : String = "0:00"
-    @Published var toggleColor : Bool = false
+    public var audioRecorder : AVAudioRecorder!
+    public var audioPlayer : AVAudioPlayer!
+    public var audioUrl : URL?
+    public var indexOfPlayer = 0
+    @Published public var isRecording : Bool = false
+    @Published public var countSec = 0
+    @Published public var timerCount : Timer?
+    @Published public var blinkingCount : Timer?
+    @Published public var timerValue : String = "0:00"
+    @Published public var toggleColor : Bool = false
     
-    @Published var recordingsList = [ISMChat_Recording]()
+    @Published public var recordingsList = [ISMChat_Recording]()
     
     //grp
-    @Published var groupTitleImage : URL?
+    @Published public var groupTitleImage : URL?
     
     
     var ismChatSDK: ISMChatSdk?
     
-    init(ismChatSDK: ISMChatSdk) {
+    public init(ismChatSDK: ISMChatSdk) {
         self.ismChatSDK = ismChatSDK
     }
     
     //MARK: - get messages
-    func getMessages(refresh : Bool? = nil,conversationId : String,lastMessageTimestamp:String,completion:@escaping(ISMChat_Messages?)->()){
+    public func getMessages(refresh : Bool? = nil,conversationId : String,lastMessageTimestamp:String,completion:@escaping(ISMChat_Messages?)->()){
         var baseURL = String()
         if lastMessageTimestamp == "" {
             baseURL = "\(ISMChat_NetworkServices.Urls.messages)?conversationId=\(conversationId)"
@@ -70,7 +70,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     
     
     //MARK: - update messages
-    func updateMessage(messageId : String,conversationId : String,message : String,completion:@escaping(String)->()){
+    public func updateMessage(messageId : String,conversationId : String,message : String,completion:@escaping(String)->()){
         var searchTags : [String] = []
         searchTags.append(ISMChat_SearchTags.ism_search_tag_text.value)
         searchTags.append(message)
@@ -86,7 +86,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
     
     //MARK: - send messages
-    func sendMessage(messageKind : ISMChat_MessageType,customType : String,conversationId :  String,message : String,fileName : String?,fileSize : Int?,mediaId : String?,objectId : String? = "",messageType:Int = 0,thumbnailUrl : String? = "",contactInfo: [ISMChat_PhoneContact]? = [],latitude : Double? = nil,longitude : Double? = nil,placeName : String? = nil,placeAddress : String? = nil,isGroup : Bool? = false,groupMembers : [ISMChat_GroupMember]? = [],caption : String? = nil,isBroadCastMessage : Bool? = false,groupcastId : String? = nil,completion:@escaping(String, String)->()){
+    public func sendMessage(messageKind : ISMChat_MessageType,customType : String,conversationId :  String,message : String,fileName : String?,fileSize : Int?,mediaId : String?,objectId : String? = "",messageType:Int = 0,thumbnailUrl : String? = "",contactInfo: [ISMChat_PhoneContact]? = [],latitude : Double? = nil,longitude : Double? = nil,placeName : String? = nil,placeAddress : String? = nil,isGroup : Bool? = false,groupMembers : [ISMChat_GroupMember]? = [],caption : String? = nil,isBroadCastMessage : Bool? = false,groupcastId : String? = nil,completion:@escaping(String, String)->()){
         var searchTags : [String] = []
         var body : [String : Any] = [:]
         var attachmentValue : [String : Any] = [:]
@@ -294,7 +294,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
     
     //MARK: - upload image, video, doc
-    func upload(messageKind : ISMChat_MessageType,conversationId :  String,conversationType : Int? = 0,image : URL?,document : URL?,video : URL?,audio : URL?,mediaName : String,isfromDocument : Bool? = false,completion:@escaping(ISMChat_PresignedUrlDetail?, String , Int)->()){
+    public func upload(messageKind : ISMChat_MessageType,conversationId :  String,conversationType : Int? = 0,image : URL?,document : URL?,video : URL?,audio : URL?,mediaName : String,isfromDocument : Bool? = false,completion:@escaping(ISMChat_PresignedUrlDetail?, String , Int)->()){
         //params
         var params = [String: Any]()
         params["conversationId"] = conversationId
@@ -362,7 +362,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     
     
     //MARK: - get conversation Detail
-    func getConversationDetail(conversationId : String,isGroup : Bool,completion:@escaping(ISMChat_ConversationDetail?)->()){
+    public func getConversationDetail(conversationId : String,isGroup : Bool,completion:@escaping(ISMChat_ConversationDetail?)->()){
         var baseURL = ""
         if isGroup == true{
             baseURL = "\(ISMChat_NetworkServices.Urls.conversationDetail)\(conversationId)?includeMembers=true"
@@ -380,7 +380,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
     
     //MARK: - message read info
-    func getMessageReadInfo(messageId : String,conversationId : String,completion:@escaping(ISMChat_ConversationDetail?)->()){
+    public func getMessageReadInfo(messageId : String,conversationId : String,completion:@escaping(ISMChat_ConversationDetail?)->()){
         let baseURL = "\(ISMChat_NetworkServices.Urls.messageRead)?conversationId=\(conversationId)&messageId=\(messageId)"
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChat_Response<ISMChat_ConversationDetail?,ISMChat_ErrorData?>) in
             switch result{
@@ -393,7 +393,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
     
     //MARK: - message delivered info
-    func getMessageDeliveredInfo(messageId : String,conversationId : String,completion:@escaping(ISMChat_ConversationDetail?)->()){
+    public func getMessageDeliveredInfo(messageId : String,conversationId : String,completion:@escaping(ISMChat_ConversationDetail?)->()){
         let baseURL = "\(ISMChat_NetworkServices.Urls.messageDelivered)?conversationId=\(conversationId)&messageId=\(messageId)"
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChat_Response<ISMChat_ConversationDetail?,ISMChat_ErrorData?>) in
             switch result{
@@ -406,7 +406,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
     
     //MARK: - delete message
-    func deleteMsg(messageDeleteType : ISMChat_DeleteMessageType,messageId : [String],conversationId : String,completion:@escaping()->()){
+    public func deleteMsg(messageDeleteType : ISMChat_DeleteMessageType,messageId : [String],conversationId : String,completion:@escaping()->()){
         let totalMessageId = messageId.joined(separator: ",")
         var baseURL = ""
         switch messageDeleteType{
@@ -427,7 +427,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     
     
     //MARK: - forward message
-    func forwardMessage(conversationIds : [String],message : String,attachments:AttachmentDB? ,customType : String,placeName : String? = nil,contactInfo: [ISMChat_PhoneContact]? = [],metaData : MetaDataDB? = nil,completion:@escaping()->()){
+    public func forwardMessage(conversationIds : [String],message : String,attachments:AttachmentDB? ,customType : String,placeName : String? = nil,contactInfo: [ISMChat_PhoneContact]? = [],metaData : MetaDataDB? = nil,completion:@escaping()->()){
         var body : [String : Any]
         var metaDataValue : [String : Any] = [:]
         let deviceId = UniqueIdentifierManager.shared.getUniqueIdentifier()
@@ -502,7 +502,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
     
     //MARK: - reply message
-    func replyToMessage(customType : String,conversationId :  String,message : String,parentMessage : MessagesDB,completion:@escaping(String)->()){
+    public func replyToMessage(customType : String,conversationId :  String,message : String,parentMessage : MessagesDB,completion:@escaping(String)->()){
         var body : [String : Any]
         let deviceId = UniqueIdentifierManager.shared.getUniqueIdentifier()
         var thumbnailUrl = ""
@@ -535,7 +535,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
     
     //MARK: - create conversation
-    func createConversation(userId : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
+    public func createConversation(userId : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
         var body : [String : Any]
         //        let metaData : [String : Any] = [:]
         body = ["typingEvents" : true ,
@@ -556,7 +556,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     
     
     //MARK: - get all messages not delivered yet
-    func getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId : String,skip : Int = 0){
+    public func getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId : String,skip : Int = 0){
         let limit = 20
         let baseUrl = "\(ISMChat_NetworkServices.Urls.getMessagesInConersation)?senderIdsExclusive=true&deliveredToMe=false&senderIds=\(myUserId)&limit=\(limit)&skip=\(skip)&sort=-1"
         
@@ -622,7 +622,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     
     
     //MARK: - mark message as read
-    func markMessagesAsRead(conversationId : String){
+    public func markMessagesAsRead(conversationId : String){
         var body : [String : Any]
         let timeStamp = UInt64(floor(Date().timeIntervalSince1970 * 1000))
         body = ["conversationId" : conversationId ,
@@ -638,7 +638,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
     
     //MARK: - read message indicator
-    func readMessageIndicator(conversationId : String,messageId : String,completion:@escaping(Bool?)->()){
+    public func readMessageIndicator(conversationId : String,messageId : String,completion:@escaping(Bool?)->()){
         var body : [String : Any]
         body = ["conversationId" : conversationId ,
                 "messageId" : messageId] as [String : Any]
@@ -654,7 +654,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
     
     //MARK: - typing message indicator
-    func typingMessageIndicator(conversationId : String){
+    public func typingMessageIndicator(conversationId : String){
         var body : [String : Any]
         body = ["conversationId" : conversationId] as [String : Any]
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.typingMessageIndicator,httpMethod: .post,params: body) { (result : ISMChat_Response<ISMChat_CreateConversationResponse?,ISMChat_ErrorData?>) in
@@ -668,7 +668,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
     
     //MARK: - delivered message indicator
-    func deliveredMessageIndicator(conversationId : String,messageId : String,completion:@escaping(Bool?)->()){
+    public func deliveredMessageIndicator(conversationId : String,messageId : String,completion:@escaping(Bool?)->()){
         var body : [String : Any]
         body = ["conversationId" : conversationId ,
                 "messageId" : messageId] as [String : Any]
@@ -686,7 +686,7 @@ class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
 }
 
 extension ChatsViewModel{
-    func getSectionMessage(for chat : [MessagesDB]) -> [[MessagesDB]] {
+    public func getSectionMessage(for chat : [MessagesDB]) -> [[MessagesDB]] {
         var res = [[MessagesDB]]()
         let groupedMessages = Dictionary(grouping: chat) { (element) -> Date in
             

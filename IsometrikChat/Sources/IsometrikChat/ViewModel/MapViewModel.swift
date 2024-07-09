@@ -12,25 +12,25 @@ import GooglePlaces
 import GoogleMaps
 import Alamofire
 
-class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate{
+public class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate{
     
     //MARK:  - PROPERTIES
-    @Published var permissionDenied = false
-    @Published var searchedText = ""
-    var mapView: GMSMapView!
-    @Published var location: CLLocation? {
+    @Published public var permissionDenied = false
+    @Published public var searchedText = ""
+    public var mapView: GMSMapView!
+    @Published public var location: CLLocation? {
         willSet { objectWillChange.send() }
     }
-    var latitude: CLLocationDegrees {
+    public var latitude: CLLocationDegrees {
         return location?.coordinate.latitude ?? 0
     }
-    var longitude: CLLocationDegrees {
+    public var longitude: CLLocationDegrees {
         return location?.coordinate.longitude ?? 0
     }
     
-    private var placesClient = GMSPlacesClient.shared()
+    public var placesClient = GMSPlacesClient.shared()
     // 2
-    @Published var places = [GMSPlaceLikelihood]()
+    @Published public var places = [GMSPlaceLikelihood]()
     
     
     //searching places
@@ -38,7 +38,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate{
         
     }
     
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+    public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         //checking permissions
         switch manager.authorizationStatus{
         case .denied:
@@ -60,13 +60,13 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate{
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         ISMChat_Helper.print(error.localizedDescription)
     }
     
     //getting user region
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else{
             return
         }
@@ -74,7 +74,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate{
         manager.stopUpdatingLocation()
     }
     
-    func currentPlacesList(){
+    public func currentPlacesList(){
         // 3
         placesClient.currentPlace { (placeLikelyHoodList, error) in
             if let error = error {
@@ -87,10 +87,10 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate{
     }
 }
 
-struct PlacesAutoCompleteResponse: Decodable {
-    let predictions: [Prediction]
+public struct PlacesAutoCompleteResponse: Decodable {
+    public let predictions: [Prediction]
     
-    struct Prediction: Decodable {
+    public struct Prediction: Decodable {
         let description: String
     }
 }

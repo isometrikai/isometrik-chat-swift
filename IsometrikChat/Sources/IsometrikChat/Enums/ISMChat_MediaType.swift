@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ISMChat_MediaType : CaseIterable{
+public enum ISMChat_MediaType : CaseIterable{
     case Text
     case Image
     case File
@@ -22,7 +22,7 @@ enum ISMChat_MediaType : CaseIterable{
     case Unblock
     case VideoCall
     case AudioCall
-    var value : String{
+    public var value : String{
         switch self {
         case .Text:
             return "AttachmentMessage:Text"

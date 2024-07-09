@@ -60,7 +60,7 @@ public enum ISMChat_ActionType : CaseIterable{
 //      reactionRemove,
 //      conversationDetailsUpdated;
 //
-    var value : String{
+    public var value : String{
         switch self {
         case .userBlock:
             return "userBlock"

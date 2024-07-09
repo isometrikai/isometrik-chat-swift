@@ -9,21 +9,21 @@ import Foundation
 import SwiftUI
 
 extension View {
-    func viewSize(_ size: CGFloat) -> some View {
+    public func viewSize(_ size: CGFloat) -> some View {
         self.frame(width: size, height: size)
     }
 
-    func circleBackground(_ color: Color) -> some View {
+    public func circleBackground(_ color: Color) -> some View {
         self.background {
             Circle().fill(color)
         }
     }
     
-    func modify<Content>(@ViewBuilder _ transform: (Self) -> Content) -> Content {
+    public func modify<Content>(@ViewBuilder _ transform: (Self) -> Content) -> Content {
         transform(self)
     }
     
-    func endEditing(_ force: Bool) {
+    public func endEditing(_ force: Bool) {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }

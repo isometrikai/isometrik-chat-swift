@@ -15,26 +15,27 @@ import AVFoundation
 import PhotosUI
 //import GiphyUISDK
 import ISMSwiftCall
+import IsometrikChat
 
-struct ISMMessageView: View {
+public struct ISMMessageView: View {
     
     //MARK: - PROPERTIES
     
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    var conversationViewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    public var conversationViewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
     @State var text = ""
     @State var textFieldtxt = ""
     @State var keyboardFocused = false
     
     @State var showActionSheet = false
     @State var conversationID : String?
-    let opponenDetail : UserDB?
-    var userId : String?
-    let isGroup : Bool?
-    let fromBroadCastFlow : Bool?
-    let groupCastId : String?
-    var delegate : MessageVCDelegate?
+    public let opponenDetail : UserDB?
+    public var userId : String?
+    public let isGroup : Bool?
+    public let fromBroadCastFlow : Bool?
+    public let groupCastId : String?
+//    public var delegate : MessageVCDelegate?
     @State var textViewHeight : CGFloat = 32
     
     @State var showVideoPicker: Bool = false
@@ -43,7 +44,7 @@ struct ISMMessageView: View {
     
     @State var showSheet : Bool = false
     @State var selectedSheetIndex : Int = 0
-    let columns = [GridItem(.flexible(minimum: 10))]
+    public let columns = [GridItem(.flexible(minimum: 10))]
     
     @State var selectedContactToShare : [ISMChat_PhoneContact] = []
     @State var shareContact : Bool = false
@@ -101,19 +102,19 @@ struct ISMMessageView: View {
     @State var startDate = Date.now
     @State var timeElapsed: Int = 0
     @State var showingNoInternetAlert = false
-    let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    public let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     
     @State var startTimeForOnline = Date.now
     @State var timeElapsedForOnline: Int = 0
-    let onlinetimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
+    public let onlinetimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     @State var executeRepeatlyForOfflineMessage : Bool = false
     
     @State var onLoad : Bool = false
     
     @State var messageCopied : Bool = false
     
-    let groupConversationTitle : String?
-    let groupImage : String?
+    public let groupConversationTitle : String?
+    public let groupImage : String?
     
     @State var navigateToLocationDetail : ISMChat_LocationData = ISMChat_LocationData()
     @State var navigateToLocation = false
@@ -156,7 +157,7 @@ struct ISMMessageView: View {
     @State var userSession = ISMChatSdk.getInstance().getUserSession()
     
     //MARK: - BODY
-    var body: some View {
+    public var body: some View {
         VStack{
             ZStack{
                 themeColor.chatList_Background.edgesIgnoringSafeArea(.all)

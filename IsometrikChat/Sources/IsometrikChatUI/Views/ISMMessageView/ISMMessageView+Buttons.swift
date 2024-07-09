@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import ISMSwiftCall
+import IsometrikChat
 
 
 extension ISMMessageView{

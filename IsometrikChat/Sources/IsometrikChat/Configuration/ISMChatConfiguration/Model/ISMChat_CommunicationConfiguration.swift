@@ -15,7 +15,7 @@ public struct ISMChat_CommunicationConfiguration {
     let username: String
     let password: String
 
-    init(userConfig: ISMChat_UserConfig,
+    public init(userConfig: ISMChat_UserConfig,
          projectConfig: ISMChat_ProjectConfig,
          mqttConfig: ISMChat_MqttConfig,
          username: String? = nil,
@@ -36,7 +36,7 @@ public struct ISMChat_UserConfig {
     let userEmail: String
     let userProfileImage: String
 
-    init(userToken: String,
+    public init(userToken: String,
          userId: String,
          userName: String,
          userEmail: String,
@@ -59,7 +59,7 @@ public struct ISMChat_ProjectConfig {
     let projectId: String
     let headers : HTTPHeaders
 
-    init(accountId: String,
+    public init(accountId: String,
          appSecret: String,
          userSecret: String,
          keySetId: String,
@@ -76,11 +76,11 @@ public struct ISMChat_ProjectConfig {
 }
 
 
-struct ISMChat_MqttConfig {
+public struct ISMChat_MqttConfig {
     let hostName: String
     let port: Int
 
-    init(hostName: String, port: Int) {
+    public init(hostName: String, port: Int) {
         self.hostName = hostName
         self.port = port
     }

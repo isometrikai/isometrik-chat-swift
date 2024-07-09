@@ -8,22 +8,22 @@
 import Foundation
 import RealmSwift
 
-class MediaDB : Object, ObjectKeyIdentifiable {
-    @Persisted(primaryKey: true) var id: ObjectId
+public class MediaDB : Object, ObjectKeyIdentifiable {
+    @Persisted(primaryKey: true) public var id: ObjectId
     
-    @Persisted var conversationId : String = ""
-    @Persisted var groupcastId : String = ""
-    @Persisted var attachmentType : Int = 0
-    @Persisted var extensions : String = ""
-    @Persisted var mediaId: Int = 0
-    @Persisted var mediaUrl  : String = ""
-    @Persisted var mimeType : String = ""
-    @Persisted var name : String = ""
-    @Persisted var size : Int = 0
-    @Persisted var thumbnailUrl : String = ""
-    @Persisted var customType : String = ""
-    @Persisted var sentAt : Double = 0.0
-    @Persisted var messageId : String = ""
-    @Persisted var userName : String = ""
-    @Persisted var caption : String = ""
+    @Persisted public var conversationId : String = ""
+    @Persisted public var groupcastId : String = ""
+    @Persisted public var attachmentType : Int = 0
+    @Persisted public var extensions : String = ""
+    @Persisted public var mediaId: Int = 0
+    @Persisted public var mediaUrl  : String = ""
+    @Persisted public var mimeType : String = ""
+    @Persisted public var name : String = ""
+    @Persisted public var size : Int = 0
+    @Persisted public var thumbnailUrl : String = ""
+    @Persisted public var customType : String = ""
+    @Persisted public var sentAt : Double = 0.0
+    @Persisted public var messageId : String = ""
+    @Persisted public var userName : String = ""
+    @Persisted public var caption : String = ""
 }

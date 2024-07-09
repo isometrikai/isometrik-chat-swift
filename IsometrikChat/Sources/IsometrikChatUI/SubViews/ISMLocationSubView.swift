@@ -11,6 +11,7 @@ import CoreLocation
 import GooglePlaces
 import GoogleMaps
 import CoreLocation
+import IsometrikChat
 
 struct ISMLocationSubView: View {
     

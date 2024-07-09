@@ -8,34 +8,34 @@
 import Foundation
 import RealmSwift
 
-class RealmManager: ObservableObject {
+public class RealmManager: ObservableObject {
     
     private(set) var localRealm: Realm?
     
-    @Published var storeConv: [ConversationDB] = []
-    @Published var conversations: [ConversationDB] = []
-    @Published var allMessages : [MessagesDB]? = []
-    @Published var messages : [[MessagesDB]] = [[]]
-    @Published var localMessages : [MessagesDB]? = []
-    @Published var medias : [MediaDB]? = []
-    @Published var linksMedia : [MessagesDB]? = []
-    @Published var filesMedia : [MediaDB]? = []
-    @Published var parentMessageIdToScroll : String = ""
-    @Published var broadcasts : [BroadCastListDB] = []
+    @Published public var storeConv: [ConversationDB] = []
+    @Published public var conversations: [ConversationDB] = []
+    @Published public var allMessages : [MessagesDB]? = []
+    @Published public var messages : [[MessagesDB]] = [[]]
+    @Published public var localMessages : [MessagesDB]? = []
+    @Published public var medias : [MediaDB]? = []
+    @Published public var linksMedia : [MessagesDB]? = []
+    @Published public var filesMedia : [MediaDB]? = []
+    @Published public var parentMessageIdToScroll : String = ""
+    @Published public var broadcasts : [BroadCastListDB] = []
     
-     var userSession = ISMChatSdk.getInstance().getUserSession()
+    public var userSession = ISMChatSdk.getInstance().getUserSession()
     
-    init() {
+    public init() {
         openRealm()
         getAllConversations()
         print("localUrl" , databaseURL() ?? "")
     }
     
-    func databaseURL() -> URL?{
+    public func databaseURL() -> URL?{
         return localRealm?.configuration.fileURL
     }
     
-    func openRealm() {
+    public func openRealm() {
         do {
             // always update schemaversion when you do add or remove param from local db
             let config = Realm.Configuration(
@@ -48,7 +48,7 @@ class RealmManager: ObservableObject {
     }
     
     //MARK: - delete all data of local db
-    func deleteAllData() {
+    public func deleteAllData() {
         do {
             let realm = try Realm()
             try realm.write {

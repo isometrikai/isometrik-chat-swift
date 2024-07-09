@@ -12,17 +12,17 @@ import RealmSwift
 extension RealmManager{
     
     //MARK: - get broadcast list count
-    func getBroadCastsCount() -> Int {
+    public func getBroadCastsCount() -> Int {
         broadcasts.count
     }
     
     //MARK: - get all broadcast
-    func getBroadCasts() -> [BroadCastListDB] {
+    public func getBroadCasts() -> [BroadCastListDB] {
         broadcasts
     }
     
     //MARK: - manage broadcast list, if already there update else add.
-    func manageBroadCastList(arr: [ISMChat_BroadCastDetail]) {
+    public func manageBroadCastList(arr: [ISMChat_BroadCastDetail]) {
         if let localRealm = localRealm {
             for obj in arr {
                 let taskToUpdate = localRealm.objects(BroadCastListDB.self).filter(NSPredicate(format: "groupcastId == %@", (obj.groupcastId ?? "")))
@@ -40,7 +40,7 @@ extension RealmManager{
     }
     
     //MARK: - update broadcast if already there in local db
-    func updateBroadCast(obj: ISMChat_BroadCastDetail) {
+    public func updateBroadCast(obj: ISMChat_BroadCastDetail) {
         if let localRealm = localRealm {
             do {
                 let listToUpdate = localRealm.objects(BroadCastListDB.self).filter(NSPredicate(format: "groupcastId == %@  AND isDelete = %d", (obj.groupcastId ?? ""), false))
@@ -82,7 +82,7 @@ extension RealmManager{
     }
     
     //MARK: - add broadcast if not locally present
-    func addBroadCasts(obj: [ISMChat_BroadCastDetail]) {
+    public func addBroadCasts(obj: [ISMChat_BroadCastDetail]) {
         if let localRealm = localRealm {
             do {
                 try localRealm.write {
@@ -124,7 +124,7 @@ extension RealmManager{
     }
     
     // MARK: - delete particular broadcast from broadcast list
-    func deleteBroadCast(groupcastId: String) {
+    public func deleteBroadCast(groupcastId: String) {
         if let localRealm = localRealm {
             do {
                 let taskToDelete = localRealm.objects(BroadCastListDB.self).filter(NSPredicate(format: "groupcastId == %@", groupcastId))
@@ -140,7 +140,7 @@ extension RealmManager{
     }
     
     //MARK: - delete all message in broadcast
-    func deleteMessagesThroughGroupCastId(groupcastId: String)  {
+    public func deleteMessagesThroughGroupCastId(groupcastId: String)  {
         if let localRealm = localRealm {
             let taskToUpdate = localRealm.objects(MessagesDB.self).filter(NSPredicate(format: "groupcastId == %@", (groupcastId )))
             if !taskToUpdate.isEmpty {
@@ -154,14 +154,14 @@ extension RealmManager{
     }
     
     //MARK: - get all local broadcasts
-    func getAllBroadCasts() {
+    public func getAllBroadCasts() {
         if let localRealm = localRealm {
             broadcasts =  Array(localRealm.objects(BroadCastListDB.self).where{$0.isDelete == false })
         }
     }
     
     
-    func deleteBroadCastMessages(groupcastId : String,messageId : String)  {
+    public func deleteBroadCastMessages(groupcastId : String,messageId : String)  {
         if let localRealm = localRealm {
             do {
                 let taskToDelete = localRealm.objects(MessagesDB.self).filter(NSPredicate(format: "groupcastId == %@ AND messageId = %@ AND conversationId != groupcastId", groupcastId,messageId))

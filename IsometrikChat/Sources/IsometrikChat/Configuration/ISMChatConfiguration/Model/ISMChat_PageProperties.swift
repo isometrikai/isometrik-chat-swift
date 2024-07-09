@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 public struct ISMChat_PageProperties {
-    var attachments: [ISMChat_ConfigAttachmentType] // Array of attachment types
-    var features : [ISMChat_ConfigFeature] // Array of chat features
-    var conversationType : [ISMChat_ConversationTypeConfig] // Array of conversation types
+    public var attachments: [ISMChat_ConfigAttachmentType] // Array of attachment types
+    public var features : [ISMChat_ConfigFeature] // Array of chat features
+    public var conversationType : [ISMChat_ConversationTypeConfig] // Array of conversation types
 }

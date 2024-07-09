@@ -8,7 +8,7 @@
 import Foundation
 
 public class ISMChat_Appearance {
-    var appearance: Appearance
+    public var appearance: Appearance
     public init(
         appearance: Appearance = Appearance()
     ) {

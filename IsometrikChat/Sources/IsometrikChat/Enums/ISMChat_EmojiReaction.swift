@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ISMChat_EmojiReaction : CaseIterable{
+public enum ISMChat_EmojiReaction : CaseIterable{
     case yes
     case surprised
     case cryingWithLaughter
@@ -23,7 +23,7 @@ enum ISMChat_EmojiReaction : CaseIterable{
     case highFive
     case talkingTooMuch
     case dancing
-    var info : (valueString : String, emoji : String){
+    public var info : (valueString : String, emoji : String){
         switch self {
         case .yes:
             return ("yes","👍")

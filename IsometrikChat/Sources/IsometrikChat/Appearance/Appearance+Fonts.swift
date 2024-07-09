@@ -96,24 +96,24 @@ import SwiftUI
     }
 
 
-private extension Font {
-    private func light(size: CGFloat) -> Font {
+public extension Font {
+    public func light(size: CGFloat) -> Font {
         return Font.custom("ProductSans-Light", size: size)
     }
     
-    private func regular(size: CGFloat) -> Font {
+    public func regular(size: CGFloat) -> Font {
         return Font.custom("ProductSans-Regular", size: size)
     }
     
-    private func medium(size: CGFloat) -> Font {
+    public func medium(size: CGFloat) -> Font {
         return Font.custom("ProductSans-Medium", size: size)
     }
     
-    private func bold(size: CGFloat) -> Font {
+    public func bold(size: CGFloat) -> Font {
         return Font.custom("ProductSans-Bold", size: size)
     }
     
-    private func italic(size: CGFloat) -> Font {
+    public func italic(size: CGFloat) -> Font {
         return Font.custom("ProductSans-Italic", size: size)
     }
 }

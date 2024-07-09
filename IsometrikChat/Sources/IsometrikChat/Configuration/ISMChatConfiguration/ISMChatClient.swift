@@ -14,7 +14,7 @@ public class ISMChat_Client {
     private var apiManager : ISMChat_APIManager
 
     
-    init(communicationConfig: ISMChat_CommunicationConfiguration,apiManager : ISMChat_APIManager,chatPageProperties : ISMChat_PageProperties) {
+    public init(communicationConfig: ISMChat_CommunicationConfiguration,apiManager : ISMChat_APIManager,chatPageProperties : ISMChat_PageProperties) {
         self.communicationConfig = communicationConfig
         self.apiManager = apiManager
         self.chatPageProperties = chatPageProperties

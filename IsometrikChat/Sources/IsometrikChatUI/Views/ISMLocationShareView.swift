@@ -10,6 +10,7 @@ import MapKit
 import CoreLocation
 import GooglePlaces
 import Combine
+import IsometrikChat
 
 struct ISMLocationShareView: View {
     

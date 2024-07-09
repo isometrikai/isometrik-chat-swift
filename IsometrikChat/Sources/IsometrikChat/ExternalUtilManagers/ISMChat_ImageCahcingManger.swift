@@ -9,9 +9,9 @@ import SwiftUI
 import Kingfisher
 import Alamofire
 
-class ISMChat_ImageCahcingManger{
+public class ISMChat_ImageCahcingManger{
     
-    static func networkImage(url: String,isprofileImage : Bool,size: CGSize? = nil)-> KFImage{
+    static public func networkImage(url: String,isprofileImage : Bool,size: CGSize? = nil)-> KFImage{
         return KFImage(URL(string: url)).placeholder {
             if isprofileImage == true{
                 Image("placeholder_New")

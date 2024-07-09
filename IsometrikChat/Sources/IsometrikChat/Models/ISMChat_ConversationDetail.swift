@@ -8,11 +8,11 @@
 import Foundation
 
 
-struct ISMChat_ConversationDetail : Codable{
-    var msg : String?
-    var conversationDetails : ISMChat_ConversationInDetail?
-    var users : [ISMChat_User]?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_ConversationDetail : Codable{
+    public var msg : String?
+    public var conversationDetails : ISMChat_ConversationInDetail?
+    public var users : [ISMChat_User]?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         msg = try? container.decode(String.self, forKey: .msg)
         conversationDetails = try? container.decode(ISMChat_ConversationInDetail.self, forKey: .conversationDetails)
@@ -20,25 +20,25 @@ struct ISMChat_ConversationDetail : Codable{
     }
 }
 
-struct ISMChat_ConversationInDetail : Codable{
-    var opponentDetails : ISMChat_User?
-    var messagingDisabled : Bool?
-    var usersOwnDetails : ISMChat_UserOwnDetail?
-    var updatedAt : Double?
-    var privateOneToOne : Bool?
-    var membersCount : Int?
-    var members : [ISMChat_GroupMember]? = []
-    var lastMessageSentAt : Double?
-    var isGroup : Bool?
-    var createdByUserName : String?
-    var createdByUserImageUrl : String?
-    var createdBy : String?
-    var createdAt : Double?
-    var conversationType : Int?
-    var conversationTitle : String?
-    var conversationImageUrl : String?
-    var config : ISMChat_ConfigConversation?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_ConversationInDetail : Codable{
+    public var opponentDetails : ISMChat_User?
+    public var messagingDisabled : Bool?
+    public var usersOwnDetails : ISMChat_UserOwnDetail?
+    public var updatedAt : Double?
+    public var privateOneToOne : Bool?
+    public var membersCount : Int?
+    public var members : [ISMChat_GroupMember]? = []
+    public var lastMessageSentAt : Double?
+    public var isGroup : Bool?
+    public var createdByUserName : String?
+    public var createdByUserImageUrl : String?
+    public var createdBy : String?
+    public var createdAt : Double?
+    public var conversationType : Int?
+    public var conversationTitle : String?
+    public var conversationImageUrl : String?
+    public var config : ISMChat_ConfigConversation?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         opponentDetails = try? container.decode(ISMChat_User.self, forKey: .opponentDetails)
         messagingDisabled = try? container.decode(Bool.self, forKey: .messagingDisabled)
@@ -60,11 +60,11 @@ struct ISMChat_ConversationInDetail : Codable{
     }
 }
 
-struct ISMChat_ConfigConversation : Codable{
-    var typingEvents : Bool?
-    var readEvents : Bool?
-    var pushNotifications : Bool?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_ConfigConversation : Codable{
+    public var typingEvents : Bool?
+    public var readEvents : Bool?
+    public var pushNotifications : Bool?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         typingEvents = try? container.decode(Bool.self, forKey: .typingEvents)
         readEvents = try? container.decode(Bool.self, forKey: .readEvents)
@@ -72,26 +72,26 @@ struct ISMChat_ConfigConversation : Codable{
     }
 }
 
-struct ISMChat_UserOwnDetail : Codable{
-    var memberId : String?
-    var isAdmin : Bool?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_UserOwnDetail : Codable{
+    public var memberId : String?
+    public var isAdmin : Bool?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         memberId = try? container.decode(String.self, forKey: .memberId)
         isAdmin = try? container.decode(Bool.self, forKey: .isAdmin)
     }
 }
 
-struct ISMChat_GroupMember : Codable, Identifiable, Hashable{
-    var id = UUID()
-    var userProfileImageUrl : String?
-    var userName : String?
-    var userIdentifier : String?
-    var userId : String?
-    var online : Bool?
-    var lastSeen : Double?
-    var isAdmin: Bool?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_GroupMember : Codable, Identifiable, Hashable{
+    public var id = UUID()
+    public var userProfileImageUrl : String?
+    public var userName : String?
+    public var userIdentifier : String?
+    public var userId : String?
+    public var online : Bool?
+    public var lastSeen : Double?
+    public var isAdmin: Bool?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         userProfileImageUrl = try? container.decode(String.self, forKey: .userProfileImageUrl)
         userName = try? container.decode(String.self, forKey: .userName)
@@ -101,7 +101,7 @@ struct ISMChat_GroupMember : Codable, Identifiable, Hashable{
         lastSeen = try? container.decode(Double.self, forKey: .lastSeen)
         isAdmin = try? container.decode(Bool.self, forKey: .isAdmin)
     }
-    init(userProfileImageUrl : String? = nil,userName : String? = nil,userIdentifier : String? = nil,userId : String? = nil,online : Bool? = nil,lastSeen : Double? = nil,isAdmin : Bool? = nil){
+    public init(userProfileImageUrl : String? = nil,userName : String? = nil,userIdentifier : String? = nil,userId : String? = nil,online : Bool? = nil,lastSeen : Double? = nil,isAdmin : Bool? = nil){
         self.userProfileImageUrl = userProfileImageUrl
         self.userName = userName
         self.userIdentifier = userIdentifier
@@ -112,14 +112,14 @@ struct ISMChat_GroupMember : Codable, Identifiable, Hashable{
     }
 }
 
-struct ISMChat_MemberAdded : Codable, Hashable{
-    var memberProfileImageUrl : String?
-    var memberName : String?
-    var memberIdentifier : String?
-    var memberId : String?
-    var isPublishing : Bool?
-    var isAdmin: Bool?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_MemberAdded : Codable, Hashable{
+    public var memberProfileImageUrl : String?
+    public var memberName : String?
+    public var memberIdentifier : String?
+    public var memberId : String?
+    public var isPublishing : Bool?
+    public var isAdmin: Bool?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         memberProfileImageUrl = try? container.decode(String.self, forKey: .memberProfileImageUrl)
         memberName = try? container.decode(String.self, forKey: .memberName)
@@ -128,7 +128,7 @@ struct ISMChat_MemberAdded : Codable, Hashable{
         isPublishing = try? container.decode(Bool.self, forKey: .isPublishing)
         isAdmin = try? container.decode(Bool.self, forKey: .isAdmin)
     }
-    init(memberProfileImageUrl : String? = nil,memberName : String? = nil,memberIdentifier : String? = nil,memberId : String? = nil,isPublishing : Bool? = nil,isAdmin : Bool? = nil){
+    public init(memberProfileImageUrl : String? = nil,memberName : String? = nil,memberIdentifier : String? = nil,memberId : String? = nil,isPublishing : Bool? = nil,isAdmin : Bool? = nil){
         self.memberProfileImageUrl = memberProfileImageUrl
         self.memberName = memberName
         self.memberIdentifier = memberIdentifier

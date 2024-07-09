@@ -11,22 +11,22 @@ import SwiftUI
 import AVFoundation
 import Combine
 
-class AudioPlayViewModel: ObservableObject {
+public class AudioPlayViewModel: ObservableObject {
     
     //MARK:  - PROPERTIES
-    private var timer: Timer?
-    @Published var isPlaying: Bool = false
+    public var timer: Timer?
+    @Published public var isPlaying: Bool = false
     @Published public var soundSamples = [ISMChat_AudioPreviewModel]()
-    let sample_count: Int
-    var index = 0
-    let url: URL
-    var dataManager: ServiceProtocol
-    @Published var player: AVPlayer!
-    @Published var session: AVAudioSession!
-    @Published var currentTime: TimeInterval = 0.0
-    @Published var totalDuration: TimeInterval = 0.2
+    public let sample_count: Int
+    public var index = 0
+    public let url: URL
+    public var dataManager: ServiceProtocol
+    @Published public var player: AVPlayer!
+    @Published public var session: AVAudioSession!
+    @Published public var currentTime: TimeInterval = 0.0
+    @Published public var totalDuration: TimeInterval = 0.2
     
-    init(url: URL, sampels_count: Int, dataManager: ServiceProtocol = Service.shared) {
+    public init(url: URL, sampels_count: Int, dataManager: ServiceProtocol = Service.shared) {
         self.url = url
         self.sample_count = sampels_count
         self.dataManager = dataManager
@@ -59,7 +59,7 @@ class AudioPlayViewModel: ObservableObject {
         }
     }
     
-    func count_duration(completion: @escaping(Float64) -> ()) {
+    public func count_duration(completion: @escaping(Float64) -> ()) {
             DispatchQueue.global(qos: .background).async {
                 if let duration = self.player.currentItem?.asset.duration {
                     let seconds = CMTimeGetSeconds(duration)
@@ -90,7 +90,7 @@ class AudioPlayViewModel: ObservableObject {
         self.currentTime =  0.0
     }
     
-    func playAudio() {
+    public func playAudio() {
         if isPlaying {
             pauseAudio()
         } else {
@@ -102,7 +102,7 @@ class AudioPlayViewModel: ObservableObject {
         }
     }
     
-    func pauseAudio() {
+    public func pauseAudio() {
         player.pause()
         timer?.invalidate()
         self.isPlaying = false
@@ -130,7 +130,7 @@ class AudioPlayViewModel: ObservableObject {
         }
     }
     
-    func removeAudio() {
+    public func removeAudio() {
         do {
             try FileManager.default.removeItem(at: url)
         } catch {

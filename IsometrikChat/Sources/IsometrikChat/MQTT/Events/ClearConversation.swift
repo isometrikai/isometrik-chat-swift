@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct ClearConversation : Codable{
-    let conversationId : String?
+public struct ClearConversation : Codable{
+    public let conversationId : String?
 }

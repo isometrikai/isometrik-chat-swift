@@ -7,17 +7,18 @@
 
 import SwiftUI
 import ISMSwiftCall
+import IsometrikChat
 
-struct ISMProfileView: View {
+public struct ISMProfileView: View {
     
     //MARK:  - PROPERTIES
     @ObservedObject var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @EnvironmentObject var vm: OnboardingViewModel
+//    @EnvironmentObject var vm: OnboardingViewModel
     @State private var showSheet = false
     @State private var image : [UIImage] = []
     @EnvironmentObject var realmManager : RealmManager
     @Environment(\.dismiss) var dismiss
-    var ismChatSDK: ISMChatSdk?
+    public var ismChatSDK: ISMChatSdk?
     @State var isSwitchOn : Bool = true
     @State var showLastSeen : Bool = true
     @State private var userName : String = ""
@@ -33,7 +34,7 @@ struct ISMProfileView: View {
     @State var userSession = ISMChatSdk.getInstance().getUserSession()
     
     //MARK: - BODY
-    var body: some View {
+    public var body: some View {
         NavigationView{
             ZStack {
                 themeColor.messageList_BackgroundColor.edgesIgnoringSafeArea(.all)
@@ -118,11 +119,11 @@ struct ISMProfileView: View {
                                 ismcallsdk.clearSession()
                                 ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
                                 Task{
-                                    vm.signOut { _ in
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                                            realmManager.deleteAllData()
-                                        })
-                                    }
+//                                    vm.signOut { _ in
+//                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+//                                            realmManager.deleteAllData()
+//                                        })
+//                                    }
                                 }
                             } label: {
                                 HStack(spacing: 15){
@@ -187,10 +188,10 @@ struct ISMProfileView: View {
                             }
                         }
                 }
-                if vm.isBusy{
-                    //Custom Progress View
-                    ActivityIndicatorView(isPresented: $vm.isBusy)
-                }
+//                if vm.isBusy{
+//                    //Custom Progress View
+//                    ActivityIndicatorView(isPresented: $vm.isBusy)
+//                }
                 
             }.navigationBarBackButtonHidden(true)
                 .navigationBarTitleDisplayMode(.inline)
@@ -260,22 +261,22 @@ struct ISMProfileView: View {
         if !userName.isEmpty{
             if !email.isEmpty{
                 if let image = image.first{
-                    vm.isBusy = true
+//                    vm.isBusy = true
                     viewModel.getPredefinedUrlToUpdateProfilePicture(image: image) { value in
                         viewModel.updateUserData(userName: self.userName, userIdentifier: self.email, profileImage: value,about: self.about) { _ in
                             userData {
                                 
-                                vm.isBusy = false
+//                                vm.isBusy = false
                                 dismiss()
                             }
                         }
                     }
                 }else{
-                    vm.isBusy = true
+//                    vm.isBusy = true
                     viewModel.updateUserData(userName: self.userName, userIdentifier: self.email, profileImage: nil,about: self.about) { _ in
                         userData {
                             
-                            vm.isBusy = false
+//                            vm.isBusy = false
                             dismiss()
                         }
                     }

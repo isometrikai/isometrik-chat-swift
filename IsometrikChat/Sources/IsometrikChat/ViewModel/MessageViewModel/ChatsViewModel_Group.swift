@@ -12,7 +12,7 @@ import Alamofire
 extension ChatsViewModel{
     
     //MARK: - craete group
-    func createGroup(members : [String],groupTitle : String,groupImage : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
+    public func createGroup(members : [String],groupTitle : String,groupImage : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
         var body : [String : Any]
         let metaData : [String : Any] = [:]
         body = ["typingEvents" : true ,
@@ -36,7 +36,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - add member in group
-    func addMembersInAlredyExistingGroup(members : [String],conversationId : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
+    public func addMembersInAlredyExistingGroup(members : [String],conversationId : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
         var body : [String : Any]
         body = ["members" : members,"conversationId" : conversationId] as [String : Any]
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.groupMembers,httpMethod: .put,params: body) { (result : ISMChat_Response<ISMChat_CreateConversationResponse?,ISMChat_ErrorData?>) in
@@ -50,7 +50,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - make user as group admin
-    func addGroupAdmin(memberId : String,conversationId : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
+    public func addGroupAdmin(memberId : String,conversationId : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
         var body : [String : Any]
         body = ["memberId" : memberId,"conversationId" : conversationId] as [String : Any]
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.groupAdmin,httpMethod: .put,params: body) { (result : ISMChat_Response<ISMChat_CreateConversationResponse?,ISMChat_ErrorData?>) in
@@ -64,7 +64,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - remove user as group admin
-    func removeGroupAdmin(memberId : String,conversationId : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
+    public func removeGroupAdmin(memberId : String,conversationId : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
         var body : [String : Any]
         body = ["memberId" : memberId,"conversationId" : conversationId] as [String : Any]
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.groupAdmin,httpMethod: .delete,params: body) { (result : ISMChat_Response<ISMChat_CreateConversationResponse?,ISMChat_ErrorData?>) in
@@ -78,7 +78,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - remove user as group
-    func removeUserFromGroup(members : String,conversationId : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
+    public func removeUserFromGroup(members : String,conversationId : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
         var body : [String : Any]
         body = ["members" : members,"conversationId" : conversationId] as [String : Any]
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.groupMembers,httpMethod: .delete,params: body) { (result : ISMChat_Response<ISMChat_CreateConversationResponse?,ISMChat_ErrorData?>) in
@@ -92,7 +92,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - get group members
-    func getGroupMembers(conversationId : String,completion:@escaping(ISMGroupMember?)->()){
+    public func getGroupMembers(conversationId : String,completion:@escaping(ISMGroupMember?)->()){
         let baseUrl = "\(ISMChat_NetworkServices.Urls.groupMembers)?conversationId=\(conversationId)"
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseUrl,httpMethod: .get) { (result : ISMChat_Response<ISMGroupMember?,ISMChat_ErrorData?>) in
             switch result{
@@ -105,7 +105,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - update group title
-    func updateGroupTitle(title : String,conversationId : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
+    public func updateGroupTitle(title : String,conversationId : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
         var body : [String : Any]
         body = ["conversationTitle" : title,"conversationId" : conversationId] as [String : Any]
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.groupTitle,httpMethod: .patch,params: body) { (result : ISMChat_Response<ISMChat_CreateConversationResponse?,ISMChat_ErrorData?>) in
@@ -119,7 +119,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - update group image
-    func updateGroupImage(image : String,conversationId : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
+    public func updateGroupImage(image : String,conversationId : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
         var body : [String : Any]
         body = ["conversationImageUrl" : image,"conversationId" : conversationId] as [String : Any]
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.groupImage,httpMethod: .patch,params: body) { (result : ISMChat_Response<ISMChat_CreateConversationResponse?,ISMChat_ErrorData?>) in
@@ -133,7 +133,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - upload group image to cloudinary
-    func uploadGroupImage(image: UIImage,userEmail : String,completion:@escaping(String?)->()){
+    public func uploadGroupImage(image: UIImage,userEmail : String,completion:@escaping(String?)->()){
         let baseURL = "\(ISMChat_NetworkServices.Urls.preassignedUrlCreate)?userIdentifier=\(userEmail)&mediaExtension=png"
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChat_Response<ISMChat_PresignedUrlDetail?,ISMChat_ErrorData?>) in
             switch result{

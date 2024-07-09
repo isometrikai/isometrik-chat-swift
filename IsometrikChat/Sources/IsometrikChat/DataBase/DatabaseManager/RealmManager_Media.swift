@@ -11,7 +11,7 @@ import RealmSwift
 extension RealmManager{
     
     //MARK: - save media locally
-    func saveMedia(arr:[ISMChat_Attachment], conId:String, customType:String,sentAt:Double,messageId:String,userName:String,fromView : Bool) {
+    public func saveMedia(arr:[ISMChat_Attachment], conId:String, customType:String,sentAt:Double,messageId:String,userName:String,fromView : Bool) {
         if let localRealm = localRealm {
             do {
                 if fromView == true{
@@ -29,7 +29,7 @@ extension RealmManager{
     }
     
     //MARK: - save media detail locally
-    func saveMediaDetail(arr : [ISMChat_Attachment],localRealm : Realm, conId:String, customType:String,sentAt:Double,messageId:String,userName:String){
+    public func saveMediaDetail(arr : [ISMChat_Attachment],localRealm : Realm, conId:String, customType:String,sentAt:Double,messageId:String,userName:String){
         for value in arr {
             let isAvailable = localRealm.objects(MediaDB.self).filter(NSPredicate(format: "messageId == %@", (messageId )))
             if isAvailable.isEmpty {
@@ -56,7 +56,7 @@ extension RealmManager{
     }
     
     //MARK: - fetch photo and videos
-    func fetchPhotosAndVideos(conId:String)  {
+    public func fetchPhotosAndVideos(conId:String)  {
         if let localRealm = localRealm {
             let predicate1 = NSPredicate(format: "customType == %@", ISMChat_MediaType.Image.value)
             let predicate2 = NSPredicate(format: "customType == %@", ISMChat_MediaType.Video.value)
@@ -71,7 +71,7 @@ extension RealmManager{
     }
     
     //MARK: - fetch files
-    func fetchFiles(conId:String)  {
+    public func fetchFiles(conId:String)  {
         if let localRealm = localRealm {
             let media = Array(localRealm.objects(MediaDB.self)
                 .filter(NSPredicate(format: "conversationId == %@", conId))
@@ -81,7 +81,7 @@ extension RealmManager{
     }
     
     //MARK: - fetch links
-    func fetchLinks(conId: String) {
+    public func fetchLinks(conId: String) {
         if let localRealm = localRealm {
             let messages = Array(localRealm.objects(MessagesDB.self)
                 .filter(NSPredicate(format: "conversationId == %@", conId)))

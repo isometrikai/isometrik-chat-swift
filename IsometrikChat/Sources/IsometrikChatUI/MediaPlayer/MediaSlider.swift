@@ -8,6 +8,7 @@
 import SwiftUI
 import AVKit
 import SDWebImageSwiftUI
+import IsometrikChat
 
 
 struct MediaSlider: View {

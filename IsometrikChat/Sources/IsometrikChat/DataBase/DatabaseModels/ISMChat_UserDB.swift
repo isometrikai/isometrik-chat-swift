@@ -8,15 +8,15 @@
 import Foundation
 import RealmSwift
 
-class UserDB : Object, ObjectKeyIdentifiable{
+public class UserDB : Object, ObjectKeyIdentifiable{
 
-    @Persisted(primaryKey: true) var id: ObjectId
+    @Persisted(primaryKey: true) public var id: ObjectId
     
-    @Persisted var userProfileImageUrl : String?
-    @Persisted var userName : String?
-    @Persisted var userIdentifier : String?
-    @Persisted var online : Bool?
-    @Persisted var userId : String?
-    @Persisted var lastSeen : Double?
+    @Persisted public var userProfileImageUrl : String?
+    @Persisted public var userName : String?
+    @Persisted public var userIdentifier : String?
+    @Persisted public var online : Bool?
+    @Persisted public var userId : String?
+    @Persisted public var lastSeen : Double?
    
 }

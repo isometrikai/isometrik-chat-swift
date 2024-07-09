@@ -7,26 +7,26 @@
 
 import Foundation
 
-struct ISMChat_PresignedUrl : Codable{
+public struct ISMChat_PresignedUrl : Codable{
     var presignedUrls : [ISMChat_PresignedUrlDetail]?
     var msg : String?
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         presignedUrls = try? container.decode([ISMChat_PresignedUrlDetail].self, forKey: .presignedUrls)
         msg = try? container.decode(String.self, forKey: .msg)
     }
 }
 
-struct ISMChat_PresignedUrlDetail : Codable{
-    var ttl : Int?
-    var thumbnailUrl : String?
-    var thumbnailPresignedUrl : String?
-    var mediaUrl : String?
-    var mediaPresignedUrl : String?
-    var mediaId : String?
-    var presignedUrl : String?
-    var name : String = ""
-    init(from decoder: Decoder) throws {
+public struct ISMChat_PresignedUrlDetail : Codable{
+    public var ttl : Int?
+    public var thumbnailUrl : String?
+    public var thumbnailPresignedUrl : String?
+    public var mediaUrl : String?
+    public var mediaPresignedUrl : String?
+    public var mediaId : String?
+    public var presignedUrl : String?
+    public var name : String = ""
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         ttl = try? container.decode(Int.self, forKey: .ttl)
         thumbnailUrl = try? container.decode(String.self, forKey: .thumbnailUrl)

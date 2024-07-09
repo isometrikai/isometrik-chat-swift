@@ -14,7 +14,7 @@ import CoreLocation
 import CoreLocationUI
 import FirebaseMessaging
 
-class ISMChat_Helper: NSObject {
+public class ISMChat_Helper: NSObject {
     
     //MARK: - Convert to Readable Test
 //    class func fromBase64(word : String) -> String{
@@ -34,7 +34,7 @@ class ISMChat_Helper: NSObject {
 //    }
     
     //MARK: - Convert Timestamp to Date String
-    class func timeStamptoDateString(format : String,timeStamp : Double) -> String{
+    public class func timeStamptoDateString(format : String,timeStamp : Double) -> String{
         let unixTimeStamp: Double = Double(timeStamp) / 1000.0
         let exactDate = NSDate.init(timeIntervalSince1970: unixTimeStamp)
         let dateFormatt = DateFormatter()
@@ -43,21 +43,21 @@ class ISMChat_Helper: NSObject {
     }
     
     //MARK: - Check if String is valid email
-    class func isValidEmail(_ email: String) -> Bool {
+    public class func isValidEmail(_ email: String) -> Bool {
         let emailFormat = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailFormat)
         return emailPredicate.evaluate(with: email)
     }
     
     //MARK: - Check if String is valid phone number
-    class func isValidPhone(phone: String) -> Bool {
+    public class func isValidPhone(phone: String) -> Bool {
         let phoneRegex = "^[7-9][0-9]{9}$"
         let phoneTest = NSPredicate(format: "SELF MATCHES %@", phoneRegex)
         return phoneTest.evaluate(with: phone)
     }
     
     //MARK: - Check message delivery status
-    class func checkMessageDeliveryType(message : MessagesDB,isGroup: Bool,memberCount:Int = 0) -> ISMChat_MessageStatus{
+    public class func checkMessageDeliveryType(message : MessagesDB,isGroup: Bool,memberCount:Int = 0) -> ISMChat_MessageStatus{
         if isGroup {
             if (memberCount - 1) == message.readBy.count {
                 return .BlueTick
@@ -84,7 +84,7 @@ class ISMChat_Helper: NSObject {
     
     //MARK: - CHECK IMAGE OR Video
     
-    class func checkMediaType(media : URL) -> ISMChat_MessageType{
+    public class func checkMediaType(media : URL) -> ISMChat_MessageType{
         if media.lastPathComponent.contains(".mov") || media.lastPathComponent.contains(".mp4"){
             return .video
         }else{
@@ -92,7 +92,7 @@ class ISMChat_Helper: NSObject {
         }
     }
     
-    class func checkMediaCustomType(media : URL) -> String{
+    public class func checkMediaCustomType(media : URL) -> String{
         if media.lastPathComponent.contains(".mov") || media.lastPathComponent.contains(".mp4"){
             return ISMChat_MediaType.Video.value
         }else{
@@ -100,7 +100,7 @@ class ISMChat_Helper: NSObject {
         }
     }
     
-    class func isVideo(media : URL) -> Bool{
+    public class func isVideo(media : URL) -> Bool{
         if media.lastPathComponent.contains(".mov") || media.lastPathComponent.contains(".mp4"){
             return true
         }else{
@@ -108,7 +108,7 @@ class ISMChat_Helper: NSObject {
         }
     }
     //MARK: - Custom print(Make the logger which will print the logs only in debugging mode and enable and disable logs.)
-    class func print(_ object : Any){
+    public class func print(_ object : Any){
         let showPrint : Bool = true
        #if DEBUG
         if showPrint == true{
@@ -117,7 +117,7 @@ class ISMChat_Helper: NSObject {
        #endif
     }
     
-    class func print(_ object : Any...){
+    public class func print(_ object : Any...){
         let showPrint : Bool = true
        #if DEBUG
         if showPrint == true{
@@ -129,7 +129,7 @@ class ISMChat_Helper: NSObject {
     }
     
     //MARK: - GET Message Type
-    class func getMessageType(message : MessagesDB) -> ISMChat_MessageType{
+    public class func getMessageType(message : MessagesDB) -> ISMChat_MessageType{
         if message.customType == ISMChat_MediaType.Video.value{
             return .video
         }else if message.customType == ISMChat_MediaType.Voice.value{
@@ -181,7 +181,7 @@ class ISMChat_Helper: NSObject {
     
     //MARK: - GET EMOJI
     
-    class func getEmoji(valueString : String) -> String{
+    public class func getEmoji(valueString : String) -> String{
         for case let emojiReaction in ISMChat_EmojiReaction.allCases {
             if emojiReaction.info.valueString == valueString {
                 return emojiReaction.info.emoji
@@ -191,14 +191,14 @@ class ISMChat_Helper: NSObject {
     }
     
     //MARK: - Convert sec to min and hr
-    func covertSecToMinAndHour(seconds : Int) -> String{
+    public func covertSecToMinAndHour(seconds : Int) -> String{
         let (_,m,s) = (seconds / 3600, (seconds % 3600) / 60, (seconds % 3600) % 60)
         let sec : String = s < 10 ? "0\(s)" : "\(s)"
         return "\(m):\(sec)"
     }
     
     //MARK: - GET File Date
-    func getFileDate(for file: URL) -> Date {
+    public func getFileDate(for file: URL) -> Date {
         if let attributes = try? FileManager.default.attributesOfItem(atPath: file.path) as [FileAttributeKey: Any],
             let creationDate = attributes[FileAttributeKey.creationDate] as? Date {
             return creationDate
@@ -206,14 +206,14 @@ class ISMChat_Helper: NSObject {
             return Date()
         }
     }
-    func returnLatitude(string : String) -> String{
+    public func returnLatitude(string : String) -> String{
         let newURL = URL(string: string)!
         let coordinate = newURL.valueOf("query")
         let values = coordinate?.split(separator: ",")
         let latitude = String(values?[0] ?? "")
         return (latitude)
     }
-    func convertLatitudeStringToDouble(latitudeString: String) -> CLLocationDegrees? {
+    public func convertLatitudeStringToDouble(latitudeString: String) -> CLLocationDegrees? {
         if let latitude = Double(latitudeString) {
             return CLLocationDegrees(latitude)
         } else {
@@ -221,7 +221,7 @@ class ISMChat_Helper: NSObject {
         }
     }
     
-    func returnLongitude(string : String) -> String{
+    public func returnLongitude(string : String) -> String{
         let newURL = URL(string: string)!
         let coordinate = newURL.valueOf("query")
         let values = coordinate?.split(separator: ",")
@@ -229,7 +229,7 @@ class ISMChat_Helper: NSObject {
         return longitude
     }
     
-    func convertLongituteStringToDouble(latitudeString: String) -> CLLocationDegrees? {
+    public func convertLongituteStringToDouble(latitudeString: String) -> CLLocationDegrees? {
         if let latitude = Double(latitudeString) {
             return CLLocationDegrees(latitude)
         } else {
@@ -240,7 +240,7 @@ class ISMChat_Helper: NSObject {
     
     //MARK: - CONVERT VIDEOURL TO IMAGE THUMBNAIL
     
-    class func generateThumbnailImageURL(from videoURL: URL, completion: @escaping (URL?) -> Void) {
+    public class func generateThumbnailImageURL(from videoURL: URL, completion: @escaping (URL?) -> Void) {
         let asset = AVAsset(url: videoURL)
         let imageGenerator = AVAssetImageGenerator(asset: asset)
         imageGenerator.appliesPreferredTrackTransform = true
@@ -273,7 +273,7 @@ class ISMChat_Helper: NSObject {
     }
     
     //MARK: - COMPRESS IMAGE
-    class func compressImage(image: URL) -> UIImage? {
+    public class func compressImage(image: URL) -> UIImage? {
         let fileURL = image
         do {
             let imageData = try Data(contentsOf: fileURL)
@@ -312,7 +312,7 @@ class ISMChat_Helper: NSObject {
 //        return nil
 //    }
     
-    func pdfThumbnail(url: URL, width: CGFloat = 240) -> UIImage? {
+    public func pdfThumbnail(url: URL, width: CGFloat = 240) -> UIImage? {
       guard let data = try? Data(contentsOf: url),
       let page = PDFDocument(data: data)?.page(at: 0) else {
         return nil
@@ -329,7 +329,7 @@ class ISMChat_Helper: NSObject {
       return page.thumbnail(of: screenSize, for: .mediaBox)
     }
     
-    class  func getAddressFromLatLon(Latitude: String,Longitude: String, completion:@escaping(String?)->()){
+    public class  func getAddressFromLatLon(Latitude: String,Longitude: String, completion:@escaping(String?)->()){
         var center : CLLocationCoordinate2D = CLLocationCoordinate2D()
         let lat: Double = Double("\(Latitude)")!
         let lon: Double = Double("\(Longitude)")!
@@ -368,7 +368,7 @@ class ISMChat_Helper: NSObject {
         })
     }
     
-    class  func getFileNameFromURL(url: URL) -> String {
+    public class  func getFileNameFromURL(url: URL) -> String {
         let filename = url.lastPathComponent
         let components = filename.components(separatedBy: "_")
         if let lastComponent = components.last {
@@ -378,7 +378,7 @@ class ISMChat_Helper: NSObject {
         }
     }
     
-    class func parseJSONString(jsonString: String) -> (count: Int, firstDisplayName: String?) {
+    public class func parseJSONString(jsonString: String) -> (count: Int, firstDisplayName: String?) {
         if let data = jsonString.data(using: .utf8) {
             do {
                 if let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]] {
@@ -398,7 +398,7 @@ class ISMChat_Helper: NSObject {
         return (0, nil) // Return default values if parsing fails
     }
     
-    class  func pdfThumbnail(url: URL, width: CGFloat = 240, _ completion: @escaping ((UIImage?) -> Void)) {
+    public class  func pdfThumbnail(url: URL, width: CGFloat = 240, _ completion: @escaping ((UIImage?) -> Void)) {
         DispatchQueue.global(qos: .userInitiated).async {
             
             guard let data = try? Data(contentsOf: url),
@@ -422,31 +422,29 @@ class ISMChat_Helper: NSObject {
         }
     }
     
-    class func getExtensionFromURL(url: URL) -> String? {
+    public class func getExtensionFromURL(url: URL) -> String? {
         let filename = url.lastPathComponent
         let components = filename.components(separatedBy: "_")
         guard let lastComponent = components.last else { return "" }
         return NSURL(fileURLWithPath: lastComponent).pathExtension
     }
     
-    class func subscribeFCM(){
-        if let userId = ChatKeychain.shared.userId{
-            Messaging.messaging().subscribe(toTopic: "chat-\(userId)") { (error) in
-                if error != nil {
-                    print("errror fcm topic ", error as Any)
-                }
+    public class func subscribeFCM(){
+        let userId = ISMChatSdk.getInstance().getUserSession().getUserId()
+        Messaging.messaging().subscribe(toTopic: "chat-\(userId)") { (error) in
+            if error != nil {
+                print("errror fcm topic ", error as Any)
             }
         }
     }
     
 //    unsubscribe all fcm topics
-    class func unSubscribeFCM(){
-        if let userId = ChatKeychain.shared.userId{
-            Messaging.messaging().unsubscribe(fromTopic: "chat-\(userId)")
-        }
+    public class func unSubscribeFCM(){
+        let userId = ISMChatSdk.getInstance().getUserSession().getUserId()
+        Messaging.messaging().unsubscribe(fromTopic: "chat-\(userId)")
     }
     
-    class func getThumbnailImage(url : String) -> UIImage? {
+    public class func getThumbnailImage(url : String) -> UIImage? {
         
         guard let videoURL = URL(string: url) else {
             return nil
@@ -476,13 +474,13 @@ class ISMChat_Helper: NSObject {
         return thumbnailImage
     }
     
-    class func createImageURL() -> URL {
+    public class func createImageURL() -> URL {
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let fileURL = documentsDirectory.appendingPathComponent("\(UUID()).jpg")
         return fileURL
     }
     
-    class func sentAtTimeForLocalDB() -> Double {
+    public class func sentAtTimeForLocalDB() -> Double {
         // Create a DateFormatter instance
         let dateFormatter = DateFormatter()
         dateFormatter.locale = .current
@@ -497,7 +495,7 @@ class ISMChat_Helper: NSObject {
 extension ISMChat_Helper{
     //MARK: - SECTION HEADER
     
-    class func sectionHeader(firstMessage message : MessagesDB,color : Color,font : Font) -> some View{
+    public class func sectionHeader(firstMessage message : MessagesDB,color : Color,font : Font) -> some View{
         ZStack{
             let sentAt = message.sentAt
             let date = NSDate().descriptiveStringLastSeen(time: sentAt,isSectionHeader: true)

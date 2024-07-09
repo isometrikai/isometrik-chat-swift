@@ -11,17 +11,17 @@ import RealmSwift
 extension RealmManager {
     
     //MARK: - get all conversations count
-    func getConversationCount() -> Int {
+    public func getConversationCount() -> Int {
         conversations.count
     }
     
     //MARK: - get all conversations
-    func getConversation() -> [ConversationDB] {
+    public func getConversation() -> [ConversationDB] {
         conversations
     }
     
     //MARK: - get conversation id if already there for specific user
-    func getConversationId(userId : String) -> String{
+    public func getConversationId(userId : String) -> String{
         let conversation = conversations.first { con in
             con.opponentDetails?.userId == userId
         }
@@ -34,7 +34,7 @@ extension RealmManager {
     
     
     //MARK: - We check if conversation already exist in local DB, if yes updateit, else save/add
-    func manageConversationList(arr: [ISMChat_ConversationsDetail]) {
+    public func manageConversationList(arr: [ISMChat_ConversationsDetail]) {
         if let localRealm = localRealm {
             for obj in arr {
                 let taskToUpdate = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@", (obj.conversationId ?? "")))
@@ -52,7 +52,7 @@ extension RealmManager {
     }
     
     //MARK: - Add conversation locally
-    func addConversation(obj: [ISMChat_ConversationsDetail]) {
+    public func addConversation(obj: [ISMChat_ConversationsDetail]) {
         if let localRealm = localRealm {
             do {
                 try localRealm.write {
@@ -189,7 +189,7 @@ extension RealmManager {
     }
     
     //MARK: - update convertion if already exist in local db
-    func updateConversation(obj: ISMChat_ConversationsDetail) {
+    public func updateConversation(obj: ISMChat_ConversationsDetail) {
         if let localRealm = localRealm {
             do {
                 let listToUpdate = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@  AND isDelete = %d", (obj.conversationId ?? ""), false))
@@ -271,7 +271,7 @@ extension RealmManager {
     }
     
     //MARK: - Get local conversations
-    func getAllConversations() {
+    public func getAllConversations() {
         if let localRealm = localRealm {
             conversations =  Array(localRealm.objects(ConversationDB.self).where{$0.isDelete == false })
             conversations = conversations.sorted(by: { lhsData, rhsData in
@@ -288,7 +288,7 @@ extension RealmManager {
     }
     
     //MARK: - delete conversation locally
-    func deleteConversation(convID: String) {
+    public func deleteConversation(convID: String) {
         if let localRealm = localRealm {
             do {
                 let taskToDelete = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@", convID))
@@ -304,7 +304,7 @@ extension RealmManager {
     }
     
     //MARK: - undo delete conversation
-    func undodeleteConversation(convID: String) {
+    public func undodeleteConversation(convID: String) {
         if let localRealm = localRealm {
             do {
                 let taskToDelete = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@ AND isDelete = %d", convID, true))
@@ -319,7 +319,7 @@ extension RealmManager {
     }
     
     //MARK: - Hard delete all conversations in local DB
-    func hardDeleteAll() {
+    public func hardDeleteAll() {
         if let localRealm = localRealm {
             do {
                 let obj = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "isDelete = %d", true))
@@ -334,7 +334,7 @@ extension RealmManager {
     }
     
     //MARK: - hard delete single conversation
-    func hardConvDelete(convID:String) {
+    public func hardConvDelete(convID:String) {
         if let localRealm = localRealm {
             do {
                 let obj = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@", convID))
@@ -350,7 +350,7 @@ extension RealmManager {
     }
     
     //MARK: - Get last message "sent time" for perticular conversation
-    func getlastMessageSentForConversation(conversationId: String) -> String {
+    public func getlastMessageSentForConversation(conversationId: String) -> String {
         if let localRealm = localRealm {
             let msgs = (localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@ AND isDelete = %d", conversationId, false)))
             guard !msgs.isEmpty else { return ""}
@@ -360,7 +360,7 @@ extension RealmManager {
     }
     
     //MARK: - Get last message "action" for perticular conversation
-    func getConversationListLastMessageAction(conversationId: String) -> String {
+    public func getConversationListLastMessageAction(conversationId: String) -> String {
         guard let localRealm = localRealm else { return "" } // Ensure localRealm is not nil
         
         // Fetch conversation with the given conversationId and isDelete flag is false
@@ -376,7 +376,7 @@ extension RealmManager {
     }
     
     //MARK: - update last message of conversation
-    func updateLastmsg(conId:String,msg: ISMChat_LastMessage) {
+    public func updateLastmsg(conId:String,msg: ISMChat_LastMessage) {
         if let localRealm = localRealm {
             let taskToUpdate = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@  AND isDelete = %d", (conId ), false))
             if !taskToUpdate.isEmpty {
@@ -427,7 +427,7 @@ extension RealmManager {
     }
     
     //MARK: - update last message detail
-    func updateLastMessageDetails(conId:String,msgObj:MessagesDB) {
+    public func updateLastMessageDetails(conId:String,msgObj:MessagesDB) {
         if let localRealm = localRealm {
             let taskToUpdate = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@  AND isDelete = %d", (conId ), false))
             if !taskToUpdate.isEmpty {
@@ -466,7 +466,7 @@ extension RealmManager {
     }
     
     //MARK: - clear lastmessagedb deliveredto and readby
-    func clearLastMessageDeliverReadInfo(convID: String){
+    public func clearLastMessageDeliverReadInfo(convID: String){
         if let localRealm = localRealm {
             do {
                 let taskToDelete = localRealm.objects(LastMessageDB.self).filter(NSPredicate(format: "conversationId == %@", convID))
@@ -482,7 +482,7 @@ extension RealmManager {
     }
     
     //MARK: - change typing status in conversationList for perticular conversation
-    func changeTypingStatus(convId:String,status:Bool) {
+    public func changeTypingStatus(convId:String,status:Bool) {
         if let localRealm = localRealm {
             let taskToUpdate = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@  AND isDelete = %d", (convId ), false))
             if !taskToUpdate.isEmpty {
@@ -495,7 +495,7 @@ extension RealmManager {
     }
     
     //MARK: - update last message body on edit
-    func updateLastMessageOnEdit(conversationId: String, messageId: String, newBody: String) {
+    public func updateLastMessageOnEdit(conversationId: String, messageId: String, newBody: String) {
         if let localRealm = localRealm {
             let conversationToUpdate = localRealm.objects(ConversationDB.self).where{$0.conversationId == conversationId && $0.isDelete == false && $0.lastMessageDetails.messageId == messageId}
             try! localRealm.write {
@@ -506,7 +506,7 @@ extension RealmManager {
     }
     
     //MARK: - add last message in conversationDB on add or remove reaction
-    func addLastMessageOnAddAndRemoveReaction(conversationId: String,action : String,emoji : String,userId: String) {
+    public func addLastMessageOnAddAndRemoveReaction(conversationId: String,action : String,emoji : String,userId: String) {
         if let localRealm = localRealm {
             let conversationToUpdate = localRealm.objects(ConversationDB.self).where{$0.conversationId == conversationId && $0.isDelete == false}
             try! localRealm.write {
@@ -519,7 +519,7 @@ extension RealmManager {
     }
     
     //MARK: -  update unread count in conversationList
-    func updateUnreadCountThroughConId(conId: String,count:Int, reset:Bool = false) {
+    public func updateUnreadCountThroughConId(conId: String,count:Int, reset:Bool = false) {
         if let localRealm = localRealm {
             let taskToUpdate = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@  AND isDelete = %d", (conId ), false))
             try! localRealm.write {
@@ -529,7 +529,7 @@ extension RealmManager {
     }
     
     //MARK: - update last message delivered
-    func updateLastmsgDeliver(conId:String,msg: ISMChat_MessageDelivered) {
+    public func updateLastmsgDeliver(conId:String,msg: ISMChat_MessageDelivered) {
         if let localRealm = localRealm {
             let taskToUpdate = localRealm.objects(LastMessageDB.self).filter(NSPredicate(format: "conversationId == %@ AND messageId == %@", (conId ), (msg.messageId ?? "")))
             if !taskToUpdate.isEmpty {
@@ -545,7 +545,7 @@ extension RealmManager {
     }
     
     //MARK: -  update last message delivery info
-    func updateLastmsgDeliverInfo(conId:String,msgId: String,userId: String, updatedAt: Double) {
+    public func updateLastmsgDeliverInfo(conId:String,msgId: String,userId: String, updatedAt: Double) {
         if let localRealm = localRealm {
             let taskToUpdate = localRealm.objects(LastMessageDB.self).filter(NSPredicate(format: "conversationId == %@", (conId )))
             if !taskToUpdate.isEmpty {
@@ -565,7 +565,7 @@ extension RealmManager {
     }
     
     //MARK: -  update last message read info
-    func updateLastmsgReadInfo(conId:String,msgId: String,userId: String, updatedAt: Double) {
+    public func updateLastmsgReadInfo(conId:String,msgId: String,userId: String, updatedAt: Double) {
         if let localRealm = localRealm {
             let taskToUpdate = localRealm.objects(LastMessageDB.self).filter(NSPredicate(format: "conversationId == %@", (conId )))
             if !taskToUpdate.isEmpty {
@@ -585,7 +585,7 @@ extension RealmManager {
     }
     
     //MARK: -  update last message read
-    func updateLastmsgRead(conId:String,msg: ISMChat_MessageDelivered) {
+    public func updateLastmsgRead(conId:String,msg: ISMChat_MessageDelivered) {
         if let localRealm = localRealm {
             let taskToUpdate = localRealm.objects(LastMessageDB.self).filter(NSPredicate(format: "conversationId == %@  AND messageId == %@", (conId ), (msg.messageId ?? "")))
             if !taskToUpdate.isEmpty {
@@ -600,7 +600,7 @@ extension RealmManager {
     
     
     
-    func updateImageAndNameOfGroup(name : String,image : String,convID: String){
+    public func updateImageAndNameOfGroup(name : String,image : String,convID: String){
         if let localRealm = localRealm {
             do {
                 let taskToUpdate = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@", convID))
@@ -616,7 +616,7 @@ extension RealmManager {
     }
     
     //MARK: - CLEAR/DELETE LAST MESSAGE FOR CONVERSATION lIST
-    func clearLastMessageFromConversationList(convID: String){
+    public func clearLastMessageFromConversationList(convID: String){
         if let localRealm = localRealm {
             do {
                 let taskToDelete = localRealm.objects(LastMessageDB.self).filter(NSPredicate(format: "conversationId == %@", convID))

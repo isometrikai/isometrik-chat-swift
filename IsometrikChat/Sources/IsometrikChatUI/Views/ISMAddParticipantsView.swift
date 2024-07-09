@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IsometrikChat
 
 struct ISMAddParticipantsView: View {
     
@@ -24,105 +25,105 @@ struct ISMAddParticipantsView: View {
     //MARK: - BODY
     var body: some View {
         ZStack{
-            VStack {
-                ScrollViewReader { proxy in
-                    List {
-                        if userSelected.count > 0{
-                            HeaderView()
-                        }
-                        ForEach(viewModel.elogibleUsersSectionDictionary.keys.sorted(), id:\.self) { key in
-                            if let contacts = viewModel.elogibleUsersSectionDictionary[key]?.filter({ (contact) -> Bool in
-                                self.viewModel.searchedText.isEmpty ? true :
-                                "\(contact)".lowercased().contains(self.viewModel.searchedText.lowercased())}), !contacts.isEmpty{
-                                Section(header: Text("\(key)")) {
-                                    ForEach(contacts){ value in
-                                        ZStack{
-                                            HStack(alignment: .center, spacing:20){
-                                                UserAvatarView(avatar: value.userProfileImageUrl ?? "", showOnlineIndicator: value.online ?? false,size: CGSize(width: 29, height: 29), userName : value.userName ?? "",font: .regular(size: 12))
-                                                VStack(alignment: .leading, spacing: 5, content: {
-                                                    Text(value.userName ?? "User")
-                                                        .font(themeFonts.messageList_MessageText)
-                                                        .foregroundColor(themeColor.messageList_MessageText)
-                                                    Text(value.userIdentifier ?? "")
-                                                        .font(themeFonts.chatList_UserMessage)
-                                                        .foregroundColor(themeColor.chatList_UserMessage)
-                                                        .lineLimit(2)
-                                                    
-                                                })//:VStack
-                                                Spacer()
-                                                
-                                                if userSelected.contains(where: { user in
-                                                    user.id == value.id
-                                                }) {
-                                                    themeImage.selected
-                                                        .resizable()
-                                                        .frame(width: 20, height: 20)
-                                                }else{
-                                                    themeImage.deselected
-                                                        .resizable()
-                                                        .frame(width: 20, height: 20)
-                                                }
-                                            }//:HStack
-                                            Button {
-                                                if userSelected.contains(where: { user in
-                                                    user.id == value.id
-                                                }){
-                                                    userSelected.removeAll(where: { $0.id == value.id })
-                                                }else{
-                                                    userSelected.append(value)
-                                                }
-                                            } label: {
-                                                
-                                            }
-                                            
-                                        }//:Zstack
-                                        .onAppear {
-                                            if viewModel.moreDataAvailableForGetUsers && viewModel.apiCalling == false{
-                                                if self.viewModel.eligibleUsers.last?.userId == contacts.last?.userId {
-                                                    self.getUsers()
-                                                }
-                                            }
-                                        }// For LoadMore
-                                    }
-                                }
-                            }
-                        }
-                    }//:LIST
-                    .searchable(text:  $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always)) {}
-                    .navigationBarBackButtonHidden(true)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .principal) {
-                            VStack {
-                                Text("Add participants")
-                                    .font(themeFonts.navigationBar_Title)
-                                    .foregroundColor(themeColor.navigationBar_Title)
-                            }
-                        }
-                    }
-                    .navigationBarItems(leading: navBarLeadingBtn,trailing: navBarTrailingBtn)
-                }
-            }//:VStack
-            .onChange(of: viewModel.debounceSearchedText, perform: { newValue in
-                print("~~SEARCHING WITH DEBOUNCING \(viewModel.searchedText)")
-                self.viewModel.resetEligibleUsersdata()
-                getUsers()
-            })
-            .onDisappear {
-                viewModel.searchedText = ""
-                viewModel.debounceSearchedText = ""
-            }
-            .onAppear {
-                self.viewModel.resetEligibleUsersdata()
-                getUsers()
-            }
-            .onLoad{
-                
-            }
-            if chatViewModel.isBusy{
-                //Custom Progress View
-                ActivityIndicatorView(isPresented: $chatViewModel.isBusy)
-            }
+//            VStack {
+//                ScrollViewReader { proxy in
+//                    List {
+//                        if userSelected.count > 0{
+//                            HeaderView()
+//                        }
+//                        ForEach(viewModel.elogibleUsersSectionDictionary.keys.sorted(), id:\.self) { key in
+//                            if let contacts = viewModel.elogibleUsersSectionDictionary[key]?.filter({ (contact) -> Bool in
+//                                self.viewModel.searchedText.isEmpty ? true :
+//                                "\(contact)".lowercased().contains(self.viewModel.searchedText.lowercased())}), !contacts.isEmpty{
+//                                Section(header: Text("\(key)")) {
+//                                    ForEach(contacts){ value in
+//                                        ZStack{
+//                                            HStack(alignment: .center, spacing:20){
+//                                                UserAvatarView(avatar: value.userProfileImageUrl ?? "", showOnlineIndicator: value.online ?? false,size: CGSize(width: 29, height: 29), userName : value.userName ?? "",font: .regular(size: 12))
+//                                                VStack(alignment: .leading, spacing: 5, content: {
+//                                                    Text(value.userName ?? "User")
+//                                                        .font(themeFonts.messageList_MessageText)
+//                                                        .foregroundColor(themeColor.messageList_MessageText)
+//                                                    Text(value.userIdentifier ?? "")
+//                                                        .font(themeFonts.chatList_UserMessage)
+//                                                        .foregroundColor(themeColor.chatList_UserMessage)
+//                                                        .lineLimit(2)
+//                                                    
+//                                                })//:VStack
+//                                                Spacer()
+//                                                
+//                                                if userSelected.contains(where: { user in
+//                                                    user.id == value.id
+//                                                }) {
+//                                                    themeImage.selected
+//                                                        .resizable()
+//                                                        .frame(width: 20, height: 20)
+//                                                }else{
+//                                                    themeImage.deselected
+//                                                        .resizable()
+//                                                        .frame(width: 20, height: 20)
+//                                                }
+//                                            }//:HStack
+//                                            Button {
+//                                                if userSelected.contains(where: { user in
+//                                                    user.id == value.id
+//                                                }){
+//                                                    userSelected.removeAll(where: { $0.id == value.id })
+//                                                }else{
+//                                                    userSelected.append(value)
+//                                                }
+//                                            } label: {
+//                                                
+//                                            }
+//                                            
+//                                        }//:Zstack
+//                                        .onAppear {
+//                                            if viewModel.moreDataAvailableForGetUsers && viewModel.apiCalling == false{
+//                                                if self.viewModel.eligibleUsers.last?.userId == contacts.last?.userId {
+//                                                    self.getUsers()
+//                                                }
+//                                            }
+//                                        }// For LoadMore
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }//:LIST
+//                    .searchable(text:  $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always)) {}
+//                    .navigationBarBackButtonHidden(true)
+//                    .navigationBarTitleDisplayMode(.inline)
+//                    .toolbar {
+//                        ToolbarItem(placement: .principal) {
+//                            VStack {
+//                                Text("Add participants")
+//                                    .font(themeFonts.navigationBar_Title)
+//                                    .foregroundColor(themeColor.navigationBar_Title)
+//                            }
+//                        }
+//                    }
+//                    .navigationBarItems(leading: navBarLeadingBtn,trailing: navBarTrailingBtn)
+//                }
+//            }//:VStack
+//            .onChange(of: viewModel.debounceSearchedText, perform: { newValue in
+//                print("~~SEARCHING WITH DEBOUNCING \(viewModel.searchedText)")
+//                self.viewModel.resetEligibleUsersdata()
+//                getUsers()
+//            })
+//            .onDisappear {
+//                viewModel.searchedText = ""
+//                viewModel.debounceSearchedText = ""
+//            }
+//            .onAppear {
+//                self.viewModel.resetEligibleUsersdata()
+//                getUsers()
+//            }
+//            .onLoad{
+//                
+//            }
+//            if chatViewModel.isBusy{
+//                //Custom Progress View
+//                ActivityIndicatorView(isPresented: $chatViewModel.isBusy)
+//            }
         }
     }
     

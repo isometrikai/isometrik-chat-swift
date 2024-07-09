@@ -8,7 +8,7 @@
 import Foundation
 
 extension NSDate{
-    func descriptiveString(time: Double,dateStyle : DateFormatter.Style = .short) -> String{
+    public func descriptiveString(time: Double,dateStyle : DateFormatter.Style = .short) -> String{
         let unixTimeStamp: Double = time / 1000.0
         let exactDate = NSDate.init(timeIntervalSince1970: unixTimeStamp)
         let daysBetween = self.daysBetween(date: exactDate)
@@ -31,7 +31,7 @@ extension NSDate{
         }
     }
     
-    func descriptiveStringLastSeen(time: Double,dateStyle : DateFormatter.Style = .short,isSectionHeader : Bool? = false) -> String{
+    public func descriptiveStringLastSeen(time: Double,dateStyle : DateFormatter.Style = .short,isSectionHeader : Bool? = false) -> String{
         let unixTimeStamp: Double = time / 1000.0
         let exactDate = NSDate.init(timeIntervalSince1970: unixTimeStamp)
         let daysBetween = self.daysBetween(date: exactDate)
@@ -62,7 +62,7 @@ extension NSDate{
         }
     }
     
-    func daysBetween(date : NSDate) -> Int{
+    public func daysBetween(date : NSDate) -> Int{
         let calander = Calendar.current
         let date1 = calander.startOfDay(for: self as Date)
         let date2 = calander.startOfDay(for: date as Date)
@@ -72,7 +72,7 @@ extension NSDate{
             return 0
         }
     }
-    func doubletoDate(time: Double,dateStyle : DateFormatter.Style = .short) -> String{
+    public func doubletoDate(time: Double,dateStyle : DateFormatter.Style = .short) -> String{
         let unixTimeStamp: Double = time / 1000.0
         let exactDate = NSDate.init(timeIntervalSince1970: unixTimeStamp)
         let timeFormatter = DateFormatter()
@@ -81,7 +81,7 @@ extension NSDate{
         
     }
     
-    func doubletoTime(time: Double,dateStyle : DateFormatter.Style = .short) -> String{
+    public func doubletoTime(time: Double,dateStyle : DateFormatter.Style = .short) -> String{
         let unixTimeStamp: Double = time / 1000.0
         let exactDate = NSDate.init(timeIntervalSince1970: unixTimeStamp)
         let timeFormatter = DateFormatter()
@@ -93,7 +93,7 @@ extension NSDate{
 
 
 extension Date{
-    func toString( dateFormat format  : String ) -> String{
+    public func toString( dateFormat format  : String ) -> String{
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
         return dateFormatter.string(from: self)

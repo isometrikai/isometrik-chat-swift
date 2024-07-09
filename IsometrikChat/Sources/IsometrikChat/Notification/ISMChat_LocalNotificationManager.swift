@@ -9,24 +9,24 @@ import Foundation
 import UserNotifications
 import UIKit
 
-struct ISMChat_LocalNotification {
-    var id: String
-    var title: String
-    var body: String
+public struct ISMChat_LocalNotification {
+    public var id: String
+    public var title: String
+    public var body: String
 }
 
-enum ISMChat_LocalNotificationDurationType {
+public enum ISMChat_LocalNotificationDurationType {
     case days
     case hours
     case minutes
     case seconds
 }
 
-struct ISMChat_LocalNotificationManager {
+public struct ISMChat_LocalNotificationManager {
     
-    static private var notifications = [ISMChat_LocalNotification]()
+    static public var notifications = [ISMChat_LocalNotification]()
     
-    static private func requestPermission() -> Void {
+    static public func requestPermission() -> Void {
         UNUserNotificationCenter
             .current()
             .requestAuthorization(options: [.alert, .badge, .alert]) { granted, error in
@@ -36,11 +36,11 @@ struct ISMChat_LocalNotificationManager {
         }
     }
     
-    static private func addNotification(title: String, body: String) -> Void {
+    static public func addNotification(title: String, body: String) -> Void {
         notifications.append(ISMChat_LocalNotification(id: UUID().uuidString, title: title, body: body))
     }
     
-    static private func scheduleNotifications(_ durationInSeconds: Int, repeats: Bool, userInfo: [AnyHashable : Any]) {
+    static public func scheduleNotifications(_ durationInSeconds: Int, repeats: Bool, userInfo: [AnyHashable : Any]) {
         UIApplication.shared.applicationIconBadgeNumber = 0
         for notification in notifications {
             let content = UNMutableNotificationContent()
@@ -62,7 +62,7 @@ struct ISMChat_LocalNotificationManager {
         notifications.removeAll()
     }
     
-    static private func scheduleNotifications(_ duration: Int, of type: ISMChat_LocalNotificationDurationType, repeats: Bool, userInfo: [AnyHashable : Any]) {
+    static public func scheduleNotifications(_ duration: Int, of type: ISMChat_LocalNotificationDurationType, repeats: Bool, userInfo: [AnyHashable : Any]) {
         var seconds = 0
         switch type {
         case .seconds:
@@ -77,11 +77,11 @@ struct ISMChat_LocalNotificationManager {
         scheduleNotifications(seconds, repeats: repeats, userInfo: userInfo)
     }
     
-    static func cancel() {
+    static public func cancel() {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
     }
     
-    static func setNotification(_ duration: Int, of type: ISMChat_LocalNotificationDurationType, repeats: Bool, title: String, body: String, userInfo: [AnyHashable : Any]) {
+    static public func setNotification(_ duration: Int, of type: ISMChat_LocalNotificationDurationType, repeats: Bool, title: String, body: String, userInfo: [AnyHashable : Any]) {
         requestPermission()
         addNotification(title: title, body: body)
         scheduleNotifications(duration, of: type, repeats: repeats, userInfo: userInfo)

@@ -8,17 +8,17 @@
 import Foundation
 
 public struct ISMChat_Reactions: Codable {
-    let sentAt : Double?
-    let messageId: String?
-    let conversationId : String?
-    let userProfileImageUrl : String?
-    let userName : String?
-    let userIdentifier : String?
-    let userId : String?
-    let privateOneToOne : Bool?
-    let action : String?
-    let conversationTitle : String?
-    let conversationImageUrl : String?
-    let reactionsCount : Int?
-    let reactionType : String?
+    public let sentAt : Double?
+    public let messageId: String?
+    public let conversationId : String?
+    public let userProfileImageUrl : String?
+    public let userName : String?
+    public let userIdentifier : String?
+    public let userId : String?
+    public let privateOneToOne : Bool?
+    public let action : String?
+    public let conversationTitle : String?
+    public let conversationImageUrl : String?
+    public let reactionsCount : Int?
+    public let reactionType : String?
 }

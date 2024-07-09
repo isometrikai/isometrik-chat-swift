@@ -8,23 +8,23 @@
 import Foundation
 import RealmSwift
 
-class BroadCastListDB: Object, ObjectKeyIdentifiable {
-    @Persisted var groupcastId: String?
-    @Persisted var membersCount : Int?
-    @Persisted var groupcastTitle : String?
-    @Persisted var groupcastImageUrl : String?
-    @Persisted var customType : String?
-    @Persisted var createdBy : String?
-    @Persisted var createdAt : Double?
-    @Persisted var metaData : BroadCastMetaDataDB?
-    @Persisted var isDelete : Bool = false
+public class BroadCastListDB: Object, ObjectKeyIdentifiable {
+    @Persisted public var groupcastId: String?
+    @Persisted public var membersCount : Int?
+    @Persisted public var groupcastTitle : String?
+    @Persisted public var groupcastImageUrl : String?
+    @Persisted public var customType : String?
+    @Persisted public var createdBy : String?
+    @Persisted public var createdAt : Double?
+    @Persisted public var metaData : BroadCastMetaDataDB?
+    @Persisted public var isDelete : Bool = false
 }
 
-class BroadCastMetaDataDB : Object, ObjectKeyIdentifiable {
-    @Persisted var membersDetail : RealmSwift.List<BroadCastMemberDetailDB>
+public class BroadCastMetaDataDB : Object, ObjectKeyIdentifiable {
+    @Persisted public var membersDetail : RealmSwift.List<BroadCastMemberDetailDB>
 }
 
-class BroadCastMemberDetailDB : Object, ObjectKeyIdentifiable {
-    @Persisted var memberId : String?
-    @Persisted var memberName : String?
+public class BroadCastMemberDetailDB : Object, ObjectKeyIdentifiable {
+    @Persisted public var memberId : String?
+    @Persisted public var memberName : String?
 }

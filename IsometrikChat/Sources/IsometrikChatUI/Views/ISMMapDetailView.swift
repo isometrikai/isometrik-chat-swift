@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import IsometrikChat
 
 struct ISMMapDetailView: View {
     

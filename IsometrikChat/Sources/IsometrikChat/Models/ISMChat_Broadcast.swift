@@ -8,11 +8,11 @@
 import Foundation
 
 
-struct ISMChat_BroadCastMembers : Codable{
-    var msg : String?
-    var membersCount : Int?
-    var members : [ISMChat_BroadcastMemberDetail]?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_BroadCastMembers : Codable{
+    public var msg : String?
+    public var membersCount : Int?
+    public var members : [ISMChat_BroadcastMemberDetail]?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         msg = try? container.decode(String.self, forKey: .msg)
         membersCount = try? container.decode(Int.self, forKey: .membersCount)
@@ -21,11 +21,11 @@ struct ISMChat_BroadCastMembers : Codable{
 }
 
 
-struct ISMChat_BroadcastMemberDetail : Identifiable, Codable{
-    var id = UUID().uuidString
-    var memberId : String?
-    var memberInfo : ISMChat_User?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_BroadcastMemberDetail : Identifiable, Codable{
+    public var id = UUID().uuidString
+    public var memberId : String?
+    public var memberInfo : ISMChat_User?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         memberId = try? container.decode(String.self, forKey: .memberId)
         memberInfo = try? container.decode(ISMChat_User.self, forKey: .memberInfo)

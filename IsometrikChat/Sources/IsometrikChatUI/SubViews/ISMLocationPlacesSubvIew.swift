@@ -7,6 +7,7 @@
 
 import SwiftUI
 import GooglePlaces
+import IsometrikChat
 
 struct PlaceRow: View {
     

@@ -9,9 +9,9 @@ import SwiftUI
 import UserNotifications
 import Combine
 import ISMSwiftCall
+import IsometrikChat
 
-
-struct ISMConversationView : View {
+public struct ISMConversationView : View {
     
     //MARK:  - PROPERTIES
     @AppStorage("isDarkMode") private var isDarkMode = false
@@ -47,7 +47,7 @@ struct ISMConversationView : View {
     @ObservedObject var chatViewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
     @State var showBroadCastOption = ISMChatSdk.getInstance().getChatClient().getChatPageProperties().conversationType.contains(.BroadCastConversation)
     
-    let NC = NotificationCenter.default
+    public let NC = NotificationCenter.default
     @State var onScreen = false
     
     //local notification
@@ -64,16 +64,16 @@ struct ISMConversationView : View {
     @State var themeImages = ISMChatSdk.getInstance().getAppAppearance().appearance.images
     @State var userSession = ISMChatSdk.getInstance().getUserSession()
     
-    var delegate : ChatVCDelegate? = nil
+//    public var delegate : ChatVCDelegate? = nil
     
-    var ismChatSDK: ISMChatSdk?
-    init(ismChatSDK: ISMChatSdk,delegate : ChatVCDelegate? = nil) {
+    public var ismChatSDK: ISMChatSdk?
+    public init(ismChatSDK: ISMChatSdk) {
         self.ismChatSDK = ismChatSDK
-        self.delegate = delegate
+//        self.delegate = delegate
     }
     
     //MARK:  - BODY
-    var body: some View {
+    public var body: some View {
         NavigationView {
             ZStack{
                 Color(uiColor: .white).edgesIgnoringSafeArea(.all)

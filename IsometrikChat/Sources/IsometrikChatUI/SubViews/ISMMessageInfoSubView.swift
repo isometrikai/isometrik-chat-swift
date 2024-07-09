@@ -12,6 +12,7 @@ import GoogleMaps
 import CoreLocation
 import MapKit
 import SDWebImageSwiftUI
+import IsometrikChat
 
 struct ISMMessageInfoSubView: View {
     

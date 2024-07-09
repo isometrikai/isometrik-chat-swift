@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Contacts
+import IsometrikChat
 
 struct ISMShareContactList: View {
     
@@ -197,7 +198,7 @@ struct ISMShareContactList: View {
         }
     }
     
-    func contactSelection(value : ISMChat_Contacts){
+    public func contactSelection(value : ISMChat_Contacts){
         if contactSelected.contains(where: { contact in
             contact.id == value.id
         }){
@@ -212,12 +213,12 @@ struct ISMShareContactList: View {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
     }
     
-    func dataToURLString(_ data: Data) -> String? {
+    public func dataToURLString(_ data: Data) -> String? {
         let urlString = String(data: data, encoding: .utf8)
         return urlString?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
     }
     
-    func share(){
+    public func share(){
         for x in contactSelected{
             guard let number = x.contact.phoneNumbers.first?.value.stringValue else {return}
             let phone = ISMChat_Phone(number: "\(number)")
@@ -227,13 +228,13 @@ struct ISMShareContactList: View {
         }
     }
     
-    func sectionIndexTitles(proxy: ScrollViewProxy) -> some View {
+    public func sectionIndexTitles(proxy: ScrollViewProxy) -> some View {
         SectionIndexTitles(proxy: proxy, titles: contactSectionDictionary.keys.sorted())
             .frame(maxWidth: .infinity, alignment: .trailing)
             .padding()
     }
     
-    private func requestContactAccess() {
+    public func requestContactAccess() {
         let store = CNContactStore()
         store.requestAccess(for: .contacts) { (granted, error) in
             if granted {
@@ -244,7 +245,7 @@ struct ISMShareContactList: View {
         }
     }
     
-    private func fetchContacts() {
+    public func fetchContacts() {
         // Create a background queue
         DispatchQueue.global(qos: .background).async {
             let store = CNContactStore()
@@ -253,7 +254,7 @@ struct ISMShareContactList: View {
             
             do {
                 try store.enumerateContacts(with: request) { (contact, _) in
-                    contacts.append(ISMChat_Contacts(id: UUID(), contact: contact))
+//                    contacts.append(ISMChat_Contacts(id: UUID(), contact: contact))
                 }
             } catch {
                 // Handle the error

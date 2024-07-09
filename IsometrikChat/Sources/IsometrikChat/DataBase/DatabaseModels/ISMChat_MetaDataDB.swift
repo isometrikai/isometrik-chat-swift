@@ -8,30 +8,30 @@
 import Foundation
 import RealmSwift
 
-class MetaDataDB : Object, ObjectKeyIdentifiable {
-    @Persisted(primaryKey: true) var id: ObjectId
-    @Persisted var locationAddress : String?
-    @Persisted var replyMessage : ReplyMessageDB?
-    @Persisted var contacts : RealmSwift.List<ContactDB>
-    @Persisted var captionMessage : String?
-    @Persisted var isBroadCastMessage : Bool?
+public class MetaDataDB : Object, ObjectKeyIdentifiable {
+    @Persisted(primaryKey: true) public var id: ObjectId
+    @Persisted public var locationAddress : String?
+    @Persisted public var replyMessage : ReplyMessageDB?
+    @Persisted public var contacts : RealmSwift.List<ContactDB>
+    @Persisted public var captionMessage : String?
+    @Persisted public var isBroadCastMessage : Bool?
 }
 
 
-class ContactDB : Object, ObjectKeyIdentifiable {
-    @Persisted var contactName : String?
-    @Persisted var contactIdentifier : String?
-    @Persisted var contactImageUrl : String?
+public class ContactDB : Object, ObjectKeyIdentifiable {
+    @Persisted public var contactName : String?
+    @Persisted public var contactIdentifier : String?
+    @Persisted public var contactImageUrl : String?
 }
 
-class ReplyMessageDB : Object, ObjectKeyIdentifiable {
-    @Persisted(primaryKey: true) var id: ObjectId
-    @Persisted var parentMessageId : String?
-    @Persisted var parentMessageBody : String?
-    @Persisted var parentMessageUserId : String?
-    @Persisted var parentMessageUserName : String?
-    @Persisted var parentMessageMessageType : String?
-    @Persisted var parentMessageAttachmentUrl : String?
-    @Persisted var parentMessageInitiator : Bool?
-    @Persisted var parentMessagecaptionMessage : String?
+public class ReplyMessageDB : Object, ObjectKeyIdentifiable {
+    @Persisted(primaryKey: true) public var id: ObjectId
+    @Persisted public var parentMessageId : String?
+    @Persisted public var parentMessageBody : String?
+    @Persisted public var parentMessageUserId : String?
+    @Persisted public var parentMessageUserName : String?
+    @Persisted public var parentMessageMessageType : String?
+    @Persisted public var parentMessageAttachmentUrl : String?
+    @Persisted public var parentMessageInitiator : Bool?
+    @Persisted public var parentMessagecaptionMessage : String?
 }

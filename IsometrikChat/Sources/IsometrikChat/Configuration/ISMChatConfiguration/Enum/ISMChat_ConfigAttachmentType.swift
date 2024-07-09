@@ -15,7 +15,7 @@ public enum ISMChat_ConfigAttachmentType{
     case location
     case contact
     
-    var name: String {
+    public var name: String {
         switch self {
         case .camera:
             return "Camera"

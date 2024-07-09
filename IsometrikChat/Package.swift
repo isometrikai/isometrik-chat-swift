@@ -5,12 +5,15 @@ import PackageDescription
 
 let package = Package(
     name: "IsometrikChat",
-    platforms: [.iOS(.v15),],
+    platforms: [.iOS(.v17),],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "IsometrikChat",
-            targets: ["IsometrikChat"])
+            targets: ["IsometrikChat"]),
+        .library(
+            name: "IsometrikChatUI",
+            targets: ["IsometrikChatUI"])
     ],
     dependencies: [
         .package(url: "https://github.com/googlemaps/ios-places-sdk", from: "9.0.0"),
@@ -31,6 +34,23 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "IsometrikChat",
+            dependencies: [
+                .product(name: "GooglePlaces", package: "ios-places-sdk"),
+                .product(name: "GoogleMaps", package: "ios-maps-sdk"),
+                .product(name: "ActiveLabel", package: "activelabel.swift"),
+                .product(name: "Mantis", package: "mantis"),
+                .product(name: "YPImagePicker", package: "ypimagepicker"),
+                .product(name: "MediaPicker", package: "swiftui-mediapicker"),
+                .product(name: "Alamofire", package: "alamofire"),
+                .product(name: "ISMSwiftCall", package: "isometrik-swift-call"),
+                .product(name: "FirebaseAuth", package: "firebase-ios-sdk"),
+                .product(name: "FirebaseMessaging", package: "firebase-ios-sdk"),
+                .product(name: "SDWebImageSwiftUI", package: "sdwebimageswiftui"),
+                .product(name: "RealmSwift", package: "realm-swift"),
+                .product(name: "KeychainAccess", package: "keychainaccess"),
+            ]),
+        .target(
+            name: "IsometrikChatUI",
             dependencies: [
                 .product(name: "GooglePlaces", package: "ios-places-sdk"),
                 .product(name: "GoogleMaps", package: "ios-maps-sdk"),

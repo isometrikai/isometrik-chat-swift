@@ -9,12 +9,12 @@ import Foundation
 import UIKit
 
 
-struct NavigationUtil {
-    static func popToRootView() {
+public struct NavigationUtil {
+    static public func popToRootView() {
         findNavigationController(viewController: UIApplication.shared.windows.filter { $0.isKeyWindow }.first?.rootViewController)?
             .popToRootViewController(animated: true)
     }
-    static func findNavigationController(viewController: UIViewController?) -> UINavigationController? {
+    static public func findNavigationController(viewController: UIViewController?) -> UINavigationController? {
         guard let viewController = viewController else {
             return nil
         }

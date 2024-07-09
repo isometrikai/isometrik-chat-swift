@@ -8,13 +8,13 @@
 import Foundation
 import SwiftUI
 
-struct ISMChat_AudioPreviewModel: Hashable {
-    var magnitude: Float
-    var color: Color
+public struct ISMChat_AudioPreviewModel: Hashable {
+    public var magnitude: Float
+    public var color: Color
 }
 
-struct ISMChat_Recording : Equatable {
-    let fileURL : URL
-    let createdAt : Date
-    var isPlaying : Bool
+public struct ISMChat_Recording : Equatable {
+    public let fileURL : URL
+    public let createdAt : Date
+    public var isPlaying : Bool
 }

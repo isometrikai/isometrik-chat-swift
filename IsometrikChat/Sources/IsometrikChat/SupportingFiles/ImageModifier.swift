@@ -9,13 +9,13 @@ import Foundation
 import SwiftUI
 import UIKit
 
-struct ImageModifier: ViewModifier {
+public struct ImageModifier: ViewModifier {
     private var contentSize: CGSize
     private var min: CGFloat = 1.0
     private var max: CGFloat = 3.0
     @State var currentScale: CGFloat = 1.0
 
-    init(contentSize: CGSize) {
+    public init(contentSize: CGSize) {
         self.contentSize = contentSize
     }
     
@@ -28,7 +28,7 @@ struct ImageModifier: ViewModifier {
         }
     }
     
-    func body(content: Content) -> some View {
+    public func body(content: Content) -> some View {
         ScrollView([.horizontal, .vertical]) {
             content
                 .frame(width: contentSize.width * currentScale, height: contentSize.height * currentScale, alignment: .center)
@@ -39,14 +39,14 @@ struct ImageModifier: ViewModifier {
     }
 }
 
-class PinchZoomView: UIView {
+public class PinchZoomView: UIView {
     let minScale: CGFloat
     let maxScale: CGFloat
     var isPinching: Bool = false
     var scale: CGFloat = 1.0
     let scaleChange: (CGFloat) -> Void
     
-    init(minScale: CGFloat,
+    public init(minScale: CGFloat,
            maxScale: CGFloat,
          currentScale: CGFloat,
          scaleChange: @escaping (CGFloat) -> Void) {
@@ -87,28 +87,28 @@ class PinchZoomView: UIView {
     }
 }
 
-struct PinchZoom: UIViewRepresentable {
+public struct PinchZoom: UIViewRepresentable {
     let minScale: CGFloat
     let maxScale: CGFloat
     @Binding var scale: CGFloat
     @Binding var isPinching: Bool
     
-    func makeUIView(context: Context) -> PinchZoomView {
+    public func makeUIView(context: Context) -> PinchZoomView {
         let pinchZoomView = PinchZoomView(minScale: minScale, maxScale: maxScale, currentScale: scale, scaleChange: { scale = $0 })
         return pinchZoomView
     }
     
-    func updateUIView(_ pageControl: PinchZoomView, context: Context) { }
+    public func updateUIView(_ pageControl: PinchZoomView, context: Context) { }
 }
 
-struct PinchToZoom: ViewModifier {
+public struct PinchToZoom: ViewModifier {
     let minScale: CGFloat
     let maxScale: CGFloat
     @Binding var scale: CGFloat
     @State var anchor: UnitPoint = .center
     @State var isPinching: Bool = false
     
-    func body(content: Content) -> some View {
+    public func body(content: Content) -> some View {
         content
             .scaleEffect(scale, anchor: anchor)
             .animation(.spring(), value: isPinching)

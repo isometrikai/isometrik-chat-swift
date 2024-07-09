@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct ISMChat_Conversations : Codable{
-    var msg : String?
-    var conversations : [ISMChat_ConversationsDetail]?
-    var groupcasts : [ISMChat_BroadCastDetail]?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_Conversations : Codable{
+    public var msg : String?
+    public var conversations : [ISMChat_ConversationsDetail]?
+    public var groupcasts : [ISMChat_BroadCastDetail]?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         msg = try? container.decode(String.self, forKey: .msg)
         conversations = try? container.decode([ISMChat_ConversationsDetail].self, forKey: .conversations)
@@ -19,17 +19,17 @@ struct ISMChat_Conversations : Codable{
     }
 }
 
-struct ISMChat_BroadCastDetail : Identifiable, Codable{
-    var id : String {groupcastId ?? ""}
-    var membersCount : Int?
-    var groupcastTitle : String?
-    var groupcastImageUrl : String?
-    var groupcastId : String?
-    var customType : String?
-    var createdBy : String?
-    var createdAt : Double?
-    var metaData : ISMChat_BroadMetadata?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_BroadCastDetail : Identifiable, Codable{
+    public var id : String {groupcastId ?? ""}
+    public var membersCount : Int?
+    public var groupcastTitle : String?
+    public var groupcastImageUrl : String?
+    public var groupcastId : String?
+    public var customType : String?
+    public var createdBy : String?
+    public var createdAt : Double?
+    public var metaData : ISMChat_BroadMetadata?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         membersCount = try? container.decodeIfPresent(Int.self, forKey: .membersCount)
         groupcastTitle = try? container.decodeIfPresent(String.self, forKey: .groupcastTitle)
@@ -42,45 +42,45 @@ struct ISMChat_BroadCastDetail : Identifiable, Codable{
     }
 }
 
-struct ISMChat_BroadMetadata : Codable{
-    var membersDetail : [ISMChat_BroadCastMemberDetail] = []
-    init(from decoder: Decoder) throws {
+public struct ISMChat_BroadMetadata : Codable{
+    public var membersDetail : [ISMChat_BroadCastMemberDetail] = []
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         membersDetail = try! container.decodeIfPresent([ISMChat_BroadCastMemberDetail].self, forKey: .membersDetail) ?? []
     }
 }
 
-struct ISMChat_BroadCastMemberDetail: Identifiable,Codable{
-    var id = UUID()
-    var memberId : String?
-    var memberName : String?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_BroadCastMemberDetail: Identifiable,Codable{
+    public var id = UUID()
+    public var memberId : String?
+    public var memberName : String?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         memberId = try? container.decodeIfPresent(String.self, forKey: .memberId)
         memberName = try? container.decodeIfPresent(String.self, forKey: .memberName)
     }
 }
 
-struct ISMChat_ConversationsDetail : Identifiable, Codable{
-    var id : String {opponentDetails?.userId ?? ""}
-    var opponentDetails : ISMChat_User?
-    var lastMessageDetails : ISMChat_LastMessage?
-    var unreadMessagesCount : Int?
-    var typing : Bool?
-    var customType : String?
-    var isGroup : Bool?
-    var membersCount : Int?
-    var lastMessageSentAt : Int?
-    var createdAt : Double?
-    var conversationTitle : String?
-    var conversationImageUrl : String?
-    var createdBy : String?
-    var createdByUserName : String?
-    var privateOneToOne : Bool?
-    var conversationId : String?
-    var members : [ISMChat_GroupMember]?
-    var config : ISMChat_ConfigConversation?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_ConversationsDetail : Identifiable, Codable{
+    public var id : String {opponentDetails?.userId ?? ""}
+    public var opponentDetails : ISMChat_User?
+    public var lastMessageDetails : ISMChat_LastMessage?
+    public var unreadMessagesCount : Int?
+    public var typing : Bool?
+    public var customType : String?
+    public var isGroup : Bool?
+    public var membersCount : Int?
+    public var lastMessageSentAt : Int?
+    public var createdAt : Double?
+    public var conversationTitle : String?
+    public var conversationImageUrl : String?
+    public var createdBy : String?
+    public var createdByUserName : String?
+    public var privateOneToOne : Bool?
+    public var conversationId : String?
+    public var members : [ISMChat_GroupMember]?
+    public var config : ISMChat_ConfigConversation?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         opponentDetails = try? container.decodeIfPresent(ISMChat_User.self, forKey: .opponentDetails)
         lastMessageDetails = try? container.decodeIfPresent(ISMChat_LastMessage.self, forKey: .lastMessageDetails)
@@ -100,7 +100,7 @@ struct ISMChat_ConversationsDetail : Identifiable, Codable{
         members = try? container.decodeIfPresent([ISMChat_GroupMember].self, forKey: .members)
         config = try? container.decodeIfPresent(ISMChat_ConfigConversation.self, forKey: .config)
     }
-    init(opponentDetails : ISMChat_User? = nil,lastMessageDetails : ISMChat_LastMessage? = nil,unreadMessagesCount : Int? = nil,typing : Bool? = nil,customType : String? = nil,isGroup : Bool? = nil,membersCount : Int? = nil,lastMessageSentAt : Int? = nil,createdAt : Double? = nil,conversationTitle : String? = nil,conversationImageUrl : String? = nil,createdBy : String? = nil,createdByUserName : String? = nil,privateOneToOne : Bool? = nil,conversationId : String? = nil,members : [ISMChat_GroupMember]? = nil,config : ISMChat_ConfigConversation? = nil) {
+    public init(opponentDetails : ISMChat_User? = nil,lastMessageDetails : ISMChat_LastMessage? = nil,unreadMessagesCount : Int? = nil,typing : Bool? = nil,customType : String? = nil,isGroup : Bool? = nil,membersCount : Int? = nil,lastMessageSentAt : Int? = nil,createdAt : Double? = nil,conversationTitle : String? = nil,conversationImageUrl : String? = nil,createdBy : String? = nil,createdByUserName : String? = nil,privateOneToOne : Bool? = nil,conversationId : String? = nil,members : [ISMChat_GroupMember]? = nil,config : ISMChat_ConfigConversation? = nil) {
         self.opponentDetails = opponentDetails
         self.lastMessageDetails = lastMessageDetails
         self.unreadMessagesCount = unreadMessagesCount
@@ -121,40 +121,40 @@ struct ISMChat_ConversationsDetail : Identifiable, Codable{
     }
 }
 
-struct ISMChat_LastMessage : Codable{
-    var sentAt : Double?
-    var updatedAt : Double?
-    var senderName : String?
-    var senderIdentifier : String?
-    var userId : String?
-    var userIdentifier : String?
-    var userProfileImageUrl : String?
-    var senderId : String?
-    var conversationId : String?
-    var body : String?
-    var messageId : String?
-    var customType : String?
-    var action : String?
-    var metaData : ISMChat_MetaData?
-    var deliveredTo : [ISMChat_MessageDeliveryStatus]? = []
-    var readBy : [ISMChat_MessageDeliveryStatus]? = []
-    var conversationTitle : String?
-    var conversationImageUrl : String?
-    var reactionsCount : Int?
-    var reactionType : String?
-    var members : [ISMChat_MemberAdded]?
-    var initiatorName : String?
-    var initiatorId : String?
-    var initiatorIdentifier : String?
-    var memberName : String?
-    var memberId : String?
-    var messageDeleted : Bool? = false
-    var userName : String?
-    var details : ISMChat_MessageUpdatedDetail?
-    var meetingId : String?
-    var missedByMembers : [String]?
-    var callDurations : [ISMCall_MeetingDuration]?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_LastMessage : Codable{
+    public var sentAt : Double?
+    public var updatedAt : Double?
+    public var senderName : String?
+    public var senderIdentifier : String?
+    public var userId : String?
+    public var userIdentifier : String?
+    public var userProfileImageUrl : String?
+    public var senderId : String?
+    public var conversationId : String?
+    public var body : String?
+    public var messageId : String?
+    public var customType : String?
+    public var action : String?
+    public var metaData : ISMChat_MetaData?
+    public var deliveredTo : [ISMChat_MessageDeliveryStatus]? = []
+    public var readBy : [ISMChat_MessageDeliveryStatus]? = []
+    public var conversationTitle : String?
+    public var conversationImageUrl : String?
+    public var reactionsCount : Int?
+    public var reactionType : String?
+    public var members : [ISMChat_MemberAdded]?
+    public var initiatorName : String?
+    public var initiatorId : String?
+    public var initiatorIdentifier : String?
+    public var memberName : String?
+    public var memberId : String?
+    public var messageDeleted : Bool? = false
+    public var userName : String?
+    public var details : ISMChat_MessageUpdatedDetail?
+    public var meetingId : String?
+    public var missedByMembers : [String]?
+    public var callDurations : [ISMCall_MeetingDuration]?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         sentAt = try? container.decode(Double.self, forKey: .sentAt)
         updatedAt = try? container.decode(Double.self, forKey: .updatedAt)
@@ -188,7 +188,7 @@ struct ISMChat_LastMessage : Codable{
         missedByMembers = try? container.decode([String].self, forKey: .missedByMembers)
         callDurations = try? container.decode([ISMCall_MeetingDuration].self, forKey: .callDurations)
     }
-    init(sentAt : Double? = nil,senderName : String? = nil,senderIdentifier : String? = nil,senderId : String? = nil, conversationId : String? = nil,body : String? = nil,messageId : String? = nil,deliveredToUser : String? = nil,timeStamp : Double? = nil,customType : String? = nil,messageDeleted : Bool? = nil,action : String? = nil,userId : String? = nil,initiatorId : String? = nil,memberName : String? = nil,initiatorName : String? = nil,memberId : String? = nil,userName : String? = nil,initiatorIdentifier : String? = nil,members : [ISMChat_MemberAdded]? = nil,userIdentifier : String? = nil,userProfileImageUrl : String? = nil,reactionType : String? = nil,meetingId : String? = nil,missedByMembers : [String]? = nil,callDurations : [ISMCall_MeetingDuration]? = nil){
+    public init(sentAt : Double? = nil,senderName : String? = nil,senderIdentifier : String? = nil,senderId : String? = nil, conversationId : String? = nil,body : String? = nil,messageId : String? = nil,deliveredToUser : String? = nil,timeStamp : Double? = nil,customType : String? = nil,messageDeleted : Bool? = nil,action : String? = nil,userId : String? = nil,initiatorId : String? = nil,memberName : String? = nil,initiatorName : String? = nil,memberId : String? = nil,userName : String? = nil,initiatorIdentifier : String? = nil,members : [ISMChat_MemberAdded]? = nil,userIdentifier : String? = nil,userProfileImageUrl : String? = nil,reactionType : String? = nil,meetingId : String? = nil,missedByMembers : [String]? = nil,callDurations : [ISMCall_MeetingDuration]? = nil){
         self.sentAt = sentAt
         self.senderName = senderName
         self.senderIdentifier = senderIdentifier
@@ -216,12 +216,12 @@ struct ISMChat_LastMessage : Codable{
     }
 }
 
-struct ISMChat_CreateConversationResponse : Codable{
-    var newConversation : Bool?
-    var msg : String?
-    var conversationId : String?
-    var groupcastId : String?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_CreateConversationResponse : Codable{
+    public var newConversation : Bool?
+    public var msg : String?
+    public var conversationId : String?
+    public var groupcastId : String?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         newConversation = try? container.decode(Bool.self, forKey: .newConversation)
         msg = try? container.decode(String.self, forKey: .msg)
@@ -230,32 +230,32 @@ struct ISMChat_CreateConversationResponse : Codable{
     }
 }
 
-struct ISMCall_MeetingDuration : Codable{
-    var memberId : String?
-    var durationInMilliseconds : Double?
-    init(memberId: String? = nil, durationInMilliseconds: Double? = nil) {
+public struct ISMCall_MeetingDuration : Codable{
+    public var memberId : String?
+    public var durationInMilliseconds : Double?
+    public init(memberId: String? = nil, durationInMilliseconds: Double? = nil) {
         self.memberId = memberId
         self.durationInMilliseconds = durationInMilliseconds
     }
 }
 
-struct  ISMChat_MessageUpdatedDetail : Codable{
-    var body : String?
-    init(from decoder: Decoder) throws {
+public struct  ISMChat_MessageUpdatedDetail : Codable{
+    public var body : String?
+    public  init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         body = try? container.decode(String.self, forKey: .body)
     }
 }
 
-struct ISMChat_MessageDeliveryStatus : Codable{
-    var userId : String?
-    var timestamp : Double?
-    init(from decoder: Decoder) throws {
+public struct ISMChat_MessageDeliveryStatus : Codable{
+    public var userId : String?
+    public var timestamp : Double?
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         userId = try? container.decode(String.self, forKey: .userId)
         timestamp = try? container.decode(Double.self, forKey: .timestamp)
     }
-    init(userId : String? = nil,timestamp : Double? = nil){
+    public init(userId : String? = nil,timestamp : Double? = nil){
         self.userId = userId
         self.timestamp = timestamp
     }

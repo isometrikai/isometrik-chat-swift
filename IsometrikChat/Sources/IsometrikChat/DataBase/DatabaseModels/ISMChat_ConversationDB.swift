@@ -9,47 +9,47 @@ import Foundation
 import RealmSwift
 
 
-class ConversationDB: Object, ObjectKeyIdentifiable {
+public class ConversationDB: Object, ObjectKeyIdentifiable {
     
-    @Persisted(primaryKey: true) var conversationId: String
+    @Persisted(primaryKey: true) public var conversationId: String
     
-    @Persisted var updatedAt :Double = 00
-    @Persisted var unreadMessagesCount :Int = -1
-    @Persisted var membersCount :Int = -1
-    @Persisted var lastMessageSentAt :Int = -1
-    @Persisted var createdAt :Double = 00
+    @Persisted public var updatedAt :Double = 00
+    @Persisted public var unreadMessagesCount :Int = -1
+    @Persisted public var membersCount :Int = -1
+    @Persisted public var lastMessageSentAt :Int = -1
+    @Persisted public var createdAt :Double = 00
     
-    @Persisted var mode :String = ""
-    @Persisted var conversationTitle :String = ""
-    @Persisted var conversationImageUrl :String = ""
-    @Persisted var createdBy :String = ""
-    @Persisted var createdByUserName :String = ""
+    @Persisted public var mode :String = ""
+    @Persisted public var conversationTitle :String = ""
+    @Persisted public var conversationImageUrl :String = ""
+    @Persisted public var createdBy :String = ""
+    @Persisted public var createdByUserName :String = ""
     
-    @Persisted var privateOneToOne :Bool = false
-    @Persisted var messagingDisabled :Bool = false
-    @Persisted var isGroup :Bool = false
-    @Persisted var typing :Bool = false
-    @Persisted var isDelete :Bool = false
-    @Persisted var userIds :RealmSwift.List<String>
+    @Persisted public var privateOneToOne :Bool = false
+    @Persisted public var messagingDisabled :Bool = false
+    @Persisted public var isGroup :Bool = false
+    @Persisted public var typing :Bool = false
+    @Persisted public var isDelete :Bool = false
+    @Persisted public var userIds :RealmSwift.List<String>
     
-    @Persisted var opponentDetails :UserDB?
-    @Persisted var config : ConfigDB?
+    @Persisted public var opponentDetails :UserDB?
+    @Persisted public var config : ConfigDB?
     
-    @Persisted var lastReadAt :RealmSwift.List<MessagesDB>
+    @Persisted public var lastReadAt :RealmSwift.List<MessagesDB>
     
-    @Persisted var lastMessageDetails :LastMessageDB?
-    @Persisted var deletedMessage : Bool = false
+    @Persisted public var lastMessageDetails :LastMessageDB?
+    @Persisted public var deletedMessage : Bool = false
     
-    override class func primaryKey() -> String? {
+    public override class func primaryKey() -> String? {
         return "conversationId"
     }
 }
 
 
-class ConfigDB : Object, ObjectKeyIdentifiable{
-    @Persisted(primaryKey: true) var id: ObjectId
+public class ConfigDB : Object, ObjectKeyIdentifiable{
+    @Persisted(primaryKey: true) public var id: ObjectId
     
-    @Persisted var typingEvents : Bool?
-    @Persisted var readEvents : Bool?
-    @Persisted var pushNotifications : Bool?
+    @Persisted public var typingEvents : Bool?
+    @Persisted public var readEvents : Bool?
+    @Persisted public var pushNotifications : Bool?
 }

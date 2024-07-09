@@ -9,18 +9,18 @@ import Foundation
 import UIKit
 import SwiftUI
 
-struct ViewControllerHolder {
+public struct ViewControllerHolder {
     weak var value: UIViewController?
 }
 
-struct ViewControllerKey: EnvironmentKey {
-    static var defaultValue: ViewControllerHolder {
+public struct ViewControllerKey: EnvironmentKey {
+    public static var defaultValue: ViewControllerHolder {
         return ViewControllerHolder(value: UIApplication.shared.windows.first?.rootViewController)
     }
 }
 
 extension EnvironmentValues {
-    var viewController: UIViewController? {
+    public var viewController: UIViewController? {
         get { return self[ViewControllerKey.self].value }
         set { self[ViewControllerKey.self].value = newValue }
     }
@@ -28,7 +28,7 @@ extension EnvironmentValues {
 
 
 extension UIViewController {
-    func present<Content: View>(style: UIModalPresentationStyle = .automatic, transitionStyle: UIModalTransitionStyle = .coverVertical, @ViewBuilder builder: () -> Content) {
+    public func present<Content: View>(style: UIModalPresentationStyle = .automatic, transitionStyle: UIModalTransitionStyle = .coverVertical, @ViewBuilder builder: () -> Content) {
         // Create a hosting controller with an empty view
         let toPresent = UIHostingController(rootView: AnyView(EmptyView()))
         toPresent.modalPresentationStyle = style

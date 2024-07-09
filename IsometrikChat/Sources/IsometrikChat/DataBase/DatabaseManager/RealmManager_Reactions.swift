@@ -12,7 +12,7 @@ import RealmSwift
 extension RealmManager{
     
     //MARK: - add reaction for message locally
-    func addReactionToMessage(conversationId: String, messageId: String, reaction: String, userId: String) {
+    public func addReactionToMessage(conversationId: String, messageId: String, reaction: String, userId: String) {
         if let localRealm = localRealm {
             let messageToUpdate = localRealm.objects(MessagesDB.self).filter("conversationId == %@ AND isDelete == false AND messageId == %@", conversationId, messageId)
             
@@ -34,7 +34,7 @@ extension RealmManager{
     
     
     //MARK: - remove reaction for message locally
-    func removeReactionFromMessage(conversationId: String, messageId: String, reaction: String, userId: String) {
+    public func removeReactionFromMessage(conversationId: String, messageId: String, reaction: String, userId: String) {
         if let localRealm = localRealm {
             let messageToUpdate = localRealm.objects(MessagesDB.self).filter("conversationId == %@ AND isDelete == false AND messageId == %@", conversationId, messageId)
             if let message = messageToUpdate.first {
