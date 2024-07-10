@@ -1,5 +1,5 @@
 //
-//  ISM_ConversationRow.swift
+//  ISMConversationRow.swift
 //  ISMChatSdk
 //
 //  Created by Rahul Sharma on 09/03/23.
@@ -30,25 +30,25 @@ struct ISMConversationSubView: View {
                     showOnlineIndicator: false,
                     size: CGSize(width: 54, height: 54),
                     userName: chat.isGroup == true ? chat.conversationTitle  : chat.opponentDetails?.userName ?? "",
-                    font: themeFonts.messageList_MessageText)
+                    font: themeFonts.messageListMessageText)
             }
             VStack(alignment: .leading, spacing: 5, content: {
                 HStack{
                     if chat.isGroup == false && chat.opponentDetails?.userId == nil && chat.opponentDetails?.userName == nil{
                         Text("Recipients: \(chat.membersCount)")
-                            .foregroundColor(themeColor.chatList_UserName)
-                            .font(themeFonts.chatList_UserName)
+                            .foregroundColor(themeColor.chatListUserName)
+                            .font(themeFonts.chatListUserName)
                     }else{
                         Text(chat.isGroup == true ? (chat.conversationTitle ) : (chat.opponentDetails?.userName?.capitalizingFirstLetter() ?? ""))
-                            .foregroundColor(themeColor.chatList_UserName)
-                            .font(themeFonts.chatList_UserName)
+                            .foregroundColor(themeColor.chatListUserName)
+                            .font(themeFonts.chatListUserName)
                     }
                     Spacer()
                     let dateVar = NSDate()
                     let date = dateVar.descriptiveString(time: (chat.lastMessageDetails?.sentAt ?? 0))
                     Text(date)
-                        .foregroundColor(themeColor.chatList_LastMessageTime)
-                        .font(themeFonts.chatList_LastMessageTime)
+                        .foregroundColor(themeColor.chatListLastMessageTime)
+                        .font(themeFonts.chatListLastMessageTime)
                 }//:HStack
                 getMessageText()
             })//:VStack
@@ -61,45 +61,45 @@ struct ISMConversationSubView: View {
         HStack {
             if chat.typing == true{
                 Text("Typing...")
-                    .foregroundColor(themeColor.chatList_UserMessage)
-                    .font(themeFonts.chatList_UserMessage)
+                    .foregroundColor(themeColor.chatListUserMessage)
+                    .font(themeFonts.chatListUserMessage)
             }else{
                 if chat.lastMessageDetails?.deletedMessage == true{
                     HStack{
                         Image(systemName: "minus.circle")
                             .resizable()
                             .frame(width: 15, height: 15, alignment: .center)
-                            .tint(themeColor.chatList_UserMessage)
-                            .foregroundColor(themeColor.chatList_UserMessage)
+                            .tint(themeColor.chatListUserMessage)
+                            .foregroundColor(themeColor.chatListUserMessage)
                         
                         Text(chat.lastMessageDetails?.senderId == userSession.getUserId() ? "You deleted this message." : "This message was deleted")
-                            .foregroundColor(themeColor.chatList_UserMessage)
-                            .font(themeFonts.chatList_UserMessage)
+                            .foregroundColor(themeColor.chatListUserMessage)
+                            .font(themeFonts.chatListUserMessage)
                             .padding(.trailing, 40)
                             .lineLimit(1)
                     }
                 }else{
                     if let customType = chat.lastMessageDetails?.customType {
                         switch customType {
-                        case ISMChat_MediaType.Image.value:
+                        case ISMChatMediaType.Image.value:
                             getLabel(text: "Image", image: "camera.fill")
-                        case ISMChat_MediaType.Video.value:
+                        case ISMChatMediaType.Video.value:
                             getLabel(text: "Video", image: "video.fill")
-                        case ISMChat_MediaType.File.value:
+                        case ISMChatMediaType.File.value:
                             getLabel(text: "Document", image: "doc.fill")
-                        case ISMChat_MediaType.Voice.value:
+                        case ISMChatMediaType.Voice.value:
                             getLabel(text: "Audio", image: "mic.fill")
-                        case ISMChat_MediaType.Location.value:
+                        case ISMChatMediaType.Location.value:
                             getLabel(text: "Location", image: "location.fill")
-                        case ISMChat_MediaType.Contact.value:
+                        case ISMChatMediaType.Contact.value:
                             getLabel(text: "Contact", image: "person.crop.circle.fill")
-                        case ISMChat_MediaType.sticker.value:
+                        case ISMChatMediaType.sticker.value:
                             getLabel(text: "Sticker", image: "gif_sticker",imageNormal: true)
-                        case ISMChat_MediaType.gif.value:
+                        case ISMChatMediaType.gif.value:
                             getLabel(text: "Gif", image: "gif_sticker",imageNormal: true)
-                        case ISMChat_MediaType.AudioCall.value:
+                        case ISMChatMediaType.AudioCall.value:
                             AudioCallUI()
-                        case ISMChat_MediaType.VideoCall.value:
+                        case ISMChatMediaType.VideoCall.value:
                             VideoCallUI()
                         default:
                             actionLabels()
@@ -114,14 +114,14 @@ struct ISMConversationSubView: View {
     
     func VideoCallUI() -> some View{
         HStack{
-            if chat.lastMessageDetails?.action == ISMChat_ActionType.meetingCreated.value{
+            if chat.lastMessageDetails?.action == ISMChatActionType.meetingCreated.value{
                 if chat.lastMessageDetails?.initiatorIdentifier == userSession.getEmailId(){
                     callKitText(text1: "Video Call", text2: "In call", color: Color.green, outgoing: true, missedCall: false, addDot: true, image: "arrow.up.right.video.fill")
                 }else{
                     callKitText(text1: "Video Call", text2: "Ringing", color: Color.green, outgoing: false, missedCall: false, addDot: true, image: "arrow.down.left.video.fill")
                 }
             }
-            else if chat.lastMessageDetails?.action == ISMChat_ActionType.meetingEndedDueToNoUserPublishing.value{
+            else if chat.lastMessageDetails?.action == ISMChatActionType.meetingEndedDueToNoUserPublishing.value{
                 if chat.lastMessageDetails?.initiatorIdentifier == userSession.getEmailId(){
                     callKitText(text1: "", text2: "Video call", color: Color.green, outgoing: true, missedCall: false, addDot: false, image: "arrow.up.right.video.fill")
                 }else{
@@ -132,7 +132,7 @@ struct ISMConversationSubView: View {
                     }
                 }
             }
-            else if chat.lastMessageDetails?.action == ISMChat_ActionType.meetingEndedDueToRejectionByAll.value{
+            else if chat.lastMessageDetails?.action == ISMChatActionType.meetingEndedDueToRejectionByAll.value{
                 if chat.lastMessageDetails?.initiatorIdentifier == userSession.getEmailId(){
                     callKitText(text1: "", text2: "Video call", color: Color.green, outgoing: true, missedCall: false, addDot: false, image: "arrow.up.right.video.fill")
                 }else{
@@ -148,14 +148,14 @@ struct ISMConversationSubView: View {
     
     func AudioCallUI() -> some View{
         HStack{
-            if chat.lastMessageDetails?.action == ISMChat_ActionType.meetingCreated.value{
+            if chat.lastMessageDetails?.action == ISMChatActionType.meetingCreated.value{
                 if chat.lastMessageDetails?.initiatorIdentifier == userSession.getEmailId(){
                     callKitText(text1: "Voice Call", text2: "In call", color: Color.green, outgoing: true, missedCall: false, addDot: true, image: "phone.arrow.up.right.fill")
                 }else{
                     callKitText(text1: "Voice Call", text2: "Ringing", color: Color.green, outgoing: false, missedCall: false, addDot: true, image: "phone.arrow.down.left.fill")
                 }
             }
-            else if chat.lastMessageDetails?.action == ISMChat_ActionType.meetingEndedDueToNoUserPublishing.value{
+            else if chat.lastMessageDetails?.action == ISMChatActionType.meetingEndedDueToNoUserPublishing.value{
                 if chat.lastMessageDetails?.initiatorIdentifier == userSession.getEmailId(){
                     callKitText(text1: "", text2: "Voice call", color: Color.green, outgoing: true, missedCall: false, addDot: false, image: "phone.arrow.up.right.fill")
                 }else{
@@ -166,7 +166,7 @@ struct ISMConversationSubView: View {
                     }
                 }
             }
-            else if chat.lastMessageDetails?.action == ISMChat_ActionType.meetingEndedDueToRejectionByAll.value{
+            else if chat.lastMessageDetails?.action == ISMChatActionType.meetingEndedDueToRejectionByAll.value{
                 if chat.lastMessageDetails?.initiatorIdentifier == userSession.getEmailId(){
                     callKitText(text1: "", text2: "Voice call", color: Color.green, outgoing: true, missedCall: false, addDot: false, image: "phone.arrow.up.right.fill")
                 }else{
@@ -182,60 +182,60 @@ struct ISMConversationSubView: View {
     
     func actionLabels() -> some View{
         HStack {
-            if chat.lastMessageDetails?.action == ISMChat_ActionType.conversationCreated.value{
+            if chat.lastMessageDetails?.action == ISMChatActionType.conversationCreated.value{
                 getLabel(text: "Conversation created", image: "person.fill")
-            }else if chat.lastMessageDetails?.action == ISMChat_ActionType.userBlock.value || chat.lastMessageDetails?.action == ISMChat_ActionType.userBlockConversation.value{
+            }else if chat.lastMessageDetails?.action == ISMChatActionType.userBlock.value || chat.lastMessageDetails?.action == ISMChatActionType.userBlockConversation.value{
                 getLabel(text: "Blocked", image: "circle.slash")
-            }else if chat.lastMessageDetails?.action == ISMChat_ActionType.userUnblock.value || chat.lastMessageDetails?.action == ISMChat_ActionType.userUnblockConversation.value{
+            }else if chat.lastMessageDetails?.action == ISMChatActionType.userUnblock.value || chat.lastMessageDetails?.action == ISMChatActionType.userUnblockConversation.value{
                 getLabel(text: "Unblocked", image: "circle.slash")
-            }else if chat.lastMessageDetails?.action == ISMChat_ActionType.reactionAdd.value{
-                let emoji = ISMChat_Helper.getEmoji(valueString: chat.lastMessageDetails?.reactionType ?? "")
+            }else if chat.lastMessageDetails?.action == ISMChatActionType.reactionAdd.value{
+                let emoji = ISMChatHelper.getEmoji(valueString: chat.lastMessageDetails?.reactionType ?? "")
                 if chat.lastMessageDetails?.userId == userSession.getUserId(){
                     getLabel(hideImage: true,text: chat.isGroup ? "Reacted \(emoji) to a message" : "You reacted \(emoji) to a message", image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: chat.isGroup ? "Reacted \(emoji) to a message" : "\(chat.lastMessageDetails?.userName ?? "") reacted \(emoji) to a message", image: "",isReaction : true)
                 }
-            }else if chat.lastMessageDetails?.action == ISMChat_ActionType.reactionRemove.value{
-                let emoji = ISMChat_Helper.getEmoji(valueString: chat.lastMessageDetails?.reactionType ?? "")
+            }else if chat.lastMessageDetails?.action == ISMChatActionType.reactionRemove.value{
+                let emoji = ISMChatHelper.getEmoji(valueString: chat.lastMessageDetails?.reactionType ?? "")
                 if chat.lastMessageDetails?.userId == userSession.getUserId(){
                     getLabel(hideImage: true,text: chat.isGroup ? "Removed \(emoji) from a message" : "You removed \(emoji) from a message", image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: chat.isGroup ? "Removed \(emoji) from a message" : "\(chat.lastMessageDetails?.userName ?? "") removed \(emoji) from a message", image: "",isReaction : true)
                 }
             }
-            else if chat.lastMessageDetails?.action == ISMChat_ActionType.memberLeave.value{
+            else if chat.lastMessageDetails?.action == ISMChatActionType.memberLeave.value{
                 getLabel(hideImage: false,text: "\(chat.lastMessageDetails?.memberName.capitalizingFirstLetter() ?? "") left", image: "figure.walk",isReaction : true)
             }
-            else if chat.lastMessageDetails?.action == ISMChat_ActionType.addAdmin.value{
+            else if chat.lastMessageDetails?.action == ISMChatActionType.addAdmin.value{
                 if chat.lastMessageDetails?.memberId == userSession.getUserId(){
                     getLabel(hideImage: true,text: "Added you as an admin", image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: "Added \(chat.lastMessageDetails?.memberName ?? "") as an admin", image: "",isReaction : true)
                 }
-            }else if chat.lastMessageDetails?.action == ISMChat_ActionType.removeAdmin.value{
+            }else if chat.lastMessageDetails?.action == ISMChatActionType.removeAdmin.value{
                 if chat.lastMessageDetails?.memberId == userSession.getUserId(){
                     getLabel(hideImage: true,text: "Removed you as an admin", image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: "Removed \(chat.lastMessageDetails?.memberName ?? "") as an admin", image: "",isReaction : true)
                 }
-            }else if chat.lastMessageDetails?.action == ISMChat_ActionType.membersRemove.value{
+            }else if chat.lastMessageDetails?.action == ISMChatActionType.membersRemove.value{
                 if chat.lastMessageDetails?.members.first?.memberId == userSession.getUserId(){
                     getLabel(hideImage: true,text: "Removed you", image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: "Removed \(chat.lastMessageDetails?.members.first?.memberName?.capitalizingFirstLetter() ?? "")", image: "",isReaction : true)
                 }
-            }else if chat.lastMessageDetails?.action == ISMChat_ActionType.membersAdd.value{
+            }else if chat.lastMessageDetails?.action == ISMChatActionType.membersAdd.value{
                 if chat.lastMessageDetails?.members.first?.memberId == userSession.getUserId(){
                     getLabel(hideImage: true,text: "Added you", image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: "Added \(chat.lastMessageDetails?.members.first?.memberName ?? "")", image: "",isReaction : true)
                 }
-            }else if chat.lastMessageDetails?.action == ISMChat_ActionType.conversationTitleUpdated.value{
+            }else if chat.lastMessageDetails?.action == ISMChatActionType.conversationTitleUpdated.value{
                 getLabel(hideImage: true,text: "Changed this group title", image: "",isReaction : true)
             }
-            else if chat.lastMessageDetails?.action == ISMChat_ActionType.conversationImageUpdated.value{
+            else if chat.lastMessageDetails?.action == ISMChatActionType.conversationImageUpdated.value{
                 getLabel(hideImage: true,text: "Changed this group image", image: "",isReaction : true)
-            }else if chat.lastMessageDetails?.action == ISMChat_ActionType.messageDetailsUpdated.value{
+            }else if chat.lastMessageDetails?.action == ISMChatActionType.messageDetailsUpdated.value{
                 if let body = chat.lastMessageDetails?.body {
                     getLabel(hideImage: true, text: body, image: "")
                 }
@@ -256,25 +256,25 @@ struct ISMConversationSubView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 19, height: 11)
-                .tint(missedCall ? Color.red : themeColor.chatList_UserMessage)
-                .foregroundColor(themeColor.chatList_UserMessage)
+                .tint(missedCall ? Color.red : themeColor.chatListUserMessage)
+                .foregroundColor(themeColor.chatListUserMessage)
             
             HStack(alignment: .center,spacing: 2){
                 Text(text1)
                     .foregroundColor(color)
-                    .font(themeFonts.chatList_UserMessage)
+                    .font(themeFonts.chatListUserMessage)
                     .lineLimit(1)
                 
                 if addDot == true{
                     Text(".")
-                        .foregroundColor(themeColor.chatList_UserMessage)
-                        .font(themeFonts.chatList_UserMessage)
+                        .foregroundColor(themeColor.chatListUserMessage)
+                        .font(themeFonts.chatListUserMessage)
                         .lineLimit(1)
                 }
                 
                 Text(text2)
-                    .foregroundColor(themeColor.chatList_UserMessage)
-                    .font(themeFonts.chatList_UserMessage)
+                    .foregroundColor(themeColor.chatListUserMessage)
+                    .font(themeFonts.chatListUserMessage)
                     .padding(.trailing, 40)
                     .lineLimit(1)
             }
@@ -284,10 +284,10 @@ struct ISMConversationSubView: View {
             if count > 0{
                 Spacer()
                 Text("\(count)")
-                    .foregroundColor(themeColor.chatList_UnreadMessageCount)
-                    .font(themeFonts.chatList_UnreadMessageCount)
+                    .foregroundColor(themeColor.chatListUnreadMessageCount)
+                    .font(themeFonts.chatListUnreadMessageCount)
                     .padding(7)
-                    .background(themeColor.chatList_UnreadMessageCountBackground)
+                    .background(themeColor.chatListUnreadMessageCountBackground)
                     .frame(height: 20)
                     .cornerRadius(10)
             }
@@ -320,13 +320,13 @@ struct ISMConversationSubView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 19, height: 11)
-                        .tint(themeColor.chatList_UserMessage)
-                        .foregroundColor(themeColor.chatList_UserMessage)
+                        .tint(themeColor.chatListUserMessage)
+                        .foregroundColor(themeColor.chatListUserMessage)
                 }
             }
             Text(text)
-                .foregroundColor(themeColor.chatList_UserMessage)
-                .font(themeFonts.chatList_UserMessage)
+                .foregroundColor(themeColor.chatListUserMessage)
+                .font(themeFonts.chatListUserMessage)
                 .padding(.trailing, 40)
                 .lineLimit(1)
             
@@ -336,10 +336,10 @@ struct ISMConversationSubView: View {
             if count > 0{
                 Spacer()
                 Text("\(count)")
-                    .foregroundColor(themeColor.chatList_UnreadMessageCount)
-                    .font(themeFonts.chatList_UnreadMessageCount)
+                    .foregroundColor(themeColor.chatListUnreadMessageCount)
+                    .font(themeFonts.chatListUnreadMessageCount)
                     .padding(7)
-                    .background(themeColor.chatList_UnreadMessageCountBackground)
+                    .background(themeColor.chatListUnreadMessageCountBackground)
                     .frame(height: 20)
                     .cornerRadius(10)
             }
@@ -356,7 +356,7 @@ struct ISMConversationSubView: View {
                     .resizable()
                     .frame(width: 15, height: 9))
             }else{
-                if chat.lastMessageDetails?.msgSyncStatus == ISMChat_SyncStatus.Local.txt {
+                if chat.lastMessageDetails?.msgSyncStatus == ISMChatSyncStatus.Local.txt {
                     return AnyView(themeImage.messagePending
                         .resizable()
                         .frame(width: 9, height: 9))
@@ -387,8 +387,8 @@ struct ISMConversationSubView: View {
             
             return AnyView(
                 Text(prefix)
-                    .foregroundColor(themeColor.chatList_UserMessage)
-                    .font(themeFonts.chatList_UserMessage)
+                    .foregroundColor(themeColor.chatListUserMessage)
+                    .font(themeFonts.chatListUserMessage)
                     .lineLimit(1)
             )
         } else {

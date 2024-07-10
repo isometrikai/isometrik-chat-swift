@@ -11,9 +11,9 @@ public class ISMChatSdkUI{
     
     //MARK: - PROPERTIES
     //chat PROPERTIES
-    private var chatUIProperties: ISMChat_PageProperties?
+    private var chatUIProperties: ISMChatPageProperties?
     
-    private var appAppearance: ISMChat_Appearance?
+    private var appAppearance: ISMChatAppearance?
     
     private static var sharedInstance : ISMChatSdkUI!
     
@@ -24,14 +24,14 @@ public class ISMChatSdkUI{
         return sharedInstance
     }
     
-    public func getChatProperties() -> ISMChat_PageProperties {
+    public func getChatProperties() -> ISMChatPageProperties {
         if chatUIProperties == nil {
             fatalError("Create configuration before trying to access chat Properties object.")
         }
         return chatUIProperties!
     }
     
-    public func getAppAppearance() -> ISMChat_Appearance{
+    public func getAppAppearance() -> ISMChatAppearance{
         if appAppearance == nil{
             print("Create configuration before trying to access user session object.")
         }
@@ -40,13 +40,13 @@ public class ISMChatSdkUI{
     
     
     
-    public func appConfiguration(conversationConfig : [ISMChat_ConversationTypeConfig],attachments : [ISMChat_ConfigAttachmentType],features : [ISMChat_ConfigFeature],customColors: ISMChat_ColorPalette, customFonts: ISMChat_Fonts,customImages: ISMChat_Images,customMessageBubbleType : ISMChat_BubbleType) {
+    public func appConfiguration(conversationConfig : [ISMChatConversationTypeConfig],attachments : [ISMChatConfigAttachmentType],features : [ISMChatConfigFeature],customColors: ISMChatColorPalette, customFonts: ISMChatFonts,customImages: ISMChatImages,customMessageBubbleType : ISMChatBubbleType) {
         
         //UI Properties
-        chatUIProperties = ISMChat_PageProperties(attachments: attachments, features: features, conversationType: conversationConfig)
+        chatUIProperties = ISMChatPageProperties(attachments: attachments, features: features, conversationType: conversationConfig)
         
        //Appearance
         let appearance = ISMAppearance(colorPalette: customColors, images: customImages, fonts: customFonts,messageBubbleType: customMessageBubbleType)
-        appAppearance = ISMChat_Appearance(appearance: appearance)
+        appAppearance = ISMChatAppearance(appearance: appearance)
     }
 }

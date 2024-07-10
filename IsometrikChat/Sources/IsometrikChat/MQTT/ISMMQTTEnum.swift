@@ -8,7 +8,7 @@
 import Foundation
 
 /// MQTT data Type
-public enum ISMChat_MQTTNotificationType: String {
+public enum ISMChatMQTTNotificationType: String {
     case mqttTypingEvent = "MQTTtypingEvent"
     case mqttConversationCreated = "MQTTconversationCreated"
     case mqttMessageDelivered = "MQTTmessageDelivered"
@@ -50,7 +50,7 @@ public enum ISMChat_MQTTNotificationType: String {
 }
 
 /// MQTT Data.
-enum ISMChat_MQTTData {
+enum ISMChatMQTTData {
     case mqttTypingEvent
     case mqttConversationCreated
     case mqttMessageDelivered
@@ -83,7 +83,7 @@ enum ISMChat_MQTTData {
     
     case none
     
-    static func dataType(_ type: String) -> ISMChat_MQTTData {
+    static func dataType(_ type: String) -> ISMChatMQTTData {
         switch type {
         case "typingEvent": return .mqttTypingEvent
         case "conversationCreated" : return .mqttConversationCreated
@@ -118,12 +118,12 @@ enum ISMChat_MQTTData {
 }
 
 
-enum ISMChat_MqttResult<T> {
+enum ISMChatMqttResult<T> {
     case success(T)
-    case failure(ISMChat_Error)
+    case failure(ISMChatError)
 }
 
-public struct ISMChat_Error: Error {
+public struct ISMChatError: Error {
     
     let httpResponseCode: Int?
     let errorMessage: String

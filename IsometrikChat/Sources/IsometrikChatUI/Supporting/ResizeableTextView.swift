@@ -21,8 +21,6 @@ struct ResizeableTextView: UIViewRepresentable{
     @Binding var mentionUser : String?
     let placeholderColor : Color
     let textViewColor : Color
-//    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-//    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
     
     //MARK: - CONFIGURE
     func makeUIView(context: Context) -> UITextView {

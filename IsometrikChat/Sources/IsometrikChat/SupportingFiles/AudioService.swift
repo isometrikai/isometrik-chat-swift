@@ -11,7 +11,7 @@ import AVFoundation
 import SwiftUI
 
 public protocol ServiceProtocol {
-    func buffer(url: URL,audioBarColor : Color, samplesCount: Int, completion: @escaping([ISMChat_AudioPreviewModel]) -> ())
+    func buffer(url: URL,audioBarColor : Color, samplesCount: Int, completion: @escaping([ISMChatAudioPreviewModel]) -> ())
 }
 
 
@@ -21,7 +21,7 @@ public class Service {
 }
 
 extension Service: ServiceProtocol {
-    public func buffer(url: URL,audioBarColor : Color, samplesCount: Int, completion: @escaping([ISMChat_AudioPreviewModel]) -> ()) {
+    public func buffer(url: URL,audioBarColor : Color, samplesCount: Int, completion: @escaping([ISMChatAudioPreviewModel]) -> ()) {
         DispatchQueue.global(qos: .userInteractive).async {
             do {
                 var cur_url = url
@@ -47,7 +47,7 @@ extension Service: ServiceProtocol {
                     
                     let samples = Array(UnsafeBufferPointer(start:floatChannelData[0], count:frameLength))
                     
-                    var result = [ISMChat_AudioPreviewModel]()
+                    var result = [ISMChatAudioPreviewModel]()
                     
                     let chunked = samples.chunked(into: samples.count / samplesCount)
                     for row in chunked {
@@ -57,7 +57,7 @@ extension Service: ServiceProtocol {
                         let power: Float = accumulator / Float(row.count)
                         let decibles = 10 * log10f(power)
                         
-                        result.append(ISMChat_AudioPreviewModel(magnitude: decibles, color: audioBarColor))
+                        result.append(ISMChatAudioPreviewModel(magnitude: decibles, color: audioBarColor))
                         
                     }
                     DispatchQueue.main.async {
@@ -65,7 +65,7 @@ extension Service: ServiceProtocol {
                     }
                 }
             } catch {
-                ISMChat_Helper.print("Audio Error: \(error)")
+                ISMChatHelper.print("Audio Error: \(error)")
             }
         }
     }

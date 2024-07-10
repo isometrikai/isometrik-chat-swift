@@ -34,13 +34,13 @@ struct ISMPDFMessageView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 13, height: 16)
                     Text("\(fileName)")
-                        .font(themeFonts.messageList_MessageText)
-                        .foregroundColor(themeColor.messageList_MessageText)
+                        .font(themeFonts.messageListMessageText)
+                        .foregroundColor(themeColor.messageListMessageText)
                         .lineLimit(2)
                 })
                 .padding(EdgeInsets(top: 3, leading: 10, bottom: 8, trailing: 10))
             }
-            .background(themeColor.messageList_attachmentBackground)
+            .background(themeColor.messageListattachmentBackground)
             .cornerRadius(5)
         }
         .onAppear( perform: {
@@ -76,8 +76,8 @@ struct ISMPDFMessageView: View {
     }
 }
 
-struct ISMPDFMessageView_Previews: PreviewProvider {
-    static var previews: some View {
-        ISMPDFMessageView()
-    }
-}
+//struct ISMPDFMessageView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ISMPDFMessageView()
+//    }
+//}

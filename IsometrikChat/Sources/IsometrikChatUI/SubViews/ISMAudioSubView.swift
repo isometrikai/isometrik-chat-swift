@@ -24,13 +24,13 @@ struct ISMAudioSubView: View {
     }
     private var message : MessagesDB
     private var isReceived : Bool
-    private var messageDeliveredType : ISMChat_MessageStatus = .Clock
+    private var messageDeliveredType : ISMChatMessageStatus = .Clock
     @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     init(audio: String,
          message : MessagesDB,
          isReceived : Bool,
-         messageDeliveredType : ISMChat_MessageStatus,
+         messageDeliveredType : ISMChatMessageStatus,
          previousAudioRef: Binding<AudioPlayViewModel?>
     ) {
         _audioVM = StateObject(wrappedValue: AudioPlayViewModel(

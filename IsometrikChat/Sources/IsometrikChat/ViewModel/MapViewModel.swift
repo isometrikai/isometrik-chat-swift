@@ -61,7 +61,7 @@ public class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegat
     }
     
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        ISMChat_Helper.print(error.localizedDescription)
+        ISMChatHelper.print(error.localizedDescription)
     }
     
     //getting user region
@@ -78,7 +78,7 @@ public class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegat
         // 3
         placesClient.currentPlace { (placeLikelyHoodList, error) in
             if let error = error {
-                ISMChat_Helper.print("Places failed to initialize with error \(error)")
+                ISMChatHelper.print("Places failed to initialize with error \(error)")
                 return
             }
             guard let placeLikelyHoodList = placeLikelyHoodList else { return }

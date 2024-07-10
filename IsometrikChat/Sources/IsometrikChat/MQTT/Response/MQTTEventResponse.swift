@@ -8,134 +8,124 @@
 import Foundation
 
 
-extension ISMChat_MQTTManager {
+extension ISMChatMQTTManager {
     
     //MARK: - TYPING MESSAGE
-    func typingEventResponse(_ data: Data, completionHandler: @escaping(ISMChat_MqttResult<ISMChat_TypingEvent>) -> Void) {
+    func typingEventResponse(_ data: Data, completionHandler: @escaping(ISMChatMqttResult<ISMChatTypingEvent>) -> Void) {
         do {
-            let moderatorObj = try data.decode() as ISMChat_TypingEvent
+            let moderatorObj = try data.decode() as ISMChatTypingEvent
             completionHandler(.success(moderatorObj))
         } catch {
-            let error = ISMChat_Error(errorMessage: "Error while parsing  TypingEvent .")
+            let error = ISMChatError(errorMessage: "Error while parsing  TypingEvent .")
             completionHandler(.failure(error))
         }
     }
     
     //MARK: - CREATE CONVERSATION
-    func conversationCreatedResponse(_ data: Data, completionHandler: @escaping(ISMChat_MqttResult<ISMChat_CreateConversation>) -> Void) {
+    func conversationCreatedResponse(_ data: Data, completionHandler: @escaping(ISMChatMqttResult<ISMChatCreateConversation>) -> Void) {
         do {
-            let moderatorObj = try data.decode() as ISMChat_CreateConversation
+            let moderatorObj = try data.decode() as ISMChatCreateConversation
             completionHandler(.success(moderatorObj))
         } catch {
-            let error = ISMChat_Error(errorMessage: "Error while parsing  CreateConversation .")
+            let error = ISMChatError(errorMessage: "Error while parsing  CreateConversation .")
             completionHandler(.failure(error))
         }
     }
     
     //MARK: - MESSAGE DELEIVERED
-    func messageDelivered(_ data: Data, completionHandler: @escaping(ISMChat_MqttResult<ISMChat_MessageDelivered>) -> Void) {
+    func messageDelivered(_ data: Data, completionHandler: @escaping(ISMChatMqttResult<ISMChatMessageDelivered>) -> Void) {
         do {
-            let moderatorObj = try data.decode() as ISMChat_MessageDelivered
+            let moderatorObj = try data.decode() as ISMChatMessageDelivered
             completionHandler(.success(moderatorObj))
         } catch {
-            let error = ISMChat_Error(errorMessage: "Error while parsing MessageDelivered .")
+            let error = ISMChatError(errorMessage: "Error while parsing MessageDelivered .")
             completionHandler(.failure(error))
         }
     }
     
     //MARK: - NEW MESSAGE RECEIVED
-    func messageReceived(_ data: Data, completionHandler: @escaping(ISMChat_MqttResult<ISMChat_MessageDelivered>) -> Void) {
+    func messageReceived(_ data: Data, completionHandler: @escaping(ISMChatMqttResult<ISMChatMessageDelivered>) -> Void) {
         do {
-            let moderatorObj = try data.decode() as ISMChat_MessageDelivered
+            let moderatorObj = try data.decode() as ISMChatMessageDelivered
             completionHandler(.success(moderatorObj))
         } catch {
-            let error = ISMChat_Error(errorMessage: "Error while parsing MessageDelivered .")
+            let error = ISMChatError(errorMessage: "Error while parsing MessageDelivered .")
             completionHandler(.failure(error))
         }
     }
     
     //MARK: - MESSAGE READ
-    func messageRead(_ data: Data, completionHandler: @escaping(ISMChat_MqttResult<ISMChat_MessageDelivered>) -> Void) {
+    func messageRead(_ data: Data, completionHandler: @escaping(ISMChatMqttResult<ISMChatMessageDelivered>) -> Void) {
         do {
-            let moderatorObj = try data.decode() as ISMChat_MessageDelivered
+            let moderatorObj = try data.decode() as ISMChatMessageDelivered
             completionHandler(.success(moderatorObj))
         } catch {
-            let error = ISMChat_Error(errorMessage: "Error while parsing MessageDelivered .")
+            let error = ISMChatError(errorMessage: "Error while parsing MessageDelivered .")
             completionHandler(.failure(error))
         }
     }
     
     //MARK: - MULTIPLE MESSAGE READ
-    func multipleMessageRead(_ data: Data, completionHandler: @escaping(ISMChat_MqttResult<ISMChat_MultipleMessageRead>) -> Void) {
+    func multipleMessageRead(_ data: Data, completionHandler: @escaping(ISMChatMqttResult<ISMChatMultipleMessageRead>) -> Void) {
         do {
-            let moderatorObj = try data.decode() as ISMChat_MultipleMessageRead
+            let moderatorObj = try data.decode() as ISMChatMultipleMessageRead
             completionHandler(.success(moderatorObj))
         } catch {
-            let error = ISMChat_Error(errorMessage: "Error while parsing MessageDelivered .")
+            let error = ISMChatError(errorMessage: "Error while parsing MessageDelivered .")
             completionHandler(.failure(error))
         }
     }
     
-    func blockedUserAndUnBlocked(_ data: Data, completionHandler: @escaping(ISMChat_MqttResult<ISMChat_MessageDelivered>) -> Void) {
+    func blockedUserAndUnBlocked(_ data: Data, completionHandler: @escaping(ISMChatMqttResult<ISMChatMessageDelivered>) -> Void) {
         do {
-            let moderatorObj = try data.decode() as ISMChat_MessageDelivered
+            let moderatorObj = try data.decode() as ISMChatMessageDelivered
             completionHandler(.success(moderatorObj))
         } catch {
-            let error = ISMChat_Error(errorMessage: "Error while parsing MessageDelivered .")
+            let error = ISMChatError(errorMessage: "Error while parsing MessageDelivered .")
             completionHandler(.failure(error))
         }
     }
     
-    func messageDeleteForAll(_ data: Data, completionHandler: @escaping(ISMChat_MqttResult<ISMChat_MessageDelivered>) -> Void) {
+    func messageDeleteForAll(_ data: Data, completionHandler: @escaping(ISMChatMqttResult<ISMChatMessageDelivered>) -> Void) {
         do {
-            let moderatorObj = try data.decode() as ISMChat_MessageDelivered
+            let moderatorObj = try data.decode() as ISMChatMessageDelivered
             completionHandler(.success(moderatorObj))
         } catch {
-            let error = ISMChat_Error(errorMessage: "Error while parsing MessageDelivered .")
+            let error = ISMChatError(errorMessage: "Error while parsing MessageDelivered .")
             completionHandler(.failure(error))
         }
     }
     
     //MARK: - MESSAGE UPDATED
-    func messageUpdated(_ data: Data, completionHandler: @escaping(ISMChat_MqttResult<ISMChat_MessageDelivered>) -> Void) {
+    func messageUpdated(_ data: Data, completionHandler: @escaping(ISMChatMqttResult<ISMChatMessageDelivered>) -> Void) {
         do {
-            let moderatorObj = try data.decode() as ISMChat_MessageDelivered
+            let moderatorObj = try data.decode() as ISMChatMessageDelivered
             completionHandler(.success(moderatorObj))
         } catch {
-            let error = ISMChat_Error(errorMessage: "Error while parsing MessageDelivered .")
-            completionHandler(.failure(error))
-        }
-    }
-   func reactions(_ data: Data, completionHandler: @escaping(ISMChat_MqttResult<ISMChat_Reactions>) -> Void) {
-       do {
-           let moderatorObj = try data.decode() as ISMChat_Reactions
-           completionHandler(.success(moderatorObj))
-       } catch {
-           let error = ISMChat_Error(errorMessage: "Error while parsing MessageDelivered .")
-           completionHandler(.failure(error))
-       }
-   }
-    
-    
-    //callkit
-//    func meeting(_ data: Data, completionHandler: @escaping(ISMChat_MqttResult<ISMCall_Meeting>) -> Void) {
-//        do {
-//            let moderatorObj = try data.decode() as ISMMeeting
-//            completionHandler(.success(moderatorObj))
-//        } catch {
-//            let error = ISMChat_Error(errorMessage: "Error while parsing Meeting Data .")
-//            completionHandler(.failure(error))
-//        }
-//    }
-    
-    func blockedUserAndUnBlockedUser(_ data: Data, completionHandler: @escaping(ISMChat_MqttResult<ISMChat_UserBlockAndUnblock>) -> Void) {
-        do {
-            let moderatorObj = try data.decode() as ISMChat_UserBlockAndUnblock
-            completionHandler(.success(moderatorObj))
-        } catch {
-            let error = ISMChat_Error(errorMessage: "Error while parsing MessageDelivered .")
+            let error = ISMChatError(errorMessage: "Error while parsing MessageDelivered .")
             completionHandler(.failure(error))
         }
     }
     
+    //MARK: - REACTIONS
+    func reactions(_ data: Data, completionHandler: @escaping(ISMChatMqttResult<ISMChatReactions>) -> Void) {
+        do {
+            let moderatorObj = try data.decode() as ISMChatReactions
+            completionHandler(.success(moderatorObj))
+        } catch {
+            let error = ISMChatError(errorMessage: "Error while parsing MessageDelivered .")
+            completionHandler(.failure(error))
+        }
+    }
+    
+    //MARK: - BLOCK UNBLOCK
+    func blockedUserAndUnBlockedUser(_ data: Data, completionHandler: @escaping(ISMChatMqttResult<ISMChatUserBlockAndUnblock>) -> Void) {
+        do {
+            let moderatorObj = try data.decode() as ISMChatUserBlockAndUnblock
+            completionHandler(.success(moderatorObj))
+        } catch {
+            let error = ISMChatError(errorMessage: "Error while parsing MessageDelivered .")
+            completionHandler(.failure(error))
+        }
+    }
 }

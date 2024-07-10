@@ -12,9 +12,9 @@ import IsometrikChat
 struct HighlightedTextView : View{
     
     @State var originalText: String
-    let mentionedUsers: [ISMChat_GroupMember]
+    let mentionedUsers: [ISMChatGroupMember]
     @Binding var navigateToInfo : Bool
-    @Binding var navigatetoUser : ISMChat_GroupMember
+    @Binding var navigatetoUser : ISMChatGroupMember
    
 
     var body: some View {
@@ -28,7 +28,7 @@ struct HighlightedTextView : View{
                             }
                             return false
                         }) {
-                            let member = ISMChat_GroupMember(userProfileImageUrl: matchedUser.userProfileImageUrl, userName: matchedUser.userName, userIdentifier: matchedUser.userIdentifier, userId: matchedUser.userId, online: matchedUser.online, lastSeen: matchedUser.lastSeen, isAdmin: matchedUser.isAdmin)
+                            let member = ISMChatGroupMember(userProfileImageUrl: matchedUser.userProfileImageUrl, userName: matchedUser.userName, userIdentifier: matchedUser.userIdentifier, userId: matchedUser.userId, online: matchedUser.online, lastSeen: matchedUser.lastSeen, isAdmin: matchedUser.isAdmin)
                             navigatetoUser = member
                             navigateToInfo = true
                         }
@@ -73,10 +73,10 @@ extension HashtagText {
 
 
 struct HashtagTextModifier: TextModifier {
-    let mentionedUsers: [ISMChat_GroupMember]
+    let mentionedUsers: [ISMChatGroupMember]
     var firstNameIsValid : Bool = false
     @Binding var navigateToInfo : Bool
-    @Binding var navigatetoUser : ISMChat_GroupMember
+    @Binding var navigatetoUser : ISMChatGroupMember
     @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
 
@@ -96,14 +96,14 @@ struct HashtagTextModifier: TextModifier {
                          if let string = matchedUser.userName?.split(separator: " ").first{
                              var attributedString = AttributedString("@\(string)")
                              // 1
-                             attributedString.font = themeFonts.messageList_MessageText
+                             attributedString.font = themeFonts.messageListMessageText
                              
-                             attributedString.foregroundColor = themeColor.userProfile_editText
+                             attributedString.foregroundColor = themeColor.userProfileEditText
                              
                              
                              // 2
                              if let range = attributedString.range(of: word) {
-                                 attributedString[range].foregroundColor = themeColor.userProfile_editText
+                                 attributedString[range].foregroundColor = themeColor.userProfileEditText
                                  attributedString[range].link = URL(string: "hashtagtext://" + String(matchedUser.userName ?? "").replacingOccurrences(of: " ", with: ""))
                              }
                              
@@ -134,6 +134,6 @@ struct HashtagTextModifier: TextModifier {
                 }
             }
         }
-        return output.font(themeFonts.messageList_MessageText)
+        return output.font(themeFonts.messageListMessageText)
     }
 }

@@ -10,10 +10,10 @@ import IsometrikChat
 
 struct ISMImageViewer: View {
     //MARK:  - PROPERTIES
-    var message : ISMChat_Message
+    var message : ISMChatMessage
     //MARK:  - LIFECYCLE
     var body: some View {
-        ISMChat_ImageCahcingManger.networkImage(url:message.body ?? "", isprofileImage: false)
+        ISMChatImageCahcingManger.networkImage(url:message.body ?? "", isprofileImage: false)
             .scaledToFill()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

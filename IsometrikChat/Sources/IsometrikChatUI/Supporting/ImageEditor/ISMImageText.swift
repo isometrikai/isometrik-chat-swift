@@ -211,7 +211,7 @@ struct ISMImageText: View {
             }
         }
         
-        let newUrl = ISMChat_Helper.createImageURL()
+        let newUrl = ISMChatHelper.createImageURL()
         if let imageData = uiimage.pngData() {
             do {
                 try imageData.write(to: newUrl)

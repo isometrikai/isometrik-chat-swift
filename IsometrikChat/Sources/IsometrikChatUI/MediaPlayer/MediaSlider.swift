@@ -31,7 +31,7 @@ struct MediaSlider: View {
                         
                         let url = (self.media[i].mediaUrl )
                         
-                        if self.media[i].customType == ISMChat_MediaType.Video.value {
+                        if self.media[i].customType == ISMChatMediaType.Video.value {
                             let vp =  AVPlayer(url:  URL(string: url)!)
                             VideoPlayer(player: vp)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -39,12 +39,12 @@ struct MediaSlider: View {
                                 .onAppear{vp.play()}
                                 .onDisappear{vp.pause()}
                             
-                        }else if media[i].customType == ISMChat_MediaType.gif.value{
+                        }else if media[i].customType == ISMChatMediaType.gif.value{
                             AnimatedImage(url: URL(string: url))
                                 .resizable()
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                         } else {
-                            ISMChat_ImageCahcingManger.networkImage(url: url,isprofileImage: false)
+                            ISMChatImageCahcingManger.networkImage(url: url,isprofileImage: false)
                                 .resizable()
                                 .scaledToFit()
                                 .tag(i)

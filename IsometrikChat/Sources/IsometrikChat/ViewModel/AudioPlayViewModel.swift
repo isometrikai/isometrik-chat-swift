@@ -16,7 +16,7 @@ public class AudioPlayViewModel: ObservableObject {
     //MARK:  - PROPERTIES
     public var timer: Timer?
     @Published public var isPlaying: Bool = false
-    @Published public var soundSamples = [ISMChat_AudioPreviewModel]()
+    @Published public var soundSamples = [ISMChatAudioPreviewModel]()
     public let sample_count: Int
     public var index = 0
     public let url: URL
@@ -40,7 +40,7 @@ public class AudioPlayViewModel: ObservableObject {
             try session.setCategory(.playAndRecord)
             try session.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
         } catch {
-            ISMChat_Helper.print(error.localizedDescription)
+            ISMChatHelper.print(error.localizedDescription)
         }
         player = AVPlayer(url: self.url)
     }
@@ -86,7 +86,7 @@ public class AudioPlayViewModel: ObservableObject {
         self.timer?.invalidate()
         self.isPlaying = false
         self.index = 0
-        self.soundSamples = self.soundSamples.map { tmp -> ISMChat_AudioPreviewModel in
+        self.soundSamples = self.soundSamples.map { tmp -> ISMChatAudioPreviewModel in
             var cur = tmp
             cur.color = self.defaultAudioBarColor
             return cur
@@ -138,7 +138,7 @@ public class AudioPlayViewModel: ObservableObject {
         do {
             try FileManager.default.removeItem(at: url)
         } catch {
-            ISMChat_Helper.print(error)
+            ISMChatHelper.print(error)
         }
     }
 }

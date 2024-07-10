@@ -11,9 +11,9 @@ import IsometrikChat
 struct ISMGroupMemberSubView: View {
     
     //MARK: - PROPERTIES
-    let member : ISMChat_GroupMember
+    let member : ISMChatGroupMember
     var hideDisclosure : Bool? = false
-    @Binding var selectedMember : ISMChat_GroupMember
+    @Binding var selectedMember : ISMChatGroupMember
     @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State var userSession = ISMChatSdk.getInstance().getUserSession()
@@ -23,29 +23,29 @@ struct ISMGroupMemberSubView: View {
             selectedMember = member
         } label: {
             HStack(spacing: 12){
-                UserAvatarView(avatar: member.userProfileImageUrl ?? "", showOnlineIndicator: false,size: CGSize(width: 29, height: 29), userName: member.userName ?? "",font: themeFonts.chatList_UserMessage)
+                UserAvatarView(avatar: member.userProfileImageUrl ?? "", showOnlineIndicator: false,size: CGSize(width: 29, height: 29), userName: member.userName ?? "",font: themeFonts.chatListUserMessage)
                 
                 VStack(alignment: .leading,spacing: 5){
                     if member.userId != userSession.getUserId(){
                         Text(member.userName?.capitalizingFirstLetter() ?? "")
-                            .font(themeFonts.messageList_MessageText)
-                            .foregroundColor(themeColor.messageList_MessageText)
+                            .font(themeFonts.messageListMessageText)
+                            .foregroundColor(themeColor.messageListMessageText)
                     }else{
                         Text(ConstantStrings.you)
-                            .font(themeFonts.messageList_MessageText)
-                            .foregroundColor(themeColor.messageList_MessageText)
+                            .font(themeFonts.messageListMessageText)
+                            .foregroundColor(themeColor.messageListMessageText)
                     }
                     Text(member.userIdentifier ?? "")
-                        .font(themeFonts.chatList_UserMessage)
-                        .foregroundColor(themeColor.chatList_UserMessage)
+                        .font(themeFonts.chatListUserMessage)
+                        .foregroundColor(themeColor.chatListUserMessage)
                         .lineLimit(2)
                 }
                 Spacer()
                 
                 if member.isAdmin == true{
                     Text("Admin")
-                        .font(themeFonts.chatList_UserMessage)
-                        .foregroundColor(themeColor.chatList_UserMessage)
+                        .font(themeFonts.chatListUserMessage)
+                        .foregroundColor(themeColor.chatListUserMessage)
                 }
                 if member.userId != userSession.getUserId(){
                     if hideDisclosure == false{

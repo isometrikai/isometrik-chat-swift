@@ -83,7 +83,7 @@ struct ISMImageDraw: View {
         let generatedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         if let image = generatedImage{
-            let newUrl = ISMChat_Helper.createImageURL()
+            let newUrl = ISMChatHelper.createImageURL()
             if let imageData = image.jpegData(compressionQuality: 1.0) {
                 do {
                     try imageData.write(to: newUrl)

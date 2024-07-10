@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-public struct ISMChat_Configuration {
+public struct ISMChatConfiguration {
     
     public var accountId: String
     public var projectId: String

@@ -12,9 +12,9 @@ struct ISMForwardToUsersSubView: View {
     
     //MARK:  - PROPERTIES
     
-    @Binding var selections: [ISMChat_User]
+    @Binding var selections: [ISMChatUser]
     @Binding  var showSendView : Bool
-    let user : ISMChat_User
+    let user : ISMChatUser
     @Binding var selectedUser : [String]
     @Binding var showAlert : Bool
     @State var showSelected : Bool = false
@@ -29,12 +29,12 @@ struct ISMForwardToUsersSubView: View {
                            showOnlineIndicator: user.online ?? false,
                            size: CGSize(width: 29, height: 29),
                            userName: user.userName ?? "",
-                           font: themeFonts.messageList_MessageText)
+                           font: themeFonts.messageListMessageText)
             
             // UserName
             Text(user.userName?.capitalizingFirstLetter() ?? "")
-                .font(themeFonts.messageList_MessageText)
-                .foregroundColor(themeColor.messageList_MessageText)
+                .font(themeFonts.messageListMessageText)
+                .foregroundColor(themeColor.messageListMessageText)
             
             // Selection Icon
             Spacer()

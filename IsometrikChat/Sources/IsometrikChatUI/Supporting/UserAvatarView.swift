@@ -82,7 +82,7 @@ public struct AvatarView: View {
                 Circle()
             )
         }else{
-            ISMChat_ImageCahcingManger.networkImage(url: avatar, isprofileImage: true,size: self.size)
+            ISMChatImageCahcingManger.networkImage(url: avatar, isprofileImage: true,size: self.size)
                 .scaledToFill()
                 .frame(
                     width: size.width,

@@ -58,7 +58,7 @@ struct ISMImageAndViderEditor: View {
                 LazyHStack(spacing: 10) {
                     ForEach(media.indices, id: \.self) { index in
                         GeometryReader { geometry in
-                            if let uiImage = ISMChat_Helper.isVideo(media: media[index].url) == true ? ISMChat_Helper.getThumbnailImage(url: media[index].url.absoluteString) : loadImageFromURL(fileURL: media[index].url) {
+                            if let uiImage = ISMChatHelper.isVideo(media: media[index].url) == true ? ISMChatHelper.getThumbnailImage(url: media[index].url.absoluteString) : loadImageFromURL(fileURL: media[index].url) {
                                 ZStack{
                                     Image(uiImage: uiImage)
                                         .resizable()

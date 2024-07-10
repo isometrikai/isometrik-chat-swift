@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ISMChat_Appearance {
+public class ISMChatAppearance {
     public var appearance: ISMAppearance
     public init(
         appearance: ISMAppearance = ISMAppearance()
@@ -17,15 +17,15 @@ public class ISMChat_Appearance {
 }
 
 public class ISMAppearance {
-    public var colorPalette : ISMChat_ColorPalette
-    public var fonts : ISMChat_Fonts
-    public var images :  ISMChat_Images
-    public var messageBubbleType : ISMChat_BubbleType
+    public var colorPalette : ISMChatColorPalette
+    public var fonts : ISMChatFonts
+    public var images :  ISMChatImages
+    public var messageBubbleType : ISMChatBubbleType
     public init(
-        colorPalette: ISMChat_ColorPalette = ISMChat_ColorPalette(),
-        images: ISMChat_Images = ISMChat_Images(),
-        fonts: ISMChat_Fonts = ISMChat_Fonts(),
-        messageBubbleType : ISMChat_BubbleType = .BubbleWithOutTail
+        colorPalette: ISMChatColorPalette = ISMChatColorPalette(),
+        images: ISMChatImages = ISMChatImages(),
+        fonts: ISMChatFonts = ISMChatFonts(),
+        messageBubbleType : ISMChatBubbleType = .BubbleWithOutTail
     ) {
         self.colorPalette = colorPalette
         self.images = images
@@ -35,7 +35,7 @@ public class ISMAppearance {
 }
 
 
-public enum ISMChat_BubbleType: Sendable{
+public enum ISMChatBubbleType: Sendable{
     case BubbleWithTail
     case BubbleWithOutTail
 }

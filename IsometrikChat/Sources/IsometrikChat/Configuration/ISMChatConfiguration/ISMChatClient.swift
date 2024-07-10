@@ -8,21 +8,21 @@
 import Foundation
 
 
-public class ISMChat_Client {
-    private var communicationConfig : ISMChat_CommunicationConfiguration
-    private var apiManager : ISMChat_APIManager
+public class ISMChatClient {
+    private var communicationConfig : ISMChatCommunicationConfiguration
+    private var apiManager : ISMChatAPIManager
 
     
-    public init(communicationConfig: ISMChat_CommunicationConfiguration,apiManager : ISMChat_APIManager) {
+    public init(communicationConfig: ISMChatCommunicationConfiguration,apiManager : ISMChatAPIManager) {
         self.communicationConfig = communicationConfig
         self.apiManager = apiManager
     }
     
-    public func getConfigurations() -> ISMChat_CommunicationConfiguration{
+    public func getConfigurations() -> ISMChatCommunicationConfiguration{
         return communicationConfig
     }
     
-     public func getApiManager () -> ISMChat_APIManager{
+     public func getApiManager () -> ISMChatAPIManager{
         return apiManager
     }
 }

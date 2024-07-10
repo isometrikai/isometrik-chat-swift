@@ -17,9 +17,9 @@ import Combine
 public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     
     //MARK:  - PROPERTIES
-    @Published public var messages : [[ISMChat_Message]]?
-    @Published public var allMessages : [ISMChat_Message]? = []
-    @Published public var forwardToConversations : [ISMChat_ConversationsDetail] = []
+    @Published public var messages : [[ISMChatMessage]]?
+    @Published public var allMessages : [ISMChatMessage]? = []
+    @Published public var forwardToConversations : [ISMChatConversationsDetail] = []
     @Published public var documentSelectedFromPicker : URL?
     //    @Published var cameraImageToUse : URL?
     public var skip : Int = 0
@@ -38,7 +38,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     @Published public var timerValue : String = "0:00"
     @Published public var toggleColor : Bool = false
     
-    @Published public var recordingsList = [ISMChat_Recording]()
+    @Published public var recordingsList = [ISMChatRecording]()
     
     //grp
     @Published public var groupTitleImage : URL?
@@ -51,19 +51,19 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
     
     //MARK: - get messages
-    public func getMessages(refresh : Bool? = nil,conversationId : String,lastMessageTimestamp:String,completion:@escaping(ISMChat_Messages?)->()){
+    public func getMessages(refresh : Bool? = nil,conversationId : String,lastMessageTimestamp:String,completion:@escaping(ISMChatMessages?)->()){
         var baseURL = String()
         if lastMessageTimestamp == "" {
-            baseURL = "\(ISMChat_NetworkServices.Urls.messages)?conversationId=\(conversationId)"
+            baseURL = "\(ISMChatNetworkServices.Urls.messages)?conversationId=\(conversationId)"
         }else {
-            baseURL = "\(ISMChat_NetworkServices.Urls.messages)?conversationId=\(conversationId)&lastMessageTimestamp=\(lastMessageTimestamp)"
+            baseURL = "\(ISMChatNetworkServices.Urls.messages)?conversationId=\(conversationId)&lastMessageTimestamp=\(lastMessageTimestamp)"
         }
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChat_Response<ISMChat_Messages?,ISMChat_ErrorData?>) in
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatMessages?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
                 completion(data)
             case .failure(let error):
-                ISMChat_Helper.print("Get Message Api failed -----> \(String(describing: error))")
+                ISMChatHelper.print("Get Message Api failed -----> \(String(describing: error))")
             }
         }
     }
@@ -72,21 +72,21 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     //MARK: - update messages
     public func updateMessage(messageId : String,conversationId : String,message : String,completion:@escaping(String)->()){
         var searchTags : [String] = []
-        searchTags.append(ISMChat_SearchTags.ism_search_tag_text.value)
+        searchTags.append(ISMChatSearchTags.text.value)
         searchTags.append(message)
         let body = ["messageId" : messageId,"conversationId" : conversationId, "body" : message,"searchableTags" : searchTags] as [String : Any]
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.sendMessage,httpMethod: .patch,params: body) { (result : ISMChat_Response<ISMChat_SendMsg?,ISMChat_ErrorData?>) in
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.sendMessage,httpMethod: .patch,params: body) { (result : ISMChatResponse<ISMChatSendMsg?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
                 completion(data?.messageId ?? "")
             case .failure(let error):
-                ISMChat_Helper.print("Get send Message Api failed -----> \(String(describing: error))")
+                ISMChatHelper.print("Get send Message Api failed -----> \(String(describing: error))")
             }
         }
     }
     
     //MARK: - send messages
-    public func sendMessage(messageKind : ISMChat_MessageType,customType : String,conversationId :  String,message : String,fileName : String?,fileSize : Int?,mediaId : String?,objectId : String? = "",messageType:Int = 0,thumbnailUrl : String? = "",contactInfo: [ISMChat_PhoneContact]? = [],latitude : Double? = nil,longitude : Double? = nil,placeName : String? = nil,placeAddress : String? = nil,isGroup : Bool? = false,groupMembers : [ISMChat_GroupMember]? = [],caption : String? = nil,isBroadCastMessage : Bool? = false,groupcastId : String? = nil,completion:@escaping(String, String)->()){
+    public func sendMessage(messageKind : ISMChatMessageType,customType : String,conversationId :  String,message : String,fileName : String?,fileSize : Int?,mediaId : String?,objectId : String? = "",messageType:Int = 0,thumbnailUrl : String? = "",contactInfo: [ISMChatPhoneContact]? = [],latitude : Double? = nil,longitude : Double? = nil,placeName : String? = nil,placeAddress : String? = nil,isGroup : Bool? = false,groupMembers : [ISMChatGroupMember]? = [],caption : String? = nil,isBroadCastMessage : Bool? = false,groupcastId : String? = nil,completion:@escaping(String, String)->()){
         var searchTags : [String] = []
         var body : [String : Any] = [:]
         var attachmentValue : [String : Any] = [:]
@@ -97,44 +97,44 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         let deviceId = UniqueIdentifierManager.shared.getUniqueIdentifier()
         switch messageKind {
         case .photo:
-            attachmentValue = ["thumbnailUrl": message, "size" : fileSize ?? 0, "name" : fileName ?? "" , "mimeType" : ISMChat_ExtensionType.Image.type, "mediaUrl" : message, "mediaId" : mediaId ?? "", "extension" : ISMChat_ExtensionType.Image.type, "attachmentType" : ISMChat_AttachmentType.Image.type]
+            attachmentValue = ["thumbnailUrl": message, "size" : fileSize ?? 0, "name" : fileName ?? "" , "mimeType" : ISMChatExtensionType.Image.type, "mediaUrl" : message, "mediaId" : mediaId ?? "", "extension" : ISMChatExtensionType.Image.type, "attachmentType" : ISMChatAttachmentType.Image.type]
             body["attachments"] = attachmentValue
             notificationBody = "📷 Photo"
             messageInBody = "Image"
             //searchable tags
-            searchTags.append(ISMChat_SearchTags.ism_search_tag_photo.value)
+            searchTags.append(ISMChatSearchTags.photo.value)
             searchTags.append(message)
             if let caption  = caption, !caption.isEmpty{
                 metaData = ["captionMessage" : caption]
             }
         case .video:
-            attachmentValue = ["thumbnailUrl": thumbnailUrl ?? "", "size" : fileSize ?? 0, "name" : fileName ?? "" , "mimeType" : ISMChat_ExtensionType.Video.type, "mediaUrl" : message, "mediaId" : mediaId ?? "", "extension" : ISMChat_ExtensionType.Video.type, "attachmentType" : ISMChat_AttachmentType.Video.type]
+            attachmentValue = ["thumbnailUrl": thumbnailUrl ?? "", "size" : fileSize ?? 0, "name" : fileName ?? "" , "mimeType" : ISMChatExtensionType.Video.type, "mediaUrl" : message, "mediaId" : mediaId ?? "", "extension" : ISMChatExtensionType.Video.type, "attachmentType" : ISMChatAttachmentType.Video.type]
             body["attachments"] = attachmentValue
             notificationBody = "📹 Video"
             messageInBody = "Video"
             //searchable tags
-            searchTags.append(ISMChat_SearchTags.ism_search_tag_video.value)
+            searchTags.append(ISMChatSearchTags.video.value)
             searchTags.append(message)
             if let caption  = caption, !caption.isEmpty{
                 metaData = ["captionMessage" : caption]
             }
         case .audio:
-            attachmentValue = ["thumbnailUrl": message, "size" : fileSize ?? 0, "name" : fileName ?? "" , "mimeType" : ISMChat_ExtensionType.Audio.type, "mediaUrl" : message, "mediaId" : mediaId ?? "", "extension" : ISMChat_ExtensionType.Audio.type, "attachmentType" : ISMChat_AttachmentType.Audio.type]
+            attachmentValue = ["thumbnailUrl": message, "size" : fileSize ?? 0, "name" : fileName ?? "" , "mimeType" : ISMChatExtensionType.Audio.type, "mediaUrl" : message, "mediaId" : mediaId ?? "", "extension" : ISMChatExtensionType.Audio.type, "attachmentType" : ISMChatAttachmentType.Audio.type]
             body["attachments"] = attachmentValue
             notificationBody = "🎤 Voice Message"
             messageInBody = "Audio"
             //searchable tags
-            searchTags.append(ISMChat_SearchTags.ism_search_tag_audio.value)
+            searchTags.append(ISMChatSearchTags.audio.value)
             searchTags.append(message)
         case .document:
-            attachmentValue = ["thumbnailUrl": message, "size" : fileSize ?? 0, "name" : fileName ?? "" , "mimeType" : ISMChat_ExtensionType.Document.type, "mediaUrl" : message, "mediaId" : mediaId ?? "", "extension" : ISMChat_ExtensionType.Document.type, "attachmentType" : ISMChat_AttachmentType.Document.type]
+            attachmentValue = ["thumbnailUrl": message, "size" : fileSize ?? 0, "name" : fileName ?? "" , "mimeType" : ISMChatExtensionType.Document.type, "mediaUrl" : message, "mediaId" : mediaId ?? "", "extension" : ISMChatExtensionType.Document.type, "attachmentType" : ISMChatAttachmentType.Document.type]
             if let documentUrl = URL(string: message){
-                let fileName = ISMChat_Helper.getFileNameFromURL(url: documentUrl)
+                let fileName = ISMChatHelper.getFileNameFromURL(url: documentUrl)
                 notificationBody = "📄 \(fileName)"
                 messageInBody = "Document"
             }
             //searchable tags
-            searchTags.append(ISMChat_SearchTags.ism_search_tag_file.value)
+            searchTags.append(ISMChatSearchTags.file.value)
             searchTags.append(message)
         case .text:
             //mentionUser
@@ -183,11 +183,11 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             notificationBody = message
             messageInBody = message
             //searchable tags
-            searchTags.append(ISMChat_SearchTags.ism_search_tag_text.value)
+            searchTags.append(ISMChatSearchTags.text.value)
             searchTags.append(message)
         case .location:
             if let latitude = latitude, let longitude = longitude, let placeName = placeName,let placeAddress = placeAddress{
-                attachmentValue = ["latitude" : latitude, "title": placeName, "longitude" : longitude , "address" : placeAddress,"attachmentType" : ISMChat_AttachmentType.Location.type]
+                attachmentValue = ["latitude" : latitude, "title": placeName, "longitude" : longitude , "address" : placeAddress,"attachmentType" : ISMChatAttachmentType.Location.type]
             }
             
             messageInBody = message
@@ -196,7 +196,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
                 notificationBody = "📍 \(name)"
             }
             //searchable tags
-            searchTags.append(ISMChat_SearchTags.ism_search_tag_location.value)
+            searchTags.append(ISMChatSearchTags.location.value)
             searchTags.append(message)
         case .contact:
             if contactInfo?.count == 1{
@@ -206,7 +206,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             }
             
             //searchable tags
-            searchTags.append(ISMChat_SearchTags.ism_search_tag_contact.value)
+            searchTags.append(ISMChatSearchTags.contact.value)
             searchTags.append(message)
             
             messageInBody = "Contact"
@@ -226,20 +226,20 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             
             metaData = ["contacts" : contacts]
         case .gif:
-            attachmentValue = ["thumbnailUrl": message, "attachmentMessageType" : "Gif","attachmentSchemaType" : "GifSticker", "attachmentType" : ISMChat_AttachmentType.Gif.type,"mediaUrl" : message,"name" : fileName, "stillUrl" : message]
+            attachmentValue = ["thumbnailUrl": message, "attachmentMessageType" : "Gif","attachmentSchemaType" : "GifSticker", "attachmentType" : ISMChatAttachmentType.Gif.type,"mediaUrl" : message,"name" : fileName, "stillUrl" : message]
             body["attachments"] = attachmentValue
             notificationBody = "Gif"
             messageInBody = "Gif"
             //searchable tags
-            searchTags.append(ISMChat_SearchTags.ism_search_tag_gif.value)
+            searchTags.append(ISMChatSearchTags.gif.value)
             searchTags.append(fileName ?? "")
         case .sticker:
-            attachmentValue = ["thumbnailUrl": message, "attachmentMessageType" : "Sticker","attachmentSchemaType" : "GifSticker", "attachmentType" : ISMChat_AttachmentType.Sticker.type,"mediaUrl" : message,"name" : fileName, "stillUrl" : message]
+            attachmentValue = ["thumbnailUrl": message, "attachmentMessageType" : "Sticker","attachmentSchemaType" : "GifSticker", "attachmentType" : ISMChatAttachmentType.Sticker.type,"mediaUrl" : message,"name" : fileName, "stillUrl" : message]
             body["attachments"] = attachmentValue
             notificationBody = "Sticker"
             messageInBody = "Sticker"
             //searchable tags
-            searchTags.append(ISMChat_SearchTags.ism_search_tag_sticker.value)
+            searchTags.append(ISMChatSearchTags.sticker.value)
             searchTags.append(fileName ?? "")
         default:
             break
@@ -283,18 +283,18 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         default:
             break
         }
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: isBroadCastMessage == false ?  ISMChat_NetworkServices.Urls.sendMessage : ISMChat_NetworkServices.Urls.postbroadCastMessage,httpMethod: .post,params: body) { (result : ISMChat_Response<ISMChat_SendMsg?,ISMChat_ErrorData?>) in
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: isBroadCastMessage == false ?  ISMChatNetworkServices.Urls.sendMessage : ISMChatNetworkServices.Urls.postbroadCastMessage,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatSendMsg?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
                 completion(data?.messageId ?? "", objectId ?? "")
             case .failure(let error):
-                ISMChat_Helper.print("Get send Message Api failed -----> \(String(describing: error))")
+                ISMChatHelper.print("Get send Message Api failed -----> \(String(describing: error))")
             }
         }
     }
     
     //MARK: - upload image, video, doc
-    public func upload(messageKind : ISMChat_MessageType,conversationId :  String,conversationType : Int? = 0,image : URL?,document : URL?,video : URL?,audio : URL?,mediaName : String,isfromDocument : Bool? = false,completion:@escaping(ISMChat_PresignedUrlDetail?, String , Int)->()){
+    public func upload(messageKind : ISMChatMessageType,conversationId :  String,conversationType : Int? = 0,image : URL?,document : URL?,video : URL?,audio : URL?,mediaName : String,isfromDocument : Bool? = false,completion:@escaping(ISMChatPresignedUrlDetail?, String , Int)->()){
         //params
         var params = [String: Any]()
         params["conversationId"] = conversationId
@@ -323,7 +323,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
                 }
                 mediaData = try! Data(contentsOf: image)
             }else if let image = image{
-                if let myImage = ISMChat_Helper.compressImage(image: image){
+                if let myImage = ISMChatHelper.compressImage(image: image){
                     if let dataobj = myImage.jpegData(compressionQuality: 0.1){
                         mediaData = dataobj
                     }
@@ -341,93 +341,93 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             }
         }
         params["attachments"] = [["nameWithExtension": mediaName ,"mediaType" : mediaType,"mediaId" : UIDevice.current.identifierForVendor!.uuidString] as [String : Any]]
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.presignedUrl,httpMethod: .post,params: params) { (result : ISMChat_Response<ISMChat_PresignedUrl?,ISMChat_ErrorData?>) in
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.presignedUrl,httpMethod: .post,params: params) { (result : ISMChatResponse<ISMChatPresignedUrl?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
                 if let url = data?.presignedUrls?.first?.mediaPresignedUrl{
                     AF.upload(mediaData, to: url, method: .put, headers: [:]).responseData { response in
-                        ISMChat_Helper.print(response)
+                        ISMChatHelper.print(response)
                         if response.response?.statusCode == 200{
                             completion(data?.presignedUrls?.first, mediaName, mediaData.count)
                         }else{
-                            ISMChat_Helper.print("Error in Image upload")
+                            ISMChatHelper.print("Error in Image upload")
                         }
                     }
                 }
             case .failure(let error):
-                ISMChat_Helper.print(error ?? "Error")
+                ISMChatHelper.print(error ?? "Error")
             }
         }
     }
     
     
     //MARK: - get conversation Detail
-    public func getConversationDetail(conversationId : String,isGroup : Bool,completion:@escaping(ISMChat_ConversationDetail?)->()){
+    public func getConversationDetail(conversationId : String,isGroup : Bool,completion:@escaping(ISMChatConversationDetail?)->()){
         var baseURL = ""
         if isGroup == true{
-            baseURL = "\(ISMChat_NetworkServices.Urls.conversationDetail)\(conversationId)?includeMembers=true"
+            baseURL = "\(ISMChatNetworkServices.Urls.conversationDetail)\(conversationId)?includeMembers=true"
         }else{
-            baseURL = "\(ISMChat_NetworkServices.Urls.conversationDetail)\(conversationId)"
+            baseURL = "\(ISMChatNetworkServices.Urls.conversationDetail)\(conversationId)"
         }
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChat_Response<ISMChat_ConversationDetail?,ISMChat_ErrorData?>) in
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatConversationDetail?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
                 completion(data)
             case .failure(let error):
-                ISMChat_Helper.print("Get CONVERSATION Api failed -----> \(String(describing: error))")
+                ISMChatHelper.print("Get CONVERSATION Api failed -----> \(String(describing: error))")
             }
         }
     }
     
     //MARK: - message read info
-    public func getMessageReadInfo(messageId : String,conversationId : String,completion:@escaping(ISMChat_ConversationDetail?)->()){
-        let baseURL = "\(ISMChat_NetworkServices.Urls.messageRead)?conversationId=\(conversationId)&messageId=\(messageId)"
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChat_Response<ISMChat_ConversationDetail?,ISMChat_ErrorData?>) in
+    public func getMessageReadInfo(messageId : String,conversationId : String,completion:@escaping(ISMChatConversationDetail?)->()){
+        let baseURL = "\(ISMChatNetworkServices.Urls.messageRead)?conversationId=\(conversationId)&messageId=\(messageId)"
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatConversationDetail?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
                 completion(data)
             case .failure(_):
-                ISMChat_Helper.print("Message Read Info Failed")
+                ISMChatHelper.print("Message Read Info Failed")
             }
         }
     }
     
     //MARK: - message delivered info
-    public func getMessageDeliveredInfo(messageId : String,conversationId : String,completion:@escaping(ISMChat_ConversationDetail?)->()){
-        let baseURL = "\(ISMChat_NetworkServices.Urls.messageDelivered)?conversationId=\(conversationId)&messageId=\(messageId)"
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChat_Response<ISMChat_ConversationDetail?,ISMChat_ErrorData?>) in
+    public func getMessageDeliveredInfo(messageId : String,conversationId : String,completion:@escaping(ISMChatConversationDetail?)->()){
+        let baseURL = "\(ISMChatNetworkServices.Urls.messageDelivered)?conversationId=\(conversationId)&messageId=\(messageId)"
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatConversationDetail?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
                 completion(data)
             case .failure(_):
-                ISMChat_Helper.print("Message deleivered Info Failed")
+                ISMChatHelper.print("Message deleivered Info Failed")
             }
         }
     }
     
     //MARK: - delete message
-    public func deleteMsg(messageDeleteType : ISMChat_DeleteMessageType,messageId : [String],conversationId : String,completion:@escaping()->()){
+    public func deleteMsg(messageDeleteType : ISMChatDeleteMessageType,messageId : [String],conversationId : String,completion:@escaping()->()){
         let totalMessageId = messageId.joined(separator: ",")
         var baseURL = ""
         switch messageDeleteType{
         case .DeleteForYou:
-            baseURL = "\(ISMChat_NetworkServices.Urls.messageDeleteForMe)?conversationId=\(conversationId)&messageIds=\(totalMessageId)"
+            baseURL = "\(ISMChatNetworkServices.Urls.messageDeleteForMe)?conversationId=\(conversationId)&messageIds=\(totalMessageId)"
         case .DeleteForEveryone:
-            baseURL = "\(ISMChat_NetworkServices.Urls.messageDeleteForEveryone)?conversationId=\(conversationId)&messageIds=\(totalMessageId)"
+            baseURL = "\(ISMChatNetworkServices.Urls.messageDeleteForEveryone)?conversationId=\(conversationId)&messageIds=\(totalMessageId)"
         }
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .delete) { (result : ISMChat_Response<ISMChat_CreateConversationResponse?,ISMChat_ErrorData?>) in
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .delete) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
             switch result{
             case .success(_):
                 completion()
             case .failure(_):
-                ISMChat_Helper.print("Message deleivered Info Failed")
+                ISMChatHelper.print("Message deleivered Info Failed")
             }
         }
     }
     
     
     //MARK: - forward message
-    public func forwardMessage(conversationIds : [String],message : String,attachments:AttachmentDB? ,customType : String,placeName : String? = nil,contactInfo: [ISMChat_PhoneContact]? = [],metaData : MetaDataDB? = nil,completion:@escaping()->()){
+    public func forwardMessage(conversationIds : [String],message : String,attachments:AttachmentDB? ,customType : String,placeName : String? = nil,contactInfo: [ISMChatPhoneContact]? = [],metaData : MetaDataDB? = nil,completion:@escaping()->()){
         var body : [String : Any]
         var metaDataValue : [String : Any] = [:]
         let deviceId = UniqueIdentifierManager.shared.getUniqueIdentifier()
@@ -438,7 +438,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
                 //Document
                 body["attachments"] = [["thumbnailUrl": obj.thumbnailUrl , "size" : obj.size , "name" : obj.name , "mimeType" : obj.mimeType , "mediaUrl" : obj.mediaUrl , "mediaId" : UIDevice.current.identifierForVendor!.uuidString, "extension" : obj.extensions , "attachmentType" : obj.attachmentType] as [String : Any]]
                 if let documentUrl = URL(string: obj.mediaUrl){
-                    let fileName = ISMChat_Helper.getFileNameFromURL(url: documentUrl)
+                    let fileName = ISMChatHelper.getFileNameFromURL(url: documentUrl)
                     body["notificationBody"] = "📄 \(fileName)"
                 }
             }else if attachments?.attachmentType == 2{
@@ -460,12 +460,12 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             }
         }
         
-        if customType == ISMChat_MediaType.Location.value{
+        if customType == ISMChatMediaType.Location.value{
             if let name = placeName , !name.isEmpty{
                 body["notificationBody"] = "📍 \(name)"
             }
-        }else if customType == ISMChat_MediaType.Contact.value{
-            let result = ISMChat_Helper.parseJSONString(jsonString: message)
+        }else if customType == ISMChatMediaType.Contact.value{
+            let result = ISMChatHelper.parseJSONString(jsonString: message)
             if result.count == 1{
                 body["notificationBody"] = "👤 \(result.firstDisplayName ?? "")"
             }else{
@@ -491,12 +491,12 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         
         body["events"] = ["updateUnreadCount" : true ,"sendPushNotification" : true]
         
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.forwardMessage,httpMethod: .post,params: body) { (result : ISMChat_Response<ISMChat_SendMsg?,ISMChat_ErrorData?>) in
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.forwardMessage,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatSendMsg?,ISMChatErrorData?>) in
             switch result{
             case .success(_):
                 completion()
             case .failure(let error):
-                ISMChat_Helper.print("post forward msg Api failed -----> \(String(describing: error))")
+                ISMChatHelper.print("post forward msg Api failed -----> \(String(describing: error))")
             }
         }
     }
@@ -506,9 +506,9 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         var body : [String : Any]
         let deviceId = UniqueIdentifierManager.shared.getUniqueIdentifier()
         var thumbnailUrl = ""
-        if parentMessage.customType == ISMChat_MediaType.Video.value{
+        if parentMessage.customType == ISMChatMediaType.Video.value{
             thumbnailUrl = parentMessage.attachments.first?.thumbnailUrl ?? ""
-        }else if parentMessage.customType == ISMChat_MediaType.Location.value{
+        }else if parentMessage.customType == ISMChatMediaType.Location.value{
             thumbnailUrl = parentMessage.body
         }else{
             thumbnailUrl = parentMessage.attachments.first?.mediaUrl ?? ""
@@ -524,18 +524,18 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         let eventDetail : [String : Any] = ["sendPushNotification" : true,"updateUnreadCount" : true]
         body = ["showInConversation" : true , "messageType" : 2 , "encrypted" : false ,"deviceId" : deviceId,"conversationId" : conversationId, "body" : message,"customType" : customType,"parentMessageId" : parentMessage.messageId,"metaData" : metaData,"notificationTitle": ismChatSDK?.getUserSession().getUserName() ?? "","notificationBody": message, "events" : eventDetail] as [String : Any]
         
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.sendMessage,httpMethod: .post,params: body) { (result : ISMChat_Response<ISMChat_SendMsg?,ISMChat_ErrorData?>) in
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.sendMessage,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatSendMsg?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
                 completion(data?.messageId ?? "")
             case .failure(let error):
-                ISMChat_Helper.print("Get send Message Api failed -----> \(String(describing: error))")
+                ISMChatHelper.print("Get send Message Api failed -----> \(String(describing: error))")
             }
         }
     }
     
     //MARK: - create conversation
-    public func createConversation(userId : String,completion:@escaping(ISMChat_CreateConversationResponse?)->()){
+    public func createConversation(userId : String,completion:@escaping(ISMChatCreateConversationResponse?)->()){
         var body : [String : Any]
         //        let metaData : [String : Any] = [:]
         body = ["typingEvents" : true ,
@@ -544,12 +544,12 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
                 "members" : [userId],
                 "isGroup" : false,
                 "conversationType" : 0] as [String : Any]
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.createConversation,httpMethod: .post,params: body) { (result : ISMChat_Response<ISMChat_CreateConversationResponse?,ISMChat_ErrorData?>) in
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.createConversation,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
                 completion(data)
             case .failure(let error):
-                ISMChat_Helper.print("Create Conversation Api failed -----> \(String(describing: error))")
+                ISMChatHelper.print("Create Conversation Api failed -----> \(String(describing: error))")
             }
         }
     }
@@ -558,34 +558,34 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     //MARK: - get all messages not delivered yet
     public func getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId : String,skip : Int = 0){
         let limit = 20
-        let baseUrl = "\(ISMChat_NetworkServices.Urls.getMessagesInConersation)?senderIdsExclusive=true&deliveredToMe=false&senderIds=\(myUserId)&limit=\(limit)&skip=\(skip)&sort=-1"
+        let baseUrl = "\(ISMChatNetworkServices.Urls.getMessagesInConersation)?senderIdsExclusive=true&deliveredToMe=false&senderIds=\(myUserId)&limit=\(limit)&skip=\(skip)&sort=-1"
         
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseUrl,httpMethod: .get) { (result : ISMChat_Response<ISMChat_Messages?,ISMChat_ErrorData?>) in
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseUrl,httpMethod: .get) { (result : ISMChatResponse<ISMChatMessages?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
                 print("success")
                 let filteredMessages = data?.messages?.filter { message in
-                    return message.action != ISMChat_ActionType.userBlock.value &&
-                    message.action != ISMChat_ActionType.userUnblock.value &&
-                    message.action != ISMChat_ActionType.userBlockConversation.value &&
-                    message.action != ISMChat_ActionType.userUnblockConversation.value &&
-                    message.action != ISMChat_ActionType.deleteConversationLocally.value &&
-                    message.action != ISMChat_ActionType.conversationTitleUpdated.value &&
-                    message.action != ISMChat_ActionType.conversationImageUpdated.value &&
-                    message.action != ISMChat_ActionType.conversationCreated.value &&
-                    message.action != ISMChat_ActionType.membersAdd.value &&
-                    message.action != ISMChat_ActionType.memberLeave.value &&
-                    message.action != ISMChat_ActionType.addAdmin.value &&
-                    message.action != ISMChat_ActionType.removeAdmin.value &&
-                    message.action != ISMChat_ActionType.membersRemove.value &&
-                    message.action != ISMChat_ActionType.messageDetailsUpdated.value &&
-                    message.action != ISMChat_ActionType.reactionAdd.value &&
-                    message.action != ISMChat_ActionType.reactionRemove.value &&
-                    message.action != ISMChat_ActionType.conversationSettingsUpdated.value &&
-                    message.action != ISMChat_ActionType.meetingCreated.value &&
-                    message.action != ISMChat_ActionType.meetingEndedDueToRejectionByAll.value &&
-                    message.action != ISMChat_ActionType.meetingEndedDueToNoUserPublishing.value &&
-                    message.action != ISMChat_ActionType.userUpdate.value
+                    return message.action != ISMChatActionType.userBlock.value &&
+                    message.action != ISMChatActionType.userUnblock.value &&
+                    message.action != ISMChatActionType.userBlockConversation.value &&
+                    message.action != ISMChatActionType.userUnblockConversation.value &&
+                    message.action != ISMChatActionType.deleteConversationLocally.value &&
+                    message.action != ISMChatActionType.conversationTitleUpdated.value &&
+                    message.action != ISMChatActionType.conversationImageUpdated.value &&
+                    message.action != ISMChatActionType.conversationCreated.value &&
+                    message.action != ISMChatActionType.membersAdd.value &&
+                    message.action != ISMChatActionType.memberLeave.value &&
+                    message.action != ISMChatActionType.addAdmin.value &&
+                    message.action != ISMChatActionType.removeAdmin.value &&
+                    message.action != ISMChatActionType.membersRemove.value &&
+                    message.action != ISMChatActionType.messageDetailsUpdated.value &&
+                    message.action != ISMChatActionType.reactionAdd.value &&
+                    message.action != ISMChatActionType.reactionRemove.value &&
+                    message.action != ISMChatActionType.conversationSettingsUpdated.value &&
+                    message.action != ISMChatActionType.meetingCreated.value &&
+                    message.action != ISMChatActionType.meetingEndedDueToRejectionByAll.value &&
+                    message.action != ISMChatActionType.meetingEndedDueToNoUserPublishing.value &&
+                    message.action != ISMChatActionType.userUpdate.value
                 }
                 if let messagesToDeliver = filteredMessages {
                     for message in messagesToDeliver {
@@ -615,7 +615,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
                     }
                 }
             case .failure(let error):
-                ISMChat_Helper.print("get all messages Api fail -----> \(String(describing: error))")
+                ISMChatHelper.print("get all messages Api fail -----> \(String(describing: error))")
             }
         }
     }
@@ -627,12 +627,12 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         let timeStamp = UInt64(floor(Date().timeIntervalSince1970 * 1000))
         body = ["conversationId" : conversationId ,
                 "timestamp" : timeStamp] as [String : Any]
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.markMessageAsRead,httpMethod: .put,params: body) { (result : ISMChat_Response<ISMChat_CreateConversationResponse?,ISMChat_ErrorData?>) in
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.markMessageAsRead,httpMethod: .put,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
-                ISMChat_Helper.print("Mark Message Read Api succedded -----> \(String(describing: data?.msg))")
+                ISMChatHelper.print("Mark Message Read Api succedded -----> \(String(describing: data?.msg))")
             case .failure(let error):
-                ISMChat_Helper.print("Mark Message Read Api failed -----> \(String(describing: error))")
+                ISMChatHelper.print("Mark Message Read Api failed -----> \(String(describing: error))")
             }
         }
     }
@@ -642,13 +642,13 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         var body : [String : Any]
         body = ["conversationId" : conversationId ,
                 "messageId" : messageId] as [String : Any]
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.readMessageIndicator,httpMethod: .put,params: body) { (result : ISMChat_Response<ISMChat_CreateConversationResponse?,ISMChat_ErrorData?>) in
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.readMessageIndicator,httpMethod: .put,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
-                ISMChat_Helper.print("Read Message Indicator Api succedded -----> \(String(describing: data?.msg))")
+                ISMChatHelper.print("Read Message Indicator Api succedded -----> \(String(describing: data?.msg))")
                 completion(true)
             case .failure(let error):
-                ISMChat_Helper.print("Read Message Indicator Api failed -----> \(String(describing: error))")
+                ISMChatHelper.print("Read Message Indicator Api failed -----> \(String(describing: error))")
             }
         }
     }
@@ -657,12 +657,12 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     public func typingMessageIndicator(conversationId : String){
         var body : [String : Any]
         body = ["conversationId" : conversationId] as [String : Any]
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.typingMessageIndicator,httpMethod: .post,params: body) { (result : ISMChat_Response<ISMChat_CreateConversationResponse?,ISMChat_ErrorData?>) in
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.typingMessageIndicator,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
-                ISMChat_Helper.print("Typing Message Indicator Api succedded -----> \(String(describing: data?.msg))")
+                ISMChatHelper.print("Typing Message Indicator Api succedded -----> \(String(describing: data?.msg))")
             case .failure(let error):
-                ISMChat_Helper.print("Typing Message Indicator Api failed -----> \(String(describing: error))")
+                ISMChatHelper.print("Typing Message Indicator Api failed -----> \(String(describing: error))")
             }
         }
     }
@@ -672,13 +672,13 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         var body : [String : Any]
         body = ["conversationId" : conversationId ,
                 "messageId" : messageId] as [String : Any]
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChat_NetworkServices.Urls.deliveredMessageIndicator,httpMethod: .put,params: body) { (result : ISMChat_Response<ISMChat_CreateConversationResponse?,ISMChat_ErrorData?>) in
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.deliveredMessageIndicator,httpMethod: .put,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
-                ISMChat_Helper.print("Delivered Message Indicator Api succedded -----> \(String(describing: data?.msg))")
+                ISMChatHelper.print("Delivered Message Indicator Api succedded -----> \(String(describing: data?.msg))")
                 completion(true)
             case .failure(let error):
-                ISMChat_Helper.print("Delivered Message Indicator Api failed -----> \(String(describing: error))")
+                ISMChatHelper.print("Delivered Message Indicator Api failed -----> \(String(describing: error))")
                 completion(true)
             }
         }

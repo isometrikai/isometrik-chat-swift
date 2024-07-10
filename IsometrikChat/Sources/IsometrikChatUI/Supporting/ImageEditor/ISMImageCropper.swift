@@ -46,7 +46,7 @@ public class ImageEditorCoordinator : NSObject, CropViewControllerDelegate{
         _isShowing = isShowing
     }
     public func cropViewControllerDidCrop(_ cropViewController: Mantis.CropViewController, cropped: UIImage, transformation: Mantis.Transformation, cropInfo: Mantis.CropInfo) {
-        let croppedImageURL = ISMChat_Helper.createImageURL()
+        let croppedImageURL = ISMChatHelper.createImageURL()
         if let imageData = cropped.jpegData(compressionQuality: 1.0) {
             do {
                 try imageData.write(to: croppedImageURL)

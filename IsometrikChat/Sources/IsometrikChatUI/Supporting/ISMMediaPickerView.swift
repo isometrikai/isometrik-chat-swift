@@ -36,8 +36,8 @@ struct ISMMediaPickerView: View {
                 ToolbarItem(placement: .principal) {
                     VStack {
                         Text("")
-                            .font(themeFonts.navigationBar_Title)
-                            .foregroundColor(themeColor.navigationBar_Title)
+                            .font(themeFonts.navigationBarTitle)
+                            .foregroundColor(themeColor.navigationBarTitle)
                     }
                 }
             }

@@ -9,17 +9,18 @@ import Foundation
 import Alamofire
 import UIKit
 import SwiftUI
+import ISMSwiftCall
 
 
 public class ISMChatSdk{
     
     //MARK: - PROPERTIES
     //chat client
-    private var chatClient: ISMChat_Client?
+    private var chatClient: ISMChatClient?
     //user session
-    private var userSession: ISMChat_UserSession?
+    private var userSession: ISMChatUserSession?
     //mqtt session
-    private var mqttSession: ISMChat_MQTTManager?
+    private var mqttSession: ISMChatMQTTManager?
     //instance
     private static var sharedInstance : ISMChatSdk!
     
@@ -30,21 +31,21 @@ public class ISMChatSdk{
         return sharedInstance
     }
     
-    public func getMqttSession() -> ISMChat_MQTTManager {
+    public func getMqttSession() -> ISMChatMQTTManager {
         if mqttSession == nil {
             fatalError("Create configuration before trying to access mqtt session object.")
         }
         return mqttSession!
     }
     
-    public func getChatClient() -> ISMChat_Client {
+    public func getChatClient() -> ISMChatClient {
         if chatClient == nil {
             print("Create configuration before trying to access isometrik session object.")
         }
         return chatClient!
     }
     
-    public func getUserSession() -> ISMChat_UserSession{
+    public func getUserSession() -> ISMChatUserSession{
         if userSession == nil{
             print("Create configuration before trying to access user session object.")
         }
@@ -53,7 +54,7 @@ public class ISMChatSdk{
     
     
     
-    public func appConfiguration(appConfig : ISMChat_Configuration, userConfig : ISMChat_UserConfig) {
+    public func appConfiguration(appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig) {
         
         if appConfig.accountId.isEmpty {
             fatalError("Pass a valid accountId for isometrik sdk initialization.")
@@ -79,20 +80,20 @@ public class ISMChatSdk{
 
         let userConfiguration = userConfig
         
-        let projectConfiguration = ISMChat_ProjectConfig(accountId: appConfig.accountId, appSecret: appConfig.appSecret, userSecret: appConfig.userSecret, keySetId: appConfig.keySetId, licenseKey: appConfig.licensekey, projectId: appConfig.projectId, headers: headers)
+        let projectConfiguration = ISMChatProjectConfig(accountId: appConfig.accountId, appSecret: appConfig.appSecret, userSecret: appConfig.userSecret, keySetId: appConfig.keySetId, licenseKey: appConfig.licensekey, projectId: appConfig.projectId, headers: headers)
         
-        let mqttConfiguration = ISMChat_MqttConfig(hostName: appConfig.MQTTHost, port: appConfig.MQTTPort)
+        let mqttConfiguration = ISMChatMqttConfig(hostName: appConfig.MQTTHost, port: appConfig.MQTTPort)
         
-        let communicationConfiguration = ISMChat_CommunicationConfiguration(userConfig: userConfiguration, projectConfig: projectConfiguration, mqttConfig: mqttConfiguration)
+        let communicationConfiguration = ISMChatCommunicationConfiguration(userConfig: userConfiguration, projectConfig: projectConfiguration, mqttConfig: mqttConfiguration)
         
-        let apiManager = ISMChat_APIManager(configuration: projectConfiguration)
+        let apiManager = ISMChatAPIManager(configuration: projectConfiguration)
         
         
         //chatClient
-        self.chatClient = ISMChat_Client(communicationConfig: communicationConfiguration, apiManager: apiManager)
+        self.chatClient = ISMChatClient(communicationConfig: communicationConfiguration, apiManager: apiManager)
         
         //userSession
-        let userSession = ISMChat_UserSession()
+        let userSession = ISMChatUserSession()
         userSession.setUserId(userId: userConfig.userId)
         userSession.setUserToken(token: userConfig.userToken)
         userSession.setUserEmailId(email: userConfig.userEmail)
@@ -101,19 +102,27 @@ public class ISMChatSdk{
         self.userSession = userSession
         
         //mqttSession
-        let mqttSession = ISMChat_MQTTManager(mqttConfiguration: mqttConfiguration, projectConfiguration: projectConfiguration, userdata: userConfig)
+        let mqttSession = ISMChatMQTTManager(mqttConfiguration: mqttConfiguration, projectConfiguration: projectConfiguration, userdata: userConfig)
         mqttSession.connect(clientId: userSession.getUserId())
         self.mqttSession = mqttSession
     
     }
     
     public func onTerminate() {
-        ISMChat_Helper.unSubscribeFCM()
+        //1. unsubscribe fcm
+        ISMChatHelper.unSubscribeFCM()
+        //2. unsubscribe mqtt
         if mqttSession != nil {
             self.mqttSession?.unSubscribe()
         }
+        //3. clear user session
         if userSession != nil{
             self.userSession?.clearUserSession()
         }
+        //4. delete local data
+        RealmManager().deleteAllData()
+        //5. For call
+        IsometrikCall().clearSession()
+        ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
     }
 }

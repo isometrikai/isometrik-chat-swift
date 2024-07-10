@@ -59,7 +59,7 @@ struct ISMDocumentViewer: View {
                             } label: {
                                 themeImage.threeDots
                                     .rotationEffect(.degrees(-90))
-                                    .foregroundColor(themeColor.userProfile_editText)
+                                    .foregroundColor(themeColor.userProfileEditText)
                                 
                             }
                         }
@@ -120,7 +120,7 @@ struct PDFKitRepresentedView: UIViewRepresentable {
         guard let document = PDFDocument(url: self.url) else { return UIView() }
         
         let pdfView = PDFView()
-        ISMChat_Helper.print("PDFVIEW IS CREATED")
+        ISMChatHelper.print("PDFVIEW IS CREATED")
         pdfView.document = document
         pdfView.displayMode = .singlePage
         pdfView.displayDirection = .horizontal
@@ -129,7 +129,7 @@ struct PDFKitRepresentedView: UIViewRepresentable {
         
         DispatchQueue.main.async {
             self.total = document.pageCount
-            ISMChat_Helper.print("Total pages: \(total)")
+            ISMChatHelper.print("Total pages: \(total)")
         }
         return pdfView
     }

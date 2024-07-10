@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Rasika on 09/07/24.
 //
@@ -20,12 +20,12 @@ struct ChatBubbleType: Shape {
     
     var cornerRadius: CGFloat
     var corners: UIRectCorner
-    let bubbleType : ISMChat_BubbleType
+    let bubbleType : ISMChatBubbleType
     let direction: Direction
     
     func path(in rect: CGRect) -> Path {
         if bubbleType == .BubbleWithOutTail{
-           return bubbleWithOutTail(rect: rect)
+            return bubbleWithOutTail(rect: rect)
         }else{
             return (direction == .left) ? getLeftBubblePathWithTail(in: rect) : getRightBubblePathWithTail(in: rect)
         }
@@ -97,7 +97,7 @@ struct ChatBubbleType: Shape {
         }
         return path
     }
-
+    
     
     func bubbleWithOutTail(rect: CGRect) -> Path{
         var path = Path()

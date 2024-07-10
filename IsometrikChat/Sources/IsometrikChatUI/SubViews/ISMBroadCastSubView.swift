@@ -10,7 +10,7 @@ import IsometrikChat
 
 struct ISMBroadCastSubView: View {
     
-    let chat : ISMChat_BroadCastDetail
+    let chat : ISMChatBroadCastDetail
     @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State var usersNames : String = ""
@@ -19,11 +19,11 @@ struct ISMBroadCastSubView: View {
         HStack{
             VStack(alignment: .leading, spacing: 8) {
                 Text("Recipients: \(chat.membersCount ?? 0)")
-                    .foregroundColor(themeColor.chatList_UserName)
-                    .font(themeFonts.chatList_UserName)
+                    .foregroundColor(themeColor.chatListUserName)
+                    .font(themeFonts.chatListUserName)
                 Text(usersNames)
-                    .foregroundColor(themeColor.chatList_UserMessage)
-                    .font(themeFonts.chatList_UserMessage)
+                    .foregroundColor(themeColor.chatListUserMessage)
+                    .font(themeFonts.chatListUserMessage)
             }
             Spacer()
             
