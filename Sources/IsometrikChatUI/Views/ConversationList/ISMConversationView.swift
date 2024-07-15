@@ -16,53 +16,53 @@ public struct ISMConversationView : View {
     //MARK:  - PROPERTIES
 //    @AppStorage("isDarkMode") public var isDarkMode = false
     
-    @State var navigateToMessages : Bool = false
+    @State public var navigateToMessages : Bool = false
     
     //search
-    @State var query = ""
+    @State public var query = ""
     
     //alert
-    @State var showingNoInternetAlert = false
+    @State public var showingNoInternetAlert = false
     
     //sheet
-    @State var showProfile : Bool = false
-    @State var createChat : Bool = false
+    @State public var showProfile : Bool = false
+    @State public var createChat : Bool = false
   
-    @State var navigateToBlockUsers = false
-    @State var navigateToBroadcastList = false
+    @State public var navigateToBlockUsers = false
+    @State public var navigateToBroadcastList = false
     
     //action
-    @State var showOptionView = false
-    @State var showDeleteOptions : Bool = false
-    @State var selectedForDelete : ConversationDB?
+    @State public var showOptionView = false
+    @State public var showDeleteOptions : Bool = false
+    @State public var selectedForDelete : ConversationDB?
     
     //1 to 1 conversation
-    @State var selectedUserToNavigate : UserDB = UserDB()
-    @State var selectedUserConversationId : String = ""
-    @State var navigatetoSelectedUser : Bool = false
+    @State public var selectedUserToNavigate : UserDB = UserDB()
+    @State public var selectedUserConversationId : String = ""
+    @State public var navigatetoSelectedUser : Bool = false
     
-    @ObservedObject var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @StateObject var realmManager = RealmManager()
+    @ObservedObject public var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @StateObject public var realmManager = RealmManager()
     @EnvironmentObject public var networkMonitor: NetworkMonitor
-    @ObservedObject var chatViewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @State var showBroadCastOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.BroadCastConversation)
+    @ObservedObject public var chatViewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @State public var showBroadCastOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.BroadCastConversation)
     
     public let NC = NotificationCenter.default
-    @State var onScreen = false
+    @State public var onScreen = false
     
     //local notification
-    @State var navigateToMessageViewFromLocalNotification : Bool = false
-    @State var conversationIdForNotification : String?
-    @State var opponentDetailforNotification : UserDB?
-    @State var isGroupFromNotification : Bool = false
-    @State var groupTitleFromNotification : String?
-    @State var groupImageFromNotification : String?
+    @State public var navigateToMessageViewFromLocalNotification : Bool = false
+    @State public var conversationIdForNotification : String?
+    @State public var opponentDetailforNotification : UserDB?
+    @State public var isGroupFromNotification : Bool = false
+    @State public var groupTitleFromNotification : String?
+    @State public var groupImageFromNotification : String?
     
-    @State var groupCastIdToNavigate : String = ""
-    @State var navigateToBroadCastMessages : Bool = false
+    @State public var groupCastIdToNavigate : String = ""
+    @State public var navigateToBroadCastMessages : Bool = false
     
-    @State var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State var userSession = ISMChatSdk.getInstance().getUserSession()
+    @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @State public var userSession = ISMChatSdk.getInstance().getUserSession()
     
 //    public var delegate : ChatVCDelegate? = nil
     

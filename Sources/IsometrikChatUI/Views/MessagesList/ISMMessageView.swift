@@ -21,14 +21,14 @@ public struct ISMMessageView: View {
     
     //MARK: - PROPERTIES
     
-    @Environment(\.dismiss) var dismiss
-    @ObservedObject var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @Environment(\.dismiss) public var dismiss
+    @ObservedObject public var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
     public var conversationViewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @State var text = ""
-    @State var textFieldtxt = ""
-    @State var keyboardFocused = false
+    @State public var text = ""
+    @State public var textFieldtxt = ""
+    @State public var keyboardFocused = false
     
-    @State var showActionSheet = false
+    @State public var showActionSheet = false
     @State public var conversationID : String?
     public let opponenDetail : UserDB?
     public var userId : String?
@@ -36,125 +36,125 @@ public struct ISMMessageView: View {
     public let fromBroadCastFlow : Bool?
     public let groupCastId : String?
 //    public var delegate : MessageVCDelegate?
-    @State var textViewHeight : CGFloat = 32
+    @State public var textViewHeight : CGFloat = 32
     
-    @State var showVideoPicker: Bool = false
+    @State public var showVideoPicker: Bool = false
     
-    @State var showLocationSharing: Bool = false
+    @State public var showLocationSharing: Bool = false
     
-    @State var showSheet : Bool = false
-    @State var selectedSheetIndex : Int = 0
+    @State public var showSheet : Bool = false
+    @State public var selectedSheetIndex : Int = 0
     public let columns = [GridItem(.flexible(minimum: 10))]
     
-    @State var selectedContactToShare : [ISMChatPhoneContact] = []
-    @State var shareContact : Bool = false
+    @State public var selectedContactToShare : [ISMChatPhoneContact] = []
+    @State public var shareContact : Bool = false
     
     
-    @State var conversationDetail : ISMChatConversationDetail?
-    @State var showScrollToBottomView = true
+    @State public var conversationDetail : ISMChatConversationDetail?
+    @State public var showScrollToBottomView = true
     
     @EnvironmentObject public var realmManager : RealmManager
     
-    @State var previousAudioRef: AudioPlayViewModel?
-    @State var audioLocked : Bool = false
+    @State public var previousAudioRef: AudioPlayViewModel?
+    @State public var audioLocked : Bool = false
     
-    @State var isShowingRedTimerStart : Bool = false
+    @State public var isShowingRedTimerStart : Bool = false
     
-    @State var showDeleteMultipleMessage = false
-    @State var deleteMessage : [MessagesDB] = []
-    @State var showDeleteActionSheet = false
+    @State public var showDeleteMultipleMessage = false
+    @State public var deleteMessage : [MessagesDB] = []
+    @State public var showDeleteActionSheet = false
     
-    @State var selectedMsgToReply : MessagesDB = MessagesDB()
-    @State var parentMessage : ISMChatMessage = ISMChatMessage()
+    @State public var selectedMsgToReply : MessagesDB = MessagesDB()
+    @State public var parentMessage : ISMChatMessage = ISMChatMessage()
     
-    @State var showforwardMultipleMessage : Bool = false
-    @State var forwardMessageSelected : [MessagesDB] = []
-    @State var movetoForwardList : Bool = false
+    @State public var showforwardMultipleMessage : Bool = false
+    @State public var forwardMessageSelected : [MessagesDB] = []
+    @State public var movetoForwardList : Bool = false
     @EnvironmentObject public var networkMonitor: NetworkMonitor
     
-    @State var isClicked : Bool = false
-    @State var uploadMedia : Bool = false
+    @State public var isClicked : Bool = false
+    @State public var uploadMedia : Bool = false
     
-    @State var audioPermissionCheck :Bool = false
-    @State var memberString : String?
+    @State public var audioPermissionCheck :Bool = false
+    @State public var memberString : String?
     
-    @State var executeRepeatly : Bool = false
-    @State var otherUserTyping : Bool = false
+    @State public var executeRepeatly : Bool = false
+    @State public var otherUserTyping : Bool = false
     
-    @State var navigateToBlockUsers = false
-    @State var navigateToProfile = false
-    @State var navigateToGroupCastInfo  : Bool = false
+    @State public var navigateToBlockUsers = false
+    @State public var navigateToProfile = false
+    @State public var navigateToGroupCastInfo  : Bool = false
     
     //location
-    @State var longitude : Double?
-    @State var latitude : Double?
-    @State var placeId : String?
-    @State var placeName : String?
-    @State var placeAddress : String?
+    @State public var longitude : Double?
+    @State public var latitude : Double?
+    @State public var placeId : String?
+    @State public var placeName : String?
+    @State public var placeAddress : String?
     
-    @State var typingUserName : String?
-    @State var showUnblockPopUp : Bool = false
-    @State var uAreBlock : Bool = false
+    @State public var typingUserName : String?
+    @State public var showUnblockPopUp : Bool = false
+    @State public var uAreBlock : Bool = false
     
-    @State var clearThisChat : Bool = false
-    @State var blockThisChat : Bool = false
+    @State public var clearThisChat : Bool = false
+    @State public var blockThisChat : Bool = false
     
-    @State var startDate = Date.now
-    @State var timeElapsed: Int = 0
-    @State var showingNoInternetAlert = false
+    @State public var startDate = Date.now
+    @State public var timeElapsed: Int = 0
+    @State public var showingNoInternetAlert = false
     public let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     
-    @State var startTimeForOnline = Date.now
-    @State var timeElapsedForOnline: Int = 0
+    @State public var startTimeForOnline = Date.now
+    @State public var timeElapsedForOnline: Int = 0
     public let onlinetimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
-    @State var executeRepeatlyForOfflineMessage : Bool = false
+    @State public var executeRepeatlyForOfflineMessage : Bool = false
     
-    @State var onLoad : Bool = false
+    @State public var onLoad : Bool = false
     
-    @State var messageCopied : Bool = false
+    @State public var messageCopied : Bool = false
     
     public let groupConversationTitle : String?
     public let groupImage : String?
     
-    @State var navigateToLocationDetail : ISMChatLocationData = ISMChatLocationData()
-    @State var navigateToLocation = false
+    @State public var navigateToLocationDetail : ISMChatLocationData = ISMChatLocationData()
+    @State public var navigateToLocation = false
     
-    @State var updateMessage : MessagesDB = MessagesDB()
+    @State public var updateMessage : MessagesDB = MessagesDB()
     
-    @State var selectedUserToMention : String?
-    @State var showMentionList : Bool = false
-    @State var mentionUsers: [ISMChatGroupMember] = []
-    @State var filteredUsers: [ISMChatGroupMember] = []
+    @State public var selectedUserToMention : String?
+    @State public var showMentionList : Bool = false
+    @State public var mentionUsers: [ISMChatGroupMember] = []
+    @State public var filteredUsers: [ISMChatGroupMember] = []
     
-    @State var showAudioOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.audio)
-    @State var showAudioCallingOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.audiocall)
-    @State var showVideoCallingOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.videocall)
-    @State var showGifOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.gif)
-    @State var showGifPicker : Bool = false
+    @State public var showAudioOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.audio)
+    @State public var showAudioCallingOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.audiocall)
+    @State public var showVideoCallingOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.videocall)
+    @State public var showGifOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.gif)
+    @State public var showGifPicker : Bool = false
 //    @State var selectedGIF: GPHMedia?
     
-    @State var navigateToImageEditor : Bool = false
-    @State var sendMedia : Bool = false
+    @State public var navigateToImageEditor : Bool = false
+    @State public var sendMedia : Bool = false
     
-    @State var videoSelectedFromPicker : [ISMMediaUpload] = []
+    @State public var videoSelectedFromPicker : [ISMMediaUpload] = []
     
     //camera click
-    @State var cameraImageToUse : URL?
+    @State public var cameraImageToUse : URL?
     
     //reaction
-    @State var selectedReaction : String? = nil
-    @State var sentRecationToMessageId : String = ""
+    @State public var selectedReaction : String? = nil
+    @State public var sentRecationToMessageId : String = ""
     // call
-    @State var audioCallToUser : Bool = false
-    @State var videoCallToUser : Bool = false
-    @State var showCallPopUp : Bool = false
-    @State var isAnimating = false
-    @State var parentMsgToScroll : MessagesDB? =  nil
+    @State public var audioCallToUser : Bool = false
+    @State public var videoCallToUser : Bool = false
+    @State public var showCallPopUp : Bool = false
+    @State public var isAnimating = false
+    @State public var parentMsgToScroll : MessagesDB? =  nil
     
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State var userSession = ISMChatSdk.getInstance().getUserSession()
+    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @State public var userSession = ISMChatSdk.getInstance().getUserSession()
     
     //MARK: - BODY
     public var body: some View {
@@ -294,11 +294,13 @@ public struct ISMMessageView: View {
             }
             ISMChatHelper.print("MESSAGE RECEIVED----------------->\(messageInfo)")
             //save in local db
-            messageReceived(messageInfo: messageInfo)
-            //local notification
-            sendLocalNotification(messageInfo: messageInfo)
-            //action if required
-            actionOnMessageDelivered(messageInfo: messageInfo)
+            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                messageReceived(messageInfo: messageInfo)
+                //local notification
+                sendLocalNotification(messageInfo: messageInfo)
+                //action if required
+                actionOnMessageDelivered(messageInfo: messageInfo)
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMessageRead.name)){ notification in
             guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {

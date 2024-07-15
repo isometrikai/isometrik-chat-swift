@@ -10,6 +10,17 @@ import RealmSwift
 
 
 extension RealmManager{
+    //MARK: - check if this message already present
+    public func doesMessageExistInMessagesDB(conversationId: String, messageId: String) -> Bool {
+        if let localRealm = localRealm {
+            // Assuming your MessagesDB model has properties like 'conversationId', 'messageId', and 'isDelete'
+            let predicate = NSPredicate(format: "conversationId == %@ AND messageId == %@ AND isDelete == %d", conversationId, messageId, false)
+            
+            let msgsExists = localRealm.objects(MessagesDB.self).filter(predicate)
+            return msgsExists.count > 0
+        }
+        return false
+    }
     
     //MARK: - update body of message on edit
     public func updateMessageBody(conversationId : String,messageId : String,body : String){
