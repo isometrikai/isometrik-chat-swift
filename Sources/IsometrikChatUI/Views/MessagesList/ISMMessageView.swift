@@ -53,7 +53,7 @@ public struct ISMMessageView: View {
     @State var conversationDetail : ISMChatConversationDetail?
     @State var showScrollToBottomView = true
     
-    @EnvironmentObject var realmManager : RealmManager
+    @EnvironmentObject public var realmManager : RealmManager
     
     @State var previousAudioRef: AudioPlayViewModel?
     @State var audioLocked : Bool = false
@@ -70,7 +70,7 @@ public struct ISMMessageView: View {
     @State var showforwardMultipleMessage : Bool = false
     @State var forwardMessageSelected : [MessagesDB] = []
     @State var movetoForwardList : Bool = false
-    @EnvironmentObject var networkMonitor: NetworkMonitor
+    @EnvironmentObject public var networkMonitor: NetworkMonitor
     
     @State var isClicked : Bool = false
     @State var uploadMedia : Bool = false
