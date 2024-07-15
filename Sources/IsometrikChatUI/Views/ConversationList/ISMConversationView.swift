@@ -14,7 +14,7 @@ import IsometrikChat
 public struct ISMConversationView : View {
     
     //MARK:  - PROPERTIES
-    @AppStorage("isDarkMode") private var isDarkMode = false
+//    @AppStorage("isDarkMode") public var isDarkMode = false
     
     @State var navigateToMessages : Bool = false
     
@@ -43,7 +43,7 @@ public struct ISMConversationView : View {
     
     @ObservedObject var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
     @StateObject var realmManager = RealmManager()
-    @EnvironmentObject var networkMonitor: NetworkMonitor
+    @EnvironmentObject public var networkMonitor: NetworkMonitor
     @ObservedObject var chatViewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
     @State var showBroadCastOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.BroadCastConversation)
     
