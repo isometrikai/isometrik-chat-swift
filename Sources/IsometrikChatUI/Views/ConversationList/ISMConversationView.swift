@@ -67,10 +67,10 @@ public struct ISMConversationView : View {
 //    public var delegate : ChatVCDelegate? = nil
     
     public var ismChatSDK: ISMChatSdk?
-    public init(ismChatSDK: ISMChatSdk) {
-        self.ismChatSDK = ismChatSDK
+//    public init(ismChatSDK: ISMChatSdk) {
+//        self.ismChatSDK = ismChatSDK
 //        self.delegate = delegate
-    }
+//    }
     
     //MARK:  - BODY
     public var body: some View {
