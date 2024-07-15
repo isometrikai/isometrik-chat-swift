@@ -66,7 +66,7 @@ public struct ISMConversationView : View {
     
 //    public var delegate : ChatVCDelegate? = nil
     
-    public var ismChatSDK: ISMChatSdk?
+//    public var ismChatSDK: ISMChatSdk?
 //    public init(ismChatSDK: ISMChatSdk) {
 //        self.ismChatSDK = ismChatSDK
 //        self.delegate = delegate
@@ -155,7 +155,7 @@ public struct ISMConversationView : View {
                 })
                 .fullScreenCover(isPresented: $showProfile, content: {
                     // profile of user
-                    ISMProfileView(viewModel: viewModel,ismChatSDK : self.ismChatSDK)
+                    ISMProfileView(viewModel: viewModel)
                         .environmentObject(realmManager)
                     
                 })

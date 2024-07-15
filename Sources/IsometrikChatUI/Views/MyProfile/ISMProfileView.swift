@@ -18,7 +18,7 @@ public struct ISMProfileView: View {
     @State private var image : [UIImage] = []
     @EnvironmentObject var realmManager : RealmManager
     @Environment(\.dismiss) var dismiss
-    public var ismChatSDK: ISMChatSdk?
+//    public var ismChatSDK: ISMChatSdk?
     @State var isSwitchOn : Bool = true
     @State var showLastSeen : Bool = true
     @State private var userName : String = ""
