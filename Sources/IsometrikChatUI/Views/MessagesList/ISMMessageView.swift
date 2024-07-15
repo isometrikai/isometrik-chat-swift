@@ -29,7 +29,7 @@ public struct ISMMessageView: View {
     @State var keyboardFocused = false
     
     @State var showActionSheet = false
-    @State var conversationID : String?
+    @State public var conversationID : String?
     public let opponenDetail : UserDB?
     public var userId : String?
     public let isGroup : Bool?
