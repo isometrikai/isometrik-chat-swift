@@ -8,32 +8,32 @@
 import SwiftUI
 import IsometrikChat
 
-struct ISMGroupCreate: View {
+public struct ISMGroupCreate: View {
     
     //MARK: - PROPERTIES
-    @Environment(\.dismiss) var dismiss
-    @Binding var showSheetView : Bool
-    @Binding var userSelected : [ISMChatUser]
-    @State private var showSheet = false
-    @State private var cancelPicker : Bool = false
-    @State private var image : [UIImage] = []
-    @State private var selectedMedia : [URL] = []
-    var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    var chatViewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @State var groupNameAlert : Bool = false
-    @State private var groupName = ""
-    @State private var hasCreatedGroup = false
-    let profileImage = "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg"
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State var userSession = ISMChatSdk.getInstance().getUserSession()
+    @Environment(\.dismiss) public var dismiss
+    @Binding public var showSheetView : Bool
+    @Binding public var userSelected : [ISMChatUser]
+    @State public var showSheet = false
+    @State public var cancelPicker : Bool = false
+    @State public var image : [UIImage] = []
+    @State public var selectedMedia : [URL] = []
+    public var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    public var chatViewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @State public var groupNameAlert : Bool = false
+    @State public var groupName = ""
+    @State public var hasCreatedGroup = false
+    public let profileImage = "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg"
+    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @State public var userSession = ISMChatSdk.getInstance().getUserSession()
     
     
     
     //MARK: - BODY
     
-    var body: some View {
+    public var body: some View {
         ZStack{
             VStack{
                 List {

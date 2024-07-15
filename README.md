@@ -126,4 +126,3 @@ Add this code when u logout
 ISMChatSdk.getInstance().onTerminate()
 IsometrikCall().clearSession()
 ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
-realmManager.deleteAllData()

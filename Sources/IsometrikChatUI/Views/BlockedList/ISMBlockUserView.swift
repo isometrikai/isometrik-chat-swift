@@ -8,20 +8,20 @@
 import SwiftUI
 import IsometrikChat
 
-struct ISMBlockUserView: View {
+public struct ISMBlockUserView: View {
     
     //MARK:  - PROPERTIES
-    @ObservedObject var conversationViewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @Environment(\.dismiss) var dismiss
-    @State var edit : Bool = false
-    @State var blockedUser : [ISMChatUser] = []
-    @State var removedUser : [ISMChatUser] = []
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @ObservedObject public var conversationViewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @Environment(\.dismiss) public var dismiss
+    @State public var edit : Bool = false
+    @State public var blockedUser : [ISMChatUser] = []
+    @State public var removedUser : [ISMChatUser] = []
+    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     //MARK:  - BODY
-    var body: some View {
+    public var body: some View {
         ZStack{
             VStack {
                 NavigationView {

@@ -10,14 +10,14 @@ import SwiftUI
 import AVFoundation
 import IsometrikChat
 
-struct ISMCameraView: UIViewControllerRepresentable {
+public struct ISMCameraView: UIViewControllerRepresentable {
     
     typealias UIViewControllerType = UIImagePickerController
-    @Binding var media: URL?
-    @Binding var isShown: Bool
-    @Binding var uploadMedia: Bool
+    @Binding public var media: URL?
+    @Binding public var isShown: Bool
+    @Binding public var uploadMedia: Bool
     
-    func makeUIViewController(context: Context) -> UIViewControllerType {
+    public func makeUIViewController(context: Context) -> UIViewControllerType {
         let viewController = UIImagePickerController()
         viewController.delegate = context.coordinator
         
@@ -56,35 +56,35 @@ struct ISMCameraView: UIViewControllerRepresentable {
         return viewController
     }
     
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+    public func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
         // Update the view controller if needed
     }
     
-    func makeCoordinator() -> ISMCameraView.Coordinator {
+    public func makeCoordinator() -> ISMCameraView.Coordinator {
         return Coordinator(self, media: $media, isShown: $isShown, uploadMedia: $uploadMedia)
     }
 }
 
 extension ISMCameraView {
-    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    public class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
         var parent: ISMCameraView
         @Binding var media: URL?
         @Binding var isShown: Bool
         @Binding var uploadMedia: Bool
         
-        init(_ parent: ISMCameraView, media: Binding<URL?>, isShown: Binding<Bool>, uploadMedia: Binding<Bool>) {
+        public init(_ parent: ISMCameraView, media: Binding<URL?>, isShown: Binding<Bool>, uploadMedia: Binding<Bool>) {
             self.parent = parent
             _media = media
             _isShown = isShown
             _uploadMedia = uploadMedia
         }
         
-        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             AudioSessionManager.shared.deactivateSession()
             isShown = false
         }
         
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             let fileManager = FileManager.default
             let documentsPath = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
             let imagePath = documentsPath?.appendingPathComponent("\(UUID().uuidString).jpg")
@@ -109,10 +109,10 @@ extension ISMCameraView {
 
 
 
-class AudioSessionManager {
+public class AudioSessionManager {
     static let shared = AudioSessionManager()
     
-    func activateSession() {
+    public func activateSession() {
         do {
             try AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .videoRecording, options: .defaultToSpeaker)
             try AVAudioSession.sharedInstance().setActive(true)
@@ -121,7 +121,7 @@ class AudioSessionManager {
         }
     }
     
-    func deactivateSession() {
+    public func deactivateSession() {
         do {
             try AVAudioSession.sharedInstance().setActive(false)
         } catch {
@@ -129,11 +129,11 @@ class AudioSessionManager {
         }
     }
     
-    func setupInterruptionHandling() {
+    public func setupInterruptionHandling() {
         NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption), name: AVAudioSession.interruptionNotification, object: nil)
     }
     
-    @objc private func handleInterruption(notification: Notification) {
+    @objc public func handleInterruption(notification: Notification) {
         guard let userInfo = notification.userInfo,
               let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
               let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
