@@ -21,7 +21,7 @@ This project is a chat SDK that you can integrate into your apps to add chat flo
 
 7. Initialization: Initialize the ChatSDK and ChatSDK UI with the provided configurations.
 
-
+``` swift
 func initializeChatIsometrik() -> ISMChatSdk{
     
     //add what attachments you need only
@@ -54,10 +54,12 @@ func initializeChatIsometrik() -> ISMChatSdk{
     
     return ISMChatSdk.getInstance()
 }
-
+```
 
 
 8. For call functionality in Chat u need to initialize ISMSwiftCall,already called in above function.
+
+``` swift
 func initializeCall(){
     let sdkConfig = ISMCallConfiguration.init(accountId: accountId, projectId: projectId, keysetId: keysetId, licenseKey: licenseKey, appSecret: appSecret, userSecret: userSecret)
     let isometrik = IsometrikCall(configuration: sdkConfig)
@@ -65,12 +67,12 @@ func initializeCall(){
     isometrik.updateUserToken(ChatKeychain.shared.authToken ?? "")
     ISMCallManager.shared.updatePushRegisteryToken()
 }
-
+```
 
 9. For call, you need to add this func in AppDelegate (didFinishLaunchingWithOptions)
 "registerPushKit()"
 
-
+``` swift
 extension AppDelegate : PKPushRegistryDelegate{
     
     func registerPushKit(){
@@ -108,7 +110,7 @@ extension AppDelegate : PKPushRegistryDelegate{
         }
     }
 }
-
+```
 
 10. Add this in AppDelegate (didFinishLaunchingWithOptions) for GoogleServices and GooglePlaces used in Chat for sharing location.
         GMSServices.provideAPIKey("")
@@ -123,7 +125,9 @@ extension AppDelegate : PKPushRegistryDelegate{
 
 Add this code when u logout
 
+``` swift
 ISMChatSdk.getInstance().onTerminate()
 IsometrikCall().clearSession()
 ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
 realmManager.deleteAllData()
+```
