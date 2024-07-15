@@ -64,6 +64,8 @@ public struct ISMConversationView : View {
     @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State public var userSession = ISMChatSdk.getInstance().getUserSession()
     
+    public init(){}
+    
 //    public var delegate : ChatVCDelegate? = nil
     
 //    public var ismChatSDK: ISMChatSdk?
