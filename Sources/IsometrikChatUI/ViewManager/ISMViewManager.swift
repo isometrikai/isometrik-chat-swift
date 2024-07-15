@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import IsometrikChat
 
 
 public class ISMViewManager{
@@ -14,5 +15,9 @@ public class ISMViewManager{
     
     public func conversationList() -> some View {
         return ISMConversationView()
+    }
+    
+    public func messageList(conversationViewModel : ConversationViewModel,conversationId: String,user : UserDB,isGroup : Bool,fromBroadCastFlow : Bool,groupCastId : String,groupConversationTitle : String,groupImage : String) -> some View{
+        return ISMMessageView(conversationViewModel: conversationViewModel, conversationID: conversationId, opponenDetail: user, isGroup: isGroup, fromBroadCastFlow: fromBroadCastFlow, groupCastId: groupCastId,groupConversationTitle : groupConversationTitle,groupImage : groupImage)
     }
 }
