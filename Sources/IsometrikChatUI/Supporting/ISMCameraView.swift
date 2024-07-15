@@ -12,7 +12,7 @@ import IsometrikChat
 
 public struct ISMCameraView: UIViewControllerRepresentable {
     
-    typealias UIViewControllerType = UIImagePickerController
+    public typealias UIViewControllerType = UIImagePickerController
     @Binding public var media: URL?
     @Binding public var isShown: Bool
     @Binding public var uploadMedia: Bool
