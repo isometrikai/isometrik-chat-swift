@@ -12,7 +12,7 @@ import ISMSwiftCall
 import IsometrikChat
 
 public protocol ISMConversationViewDelegate{
-    func navigateToMessageList(selectedUserToNavigate : UserDB?)
+    func navigateToMessageList(selectedUserToNavigate : UserDB?,conversationId : String?)
 }
 
 public struct ISMConversationView : View {
@@ -97,7 +97,7 @@ public struct ISMConversationView : View {
                             ForEach(realmManager.getConversation()){ data in
                                 if ISMChatSdkUI.getInstance().getChatProperties().hostFrameworksType == .UIKit{
                                     Button {
-                                        delegate?.navigateToMessageList(selectedUserToNavigate: data.opponentDetails)
+                                        delegate?.navigateToMessageList(selectedUserToNavigate: data.opponentDetails, conversationId: data.lastMessageDetails?.conversationId)
                                     } label: {
                                         ISMConversationSubView(chat: data, hasUnreadCount: (data.unreadMessagesCount) > 0)
                                             .onAppear {
