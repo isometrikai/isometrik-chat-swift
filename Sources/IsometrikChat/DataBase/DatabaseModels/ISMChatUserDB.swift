@@ -18,5 +18,12 @@ public class UserDB : Object, ObjectKeyIdentifiable{
     @Persisted public var online : Bool?
     @Persisted public var userId : String?
     @Persisted public var lastSeen : Double?
-   
+    @Persisted public var metaData : UserMetaDataDB?
+}
+metaDataValue
+public class UserMetaDataDB : Object, ObjectKeyIdentifiable {
+    @Persisted(primaryKey: true) public var id: ObjectId
+    
+    @Persisted public var profilePic : String?
+    @Persisted public var memberIdOfApp : String?
 }

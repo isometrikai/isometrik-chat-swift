@@ -14,6 +14,7 @@ public struct ISMChatPageProperties {
     public var conversationType : [ISMChatConversationTypeConfig] // Array of conversation types
     public var hideNavigationBarForConversationList : Bool
     public var hostFrameworksType : FrameworkType
+    public var allowToNavigateToAppProfile : Bool
 }
 
 

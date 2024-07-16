@@ -535,15 +535,16 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
     
     //MARK: - create conversation
-    public func createConversation(userId : String,completion:@escaping(ISMChatCreateConversationResponse?)->()){
+    public func createConversation(user : UserDB,completion:@escaping(ISMChatCreateConversationResponse?)->()){
         var body : [String : Any]
-        //        let metaData : [String : Any] = [:]
+        let metaDataValue : [String : Any] = ["profilePic" : user.metaData?.profilePic ?? "", "memberIdOfApp" : user.metaData?.memberIdOfApp ?? ""]
         body = ["typingEvents" : true ,
                 "readEvents" : true,
                 "pushNotifications" : true,
-                "members" : [userId],
+                "members" : [user.userId],
                 "isGroup" : false,
-                "conversationType" : 0] as [String : Any]
+                "conversationType" : 0,
+                "metaData" : metaDataValue] as [String : Any]
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.createConversation,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):

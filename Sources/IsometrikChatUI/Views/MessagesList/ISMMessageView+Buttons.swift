@@ -149,7 +149,11 @@ extension ISMMessageView{
                     
                     Button {
                         if conversationDetail != nil{
-                            navigateToProfile = true
+                            if ISMChatSdkUI.getInstance().getChatProperties().allowToNavigateToAppProfile == true{
+                                delegate?.navigateToAppProfile(appUserId: self.conversationDetail?.conversationDetails?.metaData?.memberIdOfApp ?? "")
+                            }else{
+                                navigateToProfile = true
+                            }
                         }else{
                             showingNoInternetAlert = true
                         }

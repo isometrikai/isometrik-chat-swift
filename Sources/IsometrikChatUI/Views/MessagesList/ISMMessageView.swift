@@ -17,6 +17,10 @@ import PhotosUI
 import ISMSwiftCall
 import IsometrikChat
 
+public protocol ISMMessageViewDelegate{
+    func navigateToAppProfile(appUserId : String)
+}
+
 public struct ISMMessageView: View {
     
     //MARK: - PROPERTIES
@@ -155,6 +159,8 @@ public struct ISMMessageView: View {
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State public var userSession = ISMChatSdk.getInstance().getUserSession()
+    
+    public var delegate : ISMMessageViewDelegate?
     
     //MARK: - BODY
     public var body: some View {

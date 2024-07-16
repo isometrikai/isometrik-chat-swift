@@ -188,7 +188,7 @@ extension ISMMessageView{
         }else{
             if isGroup == false{
                 if self.conversationID == nil || self.conversationID == ""{
-                    viewModel.createConversation(userId: self.opponenDetail?.userId ?? "") { data in
+                    viewModel.createConversation(user: self.opponenDetail ?? UserDB()) { data in
                         self.conversationID = data?.conversationId
                         viewModel.getConversationDetail(conversationId: self.conversationID ?? "", isGroup: self.isGroup ?? false) { data in
                             //1. first check if conversation is deleted locally
