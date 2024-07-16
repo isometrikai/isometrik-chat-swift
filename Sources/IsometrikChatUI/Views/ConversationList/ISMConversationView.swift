@@ -71,7 +71,9 @@ public struct ISMConversationView : View {
     
     public var delegate : ISMConversationViewDelegate? = nil
     
-    public init(){}
+    public init(delegate : ISMConversationViewDelegate? = nil){
+        self.delegate = delegate
+    }
     
     
     

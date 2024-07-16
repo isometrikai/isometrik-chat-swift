@@ -22,7 +22,7 @@ This project is a chat SDK that you can integrate into your apps to add chat flo
 7. Initialization: Initialize the ChatSDK and ChatSDK UI with the provided configurations.
 
 
-func initializeChatIsometrik() -> ISMChatSdk{
+func initializeChatIsometrik(_ completion: @escaping ()->Void){
     
     //add what attachments you need only
     let attachment : [ISMChatConfigAttachmentType] = [.camera,.gallery,.document,.location,.contact]

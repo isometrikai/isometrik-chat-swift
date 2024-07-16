@@ -13,8 +13,8 @@ import IsometrikChat
 public class ISMViewManager{
     public init(){}
     
-    public func conversationList() -> some View {
-        return ISMConversationView()
+    public func conversationList(delegete : ISMConversationViewDelegate? = nil) -> some View {
+        return ISMConversationView(delegate: delegete)
     }
     
     public func messageList(conversationViewModel : ConversationViewModel,conversationId: String,user : UserDB,isGroup : Bool,fromBroadCastFlow : Bool,groupCastId : String,groupConversationTitle : String,groupImage : String) -> some View{
