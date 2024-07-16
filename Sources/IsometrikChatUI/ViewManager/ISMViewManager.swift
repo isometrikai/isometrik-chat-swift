@@ -17,7 +17,7 @@ public class ISMViewManager{
         return ISMConversationView(delegate: delegete)
     }
     
-    public func messageList(conversationViewModel : ConversationViewModel,conversationId: String,user : UserDB,isGroup : Bool,fromBroadCastFlow : Bool,groupCastId : String,groupConversationTitle : String,groupImage : String) -> some View{
-        return ISMMessageView(conversationViewModel: conversationViewModel, conversationID: conversationId, opponenDetail: user, isGroup: isGroup, fromBroadCastFlow: fromBroadCastFlow, groupCastId: groupCastId,groupConversationTitle : groupConversationTitle,groupImage : groupImage)
+    public func messageList(conversationViewModel : ConversationViewModel,conversationId: String,user : UserDB,isGroup : Bool,fromBroadCastFlow : Bool,groupCastId : String,groupConversationTitle : String,groupImage : String,delegate : ISMMessageViewDelegate? = nil) -> some View{
+        return ISMMessageView(conversationViewModel: conversationViewModel, conversationID: conversationId, opponenDetail: user, isGroup: isGroup, fromBroadCastFlow: fromBroadCastFlow, groupCastId: groupCastId,groupConversationTitle : groupConversationTitle,groupImage : groupImage,delegate:delegate)
     }
 }
