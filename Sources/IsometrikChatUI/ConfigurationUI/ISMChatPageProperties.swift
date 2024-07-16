@@ -12,4 +12,5 @@ public struct ISMChatPageProperties {
     public var attachments: [ISMChatConfigAttachmentType] // Array of attachment types
     public var features : [ISMChatConfigFeature] // Array of chat features
     public var conversationType : [ISMChatConversationTypeConfig] // Array of conversation types
+    public var hideNavigationBarForConversationList : Bool
 }

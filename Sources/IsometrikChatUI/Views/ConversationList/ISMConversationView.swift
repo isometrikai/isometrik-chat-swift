@@ -63,6 +63,7 @@ public struct ISMConversationView : View {
     
     @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State public var userSession = ISMChatSdk.getInstance().getUserSession()
+    @State public var hideNavigationBar = ISMChatSdkUI.getInstance().getChatProperties().hideNavigationBarForConversationList
     
     public init(){}
     
@@ -163,6 +164,7 @@ public struct ISMConversationView : View {
                 })
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarTitle("")
+                .navigationBarHidden(hideNavigationBar)
                 .navigationBarItems(leading: navigationLeading(),
                                     trailing: navigationTrailing())
                 .onChange(of: selectedUserToNavigate, perform: { newValue in
