@@ -11,6 +11,10 @@ import Combine
 import ISMSwiftCall
 import IsometrikChat
 
+public protocol ISMConversationViewDelegate{
+    func navigateToMessageList(selectedUserToNavigate : UserDB?)
+}
+
 public struct ISMConversationView : View {
     
     //MARK:  - PROPERTIES
@@ -65,15 +69,11 @@ public struct ISMConversationView : View {
     @State public var userSession = ISMChatSdk.getInstance().getUserSession()
     @State public var hideNavigationBar = ISMChatSdkUI.getInstance().getChatProperties().hideNavigationBarForConversationList
     
+    public var delegate : ISMConversationViewDelegate? = nil
+    
     public init(){}
     
-//    public var delegate : ChatVCDelegate? = nil
     
-//    public var ismChatSDK: ISMChatSdk?
-//    public init(ismChatSDK: ISMChatSdk) {
-//        self.ismChatSDK = ismChatSDK
-//        self.delegate = delegate
-//    }
     
     //MARK:  - BODY
     public var body: some View {
@@ -93,29 +93,43 @@ public struct ISMConversationView : View {
                     }else{
                         List{
                             ForEach(realmManager.getConversation()){ data in
-                                ZStack{
-                                    ISMConversationSubView(chat: data, hasUnreadCount: (data.unreadMessagesCount ) > 0)
-                                        .onAppear {
-                                            // pagination code
-                                            if self.shouldLoadMoreData(data) {
-                                                self.loadMoreData()
-                                            }
-                                        }
-                                    NavigationLink {
-                                        //navigation to chat
-                                        ISMMessageView(conversationViewModel : self.viewModel,conversationID: data.lastMessageDetails?.conversationId,opponenDetail : data.opponentDetails,userId: viewModel.userData?.userIdentifier, isGroup: data.isGroup,fromBroadCastFlow: false,groupCastId: "",groupConversationTitle: data.conversationTitle,groupImage: data.conversationImageUrl)
-                                            .environmentObject(realmManager)
-                                            .onAppear{
-                                                onScreen = false
-                                                query = ""
-                                            }
+                                if ISMChatSdkUI.getInstance().getChatProperties().hostFrameworksType == .UIKit{
+                                    Button {
+                                        delegate?.navigateToMessageList(selectedUserToNavigate: data.opponentDetails)
                                     } label: {
-                                        EmptyView()
-                                    }.buttonStyle(PlainButtonStyle())
-                                        .frame(width :0)
-                                        .opacity(0)
+                                        ISMConversationSubView(chat: data, hasUnreadCount: (data.unreadMessagesCount) > 0)
+                                            .onAppear {
+                                                // pagination code
+                                                if self.shouldLoadMoreData(data) {
+                                                    self.loadMoreData()
+                                                }
+                                            }
+                                    }.padding(.bottom,10)
+                                }else{
+                                    ZStack{
+                                        ISMConversationSubView(chat: data, hasUnreadCount: (data.unreadMessagesCount ) > 0)
+                                            .onAppear {
+                                                // pagination code
+                                                if self.shouldLoadMoreData(data) {
+                                                    self.loadMoreData()
+                                                }
+                                            }
+                                        NavigationLink {
+                                            //navigation to chat
+                                            ISMMessageView(conversationViewModel : self.viewModel,conversationID: data.lastMessageDetails?.conversationId,opponenDetail : data.opponentDetails,userId: viewModel.userData?.userIdentifier, isGroup: data.isGroup,fromBroadCastFlow: false,groupCastId: "",groupConversationTitle: data.conversationTitle,groupImage: data.conversationImageUrl)
+                                                .environmentObject(realmManager)
+                                                .onAppear{
+                                                    onScreen = false
+                                                    query = ""
+                                                }
+                                        } label: {
+                                            EmptyView()
+                                        }.buttonStyle(PlainButtonStyle())
+                                            .frame(width :0)
+                                            .opacity(0)
+                                    }
+                                    //:ZStack
                                 }
-                                //:ZStack
                             }//:FOREACH
                             .onDelete { offsets in   //on slide of item in list give delete option
                                 for row in offsets{
