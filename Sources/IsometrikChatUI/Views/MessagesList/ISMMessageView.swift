@@ -19,6 +19,7 @@ import IsometrikChat
 
 public protocol ISMMessageViewDelegate{
     func navigateToAppProfile(appUserId : String)
+    func navigateToPost(postId : String)
 }
 
 public struct ISMMessageView: View {
@@ -159,6 +160,8 @@ public struct ISMMessageView: View {
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State public var userSession = ISMChatSdk.getInstance().getUserSession()
+    
+    @State var postIdToNavigate : String = ""
     
     public var delegate : ISMMessageViewDelegate?
     
@@ -452,6 +455,12 @@ public struct ISMMessageView: View {
                 isShowingRedTimerStart.toggle()
             }
         })
+        .onChange(of: postIdToNavigate) { newValue in
+            if !postIdToNavigate.isEmpty{
+                delegate?.navigateToPost(postId: postIdToNavigate)
+                postIdToNavigate = ""
+            }
+        }
         .onChange(of: shareContact, perform: { newValue in
             if !self.selectedContactToShare.isEmpty {
                 sendMessage(msgType: .contact)

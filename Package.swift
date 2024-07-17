@@ -52,6 +52,7 @@ let package = Package(
         .target(
             name: "IsometrikChatUI",
             dependencies: [
+                "IsometrikChat",
                 .product(name: "GooglePlaces", package: "ios-places-sdk"),
                 .product(name: "GoogleMaps", package: "ios-maps-sdk"),
                 .product(name: "ActiveLabel", package: "activelabel.swift"),
