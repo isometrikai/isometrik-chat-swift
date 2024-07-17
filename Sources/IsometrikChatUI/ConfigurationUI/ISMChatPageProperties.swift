@@ -15,6 +15,7 @@ public struct ISMChatPageProperties {
     public var hideNavigationBarForConversationList : Bool
     public var hostFrameworksType : FrameworkType
     public var allowToNavigateToAppProfile : Bool
+    public var createConversationFromChatList : Bool
 }
 
 

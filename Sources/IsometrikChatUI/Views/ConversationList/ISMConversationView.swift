@@ -353,8 +353,11 @@ public struct ISMConversationView : View {
                         self.getConversationList()
                     }
                 }
-                //create conversation button
-                ISMCreateConversationButtonView(navigate: $createChat,showOfflinePopUp: $showingNoInternetAlert)
+                
+                if ISMChatSdkUI.getInstance().getChatProperties().createConversationFromChatList == true{
+                    //create conversation button
+                    ISMCreateConversationButtonView(navigate: $createChat,showOfflinePopUp: $showingNoInternetAlert)
+                }
             }
         }//:NavigationView
         .navigationViewStyle(StackNavigationViewStyle())
