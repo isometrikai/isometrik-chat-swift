@@ -35,7 +35,7 @@ public struct ISMMessageInfoView: View {
     //MARK:  - LIFECYCLE
     public var body: some View {
         ZStack{
-            Color.backgroundView.edgesIgnoringSafeArea(.all)
+            themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
             VStack{
                 VStack(alignment  :.trailing,spacing: 0){
                     //Header
@@ -180,7 +180,7 @@ public struct ISMMessageInfoView: View {
                         }
                     }
                 }.listRowSeparatorTint(Color.border)
-                    .background(Color.listBackground)
+                    .background(themeColor.chatListBackground)
                         .scrollContentBackground(.hidden)
                 
             }//:VSTACK
