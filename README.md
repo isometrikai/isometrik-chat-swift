@@ -117,6 +117,12 @@ extension AppDelegate : PKPushRegistryDelegate{
 
 11. Add this in AppDelegate (didRefreshRegistrationToken) to subscribe topic
         ISMChatHelper.subscribeFCM()
+        
+        
+12. Share Post/ Reel
+        let viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+        viewModel.sharePost(user: UserDB(), postId: postId/reelId, postURL: "", postCaption: ""){}
+        Note - post Url should be image
 
 
 # Logout
