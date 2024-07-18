@@ -153,87 +153,168 @@ public struct ISMChatImages {
     
     public init(){}
     
-    public init(addConversation: Image, conversationListPlaceholder: Image, backButton: Image, backButtonGrey: Image, videoCall: Image, audioCall: Image, threeDots: Image, blockedUserListPlaceholder: Image, scrollToBottomArrow: Image, broadCastLogo: Image, broadCastMessageLogo: Image, broadcastInUserList: Image, forwardLogo: Image, gifLogo: Image, stickerLogo: Image, linkLogo: Image, mapPinLogo: Image, pdfLogo: Image, playVideo: Image, pauseVideo: Image, cropImageButton: Image, addTextOnImageButton: Image, editImageButton: Image, deleteImageButton: Image, messagePending: Image, messageSent: Image, messageDelivered: Image, messageRead: Image, contextMenureply: Image, contextMenuforward: Image, contextMenuedit: Image, contextMenucopy: Image, contextMenuinfo: Image, contextMenudelete: Image, audioIncoming: Image, audioOutgoing: Image, audioMissedCall: Image, videoIncoming: Image, videoOutgoing: Image, videoMissedCall: Image, cancel: Image, cancelWithBlackBackground: Image, cancelWithGreyBackground: Image, disclouser: Image, broadcastInfo: Image, imageLoading: Image, removeMemberIncoming: Image, removeUserFromSelected: Image, selected: Image, deselected: Image, sendMessage: Image, mapTarget: Image, noMessagePlaceholder: Image, chevronright: Image, CloseSheet: Image, LogoutIcon: Image, mediaIcon: Image, NotificationsIcon: Image, searchMagnifingGlass: Image, addMembers: Image, groupMembers: Image, noDocPlaceholder: Image, noLinkPlaceholder: Image, noMediaPlaceholder: Image, replyVideoIcon: Image, replyCameraIcon: Image, replyAudioIcon: Image, replyDocumentIcon: Image, replyLocationIcon: Image, replyContactIcon: Image, replyGifIcon: Image, cancelReplyMessageSelected: Image, addAttcahment: Image, addSticker: Image, addAudio: Image, chevranbackward: Image, trash: Image, audioLock: Image, blockIcon: Image, fileFallback: Image) {
-        self.addConversation = addConversation
-        self.conversationListPlaceholder = conversationListPlaceholder
-        self.backButton = backButton
-        self.backButtonGrey = backButtonGrey
-        self.videoCall = videoCall
-        self.audioCall = audioCall
-        self.threeDots = threeDots
-        self.blockedUserListPlaceholder = blockedUserListPlaceholder
-        self.scrollToBottomArrow = scrollToBottomArrow
-        self.broadCastLogo = broadCastLogo
-        self.broadCastMessageLogo = broadCastMessageLogo
-        self.broadcastInUserList = broadcastInUserList
-        self.forwardLogo = forwardLogo
-        self.gifLogo = gifLogo
-        self.stickerLogo = stickerLogo
-        self.linkLogo = linkLogo
-        self.mapPinLogo = mapPinLogo
-        self.pdfLogo = pdfLogo
-        self.playVideo = playVideo
-        self.pauseVideo = pauseVideo
-        self.cropImageButton = cropImageButton
-        self.addTextOnImageButton = addTextOnImageButton
-        self.editImageButton = editImageButton
-        self.deleteImageButton = deleteImageButton
-        self.messagePending = messagePending
-        self.messageSent = messageSent
-        self.messageDelivered = messageDelivered
-        self.messageRead = messageRead
-        self.contextMenureply = contextMenureply
-        self.contextMenuforward = contextMenuforward
-        self.contextMenuedit = contextMenuedit
-        self.contextMenucopy = contextMenucopy
-        self.contextMenuinfo = contextMenuinfo
-        self.contextMenudelete = contextMenudelete
-        self.audioIncoming = audioIncoming
-        self.audioOutgoing = audioOutgoing
-        self.audioMissedCall = audioMissedCall
-        self.videoIncoming = videoIncoming
-        self.videoOutgoing = videoOutgoing
-        self.videoMissedCall = videoMissedCall
-        self.cancel = cancel
-        self.cancelWithBlackBackground = cancelWithBlackBackground
-        self.cancelWithGreyBackground = cancelWithGreyBackground
-        self.disclouser = disclouser
-        self.broadcastInfo = broadcastInfo
-        self.imageLoading = imageLoading
-        self.removeMember = removeMemberIncoming
-        self.removeUserFromSelectedFromList = removeUserFromSelected
-        self.selected = selected
-        self.deselected = deselected
-        self.sendMessage = sendMessage
-        self.mapTarget = mapTarget
-        self.noMessagePlaceholder = noMessagePlaceholder
-        self.chevronright = chevronright
-        self.CloseSheet = CloseSheet
-        self.LogoutIcon = LogoutIcon
-        self.mediaIcon = mediaIcon
-        self.NotificationsIcon = NotificationsIcon
-        self.searchMagnifingGlass = searchMagnifingGlass
-        self.addMembers = addMembers
-        self.groupMembers = groupMembers
-        self.noDocPlaceholder = noDocPlaceholder
-        self.noLinkPlaceholder = noLinkPlaceholder
-        self.noMediaPlaceholder = noMediaPlaceholder
-        self.replyVideoIcon = replyVideoIcon
-        self.replyCameraIcon = replyCameraIcon
-        self.replyAudioIcon = replyAudioIcon
-        self.replyDocumentIcon = replyDocumentIcon
-        self.replyLocationIcon = replyLocationIcon
-        self.replyContactIcon = replyContactIcon
-        self.replyGifIcon = replyGifIcon
-        self.cancelReplyMessageSelected = cancelReplyMessageSelected
-        self.addAttcahment = addAttcahment
-        self.addSticker = addSticker
-        self.addAudio = addAudio
-        self.chevranbackward = chevranbackward
-        self.trash = trash
-        self.audioLock = audioLock
-        self.blockIcon = blockIcon
-        self.fileFallback = fileFallback
+    public init(
+        addConversation: Image? = nil,
+        conversationListPlaceholder: Image? = nil,
+        backButton: Image? = nil,
+        backButtonGrey: Image? = nil,
+        videoCall: Image? = nil,
+        audioCall: Image? = nil,
+        threeDots: Image? = nil,
+        blockedUserListPlaceholder: Image? = nil,
+        scrollToBottomArrow: Image? = nil,
+        broadCastLogo: Image? = nil,
+        broadCastMessageLogo: Image? = nil,
+        broadcastInUserList: Image? = nil,
+        forwardLogo: Image? = nil,
+        gifLogo: Image? = nil,
+        stickerLogo: Image? = nil,
+        linkLogo: Image? = nil,
+        mapPinLogo: Image? = nil,
+        pdfLogo: Image? = nil,
+        playVideo: Image? = nil,
+        pauseVideo: Image? = nil,
+        cropImageButton: Image? = nil,
+        addTextOnImageButton: Image? = nil,
+        editImageButton: Image? = nil,
+        deleteImageButton: Image? = nil,
+        messagePending: Image? = nil,
+        messageSent: Image? = nil,
+        messageDelivered: Image? = nil,
+        messageRead: Image? = nil,
+        contextMenureply: Image? = nil,
+        contextMenuforward: Image? = nil,
+        contextMenuedit: Image? = nil,
+        contextMenucopy: Image? = nil,
+        contextMenuinfo: Image? = nil,
+        contextMenudelete: Image? = nil,
+        audioIncoming: Image? = nil,
+        audioOutgoing: Image? = nil,
+        audioMissedCall: Image? = nil,
+        videoIncoming: Image? = nil,
+        videoOutgoing: Image? = nil,
+        videoMissedCall: Image? = nil,
+        cancel: Image? = nil,
+        cancelWithBlackBackground: Image? = nil,
+        cancelWithGreyBackground: Image? = nil,
+        disclouser: Image? = nil,
+        broadcastInfo: Image? = nil,
+        imageLoading: Image? = nil,
+        removeMember: Image? = nil,
+        removeUserFromSelectedFromList: Image? = nil,
+        selected: Image? = nil,
+        deselected: Image? = nil,
+        sendMessage: Image? = nil,
+        mapTarget: Image? = nil,
+        noMessagePlaceholder: Image? = nil,
+        chevronright: Image? = nil,
+        CloseSheet: Image? = nil,
+        LogoutIcon: Image? = nil,
+        mediaIcon: Image? = nil,
+        NotificationsIcon: Image? = nil,
+        searchMagnifingGlass: Image? = nil,
+        addMembers: Image? = nil,
+        groupMembers: Image? = nil,
+        noDocPlaceholder: Image? = nil,
+        noLinkPlaceholder: Image? = nil,
+        noMediaPlaceholder: Image? = nil,
+        replyVideoIcon: Image? = nil,
+        replyCameraIcon: Image? = nil,
+        replyAudioIcon: Image? = nil,
+        replyDocumentIcon: Image? = nil,
+        replyLocationIcon: Image? = nil,
+        replyContactIcon: Image? = nil,
+        replyGifIcon: Image? = nil,
+        cancelReplyMessageSelected: Image? = nil,
+        addAttcahment: Image? = nil,
+        addSticker: Image? = nil,
+        addAudio: Image? = nil,
+        chevranbackward: Image? = nil,
+        trash: Image? = nil,
+        audioLock: Image? = nil,
+        blockIcon: Image? = nil,
+        fileFallback: Image? = nil
+    ) {
+        if let addConversation = addConversation { self.addConversation = addConversation }
+        if let conversationListPlaceholder = conversationListPlaceholder { self.conversationListPlaceholder = conversationListPlaceholder }
+        if let backButton = backButton { self.backButton = backButton }
+        if let backButtonGrey = backButtonGrey { self.backButtonGrey = backButtonGrey }
+        if let videoCall = videoCall { self.videoCall = videoCall }
+        if let audioCall = audioCall { self.audioCall = audioCall }
+        if let threeDots = threeDots { self.threeDots = threeDots }
+        if let blockedUserListPlaceholder = blockedUserListPlaceholder { self.blockedUserListPlaceholder = blockedUserListPlaceholder }
+        if let scrollToBottomArrow = scrollToBottomArrow { self.scrollToBottomArrow = scrollToBottomArrow }
+        if let broadCastLogo = broadCastLogo { self.broadCastLogo = broadCastLogo }
+        if let broadCastMessageLogo = broadCastMessageLogo { self.broadCastMessageLogo = broadCastMessageLogo }
+        if let broadcastInUserList = broadcastInUserList { self.broadcastInUserList = broadcastInUserList }
+        if let forwardLogo = forwardLogo { self.forwardLogo = forwardLogo }
+        if let gifLogo = gifLogo { self.gifLogo = gifLogo }
+        if let stickerLogo = stickerLogo { self.stickerLogo = stickerLogo }
+        if let linkLogo = linkLogo { self.linkLogo = linkLogo }
+        if let mapPinLogo = mapPinLogo { self.mapPinLogo = mapPinLogo }
+        if let pdfLogo = pdfLogo { self.pdfLogo = pdfLogo }
+        if let playVideo = playVideo { self.playVideo = playVideo }
+        if let pauseVideo = pauseVideo { self.pauseVideo = pauseVideo }
+        if let cropImageButton = cropImageButton { self.cropImageButton = cropImageButton }
+        if let addTextOnImageButton = addTextOnImageButton { self.addTextOnImageButton = addTextOnImageButton }
+        if let editImageButton = editImageButton { self.editImageButton = editImageButton }
+        if let deleteImageButton = deleteImageButton { self.deleteImageButton = deleteImageButton }
+        if let messagePending = messagePending { self.messagePending = messagePending }
+        if let messageSent = messageSent { self.messageSent = messageSent }
+        if let messageDelivered = messageDelivered { self.messageDelivered = messageDelivered }
+        if let messageRead = messageRead { self.messageRead = messageRead }
+        if let contextMenureply = contextMenureply { self.contextMenureply = contextMenureply }
+        if let contextMenuforward = contextMenuforward { self.contextMenuforward = contextMenuforward }
+        if let contextMenuedit = contextMenuedit { self.contextMenuedit = contextMenuedit }
+        if let contextMenucopy = contextMenucopy { self.contextMenucopy = contextMenucopy }
+        if let contextMenuinfo = contextMenuinfo { self.contextMenuinfo = contextMenuinfo }
+        if let contextMenudelete = contextMenudelete { self.contextMenudelete = contextMenudelete }
+        if let audioIncoming = audioIncoming { self.audioIncoming = audioIncoming }
+        if let audioOutgoing = audioOutgoing { self.audioOutgoing = audioOutgoing }
+        if let audioMissedCall = audioMissedCall { self.audioMissedCall = audioMissedCall }
+        if let videoIncoming = videoIncoming { self.videoIncoming = videoIncoming }
+        if let videoOutgoing = videoOutgoing { self.videoOutgoing = videoOutgoing }
+        if let videoMissedCall = videoMissedCall { self.videoMissedCall = videoMissedCall }
+        if let cancel = cancel { self.cancel = cancel }
+        if let cancelWithBlackBackground = cancelWithBlackBackground { self.cancelWithBlackBackground = cancelWithBlackBackground }
+        if let cancelWithGreyBackground = cancelWithGreyBackground { self.cancelWithGreyBackground = cancelWithGreyBackground }
+        if let disclouser = disclouser { self.disclouser = disclouser }
+        if let broadcastInfo = broadcastInfo { self.broadcastInfo = broadcastInfo }
+        if let imageLoading = imageLoading { self.imageLoading = imageLoading }
+        if let removeMember = removeMember { self.removeMember = removeMember }
+        if let removeUserFromSelectedFromList = removeUserFromSelectedFromList { self.removeUserFromSelectedFromList = removeUserFromSelectedFromList }
+        if let selected = selected { self.selected = selected }
+        if let deselected = deselected { self.deselected = deselected }
+        if let sendMessage = sendMessage { self.sendMessage = sendMessage }
+        if let mapTarget = mapTarget { self.mapTarget = mapTarget }
+        if let noMessagePlaceholder = noMessagePlaceholder { self.noMessagePlaceholder = noMessagePlaceholder }
+        if let chevronright = chevronright { self.chevronright = chevronright }
+        if let CloseSheet = CloseSheet { self.CloseSheet = CloseSheet }
+        if let LogoutIcon = LogoutIcon { self.LogoutIcon = LogoutIcon }
+        if let mediaIcon = mediaIcon { self.mediaIcon = mediaIcon }
+        if let NotificationsIcon = NotificationsIcon { self.NotificationsIcon = NotificationsIcon }
+        if let searchMagnifingGlass = searchMagnifingGlass { self.searchMagnifingGlass = searchMagnifingGlass }
+        if let addMembers = addMembers { self.addMembers = addMembers }
+        if let groupMembers = groupMembers { self.groupMembers = groupMembers }
+        if let noDocPlaceholder = noDocPlaceholder { self.noDocPlaceholder = noDocPlaceholder }
+        if let noLinkPlaceholder = noLinkPlaceholder { self.noLinkPlaceholder = noLinkPlaceholder }
+        if let noMediaPlaceholder = noMediaPlaceholder { self.noMediaPlaceholder = noMediaPlaceholder }
+        if let replyVideoIcon = replyVideoIcon { self.replyVideoIcon = replyVideoIcon }
+        if let replyCameraIcon = replyCameraIcon { self.replyCameraIcon = replyCameraIcon }
+        if let replyAudioIcon = replyAudioIcon { self.replyAudioIcon = replyAudioIcon }
+        if let replyDocumentIcon = replyDocumentIcon { self.replyDocumentIcon = replyDocumentIcon }
+        if let replyLocationIcon = replyLocationIcon { self.replyLocationIcon = replyLocationIcon }
+        if let replyContactIcon = replyContactIcon { self.replyContactIcon = replyContactIcon }
+        if let replyGifIcon = replyGifIcon { self.replyGifIcon = replyGifIcon }
+        if let cancelReplyMessageSelected = cancelReplyMessageSelected { self.cancelReplyMessageSelected = cancelReplyMessageSelected }
+        if let addAttcahment = addAttcahment { self.addAttcahment = addAttcahment }
+        if let addSticker = addSticker { self.addSticker = addSticker }
+        if let addAudio = addAudio { self.addAudio = addAudio }
+        if let chevranbackward = chevranbackward { self.chevranbackward = chevranbackward }
+        if let trash = trash { self.trash = trash }
+        if let audioLock = audioLock { self.audioLock = audioLock }
+        if let blockIcon = blockIcon { self.blockIcon = blockIcon }
+        if let fileFallback = fileFallback { self.fileFallback = fileFallback }
     }
     
 }
