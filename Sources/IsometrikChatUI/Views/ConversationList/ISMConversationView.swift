@@ -70,6 +70,7 @@ public struct ISMConversationView : View {
     @State public var hideNavigationBar = ISMChatSdkUI.getInstance().getChatProperties().hideNavigationBarForConversationList
     
     public var delegate : ISMConversationViewDelegate? = nil
+    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     
     public init(delegate : ISMConversationViewDelegate? = nil){
         self.delegate = delegate
