@@ -36,7 +36,7 @@ public struct ISMChatImages {
     public var backButtonGrey : Image = loadImageSafely(with: "back_Button")
     public var videoCall : Image = loadImageSafely(with: "video_Calling")
     public var audioCall : Image = loadImageSafely(with: "audio_Calling")
-    public var threeDots : Image = loadSafely(systemName: "ellipsis", assetsFallback: "ellipsis")
+    public var threeDots : Image = loadImageSafely(with: "more")
     
     public var blockedUserListPlaceholder : Image = loadImageSafely(with: "BlockedUser")
     public var scrollToBottomArrow : Image = loadImageSafely(with: "bottomarrow")

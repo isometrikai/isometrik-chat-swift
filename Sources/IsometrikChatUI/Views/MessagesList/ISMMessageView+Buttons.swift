@@ -278,8 +278,8 @@ extension ISMMessageView{
                             }
                         } label: {
                             themeImages.threeDots
-                                .rotationEffect(.degrees(-90))
-                                .foregroundColor(Color.black)
+                                .resizable()
+                                .frame(width: 5, height: 20, alignment: .center)
                         }
                     }
                 }
