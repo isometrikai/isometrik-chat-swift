@@ -81,7 +81,7 @@ public struct ISMConversationView : View {
     public var body: some View {
         NavigationView {
             ZStack{
-                Color(uiColor: .white).edgesIgnoringSafeArea(.all)
+                themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
                     if realmManager.getConversationCount() == 0 && query == ""{
                         // default placeholder
