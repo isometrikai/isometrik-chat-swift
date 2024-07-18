@@ -298,7 +298,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             if !mentionedUsers.isEmpty {
                 body["mentionedUsers"] = mentionedUsers
             }
-        case .location, .contact:
+        case .location, .contact,.post:
             body["metaData"] = metaData
         case .photo, .video:
             body["attachments"] = [attachmentValue]
