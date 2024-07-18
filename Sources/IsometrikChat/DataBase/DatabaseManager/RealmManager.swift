@@ -39,7 +39,7 @@ public class RealmManager: ObservableObject {
         do {
             // always update schemaversion when you do add or remove param from local db
             let config = Realm.Configuration(
-                schemaVersion: 18)
+                schemaVersion: 19)
             Realm.Configuration.defaultConfiguration = config
             localRealm = try Realm()
         } catch {
