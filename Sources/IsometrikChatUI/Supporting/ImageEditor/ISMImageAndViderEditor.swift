@@ -11,25 +11,25 @@ import Kingfisher
 import IsometrikChat
 
 
-struct ISMMediaUpload : Hashable {
-    var url : URL
-    var caption : String
-    var isVideo: Bool
+public struct ISMMediaUpload : Hashable {
+    public var url : URL
+    public var caption : String
+    public var isVideo: Bool
 }
 
 struct ISMImageAndViderEditor: View {
     
     //MARK:  - PROPERTIES
-    @State private var selectedIndex = 0
-    @Binding var media : [ISMMediaUpload]
+    @State public var selectedIndex = 0
+    @Binding public var media : [ISMMediaUpload]
     @Environment(\.dismiss) var dismiss
-    @State private var scale: CGFloat = 1.0
-    @State var height: CGFloat = 32.0
-    var sendToUser : String
-    @Binding var sendMedia : Bool
-    @State var showCropper : Bool = false
-    @State var navigateToDraw : Bool = false
-    @State var addText : Bool = false
+    @State public var scale: CGFloat = 1.0
+    @State public var height: CGFloat = 32.0
+    public var sendToUser : String
+    @Binding public var sendMedia : Bool
+    @State public var showCropper : Bool = false
+    @State public var navigateToDraw : Bool = false
+    @State public var addText : Bool = false
     
     //MARK:  - LIFECYCLE
     var body: some View {

@@ -12,26 +12,26 @@ import IsometrikChat
 public struct ISMProfileView: View {
     
     //MARK:  - PROPERTIES
-    @ObservedObject var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject public var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
 //    @EnvironmentObject var vm: OnboardingViewModel
-    @State private var showSheet = false
-    @State private var image : [UIImage] = []
-    @EnvironmentObject var realmManager : RealmManager
-    @Environment(\.dismiss) var dismiss
-    public var ismChatSDK: ISMChatSdk?
-    @State var isSwitchOn : Bool = true
-    @State var showLastSeen : Bool = true
-    @State private var userName : String = ""
-    @State private var email : String = ""
-    @State private var about : String = ""
-    @State private var userProfileImageUrl : String = ""
-    @State private var userNameAlert : Bool = false
-    @State private var emailAlert : Bool = false
-    @State private var selectedMedia : [URL] = []
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State var userSession = ISMChatSdk.getInstance().getUserSession()
+    @State public var showSheet = false
+    @State public var image : [UIImage] = []
+    @EnvironmentObject public var realmManager : RealmManager
+    @Environment(\.dismiss) public var dismiss
+//    public var ismChatSDK: ISMChatSdk?
+    @State public var isSwitchOn : Bool = true
+    @State public var showLastSeen : Bool = true
+    @State public var userName : String = ""
+    @State public var email : String = ""
+    @State public var about : String = ""
+    @State public var userProfileImageUrl : String = ""
+    @State public var userNameAlert : Bool = false
+    @State public var emailAlert : Bool = false
+    @State public var selectedMedia : [URL] = []
+    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @State public var userSession = ISMChatSdk.getInstance().getUserSession()
     
     //MARK: - BODY
     public var body: some View {

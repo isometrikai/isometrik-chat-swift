@@ -75,6 +75,7 @@ struct ISMMessageSubView: View {
     @EnvironmentObject var realmManager : RealmManager
     @ObservedObject var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
     @Environment(\.viewController) public var viewControllerHolder: UIViewController?
+    @Binding var postIdToNavigate : String
     
     
     //MARK:  - BODY
@@ -925,6 +926,54 @@ struct ISMMessageSubView: View {
                             }
                         }.padding(.vertical,2)
                     }
+                    //MARK: - Post Message View
+                case .post:
+                    HStack(alignment: .bottom){
+                        if isGroup == true && isReceived == true{
+                            //When its group show member avatar in message
+                            inGroupUserAvatarView()
+                        }
+                        ZStack(alignment: .bottomTrailing){
+                            VStack(alignment: .leading, spacing: 2){
+                                if isGroup == true && isReceived == true{
+                                    //when its group show member name in message
+                                    inGroupUserName()
+                                }
+                                
+                                    VStack(alignment: .trailing,spacing: 5){
+                                        Button {
+                                            postIdToNavigate = message.metaData?.postId ?? ""
+                                        } label: {
+                                            postButtonView()
+                                        }
+
+                                    }//:ZStack
+                                    .padding(5)
+                                    .background(isReceived ? themeColor.messageListReceivedMessageBackgroundColor : themeColor.messageListSendMessageBackgroundColor)
+                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: self.themeBubbleType, direction: isReceived ? .left : .right))
+                                    .overlay(
+                                        themeBubbleType == .BubbleWithOutTail ?
+                                            AnyView(
+                                                UnevenRoundedRectangle(
+                                                    topLeadingRadius: 8,
+                                                    bottomLeadingRadius: isReceived ? 0 : 8,
+                                                    bottomTrailingRadius: isReceived ? 8 : 0,
+                                                    topTrailingRadius: 8,
+                                                    style: .circular
+                                                )
+                                                .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
+                                            ) : AnyView(EmptyView())
+                                    )
+                                    .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
+                                    .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser).environmentObject(self.realmManager), isActive: $navigateToInfo))
+                                
+                            }
+                            
+                            if message.reactions.count > 0{
+                                reactionsView()
+                            }
+                        }.padding(.vertical,2)
+                    }
                 default:
                     EmptyView()
                 }
@@ -1006,6 +1055,43 @@ struct ISMMessageSubView: View {
         Text("Edited")
             .font(themeFonts.messageListMessageEdited)
             .foregroundColor(themeColor.messageListMessageEdited)
+    }
+    
+    func postButtonView() -> some View{
+        VStack{
+            if message.messageType == 1{
+                forwardedView()
+            }
+            ZStack(alignment: .bottomTrailing){
+                ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.mediaUrl ?? "",isprofileImage: false)
+                    .scaledToFill()
+                    .frame(width: 250, height: 300)
+                    .cornerRadius(5)
+                    .overlay(
+                        LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                            .frame(width: 250, height: 300)
+                            .mask(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .fill(Color.white)
+                            )
+                    )
+                if message.metaData?.captionMessage == nil{
+                    dateAndStatusView(onImage: true)
+                        .padding(.bottom,5)
+                        .padding(.trailing,5)
+                }
+            }
+            if let caption = message.metaData?.captionMessage, !caption.isEmpty{
+                Text(caption)
+                    .font(themeFonts.messageListMessageText)
+                    .foregroundColor(themeColor.messageListMessageText)
+                
+                dateAndStatusView(onImage: false)
+                    .padding(.bottom,5)
+                    .padding(.trailing,5)
+                
+            }
+        }
     }
     
     func repliedMessageView() -> some View{

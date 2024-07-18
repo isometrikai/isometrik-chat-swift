@@ -149,7 +149,11 @@ extension ISMMessageView{
                     
                     Button {
                         if conversationDetail != nil{
-                            navigateToProfile = true
+                            if ISMChatSdkUI.getInstance().getChatProperties().allowToNavigateToAppProfile == true{
+                                delegate?.navigateToAppProfile(appUserId: self.conversationDetail?.conversationDetails?.metaData?.memberIdOfApp ?? "")
+                            }else{
+                                navigateToProfile = true
+                            }
                         }else{
                             showingNoInternetAlert = true
                         }
@@ -286,13 +290,13 @@ extension ISMMessageView{
     func audioCallUser(){
         self.endEditing(true)
         let callsdk = IsometrikCall()
-        callsdk.startCall(with: ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? ""), callType: .AudioCall)
+        callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType:  .AudioCall)
     }
     
     func videoCallUser(){
         self.endEditing(true)
         let callsdk = IsometrikCall()
-        callsdk.startCall(with: ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? ""), callType: .VideoCall)
+        callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType:  .VideoCall)
     }
     
     func clearChatButton() -> some View{

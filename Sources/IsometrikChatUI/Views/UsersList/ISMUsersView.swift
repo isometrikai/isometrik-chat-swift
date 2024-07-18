@@ -10,31 +10,31 @@ import Combine
 import IsometrikChat
 
 
-struct ISMUsersView: View {
+public struct ISMUsersView: View {
     
     //MARK:  - PROPERTIES
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) public var dismiss
     
-    @ObservedObject var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject public var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
     
-    @Binding var selectedUser : UserDB
-    @Binding var selectedUserconversationId : String
+    @Binding public var selectedUser : UserDB
+    @Binding public var selectedUserconversationId : String
 
-    @State private var createconversation : ISMChatCreateConversationResponse?
+    @State public var createconversation : ISMChatCreateConversationResponse?
    
-    @State private var showGroupOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.GroupConversation)
-    @State var showBroadCastOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.BroadCastConversation)
+    @State public var showGroupOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.GroupConversation)
+    @State public var showBroadCastOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.BroadCastConversation)
     
-    @EnvironmentObject var realmManager : RealmManager
-    @State var navigatetoCreatGroup : Bool = false
-    @State var navigatetoCreatBroadCast : Bool = false
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @Binding var groupCastIdToNavigate : String
+    @EnvironmentObject public var realmManager : RealmManager
+    @State public var navigatetoCreatGroup : Bool = false
+    @State public var navigatetoCreatBroadCast : Bool = false
+    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @Binding public var groupCastIdToNavigate : String
     
     //MARK:  - LIFECYCLE
-    var body: some View {
+    public var body: some View {
         ZStack{
             NavigationView{
                 VStack {

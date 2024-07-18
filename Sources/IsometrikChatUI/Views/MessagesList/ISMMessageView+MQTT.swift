@@ -38,7 +38,7 @@ import IsometrikChat
                 
                 let metaData = ISMChatMetaData(replyMessage: replyMessageData,
                                            locationAddress: messageInfo.metaData?.locationAddress,
-                                                contacts: contact,captionMessage: messageInfo.metaData?.captionMessage,isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage)
+                                               contacts: contact,captionMessage: messageInfo.metaData?.captionMessage,isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage,postId: messageInfo.metaData?.postId)
                 
                 let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")
                 

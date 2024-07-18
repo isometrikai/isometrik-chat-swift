@@ -52,6 +52,14 @@ public class ISMChatSdk{
         return userSession!
     }
     
+    public func checkifChatInitialied() -> Bool{
+        if mqttSession == nil {
+            return false
+        }else{
+            return true
+        }
+    }
+    
     
     
     public func appConfiguration(appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig) {

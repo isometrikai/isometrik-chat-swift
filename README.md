@@ -47,7 +47,7 @@ func initializeChatIsometrik() -> ISMChatSdk{
     ISMChatSdk.getInstance().appConfiguration(appConfig: appConfig, userConfig: userConfig)
     
     //For isometricChatUI
-    ISMChatSdkUI.getInstance().appConfiguration(conversationConfig: conversationTypes, attachments: attachment, features: feature, customColors: customColors, customFonts: customFonts, customImages: customImages, customMessageBubbleType: messageBubbleType)
+    ISMChatSdkUI.getInstance().appConfiguration(conversationConfig: conversationTypes, attachments: attachment, features: feature, customColors: customColors, customFonts: customFonts, customImages: customImages, customMessageBubbleType: messageBubbleType,hideNavigationBarForConversationList : Bool)
     
     //Call initializeCall func here for call functionality
     initializeCall()
@@ -129,5 +129,4 @@ Add this code when u logout
 ISMChatSdk.getInstance().onTerminate()
 IsometrikCall().clearSession()
 ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
-realmManager.deleteAllData()
 ```

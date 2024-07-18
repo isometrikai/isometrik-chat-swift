@@ -28,27 +28,27 @@ public struct ISMChatImages {
     
     //conversationList
     public var addConversation : Image = loadImageSafely(with: "AddHome")
-    public var conversationListPlaceholder : Image = loadImageSafely(with: "defaultPlaceholderCL")
+    public var conversationListPlaceholder : Image = loadImageSafely(with: "default_Placeholder_CL")
     
     
     //messageList
     public var backButton : Image = loadImageSafely(with: "Back")
-    public var backButtonGrey : Image = loadImageSafely(with: "backButton")
-    public var videoCall : Image = loadImageSafely(with: "videoCalling")
-    public var audioCall : Image = loadImageSafely(with: "audioCalling")
+    public var backButtonGrey : Image = loadImageSafely(with: "back_Button")
+    public var videoCall : Image = loadImageSafely(with: "video_Calling")
+    public var audioCall : Image = loadImageSafely(with: "audio_Calling")
     public var threeDots : Image = loadSafely(systemName: "ellipsis", assetsFallback: "ellipsis")
     
     public var blockedUserListPlaceholder : Image = loadImageSafely(with: "BlockedUser")
     public var scrollToBottomArrow : Image = loadImageSafely(with: "bottomarrow")
-    public var broadCastLogo : Image = loadImageSafely(with: "broadCastlogo")
+    public var broadCastLogo : Image = loadImageSafely(with: "broadCast_logo")
     public var broadCastMessageLogo : Image = loadImageSafely(with: "broadcastMessageIcon")
     public var broadcastInUserList : Image = loadImageSafely(with: "megaphone")
     public var forwardLogo : Image = loadImageSafely(with: "forwarded")
-    public var gifLogo : Image = loadImageSafely(with: "giflogo")
-    public var stickerLogo : Image = loadImageSafely(with: "gifsticker")
+    public var gifLogo : Image = loadImageSafely(with: "gif_logo")
+    public var stickerLogo : Image = loadImageSafely(with: "gif_sticker")
     public var linkLogo : Image = loadImageSafely(with: "link")
-    public var mapPinLogo : Image = loadImageSafely(with: "mapPin")
-    public var pdfLogo : Image = loadImageSafely(with: "pdfNew")
+    public var mapPinLogo : Image = loadImageSafely(with: "map_Pin")
+    public var pdfLogo : Image = loadImageSafely(with: "pdf_New")
     
     public var playVideo : Image = loadImageSafely(with: "play")
     public var pauseVideo : Image = loadImageSafely(with: "pause")
@@ -57,40 +57,40 @@ public struct ISMChatImages {
     
     
     //editor
-    public var cropImageButton : Image = loadImageSafely(with: "cropImage")
+    public var cropImageButton : Image = loadImageSafely(with: "crop_Image")
     public var addTextOnImageButton : Image = loadImageSafely(with: "AddText")
-    public var editImageButton : Image = loadImageSafely(with: "editImage")
-    public var deleteImageButton : Image = loadImageSafely(with: "DeleteImage")
+    public var editImageButton : Image = loadImageSafely(with: "edit_Image")
+    public var deleteImageButton : Image = loadImageSafely(with: "Delete_Image")
     
     //messageStatus
     
     public var messagePending : Image = loadImageSafely(with: "clock")
-    public var messageSent : Image = loadImageSafely(with: "singleticksent")
-    public var messageDelivered : Image = loadImageSafely(with: "doubleticksent")
-    public var messageRead : Image = loadImageSafely(with: "doubletickreceived")
+    public var messageSent : Image = loadImageSafely(with: "single_tick_sent")
+    public var messageDelivered : Image = loadImageSafely(with: "double_tick_sent")
+    public var messageRead : Image = loadImageSafely(with: "double_tick_received")
     
     //contextMenu
-    public var contextMenureply : Image = loadImageSafely(with: "replyCM")
-    public var contextMenuforward : Image = loadImageSafely(with: "forwardCM")
-    public var contextMenuedit : Image = loadImageSafely(with: "editCM")
-    public var contextMenucopy : Image = loadImageSafely(with: "copyCM")
-    public var contextMenuinfo : Image = loadImageSafely(with: "infoCM")
-    public var contextMenudelete : Image = loadImageSafely(with: "deleteCM")
+    public var contextMenureply : Image = loadImageSafely(with: "reply_CM")
+    public var contextMenuforward : Image = loadImageSafely(with: "forward_CM")
+    public var contextMenuedit : Image = loadImageSafely(with: "edit_CM")
+    public var contextMenucopy : Image = loadImageSafely(with: "copy_CM")
+    public var contextMenuinfo : Image = loadImageSafely(with: "info_CM")
+    public var contextMenudelete : Image = loadImageSafely(with: "delete_CM")
     
     
     //calling
-    public var audioIncoming : Image = loadImageSafely(with: "audioincoming")
-    public var audioOutgoing : Image = loadImageSafely(with: "audiooutgoing")
-    public var audioMissedCall : Image = loadImageSafely(with: "audiomissedCall")
-    public var videoIncoming : Image = loadImageSafely(with: "videoincoming")
-    public var videoOutgoing : Image = loadImageSafely(with: "videooutgoing")
-    public var videoMissedCall : Image = loadImageSafely(with: "videomissedCall")
+    public var audioIncoming : Image = loadImageSafely(with: "audio_incoming")
+    public var audioOutgoing : Image = loadImageSafely(with: "audio_outgoing")
+    public var audioMissedCall : Image = loadImageSafely(with: "audio_missedCall")
+    public var videoIncoming : Image = loadImageSafely(with: "video_incoming")
+    public var videoOutgoing : Image = loadImageSafely(with: "video_outgoing")
+    public var videoMissedCall : Image = loadImageSafely(with: "video_missedCall")
     
-    public var cancel : Image = loadImageSafely(with: "cancelReply")
-    public var cancelWithBlackBackground : Image = loadImageSafely(with: "closeblackbackground")
+    public var cancel : Image = loadImageSafely(with: "cancel_Reply")
+    public var cancelWithBlackBackground : Image = loadImageSafely(with: "close_black_background")
     public var cancelWithGreyBackground : Image = loadImageSafely(with: "closeGroup")
     public var disclouser: Image = loadImageSafely(with: "disclouser")
-    public var broadcastInfo : Image = loadImageSafely(with: "infobroadcast")
+    public var broadcastInfo : Image = loadImageSafely(with: "info_broadcast")
     public var imageLoading : Image = loadImageSafely(with: "loading")
     
     
@@ -101,13 +101,13 @@ public struct ISMChatImages {
     //message
     public var selected : Image = loadImageSafely(with: "selected")
     public var deselected : Image = loadImageSafely(with: "unselected")
-    public var sendMessage : Image = loadImageSafely(with: "sendMedia")
+    public var sendMessage : Image = loadImageSafely(with: "sendMessage")
     public var mapTarget : Image = loadImageSafely(with: "target")
     public var noMessagePlaceholder : Image = loadImageSafely(with: "NoMessages")
     
     
     //
-    public var chevronright : Image = loadImageSafely(with: "chevronright")
+    public var chevronright : Image = loadImageSafely(with: "chevron_right")
     public var removeSearchText : Image = loadSafely(systemName: "xmark.circle.fill", assetsFallback: "xmark.circle.fill")
     public var CloseSheet : Image = loadImageSafely(with: "CloseScreen")
     public var LogoutIcon : Image = loadImageSafely(with: "Logout")
@@ -118,10 +118,10 @@ public struct ISMChatImages {
     
     //contactInfo
     public var addMembers : Image = loadImageSafely(with: "Addparticipants")
-    public var groupMembers : Image = loadImageSafely(with: "GroupMember")
-    public var noDocPlaceholder : Image = loadImageSafely(with: "NoDocs")
-    public var noLinkPlaceholder : Image = loadImageSafely(with: "NoLinks")
-    public var noMediaPlaceholder : Image = loadImageSafely(with: "NoMedia")
+    public var groupMembers : Image = loadImageSafely(with: "Group_Member")
+    public var noDocPlaceholder : Image = loadImageSafely(with: "No_Docs")
+    public var noLinkPlaceholder : Image = loadImageSafely(with: "No_Links")
+    public var noMediaPlaceholder : Image = loadImageSafely(with: "No_Media")
     
     public var share : Image = loadSafely(systemName: "square.and.arrow.up", assetsFallback: "square.and.arrow.up")
     
@@ -133,15 +133,15 @@ public struct ISMChatImages {
     public var replyVideoIcon : Image = loadSafely(systemName: "video.fill", assetsFallback: "video.fill")
     public var replyCameraIcon : Image = loadSafely(systemName: "camera.fill", assetsFallback: "camera.fill")
     public var replyAudioIcon : Image = loadSafely(systemName: "mic", assetsFallback: "mic")
-    public var replyDocumentIcon : Image = loadImageSafely(with: "pdfNew")
+    public var replyDocumentIcon : Image = loadImageSafely(with: "pdf_New")
     public var replyLocationIcon : Image = loadSafely(systemName: "location.fill", assetsFallback: "location.fill")
     public var replyContactIcon : Image = loadSafely(systemName: "person.crop.circle.fill", assetsFallback: "person.crop.circle.fill")
-    public var replyGifIcon : Image = loadImageSafely(with: "giflogo")
-    public var cancelReplyMessageSelected : Image = loadImageSafely(with: "cancelReply")
+    public var replyGifIcon : Image = loadImageSafely(with: "gif_logo")
+    public var cancelReplyMessageSelected : Image = loadImageSafely(with: "cancel_Reply")
     
     //toolbar
     public var addAttcahment : Image = loadImageSafely(with: "addAttachments")
-    public var addSticker : Image = loadImageSafely(with: "gifsticker")
+    public var addSticker : Image = loadImageSafely(with: "gif_sticker")
     public var addAudio : Image = loadImageSafely(with: "audio")
     public var chevranbackward : Image = loadSafely(systemName: "chevron.backward", assetsFallback: "chevron.backward")
     public var trash : Image = loadSafely(systemName: "trash", assetsFallback: "trash")

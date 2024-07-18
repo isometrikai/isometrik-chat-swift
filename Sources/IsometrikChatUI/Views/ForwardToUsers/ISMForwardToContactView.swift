@@ -205,15 +205,25 @@ private extension ISMForwardToContactView{
             return
         }
         
-        let userIds = selections.compactMap({ $0.userId })
+//        let userIds = selections.compactMap({ $0.userId })
         var newConversationId : [String] = []
         
         // Define a counter to keep track of conversations created
         var conversationsCreatedCount = 0
         
         DispatchQueue.global(qos: .userInitiated).async {
-            for newUserId in userIds {
-                viewModel.createConversation(userId: newUserId) { data in
+            for newUser in selections {
+                var user = UserDB()
+                user.userProfileImageUrl = newUser.userProfileImageUrl
+                user.userName = newUser.userName
+                user.userIdentifier = newUser.userIdentifier
+                user.userId = newUser.userId
+                let metaDataValue = UserMetaDataDB()
+                metaDataValue.profilePic = newUser.metaData?.profilePic
+                metaDataValue.memberIdOfApp = newUser.metaData?.memberIdOfApp
+                user.metaData = metaDataValue
+                
+                viewModel.createConversation(user: user) { data in
                     guard let conversationId = data?.conversationId else {
                         return
                     }
@@ -223,7 +233,7 @@ private extension ISMForwardToContactView{
                     newConversationId.append(conversationId)
                     
                     // Check if all conversations are created
-                    if conversationsCreatedCount == userIds.count {
+                    if conversationsCreatedCount == selections.count {
                         // All conversations are created, so print your string here
                         print("All conversations are created!")
                         for singleMessage in messages{

@@ -52,4 +52,6 @@ public enum ISMChatMessageType {
     case AudioCall
     
     case reaction
+    
+    case post
 }

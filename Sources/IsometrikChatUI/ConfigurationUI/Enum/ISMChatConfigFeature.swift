@@ -18,4 +18,5 @@ public enum ISMChatConfigFeature {
     case audiocall
     case videocall
     case gif
+    case reel
 }

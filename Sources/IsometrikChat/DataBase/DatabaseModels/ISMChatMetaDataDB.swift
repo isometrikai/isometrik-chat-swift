@@ -15,6 +15,7 @@ public class MetaDataDB : Object, ObjectKeyIdentifiable {
     @Persisted public var contacts : RealmSwift.List<ContactDB>
     @Persisted public var captionMessage : String?
     @Persisted public var isBroadCastMessage : Bool?
+    @Persisted public var postId : String?
 }
 
 

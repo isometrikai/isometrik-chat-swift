@@ -85,8 +85,19 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         }
     }
     
+    //MARK: - send Reel
+    public func sharePost(user: UserDB,postId : String,postURL : String,postCaption : String,completion:@escaping()->()){
+        self.createConversation(user: user) { response in
+            self.sendMessage(messageKind: .post, customType: ISMChatMediaType.Post.value, conversationId: response?.conversationId ?? "", message: postURL, fileName: "", fileSize: nil, mediaId: nil,caption: postCaption,postId: postId) { _, _ in
+                NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
+                completion()
+            }
+        }
+    }
+    
+    
     //MARK: - send messages
-    public func sendMessage(messageKind : ISMChatMessageType,customType : String,conversationId :  String,message : String,fileName : String?,fileSize : Int?,mediaId : String?,objectId : String? = "",messageType:Int = 0,thumbnailUrl : String? = "",contactInfo: [ISMChatPhoneContact]? = [],latitude : Double? = nil,longitude : Double? = nil,placeName : String? = nil,placeAddress : String? = nil,isGroup : Bool? = false,groupMembers : [ISMChatGroupMember]? = [],caption : String? = nil,isBroadCastMessage : Bool? = false,groupcastId : String? = nil,completion:@escaping(String, String)->()){
+    public func sendMessage(messageKind : ISMChatMessageType,customType : String,conversationId :  String,message : String,fileName : String?,fileSize : Int?,mediaId : String?,objectId : String? = "",messageType:Int = 0,thumbnailUrl : String? = "",contactInfo: [ISMChatPhoneContact]? = [],latitude : Double? = nil,longitude : Double? = nil,placeName : String? = nil,placeAddress : String? = nil,isGroup : Bool? = false,groupMembers : [ISMChatGroupMember]? = [],caption : String? = nil,isBroadCastMessage : Bool? = false,groupcastId : String? = nil,postId : String? = nil,completion:@escaping(String, String)->()){
         var searchTags : [String] = []
         var body : [String : Any] = [:]
         var attachmentValue : [String : Any] = [:]
@@ -241,6 +252,20 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             //searchable tags
             searchTags.append(ISMChatSearchTags.sticker.value)
             searchTags.append(fileName ?? "")
+        case .post:
+            attachmentValue = ["thumbnailUrl": message, "size" : fileSize ?? 0, "name" : fileName ?? "" , "mimeType" : ISMChatExtensionType.Image.type, "mediaUrl" : message, "mediaId" : mediaId ?? "", "extension" : ISMChatExtensionType.Image.type, "attachmentType" : ISMChatAttachmentType.Image.type]
+            
+            body["attachments"] = attachmentValue
+            notificationBody = "📷 Reels Post"
+            messageInBody = "Reels Post"
+            //searchable tags
+            searchTags.append(ISMChatSearchTags.post.value)
+            searchTags.append(message)
+            
+            if let caption  = caption, !caption.isEmpty{
+                metaData = ["captionMessage" : caption]
+            }
+            metaData = ["postId" : postId ?? ""]
         default:
             break
         }
@@ -535,15 +560,16 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
     
     //MARK: - create conversation
-    public func createConversation(userId : String,completion:@escaping(ISMChatCreateConversationResponse?)->()){
+    public func createConversation(user : UserDB,completion:@escaping(ISMChatCreateConversationResponse?)->()){
         var body : [String : Any]
-        //        let metaData : [String : Any] = [:]
+        let metaDataValue : [String : Any] = ["profilePic" : user.metaData?.profilePic ?? "", "memberIdOfApp" : user.metaData?.memberIdOfApp ?? ""]
         body = ["typingEvents" : true ,
                 "readEvents" : true,
                 "pushNotifications" : true,
-                "members" : [userId],
+                "members" : [user.userId],
                 "isGroup" : false,
-                "conversationType" : 0] as [String : Any]
+                "conversationType" : 0,
+                "metaData" : metaDataValue] as [String : Any]
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.createConversation,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):

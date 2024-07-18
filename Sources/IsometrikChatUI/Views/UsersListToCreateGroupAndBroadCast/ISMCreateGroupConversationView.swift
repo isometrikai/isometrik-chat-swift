@@ -8,35 +8,35 @@
 import SwiftUI
 import IsometrikChat
 
-enum SelectUserFor: CaseIterable{
+public enum SelectUserFor: CaseIterable{
     case Group
     case BroadCast
     case AddMemberInBroadcast
 }
 
-struct ISMCreateGroupConversationView: View {
+public struct ISMCreateGroupConversationView: View {
     
     //MARK:  - PROPERTIES
-    @Environment(\.dismiss) var dismiss
-    @Binding var showSheetView : Bool
-    @State private var image : UIImage?
-    @State private var groupName = ""
-    @State  var userSelected : [ISMChatUser] = []
-    @ObservedObject var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @ObservedObject var chatViewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    var conversationId : String? = nil
-    var selectUserFor : SelectUserFor = .Group
-    @State var navigateTocreateGroup : Bool = false
+    @Environment(\.dismiss) public var dismiss
+    @Binding public var showSheetView : Bool
+    @State public var image : UIImage?
+    @State public var groupName = ""
+    @State public var userSelected : [ISMChatUser] = []
+    @ObservedObject public var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject public var chatViewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    public var conversationId : String? = nil
+    public var selectUserFor : SelectUserFor = .Group
+    @State public var navigateTocreateGroup : Bool = false
 //    @State var navigateToMessageView : Bool = false
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    let groupCastId : String?
-    @EnvironmentObject var realmManager : RealmManager
-    @Binding var groupCastIdToNavigate : String
+    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    public let groupCastId : String?
+    @EnvironmentObject public var realmManager : RealmManager
+    @Binding public var groupCastIdToNavigate : String
     
     //MARK:  - BODY
-    var body: some View {
+    public var body: some View {
         ZStack{
             VStack {
                 ScrollViewReader { proxy in

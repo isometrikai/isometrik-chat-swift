@@ -8,33 +8,33 @@
 import SwiftUI
 import IsometrikChat
 
-struct ISMBroadCastList: View {
+public struct ISMBroadCastList: View {
     
     //MARK:  - PROPERTIES
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) public var dismiss
     
-    @ObservedObject var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @ObservedObject var conversationviewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @EnvironmentObject var realmManager : RealmManager
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var navigateToBrocastDetail : BroadCastListDB?
-    @State var navigateToBrocastInfo : Bool = false
-    @State var navigatetoCreatBroadCast : Bool = false
-    @State var navigatetoCreatGroup : Bool = false
-    @State var editBroadCastList : Bool = false
+    @ObservedObject public var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject public var conversationviewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @EnvironmentObject public var realmManager : RealmManager
+    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State public var navigateToBrocastDetail : BroadCastListDB?
+    @State public var navigateToBrocastInfo : Bool = false
+    @State public var navigatetoCreatBroadCast : Bool = false
+    @State public var navigatetoCreatGroup : Bool = false
+    @State public var editBroadCastList : Bool = false
     
-    @State var navigateToGroupCastId : String = ""
-    @State var navigateToGroupCastTitle : String = ""
+    @State public var navigateToGroupCastId : String = ""
+    @State public var navigateToGroupCastTitle : String = ""
     
-    @State var navigateToMessageView : Bool = false
-    @State var groupCastIdToNavigate : String = ""
+    @State public var navigateToMessageView : Bool = false
+    @State public var groupCastIdToNavigate : String = ""
     
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     
     //MARK:  - LIFECYCLE
-    var body: some View {
+    public var body: some View {
         ZStack{
             Color(uiColor: .white).edgesIgnoringSafeArea(.all)
                 VStack {
