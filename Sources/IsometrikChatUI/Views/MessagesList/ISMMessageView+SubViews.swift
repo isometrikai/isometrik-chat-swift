@@ -110,7 +110,7 @@ extension ISMMessageView{
             }
             ISMMessageSubView(messageType: ISMChatHelper.getMessageType(message: message),
                               viewWidth: viewWidth,
-                              isReceived: (message.senderInfo?.userIdentifier ?? message.initiatorIdentifier) != userId,
+                              isReceived: (message.senderInfo?.userId ?? message.initiatorId) != myUserId,
                               messageDeliveredType: ISMChatHelper.checkMessageDeliveryType(message: message, isGroup: self.isGroup ?? false,memberCount: realmManager.getMemberCount(convId: self.conversationID ?? "")),
                               conversationId: self.conversationID ?? "",
                               groupconversationMember: self.conversationDetail?.conversationDetails?.members ?? [],

@@ -125,7 +125,7 @@ public struct ISMBroadCastList: View {
                 }
                 .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: navigateToBrocastDetail?.groupcastTitle ?? "", groupcastId: navigateToBrocastDetail?.groupcastId ?? "").environmentObject(realmManager), isActive: $navigateToBrocastInfo))
                 .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.conversationviewModel,selectUserFor: .BroadCast, groupCastId: "", groupCastIdToNavigate: $groupCastIdToNavigate).environmentObject(realmManager),isActive: $navigatetoCreatBroadCast))
-                .background(NavigationLink("", destination:  ISMMessageView(conversationViewModel : self.conversationviewModel,conversationID:  self.navigateToGroupCastId ?? "",opponenDetail: nil,userId: "", isGroup: false,fromBroadCastFlow: true,groupCastId: self.navigateToGroupCastId ?? "", groupConversationTitle: navigateToGroupCastTitle ?? "", groupImage: nil)
+                .background(NavigationLink("", destination:  ISMMessageView(conversationViewModel : self.conversationviewModel,conversationID:  self.navigateToGroupCastId ?? "",opponenDetail: nil,myUserId: "", isGroup: false,fromBroadCastFlow: true,groupCastId: self.navigateToGroupCastId ?? "", groupConversationTitle: navigateToGroupCastTitle ?? "", groupImage: nil)
                     .environmentObject(realmManager), isActive: $navigateToMessageView))
                 .navigationBarBackButtonHidden(true)
                 .navigationBarTitleDisplayMode(.inline)

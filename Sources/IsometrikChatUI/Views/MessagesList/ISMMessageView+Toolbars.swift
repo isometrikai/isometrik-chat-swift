@@ -88,7 +88,7 @@ extension ISMMessageView{
             Spacer()
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(selectedMsgToReply.senderInfo?.userIdentifier != userId ? "\(selectedMsgToReply.senderInfo?.userName ?? "")" : ConstantStrings.you)
+                    Text(selectedMsgToReply.senderInfo?.userId != myUserId ? "\(selectedMsgToReply.senderInfo?.userName ?? "")" : ConstantStrings.you)
                         .font(themeFonts.messageListReplyToolbarHeader)
                         .foregroundColor(themeColor.messageListReplyToolbarHeader)
                     

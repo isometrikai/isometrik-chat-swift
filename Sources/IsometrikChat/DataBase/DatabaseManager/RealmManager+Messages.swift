@@ -360,7 +360,7 @@ extension RealmManager{
     }
     
     //MARK: - save local message
-    public func saveLocalMessage(sent:Double, txt: String,parentMessageId: String,initiatorIdentifier: String,conversationId: String,userEmailId:String,customType:String,placeName:String = "",msgSyncStatus:String) -> String? {
+    public func saveLocalMessage(sent:Double, txt: String,parentMessageId: String,initiatorIdentifier: String,conversationId: String,customType:String,placeName:String = "",msgSyncStatus:String) -> String? {
         var objId = ""
         if let localRealm = localRealm {
             try! localRealm.write {
@@ -380,7 +380,7 @@ extension RealmManager{
                 
                 let user = UserDB()
                 user.userId = userSession.getUserId()
-                user.userIdentifier = userEmailId
+                user.userIdentifier = userSession.getEmailId()
                 user.userName = userSession.getUserName()
                 
                 obj.senderInfo = user

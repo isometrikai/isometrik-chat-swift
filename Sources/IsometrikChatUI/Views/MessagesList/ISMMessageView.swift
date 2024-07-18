@@ -36,11 +36,11 @@ public struct ISMMessageView: View {
     @State public var showActionSheet = false
     @State public var conversationID : String?
     public let opponenDetail : UserDB?
-    public var userId : String?
+    public var myUserId : String?
     public let isGroup : Bool?
     public let fromBroadCastFlow : Bool?
     public let groupCastId : String?
-//    public var delegate : MessageVCDelegate?
+
     @State public var textViewHeight : CGFloat = 32
     
     @State public var showVideoPicker: Bool = false
@@ -136,7 +136,7 @@ public struct ISMMessageView: View {
     @State public var showVideoCallingOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.videocall)
     @State public var showGifOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.gif)
     @State public var showGifPicker : Bool = false
-//    @State var selectedGIF: GPHMedia?
+
     
     @State public var navigateToImageEditor : Bool = false
     @State public var sendMedia : Bool = false
