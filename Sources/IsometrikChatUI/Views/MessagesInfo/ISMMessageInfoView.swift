@@ -87,7 +87,7 @@ public struct ISMMessageInfoView: View {
                             }.listRowInsets(EdgeInsets())
                         } footer: {
                             Text("")
-                        }
+                        }.listRowBackground(Color.white)
                         
                         Section {
                             if let members = deliveredUsers{
@@ -127,7 +127,7 @@ public struct ISMMessageInfoView: View {
                             }.listRowInsets(EdgeInsets())
                         } footer: {
                             Text("")
-                        }
+                        }.listRowBackground(Color.white)
                     }else{
                         Section {
                             HStack{
@@ -177,7 +177,7 @@ public struct ISMMessageInfoView: View {
                             Text("")
                         } footer: {
                             Text("")
-                        }
+                        }.listRowBackground(Color.white) 
                     }
                 }.listRowSeparatorTint(Color.border)
                     .background(themeColor.chatListBackground)
