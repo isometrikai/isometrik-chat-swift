@@ -24,6 +24,8 @@ public class ISMChatSdk{
     //instance
     private static var sharedInstance : ISMChatSdk!
     
+    private var hostFrameworksType : FrameworkType = .UIKit
+    
     public static func getInstance()-> ISMChatSdk{
         if sharedInstance == nil {
             sharedInstance = ISMChatSdk()
@@ -52,6 +54,10 @@ public class ISMChatSdk{
         return userSession!
     }
     
+    public func getFramework() -> FrameworkType{
+        return hostFrameworksType
+    }
+    
     public func checkifChatInitialied() -> Bool{
         if mqttSession == nil {
             return false
@@ -62,7 +68,7 @@ public class ISMChatSdk{
     
     
     
-    public func appConfiguration(appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig) {
+    public func appConfiguration(appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig,hostFrameworkType : FrameworkType,conversationListViewControllerName : UIViewController.Type?,messagesListViewControllerName : UIViewController.Type?) {
         
         if appConfig.accountId.isEmpty {
             fatalError("Pass a valid accountId for isometrik sdk initialization.")
@@ -96,6 +102,8 @@ public class ISMChatSdk{
         
         let apiManager = ISMChatAPIManager(configuration: projectConfiguration)
         
+        self.hostFrameworksType = hostFrameworkType
+        
         
         //chatClient
         self.chatClient = ISMChatClient(communicationConfig: communicationConfiguration, apiManager: apiManager)
@@ -110,7 +118,9 @@ public class ISMChatSdk{
         self.userSession = userSession
         
         //mqttSession
-        let mqttSession = ISMChatMQTTManager(mqttConfiguration: mqttConfiguration, projectConfiguration: projectConfiguration, userdata: userConfig)
+        let viewcontrollers = ISMChatViewController(conversationListViewController: conversationListViewControllerName, messagesListViewController: messagesListViewControllerName)
+        
+        let mqttSession = ISMChatMQTTManager(mqttConfiguration: mqttConfiguration, projectConfiguration: projectConfiguration, userdata: userConfig,viewcontrollers: viewcontrollers,framework: self.hostFrameworksType)
         mqttSession.connect(clientId: userSession.getUserId())
         self.mqttSession = mqttSession
     
@@ -133,4 +143,10 @@ public class ISMChatSdk{
         IsometrikCall().clearSession()
         ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
     }
+}
+
+
+public enum FrameworkType{
+    case SwiftUI
+    case UIKit
 }

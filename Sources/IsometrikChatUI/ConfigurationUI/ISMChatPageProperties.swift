@@ -13,13 +13,6 @@ public struct ISMChatPageProperties {
     public var features : [ISMChatConfigFeature] // Array of chat features
     public var conversationType : [ISMChatConversationTypeConfig] // Array of conversation types
     public var hideNavigationBarForConversationList : Bool
-    public var hostFrameworksType : FrameworkType
     public var allowToNavigateToAppProfile : Bool
     public var createConversationFromChatList : Bool
-}
-
-
-public enum FrameworkType{
-    case SwiftUI
-    case UIKit
 }

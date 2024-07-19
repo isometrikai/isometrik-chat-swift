@@ -12,6 +12,7 @@ public struct ISMChatMessageDelivered: Codable {
     public let messageId: String?
     public let body : String?
     public let senderIdentifier : String?
+    public let senderProfileImageUrl : String?
     public let conversationId : String?
     public let updatedAt : Double?
     public let senderName : String?

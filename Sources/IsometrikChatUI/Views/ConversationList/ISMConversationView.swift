@@ -96,7 +96,7 @@ public struct ISMConversationView : View {
                     }else{
                         List{
                             ForEach(realmManager.getConversation()){ data in
-                                if ISMChatSdkUI.getInstance().getChatProperties().hostFrameworksType == .UIKit{
+                                if ISMChatSdk.getInstance().getFramework() == .UIKit{
                                     Button {
                                         delegate?.navigateToMessageList(selectedUserToNavigate: data.opponentDetails, conversationId: data.lastMessageDetails?.conversationId)
                                     } label: {

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 
 public class ISMChatClient {
@@ -29,5 +30,21 @@ public class ISMChatClient {
 
 
 
-
+public class ISMChatViewController {
+    public var conversationListViewController : UIViewController.Type?
+    public var messagesListViewController : UIViewController.Type?
+    
+    public init(conversationListViewController: UIViewController.Type?,messagesListViewController : UIViewController.Type?) {
+        self.conversationListViewController = conversationListViewController
+        self.messagesListViewController = messagesListViewController
+    }
+    
+    public func getconversationListViewController() -> UIViewController.Type?{
+        return conversationListViewController
+    }
+    
+     public func getmessagesListViewController () -> UIViewController.Type?{
+        return messagesListViewController
+    }
+}
 

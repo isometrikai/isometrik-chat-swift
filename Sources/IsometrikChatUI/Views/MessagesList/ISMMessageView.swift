@@ -372,7 +372,9 @@ public struct ISMMessageView: View {
             }
             ISMChatHelper.print("Meeting ended----------------->\(messageInfo)")
             if messageInfo.conversationId == self.conversationID{
-                addMeeting(messageInfo: messageInfo)
+                if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                    addMeeting(messageInfo: messageInfo)
+                }
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name)){ notification in

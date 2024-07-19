@@ -18,12 +18,16 @@ open class ISMChatMQTTManager: NSObject{
     let deviceId = UniqueIdentifierManager.shared.getUniqueIdentifier()
     var mqttConfiguration : ISMChatMqttConfig?
     var projectConfiguration : ISMChatProjectConfig?
+    var viewcontrollers : ISMChatViewController?
+    var framework : FrameworkType
     var hasConnected : Bool = false
     var userData : ISMChatUserConfig?
-    init(mqttConfiguration : ISMChatMqttConfig,projectConfiguration : ISMChatProjectConfig,userdata : ISMChatUserConfig) {
+    init(mqttConfiguration : ISMChatMqttConfig,projectConfiguration : ISMChatProjectConfig,userdata : ISMChatUserConfig,viewcontrollers : ISMChatViewController,framework : FrameworkType) {
         self.mqttConfiguration = mqttConfiguration
         self.projectConfiguration = projectConfiguration
         self.userData = userdata
+        self.viewcontrollers = viewcontrollers
+        self.framework = framework
         super.init()
     }
     
@@ -388,6 +392,23 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                 self.messageReceived(data) { result in
                     switch result{
                     case .success(let data):
+                        if self.framework == .UIKit {
+                            if let topViewController = UIApplication.topViewController() {
+                                if let Chatvc = self.viewcontrollers?.conversationListViewController,
+                                   let Messagevc = self.viewcontrollers?.messagesListViewController {
+                                    
+                                    let isNotChatVC = !(topViewController.isKind(of: Chatvc))
+                                    let isNotMessageVC = !(topViewController.isKind(of: Messagevc))
+                                    
+                                    if isNotChatVC && isNotMessageVC {
+                                        // Your code here
+                                        if data.senderId != ISMChatSdk.getInstance().getUserSession().getUserId() {
+                                            self.whenInOtherScreen(messageInfo: data)
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
                     case .failure(let error):
                         NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
@@ -395,6 +416,16 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                 }
             }
         
+    }
+        
+    public func whenInOtherScreen(messageInfo : ISMChatMessageDelivered){
+        let viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+        if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
+            ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.senderName ?? "")", body: "\(messageInfo.notificationBody ?? (messageInfo.body ?? ""))", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? "","senderProfileImageUrl" : messageInfo.senderProfileImageUrl ?? ""])
+            viewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
+                ISMChatHelper.print("Message marked delivered")
+            }
+        }
     }
     
     public func mqtt(_ mqtt: CocoaMQTT, didSubscribeTopics success: NSDictionary, failed: [String]) {
@@ -450,4 +481,23 @@ protocol ISMChatMQTTManagerDelegate: AnyObject {
     func didReceiveBlockAndUnBlockUser(data: ISMChatUserBlockAndUnblock)
     func didReceiveBlockAndUnBlockConversation(data: ISMChatMessageDelivered)
     func didReceiveMessageDetailUpdated(data: ISMChatMessageDelivered)
+}
+
+
+extension UIApplication {
+    
+    class func topViewController(_ viewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+        if let nav = viewController as? UINavigationController {
+            return topViewController(nav.visibleViewController)
+        }
+        if let tab = viewController as? UITabBarController {
+            if let selected = tab.selectedViewController {
+                return topViewController(selected)
+            }
+        }
+        if let presented = viewController?.presentedViewController {
+            return topViewController(presented)
+        }
+        return viewController
+    }
 }
