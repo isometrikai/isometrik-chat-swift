@@ -23,7 +23,7 @@ struct ISMDocumentViewer: View {
     @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-
+    @Environment(\.dismiss) var dismiss
     
     //MARK:  - LIFECYCLE
     var body: some View {
@@ -58,8 +58,8 @@ struct ISMDocumentViewer: View {
                                 }
                             } label: {
                                 themeImage.threeDots
-                                    .rotationEffect(.degrees(-90))
-                                    .foregroundColor(themeColor.userProfileEditText)
+                                    .resizable()
+                                    .frame(width: 7, height: 20, alignment: .center)
                                 
                             }
                         }
@@ -80,6 +80,23 @@ struct ISMDocumentViewer: View {
                             documentSaved = false
                         }
                     }
+            }
+        } .navigationBarBackButtonHidden()
+            .navigationBarItems(leading: navigationBarLeadingButtons())
+    }
+    
+    
+    
+    func navigationBarLeadingButtons()  -> some View {
+        Button(action : {}) {
+            HStack{
+                Button(action: {
+                    dismiss()
+                }) {
+                    themeImage.backButton
+                        .resizable()
+                        .frame(width: 18, height: 18)
+                }
             }
         }
     }

@@ -17,7 +17,7 @@ struct ISMPDFMessageView: View {
     var fileName: String = ""
     @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     //MARK:  - BODY
     var body: some View {

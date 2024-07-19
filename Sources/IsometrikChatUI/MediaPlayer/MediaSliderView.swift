@@ -20,6 +20,8 @@ struct MediaSliderView: View {
     @EnvironmentObject var reamlManager : RealmManager
     @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @Environment(\.dismiss) var dismiss
     
     //MARK:  - BODY
     var body: some View {
@@ -28,6 +30,7 @@ struct MediaSliderView: View {
                 .frame(maxHeight: .infinity, alignment: .center)
         }
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .principal) {
                 VStack {
@@ -40,8 +43,23 @@ struct MediaSliderView: View {
                 }
             }
         }
+        .navigationBarItems(leading: navigationBarLeadingButtons())
         .onAppear{
             print(index)
+        }
+    }
+    
+    func navigationBarLeadingButtons()  -> some View {
+        Button(action : {}) {
+            HStack{
+                Button(action: {
+                    dismiss()
+                }) {
+                    themeImages.backButton
+                        .resizable()
+                        .frame(width: 18, height: 18)
+                }
+            }
         }
     }
 }

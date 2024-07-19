@@ -42,8 +42,8 @@ extension ISMConversationView{
 //                            }
         } label: {
             themeImages.threeDots
-                .rotationEffect(.degrees(-90))
-                .foregroundColor(.black)
+                .resizable()
+                .frame(width: 7, height: 20, alignment: .center)
             
         }
     }

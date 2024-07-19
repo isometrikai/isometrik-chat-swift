@@ -279,7 +279,7 @@ extension ISMMessageView{
                         } label: {
                             themeImages.threeDots
                                 .resizable()
-                                .frame(width: 5, height: 20, alignment: .center)
+                                .frame(width: 7, height: 20, alignment: .center)
                         }
                     }
                 }
