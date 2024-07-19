@@ -250,7 +250,7 @@ extension ISMMessageView{
                 .padding()
             }
         }
-        .background(themeColor.messageListToolBarBackground)
+        .background(themeColor.messageListReplyToolBarBackground)
         .frame(height: 50)
     }
     
