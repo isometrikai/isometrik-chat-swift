@@ -128,20 +128,22 @@ public class ISMChatSdk{
     
     public func onTerminate() {
         //1. unsubscribe fcm
-        ISMChatHelper.unSubscribeFCM()
-        //2. unsubscribe mqtt
-        if mqttSession != nil {
-            self.mqttSession?.unSubscribe()
+        if checkifChatInitialied() == true{
+            ISMChatHelper.unSubscribeFCM()
+            //2. unsubscribe mqtt
+            if mqttSession != nil {
+                self.mqttSession?.unSubscribe()
+            }
+            //3. clear user session
+            if userSession != nil{
+                self.userSession?.clearUserSession()
+            }
+            //4. delete local data
+            RealmManager().deleteAllData()
+            //5. For call
+            IsometrikCall().clearSession()
+            ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
         }
-        //3. clear user session
-        if userSession != nil{
-            self.userSession?.clearUserSession()
-        }
-        //4. delete local data
-        RealmManager().deleteAllData()
-        //5. For call
-        IsometrikCall().clearSession()
-        ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
     }
 }
 

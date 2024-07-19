@@ -1027,7 +1027,7 @@ struct ISMMessageInfoSubView: View {
                             )
                     )
             }
-        }
+        }.fixedSize(horizontal: false, vertical: true)
         .background(Color.docBackground)
         .cornerRadius(5, corners: .allCorners)
     }
