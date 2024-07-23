@@ -567,6 +567,9 @@ public struct ISMMessageView: View {
                 showScrollToBottomView = false
             }
             onLoad = true
+            ISMChatSdk.getInstance().getUserDetail(isometrikUserId: self.opponenDetail?.userId ?? "", userName: self.opponenDetail?.userName ?? "", completion: { data in
+                print(data)
+            })
         }
     }
     

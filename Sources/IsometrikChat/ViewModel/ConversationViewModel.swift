@@ -247,9 +247,9 @@ public class ConversationViewModel : NSObject ,ObservableObject{
     }
     
     public func getUserDetail(userId: String,userName : String,completion:@escaping(ISMChatUser?)->()){
-        var baseURL = "\(ISMChatNetworkServices.Urls.getnonBlockUsers)?searchTag=\(userName)&sort=1"
+        var baseURL = "\(ISMChatNetworkServices.Urls.getUsers)?searchTag=\(userName)&sort=1"
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatUsers?,ISMChatErrorData?>) in
-            self.apiCalling = false
+//            self.apiCalling = false
             switch result{
             case .success(let data):
                 guard let users = data?.users else {
