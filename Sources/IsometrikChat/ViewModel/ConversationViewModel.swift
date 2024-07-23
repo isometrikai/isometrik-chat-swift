@@ -75,7 +75,7 @@ public class ConversationViewModel : NSObject ,ObservableObject{
             switch result{
             case .success(let data):
                 self.userData = data
-                UserDefaults.standard.storeCodable(data, key: "userInfo")
+//                UserDefaults.standard.storeCodable(data, key: "userInfo")
                 completion(data)
             case .failure(let error):
                 ISMChatHelper.print("Get User Data Api failed -----> \(String(describing: error))")

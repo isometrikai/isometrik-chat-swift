@@ -145,6 +145,13 @@ public class ISMChatSdk{
             ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
         }
     }
+    
+    public func getUserDetail(completion: @escaping (ISMChatUser?) -> Void) {
+        let viewModel = ConversationViewModel(ismChatSDK: self)
+        viewModel.getUserData { data in
+            completion(data)
+        }
+    }
 }
 
 
