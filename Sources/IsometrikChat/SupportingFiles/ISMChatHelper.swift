@@ -150,6 +150,8 @@ public class ISMChatHelper: NSObject {
             return .gif
         }else if message.customType == ISMChatMediaType.sticker.value{
             return .sticker
+        }else if message.customType == ISMChatMediaType.Post.value{
+            return .post
         }
         else{
             if message.action == ISMChatActionType.userBlock.value || message.action == ISMChatActionType.userBlockConversation.value{
