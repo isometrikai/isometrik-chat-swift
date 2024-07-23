@@ -262,7 +262,8 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             if let caption  = caption, !caption.isEmpty{
                 metaData = ["captionMessage" : caption]
             }
-            metaData = ["postId" : postId ?? "","postUrl" : message]
+            var post : [String: Any] = ["postId" : postId ?? "","postUrl" : message]
+            metaData = ["post" : post]
         default:
             break
         }
