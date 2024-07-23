@@ -105,6 +105,8 @@ public struct ISMChatImages {
     public var mapTarget : Image = loadImageSafely(with: "target")
     public var noMessagePlaceholder : Image = loadImageSafely(with: "NoMessages")
     
+    public var postIcon : Image = loadImageSafely(with: "postIcon")
+    
     
     //
     public var chevronright : Image = loadImageSafely(with: "chevron_right")
@@ -207,6 +209,7 @@ public struct ISMChatImages {
         sendMessage: Image? = nil,
         mapTarget: Image? = nil,
         noMessagePlaceholder: Image? = nil,
+        postIcon: Image? = nil,
         chevronright: Image? = nil,
         CloseSheet: Image? = nil,
         LogoutIcon: Image? = nil,
@@ -288,6 +291,7 @@ public struct ISMChatImages {
         if let sendMessage = sendMessage { self.sendMessage = sendMessage }
         if let mapTarget = mapTarget { self.mapTarget = mapTarget }
         if let noMessagePlaceholder = noMessagePlaceholder { self.noMessagePlaceholder = noMessagePlaceholder }
+        if let postIcon = postIcon { self.postIcon = postIcon }
         if let chevronright = chevronright { self.chevronright = chevronright }
         if let CloseSheet = CloseSheet { self.CloseSheet = CloseSheet }
         if let LogoutIcon = LogoutIcon { self.LogoutIcon = LogoutIcon }

@@ -814,18 +814,24 @@ struct ISMMessageInfoSubView: View {
                 forwardedView()
             }
             ZStack(alignment: .bottomTrailing){
-                ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.mediaUrl ?? "",isprofileImage: false)
-                    .scaledToFill()
-                    .frame(width: 250, height: 300)
-                    .cornerRadius(5)
-                    .overlay(
-                        LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                            .frame(width: 250, height: 300)
-                            .mask(
-                                RoundedRectangle(cornerRadius: 5)
-                                    .fill(Color.white)
-                            )
-                    )
+                ZStack(alignment: .topTrailing){
+                    ISMChatImageCahcingManger.networkImage(url: message.metaData?.post?.postUrl ?? "",isprofileImage: false)
+                        .scaledToFill()
+                        .frame(width: 124, height: 249)
+                        .cornerRadius(5)
+                        .overlay(
+                            LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                                .frame(width: 250, height: 300)
+                                .mask(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .fill(Color.white)
+                                )
+                        )
+                    
+                    themeImages.postIcon
+                        .scaledToFill()
+                        .frame(width: 20, height: 20)
+                }
                 if message.metaData?.captionMessage == nil{
                     dateAndStatusView(onImage: true)
                         .padding(.bottom,5)
