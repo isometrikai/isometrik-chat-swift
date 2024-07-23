@@ -12,7 +12,6 @@ struct ISMForwardToContactView: View {
     
     //MARK: - PROPERTIES
     @Environment(\.dismiss) var dismiss
-    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     @State var selections: [ISMChatUser] = []
     @State var showSendView = false
     var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
@@ -102,12 +101,23 @@ struct ISMForwardToContactView: View {
                 .background(Color.listBackground)
                 .scrollContentBackground(.hidden)
                 .navigationBarTitleDisplayMode(.inline)
+                .navigationBarBackButtonHidden()
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         VStack {
                             Text("Send To")
                                 .font(themeFonts.navigationBarTitle)
                                 .foregroundColor(themeColor.navigationBarTitle)
+                        }
+                    }
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: {
+                            self.messages.removeAll()
+                            dismiss()
+                        }) {
+                            themeImage.backButton
+                                .resizable()
+                                .frame(width: 18, height: 18)
                         }
                     }
                 }
@@ -204,15 +214,13 @@ private extension ISMForwardToContactView{
         guard !selections.isEmpty else {
             return
         }
-        
-//        let userIds = selections.compactMap({ $0.userId })
-        var newConversationId : [String] = []
-        
-        // Define a counter to keep track of conversations created
-        var conversationsCreatedCount = 0
-        
+        var newConversationIds: [String] = []
+
         DispatchQueue.global(qos: .userInitiated).async {
+            let conversationGroup = DispatchGroup()
+
             for newUser in selections {
+                conversationGroup.enter()
                 var user = UserDB()
                 user.userProfileImageUrl = newUser.userProfileImageUrl
                 user.userName = newUser.userName
@@ -222,36 +230,52 @@ private extension ISMForwardToContactView{
                 metaDataValue.profilePic = newUser.metaData?.profilePic
                 metaDataValue.memberIdOfApp = newUser.metaData?.memberIdOfApp
                 user.metaData = metaDataValue
-                
+
                 viewModel.createConversation(user: user) { data in
                     guard let conversationId = data?.conversationId else {
+                        conversationGroup.leave()
                         return
                     }
-                    
-                    // Increment the counter when a conversation is created
-                    conversationsCreatedCount += 1
-                    newConversationId.append(conversationId)
-                    
-                    // Check if all conversations are created
-                    if conversationsCreatedCount == selections.count {
-                        // All conversations are created, so print your string here
-                        print("All conversations are created!")
-                        for singleMessage in messages{
-                            viewModel.forwardMessage(conversationIds: newConversationId,
-                                                     message: singleMessage.body ,
-                                                     attachments: singleMessage.attachments.first,customType: singleMessage.customType,placeName: singleMessage.metaData?.locationAddress,metaData: singleMessage.metaData ?? nil) {
-                                ISMChatHelper.print("Message Forwarded")
-                                NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
-                            }
+
+                    newConversationIds.append(conversationId)
+                    conversationGroup.leave()
+                }
+            }
+
+            conversationGroup.notify(queue: .main) {
+                guard !newConversationIds.isEmpty else {
+                    showforwardMultipleMessage = false
+                    dismiss()
+                    print("No conversations created.")
+                    return
+                }
+
+                let messageGroup = DispatchGroup()
+
+                for singleMessage in messages {
+                    for conversationId in newConversationIds {
+                        messageGroup.enter()
+                        viewModel.forwardMessage(conversationIds: [conversationId],
+                                                 message: singleMessage.body,
+                                                 attachments: singleMessage.customType == ISMChatMediaType.Text.value ? nil : singleMessage.attachments.first,
+                                                 customType: singleMessage.customType,
+                                                 placeName: singleMessage.metaData?.locationAddress,
+                                                 metaData: singleMessage.metaData ?? nil) {
+                            ISMChatHelper.print("Message Forwarded")
+                            NotificationCenter.default.post(name: NSNotification.refreshConvList, object: nil)
+                            messageGroup.leave()
                         }
                     }
                 }
-            }
-            
-            DispatchQueue.main.async {
-                showforwardMultipleMessage = false
-                self.mode.wrappedValue.dismiss()
+
+                messageGroup.notify(queue: .main) {
+                    showforwardMultipleMessage = false
+                    self.messages.removeAll()
+                    dismiss()
+                    print("All messages forwarded and view dismissed!")
+                }
             }
         }
     }
+
 }
