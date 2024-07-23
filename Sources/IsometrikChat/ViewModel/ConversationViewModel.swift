@@ -246,6 +246,29 @@ public class ConversationViewModel : NSObject ,ObservableObject{
         }
     }
     
+    public func getUserDetail(userId: String,userName : String,completion:@escaping(ISMChatUser?)->()){
+        var baseURL = "\(ISMChatNetworkServices.Urls.getnonBlockUsers)?searchTag=\(userName)&sort=1"
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatUsers?,ISMChatErrorData?>) in
+            self.apiCalling = false
+            switch result{
+            case .success(let data):
+                guard let users = data?.users else {
+                    completion(nil)
+                    return
+                }
+                
+                for user in users {
+                    if user.userId == userId {
+                        completion(user)
+                        return
+                    }
+                }
+            case .failure(_):
+                ISMChatHelper.print("get users Failed")
+            }
+        }
+    }
+    
     public func getBroadCastEligibleUsers(groupCastId : String ,search : String,completion:@escaping(ISMChatUsers?)->()){
         var baseURL = "\(ISMChatNetworkServices.Urls.getnonBlockUsers)?skip=0&limit=20&sort=1"
         let skip = self.users.count

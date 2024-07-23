@@ -146,9 +146,9 @@ public class ISMChatSdk{
         }
     }
     
-    public func getUserDetail(completion: @escaping (ISMChatUser?) -> Void) {
+    public func getUserDetail(isometrikUserId : String,userName : String,completion: @escaping (ISMChatUser?) -> Void) {
         let viewModel = ConversationViewModel(ismChatSDK: self)
-        viewModel.getUserData { data in
+        viewModel.getUserDetail(userId: isometrikUserId, userName: userName) { data in
             completion(data)
         }
     }
