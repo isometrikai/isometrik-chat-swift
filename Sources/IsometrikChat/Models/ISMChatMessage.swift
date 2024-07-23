@@ -220,7 +220,7 @@ public struct ISMChatMetaData : Codable{
     public var contacts : [ISMChatContactMetaData]?
     public var captionMessage : String?
     public var isBroadCastMessage : Bool?
-    public var postId : String?
+    public var post : ISMChatPostMetaData?
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         replyMessage = try? container.decode(ISMChatReplyMessageMetaData.self, forKey: .replyMessage)
@@ -228,14 +228,29 @@ public struct ISMChatMetaData : Codable{
         contacts = try? container.decode([ISMChatContactMetaData].self, forKey: .contacts)
         captionMessage = try? container.decode(String.self, forKey: .captionMessage)
         isBroadCastMessage = try? container.decode(Bool.self, forKey: .isBroadCastMessage)
-        postId = try? container.decode(String.self, forKey: .postId)
+        post = try? container.decode(ISMChatPostMetaData.self, forKey: .post)
     }
-    public init(replyMessage : ISMChatReplyMessageMetaData? = nil, locationAddress : String? = nil ,contacts : [ISMChatContactMetaData]? = nil,captionMessage : String? = nil,isBroadCastMessage : Bool? = nil,postId : String? = nil){
+    public init(replyMessage : ISMChatReplyMessageMetaData? = nil, locationAddress : String? = nil ,contacts : [ISMChatContactMetaData]? = nil,captionMessage : String? = nil,isBroadCastMessage : Bool? = nil,post : ISMChatPostMetaData? = nil){
         self.replyMessage = replyMessage
         self.locationAddress = locationAddress
         self.contacts = contacts
         self.captionMessage = captionMessage
         self.isBroadCastMessage = isBroadCastMessage
+        self.post = post
+    }
+}
+
+
+public struct ISMChatPostMetaData : Codable{
+    public var postId : String?
+    public var postUrl : String?
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        postId = try? container.decode(String.self, forKey: .postId)
+        postUrl = try? container.decode(String.self, forKey: .postUrl)
+    }
+    public init(postId : String? = nil,postUrl : String? = nil){
         self.postId = postId
+        self.postUrl = postUrl
     }
 }

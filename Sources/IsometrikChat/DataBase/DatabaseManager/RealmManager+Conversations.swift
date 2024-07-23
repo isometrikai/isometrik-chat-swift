@@ -157,7 +157,12 @@ extension RealmManager {
                         metaData.replyMessage = replyMessageData
                         metaData.locationAddress = value.lastMessageDetails?.metaData?.locationAddress
                         metaData.captionMessage = value.lastMessageDetails?.metaData?.captionMessage
-                        metaData.postId = value.lastMessageDetails?.metaData?.postId
+                        
+                        var post = PostDB()
+                        post.postId = value.lastMessageDetails?.metaData?.post?.postId
+                        post.postUrl = value.lastMessageDetails?.metaData?.post?.postUrl
+                        metaData.post = post
+                        
                         metaData.isBroadCastMessage = value.lastMessageDetails?.metaData?.isBroadCastMessage
                         lastMsg.metaData = metaData
                         

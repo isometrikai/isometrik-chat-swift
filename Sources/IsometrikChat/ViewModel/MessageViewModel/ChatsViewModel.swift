@@ -253,9 +253,6 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             searchTags.append(ISMChatSearchTags.sticker.value)
             searchTags.append(fileName ?? "")
         case .post:
-            attachmentValue = ["thumbnailUrl": message, "size" : fileSize ?? 0, "name" : fileName ?? "" , "mimeType" : ISMChatExtensionType.Image.type, "mediaUrl" : message, "mediaId" : mediaId ?? "", "extension" : ISMChatExtensionType.Image.type, "attachmentType" : ISMChatAttachmentType.Image.type]
-            
-            body["attachments"] = attachmentValue
             notificationBody = "📷 Reels Post"
             messageInBody = "Reels Post"
             //searchable tags
@@ -265,7 +262,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             if let caption  = caption, !caption.isEmpty{
                 metaData = ["captionMessage" : caption]
             }
-            metaData = ["postId" : postId ?? ""]
+            metaData = ["postId" : postId ?? "","postUrl" : message]
         default:
             break
         }
@@ -300,7 +297,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             }
         case .location, .contact:
             body["metaData"] = metaData
-        case .photo, .video,.post:
+        case .photo, .video:
             body["attachments"] = [attachmentValue]
             if !metaData.isEmpty {
                 body["metaData"] = metaData

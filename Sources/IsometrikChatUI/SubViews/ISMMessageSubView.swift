@@ -942,7 +942,7 @@ struct ISMMessageSubView: View {
                                 
                                     VStack(alignment: .trailing,spacing: 5){
                                         Button {
-                                            postIdToNavigate = message.metaData?.postId ?? ""
+                                            postIdToNavigate = message.metaData?.post?.postId ?? ""
                                         } label: {
                                             postButtonView()
                                         }
@@ -1063,7 +1063,7 @@ struct ISMMessageSubView: View {
                 forwardedView()
             }
             ZStack(alignment: .bottomTrailing){
-                ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.mediaUrl ?? "",isprofileImage: false)
+                ISMChatImageCahcingManger.networkImage(url: message.metaData?.post?.postUrl ?? "",isprofileImage: false)
                     .scaledToFill()
                     .frame(width: 250, height: 300)
                     .cornerRadius(5)
