@@ -324,7 +324,9 @@ public struct ISMMessageView: View {
                 return
             }
             ISMChatHelper.print("USER BLOCKED ----------------->\(messageInfo)")
-            messageReceived(messageInfo: messageInfo)
+            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                messageReceived(messageInfo: messageInfo)
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name)){
             notification in
@@ -332,7 +334,9 @@ public struct ISMMessageView: View {
                 return
             }
             ISMChatHelper.print("USER UNBLOCKED ----------------->\(messageInfo)")
-            messageReceived(messageInfo: messageInfo)
+            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                messageReceived(messageInfo: messageInfo)
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttUserBlock.name)){
             notification in
@@ -340,7 +344,9 @@ public struct ISMMessageView: View {
                 return
             }
             ISMChatHelper.print("USER BLOCKED ----------------->\(messageInfo)")
-            userBlockedAndUnblocked(messageInfo: messageInfo)
+            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                userBlockedAndUnblocked(messageInfo: messageInfo)
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttUserUnblock.name)){
             notification in
@@ -348,7 +354,9 @@ public struct ISMMessageView: View {
                 return
             }
             ISMChatHelper.print("USER UNBLOCKED ----------------->\(messageInfo)")
-            userBlockedAndUnblocked(messageInfo: messageInfo)
+            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                userBlockedAndUnblocked(messageInfo: messageInfo)
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttTypingEvent.name)){ notification in
             guard let messageInfo = notification.userInfo?["data"] as? ISMChatTypingEvent else {
