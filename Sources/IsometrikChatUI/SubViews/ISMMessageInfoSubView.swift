@@ -855,7 +855,7 @@ struct ISMMessageInfoSubView: View {
         HStack(alignment: .center,spacing: 3){
             Text(message.sentAt.datetotime())
                 .font(Font.regular(size: 12))
-                .foregroundColor(onImage ? Color.white : Color.onboardingPlaceholder)
+                .foregroundColor(onImage ? Color.white : (isReceived ? themeColor.messageListMessageTimeReceived :  themeColor.messageListMessageTimeSend))
             if message.metaData?.isBroadCastMessage == true && fromBroadCastFlow != true && !isReceived && !message.deletedMessage{
                 Image("broadcastMessageIcon")
                     .resizable()
