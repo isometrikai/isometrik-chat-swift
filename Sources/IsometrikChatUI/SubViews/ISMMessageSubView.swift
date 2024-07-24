@@ -1324,7 +1324,7 @@ struct ISMMessageSubView: View {
                     Spacer()
                     Text(message.sentAt.datetotime())
                         .font(themeFonts.messageListMessageTime)
-                        .foregroundColor(themeColor.messageListMessageTime)
+                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTimeSend)
                 }
             }
         }
@@ -1375,7 +1375,7 @@ struct ISMMessageSubView: View {
         HStack(alignment: .center,spacing: 3){
             Text(message.sentAt.datetotime())
                 .font(themeFonts.messageListMessageTime)
-                .foregroundColor(onImage ? Color.white : themeColor.messageListMessageTime)
+                .foregroundColor(onImage ? Color.white : (isReceived ? themeColor.messageListMessageTimeReceived :  themeColor.messageListMessageTimeSend))
             if message.metaData?.isBroadCastMessage == true && fromBroadCastFlow != true && !isReceived && !message.deletedMessage{
                 Image("broadcastMessageIcon")
                     .resizable()

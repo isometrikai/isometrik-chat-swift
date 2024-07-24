@@ -101,7 +101,7 @@ struct ISMMessageInfoSubView: View {
                                             }else{
                                                 Text(str)
                                                     .font(themeFonts.messageListMessageText)
-                                                    .foregroundColor(themeColor.messageListHeaderTitle)
+                                                    .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
                                             }
                                         }
                                     }
@@ -176,11 +176,11 @@ struct ISMMessageInfoSubView: View {
                                         if metaData.contacts.count == 1{
                                             Text(name)
                                                 .font(themeFonts.messageListMessageText)
-                                                .foregroundColor(themeColor.messageListHeaderTitle)
+                                                .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
                                         }else{
                                             Text("\(name) and \((metaData.contacts.count) - 1) other contact")
                                                 .font(themeFonts.messageListMessageText)
-                                                .foregroundColor(themeColor.messageListHeaderTitle)
+                                                .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
                                         }
                                         Spacer()
                                     }.padding(5)
@@ -260,7 +260,7 @@ struct ISMMessageInfoSubView: View {
                                 if let caption = message.metaData?.captionMessage, !caption.isEmpty{
                                     Text(caption)
                                         .font(themeFonts.messageListMessageText)
-                                        .foregroundColor(themeColor.messageListHeaderTitle)
+                                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
                                     
                                     dateAndStatusView(onImage: false)
                                         .padding(.bottom,5)
@@ -366,7 +366,7 @@ struct ISMMessageInfoSubView: View {
                                 if let caption = message.metaData?.captionMessage, !caption.isEmpty{
                                     Text(caption)
                                         .font(themeFonts.messageListMessageText)
-                                        .foregroundColor(themeColor.messageListHeaderTitle)
+                                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
                                     
                                     dateAndStatusView(onImage: false)
                                         .padding(.bottom,5)
@@ -434,7 +434,7 @@ struct ISMMessageInfoSubView: View {
                                                         
                                                         Text(fileName)
                                                             .font(themeFonts.messageListMessageText)
-                                                            .foregroundColor(themeColor.messageListHeaderTitle)
+                                                            .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
                                                             .fixedSize(horizontal: false, vertical: true)
                                                     }
                                                 }
@@ -679,7 +679,7 @@ struct ISMMessageInfoSubView: View {
                                 if let caption = message.metaData?.captionMessage, !caption.isEmpty{
                                     Text(caption)
                                         .font(themeFonts.messageListMessageText)
-                                        .foregroundColor(themeColor.messageListHeaderTitle)
+                                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
                                     
                                     dateAndStatusView(onImage: false)
                                         .padding(.bottom,5)
@@ -841,7 +841,7 @@ struct ISMMessageInfoSubView: View {
             if let caption = message.metaData?.captionMessage, !caption.isEmpty{
                 Text(caption)
                     .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListHeaderTitle)
+                    .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
                 
                 dateAndStatusView(onImage: false)
                     .padding(.bottom,5)
@@ -1209,7 +1209,7 @@ struct ISMMessageInfoSubView: View {
                     Spacer()
                     Text(message.sentAt.datetotime())
                         .font(themeFonts.messageListMessageTime)
-                        .foregroundColor(themeColor.messageListMessageTime)
+                        .foregroundColor(isReceived ? themeColor.messageListMessageTimeReceived :  themeColor.messageListMessageTimeSend)
                 }
             }
         }
