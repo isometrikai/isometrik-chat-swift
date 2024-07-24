@@ -121,7 +121,7 @@ public class ISMChatSdk{
         let viewcontrollers = ISMChatViewController(conversationListViewController: conversationListViewControllerName, messagesListViewController: messagesListViewControllerName)
         
         let mqttSession = ISMChatMQTTManager(mqttConfiguration: mqttConfiguration, projectConfiguration: projectConfiguration, userdata: userConfig,viewcontrollers: viewcontrollers,framework: self.hostFrameworksType)
-        mqttSession.connect(clientId: userSession.getUserId())
+        mqttSession.connect(clientId: userConfig.userId)
         self.mqttSession = mqttSession
     
     }

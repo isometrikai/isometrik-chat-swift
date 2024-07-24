@@ -95,10 +95,10 @@ public struct ISMUsersView: View {
                                                             Text(value.userName ?? "User")
                                                                 .font(themeFonts.messageListMessageText)
                                                                 .foregroundColor(themeColor.messageListMessageText)
-                                                            Text(value.metaData?.about ?? "Hey there! I am using Wetalk.")
-                                                                .font(themeFonts.chatListUserMessage)
-                                                                .foregroundColor(themeColor.chatListUserMessage)
-                                                                .lineLimit(2)
+//                                                            Text(value.metaData?.about ?? "Hey there! I am using Wetalk.")
+//                                                                .font(themeFonts.chatListUserMessage)
+//                                                                .foregroundColor(themeColor.chatListUserMessage)
+//                                                                .lineLimit(2)
                                                             
                                                         })//:VStack
                                                     }//:HStack
