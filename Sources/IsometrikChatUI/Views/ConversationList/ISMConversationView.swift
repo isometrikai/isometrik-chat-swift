@@ -185,7 +185,11 @@ public struct ISMConversationView : View {
                 .navigationBarItems(leading: navigationLeading(),
                                     trailing: navigationTrailing())
                 .onChange(of: selectedUserToNavigate, perform: { newValue in
-                    navigatetoSelectedUser = true
+                    if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
+                        navigatetoSelectedUser = true
+                    }else{
+                        self.delegate?.navigateToMessageList(selectedUserToNavigate: selectedUserToNavigate, conversationId: selectedUserConversationId)
+                    }
                 })
                 .confirmationDialog("", isPresented: $showDeleteOptions) {
                     Button {
