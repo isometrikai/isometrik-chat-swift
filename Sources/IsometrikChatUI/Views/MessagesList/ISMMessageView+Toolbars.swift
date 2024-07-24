@@ -341,7 +341,7 @@ extension ISMMessageView{
                                 
                                 Text(viewModel.timerValue)
                                     .font(themeFonts.messageListMessageText)
-                                    .foregroundColor(themeColor.messageListMessageText)
+                                    .foregroundColor(themeColor.messageListHeaderTitle)
                                 
                                 Spacer()
                                 
@@ -355,7 +355,7 @@ extension ISMMessageView{
                                 VStack(alignment: .leading){
                                     Text(viewModel.timerValue)
                                         .font(themeFonts.messageListMessageText)
-                                        .foregroundColor(themeColor.messageListMessageText)
+                                        .foregroundColor(themeColor.messageListHeaderTitle)
                                     HStack(alignment : .center){
                                         Button(action: {
                                             if isClicked == true{
@@ -369,7 +369,7 @@ extension ISMMessageView{
                                             themeImages.trash
                                                 .resizable()
                                                 .frame(width: 25, height: 28, alignment: .center)
-                                                .foregroundColor(themeColor.messageListMessageText)
+                                                .foregroundColor(themeColor.messageListHeaderTitle)
                                         })
                                         Spacer()
                                         

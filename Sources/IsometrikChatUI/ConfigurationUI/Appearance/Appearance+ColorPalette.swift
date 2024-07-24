@@ -44,7 +44,11 @@ public struct ISMChatColorPalette {
     public var messageListSendMessageBackgroundColor : Color = .ismChatSdkWhite
     public var messageListReceivedMessageBackgroundColor : Color = .ismChatSdkWhite
     public var messageListMessageBorderColor : Color = .ismChatSdkListSeperator
-    public var messageListMessageText : Color = .ismChatSdkAccentPrimary
+    
+    public var messageListMessageTextSend : Color = .ismChatSdkAccentPrimary
+    public var messageListMessageTextReceived : Color = .ismChatSdkAccentPrimary
+    
+    
     public var messageListMessageForwarded : Color = .ismChatSdkGray
     public var messageListMessageDeleted : Color = .ismChatSdkAccentPrimary
     public var messageListMessageEdited : Color = .ismChatSdkGray
@@ -78,7 +82,7 @@ public struct ISMChatColorPalette {
     public init(){
     }
     
-    public init(navigationBarTitle: Color, alertText: Color, alertBackground: Color, userProfileDescription: Color, userProfileeditText: Color, userProfilefields: Color, userProfilesectionHeader: Color, userProfileSeparator: Color, userProfileDoneButton: Color, chatListTitle: Color, chatListUserName: Color, chatListUserMessage: Color, chatListLastMessageTime: Color, chatListUnreadMessageCount: Color, chatListUnreadMessageCountBackground: Color, chatListBackground: Color, chatListseparatorColor: Color, messageListHeaderBackgroundColor: Color, messageListHeaderTitle: Color, messageListHeaderDescription: Color, messageListIcons: Color, messageListSectionHeaderBackground: Color, messageListSectionHeaderText: Color, messageListBackgroundColor: Color, messageListSendMessageBackgroundColor: Color, messageListReceivedMessageBackgroundColor: Color, messageListMessageBorderColor: Color, messageListMessageText: Color, messageListMessageForwarded: Color, messageListMessageDeleted: Color, messageListMessageEdited: Color, messageListMessageTime: Color, messageListToolBarBackground: Color,messageListReplyToolBarBackground: Color, messageListTextViewBackground: Color, messageListTextViewText: Color, messageListTextViewBoarder: Color, messageListActionText: Color, messageListActionBackground: Color, messageListTextViewPlaceholder: Color, messageListReplyToolbarRectangle: Color, messageListReplyToolbarHeader: Color, messageListReplyToolbarDescription: Color, messageListtoolbarSelected: Color, messageListtoolbarAction: Color, messageListreactionCount: Color, messageListgroupMemberUserName: Color, messageListcallingHeader: Color, messageListcallingTime: Color, messageListattachmentBackground: Color, mediaSliderHeader: Color, mediaSliderDescription: Color,audioBarDefault : Color,audioBarWhilePlaying : Color) {
+    public init(navigationBarTitle: Color, alertText: Color, alertBackground: Color, userProfileDescription: Color, userProfileeditText: Color, userProfilefields: Color, userProfilesectionHeader: Color, userProfileSeparator: Color, userProfileDoneButton: Color, chatListTitle: Color, chatListUserName: Color, chatListUserMessage: Color, chatListLastMessageTime: Color, chatListUnreadMessageCount: Color, chatListUnreadMessageCountBackground: Color, chatListBackground: Color, chatListseparatorColor: Color, messageListHeaderBackgroundColor: Color, messageListHeaderTitle: Color, messageListHeaderDescription: Color, messageListIcons: Color, messageListSectionHeaderBackground: Color, messageListSectionHeaderText: Color, messageListBackgroundColor: Color, messageListSendMessageBackgroundColor: Color, messageListReceivedMessageBackgroundColor: Color, messageListMessageBorderColor: Color, messageListMessageTextSend: Color,messageListMessageTextReceived: Color, messageListMessageForwarded: Color, messageListMessageDeleted: Color, messageListMessageEdited: Color, messageListMessageTime: Color, messageListToolBarBackground: Color,messageListReplyToolBarBackground: Color, messageListTextViewBackground: Color, messageListTextViewText: Color, messageListTextViewBoarder: Color, messageListActionText: Color, messageListActionBackground: Color, messageListTextViewPlaceholder: Color, messageListReplyToolbarRectangle: Color, messageListReplyToolbarHeader: Color, messageListReplyToolbarDescription: Color, messageListtoolbarSelected: Color, messageListtoolbarAction: Color, messageListreactionCount: Color, messageListgroupMemberUserName: Color, messageListcallingHeader: Color, messageListcallingTime: Color, messageListattachmentBackground: Color, mediaSliderHeader: Color, mediaSliderDescription: Color,audioBarDefault : Color,audioBarWhilePlaying : Color) {
         self.navigationBarTitle = navigationBarTitle
         self.alertText = alertText
         self.alertBackground = alertBackground
@@ -106,7 +110,8 @@ public struct ISMChatColorPalette {
         self.messageListSendMessageBackgroundColor = messageListSendMessageBackgroundColor
         self.messageListReceivedMessageBackgroundColor = messageListReceivedMessageBackgroundColor
         self.messageListMessageBorderColor = messageListMessageBorderColor
-        self.messageListMessageText = messageListMessageText
+        self.messageListMessageTextSend = messageListMessageTextSend
+        self.messageListMessageTextReceived = messageListMessageTextReceived
         self.messageListMessageForwarded = messageListMessageForwarded
         self.messageListMessageDeleted = messageListMessageDeleted
         self.messageListMessageEdited = messageListMessageEdited

@@ -132,7 +132,7 @@ public struct ISMGroupCreate: View {
             
             TextField("Group Name*", text: $groupName)
                 .font(themeFonts.messageListMessageText)
-                .foregroundColor(themeColor.messageListMessageText)
+                .foregroundColor(themeColor.messageListHeaderTitle)
             
             
             Spacer()

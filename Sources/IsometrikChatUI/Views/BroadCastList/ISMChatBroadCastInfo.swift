@@ -53,7 +53,7 @@ struct ISMChatBroadCastInfo: View {
                                     UserAvatarView(avatar: mem.memberInfo?.userProfileImageUrl ?? "", showOnlineIndicator: false, size: CGSize(width: 25, height: 25), userName: mem.memberInfo?.userName ?? "",font: .regular(size: 12))
                                     Text(mem.memberInfo?.userName ?? "")
                                         .font(themeFonts.messageListMessageText)
-                                        .foregroundColor(themeColor.messageListMessageText)
+                                        .foregroundColor(themeColor.messageListHeaderTitle)
                                 }
                             }
                             Button {
@@ -124,7 +124,7 @@ struct ISMChatBroadCastInfo: View {
             } label: {
                 Text("Save")
                     .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListMessageText)
+                    .foregroundColor(themeColor.messageListHeaderTitle)
             }
         }else{
             Button {
@@ -132,7 +132,7 @@ struct ISMChatBroadCastInfo: View {
             } label: {
                 Text("")
                     .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListMessageText)
+                    .foregroundColor(themeColor.messageListHeaderTitle)
             }
         }
     }

@@ -52,7 +52,7 @@ public struct ISMUsersView: View {
                                                 HStack{
                                                     Text("New Group")
                                                         .font(themeFonts.messageListMessageText)
-                                                        .foregroundColor(themeColor.messageListMessageText)
+                                                        .foregroundColor(themeColor.messageListHeaderTitle)
                                                     Spacer()
                                                     themeImage.groupMembers
                                                         .resizable()
@@ -67,7 +67,7 @@ public struct ISMUsersView: View {
                                                 HStack{
                                                     Text("New Broadcast")
                                                         .font(themeFonts.messageListMessageText)
-                                                        .foregroundColor(themeColor.messageListMessageText)
+                                                        .foregroundColor(themeColor.messageListHeaderTitle)
                                                     Spacer()
                                                     themeImage.broadcastInUserList
                                                         .resizable()
@@ -94,7 +94,7 @@ public struct ISMUsersView: View {
                                                         VStack(alignment: .leading, spacing: 5, content: {
                                                             Text(value.userName ?? "User")
                                                                 .font(themeFonts.messageListMessageText)
-                                                                .foregroundColor(themeColor.messageListMessageText)
+                                                                .foregroundColor(themeColor.messageListHeaderTitle)
 //                                                            Text(value.metaData?.about ?? "Hey there! I am using Wetalk.")
 //                                                                .font(themeFonts.chatListUserMessage)
 //                                                                .foregroundColor(themeColor.chatListUserMessage)

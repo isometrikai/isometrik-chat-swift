@@ -56,7 +56,7 @@ public struct ISMCreateGroupConversationView: View {
                                                 VStack(alignment: .leading, spacing: 5, content: {
                                                     Text(value.userName ?? "User")
                                                         .font(themeFonts.messageListMessageText)
-                                                        .foregroundColor(themeColor.messageListMessageText)
+                                                        .foregroundColor(themeColor.messageListHeaderTitle)
                                                     Text(value.userIdentifier ?? "")
                                                         .font(themeFonts.chatListUserMessage)
                                                         .foregroundColor(themeColor.chatListUserMessage)

@@ -43,8 +43,8 @@ public struct ISMBlockUserView: View {
                                     UserAvatarView(avatar: obj.userProfileImageUrl ?? "", showOnlineIndicator: obj.online ?? false,size: CGSize(width: 29, height: 29), userName: obj.userName ?? "",font: .regular(size: 12))
                                     VStack(alignment: .leading, spacing: 5, content: {
                                         Text(obj.userName ?? "")
-                                            .font(themeFonts.messageListMessageText)
-                                            .foregroundColor(themeColor.messageListMessageText)
+                                            .font(themeFonts.messageListHeaderTitle)
+                                            .foregroundColor(themeColor.messageListHeaderTitle)
                                         Text(obj.userIdentifier ?? "")
                                             .font(themeFonts.chatListUserMessage)
                                             .foregroundColor(themeColor.chatListUserMessage)

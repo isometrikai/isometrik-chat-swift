@@ -131,7 +131,7 @@ struct ISMLocationShareView: View {
                             VStack(alignment: .leading,spacing: 3){
                                 Text("Send your current location")
                                     .font(themeFonts.messageListMessageText)
-                                    .foregroundColor(themeColor.messageListMessageText)
+                                    .foregroundColor(themeColor.messageListHeaderTitle)
                                 Text("Accurate to 5 meters")
                                     .font(themeFonts.chatListUserMessage)
                                     .foregroundColor(themeColor.chatListUserMessage)
@@ -178,7 +178,7 @@ struct ISMLocationShareView: View {
             List(predictions, id: \.attributedFullText.string) { prediction in
                 Text(prediction.attributedFullText.string)
                     .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListMessageText)
+                    .foregroundColor(themeColor.messageListHeaderTitle)
                     .onTapGesture {
                         selectPlace(prediction)
                     }

@@ -167,7 +167,7 @@ struct ISMMessageSubView: View {
                                                 }else{
                                                     Text(str)
                                                         .font(themeFonts.messageListMessageText)
-                                                        .foregroundColor(themeColor.messageListMessageText)
+                                                        .foregroundColor(themeColor.messageListHeaderTitle)
                                                 }
                                             }
                                         }
@@ -248,11 +248,11 @@ struct ISMMessageSubView: View {
                                                 if metaData.contacts.count == 1{
                                                     Text(name)
                                                         .font(themeFonts.messageListMessageText)
-                                                        .foregroundColor(themeColor.messageListMessageText)
+                                                        .foregroundColor(themeColor.messageListHeaderTitle)
                                                 }else{
                                                     Text("\(name) and \((metaData.contacts.count) - 1) other contact")
                                                         .font(themeFonts.messageListMessageText)
-                                                        .foregroundColor(themeColor.messageListMessageText)
+                                                        .foregroundColor(themeColor.messageListHeaderTitle)
                                                 }
                                                 Spacer()
                                             }.padding(5)
@@ -340,7 +340,7 @@ struct ISMMessageSubView: View {
                                         if let caption = message.metaData?.captionMessage, !caption.isEmpty{
                                             Text(caption)
                                                 .font(themeFonts.messageListMessageText)
-                                                .foregroundColor(themeColor.messageListMessageText)
+                                                .foregroundColor(themeColor.messageListHeaderTitle)
                                             
                                             dateAndStatusView(onImage: false)
                                                 .padding(.bottom,5)
@@ -455,7 +455,7 @@ struct ISMMessageSubView: View {
                                         if let caption = message.metaData?.captionMessage, !caption.isEmpty{
                                             Text(caption)
                                                 .font(themeFonts.messageListMessageText)
-                                                .foregroundColor(themeColor.messageListMessageText)
+                                                .foregroundColor(themeColor.messageListHeaderTitle)
                                             
                                             dateAndStatusView(onImage: false)
                                                 .padding(.bottom,5)
@@ -531,7 +531,7 @@ struct ISMMessageSubView: View {
                                                                 
                                                                 Text(fileName)
                                                                     .font(themeFonts.messageListMessageText)
-                                                                    .foregroundColor(themeColor.messageListMessageText)
+                                                                    .foregroundColor(themeColor.messageListHeaderTitle)
                                                                     .fixedSize(horizontal: false, vertical: true)
                                                             }
                                                         }
@@ -839,7 +839,7 @@ struct ISMMessageSubView: View {
                                         if let caption = message.metaData?.captionMessage, !caption.isEmpty{
                                             Text(caption)
                                                 .font(themeFonts.messageListMessageText)
-                                                .foregroundColor(themeColor.messageListMessageText)
+                                                .foregroundColor(themeColor.messageListHeaderTitle)
                                             
                                             dateAndStatusView(onImage: false)
                                                 .padding(.bottom,5)
@@ -1090,7 +1090,7 @@ struct ISMMessageSubView: View {
             if let caption = message.metaData?.captionMessage, !caption.isEmpty{
                 Text(caption)
                     .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListMessageText)
+                    .foregroundColor(themeColor.messageListHeaderTitle)
                 
                 dateAndStatusView(onImage: false)
                     .padding(.bottom,5)

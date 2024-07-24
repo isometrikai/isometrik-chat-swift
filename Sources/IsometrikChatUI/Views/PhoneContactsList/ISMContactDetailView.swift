@@ -151,7 +151,7 @@ struct ContactDetailCell : View {
                 VStack(alignment: .leading, spacing: 5, content: {
                     Text(index.contactName ?? "")
                         .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.messageListMessageText)
+                        .foregroundColor(themeColor.messageListHeaderTitle)
                     
                     if let phones = index.contactIdentifier {
                         Text(phones)

@@ -148,7 +148,7 @@ struct ISMAddParticipantsView: View {
                                     
                                     Text(user.userName ?? "")
                                         .font(themeFonts.chatListUserMessage)
-                                        .foregroundColor(themeColor.messageListMessageText)
+                                        .foregroundColor(themeColor.messageListHeaderTitle)
                                         .lineLimit(2)
                                 }.onTapGesture {
                                     if userSelected.contains(where: { user1 in

@@ -60,9 +60,9 @@ struct ISMContactInfoView: View {
                     //Bio
                     if isGroup == false{
                         Section {
-                            Text(conversationDetail?.conversationDetails?.opponentDetails?.metaData?.about ?? "Hey there! I m using Wetalk.")
+                            Text(conversationDetail?.conversationDetails?.opponentDetails?.metaData?.about ?? "")
                                 .font(themeFonts.messageListMessageText)
-                                .foregroundColor(themeColor.messageListMessageText)
+                                .foregroundColor(themeColor.messageListHeaderTitle)
                         } header: {
                             HStack(alignment: .center){
                                 Spacer()
@@ -83,7 +83,7 @@ struct ISMContactInfoView: View {
                                     .frame(width: 29,height: 29)
                                 Text("Media, Links and Docs")
                                     .font(themeFonts.messageListMessageText)
-                                    .foregroundColor(themeColor.messageListMessageText)
+                                    .foregroundColor(themeColor.messageListHeaderTitle)
                                 Spacer()
                                 let count = ((realmManager.medias?.count ?? 0) + (realmManager.filesMedia?.count ?? 0) + (realmManager.linksMedia?.count ?? 0))
                                 Text(count.description)
@@ -136,7 +136,7 @@ struct ISMContactInfoView: View {
                             HStack{
                                 Text("\(conversationDetail?.conversationDetails?.members?.count ?? 0) Members")
                                     .font(themeFonts.contactInfoHeader)
-                                    .foregroundColor(themeColor.messageListMessageText)
+                                    .foregroundColor(themeColor.messageListHeaderTitle)
                                     .textCase(nil)
                                 Spacer()
                                 Button {

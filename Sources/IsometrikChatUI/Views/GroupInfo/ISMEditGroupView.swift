@@ -65,7 +65,7 @@ struct ISMEditGroupView: View {
                     .padding()
                     .frame( height: 50)
                     .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListMessageText)
+                    .foregroundColor(themeColor.messageListHeaderTitle)
                     .keyboardType(.default)
                     .disableAutocorrection(true)
                     .textInputAutocapitalization(.words)

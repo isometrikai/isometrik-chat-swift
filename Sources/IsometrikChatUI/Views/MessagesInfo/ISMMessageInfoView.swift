@@ -134,7 +134,7 @@ public struct ISMMessageInfoView: View {
                                 themeImage.messageRead
                                     .resizable().frame(width: 15, height: 9, alignment: .center).padding(.horizontal,10)
                                 Text("Read")
-                                    .foregroundColor(themeColor.messageListMessageText)
+                                    .foregroundColor(themeColor.messageListHeaderTitle)
                                     .font(themeFonts.messageListMessageText)
                                 Spacer()
                                 if let readAtTime = self.readAt{
@@ -155,7 +155,7 @@ public struct ISMMessageInfoView: View {
                                 themeImage.messageDelivered
                                     .resizable().frame(width: 15, height: 9, alignment: .center).padding(.horizontal,10)
                                 Text("Delivered")
-                                    .foregroundColor(themeColor.messageListMessageText)
+                                    .foregroundColor(themeColor.messageListHeaderTitle)
                                     .font(themeFonts.messageListMessageText)
                                 Spacer()
                                 if let deliveredAtTime = self.deliveredAt{
@@ -277,7 +277,7 @@ struct ISMMessageInfoDetailUserSubView : View {
                 size: CGSize(width: 24, height: 24), userName: user.userName ?? "",font: .regular(size: 12))
             
             Text(user.userName ?? "")
-                .foregroundColor(themeColor.messageListMessageText)
+                .foregroundColor(themeColor.messageListHeaderTitle)
                 .font(themeFonts.messageListMessageText)
             
             Spacer()

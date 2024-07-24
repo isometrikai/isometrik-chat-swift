@@ -75,7 +75,7 @@ struct ISMShareContactList: View {
                                                     VStack(alignment: .leading, spacing: 5) {
                                                         Text("\(value.contact.givenName) \(value.contact.familyName)")
                                                             .font(themeFonts.messageListMessageText)
-                                                            .foregroundColor(themeColor.messageListMessageText)
+                                                            .foregroundColor(themeColor.messageListHeaderTitle)
                                                             .lineLimit(nil)
                                                         
                                                         if let phoneNumber = value.contact.phoneNumbers.first?.value {

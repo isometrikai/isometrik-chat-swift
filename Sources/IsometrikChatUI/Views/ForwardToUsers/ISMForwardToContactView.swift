@@ -41,7 +41,7 @@ struct ISMForwardToContactView: View {
                                             VStack(alignment: .leading, spacing: 5) {
                                                 Text(value.userName ?? "")
                                                     .font(themeFonts.messageListMessageText)
-                                                    .foregroundColor(themeColor.messageListMessageText)
+                                                    .foregroundColor(themeColor.messageListHeaderTitle)
                                                     .lineLimit(nil)
                                                 
                                                 Text(value.userIdentifier ?? "")
@@ -128,7 +128,7 @@ struct ISMForwardToContactView: View {
                         ScrollView(.horizontal) {
                             Text(selectedUser.joined(separator: ", "))
                                 .font(themeFonts.messageListMessageText)
-                                .foregroundColor(themeColor.messageListMessageText)
+                                .foregroundColor(themeColor.messageListHeaderTitle)
                                 .id("combinedText")
                             
                             .padding()

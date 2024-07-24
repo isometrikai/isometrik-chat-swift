@@ -144,7 +144,7 @@ public struct ISMProfileView: View {
                         if userSession.getUserBio() != ""{
                             self.about = userSession.getUserBio()
                         }else{
-                            self.about = "Hey there! I m using Wetalk."
+//                            self.about = "Hey there! I m using Wetalk."
                         }
                         self.showLastSeen = userSession.getLastSeenStatus()
                     })

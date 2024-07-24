@@ -29,11 +29,11 @@ struct ISMGroupMemberSubView: View {
                     if member.userId != userSession.getUserId(){
                         Text(member.userName?.capitalizingFirstLetter() ?? "")
                             .font(themeFonts.messageListMessageText)
-                            .foregroundColor(themeColor.messageListMessageText)
+                            .foregroundColor(themeColor.messageListHeaderTitle)
                     }else{
                         Text(ConstantStrings.you)
                             .font(themeFonts.messageListMessageText)
-                            .foregroundColor(themeColor.messageListMessageText)
+                            .foregroundColor(themeColor.messageListHeaderTitle)
                     }
                     Text(member.userIdentifier ?? "")
                         .font(themeFonts.chatListUserMessage)

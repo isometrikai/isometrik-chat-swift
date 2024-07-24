@@ -35,7 +35,7 @@ struct ISMPDFMessageView: View {
                         .frame(width: 13, height: 16)
                     Text("\(fileName)")
                         .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.messageListMessageText)
+                        .foregroundColor(themeColor.messageListHeaderTitle)
                         .lineLimit(2)
                 })
                 .padding(EdgeInsets(top: 3, leading: 10, bottom: 8, trailing: 10))

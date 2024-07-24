@@ -26,7 +26,7 @@ struct PlaceRow: View {
             VStack {
                 Text(place.name ?? "")
                     .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListMessageText)
+                    .foregroundColor(themeColor.messageListHeaderTitle)
             }
         }
     }

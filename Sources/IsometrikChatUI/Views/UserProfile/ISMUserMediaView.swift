@@ -60,15 +60,15 @@ struct ISMUserMediaView: View {
                             Text("Media")
                                 .tag(0)
                                 .font(themeFonts.messageListMessageText)
-                                .foregroundColor(themeColor.messageListMessageText)
+                                .foregroundColor(themeColor.messageListHeaderTitle)
                             Text("Links")
                                 .tag(1)
                                 .font(themeFonts.messageListMessageText)
-                                .foregroundColor(themeColor.messageListMessageText)
+                                .foregroundColor(themeColor.messageListHeaderTitle)
                             Text("Docs")
                                 .tag(2)
                                 .font(themeFonts.messageListMessageText)
-                                .foregroundColor(themeColor.messageListMessageText)
+                                .foregroundColor(themeColor.messageListHeaderTitle)
                             
                         }
                         .pickerStyle(.segmented)
@@ -169,7 +169,7 @@ struct ISMUserMediaView: View {
                     Section(header: Text(key.toString(dateFormat: "dd MMM yyyy"))
                         .foregroundColor(.black)
                         .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.messageListMessageText)
+                        .foregroundColor(themeColor.messageListHeaderTitle)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding()
                     ) {
@@ -203,7 +203,7 @@ struct ISMUserMediaView: View {
         ) {
             Section(header: Text(key.toString(dateFormat: "dd MMM yyyy"))
                 .font(themeFonts.messageListMessageText)
-                .foregroundColor(themeColor.messageListMessageText)
+                .foregroundColor(themeColor.messageListHeaderTitle)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
             ) {
@@ -252,7 +252,7 @@ struct ISMUserMediaView: View {
                         
                         Text(msg)
                             .font(themeFonts.messageListMessageTime)
-                            .foregroundColor(themeColor.messageListMessageText)
+                            .foregroundColor(themeColor.messageListHeaderTitle)
                             .lineLimit(3)
                         
                         Spacer()
@@ -324,7 +324,7 @@ struct ISMUserMediaView: View {
                     
                     Text(value.name)
                         .font(themeFonts.messageListMessageTime)
-                        .foregroundColor(themeColor.messageListMessageText)
+                        .foregroundColor(themeColor.messageListHeaderTitle)
                         .lineLimit(3)
                     
                     Spacer()

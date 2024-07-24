@@ -34,7 +34,7 @@ struct ISMForwardToUsersSubView: View {
             // UserName
             Text(user.userName?.capitalizingFirstLetter() ?? "")
                 .font(themeFonts.messageListMessageText)
-                .foregroundColor(themeColor.messageListMessageText)
+                .foregroundColor(themeColor.messageListHeaderTitle)
             
             // Selection Icon
             Spacer()

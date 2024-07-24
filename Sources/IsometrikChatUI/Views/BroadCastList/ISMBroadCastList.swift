@@ -97,7 +97,7 @@ public struct ISMBroadCastList: View {
                         Spacer()
                         Text("You should use broadcast lists to message multiple people at once.")
                             .font(themeFonts.messageListMessageText)
-                            .foregroundColor(themeColor.messageListMessageText)
+                            .foregroundColor(themeColor.messageListHeaderTitle)
                             .padding(.horizontal,35)
                             .multilineTextAlignment(.center)
                         Spacer()
@@ -108,7 +108,7 @@ public struct ISMBroadCastList: View {
                     } label: {
                         Text("New list")
                             .font(themeFonts.messageListtoolbarAction)
-                            .foregroundColor(themeColor.messageListMessageText)
+                            .foregroundColor(themeColor.messageListHeaderTitle)
                     }
 
                     
@@ -180,7 +180,7 @@ public struct ISMBroadCastList: View {
                 Button(action: { editBroadCastList = true }) {
                     Text("Edit")
                         .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.messageListMessageText)
+                        .foregroundColor(themeColor.messageListHeaderTitle)
                 }
             }else{
                 Button {
@@ -188,7 +188,7 @@ public struct ISMBroadCastList: View {
                 } label: {
                     Text("")
                         .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.messageListMessageText)
+                        .foregroundColor(themeColor.messageListHeaderTitle)
                 }
             }
         }else{
@@ -197,7 +197,7 @@ public struct ISMBroadCastList: View {
             }) {
                 Text("Done")
                     .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListMessageText)
+                    .foregroundColor(themeColor.messageListHeaderTitle)
             }
         }
     }

@@ -40,7 +40,7 @@ struct ISMMapDetailView: View {
                 VStack(spacing: 1){
                     Text(data?.title ?? "")
                         .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.messageListMessageText)
+                        .foregroundColor(themeColor.messageListHeaderTitle)
                     Text(data?.completeAddress ?? "")
                         .font(themeFonts.chatListUserMessage)
                         .foregroundColor(themeColor.chatListUserMessage)
