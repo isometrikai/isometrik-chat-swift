@@ -90,13 +90,13 @@ extension ISMCameraView {
             let imagePath = documentsPath?.appendingPathComponent("\(UUID().uuidString).jpg")
             
             if let pickedImage = info[.originalImage] as? UIImage {
-//                if let fixedImage = pickedImage.fixOrientation() {
-//                    if let imageData = fixedImage.pngData() {
-//                        try? imageData.write(to: imagePath!)
-//                        self.media = imagePath
-//                        self.uploadMedia = true
-//                    }
-//                }
+                if let fixedImage = pickedImage.fixOrientation() {
+                    if let imageData = fixedImage.pngData() {
+                        try? imageData.write(to: imagePath!)
+                        self.media = imagePath
+                        self.uploadMedia = true
+                    }
+                }
             } else if let pickedVideo = info[.mediaURL] as? URL {
                 self.media = pickedVideo
                 self.uploadMedia = true

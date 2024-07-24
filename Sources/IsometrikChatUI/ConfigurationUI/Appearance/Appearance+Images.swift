@@ -102,6 +102,7 @@ public struct ISMChatImages {
     public var selected : Image = loadImageSafely(with: "selected")
     public var deselected : Image = loadImageSafely(with: "unselected")
     public var sendMessage : Image = loadImageSafely(with: "sendMessage")
+    public var sendMedia : Image = loadImageSafely(with: "send_Media")
     public var mapTarget : Image = loadImageSafely(with: "target")
     public var noMessagePlaceholder : Image = loadImageSafely(with: "NoMessages")
     

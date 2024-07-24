@@ -31,6 +31,10 @@ struct ISMImageAndViderEditor: View {
     @State public var navigateToDraw : Bool = false
     @State public var addText : Bool = false
     
+    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    
     //MARK:  - LIFECYCLE
     var body: some View {
         ZStack {
@@ -138,7 +142,7 @@ struct ISMImageAndViderEditor: View {
                         sendMedia = true
                         dismiss()
                     }) {
-                        Image("send_Media")
+                        themeImages.sendMedia
                             .resizable()
                             .frame(width: 36, height: 36, alignment: .center)
                     }
