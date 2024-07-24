@@ -1042,7 +1042,7 @@ struct ISMMessageSubView: View {
     
     func forwardedView() -> some View{
         HStack(alignment: .center, spacing: 2) {
-            Image("forwarded")
+            themeImages.forwardedIcon
                 .resizable()
                 .frame(width: 14, height: 14, alignment: .center)
             Text("Forwarded")

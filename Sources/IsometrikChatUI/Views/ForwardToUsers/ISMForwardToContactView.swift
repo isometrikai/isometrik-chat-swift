@@ -44,9 +44,9 @@ struct ISMForwardToContactView: View {
                                                     .foregroundColor(themeColor.messageListHeaderTitle)
                                                     .lineLimit(nil)
                                                 
-                                                Text(value.userIdentifier ?? "")
-                                                    .font(themeFonts.chatListUserMessage)
-                                                    .foregroundColor(themeColor.chatListUserMessage)
+//                                                Text(value.userIdentifier ?? "")
+//                                                    .font(themeFonts.chatListUserMessage)
+//                                                    .foregroundColor(themeColor.chatListUserMessage)
                                             }
                                             Spacer()
                                             

@@ -26,6 +26,7 @@ struct ISMAudioSubView: View {
     private var isReceived : Bool
     private var messageDeliveredType : ISMChatMessageStatus = .Clock
     @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     
     init(audio: String,
          message : MessagesDB,
@@ -100,7 +101,7 @@ struct ISMAudioSubView: View {
                 Spacer().frame(width: 45)
                 Text(formatTime(audioVM.isPlaying ? audioVM.currentTime : audioVM.totalDuration))
                     .font(Font.regular(size: 12))
-                    .foregroundColor(Color.onboardingPlaceholder)
+                    .foregroundColor(isReceived ? themeColor.messageListMessageTimeReceived :  themeColor.messageListMessageTimeSend)
                     .onAppear(perform: {
                         audioVM.count_duration { _ in
                             // Start playing audio here if needed
@@ -128,7 +129,7 @@ struct ISMAudioSubView: View {
         HStack(alignment: .center,spacing: 3){
             Text(message.sentAt.datetotime())
                 .font(Font.regular(size: 12))
-                .foregroundColor(onImage ? Color.white : Color.onboardingPlaceholder)
+                .foregroundColor(onImage ? Color.white : (isReceived ? themeColor.messageListMessageTimeReceived :  themeColor.messageListMessageTimeSend))
             if !isReceived && !message.deletedMessage{
                 switch self.messageDeliveredType{
                 case .BlueTick:

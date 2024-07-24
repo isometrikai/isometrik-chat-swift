@@ -107,7 +107,7 @@ public struct ISMChatImages {
     public var noMessagePlaceholder : Image = loadImageSafely(with: "NoMessages")
     
     public var postIcon : Image = loadImageSafely(with: "postIcon")
-    
+    public var forwardedIcon : Image = loadImageSafely(with: "forwarded")
     
     //
     public var chevronright : Image = loadImageSafely(with: "chevron_right")
