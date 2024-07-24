@@ -328,7 +328,7 @@ extension ISMMessageView{
                                 }
                             }.overlay(
                                 RoundedRectangle(cornerRadius: 16)
-                                    .stroke(Color.border, lineWidth: 1)
+                                    .stroke(themeColor.messageListTextViewBoarder, lineWidth: 1)
                             )
                         } else {
                             if audioLocked == false{
