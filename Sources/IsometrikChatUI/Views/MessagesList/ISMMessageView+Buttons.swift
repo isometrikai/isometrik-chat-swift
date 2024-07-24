@@ -251,9 +251,9 @@ extension ISMMessageView{
                 }else{
                     if self.conversationDetail != nil{
                         //calling Button
-                        if showVideoCallingOption == true && isGroup == false{
+                        if showVideoCallingOption == true{
                             Button {
-                                videoCallUser()
+                                calling(type: .VideoCall)
                             } label: {
                                 themeImages.videoCall
                                     .resizable()
@@ -261,9 +261,9 @@ extension ISMMessageView{
                             }
                         }
                         
-                        if showAudioCallingOption == true && isGroup == false{
+                        if showAudioCallingOption == true{
                             Button {
-                                audioCallUser()
+                                calling(type: .AudioCall)
                             } label: {
                                 themeImages.audioCall
                                     .resizable()
@@ -287,17 +287,40 @@ extension ISMMessageView{
         }.background(NavigationLink("", destination:  ISMBlockUserView(conversationViewModel: self.conversationViewModel), isActive: $navigateToBlockUsers))
     }
     
-    func audioCallUser(){
+    func calling(type : ISMLiveCallType){
         self.endEditing(true)
-        let callsdk = IsometrikCall()
-        callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType:  .AudioCall)
+        if self.isGroup == true{
+            if let chatMembers = self.conversationDetail?.conversationDetails?.members {
+                let callMembers = chatMembers.map { member in
+                    ISMCallMember(
+                        memberName: member.userName ?? "",
+                        memberIdentifier: member.userIdentifier ?? "",
+                        memberId: member.userId ?? "",
+                        isPublishing: false,
+                        isAdmin: member.isAdmin,
+                        memberProfileImageURL: member.userProfileImageUrl ?? ""
+                    )
+                }
+                let callsdk = IsometrikCall()
+                callsdk.startCall(with: callMembers, conversationId: self.conversationID, callType: .GroupCall)
+            }
+        }else{
+            let callsdk = IsometrikCall()
+            callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType: type)
+        }
     }
     
-    func videoCallUser(){
-        self.endEditing(true)
-        let callsdk = IsometrikCall()
-        callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType:  .VideoCall)
-    }
+//    func audioCallUser(){
+//        self.endEditing(true)
+//        let callsdk = IsometrikCall()
+//        callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType:  .AudioCall)
+//    }
+    
+//    func videoCallUser(){
+//        self.endEditing(true)
+//        let callsdk = IsometrikCall()
+//        callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType:  .VideoCall)
+//    }
     
     func clearChatButton() -> some View{
         Button {

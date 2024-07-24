@@ -75,6 +75,10 @@ open class ISMChatMQTTManager: NSObject{
 }
 
 extension ISMChatMQTTManager: CallEventHandlerDelegate{
+    public func publishingStarted(meeting: ISMSwiftCall.ISMMeeting?) {
+        
+    }
+    
     public func didMemberLeaveTheMeeting(meeting: ISMSwiftCall.ISMMeeting?) {
         
     }

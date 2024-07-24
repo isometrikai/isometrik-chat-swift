@@ -538,13 +538,13 @@ public struct ISMMessageView: View {
             if audioCallToUser {
                 Button("Voice Call") {
                     audioCallToUser = false
-                    audioCallUser()
+                    calling(type: .AudioCall)
                 }
             }
             if videoCallToUser {
                 Button("Video Call") {
                     videoCallToUser = false
-                    videoCallUser()
+                    calling(type: .VideoCall)
                 }
             }
         }
