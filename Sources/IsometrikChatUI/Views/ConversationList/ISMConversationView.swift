@@ -13,7 +13,7 @@ import IsometrikChat
 
 public protocol ISMConversationViewDelegate{
     func navigateToMessageList(selectedUserToNavigate : UserDB?,conversationId : String?)
-    func navigateToUsersListToCreateChat()
+    func navigateToUsersListToCreateChat(conversationType : ISMChatConversationTypeConfig)
 }
 
 public struct ISMConversationView : View {
@@ -72,6 +72,7 @@ public struct ISMConversationView : View {
     
     public var delegate : ISMConversationViewDelegate? = nil
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State public var showMenuForConversationType : Bool = false
     
     public init(delegate : ISMConversationViewDelegate? = nil){
         self.delegate = delegate
@@ -368,7 +369,7 @@ public struct ISMConversationView : View {
                             HStack {
                                 Spacer()
                                 Button(action: {
-                                    self.delegate?.navigateToUsersListToCreateChat()
+                                    showMenuForConversationType.toggle()
                                 }, label: {
                                     themeImages.addConversation
                                         .resizable()
@@ -383,6 +384,18 @@ public struct ISMConversationView : View {
                 }
             }
         }//:NavigationView
+        .confirmationDialog("", isPresented: $showMenuForConversationType, titleVisibility: .hidden) {
+            VStack {
+                ForEach(ISMChatSdkUI.getInstance().getChatProperties().conversationType, id: \.self) { option in
+                    Button(option.name) {
+                        self.delegate?.navigateToUsersListToCreateChat(conversationType: option)
+                    }
+                }
+                Button("Cancel", role: .cancel) {
+                    // Handle cancel action if needed
+                }
+            }
+        }
         .navigationViewStyle(StackNavigationViewStyle())
         .alert("Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.", isPresented: $showingNoInternetAlert) {
             Button("OK", role: .cancel) { }
