@@ -102,7 +102,7 @@ extension ISMMessageView{
     
     func defaultMessageView(message : MessagesDB,scrollReader : ScrollViewProxy,viewWidth : CGFloat) -> some View{
         HStack{
-            if showforwardMultipleMessage == true{
+            if showforwardMultipleMessage == true && (ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall){
                 multipleForwardMessageButtonView(message: message)
             }
             if showDeleteMultipleMessage == true{

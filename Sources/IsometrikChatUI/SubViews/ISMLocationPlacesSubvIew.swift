@@ -16,11 +16,12 @@ struct PlaceRow: View {
     var place: GMSPlace
     @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     //MARK:  - LIFECYCLE
     var body: some View {
         HStack{
-            Image("near_me")
+            themeImages.locationLogo
                 .resizable()
                 .frame(width: 20, height: 20, alignment: .center)
             VStack {

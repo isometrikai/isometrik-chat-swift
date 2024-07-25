@@ -202,8 +202,9 @@ struct ISMLocationShareView: View {
     var navBarTrailingBtn : some View{
         HStack{
             Button(action: { getPlaces() }) {
-                themeImage.scrollToBottomArrow
-                    .foregroundColor(themeColor.userProfileEditText)
+                themeImage.refreshLocationLogo
+                    .resizable()
+                    .frame(width: 20, height: 20, alignment: .center)
                 .imageScale(.large) }
         }
     }

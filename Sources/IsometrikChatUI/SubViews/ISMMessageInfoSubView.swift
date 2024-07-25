@@ -1120,98 +1120,78 @@ struct ISMMessageInfoSubView: View {
             .foregroundColor(themeColor.messageListMessageEdited)
     }
     
-    func callView() -> some View{
-        var imageString : String = ""
-        var titleText : String = ""
-        var durationText : String = ""
-        
-        
-        if message.initiatorIdentifier == userSession.getEmailId(){
-            if message.missedByMembers.count == 0{
+    func getImageAsset() -> ImageAsset {
+        var imageAsset: ImageAsset
+
+        if message.initiatorIdentifier == userSession.getEmailId() {
+            if message.missedByMembers.count == 0 {
                 if let duration = message.callDurations.first(where: { $0.memberId == userSession.getUserId() }) {
-                    // Duration found
-                    if messageType == .AudioCall{
-                        imageString = "audio_outgoing"
-                        titleText = "Voice Call"
-                        durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
-                    }else{
-                        imageString = "video_outgoing"
-                        titleText = "Video Call"
-                        durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
+                    let durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
+                    if messageType == .AudioCall {
+                        imageAsset = ImageAsset(image: themeImages.audioOutgoing, title: "Voice Call", durationText: durationText)
+                    } else {
+                        imageAsset = ImageAsset(image: themeImages.videoOutgoing, title: "Video Call", durationText: durationText)
                     }
                 } else {
-                    imageString = ""
-                    titleText = ""
-                    durationText = ""
+                    imageAsset = ImageAsset(image: Image(""), title: "", durationText: "")
                 }
             } else {
-                //correct
-                if messageType == .AudioCall{
-                    imageString = "audio_outgoing"
-                    titleText = "Voice Call"
-                    durationText = "No answer"
-                }else{
-                    imageString = "video_outgoing"
-                    titleText = "Video Call"
-                    durationText = "No answer"
+                if messageType == .AudioCall {
+                    imageAsset = ImageAsset(image: themeImages.audioOutgoing, title: "Voice Call", durationText: "No answer")
+                } else {
+                    imageAsset = ImageAsset(image: themeImages.videoOutgoing, title: "Video Call", durationText: "No answer")
                 }
             }
-        }else{
-            if message.missedByMembers.count == 0{
+        } else {
+            if message.missedByMembers.count == 0 {
                 if let duration = message.callDurations.first(where: { $0.memberId == userSession.getUserId() }) {
-                    if messageType == .AudioCall{
-                        imageString = "audio_incoming"
-                        titleText = "Voice Call"
-                        durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
-                    }else{
-                        imageString = "video_incoming"
-                        titleText = "Video Call"
-                        durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
+                    let durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
+                    if messageType == .AudioCall {
+                        imageAsset = ImageAsset(image: themeImages.audioIncoming, title: "Voice Call", durationText: durationText)
+                    } else {
+                        imageAsset = ImageAsset(image: themeImages.videoIncoming, title: "Video Call", durationText: durationText)
                     }
                 } else {
-                    if messageType == .AudioCall{
-                        imageString = "audio_missedCall"
-                        titleText = "Missed voice call"
-                        durationText = "Tap to call back"
-                    }else{
-                        imageString = "video_missedCall"
-                        titleText = "Missed video call"
-                        durationText = "Tap to call back"
+                    if messageType == .AudioCall {
+                        imageAsset = ImageAsset(image: themeImages.audioMissedCall, title: "Missed voice call", durationText: "Tap to call back")
+                    } else {
+                        imageAsset = ImageAsset(image: themeImages.videoMissedCall, title: "Missed video call", durationText: "Tap to call back")
                     }
                 }
-            }else{
-                //correct
-                if messageType == .AudioCall{
-                    imageString = "audio_missedCall"
-                    titleText = "Missed voice call"
-                    durationText = "Tap to call back"
-                }else{
-                    imageString = "video_missedCall"
-                    titleText = "Missed video call"
-                    durationText = "Tap to call back"
+            } else {
+                if messageType == .AudioCall {
+                    imageAsset = ImageAsset(image: themeImages.audioMissedCall, title: "Missed voice call", durationText: "Tap to call back")
+                } else {
+                    imageAsset = ImageAsset(image: themeImages.videoMissedCall, title: "Missed video call", durationText: "Tap to call back")
                 }
             }
         }
+
+        return imageAsset
+    }
+
+    func callView() -> some View {
+        let imageAsset = getImageAsset()
         
-        
-        return HStack(spacing: 10){
-            Image(imageString)
+        return HStack(spacing: 10) {
+            imageAsset.image
                 .resizable()
                 .frame(width: 38, height: 38, alignment: .center)
-            VStack(alignment : .leading,spacing : 5){
-                Text(titleText)
+            VStack(alignment: .leading, spacing: 5) {
+                Text(imageAsset.title)
                     .font(themeFonts.messageListcallingHeader)
                     .foregroundColor(themeColor.messageListcallingHeader)
-                HStack{
-                    Text(durationText)
+                HStack {
+                    Text(imageAsset.durationText)
                         .font(themeFonts.messageListcallingTime)
                         .foregroundColor(themeColor.messageListcallingTime)
                     Spacer()
                     Text(message.sentAt.datetotime())
                         .font(themeFonts.messageListMessageTime)
-                        .foregroundColor(isReceived ? themeColor.messageListMessageTimeReceived :  themeColor.messageListMessageTimeSend)
+                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived : themeColor.messageListMessageTimeSend)
                 }
             }
         }
     }
+
 }

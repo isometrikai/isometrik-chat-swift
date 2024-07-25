@@ -92,7 +92,7 @@ extension ISMMessageView{
             Spacer()
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(selectedMsgToReply.senderInfo?.userId != myUserId ? "\(selectedMsgToReply.senderInfo?.userName ?? "")" : ConstantStrings.you)
+                    Text((selectedMsgToReply.senderInfo?.userId ?? selectedMsgToReply.initiatorId) != myUserId ? "\(selectedMsgToReply.senderInfo?.userName ?? selectedMsgToReply.initiatorName)" : ConstantStrings.you)
                         .font(themeFonts.messageListReplyToolbarHeader)
                         .foregroundColor(themeColor.messageListReplyToolbarHeader)
                     
@@ -198,6 +198,28 @@ extension ISMMessageView{
                                 .resizable()
                                 .frame(width: 20, height: 15)
                         }
+                    case .AudioCall:
+                        Label {
+                            Text("Audio Call")
+                                .font(themeFonts.messageListReplyToolbarDescription)
+                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                        } icon: {
+                            themeImages.audioCall
+                                .resizable()
+                                .frame(width: 20, height: 15)
+                        }
+                    case .VideoCall:
+                        Label {
+                            Text("Video Call")
+                                .font(themeFonts.messageListReplyToolbarDescription)
+                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                        } icon: {
+                            themeImages.videoCall
+                                .resizable()
+                                .frame(width: 20, height: 15)
+                        }
                     default:
                         Text(msg)
                             .font(themeFonts.messageListReplyToolbarDescription)
@@ -299,7 +321,7 @@ extension ISMMessageView{
             } else if showDeleteMultipleMessage {
                 deleteMessageToolBarView()
             } else {
-                if (selectedMsgToReply.messageId != "") {
+                if (selectedMsgToReply.messageId != "") || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall{
                     replyMessageToolBarView()
                 }
                 if textFieldtxt.isValidURL{

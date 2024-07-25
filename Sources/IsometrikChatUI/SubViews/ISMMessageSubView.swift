@@ -982,6 +982,12 @@ struct ISMMessageSubView: View {
         .padding(.bottom, (message.reactions.count > 0) ? 20 : 0)
         .frame(maxWidth: .infinity, alignment: isReceived ? .leading : .trailing)
         .multilineTextAlignment(.leading) // Aligning the text based on message type
+        .simultaneousGesture(LongPressGesture(minimumDuration: 0.5).onEnded { _ in
+            self.viewControllerHolder?.present(style: .overCurrentContext, transitionStyle: .crossDissolve) {
+                ISMCustomContextMenu(conversationId: self.conversationId, message: self.message, viewWidth: self.viewWidth, isGroup: self.isGroup ?? false, isReceived: self.isReceived, selectedMessageToReply: $selectedMessageToReply, showForward: $showForward, updateMessage: $updateMessage, messageCopied: $messageCopied, navigatetoMessageInfo: $navigatetoMessageInfo, navigateToDeletePopUp: $navigateToDeletePopUp, selectedReaction: $selectedReaction,sentRecationToMessageId: $sentRecationToMessageId,fromBroadCastFlow: self.fromBroadCastFlow)
+                    .environmentObject(self.realmManager)
+            }
+        })
         .gesture(
             DragGesture()
                 .onChanged { gesture in
@@ -1007,12 +1013,6 @@ struct ISMMessageSubView: View {
                     }
                 }
         )
-        .simultaneousGesture(!isReceived ? LongPressGesture(minimumDuration: 0.5).onEnded { _ in
-            self.viewControllerHolder?.present(style: .overCurrentContext, transitionStyle: .crossDissolve) {
-                ISMCustomContextMenu(conversationId: self.conversationId, message: self.message, viewWidth: self.viewWidth, isGroup: self.isGroup ?? false, isReceived: self.isReceived, selectedMessageToReply: $selectedMessageToReply, showForward: $showForward, updateMessage: $updateMessage, messageCopied: $messageCopied, navigatetoMessageInfo: $navigatetoMessageInfo, navigateToDeletePopUp: $navigateToDeletePopUp, selectedReaction: $selectedReaction,sentRecationToMessageId: $sentRecationToMessageId,fromBroadCastFlow: self.fromBroadCastFlow)
-                    .environmentObject(self.realmManager)
-            }
-        } : nil)
         .onAppear( perform: {
             self.navigateToInfo = false
             if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.File.value && message.customType == ISMChatMediaType.ReplyText.value{
@@ -1195,6 +1195,28 @@ struct ISMMessageSubView: View {
                             .resizable()
                             .frame(width: 20,height: 15)
                     }
+                }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.AudioCall.value{
+                    Label {
+                        Text("Audio Call")
+                            .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                            .font(themeFonts.messageListReplyToolbarDescription)
+                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                    } icon: {
+                        themeImages.audioCall
+                            .resizable()
+                            .frame(width: 20,height: 15)
+                    }
+                }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.VideoCall.value{
+                    Label {
+                        Text("Video Call")
+                            .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                            .font(themeFonts.messageListReplyToolbarDescription)
+                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                    } icon: {
+                        themeImages.videoCall
+                            .resizable()
+                            .frame(width: 20,height: 15)
+                    }
                 }else{
                     Text(msg)
                         .foregroundColor(themeColor.messageListReplyToolbarDescription)
@@ -1329,12 +1351,6 @@ struct ISMMessageSubView: View {
 //            }
 //        }
 //    }
-    
-    struct ImageAsset {
-        let image: Image
-        let title: String
-        let durationText: String
-    }
 
     func getImageAsset() -> ImageAsset {
         var imageAsset: ImageAsset
@@ -1501,3 +1517,10 @@ struct ISMMessageSubView: View {
         return .none
     }
 }
+
+
+public struct ImageAsset {
+     let image: Image
+     let title: String
+     let durationText: String
+ }

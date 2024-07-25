@@ -53,7 +53,8 @@ public struct ISMChatImages {
     public var playVideo : Image = loadImageSafely(with: "play")
     public var pauseVideo : Image = loadImageSafely(with: "pause")
     
-    
+    public var refreshLocationLogo : Image = loadImageSafely(with: "refreshLogo")
+    public var locationLogo : Image = loadImageSafely(with: "near_me")
     
     
     //editor
