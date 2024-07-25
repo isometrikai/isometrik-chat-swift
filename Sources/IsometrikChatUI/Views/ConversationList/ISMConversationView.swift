@@ -13,6 +13,7 @@ import IsometrikChat
 
 public protocol ISMConversationViewDelegate{
     func navigateToMessageList(selectedUserToNavigate : UserDB?,conversationId : String?)
+    func navigateToUsersListToCreateChat()
 }
 
 public struct ISMConversationView : View {
@@ -361,7 +362,24 @@ public struct ISMConversationView : View {
                 
                 if ISMChatSdkUI.getInstance().getChatProperties().createConversationFromChatList == true{
                     //create conversation button
-                    ISMCreateConversationButtonView(navigate: $createChat,showOfflinePopUp: $showingNoInternetAlert)
+                    if ISMChatSdk.getInstance().getFramework() == .UIKit{
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Spacer()
+                                Button(action: {
+                                    self.delegate?.navigateToUsersListToCreateChat()
+                                }, label: {
+                                    themeImage.addConversation
+                                        .resizable()
+                                        .frame(width: 58, height: 58)
+                                })
+                                .padding()
+                            }
+                        }
+                    }else{
+                        ISMCreateConversationButtonView(navigate: $createChat,showOfflinePopUp: $showingNoInternetAlert)
+                    }
                 }
             }
         }//:NavigationView
