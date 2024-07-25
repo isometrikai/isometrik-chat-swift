@@ -25,6 +25,8 @@ public class RealmManager: ObservableObject {
     
     public var userSession = ISMChatSdk.getInstance().getUserSession()
     
+    public static let shared = RealmManager()
+    
     public init() {
         openRealm()
         getAllConversations()
