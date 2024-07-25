@@ -370,7 +370,7 @@ public struct ISMConversationView : View {
                                 Button(action: {
                                     self.delegate?.navigateToUsersListToCreateChat()
                                 }, label: {
-                                    themeImage.addConversation
+                                    themeImages.addConversation
                                         .resizable()
                                         .frame(width: 58, height: 58)
                                 })

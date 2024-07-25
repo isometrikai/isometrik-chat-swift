@@ -448,6 +448,56 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         }
     }
     
+    public func forwardToMutipleUsers(users : [UserDB],messages : [MessagesDB],completion:@escaping()->()){
+        var newConversationIds: [String] = []
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            let conversationGroup = DispatchGroup()
+            
+            for newUser in users {
+                conversationGroup.enter()
+                self.createConversation(user: newUser) { data in
+                    guard let conversationId = data?.conversationId else {
+                        conversationGroup.leave()
+                        return
+                    }
+                    newConversationIds.append(conversationId)
+                    conversationGroup.leave()
+                }
+            }
+            
+            conversationGroup.notify(queue: .main) {
+                guard !newConversationIds.isEmpty else {
+                    print("No conversations created.")
+                    return
+                }
+                
+                let messageGroup = DispatchGroup()
+                
+                for singleMessage in messages {
+                    for conversationId in newConversationIds {
+                        messageGroup.enter()
+                        self.forwardMessage(conversationIds: [conversationId],
+                                                 message: singleMessage.body,
+                                                 attachments: singleMessage.customType == ISMChatMediaType.Text.value ? nil : singleMessage.attachments.first,
+                                                 customType: singleMessage.customType,
+                                                 placeName: singleMessage.metaData?.locationAddress,
+                                                 metaData: singleMessage.metaData ?? nil) {
+                            ISMChatHelper.print("Message Forwarded")
+                            NotificationCenter.default.post(name: NSNotification.refreshConvList, object: nil)
+                            messageGroup.leave()
+                        }
+                    }
+                }
+                
+                messageGroup.notify(queue: .main) {
+                    print("All messages forwarded and view dismissed!")
+                    completion()
+                }
+            }
+        }
+    }
+    
     
     //MARK: - forward message
     public func forwardMessage(conversationIds : [String],message : String,attachments:AttachmentDB? ,customType : String,placeName : String? = nil,contactInfo: [ISMChatPhoneContact]? = [],metaData : MetaDataDB? = nil,completion:@escaping()->()){

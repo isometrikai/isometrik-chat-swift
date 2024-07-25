@@ -22,7 +22,11 @@ extension ISMMessageView{
                     .foregroundColor(themeColor.messageListtoolbarSelected)
                 Spacer()
                 Button {
-                    movetoForwardList = true
+                    if ISMChatSdk.getInstance().getFramework() == .UIKit{
+                        self.delegate?.navigateToUserListToForward(messages: forwardMessageSelected)
+                    }else{
+                        movetoForwardList = true
+                    }
                 } label: {
                     Text("Forward")
                         .foregroundColor(forwardMessageSelected.count == 0 ? themeColor.messageListTextViewPlaceholder : themeColor.messageListtoolbarAction)

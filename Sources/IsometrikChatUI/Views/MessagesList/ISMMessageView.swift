@@ -20,6 +20,7 @@ import IsometrikChat
 public protocol ISMMessageViewDelegate{
     func navigateToAppProfile(appUserId : String)
     func navigateToPost(postId : String)
+    func navigateToUserListToForward(messages : [MessagesDB])
 }
 
 public struct ISMMessageView: View {
