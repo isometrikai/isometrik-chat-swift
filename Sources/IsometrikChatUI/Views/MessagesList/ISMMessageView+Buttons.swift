@@ -150,7 +150,12 @@ extension ISMMessageView{
                     Button {
                         if conversationDetail != nil{
                             if ISMChatSdkUI.getInstance().getChatProperties().allowToNavigateToAppProfile == true{
-                                delegate?.navigateToAppProfile(appUserId: self.conversationDetail?.conversationDetails?.metaData?.memberIdOfApp ?? "")
+                                if isGroup == true{
+                                    //group profile will not be there in uikit apps
+                                    navigateToProfile = true
+                                }else{
+                                    delegate?.navigateToAppProfile(appUserId: self.conversationDetail?.conversationDetails?.metaData?.memberIdOfApp ?? "")
+                                }
                             }else{
                                 navigateToProfile = true
                             }
