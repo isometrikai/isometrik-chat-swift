@@ -21,7 +21,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToAppProfile(appUserId : String)
     func navigateToPost(postId : String)
     func navigateToUserListToForward(messages : [MessagesDB])
-    func navigateToAppMemberInGroup(conversationId : String)
+    func navigateToAppMemberInGroup(conversationId : String,groupMembers : [ISMChatGroupMember]?)
 }
 
 public struct ISMMessageView: View {
@@ -465,7 +465,7 @@ public struct ISMMessageView: View {
         }
         .onChange(of: navigateToAddParticipantsInGroupViaDelegate) { newValue in
             if navigateToAddParticipantsInGroupViaDelegate == true{
-                delegate?.navigateToAppMemberInGroup(conversationId: self.conversationID ?? "")
+                delegate?.navigateToAppMemberInGroup(conversationId: self.conversationID ?? "", groupMembers: self.conversationDetail?.conversationDetails?.members)
                 navigateToAddParticipantsInGroupViaDelegate = false
             }
         }
