@@ -12,7 +12,7 @@ import ISMSwiftCall
 import IsometrikChat
 
 public protocol ISMConversationViewDelegate{
-    func navigateToMessageList(selectedUserToNavigate : UserDB?,conversationId : String?)
+    func navigateToMessageList(selectedUserToNavigate : UserDB?,conversationId : String?,isGroup : Bool?,groupImage : String?)
     func navigateToUsersListToCreateChat(conversationType : ISMChatConversationTypeConfig)
 }
 
@@ -100,7 +100,7 @@ public struct ISMConversationView : View {
                             ForEach(realmManager.getConversation()){ data in
                                 if ISMChatSdk.getInstance().getFramework() == .UIKit{
                                     Button {
-                                        delegate?.navigateToMessageList(selectedUserToNavigate: data.opponentDetails, conversationId: data.lastMessageDetails?.conversationId)
+                                        delegate?.navigateToMessageList(selectedUserToNavigate: data.opponentDetails, conversationId: data.lastMessageDetails?.conversationId, isGroup: data.isGroup, groupImage: data.conversationImageUrl)
                                     } label: {
                                         ISMConversationSubView(chat: data, hasUnreadCount: (data.unreadMessagesCount) > 0)
                                             .onAppear {
@@ -190,7 +190,7 @@ public struct ISMConversationView : View {
                     if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
                         navigatetoSelectedUser = true
                     }else{
-                        self.delegate?.navigateToMessageList(selectedUserToNavigate: selectedUserToNavigate, conversationId: selectedUserConversationId)
+                        self.delegate?.navigateToMessageList(selectedUserToNavigate: selectedUserToNavigate, conversationId: selectedUserConversationId, isGroup: false, groupImage: nil)
                     }
                 })
                 .confirmationDialog("", isPresented: $showDeleteOptions) {
