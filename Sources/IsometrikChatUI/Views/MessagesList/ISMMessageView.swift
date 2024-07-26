@@ -21,6 +21,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToAppProfile(appUserId : String)
     func navigateToPost(postId : String)
     func navigateToUserListToForward(messages : [MessagesDB])
+    func navigateToAppMemberInGroup(conversationId : String)
 }
 
 public struct ISMMessageView: View {
@@ -163,6 +164,7 @@ public struct ISMMessageView: View {
     @State public var userSession = ISMChatSdk.getInstance().getUserSession()
     
     @State var postIdToNavigate : String = ""
+    @State var navigateToAddParticipantsInGroupViaDelegate : Bool = false
     
     public var delegate : ISMMessageViewDelegate?
     
@@ -461,6 +463,12 @@ public struct ISMMessageView: View {
         .onChange(of: self.placeId) { newValue in
             sendMessageIfPlaceId()
         }
+        .onChange(of: navigateToAddParticipantsInGroupViaDelegate) { newValue in
+            if navigateToAddParticipantsInGroupViaDelegate == true{
+                delegate?.navigateToAppMemberInGroup(conversationId: self.conversationID ?? "")
+                navigateToAddParticipantsInGroupViaDelegate = false
+            }
+        }
         .onChange(of: viewModel.timerValue, perform: { newValue in
             withAnimation {
                 isShowingRedTimerStart.toggle()
@@ -507,7 +515,7 @@ public struct ISMMessageView: View {
         .background(NavigationLink("", destination: ISMForwardToContactView(viewModel : self.viewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $showforwardMultipleMessage),isActive: $movetoForwardList))
         .background(NavigationLink("", destination: ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId,placeName : $placeName, address: $placeAddress),isActive: $showLocationSharing))
 //        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
-        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.viewModel, isGroup: self.isGroup).environmentObject(self.realmManager),isActive: $navigateToProfile))
+        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.viewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $navigateToAddParticipantsInGroupViaDelegate).environmentObject(self.realmManager),isActive: $navigateToProfile))
 //        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))
         .background(NavigationLink("", destination: ISMImageAndViderEditor(media: $videoSelectedFromPicker, sendToUser: opponenDetail?.userName ?? "",sendMedia: $sendMedia),isActive: $navigateToImageEditor))
         .onReceive(timer, perform: { firedDate in

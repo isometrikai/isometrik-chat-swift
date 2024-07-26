@@ -47,6 +47,8 @@ struct ISMContactInfoView: View {
     @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State var userSession = ISMChatSdk.getInstance().getUserSession()
     
+    @Binding var navigateToAddParticipantsInGroupViaDelegate : Bool
+    
     //MARK:  - BODY
     var body: some View {
         VStack{
@@ -110,7 +112,11 @@ struct ISMContactInfoView: View {
                             
                             if conversationDetail?.conversationDetails?.usersOwnDetails?.isAdmin == true{
                                 Button {
-                                    navigatetoAddparticipant = true
+                                    if ISMChatSdk.getInstance().getFramework() == .UIKit{
+                                        navigateToAddParticipantsInGroupViaDelegate = true
+                                    }else{
+                                        navigatetoAddparticipant = true
+                                    }
                                 } label: {
                                     HStack(spacing: 12){
                                         
@@ -174,7 +180,7 @@ struct ISMContactInfoView: View {
         .background(NavigationLink("", destination:  ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager), isActive: $navigatetoAddparticipant))
         .background(NavigationLink("", destination:  ISMUserMediaView(viewModel:viewModel)
             .environmentObject(self.realmManager), isActive: $navigatetoMedia))
-        .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: self.selectedConversationId,viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.selectedToShowInfo).environmentObject(self.realmManager), isActive: $showInfo))
+        .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: self.selectedConversationId,viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.selectedToShowInfo,navigateToAddParticipantsInGroupViaDelegate: $navigateToAddParticipantsInGroupViaDelegate).environmentObject(self.realmManager), isActive: $showInfo))
         .background(NavigationLink("", destination:  ISMSearchParticipants(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel ,conversationID: self.conversationID), isActive: $showSearch))
         .background(NavigationLink("", destination:  ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID,updateData : $updateData), isActive: $showEdit))
         .onChange(of: selectedMember, perform: { newValue in

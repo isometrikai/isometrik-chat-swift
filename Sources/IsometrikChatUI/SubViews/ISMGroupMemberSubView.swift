@@ -35,10 +35,10 @@ struct ISMGroupMemberSubView: View {
                             .font(themeFonts.messageListMessageText)
                             .foregroundColor(themeColor.messageListHeaderTitle)
                     }
-                    Text(member.userIdentifier ?? "")
-                        .font(themeFonts.chatListUserMessage)
-                        .foregroundColor(themeColor.chatListUserMessage)
-                        .lineLimit(2)
+//                    Text(member.userIdentifier ?? "")
+//                        .font(themeFonts.chatListUserMessage)
+//                        .foregroundColor(themeColor.chatListUserMessage)
+//                        .lineLimit(2)
                 }
                 Spacer()
                 
