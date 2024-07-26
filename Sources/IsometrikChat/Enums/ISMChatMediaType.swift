@@ -22,6 +22,7 @@ public enum ISMChatMediaType : CaseIterable{
     case Unblock
     case VideoCall
     case AudioCall
+    case GroupCall
     case Post
     public var value : String{
         switch self {
@@ -53,6 +54,8 @@ public enum ISMChatMediaType : CaseIterable{
             return "VideoCall"
         case .AudioCall:
             return "AudioCall"
+        case .GroupCall:
+            return "GroupCall"
         case .Post:
             return "Post"
         }

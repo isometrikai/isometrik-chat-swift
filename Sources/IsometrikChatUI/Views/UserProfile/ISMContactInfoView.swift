@@ -188,6 +188,9 @@ struct ISMContactInfoView: View {
                 showOptions = true
             }
         })
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.memberAddAndRemove)) { _ in
+            getConversationDetail {}
+        }
         .onChange(of: updateData, perform: { _ in
             getConversationDetail {
                 realmManager.updateImageAndNameOfGroup(name: conversationDetail?.conversationDetails?.conversationTitle ?? "", image: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", convID: self.conversationID ?? "")

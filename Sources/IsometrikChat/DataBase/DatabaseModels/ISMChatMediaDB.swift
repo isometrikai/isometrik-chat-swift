@@ -15,7 +15,7 @@ public class MediaDB : Object, ObjectKeyIdentifiable {
     @Persisted public var groupcastId : String = ""
     @Persisted public var attachmentType : Int = 0
     @Persisted public var extensions : String = ""
-    @Persisted public var mediaId: Int = 0
+    @Persisted public var mediaId: String = ""
     @Persisted public var mediaUrl  : String = ""
     @Persisted public var mimeType : String = ""
     @Persisted public var name : String = ""

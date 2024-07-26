@@ -146,6 +146,8 @@ public class ISMChatHelper: NSObject {
             return .VideoCall
         }else if message.customType == ISMChatMediaType.AudioCall.value{
             return .AudioCall
+        }else if message.customType == ISMChatMediaType.GroupCall.value{
+            return .GroupCall
         }else if message.customType == ISMChatMediaType.gif.value{
             return .gif
         }else if message.customType == ISMChatMediaType.sticker.value{

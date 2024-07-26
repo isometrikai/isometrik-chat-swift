@@ -528,7 +528,16 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
                 //Photo
                 metaDataValue["captionMessage"] = metaData?.captionMessage
                 body["metaData"] = metaDataValue
-                body["attachments"] = [["thumbnailUrl": obj.thumbnailUrl , "size" : obj.size , "name" : obj.name , "mimeType" : obj.mimeType , "mediaUrl" : obj.mediaUrl , "mediaId" : UIDevice.current.identifierForVendor!.uuidString, "extension" : obj.extensions , "attachmentType" : obj.attachmentType] as [String : Any]]
+                body["attachments"] = [[
+                    "thumbnailUrl": obj.thumbnailUrl,
+                    "size": obj.size == 0 ? 10 : obj.size,
+                    "name": obj.name,
+                    "mimeType": obj.mimeType,
+                    "mediaUrl": obj.mediaUrl,
+                    "mediaId": obj.mediaId,
+                    "extension": obj.extensions,
+                    "attachmentType": obj.attachmentType
+                ]as [String : Any]]
                 body["notificationBody"] = "📷 Photo"
             }
         }

@@ -380,7 +380,7 @@ extension ISMMessageView{
                                 viewModel.sendMessage(messageKind: messageKind, customType: customType, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,thumbnailUrl: thumbnailmedia?.mediaUrl) {messageId,_ in
                                     
                                     //4. update messageId locally
-                                    realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",thumbnailUrl: thumbnailmedia?.mediaUrl)
+                                    realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",thumbnailUrl: thumbnailmedia?.mediaUrl,mediaSize: size,mediaId: data.mediaId)
                                     localIds.removeFirst()
                                     
                                     //5. we need to save media
@@ -400,7 +400,7 @@ extension ISMMessageView{
                         viewModel.sendMessage(messageKind: .photo, customType: ISMChatMediaType.Image.value, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId) {messageId,_  in
                             
                             //4. update messageId locally
-                            realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "")
+                            realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",mediaSize: size,mediaId: data.mediaId)
                             localIds.removeFirst()
                             
                             //5. we need to save media
@@ -459,7 +459,7 @@ extension ISMMessageView{
                     viewModel.sendMessage(messageKind: messageKind, customType: customType.value, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId) {messageId,_  in
                         
                         //4. update messageId locally
-                        realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "")
+                        realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",mediaSize: size,mediaId: data.mediaId)
                         localIds.removeFirst()
                         
                         //5. we need to save media
@@ -492,7 +492,7 @@ extension ISMMessageView{
                     viewModel.sendMessage(messageKind: .audio, customType: ISMChatMediaType.Voice.value, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId) {messageId,_ in
                         
                         //4. update messageId locally
-                        realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "")
+                        realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",mediaSize: size,mediaId: data.mediaId)
                         localIds.removeFirst()
                         
                     }
@@ -526,7 +526,7 @@ extension ISMMessageView{
                                         }
                                         
                                         //4. update messageId locally
-                                        realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",thumbnailUrl: thumbnailmedia?.mediaUrl)
+                                        realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",thumbnailUrl: thumbnailmedia?.mediaUrl,mediaSize: size,mediaId: data.mediaId)
                                         localIds.removeFirst()
                                         
                                         //5. we need to save media
@@ -566,7 +566,7 @@ extension ISMMessageView{
                                 }
                                 
                                 //4. update messageId locally
-                                realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "")
+                                realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",mediaSize: size,mediaId: data.mediaId)
                                 localIds.removeFirst()
                                 
                                 //5. we need to save media
@@ -1128,9 +1128,9 @@ extension ISMMessageView{
             }
             
         case .gif:
-            attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Gif.type, extensions: "", mediaId: 0, mediaUrl: fileUrl, name: fileName, thumbnailUrl: fileUrl)
+            attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Gif.type, extensions: "", mediaId: "", mediaUrl: fileUrl, name: fileName, thumbnailUrl: fileUrl)
         case .sticker:
-            attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Sticker.type, extensions: "", mediaId: 0, mediaUrl: fileUrl, name: fileName, thumbnailUrl: fileUrl)
+            attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Sticker.type, extensions: "", mediaId: "", mediaUrl: fileUrl, name: fileName, thumbnailUrl: fileUrl)
         case .contact:
             var contactsMetaData : [ISMChatContactMetaData] = []
             if let contacts = contactInfo{

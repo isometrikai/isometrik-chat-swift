@@ -10,7 +10,7 @@ import Foundation
 public struct ISMChatAttachment : Codable{
     public var attachmentType : Int?
     public var extensions : String?
-    public var mediaId: Int?
+    public var mediaId: String?
     public var mediaUrl  : String?
     public var mimeType : String?
     public var name : String?
@@ -25,7 +25,7 @@ public struct ISMChatAttachment : Codable{
         let container = try decoder.container(keyedBy: CodingKeys.self)
         attachmentType = try? container.decode(Int.self, forKey: .attachmentType)
         extensions = try? container.decode(String.self, forKey: .extensions)
-        mediaId = try? container.decode(Int.self, forKey: .mediaId)
+        mediaId = try? container.decode(String.self, forKey: .mediaId)
         mediaUrl = try? container.decode(String.self, forKey: .mediaUrl)
         mimeType = try? container.decode(String.self, forKey: .mimeType)
         name = try? container.decode(String.self, forKey: .name)
@@ -37,7 +37,7 @@ public struct ISMChatAttachment : Codable{
         address = try? container.decode(String.self, forKey: .address)
         caption = try? container.decode(String.self, forKey: .caption)
     }
-    public init(attachmentType : Int? = nil,extensions : String? = nil,mediaId : Int? = nil,mediaUrl : String? = nil,mimeType : String? = nil,name : String? = nil,size : Int? = nil,thumbnailUrl : String? = nil,latitude : Double? = nil,longitude : Double? = nil,title : String? = nil,address : String? = nil,caption : String? = nil) {
+    public init(attachmentType : Int? = nil,extensions : String? = nil,mediaId : String? = nil,mediaUrl : String? = nil,mimeType : String? = nil,name : String? = nil,size : Int? = nil,thumbnailUrl : String? = nil,latitude : Double? = nil,longitude : Double? = nil,title : String? = nil,address : String? = nil,caption : String? = nil) {
         self.attachmentType = attachmentType
         self.extensions = extensions
         self.mediaId = mediaId

@@ -50,6 +50,7 @@ public enum ISMChatMessageType {
     
     case VideoCall
     case AudioCall
+    case GroupCall
     
     case reaction
     

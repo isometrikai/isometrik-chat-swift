@@ -39,7 +39,7 @@ extension RealmManager{
                 
                 obj.attachmentType = value.attachmentType ?? 0
                 obj.extensions  = value.extensions ?? ""
-                obj.mediaId  = value.mediaId ?? 0
+                obj.mediaId  = value.mediaId ?? ""
                 obj.mediaUrl  = value.mediaUrl ?? ""
                 obj.mimeType  = value.mimeType ?? ""
                 obj.name  = value.name ?? ""

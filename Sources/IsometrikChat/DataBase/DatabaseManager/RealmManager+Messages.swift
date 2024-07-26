@@ -34,7 +34,7 @@ extension RealmManager{
     }
     
     //MARK: - update message Id for locally added message before api call, for best performance
-    public func updateMsgId(objectId: String, msgId: String,mediaUrl : String? = nil,thumbnailUrl : String? = nil) {
+    public func updateMsgId(objectId: String, msgId: String,mediaUrl : String? = nil,thumbnailUrl : String? = nil,mediaSize : Int? = nil,mediaId : String? = nil) {
         if let localRealm = localRealm {
             do {
                 let id = try ObjectId(string: objectId)
@@ -47,6 +47,12 @@ extension RealmManager{
                     }
                     if let thumbnailUrl = thumbnailUrl{
                         existingDog?.attachments.first?.thumbnailUrl = thumbnailUrl
+                    }
+                    if let mediaSize = mediaSize{
+                        existingDog?.attachments.first?.size = mediaSize
+                    }
+                    if let mediaId = mediaId{
+                        existingDog?.attachments.first?.mediaId = mediaId
                     }
                     
                 }
@@ -265,7 +271,7 @@ extension RealmManager{
                             
                             attach.attachmentType = result.attachmentType ?? 0
                             attach.extensions  = result.extensions ?? ""
-                            attach.mediaId  = result.mediaId ?? 0
+                            attach.mediaId  = result.mediaId ?? ""
                             attach.mediaUrl  = result.mediaUrl ?? ""
                             attach.mimeType  = result.mimeType ?? ""
                             attach.name  = result.name ?? ""
