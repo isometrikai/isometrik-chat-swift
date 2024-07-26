@@ -38,7 +38,7 @@ struct ISMImageAndViderEditor: View {
     //MARK:  - LIFECYCLE
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            Color.black.edgesIgnoringSafeArea(.all)
             VStack {
                 GeometryReader { proxy in
                     TabView(selection: $selectedIndex) {

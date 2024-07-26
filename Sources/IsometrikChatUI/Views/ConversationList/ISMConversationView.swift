@@ -48,7 +48,7 @@ public struct ISMConversationView : View {
     
     @ObservedObject public var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
     @StateObject public var realmManager = RealmManager()
-    @EnvironmentObject public var networkMonitor: NetworkMonitor
+    @StateObject public var networkMonitor = NetworkMonitor()
     @ObservedObject public var chatViewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
     @State public var showBroadCastOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.BroadCastConversation)
     

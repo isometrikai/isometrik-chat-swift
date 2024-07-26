@@ -1421,7 +1421,7 @@ struct ISMMessageSubView: View {
                     Spacer()
                     Text(message.sentAt.datetotime())
                         .font(themeFonts.messageListMessageTime)
-                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived : themeColor.messageListMessageTimeSend)
+                        .foregroundColor(themeColor.messageListcallingTime)
                 }
             }
         }
