@@ -311,7 +311,7 @@ extension ISMMessageView{
             }
         }else{
             let callsdk = IsometrikCall()
-            callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType: type,groupName: (opponenDetail?.userName ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""))
+            callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType: type,groupName: opponenDetail?.userName ?? (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""))
         }
     }
     
