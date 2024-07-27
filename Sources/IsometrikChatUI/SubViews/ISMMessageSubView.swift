@@ -164,7 +164,7 @@ struct ISMMessageSubView: View {
                                             }
                                             else{
                                                 if str.contains("@") && isGroup == true{
-                                                    HighlightedTextView(originalText: str, mentionedUsers: groupconversationMember, navigateToInfo: $navigateToInfo, navigatetoUser: $navigatetoUser)
+                                                    HighlightedTextView(originalText: str, mentionedUsers: groupconversationMember, isReceived: self.isReceived, navigateToInfo: $navigateToInfo, navigatetoUser: $navigatetoUser)
                                                 }else{
                                                     Text(str)
                                                         .font(themeFonts.messageListMessageText)
