@@ -13,13 +13,15 @@ struct HighlightedTextView : View{
     
     @State var originalText: String
     let mentionedUsers: [ISMChatGroupMember]
+    let isReceived : Bool
     @Binding var navigateToInfo : Bool
     @Binding var navigatetoUser : ISMChatGroupMember
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
    
 
     var body: some View {
         HashtagText(originalText)
-            .modifier(HashtagTextModifier(mentionedUsers: mentionedUsers,navigateToInfo : $navigateToInfo,navigatetoUser : $navigatetoUser))
+            .modifier(HashtagTextModifier(mentionedUsers: mentionedUsers,isReceived: self.isReceived, navigateToInfo : $navigateToInfo,navigatetoUser : $navigatetoUser))
             .onOpenURL { url in
                 if let keyword = self.parseURL(url: url) {
                         if let matchedUser = mentionedUsers.first(where: { member in
@@ -75,6 +77,7 @@ extension HashtagText {
 struct HashtagTextModifier: TextModifier {
     let mentionedUsers: [ISMChatGroupMember]
     var firstNameIsValid : Bool = false
+    let isReceived : Bool
     @Binding var navigateToInfo : Bool
     @Binding var navigatetoUser : ISMChatGroupMember
     @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
@@ -134,6 +137,8 @@ struct HashtagTextModifier: TextModifier {
                 }
             }
         }
-        return output.font(themeFonts.messageListMessageText)
+        return output
+            .font(themeFonts.messageListMessageText)
+            .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
     }
 }
