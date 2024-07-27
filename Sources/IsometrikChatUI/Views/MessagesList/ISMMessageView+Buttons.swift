@@ -307,11 +307,11 @@ extension ISMMessageView{
                     )
                 }
                 let callsdk = IsometrikCall()
-                callsdk.startCall(with: callMembers, conversationId: self.conversationID, callType: .GroupCall)
+                callsdk.startCall(with: callMembers, conversationId: self.conversationID, callType: .GroupCall,groupName: self.conversationDetail?.conversationDetails?.conversationTitle ?? (self.groupConversationTitle ?? ""))
             }
         }else{
             let callsdk = IsometrikCall()
-            callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType: type)
+            callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType: type,groupName: (opponenDetail?.userName ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""))
         }
     }
     
