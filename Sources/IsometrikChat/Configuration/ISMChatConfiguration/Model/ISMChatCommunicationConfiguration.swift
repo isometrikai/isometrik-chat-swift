@@ -58,13 +58,14 @@ public struct ISMChatProjectConfig {
     let licenseKey: String
     let projectId: String
     let headers : HTTPHeaders
+    let origin : String
 
     public init(accountId: String,
          appSecret: String,
          userSecret: String,
          keySetId: String,
          licenseKey: String,
-         projectId: String,headers : HTTPHeaders) {
+                projectId: String, origin : String, headers : HTTPHeaders) {
         self.accountId = accountId
         self.appSecret = appSecret
         self.userSecret = userSecret
@@ -72,6 +73,7 @@ public struct ISMChatProjectConfig {
         self.licenseKey = licenseKey
         self.projectId = projectId
         self.headers = headers
+        self.origin = origin
     }
 }
 

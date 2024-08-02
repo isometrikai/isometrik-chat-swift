@@ -10,10 +10,11 @@ import Alamofire
 import UIKit
 
 public struct ISMChatNetworkServices{
+
     public struct Urls{
         public struct BaseUrl{
             static let baseUrl : String = {
-                return "https://apis.isometrik.io" //Base url
+                return  ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.origin //Base url
             }()
         }
         static public let guestToken                    = BaseUrl.baseUrl + "/chat/user/authenticate"

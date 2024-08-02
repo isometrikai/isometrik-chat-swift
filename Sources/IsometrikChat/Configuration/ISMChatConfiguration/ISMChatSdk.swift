@@ -84,6 +84,7 @@ public class ISMChatSdk{
             fatalError("Pass a valid userSecret for isometrik sdk initialization.")
         } 
         
+        
         let headers: HTTPHeaders = ["userToken": userConfig.userToken,
                                     "userSecret": appConfig.userSecret,
                                     "projectId": appConfig.projectId,
@@ -94,7 +95,7 @@ public class ISMChatSdk{
 
         let userConfiguration = userConfig
         
-        let projectConfiguration = ISMChatProjectConfig(accountId: appConfig.accountId, appSecret: appConfig.appSecret, userSecret: appConfig.userSecret, keySetId: appConfig.keySetId, licenseKey: appConfig.licensekey, projectId: appConfig.projectId, headers: headers)
+        let projectConfiguration = ISMChatProjectConfig(accountId: appConfig.accountId, appSecret: appConfig.appSecret, userSecret: appConfig.userSecret, keySetId: appConfig.keySetId, licenseKey: appConfig.licensekey, projectId: appConfig.projectId, origin: appConfig.origin, headers: headers)
         
         let mqttConfiguration = ISMChatMqttConfig(hostName: appConfig.MQTTHost, port: appConfig.MQTTPort)
         
