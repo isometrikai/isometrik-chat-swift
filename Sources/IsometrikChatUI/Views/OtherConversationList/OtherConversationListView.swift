@@ -8,18 +8,18 @@
 import SwiftUI
 import IsometrikChat
 
-protocol OtherConversationListViewDelegate{
+public protocol OtherConversationListViewDelegate{
     func navigateToMessageVc(selectedUserToNavigate : UserDB?,conversationId : String?)
 }
 
-struct OtherConversationListView : View {
-    @StateObject var realmManager = RealmManager()
-    var delegate: OtherConversationListViewDelegate?
+public struct OtherConversationListView : View {
+    @StateObject public var realmManager = RealmManager()
+    public var delegate: OtherConversationListViewDelegate?
     @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
-    var body: some View {
+    public var body: some View {
         NavigationView {
             ZStack{
                 themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
