@@ -39,10 +39,16 @@ public class ConversationDB: Object, ObjectKeyIdentifiable {
     
     @Persisted public var lastMessageDetails :LastMessageDB?
     @Persisted public var deletedMessage : Bool = false
+    @Persisted var metaData : ConversationMetaData?
     
     public override class func primaryKey() -> String? {
         return "conversationId"
     }
+}
+
+class ConversationMetaData : Object, ObjectKeyIdentifiable {
+    @Persisted var chatStatus : String?
+    @Persisted var profileType : String?
 }
 
 

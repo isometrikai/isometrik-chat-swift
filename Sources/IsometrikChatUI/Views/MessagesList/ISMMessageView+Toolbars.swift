@@ -457,4 +457,95 @@ extension ISMMessageView{
             }
         }
     }
+    
+    func showOptionToAllow() -> Bool {
+        let myProfileType = ISMChatSdk.getInstance().getUserSession().getProfileType()
+        let userId = ISMChatSdk.getInstance().getUserSession().getUserId()
+        
+        // Ensure conversation detail is available
+        guard let conversation = conversationDetail?.conversationDetails else {
+            return false
+        }
+
+        // Check if the current user is not the one who created the conversation
+        if conversation.createdBy != userId {
+            switch myProfileType {
+            case ISMChatUserProfileType.NormalUser.value:
+                return false
+                
+            case ISMChatUserProfileType.Influencer.value:
+                if conversation.metaData?.profileType == ISMChatUserProfileType.NormalUser.value &&
+                    conversation.metaData?.chatStatus != ISMChatStatus.Reject.value {
+                    return true
+                } else {
+                    return false
+                }
+                
+            case ISMChatUserProfileType.Bussiness.value:
+                if (conversation.metaData?.profileType == ISMChatUserProfileType.NormalUser.value ||
+                    conversation.metaData?.profileType == ISMChatUserProfileType.Influencer.value) &&
+                    conversation.metaData?.chatStatus != ISMChatStatus.Reject.value {
+                    return true
+                } else {
+                    return false
+                }
+                
+            default:
+                return false
+            }
+        }
+        
+        return false
+    }
+    
+    func acceptRejectView() -> some View{
+        VStack{
+            Divider()
+            Text("Accept message request from \(self.opponenDetail?.userName ?? "")?")
+                .font(themeFonts.messageListMessageText)
+                .foregroundColor(themeColor.chatListUserName)
+                .padding(.top,34)
+                .padding(.horizontal,15)
+                .padding(.bottom,10)
+                .multilineTextAlignment(.leading)
+                
+            Text("If you accept, you both can see information such as when you’ve read messages.")
+                .font(themeFonts.messageListMessageText)
+                .foregroundColor(themeColor.chatListUserMessage)
+                .padding(.horizontal,15)
+                .padding(.bottom,29)
+                .multilineTextAlignment(.leading)
+            
+            HStack(spacing: 14){
+                Button {
+                    dismiss()
+//                    self.messageVCDelegate?.navigateBack(isFromProfile: self.fromProfile ?? false, isfromBroadcast: self.fromBroadCastFlow ?? false)
+                } label: {
+                    Text("Reject")
+                        .font(themeFonts.navigationBarTitle)
+                        .foregroundColor(themeColor.chatListUnreadMessageCountBackground)
+                        .frame(maxWidth: .infinity, minHeight: 49)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(themeColor.chatListUnreadMessageCountBackground, lineWidth: 1)
+                        )
+                }
+                
+                Button {
+                    //call api
+                    viewModel.acceptRequestToAllowMessage(conversationId: self.conversationID ?? "", completion: { _ in
+                        getConversationDetail()
+                    })
+                } label: {
+                    Text("Accept")
+                        .font(themeFonts.navigationBarTitle)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, minHeight: 49)
+                        .background(themeColor.chatListUnreadMessageCountBackground)
+                        .cornerRadius(10)
+                }
+                
+            }.padding(.horizontal,20)
+        }
+    }
 }

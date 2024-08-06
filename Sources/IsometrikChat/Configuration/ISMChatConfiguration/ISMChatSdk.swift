@@ -116,6 +116,7 @@ public class ISMChatSdk{
         userSession.setUserEmailId(email: userConfig.userEmail)
         userSession.setUserProfilePicture(url: userConfig.userProfileImage)
         userSession.setUserName(userName: userConfig.userName)
+        userSession.setProfileType(type: userConfig.userProfileType)
         self.userSession = userSession
         
         //mqttSession

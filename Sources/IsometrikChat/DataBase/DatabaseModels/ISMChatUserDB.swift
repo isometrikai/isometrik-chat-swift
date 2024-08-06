@@ -26,4 +26,6 @@ public class UserMetaDataDB : Object, ObjectKeyIdentifiable {
     
     @Persisted public var profilePic : String?
     @Persisted public var memberIdOfApp : String?
+    @Persisted public var profileType : String?
+    @Persisted public var chatStatus : String?
 }

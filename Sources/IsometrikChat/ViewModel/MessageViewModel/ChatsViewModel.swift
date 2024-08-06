@@ -617,9 +617,9 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
     
     //MARK: - create conversation
-    public func createConversation(user : UserDB,completion:@escaping(ISMChatCreateConversationResponse?)->()){
+    public func createConversation(user : UserDB,profileType : String? = nil,chatStatus : String? = nil,completion:@escaping(ISMChatCreateConversationResponse?)->()){
         var body : [String : Any]
-        let metaDataValue : [String : Any] = ["profilePic" : user.metaData?.profilePic ?? "", "memberIdOfApp" : user.metaData?.memberIdOfApp ?? ""]
+        let metaDataValue : [String : Any] = ["profilePic" : user.metaData?.profilePic ?? "", "memberIdOfApp" : user.metaData?.memberIdOfApp ?? "","profileType" : profileType ?? "", "chatStatus" : chatStatus ?? ""]
         body = ["typingEvents" : true ,
                 "readEvents" : true,
                 "pushNotifications" : true,
@@ -633,6 +633,21 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
                 completion(data)
             case .failure(let error):
                 ISMChatHelper.print("Create Conversation Api failed -----> \(String(describing: error))")
+            }
+        }
+    }
+    
+    //MARK: - accept rquest to chat
+    public func acceptRequestToAllowMessage(conversationId : String,completion:@escaping(ISMChatCreateConversationResponse?)->()){
+        var body : [String : Any]
+        let metaData = ["chatStatus" : ISMChatStatus.Accept.value]
+        body = ["metaData" : metaData,"conversationId" : conversationId] as [String : Any]
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.conversationDetail,httpMethod: .patch,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
+            switch result{
+            case .success(let data):
+                completion(data)
+            case .failure(let error):
+                ISMChatHelper.print("Meta data changed to allow message -----> \(String(describing: error))")
             }
         }
     }

@@ -20,4 +20,8 @@ public class ISMViewManager{
     public func messageList(conversationViewModel : ConversationViewModel,conversationId: String,user : UserDB,isGroup : Bool,fromBroadCastFlow : Bool,groupCastId : String,groupConversationTitle : String,groupImage : String,delegate : ISMMessageViewDelegate? = nil,myIsometrikUserId : String) -> some View{
         return ISMMessageView(conversationViewModel: conversationViewModel, conversationID: conversationId, opponenDetail: user, myUserId: myIsometrikUserId, isGroup: isGroup, fromBroadCastFlow: fromBroadCastFlow, groupCastId: groupCastId,groupConversationTitle : groupConversationTitle,groupImage : groupImage,delegate:delegate)
     }
+    
+    public func otherconversationList(delegete : OtherConversationListViewDelegate? = nil) -> some View {
+        return OtherConversationListView(delegate: delegete)
+    }
 }

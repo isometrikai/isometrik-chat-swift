@@ -188,7 +188,7 @@ extension ISMMessageView{
         }else{
             if isGroup == false{
                 if self.conversationID == nil || self.conversationID == ""{
-                    viewModel.createConversation(user: self.opponenDetail ?? UserDB()) { data in
+                    viewModel.createConversation(user: self.opponenDetail ?? UserDB(),profileType: ISMChatSdk.getInstance().getUserSession().getProfileType(),chatStatus: ISMChatStatus.Reject.value) { data in
                         self.conversationID = data?.conversationId
                         viewModel.getConversationDetail(conversationId: self.conversationID ?? "", isGroup: self.isGroup ?? false) { data in
                             //1. first check if conversation is deleted locally
@@ -197,7 +197,7 @@ extension ISMMessageView{
                             self.conversationDetail = data
                             
                             //2. save conversation locally, no need to call api again
-                            let conv = ISMChatConversationsDetail(opponentDetails: self.conversationDetail?.conversationDetails?.opponentDetails, lastMessageDetails: nil, unreadMessagesCount: 0, isGroup: self.conversationDetail?.conversationDetails?.isGroup, membersCount:  self.conversationDetail?.conversationDetails?.membersCount, createdAt:  self.conversationDetail?.conversationDetails?.createdAt, conversationTitle:  self.conversationDetail?.conversationDetails?.conversationTitle, conversationImageUrl:  self.conversationDetail?.conversationDetails?.conversationImageUrl, createdBy:  self.conversationDetail?.conversationDetails?.createdBy, createdByUserName:  self.conversationDetail?.conversationDetails?.createdByUserName, privateOneToOne:  self.conversationDetail?.conversationDetails?.privateOneToOne, conversationId:  self.conversationID ?? "", members: self.conversationDetail?.conversationDetails?.members, config: self.conversationDetail?.conversationDetails?.config)
+                            let conv = ISMChatConversationsDetail(opponentDetails: self.conversationDetail?.conversationDetails?.opponentDetails, lastMessageDetails: nil, unreadMessagesCount: 0, isGroup: self.conversationDetail?.conversationDetails?.isGroup, membersCount:  self.conversationDetail?.conversationDetails?.membersCount, createdAt:  self.conversationDetail?.conversationDetails?.createdAt, conversationTitle:  self.conversationDetail?.conversationDetails?.conversationTitle, conversationImageUrl:  self.conversationDetail?.conversationDetails?.conversationImageUrl, createdBy:  self.conversationDetail?.conversationDetails?.createdBy, createdByUserName:  self.conversationDetail?.conversationDetails?.createdByUserName, privateOneToOne:  self.conversationDetail?.conversationDetails?.privateOneToOne, conversationId:  self.conversationID ?? "", members: self.conversationDetail?.conversationDetails?.members, config: self.conversationDetail?.conversationDetails?.config,metaData: self.conversationDetail?.conversationDetails?.metaData)
                             realmManager.addConversation(obj: [conv])
                             NotificationCenter.default.post(name: NSNotification.refrestConversationListLocally,object: nil)
                             

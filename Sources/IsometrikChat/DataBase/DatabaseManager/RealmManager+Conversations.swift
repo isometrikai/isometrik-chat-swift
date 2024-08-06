@@ -11,6 +11,87 @@ import RealmSwift
 extension RealmManager {
     
     //MARK: - get all conversations count
+    public func getOtherConversationCount() -> Int {
+        let filteredOutConversations = conversations.filter { conversation in
+            // Check if the user is a business user
+            if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Bussiness.value {
+                // If user is a business user
+                if let metaData = conversation.metaData {
+                    // Check if opponent's profileType is not "user" or "influencer" or allowToMessage is true
+                    if (metaData.profileType == ISMChatUserProfileType.NormalUser.value || metaData.profileType == ISMChatUserProfileType.Influencer.value) && metaData.chatStatus == ISMChatStatus.Reject.value{
+                        return true
+                    }else{
+                        return false
+                    }
+                }
+                return false // Reject conversations with opponents other than "user" or "influencer"
+            } else  if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Influencer.value {
+                if let metaData = conversation.metaData {
+                    // Check if opponent's profileType is not "user" or allowToMessage is true
+                    if metaData.profileType == ISMChatUserProfileType.NormalUser.value && metaData.chatStatus == ISMChatStatus.Reject.value{
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+                return false
+            } else {
+                return false
+            }
+        }
+        return filteredOutConversations.count
+        
+    }
+    
+    public func getOtherConversation() -> [ConversationDB] {
+        let filteredOutConversations = conversations.filter { conversation in
+            // Check if the user is a business user
+            if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Bussiness.value {
+                // If user is a business user
+                if let metaData = conversation.metaData {
+                    // Check if opponent's profileType is not "user" or "influencer" or allowToMessage is true
+                    if (metaData.profileType == ISMChatUserProfileType.NormalUser.value || metaData.profileType == ISMChatUserProfileType.Influencer.value) && metaData.chatStatus == ISMChatStatus.Reject.value{
+                        return true
+                    }else{
+                        return false
+                    }
+                }
+                return false // Reject conversations with opponents other than "user" or "influencer"
+            } else  if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Influencer.value {
+                if let metaData = conversation.metaData {
+                    // Check if opponent's profileType is not "user" or allowToMessage is true
+                    if metaData.profileType == ISMChatUserProfileType.NormalUser.value && metaData.chatStatus == ISMChatStatus.Reject.value{
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+                return false
+            } else {
+                return false
+            }
+        }
+        return filteredOutConversations
+    }
+    
+    
+    public func getPrimaryConversationCount() -> Int {
+        let otherConversations = self.getOtherConversation()
+        let primaryConversations = conversations.filter { conversation in
+            !otherConversations.contains(where: { $0.id == conversation.id })
+        }
+        return primaryConversations.count
+    }
+    
+    public func getPrimaryConversation() -> [ConversationDB] {
+        let otherConversations = self.getOtherConversation()
+        let primaryConversations = conversations.filter { conversation in
+            !otherConversations.contains(where: { $0.id == conversation.id })
+        }
+        return primaryConversations
+    }
+    
+    //MARK: - get all conversations count
     public func getConversationCount() -> Int {
         conversations.count
     }
@@ -73,6 +154,11 @@ extension RealmManager {
                         obj.privateOneToOne = value.privateOneToOne ?? false
                         obj.messagingDisabled = false
                         obj.isGroup = value.isGroup ?? false
+                        
+                        let convmetaData = ConversationMetaData()
+                        convmetaData.chatStatus = value.metaData?.chatStatus
+                        convmetaData.profileType = value.metaData?.profileType
+                        obj.metaData = convmetaData
                         
                         let config = ConfigDB()
                         config.typingEvents = value.config?.typingEvents
@@ -505,7 +591,7 @@ extension RealmManager {
         if let localRealm = localRealm {
             let conversationToUpdate = localRealm.objects(ConversationDB.self).where{$0.conversationId == conversationId && $0.isDelete == false && $0.lastMessageDetails.messageId == messageId}
             try! localRealm.write {
-                    conversationToUpdate.first?.lastMessageDetails?.body = newBody
+                conversationToUpdate.first?.lastMessageDetails?.body = newBody
                 getAllConversations()
             }
         }

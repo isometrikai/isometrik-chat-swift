@@ -65,6 +65,8 @@ public struct ISMChatUserMetaData: Codable, Hashable {
     public var showlastSeen: Bool?
     public var profilePic : String?
     public var memberIdOfApp : String?
+    public var profileType : String?
+    public var chatStatus : String?
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -78,6 +80,8 @@ public struct ISMChatUserMetaData: Codable, Hashable {
         }
         profilePic = try? container.decodeIfPresent(String.self, forKey: .profilePic)
         memberIdOfApp = try? container.decodeIfPresent(String.self, forKey: .memberIdOfApp)
+        profileType = try? container.decodeIfPresent(String.self, forKey: .profileType)
+        chatStatus = try? container.decodeIfPresent(String.self, forKey: .chatStatus)
     }
 }
 

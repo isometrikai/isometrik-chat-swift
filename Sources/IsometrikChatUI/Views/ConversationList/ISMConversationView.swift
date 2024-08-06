@@ -86,7 +86,7 @@ public struct ISMConversationView : View {
             ZStack{
                 themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
-                    if realmManager.getConversationCount() == 0 && query == ""{
+                    if (ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ? realmManager.getPrimaryConversationCount() : realmManager.getConversationCount()) == 0 && query == ""{
                         // default placeholder
                         Button {
                             createChat = true
@@ -97,7 +97,7 @@ public struct ISMConversationView : View {
                         }
                     }else{
                         List{
-                            ForEach(realmManager.getConversation()){ data in
+                            ForEach(ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ? realmManager.getPrimaryConversation() : realmManager.getConversation()){ data in
                                 if ISMChatSdk.getInstance().getFramework() == .UIKit{
                                     Button {
                                         delegate?.navigateToMessageList(selectedUserToNavigate: data.opponentDetails, conversationId: data.lastMessageDetails?.conversationId, isGroup: data.isGroup, groupImage: data.conversationImageUrl,groupName: data.conversationTitle)

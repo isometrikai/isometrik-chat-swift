@@ -40,10 +40,10 @@ public class ISMChatSdkUI{
     
     
     
-    public func appConfiguration(conversationConfig : [ISMChatConversationTypeConfig],attachments : [ISMChatConfigAttachmentType],features : [ISMChatConfigFeature],customColors: ISMChatColorPalette, customFonts: ISMChatFonts,customImages: ISMChatImages,customMessageBubbleType : ISMChatBubbleType,hideNavigationBarForConversationList : Bool,allowToNavigateToAppProfile : Bool,createConversationFromChatList : Bool) {
+    public func appConfiguration(conversationConfig : [ISMChatConversationTypeConfig],attachments : [ISMChatConfigAttachmentType],features : [ISMChatConfigFeature],customColors: ISMChatColorPalette, customFonts: ISMChatFonts,customImages: ISMChatImages,customMessageBubbleType : ISMChatBubbleType,hideNavigationBarForConversationList : Bool,allowToNavigateToAppProfile : Bool,createConversationFromChatList : Bool,otherConversationList : Bool? = false) {
         
         //UI Properties
-        chatUIProperties = ISMChatPageProperties(attachments: attachments, features: features, conversationType: conversationConfig, hideNavigationBarForConversationList: hideNavigationBarForConversationList, allowToNavigateToAppProfile: allowToNavigateToAppProfile, createConversationFromChatList: createConversationFromChatList)
+        chatUIProperties = ISMChatPageProperties(attachments: attachments, features: features, conversationType: conversationConfig, hideNavigationBarForConversationList: hideNavigationBarForConversationList, allowToNavigateToAppProfile: allowToNavigateToAppProfile, createConversationFromChatList: createConversationFromChatList, otherConversationList: otherConversationList ?? false)
         
        //Appearance
         let appearance = ISMAppearance(colorPalette: customColors, images: customImages, fonts: customFonts,messageBubbleType: customMessageBubbleType)

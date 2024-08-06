@@ -42,6 +42,10 @@ public class ISMChatUserSession: NSObject {
         UserDefaults.standard.set(bio, forKey: ISMChatAppConstants.userDefaultUserBio)
     }
     
+    public func setProfileType(type : String){
+        UserDefaults.standard.set(type, forKey: ISMChatAppConstants.userDefaultProfileType)
+    }
+    
     
     public func setLastSeen(showLastSeen : Bool){
         UserDefaults.standard.set(showLastSeen, forKey: ISMChatAppConstants.userDefaultLastSeen)
@@ -88,6 +92,11 @@ public class ISMChatUserSession: NSObject {
         return UserDefaults.standard.bool(forKey: ISMChatAppConstants.userDefaultLastSeen)
     }
     
+    public func getProfileType() -> String {
+        guard let url = UserDefaults.standard.string(forKey: ISMChatAppConstants.userDefaultProfileType) else { return ""}
+        return url
+    }
+    
     
     // MARK: - DEFAULTS
     
@@ -100,6 +109,7 @@ public class ISMChatUserSession: NSObject {
         UserDefaults.standard.removeObject(forKey: ISMChatAppConstants.userDefaultKeepNotificationOn)
         UserDefaults.standard.removeObject(forKey: ISMChatAppConstants.userDefaultUserBio)
         UserDefaults.standard.removeObject(forKey: ISMChatAppConstants.userDefaultLastSeen)
+        UserDefaults.standard.removeObject(forKey: ISMChatAppConstants.userDefaultProfileType)
     }
 }
 
@@ -112,5 +122,6 @@ public struct ISMChatAppConstants {
     static let userDefaultKeepNotificationOn = "ismChatSdkNotification"
     static let userDefaultUserBio = "ismChatSdkUserBio"
     static let userDefaultLastSeen = "ismChatsdkLastSeen"
+    static let userDefaultProfileType = "ismChatsdkProfileType"
 }
 

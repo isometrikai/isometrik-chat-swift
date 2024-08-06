@@ -35,17 +35,20 @@ public struct ISMChatUserConfig {
     let userName: String
     let userEmail: String
     let userProfileImage: String
-
+    let userProfileType : String
+    
     public init(userToken: String,
-         userId: String,
-         userName: String,
-         userEmail: String,
-         userProfileImage: String) {
+                userId: String,
+                userName: String,
+                userEmail: String,
+                userProfileImage: String,
+                userProfileType : String) {
         self.userToken = userToken
         self.userId = userId
         self.userName = userName
         self.userEmail = userEmail
         self.userProfileImage = userProfileImage
+        self.userProfileType = userProfileType
     }
 }
 

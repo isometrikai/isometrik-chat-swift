@@ -228,7 +228,11 @@ public struct ISMMessageView: View {
                             }
                         }
                     }else{
-                        toolBarView()
+                        if ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true && showOptionToAllow() == true{
+                            acceptRejectView()
+                        }else{
+                            toolBarView()
+                        }
                     }
                 }//VStack
                 .onAppear {
