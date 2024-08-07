@@ -89,7 +89,7 @@ struct ISMMessageSubView: View {
                             Image(systemName: "minus.circle")
                             Text(isReceived == true ? "This message was deleted." :  "You deleted this message.")
                                 .font(themeFonts.messageListMessageDeleted)
-                                .foregroundColor(themeColor.messageListMessageDeleted)
+                                .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
                         }
                         .opacity(0.2)
                         dateAndStatusView(onImage: false)
