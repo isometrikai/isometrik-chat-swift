@@ -103,13 +103,13 @@ public struct ISMBroadCastList: View {
                         Spacer()
                     }
                     
-                    Button {
-                        navigatetoCreatBroadCast = true
-                    } label: {
-                        Text("New list")
-                            .font(themeFonts.messageListtoolbarAction)
-                            .foregroundColor(themeColor.messageListHeaderTitle)
-                    }
+//                    Button {
+//                        navigatetoCreatBroadCast = true
+//                    } label: {
+//                        Text("New list")
+//                            .font(themeFonts.messageListtoolbarAction)
+//                            .foregroundColor(themeColor.messageListHeaderTitle)
+//                    }
 
                     
                 }//:VStack
