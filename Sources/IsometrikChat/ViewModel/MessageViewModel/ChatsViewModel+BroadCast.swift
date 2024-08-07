@@ -10,7 +10,7 @@ import Foundation
 extension ChatsViewModel{
     
     //MARK: - create broadcast api
-    public func createBroadCast(users : [ISMChatUser],completion:@escaping(ISMChatCreateConversationResponse?)->()){
+    public func createBroadCast(broadCastTitle : String? = "Default",broadcastImage : String? = "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg",users : [ISMChatUser],completion:@escaping(ISMChatCreateConversationResponse?)->()){
         var body : [String : Any]
         var membersAll : [[String : Any]] = []
         var membersDetail : [[String : Any]] = []
@@ -20,8 +20,8 @@ extension ChatsViewModel{
             let memberDetail = ["memberId" :  x.userId ?? "","memberName" : x.userName ?? ""]
             membersDetail.append(memberDetail)
         }
-        body = ["groupcastTitle" : "Default" ,
-                "groupcastImageUrl" : "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg",
+        body = ["groupcastTitle" : broadCastTitle ?? "Default",
+                "groupcastImageUrl" : broadcastImage ?? "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg",
                 "members" : membersAll,
                 "metaData" : ["membersDetail" : membersDetail]] as [String : Any]
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.createBroadCast,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
