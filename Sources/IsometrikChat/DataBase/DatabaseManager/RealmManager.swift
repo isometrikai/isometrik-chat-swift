@@ -56,6 +56,7 @@ public class RealmManager: ObservableObject {
             try realm.write {
                 realm.deleteAll()
             }
+            try FileManager.default.removeItem(at:Realm.Configuration.defaultConfiguration.fileURL!) 
         } catch let error as NSError {
             print("Error deleting all data: \(error.localizedDescription)")
             // Handle the error as needed, such as showing an alert to the user
