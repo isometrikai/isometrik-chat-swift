@@ -29,7 +29,7 @@ public struct ISMBroadCastList: View {
     
     @State public var navigateToMessageView : Bool = false
     @State public var groupCastIdToNavigate : String = ""
-    
+    @StateObject public var networkMonitor = NetworkMonitor()
     @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     
@@ -126,7 +126,7 @@ public struct ISMBroadCastList: View {
                 .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: navigateToBrocastDetail?.groupcastTitle ?? "", groupcastId: navigateToBrocastDetail?.groupcastId ?? "").environmentObject(realmManager), isActive: $navigateToBrocastInfo))
                 .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.conversationviewModel,selectUserFor: .BroadCast, groupCastId: "", groupCastIdToNavigate: $groupCastIdToNavigate).environmentObject(realmManager),isActive: $navigatetoCreatBroadCast))
                 .background(NavigationLink("", destination:  ISMMessageView(conversationViewModel : self.conversationviewModel,conversationID:  self.navigateToGroupCastId ?? "",opponenDetail: nil,myUserId: "", isGroup: false,fromBroadCastFlow: true,groupCastId: self.navigateToGroupCastId ?? "", groupConversationTitle: navigateToGroupCastTitle ?? "", groupImage: nil)
-                    .environmentObject(realmManager), isActive: $navigateToMessageView))
+                    .environmentObject(realmManager).environmentObject(networkMonitor), isActive: $navigateToMessageView))
                 .navigationBarBackButtonHidden(true)
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(leading : navBarLeadingBtn,trailing: navBarTrailingBtn)
