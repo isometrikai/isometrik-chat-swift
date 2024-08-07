@@ -8,7 +8,7 @@
 import SwiftUI
 import IsometrikChat
 
-struct UserAvatarView: View {
+public struct UserAvatarView: View {
     var avatar: String
     var showOnlineIndicator: Bool
     var size: CGSize = .defaultAvatarSize
