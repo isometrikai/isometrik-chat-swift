@@ -42,10 +42,19 @@ extension ISMConversationView{
         }
     }
     
+    func getOtherChatCountUpdate(){
+        let count = realmManager.getOtherConversationCount()
+        let otherConversationCount : [String: Int] = ["count": count]
+        NotificationCenter.default.post(name: NSNotification.refreshOtherChatCount, object: nil, userInfo: otherConversationCount)
+    }
+    
     func getConversationList(){
         viewModel.getChatList(search: "") { data in
             self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: data?.conversations ?? [], query: ""))
             realmManager.manageConversationList(arr: viewModel.getConversation())
+            if ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
+                getOtherChatCountUpdate()
+            }
         }
     }
     
