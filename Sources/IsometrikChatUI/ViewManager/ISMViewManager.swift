@@ -24,4 +24,8 @@ public class ISMViewManager{
     public func otherconversationList(delegete : OtherConversationListViewDelegate? = nil) -> some View {
         return OtherConversationListView(delegate: delegete)
     }
+    
+    public func broadcastList() -> some View{
+        return ISMBroadCastList()
+    }
 }
