@@ -15,7 +15,7 @@ public class ISMChatSdkUI{
     
     private var appAppearance: ISMChatAppearance?
     
-    private static var sharedInstance : ISMChatSdkUI!
+    public static var sharedInstance : ISMChatSdkUI!
     
     public static func getInstance()-> ISMChatSdkUI{
         if sharedInstance == nil {

@@ -22,7 +22,7 @@ public class ISMChatSdk{
     //mqtt session
     private var mqttSession: ISMChatMQTTManager?
     //instance
-    private static var sharedInstance : ISMChatSdk!
+    public static var sharedInstance : ISMChatSdk!
     
     private var hostFrameworksType : FrameworkType = .UIKit
     
