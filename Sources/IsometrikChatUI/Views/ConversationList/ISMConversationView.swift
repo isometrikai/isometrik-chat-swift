@@ -89,7 +89,9 @@ public struct ISMConversationView : View {
                     if (ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ? realmManager.getPrimaryConversationCount() : realmManager.getConversationCount()) == 0 && query == ""{
                         // default placeholder
                         Button {
-                            createChat = true
+                            if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
+                                createChat = true
+                            }
                         } label: {
                             themeImages.conversationListPlaceholder
                                 .resizable()
