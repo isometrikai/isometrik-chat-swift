@@ -53,7 +53,7 @@ struct ISMConversationSubView: View {
                 getMessageText()
             })//:VStack
         }//:HStack
-        .frame(height: 60)
+        .frame(maxHeight: 60)
     }//:Body
     
     
@@ -328,7 +328,7 @@ struct ISMConversationSubView: View {
                 .foregroundColor(themeColor.chatListUserMessage)
                 .font(themeFonts.chatListUserMessage)
                 .padding(.trailing, 40)
-                .lineLimit(1)
+                .lineLimit(2)
             
             
             //UNREAD MESSAGE COUNT
