@@ -73,7 +73,7 @@ public struct ISMConversationView : View {
     public var delegate : ISMConversationViewDelegate? = nil
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State public var showMenuForConversationType : Bool = false
-    @State var isTextFieldFocused : Bool = false
+    @State public var isTextFieldFocused : Bool = false
     
     public init(delegate : ISMConversationViewDelegate? = nil){
         self.delegate = delegate
@@ -90,27 +90,30 @@ public struct ISMConversationView : View {
                     
                     if ISMChatSdk.getInstance().getFramework() == .UIKit{
                         HStack {
-                            HStack {
-                                Image("search-normal")
-                                UITextFieldWrapper(text: $query, isTextFieldFocused: $isTextFieldFocused, textFieldHeight: 38, placeholder: "Search")
-                            }//:HSTACK
-                            .padding(5)
-                            .background(Color(.systemFill).opacity(0.5))
-                            .clipShape(RoundedRectangle(cornerRadius: 18))
-                            
+                            themeImages.searchIcon
+                                .resizable()
+                                .frame(width: 15,height: 15)
+                            TextField("Search", text: $query)
+                                .foregroundColor(themeColor.chatListUserName)
+                                .padding(.vertical, 8)
+                                .background(Color.clear)
+                                .onTapGesture {
+                                    isTextFieldFocused = true
+                                }
                             if !query.isEmpty {
                                 Button(action: {
-                                    // Perform the action to clear the search query
-                                    self.query = ""
+                                    query = ""
                                 }) {
-                                    Image(systemName: "xmark.circle.fill") // You can use any clear icon
-                                        .foregroundColor(.gray)
-                                        .imageScale(.medium)
-                                }.padding(5)
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundColor(Color.gray)
+                                }
                             }
-                        }//:HSTACK
-                        .frame(height: 38)
-                        .padding(.horizontal,15)
+                        }
+                        .padding(5)
+                        .padding(.horizontal,5)
+                        .background(Color(UIColor.systemGray6))
+                        .cornerRadius(10)
+                        .padding(.horizontal, 15)
                     }
                     
                     
@@ -177,7 +180,7 @@ public struct ISMConversationView : View {
                         }
                         .listStyle(.plain)
                         .listRowSeparatorTint(Color.border)
-                        .searchable(text: $query)
+//                        .searchable(text: $query)
                         .keyboardType(.default)
                         .textContentType(.oneTimeCode)
                         .autocorrectionDisabled(true)
@@ -444,57 +447,4 @@ public struct ISMConversationView : View {
             }
         }
     }//:Body
-}
-
-
-
-
-
-
-
-struct UITextFieldWrapper: UIViewRepresentable {
-    @Binding var text: String
-    @Binding var isTextFieldFocused: Bool
-    var textFieldHeight: CGFloat // Added textFieldHeight parameter
-    var placeholder : String
-    
-    func makeUIView(context: Context) -> UITextField {
-        let textField = UITextField()
-        textField.delegate = context.coordinator
-        textField.placeholder = placeholder
-        textField.font = UIFont.regular(size: 14)
-        return textField
-    }
-    
-    func updateUIView(_ uiView: UITextField, context: Context) {
-        uiView.text = text
-        
-        if isTextFieldFocused {
-            uiView.becomeFirstResponder()
-        } else {
-            uiView.resignFirstResponder()
-        }
-    }
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(text: $text, isTextFieldFocused: $isTextFieldFocused)
-    }
-    
-    class Coordinator: NSObject, UITextFieldDelegate {
-        @Binding var text: String
-        @Binding var isTextFieldFocused: Bool
-        
-        init(text: Binding<String>, isTextFieldFocused: Binding<Bool>) {
-            _text = text
-            _isTextFieldFocused = isTextFieldFocused
-        }
-        
-        func textFieldDidBeginEditing(_ textField: UITextField) {
-            isTextFieldFocused = true // Set isTextFieldFocused to true when editing begins
-        }
-        
-        func textFieldDidChangeSelection(_ textField: UITextField) {
-            text = textField.text ?? ""
-        }
-    }
 }
