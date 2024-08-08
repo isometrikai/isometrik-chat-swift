@@ -13,6 +13,8 @@ import AVFoundation
 import AVKit
 import SwiftUI
 import Combine
+import TUSKit
+import TransloaditKit
 
 public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     
@@ -43,6 +45,11 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     //grp
     @Published public var groupTitleImage : URL?
     
+    public var tusClient: TUSClient? = nil
+    public var callBack : ((String,Bool)->())? = nil
+    public var callBackProgress : ((Int,Int,Bool)->())? = nil
+    public var isVideo:Bool = false
+    public var isFile: Bool = false
     
     var ismChatSDK: ISMChatSdk?
     
@@ -315,74 +322,6 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             }
         }
     }
-    
-    //MARK: - upload image, video, doc
-    public func upload(messageKind : ISMChatMessageType,conversationId :  String,conversationType : Int? = 0,image : URL?,document : URL?,video : URL?,audio : URL?,mediaName : String,isfromDocument : Bool? = false,completion:@escaping(ISMChatPresignedUrlDetail?, String , Int)->()){
-        //params
-        var params = [String: Any]()
-        params["conversationId"] = conversationId
-        //Type of the conversation for which to fetch presigned urls for attachments.0- Conversation, 1- Bulk messaging, 2- Groupcast
-        params["conversationType"] = conversationType
-        var mediaType : Int = 0
-        var mediaData : Data = Data()
-        if messageKind == .document{
-            mediaType = 3
-            if let document = document {
-                if document.startAccessingSecurityScopedResource() {
-                    guard let restoredData = try? Data(contentsOf: document) else {
-                        return
-                    }
-                    mediaData = restoredData
-                }
-                document.stopAccessingSecurityScopedResource()
-            }
-        }else if messageKind == .photo{
-            mediaType = 0
-            if let image = video {
-                if isfromDocument == true{
-                    guard image.startAccessingSecurityScopedResource() else {
-                        return
-                    }
-                }
-                mediaData = try! Data(contentsOf: image)
-            }else if let image = image{
-                if let myImage = ISMChatHelper.compressImage(image: image){
-                    if let dataobj = myImage.jpegData(compressionQuality: 0.1){
-                        mediaData = dataobj
-                    }
-                }
-            }
-        }else if messageKind == .video{
-            mediaType = 1
-            if let video = video {
-                mediaData =  try! Data(contentsOf: video)
-            }
-        }else if messageKind == .audio{
-            mediaType = 2
-            if let audio = audio {
-                mediaData =  try! Data(contentsOf: audio)
-            }
-        }
-        params["attachments"] = [["nameWithExtension": mediaName ,"mediaType" : mediaType,"mediaId" : UIDevice.current.identifierForVendor!.uuidString] as [String : Any]]
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.presignedUrl,httpMethod: .post,params: params) { (result : ISMChatResponse<ISMChatPresignedUrl?,ISMChatErrorData?>) in
-            switch result{
-            case .success(let data):
-                if let url = data?.presignedUrls?.first?.mediaPresignedUrl{
-                    AF.upload(mediaData, to: url, method: .put, headers: [:]).responseData { response in
-                        ISMChatHelper.print(response)
-                        if response.response?.statusCode == 200{
-                            completion(data?.presignedUrls?.first, mediaName, mediaData.count)
-                        }else{
-                            ISMChatHelper.print("Error in Image upload")
-                        }
-                    }
-                }
-            case .failure(let error):
-                ISMChatHelper.print(error ?? "Error")
-            }
-        }
-    }
-    
     
     //MARK: - get conversation Detail
     public func getConversationDetail(conversationId : String,isGroup : Bool,completion:@escaping(ISMChatConversationDetail?)->()){

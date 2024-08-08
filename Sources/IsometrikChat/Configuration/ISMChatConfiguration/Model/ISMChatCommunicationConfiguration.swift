@@ -90,3 +90,16 @@ public struct ISMChatMqttConfig {
         self.port = port
     }
 }
+
+
+public struct ISMChatUploadMedia {
+    let uploadUrl : String
+    let fetchUrl : String
+    let headers : [String: String]
+
+    public init(uploadUrl: String,fetchUrl: String, headers: [String: String]) {
+        self.uploadUrl = uploadUrl
+        self.fetchUrl = fetchUrl
+        self.headers = headers
+    }
+}

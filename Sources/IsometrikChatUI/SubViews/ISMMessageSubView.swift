@@ -161,6 +161,10 @@ struct ISMMessageSubView: View {
 //                                                ISMLinkPreview(urlString: str)
 //                                                    .font(themeFonts.messageListMessageText)
 //                                                    .foregroundColor(themeColor.messageListMessageText)
+                                                Link(str, destination: URL(string: str)!)
+                                                    .font(themeFonts.messageListMessageText)
+                                                    .foregroundColor(themeColor.userProfileEditText)
+                                                    .underline(true, color: themeColor.userProfileEditText)
                                             }
                                             else{
                                                 if str.contains("@") && isGroup == true{

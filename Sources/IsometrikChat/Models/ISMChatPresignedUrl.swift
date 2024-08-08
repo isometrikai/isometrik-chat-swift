@@ -36,4 +36,8 @@ public struct ISMChatPresignedUrlDetail : Codable{
         mediaId = try? container.decode(String.self, forKey: .mediaId)
         presignedUrl = try? container.decode(String.self, forKey: .presignedUrl)
     }
+    public init(mediaUrl : String,mediaId : String){
+        self.mediaId = mediaId
+        self.mediaId = mediaUrl
+    }
 }

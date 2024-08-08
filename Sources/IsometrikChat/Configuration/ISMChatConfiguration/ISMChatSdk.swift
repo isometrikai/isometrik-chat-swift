@@ -26,6 +26,10 @@ public class ISMChatSdk{
     
     private var hostFrameworksType : FrameworkType = .UIKit
     
+    private var uploadMediaConfig : ISMChatUploadMedia?
+    
+    private var allowuploadMediaConfig : Bool?
+    
     public static func getInstance()-> ISMChatSdk{
         if sharedInstance == nil {
             sharedInstance = ISMChatSdk()
@@ -58,6 +62,17 @@ public class ISMChatSdk{
         return hostFrameworksType
     }
     
+    public func getUploadMediaConfig() -> ISMChatUploadMedia?{
+        if let uploadMediaConfig = uploadMediaConfig{
+            return uploadMediaConfig
+        }
+        return nil
+    }
+    
+    public func checkAllowUpload() -> Bool{
+        return allowuploadMediaConfig ?? false
+    }
+    
     public func checkifChatInitialied() -> Bool{
         if mqttSession == nil {
             return false
@@ -68,7 +83,7 @@ public class ISMChatSdk{
     
     
     
-    public func appConfiguration(appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig,hostFrameworkType : FrameworkType,conversationListViewControllerName : UIViewController.Type?,messagesListViewControllerName : UIViewController.Type?) {
+    public func appConfiguration(appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig,hostFrameworkType : FrameworkType,conversationListViewControllerName : UIViewController.Type?,messagesListViewControllerName : UIViewController.Type?,uploadMediaConfig : ISMChatUploadMedia? = nil,allowMediaUpload : Bool? = false) {
         
         if appConfig.accountId.isEmpty {
             fatalError("Pass a valid accountId for isometrik sdk initialization.")
@@ -104,7 +119,8 @@ public class ISMChatSdk{
         let apiManager = ISMChatAPIManager(configuration: projectConfiguration)
         
         self.hostFrameworksType = hostFrameworkType
-        
+        self.uploadMediaConfig = uploadMediaConfig
+        self.allowuploadMediaConfig = allowMediaUpload
         
         //chatClient
         self.chatClient = ISMChatClient(communicationConfig: communicationConfiguration, apiManager: apiManager)
