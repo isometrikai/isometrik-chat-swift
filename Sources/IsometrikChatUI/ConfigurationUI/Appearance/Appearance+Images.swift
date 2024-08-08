@@ -154,6 +154,7 @@ public struct ISMChatImages {
     
     
     public var fileFallback: Image = loadImageSafely(with: "generic")
+    public var searchIcon : Image = loadImageSafely(with: "search-normal")
     
     public init(){}
     
@@ -238,7 +239,8 @@ public struct ISMChatImages {
         trash: Image? = nil,
         audioLock: Image? = nil,
         blockIcon: Image? = nil,
-        fileFallback: Image? = nil
+        fileFallback: Image? = nil,
+        searchIcon : Image? = nil
     ) {
         if let addConversation = addConversation { self.addConversation = addConversation }
         if let conversationListPlaceholder = conversationListPlaceholder { self.conversationListPlaceholder = conversationListPlaceholder }
@@ -321,6 +323,7 @@ public struct ISMChatImages {
         if let audioLock = audioLock { self.audioLock = audioLock }
         if let blockIcon = blockIcon { self.blockIcon = blockIcon }
         if let fileFallback = fileFallback { self.fileFallback = fileFallback }
+        if let searchIcon = searchIcon { self.searchIcon = searchIcon }
     }
     
 }

@@ -147,24 +147,30 @@ struct ISMMessageSubView: View {
                                     VStack(alignment: .trailing, spacing: 5){
                                         HStack{
                                             if ISMChatHelper.isValidEmail(str) == true{
-                                                Link(str, destination: URL(string: "mailto:apple@me.com")!)
-                                                    .font(themeFonts.messageListMessageText)
-                                                    .foregroundColor(themeColor.userProfileEditText)
-                                                    .underline(true, color: themeColor.userProfileEditText)
+                                                Link(destination: URL(string: "mailto:apple@me.com")!, label: {
+                                                    Text(str)
+                                                        .font(themeFonts.messageListMessageText)
+                                                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                                                        .underline(true, color: isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                                                })
                                             }else if  ISMChatHelper.isValidPhone(phone: str) == true{
-                                                Link(str, destination: URL(string: "tel:\(str)")!)
-                                                    .font(themeFonts.messageListMessageText)
-                                                    .foregroundColor(themeColor.userProfileEditText)
-                                                    .underline(true, color: themeColor.userProfileEditText)
+                                                Link(destination: URL(string: "tel:\(str)")!, label: {
+                                                    Text(str)
+                                                        .font(themeFonts.messageListMessageText)
+                                                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                                                        .underline(true, color: isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                                                })
                                             }
                                             else if str.isValidURL || str.contains("www."){
 //                                                ISMLinkPreview(urlString: str)
 //                                                    .font(themeFonts.messageListMessageText)
 //                                                    .foregroundColor(themeColor.messageListMessageText)
-                                                Link(str, destination: URL(string: str)!)
-                                                    .font(themeFonts.messageListMessageText)
-                                                    .foregroundColor(themeColor.userProfileEditText)
-                                                    .underline(true, color: themeColor.userProfileEditText)
+                                                Link(destination: URL(string: str)!, label: {
+                                                    Text(str)
+                                                        .font(themeFonts.messageListMessageText)
+                                                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                                                        .underline(true, color: isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                                                })
                                             }
                                             else{
                                                 if str.contains("@") && isGroup == true{
