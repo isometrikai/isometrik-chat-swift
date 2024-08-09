@@ -142,7 +142,7 @@ public struct ISMConversationView : View {
                                                     self.loadMoreData()
                                                 }
                                             }
-                                    }.padding(.bottom,10)
+                                    }
                                 }else{
                                     ZStack{
                                         ISMConversationSubView(chat: data, hasUnreadCount: (data.unreadMessagesCount ) > 0)
