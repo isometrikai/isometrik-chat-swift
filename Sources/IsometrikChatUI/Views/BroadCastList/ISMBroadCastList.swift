@@ -105,7 +105,10 @@ public struct ISMBroadCastList: View {
                                 .multilineTextAlignment(.center)
                             Spacer()
                         }else{
-                            placeholder
+                            themeImage.broadCastListPlaceholder
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 169, height: 169, alignment: .center)
                         }
                     }
                     
@@ -162,19 +165,19 @@ public struct ISMBroadCastList: View {
         }
     }
     
-    var placeholder : some View{
-        VStack(spacing:20){
-            themeImage.broadCastListPlaceholder
-                .resizable()
-                .scaledToFit()
-                .frame(width: 169, height: 169, alignment: .center)
+//    var placeholder : some View{
+//        VStack(spacing:20){
+//            themeImage.broadCastListPlaceholder
+//                .resizable()
+//                .scaledToFit()
+//                .frame(width: 169, height: 169, alignment: .center)
 //            if !themeText.broadcastListPlaceholderText.isEmpty{
 //                Text(themeText.broadcastListPlaceholderText)
 //                    .font(themeFonts.navigationBarTitle)
 //                    .foregroundColor(themeColor.navigationBarTitle)
 //            }
-        }
-    }
+//        }
+//    }
     
     var navBarLeadingBtn : some View{
         if editBroadCastList == false{

@@ -26,7 +26,7 @@ public struct OtherConversationListView : View {
                 themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
                     if realmManager.getOtherConversationCount() == 0{
-                        VStack(spacing:20){
+//                        VStack(spacing:20){
                             themeImage.otherConversationListPlaceholder
                                 .resizable()
                                 .scaledToFit()
@@ -36,7 +36,7 @@ public struct OtherConversationListView : View {
 //                                    .font(themeFonts.navigationBarTitle)
 //                                    .foregroundColor(themeColor.navigationBarTitle)
 //                            }
-                        }
+//                        }
                     }else{
                         List{
                             ForEach(realmManager.getOtherConversation()){ data in

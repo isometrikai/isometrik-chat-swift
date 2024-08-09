@@ -126,17 +126,21 @@ public struct ISMConversationView : View {
                                 createChat = true
                             }
                         } label: {
-                            VStack(spacing:20){
-                                themeImages.conversationListPlaceholder
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 169, height: 169, alignment: .center)
+                            themeImages.conversationListPlaceholder
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 169, height: 169, alignment: .center)
+//                            VStack(spacing:20){
+//                                themeImages.conversationListPlaceholder
+//                                    .resizable()
+//                                    .scaledToFit()
+//                                    .frame(width: 169, height: 169, alignment: .center)
                 //                if !themeText.conversationListPlaceholderText.isEmpty{
 //                                    Text(themeText.conversationListPlaceholderText ?? "")
 //                                        .font(themeFont.navigationBarTitle)
 //                                        .foregroundColor(themeColor.navigationBarTitle)
                 //                }
-                            }
+//                            }
                         }
                     }else{
                         List{

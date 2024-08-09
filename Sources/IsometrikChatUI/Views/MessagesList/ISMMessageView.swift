@@ -203,7 +203,7 @@ public struct ISMMessageView: View {
                         //No Message View
                         if realmManager.allMessages?.count == 0 || realmManager.messages.count == 0{
                             //
-                            VStack(spacing:20){
+//                            VStack(spacing:20){
                                 themeImages.noMessagePlaceholder
                                     .resizable()
                                     .scaledToFit()
@@ -213,7 +213,7 @@ public struct ISMMessageView: View {
 //                                        .font(themeFonts.navigationBarTitle)
 //                                        .foregroundColor(themeColor.navigationBarTitle)
 //                                }
-                            }
+//                            }
                             
                         }
                     }.onTapGesture {
