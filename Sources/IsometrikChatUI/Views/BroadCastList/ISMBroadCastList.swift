@@ -31,6 +31,7 @@ public struct ISMBroadCastList: View {
     @State public var groupCastIdToNavigate : String = ""
     @StateObject public var networkMonitor = NetworkMonitor()
     @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @State public var themeText = ISMChatSdkUI.getInstance().getAppAppearance().appearance.text
     
     
     //MARK:  - LIFECYCLE
@@ -94,13 +95,21 @@ public struct ISMBroadCastList: View {
                         .refreshable {
                         }
                     }else{
-                        Spacer()
-                        Text("You should use broadcast lists to message multiple people at once.")
-                            .font(themeFonts.messageListMessageText)
-                            .foregroundColor(themeColor.messageListHeaderTitle)
-                            .padding(.horizontal,35)
-                            .multilineTextAlignment(.center)
-                        Spacer()
+                        
+                        if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
+                            Spacer()
+                            Text("You should use broadcast lists to message multiple people at once.")
+                                .font(themeFonts.messageListMessageText)
+                                .foregroundColor(themeColor.messageListHeaderTitle)
+                                .padding(.horizontal,35)
+                                .multilineTextAlignment(.center)
+                            Spacer()
+                        }else{
+                            themeImage.broadCastListPlaceholder
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 169, height: 169, alignment: .center)
+                        }
                     }
                     
 //                    Button {
@@ -155,6 +164,20 @@ public struct ISMBroadCastList: View {
             }
         }
     }
+    
+//    var placeholder : some View{
+//        VStack(spacing:20){
+//            themeImage.broadCastListPlaceholder
+//                .resizable()
+//                .scaledToFit()
+//                .frame(width: 169, height: 169, alignment: .center)
+//            if !themeText.broadcastListPlaceholderText.isEmpty{
+//                Text(themeText.broadcastListPlaceholderText)
+//                    .font(themeFonts.navigationBarTitle)
+//                    .foregroundColor(themeColor.navigationBarTitle)
+//            }
+//        }
+//    }
     
     var navBarLeadingBtn : some View{
         if editBroadCastList == false{
