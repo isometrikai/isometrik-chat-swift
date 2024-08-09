@@ -18,6 +18,7 @@ public struct OtherConversationListView : View {
     @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @State public var themeText = ISMChatSdkUI.getInstance().getAppAppearance().appearance.text
     
     public var body: some View {
         NavigationView {
@@ -25,7 +26,17 @@ public struct OtherConversationListView : View {
                 themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
                     if realmManager.getOtherConversationCount() == 0{
-                        Text("No other chats found!")
+                        VStack(spacing:20){
+                            themeImage.otherConversationListPlaceholder
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 169, height: 169, alignment: .center)
+                            if !themeText.otherconversationText.isEmpty{
+                                Text(themeText.otherconversationText)
+                                    .font(themeFonts.navigationBarTitle)
+                                    .foregroundColor(themeColor.navigationBarTitle)
+                            }
+                        }
                     }else{
                         List{
                             ForEach(realmManager.getOtherConversation()){ data in
