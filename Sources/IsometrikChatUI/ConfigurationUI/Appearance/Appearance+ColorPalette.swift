@@ -58,7 +58,7 @@ public struct ISMChatColorPalette {
     
     public var messageListToolBarBackground : Color = .ismChatSdkWhite
     public var messageListReplyToolBarBackground : Color = .ismChatSdkWhite
-    public var messageListTextViewBackground : Color = .black
+    public var messageListTextViewBackground : Color = .clear
     public var messageListTextViewText : Color = .ismChatSdkAccentPrimary
     public var messageListTextViewBoarder : Color = .ismChatSdkListSeperator
     public var messageListActionText : Color = .ismChatSdkGray

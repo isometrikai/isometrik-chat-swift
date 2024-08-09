@@ -161,7 +161,6 @@ public struct ISMMessageView: View {
     
     @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State public var themeText = ISMChatSdkUI.getInstance().getAppAppearance().appearance.text
     @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State public var userSession = ISMChatSdk.getInstance().getUserSession()
     
@@ -202,9 +201,11 @@ public struct ISMMessageView: View {
                         }.padding(.bottom,5)
                         //No Message View
                         if realmManager.allMessages?.count == 0 || realmManager.messages.count == 0{
+                            //
                             themeImages.noMessagePlaceholder
                                 .resizable()
-                                .frame(width: 169, height: 169, alignment: .center)
+                                .frame(width: 206, height: 144, alignment: .center)
+                            
                         }
                     }.onTapGesture {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)

@@ -67,8 +67,6 @@ public struct ISMConversationView : View {
     @State public var navigateToBroadCastMessages : Bool = false
     
     @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State public var themeText = ISMChatSdkUI.getInstance().getAppAppearance().appearance.text
-    @State public var themeFont = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State public var userSession = ISMChatSdk.getInstance().getUserSession()
     @State public var hideNavigationBar = ISMChatSdkUI.getInstance().getChatProperties().hideNavigationBarForConversationList
     
@@ -89,6 +87,36 @@ public struct ISMConversationView : View {
             ZStack{
                 themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
+                    
+//                    if ISMChatSdk.getInstance().getFramework() == .UIKit{
+//                        HStack {
+//                            themeImages.searchIcon
+//                                .resizable()
+//                                .frame(width: 15,height: 15)
+//                            TextField("Search", text: $query)
+//                                .foregroundColor(themeColor.chatListUserName)
+//                                .padding(.vertical, 8)
+//                                .background(Color.clear)
+//                                .onTapGesture {
+//                                    isTextFieldFocused = true
+//                                }
+//                            if !query.isEmpty {
+//                                Button(action: {
+//                                    query = ""
+//                                }) {
+//                                    Image(systemName: "xmark.circle.fill")
+//                                        .foregroundColor(Color.gray)
+//                                }
+//                            }
+//                        }
+//                        .padding(5)
+//                        .padding(.horizontal,5)
+//                        .background(Color(UIColor.systemGray6))
+//                        .cornerRadius(10)
+//                        .padding(.horizontal, 15)
+//                    }
+                    
+                    
                     if (ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ? realmManager.getPrimaryConversationCount() : realmManager.getConversationCount()) == 0 && query == ""{
                         // default placeholder
                         Button {
@@ -98,8 +126,7 @@ public struct ISMConversationView : View {
                         } label: {
                             themeImages.conversationListPlaceholder
                                 .resizable()
-                                .scaledToFit()
-                                .frame(width: 169, height: 169, alignment: .center)
+                                .frame(width: 251, height: 163, alignment: .center)
                         }
                     }else{
                         List{
@@ -420,24 +447,4 @@ public struct ISMConversationView : View {
             }
         }
     }//:Body
-    
-//    var placeholder : some View{
-//        Button {
-//            if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
-//                createChat = true
-//            }
-//        } label: {
-//            VStack(spacing:20){
-//                themeImages.conversationListPlaceholder
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: 169, height: 169, alignment: .center)
-////                if !themeText.conversationListPlaceholderText.isEmpty{
-//                    Text(themeText.conversationListPlaceholderText)
-//                        .font(themeFont.navigationBarTitle)
-//                        .foregroundColor(themeColor.navigationBarTitle)
-////                }
-//            }
-//        }
-//    }
 }

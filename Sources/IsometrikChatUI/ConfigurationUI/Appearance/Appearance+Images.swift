@@ -123,17 +123,9 @@ public struct ISMChatImages {
     //contactInfo
     public var addMembers : Image = loadImageSafely(with: "Addparticipants")
     public var groupMembers : Image = loadImageSafely(with: "Group_Member")
-    
-    
-    
     public var noDocPlaceholder : Image = loadImageSafely(with: "No_Docs")
     public var noLinkPlaceholder : Image = loadImageSafely(with: "No_Links")
     public var noMediaPlaceholder : Image = loadImageSafely(with: "No_Media")
-    public var otherConversationListPlaceholder : Image = loadImageSafely(with: "default_Placeholder_CL")
-    public var broadCastListPlaceholder : Image = loadImageSafely(with: "")
-    
-    
-    
     
     public var share : Image = loadSafely(systemName: "square.and.arrow.up", assetsFallback: "square.and.arrow.up")
     
@@ -232,8 +224,6 @@ public struct ISMChatImages {
         noDocPlaceholder: Image? = nil,
         noLinkPlaceholder: Image? = nil,
         noMediaPlaceholder: Image? = nil,
-        otherConversationListPlaceholder : Image? = nil,
-        broadCastListPlaceholder : Image? = nil,
         replyVideoIcon: Image? = nil,
         replyCameraIcon: Image? = nil,
         replyAudioIcon: Image? = nil,
@@ -317,9 +307,6 @@ public struct ISMChatImages {
         if let noDocPlaceholder = noDocPlaceholder { self.noDocPlaceholder = noDocPlaceholder }
         if let noLinkPlaceholder = noLinkPlaceholder { self.noLinkPlaceholder = noLinkPlaceholder }
         if let noMediaPlaceholder = noMediaPlaceholder { self.noMediaPlaceholder = noMediaPlaceholder }
-        if let otherConversationListPlaceholder = otherConversationListPlaceholder { self.otherConversationListPlaceholder = otherConversationListPlaceholder }
-        if let broadCastListPlaceholder = broadCastListPlaceholder { self.broadCastListPlaceholder = broadCastListPlaceholder }
-        
         if let replyVideoIcon = replyVideoIcon { self.replyVideoIcon = replyVideoIcon }
         if let replyCameraIcon = replyCameraIcon { self.replyCameraIcon = replyCameraIcon }
         if let replyAudioIcon = replyAudioIcon { self.replyAudioIcon = replyAudioIcon }
