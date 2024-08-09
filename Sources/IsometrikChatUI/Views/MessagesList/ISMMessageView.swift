@@ -161,6 +161,7 @@ public struct ISMMessageView: View {
     
     @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State public var themeText = ISMChatSdkUI.getInstance().getAppAppearance().appearance.text
     @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State public var userSession = ISMChatSdk.getInstance().getUserSession()
     
@@ -209,8 +210,8 @@ public struct ISMMessageView: View {
                                     .frame(width: 169, height: 169, alignment: .center)
                                 if !themeText.messagesListPlaceholderText.isEmpty{
                                     Text(themeText.messagesListPlaceholderText)
-                                        .font(themeFont.navigationBarTitle)
-                                        .font(themeColor.navigationBarTitle)
+                                        .font(themeFonts.navigationBarTitle)
+                                        .foregroundColor(themeColor.navigationBarTitle)
                                 }
                             }
                             

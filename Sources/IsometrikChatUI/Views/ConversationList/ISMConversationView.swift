@@ -134,7 +134,7 @@ public struct ISMConversationView : View {
                                 if !themeText.conversationListPlaceholderText.isEmpty{
                                     Text(themeText.conversationListPlaceholderText)
                                         .font(themeFont.navigationBarTitle)
-                                        .font(themeColor.navigationBarTitle)
+                                        .foregroundColor(themeColor.navigationBarTitle)
                                 }
                             }
                         }
