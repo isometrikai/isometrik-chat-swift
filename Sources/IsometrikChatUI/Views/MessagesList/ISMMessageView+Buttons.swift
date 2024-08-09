@@ -154,7 +154,7 @@ extension ISMMessageView{
                                     //group profile will not be there in uikit apps
                                     navigateToProfile = true
                                 }else{
-                                    delegate?.navigateToAppProfile(appUserId: self.conversationDetail?.conversationDetails?.metaData?.memberIdOfApp ?? "")
+                                    delegate?.navigateToAppProfile(appUserId: self.opponenDetail?.metaData?.memberIdOfApp ?? "")
                                 }
                             }else{
                                 navigateToProfile = true
