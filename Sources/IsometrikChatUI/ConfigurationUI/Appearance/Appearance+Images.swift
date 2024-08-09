@@ -123,9 +123,16 @@ public struct ISMChatImages {
     //contactInfo
     public var addMembers : Image = loadImageSafely(with: "Addparticipants")
     public var groupMembers : Image = loadImageSafely(with: "Group_Member")
+    
+    
+    
     public var noDocPlaceholder : Image = loadImageSafely(with: "No_Docs")
     public var noLinkPlaceholder : Image = loadImageSafely(with: "No_Links")
     public var noMediaPlaceholder : Image = loadImageSafely(with: "No_Media")
+    
+    
+    
+    
     
     public var share : Image = loadSafely(systemName: "square.and.arrow.up", assetsFallback: "square.and.arrow.up")
     

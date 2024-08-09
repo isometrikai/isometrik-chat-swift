@@ -202,9 +202,17 @@ public struct ISMMessageView: View {
                         //No Message View
                         if realmManager.allMessages?.count == 0 || realmManager.messages.count == 0{
                             //
-                            themeImages.noMessagePlaceholder
-                                .resizable()
-                                .frame(width: 206, height: 144, alignment: .center)
+                            VStack(spacing:20){
+                                themeImages.noMessagePlaceholder
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 169, height: 169, alignment: .center)
+                                if !themeText.messagesListPlaceholderText.isEmpty{
+                                    Text(themeText.messagesListPlaceholderText)
+                                        .font(themeFont.navigationBarTitle)
+                                        .font(themeColor.navigationBarTitle)
+                                }
+                            }
                             
                         }
                     }.onTapGesture {

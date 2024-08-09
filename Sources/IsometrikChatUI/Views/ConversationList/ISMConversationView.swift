@@ -67,6 +67,8 @@ public struct ISMConversationView : View {
     @State public var navigateToBroadCastMessages : Bool = false
     
     @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @State public var themeText = ISMChatSdkUI.getInstance().getAppAppearance().appearance.text
+    @State public var themeFont = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State public var userSession = ISMChatSdk.getInstance().getUserSession()
     @State public var hideNavigationBar = ISMChatSdkUI.getInstance().getChatProperties().hideNavigationBarForConversationList
     
@@ -124,9 +126,17 @@ public struct ISMConversationView : View {
                                 createChat = true
                             }
                         } label: {
-                            themeImages.conversationListPlaceholder
-                                .resizable()
-                                .frame(width: 251, height: 163, alignment: .center)
+                            VStack(spacing:20){
+                                themeImages.conversationListPlaceholder
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 169, height: 169, alignment: .center)
+                                if !themeText.conversationListPlaceholderText.isEmpty{
+                                    Text(themeText.conversationListPlaceholderText)
+                                        .font(themeFont.navigationBarTitle)
+                                        .font(themeColor.navigationBarTitle)
+                                }
+                            }
                         }
                     }else{
                         List{
