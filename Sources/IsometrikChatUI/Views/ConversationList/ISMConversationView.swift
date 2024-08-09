@@ -89,36 +89,6 @@ public struct ISMConversationView : View {
             ZStack{
                 themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
-                    
-//                    if ISMChatSdk.getInstance().getFramework() == .UIKit{
-//                        HStack {
-//                            themeImages.searchIcon
-//                                .resizable()
-//                                .frame(width: 15,height: 15)
-//                            TextField("Search", text: $query)
-//                                .foregroundColor(themeColor.chatListUserName)
-//                                .padding(.vertical, 8)
-//                                .background(Color.clear)
-//                                .onTapGesture {
-//                                    isTextFieldFocused = true
-//                                }
-//                            if !query.isEmpty {
-//                                Button(action: {
-//                                    query = ""
-//                                }) {
-//                                    Image(systemName: "xmark.circle.fill")
-//                                        .foregroundColor(Color.gray)
-//                                }
-//                            }
-//                        }
-//                        .padding(5)
-//                        .padding(.horizontal,5)
-//                        .background(Color(UIColor.systemGray6))
-//                        .cornerRadius(10)
-//                        .padding(.horizontal, 15)
-//                    }
-                    
-                    
                     if (ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ? realmManager.getPrimaryConversationCount() : realmManager.getConversationCount()) == 0 && query == ""{
                         // default placeholder
                         Button {
@@ -130,17 +100,6 @@ public struct ISMConversationView : View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 169, height: 169, alignment: .center)
-//                            VStack(spacing:20){
-//                                themeImages.conversationListPlaceholder
-//                                    .resizable()
-//                                    .scaledToFit()
-//                                    .frame(width: 169, height: 169, alignment: .center)
-                //                if !themeText.conversationListPlaceholderText.isEmpty{
-//                                    Text(themeText.conversationListPlaceholderText ?? "")
-//                                        .font(themeFont.navigationBarTitle)
-//                                        .foregroundColor(themeColor.navigationBarTitle)
-                //                }
-//                            }
                         }
                     }else{
                         List{

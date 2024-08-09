@@ -202,19 +202,9 @@ public struct ISMMessageView: View {
                         }.padding(.bottom,5)
                         //No Message View
                         if realmManager.allMessages?.count == 0 || realmManager.messages.count == 0{
-                            //
-//                            VStack(spacing:20){
-                                themeImages.noMessagePlaceholder
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 169, height: 169, alignment: .center)
-//                                if !themeText.messagesListPlaceholderText.isEmpty{
-//                                    Text(themeText.messagesListPlaceholderText)
-//                                        .font(themeFonts.navigationBarTitle)
-//                                        .foregroundColor(themeColor.navigationBarTitle)
-//                                }
-//                            }
-                            
+                            themeImages.noMessagePlaceholder
+                                .resizable()
+                                .frame(width: 169, height: 169, alignment: .center)
                         }
                     }.onTapGesture {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
