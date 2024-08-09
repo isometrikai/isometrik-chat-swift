@@ -121,23 +121,7 @@ public struct ISMConversationView : View {
                     
                     if (ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ? realmManager.getPrimaryConversationCount() : realmManager.getConversationCount()) == 0 && query == ""{
                         // default placeholder
-                        Button {
-                            if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
-                                createChat = true
-                            }
-                        } label: {
-                            VStack(spacing:20){
-                                themeImages.conversationListPlaceholder
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 169, height: 169, alignment: .center)
-                                if !themeText.conversationListPlaceholderText.isEmpty{
-                                    Text(themeText.conversationListPlaceholderText)
-                                        .font(themeFont.navigationBarTitle)
-                                        .foregroundColor(themeColor.navigationBarTitle)
-                                }
-                            }
-                        }
+                        placeholder
                     }else{
                         List{
                             ForEach(ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ? realmManager.getPrimaryConversation() : realmManager.getConversation()){ data in
@@ -457,4 +441,24 @@ public struct ISMConversationView : View {
             }
         }
     }//:Body
+    
+    var placeholder : some View{
+        Button {
+            if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
+                createChat = true
+            }
+        } label: {
+            VStack(spacing:20){
+                themeImages.conversationListPlaceholder
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 169, height: 169, alignment: .center)
+                if !themeText.conversationListPlaceholderText.isEmpty{
+                    Text(themeText.conversationListPlaceholderText)
+                        .font(themeFont.navigationBarTitle)
+                        .foregroundColor(themeColor.navigationBarTitle)
+                }
+            }
+        }
+    }
 }

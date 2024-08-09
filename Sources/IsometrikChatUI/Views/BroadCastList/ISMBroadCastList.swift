@@ -105,17 +105,7 @@ public struct ISMBroadCastList: View {
                                 .multilineTextAlignment(.center)
                             Spacer()
                         }else{
-                            VStack(spacing:20){
-                                themeImage.broadCastListPlaceholder
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 169, height: 169, alignment: .center)
-                                if !themeText.broadcastListPlaceholderText.isEmpty{
-                                    Text(themeText.broadcastListPlaceholderText)
-                                        .font(themeFonts.navigationBarTitle)
-                                        .foregroundColor(themeColor.navigationBarTitle)
-                                }
-                            }
+                            placeholder
                         }
                     }
                     
@@ -168,6 +158,20 @@ public struct ISMBroadCastList: View {
 //            self.broadCastList = data?.groupcasts ?? []
             if let groupcast = data?.groupcasts{
                 realmManager.manageBroadCastList(arr: groupcast)
+            }
+        }
+    }
+    
+    var placeholder : some View{
+        VStack(spacing:20){
+            themeImage.broadCastListPlaceholder
+                .resizable()
+                .scaledToFit()
+                .frame(width: 169, height: 169, alignment: .center)
+            if !themeText.broadcastListPlaceholderText.isEmpty{
+                Text(themeText.broadcastListPlaceholderText)
+                    .font(themeFonts.navigationBarTitle)
+                    .foregroundColor(themeColor.navigationBarTitle)
             }
         }
     }
