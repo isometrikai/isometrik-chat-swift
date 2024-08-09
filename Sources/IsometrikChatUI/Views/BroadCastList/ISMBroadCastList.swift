@@ -168,11 +168,11 @@ public struct ISMBroadCastList: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 169, height: 169, alignment: .center)
-            if !themeText.broadcastListPlaceholderText.isEmpty{
-                Text(themeText.broadcastListPlaceholderText)
-                    .font(themeFonts.navigationBarTitle)
-                    .foregroundColor(themeColor.navigationBarTitle)
-            }
+//            if !themeText.broadcastListPlaceholderText.isEmpty{
+//                Text(themeText.broadcastListPlaceholderText)
+//                    .font(themeFonts.navigationBarTitle)
+//                    .foregroundColor(themeColor.navigationBarTitle)
+//            }
         }
     }
     

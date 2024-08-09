@@ -208,11 +208,11 @@ public struct ISMMessageView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 169, height: 169, alignment: .center)
-                                if !themeText.messagesListPlaceholderText.isEmpty{
-                                    Text(themeText.messagesListPlaceholderText)
-                                        .font(themeFonts.navigationBarTitle)
-                                        .foregroundColor(themeColor.navigationBarTitle)
-                                }
+//                                if !themeText.messagesListPlaceholderText.isEmpty{
+//                                    Text(themeText.messagesListPlaceholderText)
+//                                        .font(themeFonts.navigationBarTitle)
+//                                        .foregroundColor(themeColor.navigationBarTitle)
+//                                }
                             }
                             
                         }

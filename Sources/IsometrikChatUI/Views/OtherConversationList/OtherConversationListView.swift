@@ -31,11 +31,11 @@ public struct OtherConversationListView : View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 169, height: 169, alignment: .center)
-                            if !themeText.otherconversationText.isEmpty{
-                                Text(themeText.otherconversationText)
-                                    .font(themeFonts.navigationBarTitle)
-                                    .foregroundColor(themeColor.navigationBarTitle)
-                            }
+//                            if !themeText.otherconversationText.isEmpty{
+//                                Text(themeText.otherconversationText)
+//                                    .font(themeFonts.navigationBarTitle)
+//                                    .foregroundColor(themeColor.navigationBarTitle)
+//                            }
                         }
                     }else{
                         List{
