@@ -453,11 +453,11 @@ public struct ISMConversationView : View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 169, height: 169, alignment: .center)
-                if !themeText.conversationListPlaceholderText.isEmpty{
+//                if !themeText.conversationListPlaceholderText.isEmpty{
                     Text(themeText.conversationListPlaceholderText)
                         .font(themeFont.navigationBarTitle)
                         .foregroundColor(themeColor.navigationBarTitle)
-                }
+//                }
             }
         }
     }
