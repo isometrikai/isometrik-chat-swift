@@ -22,6 +22,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToPost(postId : String)
     func navigateToUserListToForward(messages : [MessagesDB])
     func navigateToAppMemberInGroup(conversationId : String,groupMembers : [ISMChatGroupMember]?)
+    func uploadOnExternalCDN(messageKind : ISMChatMessageType,mediaUrl : URL,completion:@escaping(String,Int)->())
 }
 
 public struct ISMMessageView: View {

@@ -13,8 +13,8 @@ import AVFoundation
 import AVKit
 import SwiftUI
 import Combine
-import TUSKit
-import TransloaditKit
+//import TUSKit
+//import TransloaditKit
 
 public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     
@@ -45,11 +45,11 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     //grp
     @Published public var groupTitleImage : URL?
     
-    public var tusClient: TUSClient? = nil
-    public var callBack : ((String,Bool)->())? = nil
-    public var callBackProgress : ((Int,Int,Bool)->())? = nil
-    public var isVideo:Bool = false
-    public var isFile: Bool = false
+//    public var tusClient: TUSClient? = nil
+//    public var callBack : ((String,Bool)->())? = nil
+//    public var callBackProgress : ((Int,Int,Bool)->())? = nil
+//    public var isVideo:Bool = false
+//    public var isFile: Bool = false
     
     var ismChatSDK: ISMChatSdk?
     
@@ -305,7 +305,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             }
         case .location, .contact,.post:
             body["metaData"] = metaData
-        case .photo, .video:
+        case .photo, .video,.audio:
             body["attachments"] = [attachmentValue]
             if !metaData.isEmpty {
                 body["metaData"] = metaData

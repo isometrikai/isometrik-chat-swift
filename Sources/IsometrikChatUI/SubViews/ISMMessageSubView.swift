@@ -457,7 +457,7 @@ struct ISMMessageSubView: View {
                                                     }
                                                 }
                                             }
-                                            Image("playvideo")
+                                            themeImages.playVideo
                                                 .resizable()
                                                 .frame(width: 48,height: 48)
                                             

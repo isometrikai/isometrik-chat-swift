@@ -298,24 +298,6 @@
       }
     },
     {
-      "identity" : "transloaditkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/transloadit/TransloaditKit",
-      "state" : {
-        "revision" : "7db7982b42b786d308e55523bcb8c48b09752061",
-        "version" : "3.2.0"
-      }
-    },
-    {
-      "identity" : "tuskit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tus/TUSKit",
-      "state" : {
-        "revision" : "03d4421a6165a48f8fc1cda785ff30274e06370c",
-        "version" : "3.3.0"
-      }
-    },
-    {
       "identity" : "webrtc-xcframework",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/livekit/webrtc-xcframework.git",
