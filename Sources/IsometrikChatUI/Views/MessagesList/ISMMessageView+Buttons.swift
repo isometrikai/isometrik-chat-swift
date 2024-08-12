@@ -148,20 +148,22 @@ extension ISMMessageView{
                 }else{
                     
                     Button {
-                        if conversationDetail != nil{
+//                        if conversationDetail != nil{
                             if ISMChatSdkUI.getInstance().getChatProperties().allowToNavigateToAppProfile == true{
                                 if isGroup == true{
                                     //group profile will not be there in uikit apps
                                     navigateToProfile = true
                                 }else{
-                                    delegate?.navigateToAppProfile(appUserId: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? "")
+                                    //when conversation is not created then conversationdetail will be empty, so it will pick from opponenedetail,this happens only when we try to craete converasation from profile
+                                    delegate?.navigateToAppProfile(appUserId:
+                                                                    self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? (opponenDetail?.metaData?.userId ?? ""))
                                 }
                             }else{
                                 navigateToProfile = true
                             }
-                        }else{
-                            showingNoInternetAlert = true
-                        }
+//                        }else{
+//                            showingNoInternetAlert = true
+//                        }
                     } label: {
                         UserAvatarView(avatar: isGroup == false ? opponenDetail?.userProfileImageUrl ?? "" : (self.conversationDetail?.conversationDetails?.conversationImageUrl ?? (self.groupImage ?? "")), showOnlineIndicator: opponenDetail?.online ?? false,size: CGSize(width: 40, height: 40), userName: isGroup == false ? (opponenDetail?.userName ?? "") : (self.conversationDetail?.conversationDetails?.conversationTitle ?? "") ,font: .regular(size: 14))
                             .padding(.trailing,5)
