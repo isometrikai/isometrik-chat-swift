@@ -227,8 +227,7 @@ private extension ISMForwardToContactView{
                 user.userIdentifier = newUser.userIdentifier
                 user.userId = newUser.userId
                 let metaDataValue = UserMetaDataDB()
-                metaDataValue.profilePic = newUser.metaData?.profilePic
-                metaDataValue.memberIdOfApp = newUser.metaData?.memberIdOfApp
+                metaDataValue.userId = newUser.metaData?.userId
                 metaDataValue.profileType = newUser.metaData?.profileType
                 metaDataValue.chatStatus = newUser.metaData?.chatStatus
                 user.metaData = metaDataValue

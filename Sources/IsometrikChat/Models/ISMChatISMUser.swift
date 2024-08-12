@@ -64,7 +64,7 @@ public struct ISMChatUserMetaData: Codable, Hashable {
     public var about: String?
     public var showlastSeen: Bool?
     public var profilePic : String?
-    public var memberIdOfApp : String?
+    public var userId : String?
     public var profileType : String?
     public var chatStatus : String?
     
@@ -79,7 +79,7 @@ public struct ISMChatUserMetaData: Codable, Hashable {
             showlastSeen = true
         }
         profilePic = try? container.decodeIfPresent(String.self, forKey: .profilePic)
-        memberIdOfApp = try? container.decodeIfPresent(String.self, forKey: .memberIdOfApp)
+        userId = try? container.decodeIfPresent(String.self, forKey: .userId)
         profileType = try? container.decodeIfPresent(String.self, forKey: .profileType)
         chatStatus = try? container.decodeIfPresent(String.self, forKey: .chatStatus)
     }
