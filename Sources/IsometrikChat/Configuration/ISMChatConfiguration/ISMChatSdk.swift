@@ -28,6 +28,8 @@ public class ISMChatSdk{
     
     private var uploadOnExternalCDN : Bool?
     
+    private var chatInitialized : Bool?
+    
     public static func getInstance()-> ISMChatSdk{
         if sharedInstance == nil {
             sharedInstance = ISMChatSdk()
@@ -65,7 +67,7 @@ public class ISMChatSdk{
     }
     
     public func checkifChatInitialied() -> Bool{
-        if mqttSession == nil {
+        if chatInitialized == nil || chatInitialized == false{
             return false
         }else{
             return true
@@ -132,7 +134,7 @@ public class ISMChatSdk{
         let mqttSession = ISMChatMQTTManager(mqttConfiguration: mqttConfiguration, projectConfiguration: projectConfiguration, userdata: userConfig,viewcontrollers: viewcontrollers,framework: self.hostFrameworksType)
         mqttSession.connect(clientId: userConfig.userId)
         self.mqttSession = mqttSession
-    
+        self.chatInitialized = true
     }
     
     public func onTerminate() {

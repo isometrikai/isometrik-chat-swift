@@ -406,7 +406,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                                     
                                     if isNotChatVC && isNotMessageVC {
                                         // Your code here
-                                        if data.senderId != ISMChatSdk.getInstance().getUserSession().getUserId() {
+                                        if data.senderId != ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId{
                                             self.whenInOtherScreen(messageInfo: data)
                                         }
                                     }
