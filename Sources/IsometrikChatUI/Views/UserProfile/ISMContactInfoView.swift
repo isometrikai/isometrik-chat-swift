@@ -48,6 +48,8 @@ struct ISMContactInfoView: View {
     @State var userSession = ISMChatSdk.getInstance().getUserSession()
     
     @Binding var navigateToAddParticipantsInGroupViaDelegate : Bool
+    @Binding var blockUser : String
+    @Binding var unblockUser : String
     
     //MARK:  - BODY
     var body: some View {
@@ -293,11 +295,13 @@ struct ISMContactInfoView: View {
         if selectedOption == .BlockUser {
             conversationViewModel.blockUnBlockUser(opponentId: (conversationDetail?.conversationDetails?.opponentDetails?.userId ?? selectedToShowInfo?.userId) ?? "", needToBlock: true) { obj in
                 print("Success")
+                self.blockUser = conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? ""
                 presentationMode.wrappedValue.dismiss()
             }
         }else if selectedOption == .UnBlockUser {
             conversationViewModel.blockUnBlockUser(opponentId: conversationDetail?.conversationDetails?.opponentDetails?.userId ?? (selectedToShowInfo?.userId ?? ""), needToBlock: false) { obj in
                 print("Success")
+                self.unblockUser = conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? ""
                 presentationMode.wrappedValue.dismiss()
             }
         }else if selectedOption == .ClearChat {

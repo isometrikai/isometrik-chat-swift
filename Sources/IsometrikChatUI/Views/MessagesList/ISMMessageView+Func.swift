@@ -1319,7 +1319,7 @@ extension ISMMessageView{
         conversationViewModel.blockUnBlockUser(opponentId: self.conversationDetail?.conversationDetails?.opponentDetails?.id ?? "", needToBlock: true) { obj in
             print("Success")
             self.conversationDetail?.conversationDetails?.messagingDisabled = true
-            self.delegate?.externalBlockMechanism(appUserId: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? "")
+            self.delegate?.externalBlockMechanism(appUserId: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? "",block: true)
         }
     }
 }

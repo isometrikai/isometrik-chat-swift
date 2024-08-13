@@ -23,7 +23,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToUserListToForward(messages : [MessagesDB])
     func navigateToAppMemberInGroup(conversationId : String,groupMembers : [ISMChatGroupMember]?)
     func uploadOnExternalCDN(messageKind : ISMChatMessageType,mediaUrl : URL,completion:@escaping(String,Int)->())
-    func externalBlockMechanism(appUserId : String)
+    func externalBlockMechanism(appUserId : String,block: Bool)
 }
 
 public struct ISMMessageView: View {
@@ -168,6 +168,9 @@ public struct ISMMessageView: View {
     
     @State var postIdToNavigate : String = ""
     @State var navigateToAddParticipantsInGroupViaDelegate : Bool = false
+    
+    @State var blockUserForExternalBlockingMechanism : String?
+    @State var unblockUserForExternalBlockingMechanism : String?
     
     public var delegate : ISMMessageViewDelegate?
     
@@ -526,7 +529,7 @@ public struct ISMMessageView: View {
         .background(NavigationLink("", destination: ISMForwardToContactView(viewModel : self.viewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $showforwardMultipleMessage),isActive: $movetoForwardList))
         .background(NavigationLink("", destination: ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId,placeName : $placeName, address: $placeAddress),isActive: $showLocationSharing))
 //        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
-        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.viewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $navigateToAddParticipantsInGroupViaDelegate).environmentObject(self.realmManager),isActive: $navigateToProfile))
+        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.viewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $navigateToAddParticipantsInGroupViaDelegate,blockUser: $blockUserForExternalBlockingMechanism,unblockUser: $unblockUserForExternalBlockingMechanism).environmentObject(self.realmManager),isActive: $navigateToProfile))
 //        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))
         .background(NavigationLink("", destination: ISMImageAndViderEditor(media: $videoSelectedFromPicker, sendToUser: opponenDetail?.userName ?? "",sendMedia: $sendMedia),isActive: $navigateToImageEditor))
         .onReceive(timer, perform: { firedDate in
@@ -541,6 +544,18 @@ public struct ISMMessageView: View {
             timeElapsedForOnline = Int(firedtime.timeIntervalSince(startTimeForOnline))
             if executeRepeatlyForOfflineMessage == true{
                 sendLocalMsg()
+            }
+        })
+        .onChange(of: blockUserForExternalBlockingMechanism, perform: { _ in
+            if let blockUserId = blockUserForExternalBlockingMechanism{
+                self.delegate?.externalBlockMechanism(appUserId: blockUserId, block: true)
+                self.blockUserForExternalBlockingMechanism = nil
+            }
+        })
+        .onChange(of: unblockUserForExternalBlockingMechanism, perform: { _ in
+            if let unblockUserId = unblockUserForExternalBlockingMechanism{
+                self.delegate?.externalBlockMechanism(appUserId: unblockUserId, block: false)
+                self.unblockUserForExternalBlockingMechanism = nil
             }
         })
         .alert("Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.", isPresented: $showingNoInternetAlert) {

@@ -89,6 +89,7 @@ extension ISMMessageView{
             conversationViewModel.blockUnBlockUser(opponentId: self.conversationDetail?.conversationDetails?.opponentDetails?.id ?? "", needToBlock: false) { obj in
                 print("Success")
                 self.conversationDetail?.conversationDetails?.messagingDisabled = false
+                self.delegate?.externalBlockMechanism(appUserId: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? "", block: false)
 //                getConversationDetail()
 //                reload()
             }
