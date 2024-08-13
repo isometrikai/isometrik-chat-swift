@@ -94,13 +94,17 @@ public struct ISMBroadCastList: View {
                         .refreshable {
                         }
                     }else{
-                        Spacer()
-                        Text("You should use broadcast lists to message multiple people at once.")
-                            .font(themeFonts.messageListMessageText)
-                            .foregroundColor(themeColor.messageListHeaderTitle)
-                            .padding(.horizontal,35)
-                            .multilineTextAlignment(.center)
-                        Spacer()
+                        if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true{
+                            themePlaceholder.broadCastListPlaceholder
+                        }else{
+                            Spacer()
+                            Text("You should use broadcast lists to message multiple people at once.")
+                                .font(themeFonts.messageListMessageText)
+                                .foregroundColor(themeColor.messageListHeaderTitle)
+                                .padding(.horizontal,35)
+                                .multilineTextAlignment(.center)
+                            Spacer()
+                        }
                     }
                     
 //                    Button {

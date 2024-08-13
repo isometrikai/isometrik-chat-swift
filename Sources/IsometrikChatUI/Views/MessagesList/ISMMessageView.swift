@@ -202,9 +202,13 @@ public struct ISMMessageView: View {
                         //No Message View
                         if realmManager.allMessages?.count == 0 || realmManager.messages.count == 0{
                             //
-                            themeImages.noMessagePlaceholder
-                                .resizable()
-                                .frame(width: 206, height: 144, alignment: .center)
+                            if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true{
+                                themePlaceholder.messageListPlaceholder
+                            }else{
+                                themeImages.noMessagePlaceholder
+                                    .resizable()
+                                    .frame(width: 206, height: 144, alignment: .center)
+                            }
                             
                         }
                     }.onTapGesture {

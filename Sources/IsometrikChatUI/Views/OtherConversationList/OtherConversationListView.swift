@@ -25,7 +25,11 @@ public struct OtherConversationListView : View {
                 themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
                     if realmManager.getOtherConversationCount() == 0{
-                        Text("No other chats found!")
+                        if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true{
+                            themePlaceholder.otherchatListPlaceholder
+                        }else{
+                            Text("No other chats found!")
+                        }
                     }else{
                         List{
                             ForEach(realmManager.getOtherConversation()){ data in
