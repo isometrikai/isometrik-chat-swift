@@ -186,7 +186,12 @@ extension ISMMessageView{
                                     .foregroundColor(themeColor.messageListHeaderTitle)
                                     .font(themeFonts.messageListHeaderTitle)
                             }
-                            if isGroup == true{
+                            if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
+                                Text(ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userName ?? "")
+                                    .foregroundColor(themeColor.messageListHeaderDescription)
+                                    .font(themeFonts.messageListHeaderDescription)
+                                    .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                            }else if isGroup == true{
                                 if otherUserTyping == true{
                                     Text("\(typingUserName ?? "") is typing...")
                                         .foregroundColor(themeColor.messageListHeaderDescription)
@@ -235,13 +240,6 @@ extension ISMMessageView{
                                             if self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true{
                                                 let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
                                                 Text("Last seen at \(date)")
-                                                    .foregroundColor(themeColor.messageListHeaderDescription)
-                                                    .font(themeFonts.messageListHeaderDescription)
-                                                    .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                                            }
-                                        }else{
-                                            if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
-                                                Text(ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userName ?? "")
                                                     .foregroundColor(themeColor.messageListHeaderDescription)
                                                     .font(themeFonts.messageListHeaderDescription)
                                                     .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))

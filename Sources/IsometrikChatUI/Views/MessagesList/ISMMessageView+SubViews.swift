@@ -110,7 +110,7 @@ extension ISMMessageView{
             }
             ISMMessageSubView(messageType: ISMChatHelper.getMessageType(message: message),
                               viewWidth: viewWidth,
-                              isReceived: getIsReceived(message: message),
+                              isReceived: (message.senderInfo?.userId ?? message.initiatorId) != myUserId,
                               messageDeliveredType: ISMChatHelper.checkMessageDeliveryType(message: message, isGroup: self.isGroup ?? false,memberCount: realmManager.getMemberCount(convId: self.conversationID ?? "")),
                               conversationId: self.conversationID ?? "",
                               groupconversationMember: self.conversationDetail?.conversationDetails?.members ?? [],
@@ -131,14 +131,6 @@ extension ISMMessageView{
                               parentMsgToScroll: $parentMsgToScroll,
                               message: message, postIdToNavigate: $postIdToNavigate) .environmentObject(self.realmManager)
                
-        }
-    }
-    
-    func getIsReceived(message: MessagesDB) -> Bool{
-        if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
-            return ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userId != myUserId
-        }else{
-            return (message.senderInfo?.userId ?? message.initiatorId) != myUserId
         }
     }
     
