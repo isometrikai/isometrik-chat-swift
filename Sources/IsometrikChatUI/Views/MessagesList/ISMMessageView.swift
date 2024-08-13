@@ -162,6 +162,7 @@ public struct ISMMessageView: View {
     @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @State public var themePlaceholder = ISMChatSdkUI.getInstance().getAppAppearance().appearance.placeholders
     @State public var userSession = ISMChatSdk.getInstance().getUserSession()
     
     @State var postIdToNavigate : String = ""

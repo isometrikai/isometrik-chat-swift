@@ -31,7 +31,7 @@ public struct ISMBroadCastList: View {
     @State public var groupCastIdToNavigate : String = ""
     @StateObject public var networkMonitor = NetworkMonitor()
     @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    
+    @State public var themePlaceholder = ISMChatSdkUI.getInstance().getAppAppearance().appearance.placeholders
     
     //MARK:  - LIFECYCLE
     public var body: some View {

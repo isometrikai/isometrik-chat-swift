@@ -18,7 +18,7 @@ public struct OtherConversationListView : View {
     @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    
+    @State public var themePlaceholder = ISMChatSdkUI.getInstance().getAppAppearance().appearance.placeholders
     public var body: some View {
         NavigationView {
             ZStack{
