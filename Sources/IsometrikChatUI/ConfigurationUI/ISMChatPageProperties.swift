@@ -16,4 +16,5 @@ public struct ISMChatPageProperties {
     public var allowToNavigateToAppProfile : Bool
     public var createConversationFromChatList : Bool
     public var otherConversationList : Bool = false
+    public var showCustomPlaceholder : Bool = false
 }

@@ -72,6 +72,7 @@ public struct ISMConversationView : View {
     
     public var delegate : ISMConversationViewDelegate? = nil
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State public var themePlaceholder = ISMChatSdkUI.getInstance().getAppAppearance().appearance.placeholders
     @State public var showMenuForConversationType : Bool = false
     @State public var isTextFieldFocused : Bool = false
     
@@ -119,14 +120,18 @@ public struct ISMConversationView : View {
                     
                     if (ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ? realmManager.getPrimaryConversationCount() : realmManager.getConversationCount()) == 0 && query == ""{
                         // default placeholder
-                        Button {
-                            if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
-                                createChat = true
+                        if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true{
+                            themePlaceholder.chatListPlaceholder
+                        }else{
+                            Button {
+                                if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
+                                    createChat = true
+                                }
+                            } label: {
+                                themeImages.conversationListPlaceholder
+                                    .resizable()
+                                    .frame(width: 251, height: 163, alignment: .center)
                             }
-                        } label: {
-                            themeImages.conversationListPlaceholder
-                                .resizable()
-                                .frame(width: 251, height: 163, alignment: .center)
                         }
                     }else{
                         List{
