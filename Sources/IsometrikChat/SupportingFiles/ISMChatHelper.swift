@@ -512,4 +512,15 @@ extension ISMChatHelper{
         .padding(.vertical,5)
         .frame(maxWidth : .infinity)
     }
+    public class func getOpponentForOneToOneGroup(myUserId : String,members : [ISMChatGroupMember]) -> ISMChatGroupMember?{
+        // Ensure there are exactly 2 members in the group
+        guard members.count == 2 else {
+            return nil
+        }
+        // Find the opponent by filtering out the member with myUserId
+        let opponent = members.first { $0.userId != myUserId }
+        
+        // Return the opponent in the completion handler
+        return (opponent)
+    }
 }

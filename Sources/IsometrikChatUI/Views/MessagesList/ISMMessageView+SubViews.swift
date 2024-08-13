@@ -110,7 +110,7 @@ extension ISMMessageView{
             }
             ISMMessageSubView(messageType: ISMChatHelper.getMessageType(message: message),
                               viewWidth: viewWidth,
-                              isReceived: (message.senderInfo?.userId ?? message.initiatorId) != myUserId,
+                              isReceived: getIsReceived(message: message),
                               messageDeliveredType: ISMChatHelper.checkMessageDeliveryType(message: message, isGroup: self.isGroup ?? false,memberCount: realmManager.getMemberCount(convId: self.conversationID ?? "")),
                               conversationId: self.conversationID ?? "",
                               groupconversationMember: self.conversationDetail?.conversationDetails?.members ?? [],
@@ -134,6 +134,15 @@ extension ISMMessageView{
         }
     }
     
+    func getIsReceived(message: MessagesDB) -> Bool{
+        if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
+            return ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userId != myUserId
+        }else{
+            return (message.senderInfo?.userId ?? message.initiatorId) != myUserId
+        }
+    }
+    
+    
     //MARK: - GROUP HEADERS
     func grpHeader(action: ISMChatActionType, userName: String, senderId: String,member : String? = nil,memberId : String? = nil,isGroup : Bool? = true) -> some View {
         ZStack {
@@ -151,12 +160,16 @@ extension ISMMessageView{
                 let text = senderId == userId ? "You changed this group image" : "\(userName) changed this group image"
                 customText(text: text)
             }else if action == .conversationCreated{
-                if isGroup == false{
-                    let text = "Messages are end to end encrypted. No one \noutside of this chat can read to them."
-                    customText(text: text)
+                if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
+                    Text("")
                 }else{
-                    let text = senderId == userId ? "You created group" : "\(userName) created group"
-                    customText(text: text)
+                    if isGroup == false{
+                        let text = "Messages are end to end encrypted. No one \noutside of this chat can read to them."
+                        customText(text: text)
+                    }else{
+                        let text = senderId == userId ? "You created group" : "\(userName) created group"
+                        customText(text: text)
+                    }
                 }
             }else if action == .membersAdd{
                 let memberName = memberId == userId ? ConstantStrings.you.lowercased() : "\(member ?? "")"

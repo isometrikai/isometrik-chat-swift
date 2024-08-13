@@ -150,7 +150,9 @@ extension ISMMessageView{
                     Button {
 //                        if conversationDetail != nil{
                             if ISMChatSdkUI.getInstance().getChatProperties().allowToNavigateToAppProfile == true{
-                                if isGroup == true{
+                                if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
+                                    
+                                }else if isGroup == true{
                                     //group profile will not be there in uikit apps
                                     navigateToProfile = true
                                 }else{
@@ -165,13 +167,25 @@ extension ISMMessageView{
 //                            showingNoInternetAlert = true
 //                        }
                     } label: {
-                        UserAvatarView(avatar: isGroup == false ? opponenDetail?.userProfileImageUrl ?? "" : (self.conversationDetail?.conversationDetails?.conversationImageUrl ?? (self.groupImage ?? "")), showOnlineIndicator: opponenDetail?.online ?? false,size: CGSize(width: 40, height: 40), userName: isGroup == false ? (opponenDetail?.userName ?? "") : (self.conversationDetail?.conversationDetails?.conversationTitle ?? "") ,font: .regular(size: 14))
-                            .padding(.trailing,5)
+                        
+                        if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
+                            UserAvatarView(avatar: ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userProfileImageUrl ?? "", showOnlineIndicator: opponenDetail?.online ?? false,size: CGSize(width: 40, height: 40), userName: isGroup == false ? (opponenDetail?.userName ?? "") : (self.conversationDetail?.conversationDetails?.conversationTitle ?? "") ,font: .regular(size: 14))
+                                .padding(.trailing,5)
+                        }else{
+                            UserAvatarView(avatar: isGroup == false ? opponenDetail?.userProfileImageUrl ?? "" : (self.conversationDetail?.conversationDetails?.conversationImageUrl ?? (self.groupImage ?? "")), showOnlineIndicator: opponenDetail?.online ?? false,size: CGSize(width: 40, height: 40), userName: isGroup == false ? (opponenDetail?.userName ?? "") : (self.conversationDetail?.conversationDetails?.conversationTitle ?? "") ,font: .regular(size: 14))
+                                .padding(.trailing,5)
+                        }
                         
                         VStack(alignment: .leading){
-                            Text(isGroup == false ? (opponenDetail?.userName ?? "") : (self.conversationDetail?.conversationDetails?.conversationTitle ?? (self.groupConversationTitle ?? "")))
-                                .foregroundColor(themeColor.messageListHeaderTitle)
-                                .font(themeFonts.messageListHeaderTitle)
+                            if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
+                                Text(self.conversationDetail?.conversationDetails?.conversationTitle ?? "")
+                                    .foregroundColor(themeColor.messageListHeaderTitle)
+                                    .font(themeFonts.messageListHeaderTitle)
+                            }else{
+                                Text(isGroup == false ? (opponenDetail?.userName ?? "") : (self.conversationDetail?.conversationDetails?.conversationTitle ?? (self.groupConversationTitle ?? "")))
+                                    .foregroundColor(themeColor.messageListHeaderTitle)
+                                    .font(themeFonts.messageListHeaderTitle)
+                            }
                             if isGroup == true{
                                 if otherUserTyping == true{
                                     Text("\(typingUserName ?? "") is typing...")
@@ -221,6 +235,13 @@ extension ISMMessageView{
                                             if self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true{
                                                 let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
                                                 Text("Last seen at \(date)")
+                                                    .foregroundColor(themeColor.messageListHeaderDescription)
+                                                    .font(themeFonts.messageListHeaderDescription)
+                                                    .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                                            }
+                                        }else{
+                                            if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
+                                                Text(ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userName ?? "")
                                                     .foregroundColor(themeColor.messageListHeaderDescription)
                                                     .font(themeFonts.messageListHeaderDescription)
                                                     .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))

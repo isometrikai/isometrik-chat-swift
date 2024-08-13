@@ -17,4 +17,5 @@ public struct ISMChatPageProperties {
     public var createConversationFromChatList : Bool
     public var otherConversationList : Bool = false
     public var showCustomPlaceholder : Bool = false
+    public var isOneToOneGroup : Bool = false
 }
