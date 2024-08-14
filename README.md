@@ -38,6 +38,9 @@ func initializeChatIsometrik(_ completion: @escaping ()->Void){
     let customFonts = ISMChatFonts()
     let customImages = ISMChatImages()
     let messageBubbleType : ISMChatBubbleType = .BubbleWithOutTail
+    let customPlaceholder = ISMChatPlaceholders() // u can pass anyView here
+    let customFontNames = ISMChatCustomFontNames(light: "ProductSans-Light", regular: "ProductSans-Regular", bold: "ProductSans-Bold", medium: "ProductSans-Medium", italic: "ProductSans-Italic")
+    
     
     let appConfig = ISMChatConfiguration(accountId: accountId, projectId: projectId, keySetId: keysetId, licensekey: licenseKey, MQTTHost: MQTTHost, MQTTPort: MQTTPort, appSecret: appSecret, userSecret: userSecret, authToken: authToken)
     
@@ -47,27 +50,14 @@ func initializeChatIsometrik(_ completion: @escaping ()->Void){
     ISMChatSdk.getInstance().appConfiguration(appConfig: appConfig, userConfig: userConfig)
     
     //For isometricChatUI
-    ISMChatSdkUI.getInstance().appConfiguration(conversationConfig: conversationTypes, attachments: attachment, features: feature, customColors: customColors, customFonts: customFonts, customImages: customImages, customMessageBubbleType: messageBubbleType,hideNavigationBarForConversationList : Bool)
-    
-    //Call initializeCall func here for call functionality
-    initializeCall()
+    ISMChatSdkUI.getInstance().appConfiguration(chatProperties: ISMChatPageProperties(attachments: attachment, features: feature, conversationType: conversationTypes, hideNavigationBarForConversationList: true, allowToNavigateToAppProfile: true, createConversationFromChatList: false, otherConversationList: true, showCustomPlaceholder: true, isOneToOneGroup: false), appearance: ISMAppearance(colorPalette: customColors, images: customImages, fonts: customFonts, messageBubbleType: messageBubbleType, placeholders: customPlaceholder, customFontNames: customFontNames))
     
     return ISMChatSdk.getInstance()
 }
 
 
 
-8. For call functionality in Chat u need to initialize ISMSwiftCall,already called in above function.
-func initializeCall(){
-    let sdkConfig = ISMCallConfiguration.init(accountId: accountId, projectId: projectId, keysetId: keysetId, licenseKey: licenseKey, appSecret: appSecret, userSecret: userSecret)
-    let isometrik = IsometrikCall(configuration: sdkConfig)
-    isometrik.updateUserId(ChatKeychain.shared.userId ?? "")
-    isometrik.updateUserToken(ChatKeychain.shared.authToken ?? "")
-    ISMCallManager.shared.updatePushRegisteryToken()
-}
-
-
-9. For call, you need to add this func in AppDelegate (didFinishLaunchingWithOptions)
+8. For call, you need to add this func in AppDelegate (didFinishLaunchingWithOptions)
 "registerPushKit()"
 
 
@@ -110,16 +100,16 @@ extension AppDelegate : PKPushRegistryDelegate{
 }
 
 
-10. Add this in AppDelegate (didFinishLaunchingWithOptions) for GoogleServices and GooglePlaces used in Chat for sharing location.
+9. Add this in AppDelegate (didFinishLaunchingWithOptions) for GoogleServices and GooglePlaces used in Chat for sharing location.
         GMSServices.provideAPIKey("")
         GMSPlacesClient.provideAPIKey("")
 
 
-11. Add this in AppDelegate (didRefreshRegistrationToken) to subscribe topic
+10. Add this in AppDelegate (didRefreshRegistrationToken) to subscribe topic
         ISMChatHelper.subscribeFCM()
         
         
-12. Share Post/ Reel
+11. Share Post/ Reel
         let viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
         viewModel.sharePost(user: UserDB(), postId: postId/reelId, postURL: "", postCaption: ""){}
         Note - post Url should be image
