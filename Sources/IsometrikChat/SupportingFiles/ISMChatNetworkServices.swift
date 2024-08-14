@@ -25,6 +25,7 @@ public struct ISMChatNetworkServices{
         static public let sendMessage                   = BaseUrl.baseUrl + "/chat/message"
         static public let deleteConversationLocal       = BaseUrl.baseUrl + "/chat/conversation/local"
         static public let presignedUrl                  = BaseUrl.baseUrl + "/chat/messages/presignedurls"
+        static public let conversationPresignedUrl      = BaseUrl.baseUrl + "/chat/conversation/presignedurl"
         static public let conversationDetail            = BaseUrl.baseUrl + "/chat/conversation/details/"
         static public let messageRead                   = BaseUrl.baseUrl + "/chat/message/status/read"
         static public let messageDelivered              = BaseUrl.baseUrl + "/chat/message/status/delivery"

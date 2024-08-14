@@ -139,12 +139,7 @@ struct ISMEditGroupView: View {
             if existingGroupName != groupName{
                 if let image = image.first{
                     viewModel.updateGroupTitle(title: groupName, conversationId: conversationId ?? "") { _ in
-                        conversationViewModel.getPredefinedUrlToUpdateProfilePicture(image: image) { value in
-                            viewModel.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "") { _ in
-                                updateData = true
-                                presentationMode.wrappedValue.dismiss()
-                            }
-                        }
+                        updategroupImage(image: image)
                     }
                 }else{
                     viewModel.updateGroupTitle(title: groupName, conversationId: conversationId ?? "") { _ in
@@ -154,18 +149,22 @@ struct ISMEditGroupView: View {
                 }
             }else{
                 if let image = image.first{
-                    conversationViewModel.getPredefinedUrlToUpdateProfilePicture(image: image) { value in
-                        viewModel.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "") { _ in
-                            updateData = true
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                    }
+                    updategroupImage(image: image)
                 }else{
                     presentationMode.wrappedValue.dismiss()
                 }
             }
         }else{
             NameAlert = true
+        }
+    }
+    
+    func updategroupImage(image : UIImage){
+        viewModel.uploadConversationImage(image: image, conversationType: 0, newConversation: false, conversationId: conversationId ?? "", conversationTitle: groupName) { value in
+            viewModel.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "") { _ in
+                updateData = true
+                presentationMode.wrappedValue.dismiss()
+            }
         }
     }
 }

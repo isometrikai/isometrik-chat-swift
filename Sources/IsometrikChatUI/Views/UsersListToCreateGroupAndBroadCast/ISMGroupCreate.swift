@@ -183,7 +183,7 @@ public struct ISMGroupCreate: View {
         if let image = image.first{
             if !self.groupName.isEmpty{
                 chatViewModel.isBusy = true
-                chatViewModel.uploadGroupImage(image: image, userEmail: userSession.getEmailId() ?? "") { url in
+                chatViewModel.uploadConversationImage(image: image, conversationType: 0, newConversation: true, conversationId: "", conversationTitle: self.groupName){ url in
                     chatViewModel.createGroup(members: member, groupTitle: self.groupName, groupImage: url ?? "") { data in
                         NotificationCenter.default.post(name: NSNotification.refreshConvList,
                                                         object: nil)

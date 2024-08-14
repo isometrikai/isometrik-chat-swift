@@ -131,26 +131,4 @@ extension ChatsViewModel{
             }
         }
     }
-    
-    //MARK: - upload group image to cloudinary
-    public func uploadGroupImage(image: UIImage,userEmail : String,completion:@escaping(String?)->()){
-        let baseURL = "\(ISMChatNetworkServices.Urls.preassignedUrlCreate)?userIdentifier=\(userEmail)&mediaExtension=png"
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatPresignedUrlDetail?,ISMChatErrorData?>) in
-            switch result{
-            case .success(let data):
-                if let url = data?.presignedUrl, let urlData = image.pngData(){
-                    AF.upload(urlData, to: url, method: .put, headers: [:]).responseData { response in
-                        ISMChatHelper.print(response)
-                        if response.response?.statusCode == 200{
-                            completion(data?.mediaUrl)
-                        }else{
-                            ISMChatHelper.print("Error in Image upload")
-                        }
-                    }
-                }
-            case .failure(let error):
-                ISMChatHelper.print("Error in Image upload Api failed -----> \(String(describing: error))")
-            }
-        }
-    }
 }
