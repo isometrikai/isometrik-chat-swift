@@ -18,4 +18,15 @@ public struct ISMChatPageProperties {
     public var otherConversationList : Bool = false
     public var showCustomPlaceholder : Bool = false
     public var isOneToOneGroup : Bool = false
+    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, allowToNavigateToAppProfile: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool) {
+        self.attachments = attachments
+        self.features = features
+        self.conversationType = conversationType
+        self.hideNavigationBarForConversationList = hideNavigationBarForConversationList
+        self.allowToNavigateToAppProfile = allowToNavigateToAppProfile
+        self.createConversationFromChatList = createConversationFromChatList
+        self.otherConversationList = otherConversationList
+        self.showCustomPlaceholder = showCustomPlaceholder
+        self.isOneToOneGroup = isOneToOneGroup
+    }
 }
