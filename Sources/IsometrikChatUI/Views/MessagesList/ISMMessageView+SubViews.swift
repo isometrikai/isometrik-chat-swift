@@ -110,7 +110,7 @@ extension ISMMessageView{
             }
             ISMMessageSubView(messageType: ISMChatHelper.getMessageType(message: message),
                               viewWidth: viewWidth,
-                              isReceived: (message.senderInfo?.userId ?? message.initiatorId) != myUserId,
+                              isReceived: getIsReceived(message: message),
                               messageDeliveredType: ISMChatHelper.checkMessageDeliveryType(message: message, isGroup: self.isGroup ?? false,memberCount: realmManager.getMemberCount(convId: self.conversationID ?? "")),
                               conversationId: self.conversationID ?? "",
                               groupconversationMember: self.conversationDetail?.conversationDetails?.members ?? [],
@@ -133,7 +133,13 @@ extension ISMMessageView{
                
         }
     }
-    
+    func getIsReceived(message : MessagesDB) -> Bool{
+        if self.fromBroadCastFlow == true{
+            return false
+        }else{
+            return (message.senderInfo?.userId ?? message.initiatorId) != myUserId
+        }
+    }
     
     //MARK: - GROUP HEADERS
     func grpHeader(action: ISMChatActionType, userName: String, senderId: String,member : String? = nil,memberId : String? = nil,isGroup : Bool? = true) -> some View {
