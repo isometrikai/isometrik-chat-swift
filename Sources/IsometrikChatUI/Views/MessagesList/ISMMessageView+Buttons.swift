@@ -150,15 +150,15 @@ extension ISMMessageView{
                     Button {
 //                        if conversationDetail != nil{
                             if ISMChatSdkUI.getInstance().getChatProperties().allowToNavigateToAppProfile == true{
-                                if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
-                                    
-                                }else if isGroup == true{
-                                    //group profile will not be there in uikit apps
-                                    navigateToProfile = true
-                                }else{
-                                    //when conversation is not created then conversationdetail will be empty, so it will pick from opponenedetail,this happens only when we try to craete converasation from profile
-                                    delegate?.navigateToAppProfile(appUserId:
-                                                                    self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? (opponenDetail?.metaData?.userId ?? ""))
+                                if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true{
+                                    if isGroup == true{
+                                        //group profile will not be there in uikit apps
+                                        navigateToProfile = true
+                                    }else{
+                                        //when conversation is not created then conversationdetail will be empty, so it will pick from opponenedetail,this happens only when we try to craete converasation from profile
+                                        delegate?.navigateToAppProfile(appUserId:
+                                                                        self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? (opponenDetail?.metaData?.userId ?? ""))
+                                    }
                                 }
                             }else{
                                 navigateToProfile = true
@@ -296,16 +296,17 @@ extension ISMMessageView{
                                     .frame(width: 26, height: 26, alignment: .center)
                             }
                         }
-                        
-                        Menu {
-                            clearChatButton()
-                            if isGroup == false{
-                                blockUserButton()
+                        if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true{
+                            Menu {
+                                clearChatButton()
+                                if isGroup == false{
+                                    blockUserButton()
+                                }
+                            } label: {
+                                themeImages.threeDots
+                                    .resizable()
+                                    .frame(width: 5, height: 20, alignment: .center)
                             }
-                        } label: {
-                            themeImages.threeDots
-                                .resizable()
-                                .frame(width: 5, height: 20, alignment: .center)
                         }
                     }
                 }
