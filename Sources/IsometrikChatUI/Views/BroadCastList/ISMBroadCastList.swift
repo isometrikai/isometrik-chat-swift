@@ -52,6 +52,15 @@ public struct ISMBroadCastList: View {
                                                 
                                             }.buttonStyle(PlainButtonStyle())
                                         }
+                                        
+                                        if ISMChatSdk.getInstance().getFramework() == .UIKit{
+                                            UserAvatarView(
+                                                avatar: broadcast.groupcastImageUrl,
+                                                showOnlineIndicator: false,
+                                                size: CGSize(width: 54, height: 54),
+                                                userName: broadcast.groupcastTitle ?? "",
+                                                font: themeFonts.messageListMessageText)
+                                        }
                                        
                                             VStack(alignment: .leading, spacing: 8) {
                                                 if broadcast.groupcastTitle != "Default"{
@@ -76,17 +85,17 @@ public struct ISMBroadCastList: View {
                                             }
                                         
                                         Spacer()
-                                        Button {
-                                            navigateToBrocastDetail = broadcast
-                                            navigateToBrocastInfo = true
-                                        } label: {
-                                            themeImage.broadcastInfo
-                                                .resizable()
-                                                .frame(width: 24, height: 24, alignment: .center)
-                                        }.frame(width: 50)
+//                                        Button {
+//                                            navigateToBrocastDetail = broadcast
+//                                            navigateToBrocastInfo = true
+//                                        } label: {
+//                                            themeImage.broadcastInfo
+//                                                .resizable()
+//                                                .frame(width: 24, height: 24, alignment: .center)
+//                                        }.frame(width: 50)
                                     }
                                 }
-                        }
+                        }.listStyle(.plain)
                         .listRowSeparatorTint(Color.border)
                         .keyboardType(.default)
                         .textContentType(.oneTimeCode)
