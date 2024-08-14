@@ -40,13 +40,12 @@ public class ISMChatSdkUI{
     
     
     
-    public func appConfiguration(conversationConfig : [ISMChatConversationTypeConfig],attachments : [ISMChatConfigAttachmentType],features : [ISMChatConfigFeature],customColors: ISMChatColorPalette, customFonts: ISMChatFonts,customImages: ISMChatImages,customMessageBubbleType : ISMChatBubbleType,customPlaceholders : ISMChatPlaceholders? = nil,hideNavigationBarForConversationList : Bool,allowToNavigateToAppProfile : Bool,createConversationFromChatList : Bool,otherConversationList : Bool? = false,showCustomPlaceholders : Bool? = false,isOneToOneGroup : Bool? = false) {
+    public func appConfiguration(chatProperties : ISMChatPageProperties,appearance : ISMAppearance) {
         
         //UI Properties
-        chatUIProperties = ISMChatPageProperties(attachments: attachments, features: features, conversationType: conversationConfig, hideNavigationBarForConversationList: hideNavigationBarForConversationList, allowToNavigateToAppProfile: allowToNavigateToAppProfile, createConversationFromChatList: createConversationFromChatList, otherConversationList: otherConversationList ?? false,showCustomPlaceholder: showCustomPlaceholders ?? false,isOneToOneGroup: isOneToOneGroup ?? false)
+        chatUIProperties = chatProperties
         
        //Appearance
-        let appearance = ISMAppearance(colorPalette: customColors, images: customImages, fonts: customFonts,messageBubbleType: customMessageBubbleType,placeholders: customPlaceholders ?? ISMChatPlaceholders())
         appAppearance = ISMChatAppearance(appearance: appearance)
     }
 }
