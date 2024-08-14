@@ -8,6 +8,10 @@
 import SwiftUI
 import IsometrikChat
 
+public protocol ISMBroadCastListDelegate{
+     func navigateToBroadCastList(groupcastId : String,groupCastTitle : String)
+}
+
 public struct ISMBroadCastList: View {
     
     //MARK:  - PROPERTIES
@@ -32,6 +36,11 @@ public struct ISMBroadCastList: View {
     @StateObject public var networkMonitor = NetworkMonitor()
     @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State public var themePlaceholder = ISMChatSdkUI.getInstance().getAppAppearance().appearance.placeholders
+    public var delegate : ISMBroadCastListDelegate? = nil
+    
+    public init(delegate : ISMBroadCastListDelegate? = nil){
+        self.delegate = delegate
+    }
     
     //MARK:  - LIFECYCLE
     public var body: some View {
@@ -79,9 +88,13 @@ public struct ISMBroadCastList: View {
                                                         .font(themeFonts.chatListUserMessage)
                                                 }
                                             }.onTapGesture {
-                                                navigateToGroupCastId = broadcast.groupcastId ?? ""
-                                                navigateToGroupCastTitle = broadcast.groupcastTitle ?? ""
-                                                navigateToMessageView = true
+                                                if ISMChatSdk.getInstance().getFramework() == .UIKit{
+                                                    delegate?.navigateToBroadCastList(groupcastId: broadcast.groupcastId ?? "", groupCastTitle: broadcast.groupcastTitle ?? "")
+                                                }else{
+                                                    navigateToGroupCastId = broadcast.groupcastId ?? ""
+                                                    navigateToGroupCastTitle = broadcast.groupcastTitle ?? ""
+                                                    navigateToMessageView = true
+                                                }
                                             }
                                         
                                         Spacer()
