@@ -88,10 +88,10 @@ public struct ISMChatUserMetaData: Codable, Hashable {
 }
 
 public struct ISMChatCustomUsers : Codable,Hashable{
-    var userId: String?
-    var isomatricChatUserId: String?
-    var userName: String?
-    var userProfilePic: String?
+    public var userId: String?
+    public var isomatricChatUserId: String?
+    public var userName: String?
+    public var userProfilePic: String?
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         userId = try? container.decodeIfPresent(String.self, forKey: .userId)
