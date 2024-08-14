@@ -84,16 +84,14 @@ public class ConversationViewModel : NSObject ,ObservableObject{
     }
     
     public func getChatListWithCustomType(customType : String,search : String?,skip :Int,completion:@escaping(ISMChatConversations?)->()){
-        var body = [String : Any]()
+        var baseUrl = ""
         if let search = search , search != ""{
-            body["searchTag"] = search
+            baseUrl = "\(ISMChatNetworkServices.Urls.chatList)?includeConversationStatusMessagesInUnreadMessagesCount=false&customType=\(customType)&searchTag=\(search)&skip=\(skip)"
+        }else{
+            baseUrl = "\(ISMChatNetworkServices.Urls.chatList)?includeConversationStatusMessagesInUnreadMessagesCount=false&customType=\(customType)&skip=\(skip)"
         }
-        body["customType"] = customType
         
-        
-        let newUrl = "\(ISMChatNetworkServices.Urls.chatList)?includeConversationStatusMessagesInUnreadMessagesCount=false&skip=\(skip)"
-        
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: newUrl,httpMethod: .get,params: body) { (result : ISMChatResponse<ISMChatConversations?,ISMChatErrorData?>) in
+        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseUrl,httpMethod: .get,params: nil) { (result : ISMChatResponse<ISMChatConversations?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
                 completion(data)
