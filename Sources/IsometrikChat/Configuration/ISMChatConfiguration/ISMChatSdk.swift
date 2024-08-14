@@ -134,6 +134,9 @@ public class ISMChatSdk{
         let mqttSession = ISMChatMQTTManager(mqttConfiguration: mqttConfiguration, projectConfiguration: projectConfiguration, userdata: userConfig,viewcontrollers: viewcontrollers,framework: self.hostFrameworksType)
         mqttSession.connect(clientId: userConfig.userId)
         self.mqttSession = mqttSession
+        
+        //initializeCall
+        initializeCallIsometrik(accountId: appConfig.accountId, projectId: appConfig.projectId, keysetId: appConfig.keySetId, licenseKey: appConfig.licensekey, appSecret: appConfig.appSecret, userSecret: appConfig.userSecret, isometricChatUserId: userConfig.userId, isometricUserToken: userConfig.userToken)
         self.chatInitialized = true
     }
     
@@ -156,6 +159,14 @@ public class ISMChatSdk{
             ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
             self.chatInitialized = nil
         }
+    }
+    
+    func initializeCallIsometrik(accountId : String,projectId : String,keysetId : String,licenseKey : String,appSecret : String,userSecret : String,isometricChatUserId : String,isometricUserToken : String){
+        let sdkConfig = ISMCallConfiguration.init(accountId: accountId, projectId: projectId, keysetId: keysetId, licenseKey: licenseKey, appSecret: appSecret, userSecret: userSecret)
+        let isometrik = IsometrikCall(configuration: sdkConfig)
+        isometrik.updateUserId(isometricChatUserId)
+        isometrik.updateUserToken(isometricUserToken)
+        ISMCallManager.shared.updatePushRegisteryToken()
     }
     
     public func getUserDetail(isometrikUserId : String,userName : String,completion: @escaping (ISMChatUser?) -> Void) {
