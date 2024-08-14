@@ -67,6 +67,7 @@ public struct ISMChatUserMetaData: Codable, Hashable {
     public var userId : String?
     public var profileType : String?
     public var chatStatus : String?
+    public var users : [ISMChatCustomUsers]?
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -82,6 +83,21 @@ public struct ISMChatUserMetaData: Codable, Hashable {
         userId = try? container.decodeIfPresent(String.self, forKey: .userId)
         profileType = try? container.decodeIfPresent(String.self, forKey: .profileType)
         chatStatus = try? container.decodeIfPresent(String.self, forKey: .chatStatus)
+        users = try? container.decodeIfPresent([ISMChatCustomUsers].self, forKey: .users)
+    }
+}
+
+public struct ISMChatCustomUsers : Codable,Hashable{
+    var userId: String?
+    var isomatricChatUserId: String?
+    var userName: String?
+    var userProfilePic: String?
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        userId = try? container.decodeIfPresent(String.self, forKey: .userId)
+        isomatricChatUserId = try? container.decodeIfPresent(String.self, forKey: .isomatricChatUserId)
+        userName = try? container.decodeIfPresent(String.self, forKey: .userName)
+        userProfilePic = try? container.decodeIfPresent(String.self, forKey: .userProfilePic)
     }
 }
 
