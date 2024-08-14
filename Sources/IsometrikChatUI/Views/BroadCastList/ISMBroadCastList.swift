@@ -55,7 +55,7 @@ public struct ISMBroadCastList: View {
                                         
                                         if ISMChatSdk.getInstance().getFramework() == .UIKit{
                                             UserAvatarView(
-                                                avatar: broadcast.groupcastImageUrl,
+                                                avatar: broadcast.groupcastImageUrl ?? "",
                                                 showOnlineIndicator: false,
                                                 size: CGSize(width: 54, height: 54),
                                                 userName: broadcast.groupcastTitle ?? "",
