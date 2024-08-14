@@ -154,6 +154,7 @@ public class ISMChatSdk{
             //5. For call
             IsometrikCall().clearSession()
             ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
+            self.chatInitialized = nil
         }
     }
     
