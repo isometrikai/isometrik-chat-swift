@@ -23,18 +23,21 @@ public class ISMAppearance {
     public var images :  ISMChatImages
     public var messageBubbleType : ISMChatBubbleType
     public var placeholders : ISMChatPlaceholders
+    public var customFontNames : ISMChatCustomFontNames
     public init(
         colorPalette: ISMChatColorPalette = ISMChatColorPalette(),
         images: ISMChatImages = ISMChatImages(),
         fonts: ISMChatFonts = ISMChatFonts(),
         messageBubbleType : ISMChatBubbleType = .BubbleWithOutTail,
-        placeholders: ISMChatPlaceholders = ISMChatPlaceholders()
+        placeholders: ISMChatPlaceholders = ISMChatPlaceholders(),
+        customFontNames : ISMChatCustomFontNames = ISMChatCustomFontNames()
     ) {
         self.colorPalette = colorPalette
         self.images = images
         self.fonts = fonts
         self.messageBubbleType = messageBubbleType
         self.placeholders = placeholders
+        self.customFontNames = customFontNames
     }
 }
 
@@ -56,4 +59,20 @@ public class ISMChatPlaceholders {
 public enum ISMChatBubbleType: Sendable{
     case BubbleWithTail
     case BubbleWithOutTail
+}
+
+public class ISMChatCustomFontNames{
+    public var light : String = "ProductSans-Light"
+    public var regular : String = "ProductSans-Regular"
+    public var medium : String = "ProductSans-Medium"
+    public var bold : String = "ProductSans-Bold"
+    public var italic : String = "ProductSans-Italic"
+    public init(){}
+    public init(light: String, regular: String, bold: String, medium: String, italic: String) {
+        self.light = light
+        self.regular = regular
+        self.bold = bold
+        self.medium = medium
+        self.italic = italic
+    }
 }

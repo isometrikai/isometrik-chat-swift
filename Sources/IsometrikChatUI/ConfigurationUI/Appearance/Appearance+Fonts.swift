@@ -97,23 +97,23 @@ import SwiftUI
 
 
 public extension Font {
-    public func light(size: CGFloat) -> Font {
-        return Font.custom("ProductSans-Light", size: size)
+    func light(size: CGFloat) -> Font {
+        return Font.custom(ISMChatSdkUI.getInstance().getAppAppearance().appearance.customFontNames.light, size: size)
     }
     
-    public func regular(size: CGFloat) -> Font {
-        return Font.custom("ProductSans-Regular", size: size)
+    func regular(size: CGFloat) -> Font {
+        return Font.custom(ISMChatSdkUI.getInstance().getAppAppearance().appearance.customFontNames.regular, size: size)
     }
     
-    public func medium(size: CGFloat) -> Font {
-        return Font.custom("ProductSans-Medium", size: size)
+    func medium(size: CGFloat) -> Font {
+        return Font.custom(ISMChatSdkUI.getInstance().getAppAppearance().appearance.customFontNames.medium, size: size)
     }
     
-    public func bold(size: CGFloat) -> Font {
-        return Font.custom("ProductSans-Bold", size: size)
+    func bold(size: CGFloat) -> Font {
+        return Font.custom(ISMChatSdkUI.getInstance().getAppAppearance().appearance.customFontNames.bold, size: size)
     }
     
-    public func italic(size: CGFloat) -> Font {
-        return Font.custom("ProductSans-Italic", size: size)
+    func italic(size: CGFloat) -> Font {
+        return Font.custom(ISMChatSdkUI.getInstance().getAppAppearance().appearance.customFontNames.italic, size: size)
     }
 }
