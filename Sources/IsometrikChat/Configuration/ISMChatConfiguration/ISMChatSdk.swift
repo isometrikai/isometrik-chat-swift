@@ -161,6 +161,27 @@ public class ISMChatSdk{
         }
     }
     
+    public func onProfileSwitch(appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig,hostFrameworkType : FrameworkType,conversationListViewControllerName : UIViewController.Type?,messagesListViewControllerName : UIViewController.Type?){
+        //1. unsubscribe fcm
+        ISMChatHelper.unSubscribeFCM()
+        //2. unsubscribe mqtt
+        if mqttSession != nil {
+            self.mqttSession?.unSubscribe()
+        }
+        //3. clear user session
+        if userSession != nil{
+            self.userSession?.clearUserSession()
+        }
+        //4. delete local data
+        RealmManager().deleteAllData()
+        //5. For call
+        IsometrikCall().clearSession()
+        ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
+        self.chatInitialized = nil
+        
+        self.appConfiguration(appConfig: appConfig, userConfig: userConfig, hostFrameworkType: hostFrameworkType, conversationListViewControllerName: conversationListViewControllerName, messagesListViewControllerName: messagesListViewControllerName)
+    }
+    
     func initializeCallIsometrik(accountId : String,projectId : String,keysetId : String,licenseKey : String,appSecret : String,userSecret : String,isometricChatUserId : String,isometricUserToken : String){
         let sdkConfig = ISMCallConfiguration.init(accountId: accountId, projectId: projectId, keysetId: keysetId, licenseKey: licenseKey, appSecret: appSecret, userSecret: userSecret)
         let isometrik = IsometrikCall(configuration: sdkConfig)
