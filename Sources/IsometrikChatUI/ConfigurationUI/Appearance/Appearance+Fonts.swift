@@ -99,45 +99,45 @@ import UIKit
 
 public extension Font {
     static func light(size: CGFloat) -> Font {
-        return Font.custom(ISMChatSdkUI.getInstance().getAppAppearance().appearance.customFontNames.light, size: size)
+        return Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().light, size: size)
     }
     
     static func regular(size: CGFloat) -> Font {
-        return Font.custom(ISMChatSdkUI.getInstance().getAppAppearance().appearance.customFontNames.regular, size: size)
+        return Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: size)
     }
     
     static func medium(size: CGFloat) -> Font {
-        return Font.custom(ISMChatSdkUI.getInstance().getAppAppearance().appearance.customFontNames.medium, size: size)
+        return Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().medium, size: size)
     }
     
     static func bold(size: CGFloat) -> Font {
-        return Font.custom(ISMChatSdkUI.getInstance().getAppAppearance().appearance.customFontNames.bold, size: size)
+        return Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().bold, size: size)
     }
     
     static func italic(size: CGFloat) -> Font {
-        return Font.custom(ISMChatSdkUI.getInstance().getAppAppearance().appearance.customFontNames.italic, size: size)
+        return Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().italic, size: size)
     }
 }
 
 
 public extension UIFont {
     class func light(size: CGFloat) -> UIFont {
-        return UIFont(name: ISMChatSdkUI.getInstance().getAppAppearance().appearance.customFontNames.light, size: size) ?? UIFont.systemFont(ofSize: size)
+        return UIFont(name: ISMChatSdkUI.getInstance().getCustomFontNames().light, size: size) ?? UIFont.systemFont(ofSize: size)
     }
     
     class func regular(size: CGFloat) -> UIFont {
-        return UIFont(name: ISMChatSdkUI.getInstance().getAppAppearance().appearance.customFontNames.regular, size: size) ?? UIFont.systemFont(ofSize: size)
+        return UIFont(name: ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: size) ?? UIFont.systemFont(ofSize: size)
     }
     
     class func medium(size: CGFloat) -> UIFont {
-        return UIFont(name: ISMChatSdkUI.getInstance().getAppAppearance().appearance.customFontNames.medium, size: size) ?? UIFont.systemFont(ofSize: size)
+        return UIFont(name: ISMChatSdkUI.getInstance().getCustomFontNames().medium, size: size) ?? UIFont.systemFont(ofSize: size)
     }
     
     class func bold(size: CGFloat) -> UIFont {
-        return UIFont(name: ISMChatSdkUI.getInstance().getAppAppearance().appearance.customFontNames.bold, size: size) ?? UIFont.systemFont(ofSize: size)
+        return UIFont(name: ISMChatSdkUI.getInstance().getCustomFontNames().bold, size: size) ?? UIFont.systemFont(ofSize: size)
     }
     
     class func italic(size: CGFloat) -> UIFont {
-        return UIFont(name: ISMChatSdkUI.getInstance().getAppAppearance().appearance.customFontNames.italic, size: size) ?? UIFont.systemFont(ofSize: size)
+        return UIFont(name: ISMChatSdkUI.getInstance().getCustomFontNames().italic, size: size) ?? UIFont.systemFont(ofSize: size)
     }
 }

@@ -23,21 +23,18 @@ public class ISMAppearance {
     public var images :  ISMChatImages
     public var messageBubbleType : ISMChatBubbleType
     public var placeholders : ISMChatPlaceholders
-    public var customFontNames : ISMChatCustomFontNames
     public init(
         colorPalette: ISMChatColorPalette = ISMChatColorPalette(),
         images: ISMChatImages = ISMChatImages(),
         fonts: ISMChatFonts = ISMChatFonts(),
         messageBubbleType : ISMChatBubbleType = .BubbleWithOutTail,
-        placeholders: ISMChatPlaceholders = ISMChatPlaceholders(),
-        customFontNames : ISMChatCustomFontNames = ISMChatCustomFontNames()
+        placeholders: ISMChatPlaceholders = ISMChatPlaceholders()
     ) {
         self.colorPalette = colorPalette
         self.images = images
         self.fonts = fonts
         self.messageBubbleType = messageBubbleType
         self.placeholders = placeholders
-        self.customFontNames = customFontNames
     }
 }
 

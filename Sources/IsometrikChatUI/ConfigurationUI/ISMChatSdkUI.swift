@@ -15,6 +15,8 @@ public class ISMChatSdkUI{
     
     private var appAppearance: ISMChatAppearance?
     
+    private var fontNames : ISMChatCustomFontNames?
+    
     public static var sharedInstance : ISMChatSdkUI!
     
     public static func getInstance()-> ISMChatSdkUI{
@@ -33,14 +35,22 @@ public class ISMChatSdkUI{
     
     public func getAppAppearance() -> ISMChatAppearance{
         if appAppearance == nil{
-            print("Create configuration before trying to access user session object.")
+            print("Create configuration before trying to access appearance object.")
         }
         return appAppearance!
     }
     
+    public func getCustomFontNames() -> ISMChatCustomFontNames{
+        if fontNames == nil{
+            print("Create configuration before trying to access font names object.")
+        }
+        return fontNames!
+    }
     
     
-    public func appConfiguration(chatProperties : ISMChatPageProperties,appearance : ISMAppearance) {
+    
+    public func appConfiguration(chatProperties : ISMChatPageProperties,appearance : ISMAppearance,fontNames : ISMChatCustomFontNames? = nil) {
+        self.fontNames = fontNames
         
         //UI Properties
         chatUIProperties = chatProperties
