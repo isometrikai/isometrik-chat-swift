@@ -89,9 +89,9 @@ public struct ISMConversationView : View {
                 themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
                     
-                    if ISMChatSdk.getInstance().getFramework() == .UIKit{
-                        CustomSearchBar(searchText: $query).padding(.horizontal,15)
-                    }
+//                    if ISMChatSdk.getInstance().getFramework() == .UIKit{
+//                        CustomSearchBar(searchText: $query).padding(.horizontal,15)
+//                    }
                     
                     
                     if (ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ? realmManager.getPrimaryConversationCount() : realmManager.getConversationCount()) == 0 && query == ""{

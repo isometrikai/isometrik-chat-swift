@@ -48,9 +48,9 @@ public struct ISMBroadCastList: View {
         ZStack{
             Color(uiColor: .white).edgesIgnoringSafeArea(.all)
                 VStack {
-                    if ISMChatSdk.getInstance().getFramework() == .UIKit{
-                        CustomSearchBar(searchText: $query).padding(.horizontal,15)
-                    }
+//                    if ISMChatSdk.getInstance().getFramework() == .UIKit{
+//                        CustomSearchBar(searchText: $query).padding(.horizontal,15)
+//                    }
                     if realmManager.getBroadCastsCount() != 0{
                         
                         List(realmManager.getBroadCasts()) { broadcast in
