@@ -55,6 +55,25 @@ extension ISMConversationView{
             if ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
                 getOtherChatCountUpdate()
             }
+            if ISMChatSdk.getInstance().getFramework() == .UIKit && ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
+                getBroadcastList()
+                
+                let chatcount = realmManager.getConversationCount()
+                let Info : [String: Int] = ["count": chatcount]
+                NotificationCenter.default.post(name: NSNotification.updateChatCount, object: nil, userInfo: Info)
+            }
+        }
+    }
+    
+    func getBroadcastList(){
+        chatViewModel.getBroadCastList { data in
+            if let groupcast = data?.groupcasts{
+                realmManager.manageBroadCastList(arr: groupcast)
+                
+                let count = realmManager.getBroadCastsCount()
+                let Info : [String: Int] = ["count": count]
+                NotificationCenter.default.post(name: NSNotification.updateBroadCastCount, object: nil, userInfo: Info)
+            }
         }
     }
     

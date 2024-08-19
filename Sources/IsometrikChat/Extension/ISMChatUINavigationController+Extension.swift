@@ -30,4 +30,6 @@ extension NSNotification {
     public static let refrestConversationListLocally = Notification.Name.init("refrestConversationListLocally")
     public static let refreshBroadCastListNotification = Notification.Name.init("refreshBroadCastList")
     public static let refreshOtherChatCount = Notification.Name.init("refreshOtherChatCount")
+    public static let updateChatCount = Notification.Name.init("updateChatCount")
+    public static let updateBroadCastCount = Notification.Name.init("updateBroadCastCount")
 }
