@@ -37,6 +37,7 @@ public struct ISMBroadCastList: View {
     @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State public var themePlaceholder = ISMChatSdkUI.getInstance().getAppAppearance().appearance.placeholders
     public var delegate : ISMBroadCastListDelegate? = nil
+    @State public var query = ""
     
     public init(delegate : ISMBroadCastListDelegate? = nil){
         self.delegate = delegate
@@ -47,7 +48,11 @@ public struct ISMBroadCastList: View {
         ZStack{
             Color(uiColor: .white).edgesIgnoringSafeArea(.all)
                 VStack {
+                    if ISMChatSdk.getInstance().getFramework() == .UIKit{
+                        CustomSearchBar(searchText: $query).padding(.horizontal,15)
+                    }
                     if realmManager.getBroadCastsCount() != 0{
+                        
                         List(realmManager.getBroadCasts()) { broadcast in
                                 ZStack{
                                     HStack(spacing: 10){
@@ -165,6 +170,13 @@ public struct ISMBroadCastList: View {
                         }
                     }
                 }
+                .onChange(of: query, perform: { newValue in
+                    if newValue == "" {
+                        realmManager.broadcasts = realmManager.storeBroadcasts
+                    }else {
+                        searchInBroadCastList()
+                    }
+                })
         }.onLoad{
             getBroadcastList()
         }
@@ -172,6 +184,13 @@ public struct ISMBroadCastList: View {
     
     //MARK: - CONFIGURE
     
+    func searchInBroadCastList(){
+        let  conversation = realmManager.storeBroadcasts
+        realmManager.broadcasts = conversation.filter { conversation in
+            let x = conversation.groupcastTitle?.contains(query) ?? false
+            return x
+        }
+    }
     
     func getBroadcastList(){
         viewModel.getBroadCastList { data in

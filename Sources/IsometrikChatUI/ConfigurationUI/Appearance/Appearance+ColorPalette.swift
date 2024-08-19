@@ -82,6 +82,8 @@ public struct ISMChatColorPalette {
     public var audioBarDefault : Color = .ismChatSdkBGGradientTo
     public var audioBarWhilePlaying : Color = .ismChatSdkListSeperator
     
+    public var searchBarBackground : Color = Color(hex: "#F2F2F5")
+    
     public init(){
     }
     

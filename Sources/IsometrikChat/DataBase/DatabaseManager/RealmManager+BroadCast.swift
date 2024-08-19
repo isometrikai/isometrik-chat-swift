@@ -157,6 +157,7 @@ extension RealmManager{
     public func getAllBroadCasts() {
         if let localRealm = localRealm {
             broadcasts =  Array(localRealm.objects(BroadCastListDB.self).where{$0.isDelete == false })
+            storeBroadcasts = broadcasts
         }
     }
     

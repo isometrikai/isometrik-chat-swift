@@ -22,6 +22,7 @@ public class RealmManager: ObservableObject {
     @Published public var filesMedia : [MediaDB]? = []
     @Published public var parentMessageIdToScroll : String = ""
     @Published public var broadcasts : [BroadCastListDB] = []
+    @Published public var storeBroadcasts: [BroadCastListDB] = []
     
     public var userSession = ISMChatSdk.getInstance().getUserSession()
     
