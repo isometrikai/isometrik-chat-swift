@@ -185,6 +185,8 @@ extension ISMMessageView{
         }
         if self.fromBroadCastFlow == true{
             sendMessageInBroadcast()
+        }else if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
+            sendMessageDetail()
         }else{
             if isGroup == false{
                 if self.conversationID == nil || self.conversationID == ""{
