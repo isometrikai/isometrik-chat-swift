@@ -119,14 +119,14 @@ struct ISMMessageSubView: View {
                     //MARK: - Text Message View
                 case .text:
                     HStack(alignment: .bottom){
-                        if isGroup == true && isReceived == true{
+                         if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                             //When its group show member avatar in message
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
                             let str = message.body
                             VStack(alignment: .leading, spacing: 2){
-                                if isGroup == true && isReceived == true{
+                                 if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }
@@ -232,13 +232,13 @@ struct ISMMessageSubView: View {
                     //MARK: - Contact Message View
                 case .contact:
                     HStack(alignment: .bottom){
-                        if isGroup == true && isReceived == true{
+                         if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                             //When its group show member avatar in message
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
                             VStack(alignment: .leading, spacing: 2){
-                                if isGroup == true && isReceived == true{
+                                 if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }
@@ -312,13 +312,13 @@ struct ISMMessageSubView: View {
                     //MARK: - Photo Message View
                 case .photo:
                     HStack(alignment: .bottom){
-                        if isGroup == true && isReceived == true{
+                         if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                             //When its group show member avatar in message
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
                             VStack(alignment: .leading, spacing: 2){
-                                if isGroup == true && isReceived == true{
+                                 if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }
@@ -389,13 +389,13 @@ struct ISMMessageSubView: View {
                     //MARK: - Video Message View
                 case .video:
                     HStack(alignment: .bottom){
-                        if isGroup == true && isReceived == true{
+                         if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                             //When its group show member avatar in message
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
                             VStack(alignment: .leading, spacing: 2){
-                                if isGroup == true && isReceived == true{
+                                 if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }
@@ -503,13 +503,13 @@ struct ISMMessageSubView: View {
                     //MARK: - Video Message View
                 case .document:
                     HStack(alignment: .bottom){
-                        if isGroup == true && isReceived == true{
+                         if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                             //When its group show member avatar in message
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
                             VStack(alignment: .leading, spacing: 2){
-                                if isGroup == true && isReceived == true{
+                                 if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }
@@ -585,13 +585,13 @@ struct ISMMessageSubView: View {
                     //MARK: - Location Message View
                 case .location:
                     HStack(alignment: .bottom){
-                        if isGroup == true && isReceived == true{
+                         if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                             //When its group show member avatar in message
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
                             VStack(alignment: .leading, spacing: 2){
-                                if isGroup == true && isReceived == true{
+                                 if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }
@@ -662,13 +662,13 @@ struct ISMMessageSubView: View {
                     //MARK: - Audio Message View
                 case .audio:
                     HStack(alignment: .bottom){
-                        if isGroup == true && isReceived == true{
+                         if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                             //When its group show member avatar in message
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
                             VStack(alignment: .leading, spacing: 2){
-                                if isGroup == true && isReceived == true{
+                                 if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }
@@ -711,7 +711,7 @@ struct ISMMessageSubView: View {
                     HStack(alignment: .bottom){
                         ZStack(alignment: .bottomTrailing){
                             VStack(alignment: .leading, spacing: 2){
-                                if isGroup == true && isReceived == true{
+                                 if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }
@@ -762,7 +762,7 @@ struct ISMMessageSubView: View {
                     HStack(alignment: .bottom){
                         ZStack(alignment: .bottomTrailing){
                             VStack(alignment: .leading, spacing: 2){
-                                if isGroup == true && isReceived == true{
+                                 if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }
@@ -811,13 +811,13 @@ struct ISMMessageSubView: View {
                     //MARK: - Gif Message View
                 case .gif:
                     HStack(alignment: .bottom){
-                        if isGroup == true && isReceived == true{
+                         if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                             //When its group show member avatar in message
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
                             VStack(alignment: .leading, spacing: 2){
-                                if isGroup == true && isReceived == true{
+                                 if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }
@@ -887,13 +887,13 @@ struct ISMMessageSubView: View {
                     //MARK: - Sticker Message View
                 case .sticker:
                     HStack(alignment: .bottom){
-                        if isGroup == true && isReceived == true{
+                         if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                             //When its group show member avatar in message
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
                             VStack(alignment: .leading, spacing: 2){
-                                if isGroup == true && isReceived == true{
+                                 if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }
@@ -940,13 +940,13 @@ struct ISMMessageSubView: View {
                     //MARK: - Post Message View
                 case .post:
                     HStack(alignment: .bottom){
-                        if isGroup == true && isReceived == true{
+                         if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                             //When its group show member avatar in message
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
                             VStack(alignment: .leading, spacing: 2){
-                                if isGroup == true && isReceived == true{
+                                 if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }

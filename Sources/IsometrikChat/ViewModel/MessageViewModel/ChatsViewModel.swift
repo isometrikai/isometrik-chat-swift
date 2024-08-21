@@ -282,7 +282,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         body["conversationId"] = conversationId
         body["body"] = messageInBody
         body["customType"] = customType
-        body["notificationTitle"] = ismChatSDK?.getUserSession().getUserName() ?? ""
+        body["notificationTitle"] = ismChatSDK?.getUserSession().getUserName() ?? "Message"
         body["notificationBody"] = notificationBody
         body["searchableTags"] = searchTags
         body["events"] = eventDetail
