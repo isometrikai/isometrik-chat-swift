@@ -338,8 +338,10 @@ public struct ISMMessageView: View {
                 return
             }
             ISMChatHelper.print("USER BLOCKED ----------------->\(messageInfo)")
-            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
-                messageReceived(messageInfo: messageInfo)
+            if let messageId = messageInfo.messageId,let conversationId = messageInfo.conversationId{
+                if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: conversationId, messageId: messageId)){
+                    messageReceived(messageInfo: messageInfo)
+                }
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name)){
@@ -348,8 +350,10 @@ public struct ISMMessageView: View {
                 return
             }
             ISMChatHelper.print("USER UNBLOCKED ----------------->\(messageInfo)")
-            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
-                messageReceived(messageInfo: messageInfo)
+            if let messageId = messageInfo.messageId,let conversationId = messageInfo.conversationId{
+                if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                    messageReceived(messageInfo: messageInfo)
+                }
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttUserBlock.name)){
@@ -358,8 +362,10 @@ public struct ISMMessageView: View {
                 return
             }
             ISMChatHelper.print("USER BLOCKED ----------------->\(messageInfo)")
-            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
-                userBlockedAndUnblocked(messageInfo: messageInfo)
+            if let messageId = messageInfo.messageId,let conversationId = messageInfo.conversationId{
+                if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                    userBlockedAndUnblocked(messageInfo: messageInfo)
+                }
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttUserUnblock.name)){
@@ -368,8 +374,10 @@ public struct ISMMessageView: View {
                 return
             }
             ISMChatHelper.print("USER UNBLOCKED ----------------->\(messageInfo)")
-            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
-                userBlockedAndUnblocked(messageInfo: messageInfo)
+            if let messageId = messageInfo.messageId,let conversationId = messageInfo.conversationId{
+                if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                    userBlockedAndUnblocked(messageInfo: messageInfo)
+                }
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttTypingEvent.name)){ notification in
