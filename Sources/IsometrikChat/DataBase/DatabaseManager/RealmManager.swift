@@ -29,20 +29,21 @@ public class RealmManager: ObservableObject {
     public static let shared = RealmManager()
     
     public init() {
-        openRealm()
-        getAllConversations()
-        print("localUrl" , databaseURL() ?? "")
+        if let localRealm = localRealm {
+            getAllConversations()
+        }else{
+            openRealm(for: ISMChatSdk.getInstance().getUserSession().getUserId())
+            getAllConversations()
+        }
+        print("localUrl" , getRealmFileURL(for: ISMChatSdk.getInstance().getUserSession().getUserId()) ?? "")
     }
     
-    public func databaseURL() -> URL?{
-        return localRealm?.configuration.fileURL
-    }
-    
-    public func openRealm() {
+    public func openRealm(for userId: String) {
         do {
-            // always update schemaversion when you do add or remove param from local db
             let config = Realm.Configuration(
-                schemaVersion: 23)
+                fileURL: getRealmFileURL(for: userId),
+                schemaVersion: 23
+            )
             Realm.Configuration.defaultConfiguration = config
             localRealm = try Realm()
         } catch {
@@ -50,6 +51,30 @@ public class RealmManager: ObservableObject {
         }
     }
     
+    
+    public func deleteRealm(for userId: String) {
+            do {
+                if let realmURL = getRealmFileURL(for: userId) {
+                    // Delete the Realm file and related files
+                    try FileManager.default.removeItem(at: realmURL)
+                    try FileManager.default.removeItem(at: realmURL.appendingPathExtension("lock"))
+                    try FileManager.default.removeItem(at: realmURL.appendingPathExtension("note"))
+                    try FileManager.default.removeItem(at: realmURL.appendingPathExtension("management"))
+                    print("Realm deleted successfully.")
+                }
+                // After deletion, reinitialize Realm
+                openRealm(for: userId)
+            } catch {
+                print("Error deleting Realm file:", error)
+            }
+        }
+
+        private func getRealmFileURL(for userId: String) -> URL? {
+            let fileName = "realm_\(userId).realm"
+            return FileManager.default
+                .containerURL(forSecurityApplicationGroupIdentifier: "your.group.identifier")?
+                .appendingPathComponent(fileName)
+        }
     //MARK: - delete all data of local db
 //    public func deleteAllData() {
 //        do {
@@ -63,17 +88,4 @@ public class RealmManager: ObservableObject {
 //            // Handle the error as needed, such as showing an alert to the user
 //        }
 //    }
-    
-    public func deleteAllData() {
-        do {
-            if let realmURL = Realm.Configuration.defaultConfiguration.fileURL {
-                try FileManager.default.removeItem(at: realmURL)
-                print("Realm deleted successfully.")
-            }
-            // After deletion, reinitialize Realm
-            openRealm()
-        } catch {
-            print("Error deleting Realm file:", error)
-        }
-    }
 }

@@ -148,12 +148,12 @@ public class ISMChatSdk{
             if mqttSession != nil {
                 self.mqttSession?.unSubscribe()
             }
-            //3. clear user session
+            //3. delete local data
+            RealmManager().deleteRealm(for: self.userSession?.getUserId() ?? "")
+            //4. clear user session
             if userSession != nil{
                 self.userSession?.clearUserSession()
             }
-            //4. delete local data
-            RealmManager().deleteAllData()
             //5. For call
             IsometrikCall().clearSession()
             ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
@@ -168,12 +168,12 @@ public class ISMChatSdk{
         if mqttSession != nil {
             self.mqttSession?.unSubscribe()
         }
-        //3. clear user session
+        //3. delete local data
+        RealmManager().deleteRealm(for: self.userSession?.getUserId() ?? "")
+        //4. clear user session
         if userSession != nil{
             self.userSession?.clearUserSession()
         }
-        //4. delete local data
-        RealmManager().deleteAllData()
         //5. For call
         IsometrikCall().clearSession()
         ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
