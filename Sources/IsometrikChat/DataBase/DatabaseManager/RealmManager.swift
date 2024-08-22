@@ -68,6 +68,12 @@ public class RealmManager: ObservableObject {
                 print("Error deleting Realm file:", error)
             }
         }
+    
+    public func switchProfile(oldUserId : String,newUserId : String){
+        deleteRealm(for: oldUserId)
+        openRealm(for: newUserId)
+        getAllConversations()
+    }
 
     private func getRealmFileURL(for userId: String) -> URL? {
         // Use the app's documents directory to get a valid path

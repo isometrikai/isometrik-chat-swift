@@ -169,8 +169,7 @@ public class ISMChatSdk{
             self.mqttSession?.unSubscribe()
         }
         //3. delete local data
-        RealmManager().deleteRealm(for: self.userSession?.getUserId() ?? "")
-        RealmManager().openRealm(for: userConfig.userId)
+        RealmManager().switchProfile(oldUserId: self.userSession?.getUserId() ?? "", newUserId: userConfig.userId)
         //4. clear user session
         if userSession != nil{
             self.userSession?.clearUserSession()
