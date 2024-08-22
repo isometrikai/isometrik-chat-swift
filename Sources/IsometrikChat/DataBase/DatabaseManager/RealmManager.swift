@@ -51,16 +51,29 @@ public class RealmManager: ObservableObject {
     }
     
     //MARK: - delete all data of local db
+//    public func deleteAllData() {
+//        do {
+//            let realm = try Realm()
+//            try realm.write {
+//                realm.deleteAll()
+//            }
+//            try FileManager.default.removeItem(at:Realm.Configuration.defaultConfiguration.fileURL!) 
+//        } catch let error as NSError {
+//            print("Error deleting all data: \(error.localizedDescription)")
+//            // Handle the error as needed, such as showing an alert to the user
+//        }
+//    }
+    
     public func deleteAllData() {
         do {
-            let realm = try Realm()
-            try realm.write {
-                realm.deleteAll()
+            if let realmURL = Realm.Configuration.defaultConfiguration.fileURL {
+                try FileManager.default.removeItem(at: realmURL)
+                print("Realm deleted successfully.")
             }
-            try FileManager.default.removeItem(at:Realm.Configuration.defaultConfiguration.fileURL!) 
-        } catch let error as NSError {
-            print("Error deleting all data: \(error.localizedDescription)")
-            // Handle the error as needed, such as showing an alert to the user
+            // After deletion, reinitialize Realm
+            openRealm()
+        } catch {
+            print("Error deleting Realm file:", error)
         }
     }
 }
