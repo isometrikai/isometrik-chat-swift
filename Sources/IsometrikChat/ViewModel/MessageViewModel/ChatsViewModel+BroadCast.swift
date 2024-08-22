@@ -27,6 +27,7 @@ extension ChatsViewModel{
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.createBroadCast,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
             switch result{
             case .success(let data):
+                NotificationCenter.default.post(name: NSNotification.refreshBroadCastListNotification,object: nil)
                 completion(data)
             case .failure(let error):
                 ISMChatHelper.print("Create Conversation Api failed -----> \(String(describing: error))")
