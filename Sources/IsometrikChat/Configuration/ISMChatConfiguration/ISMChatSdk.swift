@@ -170,6 +170,7 @@ public class ISMChatSdk{
         }
         //3. delete local data
         RealmManager().deleteRealm(for: self.userSession?.getUserId() ?? "")
+        RealmManager().openRealm(for: userConfig.userId)
         //4. clear user session
         if userSession != nil{
             self.userSession?.clearUserSession()
