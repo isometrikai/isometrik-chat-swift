@@ -62,8 +62,6 @@ public class RealmManager: ObservableObject {
                     try FileManager.default.removeItem(at: realmURL.appendingPathExtension("management"))
                     print("Realm deleted successfully.")
                 }
-                // After deletion, reinitialize Realm
-                openRealm(for: userId)
             } catch {
                 print("Error deleting Realm file:", error)
             }
