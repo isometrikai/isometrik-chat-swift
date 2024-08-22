@@ -161,7 +161,7 @@ public struct ISMConversationView : View {
                         }
                         .listStyle(.plain)
                         .listRowSeparatorTint(Color.border)
-                        .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
+//                        .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
                         .keyboardType(.default)
                         .textContentType(.oneTimeCode)
                         .autocorrectionDisabled(true)
