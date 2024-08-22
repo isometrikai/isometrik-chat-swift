@@ -69,12 +69,12 @@ public class RealmManager: ObservableObject {
             }
         }
 
-        private func getRealmFileURL(for userId: String) -> URL? {
-            let fileName = "realm_\(userId).realm"
-            return FileManager.default
-                .containerURL(forSecurityApplicationGroupIdentifier: "your.group.identifier")?
-                .appendingPathComponent(fileName)
-        }
+    private func getRealmFileURL(for userId: String) -> URL? {
+        // Use the app's documents directory to get a valid path
+        let fileName = "realm_\(userId).realm"
+        let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        return directory?.appendingPathComponent(fileName)
+    }
     //MARK: - delete all data of local db
 //    public func deleteAllData() {
 //        do {
