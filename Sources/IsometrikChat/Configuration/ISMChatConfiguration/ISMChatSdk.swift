@@ -170,6 +170,9 @@ public class ISMChatSdk{
         }
         //3. delete local data
         RealmManager().switchProfile(oldUserId: self.userSession?.getUserId() ?? "", newUserId: userConfig.userId)
+        // to refresh chatlist
+        let viewModel = ConversationViewModel(ismChatSDK: self)
+        viewModel.profileSwitched = true
         //4. clear user session
         if userSession != nil{
             self.userSession?.clearUserSession()

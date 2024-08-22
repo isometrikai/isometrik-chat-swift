@@ -37,6 +37,7 @@ public class ConversationViewModel : NSObject ,ObservableObject{
     @Published public var getUsersLimit = 20
     @Published public var moreDataAvailableForGetUsers = true
     @Published public var apiCalling = false
+    @Published public var profileSwitched : Bool = false
     
     var ismChatSDK: ISMChatSdk?
     

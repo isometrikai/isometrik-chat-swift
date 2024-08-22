@@ -238,9 +238,15 @@ public struct ISMConversationView : View {
                     .environmentObject(realmManager).onAppear{onScreen = false}, isActive: $navigateToBroadCastMessages))
                 .onAppear {
                     onScreen = true
-                    self.viewModel.resetdata()
-                    self.viewModel.clearMessages()
-                    realmManager.getAllConversations()
+                    if self.viewModel.profileSwitched = true{
+                        self.viewModel.resetdata()
+                        self.getConversationList()
+                        self.viewModel.profileSwitched = false
+                    }else{
+                        self.viewModel.resetdata()
+                        self.viewModel.clearMessages()
+                        realmManager.getAllConversations()
+                    }
                 }
                 .onDisappear{
                     onScreen = false
