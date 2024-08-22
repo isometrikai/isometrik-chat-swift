@@ -20,7 +20,7 @@ struct ResizeableTextView: UIViewRepresentable{
     var filteredMentionUserCount : Int
     @Binding var mentionUser : String?
     let placeholderColor : Color
-    let textViewColor : Color
+    let textViewColor : UIColor
     
     //MARK: - CONFIGURE
     func makeUIView(context: Context) -> UITextView {
@@ -45,7 +45,7 @@ struct ResizeableTextView: UIViewRepresentable{
         }
         if self.text.isEmpty == true{
             textView.text = self.editing ? "" : self.placeholderText
-            textView.textColor = textView.text == self.placeholderText ? UIColor(placeholderColor) : UIColor(textViewColor)
+            textView.textColor = textView.text == self.placeholderText ? UIColor(placeholderColor) : textViewColor
         }
         
         DispatchQueue.main.async {

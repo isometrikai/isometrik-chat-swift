@@ -119,7 +119,7 @@ extension ISMConversationView{
         
         self.realmManager.updateLastmsg(conId: messageInfo.conversationId ?? "", msg: msg)
         // increase unread count
-        self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 1)
+//        self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 1)
         
         self.realmManager.getAllConversations()
         
@@ -134,7 +134,7 @@ extension ISMConversationView{
         
         self.realmManager.updateLastmsg(conId: messageInfo.conversationId ?? "", msg: msg)
         
-        self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 1)
+//        self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 1)
         
         self.realmManager.getAllConversations()
         
