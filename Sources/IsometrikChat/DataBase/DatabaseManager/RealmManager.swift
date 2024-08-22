@@ -53,34 +53,19 @@ public class RealmManager: ObservableObject {
     
     
     public func deleteRealm(for userId: String) {
-        do {
-            // First, delete all objects in the Realm to clean it up
-            let realm = try Realm()
-            try realm.write {
-                realm.deleteAll()
-            }
-            
-            // Then, attempt to delete the Realm file and related files
-            if let realmURL = getRealmFileURL(for: userId) {
-                let fileManager = FileManager.default
-                let auxiliaryFileExtensions = ["lock", "note", "management"]
-
-                // Delete the primary Realm file
-                try fileManager.removeItem(at: realmURL)
-                
-                // Delete auxiliary Realm files
-                for ext in auxiliaryFileExtensions {
-                    try fileManager.removeItem(at: realmURL.appendingPathExtension(ext))
+            do {
+                if let realmURL = getRealmFileURL(for: userId) {
+                    // Delete the Realm file and related files
+                    try FileManager.default.removeItem(at: realmURL)
+                    try FileManager.default.removeItem(at: realmURL.appendingPathExtension("lock"))
+                    try FileManager.default.removeItem(at: realmURL.appendingPathExtension("note"))
+                    try FileManager.default.removeItem(at: realmURL.appendingPathExtension("management"))
+                    print("Realm deleted successfully.")
                 }
-
-                print("Realm deleted successfully.")
+            } catch {
+                print("Error deleting Realm file:", error)
             }
-        } catch {
-            // Handle all errors in one place
-            print("Error deleting Realm data or files: \(error.localizedDescription)")
         }
-    }
-
     
     public func switchProfile(oldUserId : String,newUserId : String){
         deleteRealm(for: oldUserId)
