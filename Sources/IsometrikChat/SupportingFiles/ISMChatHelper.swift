@@ -434,7 +434,7 @@ public class ISMChatHelper: NSObject {
     }
     
     public class func subscribeFCM(){
-        let userId = ISMChatSdk.getInstance().getUserSession().getUserId()
+        let userId = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId
         Messaging.messaging().subscribe(toTopic: "chat-\(userId)") { (error) in
             if error != nil {
                 print("errror fcm topic ", error as Any)
@@ -444,7 +444,7 @@ public class ISMChatHelper: NSObject {
     
 //    unsubscribe all fcm topics
     public class func unSubscribeFCM(){
-        let userId = ISMChatSdk.getInstance().getUserSession().getUserId()
+        let userId = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId
         Messaging.messaging().unsubscribe(fromTopic: "chat-\(userId)")
     }
     

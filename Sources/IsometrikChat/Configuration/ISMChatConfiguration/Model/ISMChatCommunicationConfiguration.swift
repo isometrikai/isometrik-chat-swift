@@ -9,11 +9,11 @@ import Foundation
 import Alamofire
 
 public struct ISMChatCommunicationConfiguration {
-    let userConfig: ISMChatUserConfig
-    let projectConfig: ISMChatProjectConfig
-    let mqttConfig: ISMChatMqttConfig
-    let username: String
-    let password: String
+    public let userConfig: ISMChatUserConfig
+    public let projectConfig: ISMChatProjectConfig
+    public let mqttConfig: ISMChatMqttConfig
+    public let username: String
+    public let password: String
 
     public init(userConfig: ISMChatUserConfig,
          projectConfig: ISMChatProjectConfig,
@@ -30,25 +30,34 @@ public struct ISMChatCommunicationConfiguration {
 
 
 public struct ISMChatUserConfig {
-    let userToken: String
-    let userId: String
-    let userName: String
-    let userEmail: String
-    let userProfileImage: String
-    let userProfileType : String
+    public var userToken: String
+    public var userId: String
+    public var userName: String
+    public var userEmail: String
+    public var userProfileImage: String
+    public var userProfileType : String
+    public var userBio : String = ""
+    public var allowNotification : Bool = true
+    public var showLastSeen : Bool = true
     
     public init(userToken: String,
                 userId: String,
                 userName: String,
                 userEmail: String,
                 userProfileImage: String,
-                userProfileType : String) {
+                userProfileType : String,
+                userBio : String? = "",
+                allowNotification : Bool? = true,
+                showLastSeen : Bool? = true) {
         self.userToken = userToken
         self.userId = userId
         self.userName = userName
         self.userEmail = userEmail
         self.userProfileImage = userProfileImage
         self.userProfileType = userProfileType
+        self.userBio = userBio ?? ""
+        self.allowNotification = allowNotification ?? true
+        self.showLastSeen = showLastSeen ?? true
     }
 }
 

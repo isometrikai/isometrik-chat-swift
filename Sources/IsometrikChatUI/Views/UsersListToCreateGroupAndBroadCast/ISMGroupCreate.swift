@@ -27,7 +27,7 @@ public struct ISMGroupCreate: View {
     @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State public var userSession = ISMChatSdk.getInstance().getUserSession()
+    @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     
     

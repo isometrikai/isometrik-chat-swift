@@ -190,7 +190,7 @@ extension ISMMessageView{
         }else{
             if isGroup == false{
                 if self.conversationID == nil || self.conversationID == ""{
-                    viewModel.createConversation(user: self.opponenDetail ?? UserDB(),profileType: ISMChatSdk.getInstance().getUserSession().getProfileType(),chatStatus: ISMChatStatus.Reject.value) { data in
+                    viewModel.createConversation(user: self.opponenDetail ?? UserDB(),profileType: ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType,chatStatus: ISMChatStatus.Reject.value) { data in
                         self.conversationID = data?.conversationId
                         viewModel.getConversationDetail(conversationId: self.conversationID ?? "", isGroup: self.isGroup ?? false) { data in
                             //1. first check if conversation is deleted locally
@@ -225,9 +225,9 @@ extension ISMMessageView{
         if let selectedReaction = selectedReaction{
             viewModel.sendReaction(conversationId: self.conversationID ?? "", messageId: self.sentRecationToMessageId, emojiReaction: selectedReaction) { _ in
                 //add my reactions here, and for other added in mqtt event
-                realmManager.addReactionToMessage(conversationId: self.conversationID ?? "", messageId:  self.sentRecationToMessageId, reaction: selectedReaction, userId: userSession.getUserId() ?? "")
+                realmManager.addReactionToMessage(conversationId: self.conversationID ?? "", messageId:  self.sentRecationToMessageId, reaction: selectedReaction, userId: userData.userId ?? "")
                 self.selectedReaction = nil
-                realmManager.addLastMessageOnAddAndRemoveReaction(conversationId: self.conversationID ?? "", action: ISMChatActionType.reactionAdd.value, emoji: selectedReaction, userId: userSession.getUserId() ?? "")
+                realmManager.addLastMessageOnAddAndRemoveReaction(conversationId: self.conversationID ?? "", action: ISMChatActionType.reactionAdd.value, emoji: selectedReaction, userId: userData.userId ?? "")
                 
             }
         }
@@ -727,7 +727,7 @@ extension ISMMessageView{
             //5. we need to save media
             if messageKind != .audio{
                 let attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Video.type, extensions: ISMChatExtensionType.Video.type, mediaUrl: mediaUrl, mimeType: ISMChatExtensionType.Video.type, name: mediaName, thumbnailUrl: thubnailUrl)
-                realmManager.saveMedia(arr: [attachment], conId: self.conversationID ?? "", customType: customType , sentAt: sentAt, messageId: messageId, userName: userSession.getUserName(), fromView: true)
+                realmManager.saveMedia(arr: [attachment], conId: self.conversationID ?? "", customType: customType , sentAt: sentAt, messageId: messageId, userName: userData.userName, fromView: true)
                 
                 //6. if we add image or video, we need to save it to show in media
                 realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
@@ -1144,7 +1144,7 @@ extension ISMMessageView{
     func saveMessageToLocalDB(sentAt: Double,messageId : String,message : String,mentionUsers : [ISMChatGroupMember],fileName : String? = nil,fileUrl : String? = nil,messageType : ISMChatMessageType,contactInfo: [ISMChatPhoneContact]? = [],customType : ISMChatMediaType,messageKind : ISMChatMessageKind,parentMessage : MessagesDB? = nil,longitude :Double? = nil,latitude : Double? = nil,placeName : String? = nil, placeAddress : String? = nil,mediaCaption : String? = nil) -> String{
         
         //1. senderInfo
-        let senderInfo = ISMChatUser(userId: userSession.getUserId(), userName: userSession.getUserName(), userIdentifier: userSession.getEmailId(), userProfileImage: userSession.getUserProfilePicture())
+        let senderInfo = ISMChatUser(userId: userData.userId, userName: userData.userName, userIdentifier: userData.userEmail, userProfileImage: userData.userProfileImage)
         
         //2. message initialize
         var messageValue = ISMChatMessage()
@@ -1209,7 +1209,7 @@ extension ISMMessageView{
                     thumbnailUrl = parentMessage?.attachments.first?.mediaUrl ?? ""
                 }
                 
-                let replyParentMessage = ISMChatReplyMessageMetaData(parentMessageId: parentMessage?.messageId, parentMessageBody: parentMessage?.body, parentMessageUserId: parentMessage?.senderInfo?.userId ?? "", parentMessageUserName: parentMessage?.senderInfo?.userName ?? "", parentMessageMessageType: parentMessage?.customType, parentMessageAttachmentUrl: thumbnailUrl, parentMessageInitiator: userSession.getUserId() == parentMessage?.senderInfo?.userId, parentMessagecaptionMessage: parentMessage?.metaData?.captionMessage ?? "")
+                let replyParentMessage = ISMChatReplyMessageMetaData(parentMessageId: parentMessage?.messageId, parentMessageBody: parentMessage?.body, parentMessageUserId: parentMessage?.senderInfo?.userId ?? "", parentMessageUserName: parentMessage?.senderInfo?.userName ?? "", parentMessageMessageType: parentMessage?.customType, parentMessageAttachmentUrl: thumbnailUrl, parentMessageInitiator: userData.userId == parentMessage?.senderInfo?.userId, parentMessagecaptionMessage: parentMessage?.metaData?.captionMessage ?? "")
                 
                 metaData = ISMChatMetaData(replyMessage: replyParentMessage)
             }
@@ -1249,7 +1249,7 @@ extension ISMMessageView{
         
         messageValue = ISMChatMessage(sentAt: sentAt, body: message, messageId: messageId, metaData: metaData, customType: customType.value, attachment: [attachment], conversationId: self.conversationID ?? "", senderInfo: senderInfo,messageType: messageKind.value)
         
-        lastMessage = ISMChatLastMessage(sentAt: sentAt, senderName: userSession.getUserName(), senderIdentifier: userSession.getEmailId(), senderId: userSession.getUserId(), conversationId: self.conversationID ?? "", body: message, messageId: messageId, customType: customType.value)
+        lastMessage = ISMChatLastMessage(sentAt: sentAt, senderName: userData.userName, senderIdentifier: userData.userEmail, senderId: userData.userId, conversationId: self.conversationID ?? "", body: message, messageId: messageId, customType: customType.value)
         
         //6. append in list
         realmManager.saveMessage(obj: [messageValue])

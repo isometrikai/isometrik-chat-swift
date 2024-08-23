@@ -459,8 +459,8 @@ extension ISMMessageView{
     }
     
     func showOptionToAllow() -> Bool {
-        let myProfileType = ISMChatSdk.getInstance().getUserSession().getProfileType()
-        let userId = ISMChatSdk.getInstance().getUserSession().getUserId()
+        let myProfileType = userData.userProfileType
+        let userId = userData.userId
         
         // Ensure conversation detail is available
         guard let conversation = conversationDetail?.conversationDetails else {

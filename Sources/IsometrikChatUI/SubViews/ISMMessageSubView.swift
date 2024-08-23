@@ -70,7 +70,7 @@ struct ISMMessageSubView: View {
     @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State var themeBubbleType = ISMChatSdkUI.getInstance().getAppAppearance().appearance.messageBubbleType
-    @State var userSession = ISMChatSdk.getInstance().getUserSession()
+    @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
    
     @EnvironmentObject var realmManager : RealmManager
@@ -1045,7 +1045,7 @@ struct ISMMessageSubView: View {
         }
         .onChange(of: reactionRemoved) { newVALUE in
             if !reactionRemoved.isEmpty{
-                realmManager.removeReactionFromMessage(conversationId: self.message.conversationId, messageId: self.message.messageId, reaction: reactionRemoved, userId: userSession.getUserId() ?? "")
+                realmManager.removeReactionFromMessage(conversationId: self.message.conversationId, messageId: self.message.messageId, reaction: reactionRemoved, userId: userData.userId)
                 reactionRemoved = ""
             }
         }
@@ -1118,7 +1118,8 @@ struct ISMMessageSubView: View {
                 .frame(width: 4)
             VStack(alignment: .leading, spacing: 2){
                 let parentUserName = message.metaData?.replyMessage?.parentMessageUserName ?? "User"
-                let name = parentUserName == userSession.getUserName() ? ConstantStrings.you : parentUserName
+                let parentUserId = message.metaData?.replyMessage?.parentMessageUserId
+                let name = parentUserId == userData.userId ? ConstantStrings.you : parentUserName
                 Text(name)
                     .foregroundColor(themeColor.messageListReplyToolbarHeader)
                     .font(themeFonts.messageListReplyToolbarHeader)
@@ -1366,9 +1367,9 @@ struct ISMMessageSubView: View {
     func getImageAsset() -> ImageAsset {
         var imageAsset: ImageAsset
 
-        if message.initiatorIdentifier == userSession.getEmailId() {
+        if message.initiatorId == userData.userId {
             if message.missedByMembers.count == 0 {
-                if let duration = message.callDurations.first(where: { $0.memberId == userSession.getUserId() }) {
+                if let duration = message.callDurations.first(where: { $0.memberId == userData.userId }) {
                     let durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
                     if messageType == .AudioCall {
                         imageAsset = ImageAsset(image: themeImages.audioOutgoing, title: "Voice Call", durationText: durationText)
@@ -1387,7 +1388,7 @@ struct ISMMessageSubView: View {
             }
         } else {
             if message.missedByMembers.count == 0 {
-                if let duration = message.callDurations.first(where: { $0.memberId == userSession.getUserId() }) {
+                if let duration = message.callDurations.first(where: { $0.memberId == userData.userId }) {
                     let durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
                     if messageType == .AudioCall {
                         imageAsset = ImageAsset(image: themeImages.audioIncoming, title: "Voice Call", durationText: durationText)

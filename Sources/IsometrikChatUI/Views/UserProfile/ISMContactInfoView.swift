@@ -45,7 +45,7 @@ struct ISMContactInfoView: View {
     @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State var userSession = ISMChatSdk.getInstance().getUserSession()
+    @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     @Binding var navigateToAddParticipantsInGroupViaDelegate : Bool
     
@@ -184,7 +184,7 @@ struct ISMContactInfoView: View {
         .background(NavigationLink("", destination:  ISMSearchParticipants(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel ,conversationID: self.conversationID), isActive: $showSearch))
         .background(NavigationLink("", destination:  ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID,updateData : $updateData), isActive: $showEdit))
         .onChange(of: selectedMember, perform: { newValue in
-            if selectedMember.userId != userSession.getUserId(){
+            if selectedMember.userId != userData.userId{
                 showOptions = true
             }
         })
@@ -277,7 +277,7 @@ struct ISMContactInfoView: View {
                 let dateVar = NSDate()
                 let date = dateVar.doubletoDate(time: conversationDetail?.conversationDetails?.createdAt ?? 0)
                 VStack(alignment: .leading){
-                    let user = userSession.getUserName() == (conversationDetail?.conversationDetails?.createdByUserName ?? "") ? ConstantStrings.you.lowercased() : (conversationDetail?.conversationDetails?.createdByUserName ?? "")
+                    let user = userData.userName == (conversationDetail?.conversationDetails?.createdByUserName ?? "") ? ConstantStrings.you.lowercased() : (conversationDetail?.conversationDetails?.createdByUserName ?? "")
                     Text("Group created by \(user)")
                         .font(themeFonts.chatListUserMessage)
                         .foregroundColor(themeColor.chatListUserMessage)

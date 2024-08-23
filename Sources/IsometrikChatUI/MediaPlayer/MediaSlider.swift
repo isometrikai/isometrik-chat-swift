@@ -19,7 +19,7 @@ struct MediaSlider: View {
     @EnvironmentObject var realmManager : RealmManager
     @Binding var description : String
     @Binding var user : String
-    @State var userSesssion = ISMChatSdk.getInstance().getUserSession()
+    @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations()
     
     var body: some View {
         GeometryReader { proxy in
@@ -67,7 +67,7 @@ struct MediaSlider: View {
                     .onAppear(perform: {
                         let date = NSDate().doubletoDate(time: self.media[i].sentAt )
                         let time = NSDate().doubletoTime(time: self.media[i].sentAt )
-                        let name = userName == userSesssion.getUserName() ? ConstantStrings.you : userName
+                        let name = userName == userData.userConfig.userName ? ConstantStrings.you : userName
                         self.user = name
                         self.description = "\(date), \(time)"
                     })

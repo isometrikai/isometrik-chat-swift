@@ -24,7 +24,7 @@ public class RealmManager: ObservableObject {
     @Published public var broadcasts : [BroadCastListDB] = []
     @Published public var storeBroadcasts: [BroadCastListDB] = []
     
-    public var userSession = ISMChatSdk.getInstance().getUserSession()
+    public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     public static let shared = RealmManager()
     
@@ -32,10 +32,10 @@ public class RealmManager: ObservableObject {
         if let localRealm = localRealm {
             getAllConversations()
         }else{
-            openRealm(for: ISMChatSdk.getInstance().getUserSession().getUserId())
+            openRealm(for: userData.userId)
             getAllConversations()
         }
-        print("localUrl" , getRealmFileURL(for: ISMChatSdk.getInstance().getUserSession().getUserId()) ?? "")
+        print("localUrl" , getRealmFileURL(for: userData.userId) ?? "")
     }
     
     public func openRealm(for userId: String) {

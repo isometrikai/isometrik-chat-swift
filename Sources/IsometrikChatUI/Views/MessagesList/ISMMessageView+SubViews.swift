@@ -21,27 +21,27 @@ extension ISMMessageView{
                     ForEach(messages) { message in
                         VStack{
                             if ISMChatHelper.getMessageType(message: message) == .blockUser{
-                                grpHeader(action: .userBlock, userName: message.userName, senderId: message.initiatorIdentifier)
+                                grpHeader(action: .userBlock, userName: message.userName, senderId: message.initiatorId)
                             }else if ISMChatHelper.getMessageType(message: message) == .unblockUser{
-                                grpHeader(action: .userUnblock, userName: message.userName, senderId: message.initiatorIdentifier)
+                                grpHeader(action: .userUnblock, userName: message.userName, senderId: message.initiatorId)
                             }else if ISMChatHelper.getMessageType(message: message) == .conversationTitleUpdate{
-                                grpHeader(action: .conversationTitleUpdated, userName: message.userId == userSession.getUserId() ? ConstantStrings.you : message.userName, senderId: message.initiatorIdentifier)
+                                grpHeader(action: .conversationTitleUpdated, userName: message.userId == userData.userId ? ConstantStrings.you : message.userName, senderId: message.initiatorId)
                             }else if ISMChatHelper.getMessageType(message: message) == .conversationImageUpdated{
-                                grpHeader(action: .conversationImageUpdated, userName: message.userId == userSession.getUserId() ? ConstantStrings.you : message.userName, senderId: message.initiatorIdentifier)
+                                grpHeader(action: .conversationImageUpdated, userName: message.userId == userData.userId ? ConstantStrings.you : message.userName, senderId: message.initiatorId)
                             }else if ISMChatHelper.getMessageType(message: message) == .conversationCreated{
-                                grpHeader(action: .conversationCreated, userName: message.userId == userSession.getUserId() ? ConstantStrings.you :  message.userName, senderId: message.initiatorIdentifier,isGroup : conversationDetail?.conversationDetails?.isGroup)
+                                grpHeader(action: .conversationCreated, userName: message.userId == userData.userId ? ConstantStrings.you :  message.userName, senderId: message.initiatorId,isGroup : conversationDetail?.conversationDetails?.isGroup)
                             }else if ISMChatHelper.getMessageType(message: message) == .membersAdd{
-                                grpHeader(action: .membersAdd, userName: message.userId == userSession.getUserId() ? ConstantStrings.you : message.userName, senderId: message.initiatorIdentifier,member: message.members.last?.memberName ?? "",memberId : message.members.last?.memberIdentifier ?? "")
+                                grpHeader(action: .membersAdd, userName: message.userId == userData.userId ? ConstantStrings.you : message.userName, senderId: message.initiatorId,member: message.members.last?.memberName ?? "",memberId : message.members.last?.memberIdentifier ?? "")
                             }else if ISMChatHelper.getMessageType(message: message) == .memberLeave{
-                                grpHeader(action: .memberLeave, userName: message.userId == userSession.getUserId() ? ConstantStrings.you : message.userName, senderId: message.initiatorIdentifier,member: message.members.last?.memberName ?? "",memberId : message.members.last?.memberIdentifier ?? "")
+                                grpHeader(action: .memberLeave, userName: message.userId == userData.userId ? ConstantStrings.you : message.userName, senderId: message.initiatorId,member: message.members.last?.memberName ?? "",memberId : message.members.last?.memberIdentifier ?? "")
                             }else if ISMChatHelper.getMessageType(message: message) == .membersRemove{
-                                grpHeader(action: .membersRemove, userName: message.userId == userSession.getUserId() ? ConstantStrings.you : message.userName, senderId: message.initiatorIdentifier,member: message.members.last?.memberName ?? "",memberId : message.members.last?.memberIdentifier ?? "")
+                                grpHeader(action: .membersRemove, userName: message.userId == userData.userId ? ConstantStrings.you : message.userName, senderId: message.initiatorId,member: message.members.last?.memberName ?? "",memberId : message.members.last?.memberIdentifier ?? "")
                             }else if ISMChatHelper.getMessageType(message: message) == .addAdmin{
-                                grpHeader(action: .addAdmin, userName: message.initiatorId == userSession.getUserId() ? ConstantStrings.you :  message.initiatorName, senderId: message.initiatorIdentifier,member: message.memberId == userSession.getUserId() ? ConstantStrings.you.lowercased() : message.memberName)
+                                grpHeader(action: .addAdmin, userName: message.initiatorId == userData.userId ? ConstantStrings.you :  message.initiatorName, senderId: message.initiatorId,member: message.memberId == userData.userId ? ConstantStrings.you.lowercased() : message.memberName)
                             }else if ISMChatHelper.getMessageType(message: message) == .removeAdmin{
-                                grpHeader(action: .removeAdmin, userName: message.initiatorId == userSession.getUserId() ? ConstantStrings.you :  message.initiatorName, senderId: message.initiatorIdentifier,member: message.memberId == userSession.getUserId() ? ConstantStrings.you.lowercased() : message.memberName)
+                                grpHeader(action: .removeAdmin, userName: message.initiatorId == userData.userId ? ConstantStrings.you :  message.initiatorName, senderId: message.initiatorId,member: message.memberId == userData.userId ? ConstantStrings.you.lowercased() : message.memberName)
                             }else if ISMChatHelper.getMessageType(message: message) == .conversationSettingsUpdated{
-                                grpHeader(action: .conversationSettingsUpdated, userName: message.initiatorId == userSession.getUserId() ? ConstantStrings.you :  message.initiatorName, senderId: message.initiatorIdentifier,member: message.memberId == userSession.getUserId() ? ConstantStrings.you.lowercased() : message.memberName)
+                                grpHeader(action: .conversationSettingsUpdated, userName: message.initiatorId == userData.userId ? ConstantStrings.you :  message.initiatorName, senderId: message.initiatorId,member: message.memberId == userData.userId ? ConstantStrings.you.lowercased() : message.memberName)
                             }else{
                                 defaultMessageView(message: message, scrollReader: scrollReader, viewWidth: viewWidth)
                                     .onTapGesture {
@@ -144,7 +144,7 @@ extension ISMMessageView{
     //MARK: - GROUP HEADERS
     func grpHeader(action: ISMChatActionType, userName: String, senderId: String,member : String? = nil,memberId : String? = nil,isGroup : Bool? = true) -> some View {
         ZStack {
-            let userId = userSession.getEmailId()
+            let userId = userData.userId
             if action == .userBlock{
                 let text = senderId == userId ? "You blocked this user" : "You are blocked"
                 customText(text: text)

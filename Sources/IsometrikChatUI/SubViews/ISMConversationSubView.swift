@@ -17,7 +17,7 @@ struct ISMConversationSubView: View {
     @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State var userSession = ISMChatSdk.getInstance().getUserSession()
+    @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     //MARK:  - BODY
     var body: some View {
@@ -72,7 +72,7 @@ struct ISMConversationSubView: View {
                             .tint(themeColor.chatListUserMessage)
                             .foregroundColor(themeColor.chatListUserMessage)
                         
-                        Text(chat.lastMessageDetails?.senderId == userSession.getUserId() ? "You deleted this message." : "This message was deleted")
+                        Text(chat.lastMessageDetails?.senderId == userData.userId ? "You deleted this message." : "This message was deleted")
                             .foregroundColor(themeColor.chatListUserMessage)
                             .font(themeFonts.chatListUserMessage)
                             .padding(.trailing, 40)
@@ -115,14 +115,14 @@ struct ISMConversationSubView: View {
     func VideoCallUI() -> some View{
         HStack{
             if chat.lastMessageDetails?.action == ISMChatActionType.meetingCreated.value{
-                if chat.lastMessageDetails?.initiatorIdentifier == userSession.getEmailId(){
+                if chat.lastMessageDetails?.initiatorId == userData.userId{
                     callKitText(text1: "Video Call", text2: "In call", color: Color.green, outgoing: true, missedCall: false, addDot: true, image: "arrow.up.right.video.fill")
                 }else{
                     callKitText(text1: "Video Call", text2: "Ringing", color: Color.green, outgoing: false, missedCall: false, addDot: true, image: "arrow.down.left.video.fill")
                 }
             }
             else if chat.lastMessageDetails?.action == ISMChatActionType.meetingEndedDueToNoUserPublishing.value{
-                if chat.lastMessageDetails?.initiatorIdentifier == userSession.getEmailId(){
+                if chat.lastMessageDetails?.initiatorId == userData.userId{
                     callKitText(text1: "", text2: "Video call", color: Color.green, outgoing: true, missedCall: false, addDot: false, image: "arrow.up.right.video.fill")
                 }else{
                     if chat.lastMessageDetails?.missedByMembers.count == 0{
@@ -133,7 +133,7 @@ struct ISMConversationSubView: View {
                 }
             }
             else if chat.lastMessageDetails?.action == ISMChatActionType.meetingEndedDueToRejectionByAll.value{
-                if chat.lastMessageDetails?.initiatorIdentifier == userSession.getEmailId(){
+                if chat.lastMessageDetails?.initiatorId == userData.userId{
                     callKitText(text1: "", text2: "Video call", color: Color.green, outgoing: true, missedCall: false, addDot: false, image: "arrow.up.right.video.fill")
                 }else{
                     if chat.lastMessageDetails?.missedByMembers.count == 0{
@@ -149,14 +149,14 @@ struct ISMConversationSubView: View {
     func AudioCallUI() -> some View{
         HStack{
             if chat.lastMessageDetails?.action == ISMChatActionType.meetingCreated.value{
-                if chat.lastMessageDetails?.initiatorIdentifier == userSession.getEmailId(){
+                if chat.lastMessageDetails?.initiatorId == userData.userId{
                     callKitText(text1: "Voice Call", text2: "In call", color: Color.green, outgoing: true, missedCall: false, addDot: true, image: "phone.arrow.up.right.fill")
                 }else{
                     callKitText(text1: "Voice Call", text2: "Ringing", color: Color.green, outgoing: false, missedCall: false, addDot: true, image: "phone.arrow.down.left.fill")
                 }
             }
             else if chat.lastMessageDetails?.action == ISMChatActionType.meetingEndedDueToNoUserPublishing.value{
-                if chat.lastMessageDetails?.initiatorIdentifier == userSession.getEmailId(){
+                if chat.lastMessageDetails?.initiatorId == userData.userId{
                     callKitText(text1: "", text2: "Voice call", color: Color.green, outgoing: true, missedCall: false, addDot: false, image: "phone.arrow.up.right.fill")
                 }else{
                     if chat.lastMessageDetails?.missedByMembers.count == 0{
@@ -167,7 +167,7 @@ struct ISMConversationSubView: View {
                 }
             }
             else if chat.lastMessageDetails?.action == ISMChatActionType.meetingEndedDueToRejectionByAll.value{
-                if chat.lastMessageDetails?.initiatorIdentifier == userSession.getEmailId(){
+                if chat.lastMessageDetails?.initiatorId == userData.userId{
                     callKitText(text1: "", text2: "Voice call", color: Color.green, outgoing: true, missedCall: false, addDot: false, image: "phone.arrow.up.right.fill")
                 }else{
                     if chat.lastMessageDetails?.missedByMembers.count == 0{
@@ -190,14 +190,14 @@ struct ISMConversationSubView: View {
                 getLabel(text: "Unblocked", image: "circle.slash")
             }else if chat.lastMessageDetails?.action == ISMChatActionType.reactionAdd.value{
                 let emoji = ISMChatHelper.getEmoji(valueString: chat.lastMessageDetails?.reactionType ?? "")
-                if chat.lastMessageDetails?.userId == userSession.getUserId(){
+                if chat.lastMessageDetails?.userId == userData.userId{
                     getLabel(hideImage: true,text: chat.isGroup ? "Reacted \(emoji) to a message" : "You reacted \(emoji) to a message", image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: chat.isGroup ? "Reacted \(emoji) to a message" : "\(chat.lastMessageDetails?.userName ?? "") reacted \(emoji) to a message", image: "",isReaction : true)
                 }
             }else if chat.lastMessageDetails?.action == ISMChatActionType.reactionRemove.value{
                 let emoji = ISMChatHelper.getEmoji(valueString: chat.lastMessageDetails?.reactionType ?? "")
-                if chat.lastMessageDetails?.userId == userSession.getUserId(){
+                if chat.lastMessageDetails?.userId == userData.userId{
                     getLabel(hideImage: true,text: chat.isGroup ? "Removed \(emoji) from a message" : "You removed \(emoji) from a message", image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: chat.isGroup ? "Removed \(emoji) from a message" : "\(chat.lastMessageDetails?.userName ?? "") removed \(emoji) from a message", image: "",isReaction : true)
@@ -207,25 +207,25 @@ struct ISMConversationSubView: View {
                 getLabel(hideImage: false,text: "\(chat.lastMessageDetails?.memberName.capitalizingFirstLetter() ?? "") left", image: "figure.walk",isReaction : true)
             }
             else if chat.lastMessageDetails?.action == ISMChatActionType.addAdmin.value{
-                if chat.lastMessageDetails?.memberId == userSession.getUserId(){
+                if chat.lastMessageDetails?.memberId == userData.userId{
                     getLabel(hideImage: true,text: "Added you as an admin", image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: "Added \(chat.lastMessageDetails?.memberName ?? "") as an admin", image: "",isReaction : true)
                 }
             }else if chat.lastMessageDetails?.action == ISMChatActionType.removeAdmin.value{
-                if chat.lastMessageDetails?.memberId == userSession.getUserId(){
+                if chat.lastMessageDetails?.memberId == userData.userId{
                     getLabel(hideImage: true,text: "Removed you as an admin", image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: "Removed \(chat.lastMessageDetails?.memberName ?? "") as an admin", image: "",isReaction : true)
                 }
             }else if chat.lastMessageDetails?.action == ISMChatActionType.membersRemove.value{
-                if chat.lastMessageDetails?.members.first?.memberId == userSession.getUserId(){
+                if chat.lastMessageDetails?.members.first?.memberId == userData.userId{
                     getLabel(hideImage: true,text: "Removed you", image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: "Removed \(chat.lastMessageDetails?.members.first?.memberName?.capitalizingFirstLetter() ?? "")", image: "",isReaction : true)
                 }
             }else if chat.lastMessageDetails?.action == ISMChatActionType.membersAdd.value{
-                if chat.lastMessageDetails?.members.first?.memberId == userSession.getUserId(){
+                if chat.lastMessageDetails?.members.first?.memberId == userData.userId{
                     getLabel(hideImage: true,text: "Added you", image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: "Added \(chat.lastMessageDetails?.members.first?.memberName ?? "")", image: "",isReaction : true)
@@ -298,7 +298,7 @@ struct ISMConversationSubView: View {
         HStack(alignment: .center,spacing: 5){
             
             if chat.isGroup == false{
-                if chat.lastMessageDetails?.senderId == userSession.getUserId(){
+                if chat.lastMessageDetails?.senderId == userData.userId{
                     if isReaction == false{
                         messageDeliveryStatus()
                     }
@@ -383,7 +383,7 @@ struct ISMConversationSubView: View {
                 senderName = messageDetails.userName ?? ""
             }
         
-            let prefix = senderId == userSession.getUserId() ? "You:" : "\(senderName):"
+            let prefix = senderId == userData.userId ? "You:" : "\(senderName):"
             
             return AnyView(
                 Text(prefix)

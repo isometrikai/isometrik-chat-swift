@@ -282,7 +282,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         body["conversationId"] = conversationId
         body["body"] = messageInBody
         body["customType"] = customType
-        body["notificationTitle"] = ismChatSDK?.getUserSession().getUserName() ?? "Message"
+        body["notificationTitle"] = ismChatSDK?.getChatClient().getConfigurations().userConfig.userName ?? "Message"
         body["notificationBody"] = notificationBody
         body["searchableTags"] = searchTags
         body["events"] = eventDetail
@@ -443,7 +443,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         var body : [String : Any]
         var metaDataValue : [String : Any] = [:]
         let deviceId = UniqueIdentifierManager.shared.getUniqueIdentifier()
-        body = ["showInConversation" : true , "messageType" : 1 ,"encrypted" : false, "conversationIds" : conversationIds,"body" : message,"deviceId" : deviceId,"notificationTitle": ismChatSDK?.getUserSession().getUserName() ?? "","customType" : customType] as [String : Any]
+        body = ["showInConversation" : true , "messageType" : 1 ,"encrypted" : false, "conversationIds" : conversationIds,"body" : message,"deviceId" : deviceId,"notificationTitle": ismChatSDK?.getChatClient().getConfigurations().userConfig.userName ?? "","customType" : customType] as [String : Any]
         
         if let obj = attachments{
             if attachments?.attachmentType == 3  {
@@ -536,14 +536,14 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         }
         let replyMessageData : [String : Any] = ["parentMessageBody" : parentMessage.body,
                                                  "parentMessageUserId" : parentMessage.senderInfo?.userId ?? "",
-                                                 "parentMessageInitiator" : ismChatSDK?.getUserSession().getUserId() == parentMessage.senderInfo?.userId,
+                                                 "parentMessageInitiator" : ismChatSDK?.getChatClient().getConfigurations().userConfig.userId == parentMessage.senderInfo?.userId,
                                                  "parentMessageUserName" : parentMessage.senderInfo?.userName ?? "",
                                                  "parentMessageMessageType" : parentMessage.customType,
                                                  "parentMessageAttachmentUrl" : thumbnailUrl,
                                                  "parentMessagecaptionMessage" : parentMessage.metaData?.captionMessage ?? ""]
         let metaData : [String : Any] = ["replyMessage" : replyMessageData]
         let eventDetail : [String : Any] = ["sendPushNotification" : true,"updateUnreadCount" : true]
-        body = ["showInConversation" : true , "messageType" : 2 , "encrypted" : false ,"deviceId" : deviceId,"conversationId" : conversationId, "body" : message,"customType" : customType,"parentMessageId" : parentMessage.messageId,"metaData" : metaData,"notificationTitle": ismChatSDK?.getUserSession().getUserName() ?? "","notificationBody": message, "events" : eventDetail] as [String : Any]
+        body = ["showInConversation" : true , "messageType" : 2 , "encrypted" : false ,"deviceId" : deviceId,"conversationId" : conversationId, "body" : message,"customType" : customType,"parentMessageId" : parentMessage.messageId,"metaData" : metaData,"notificationTitle": ismChatSDK?.getChatClient().getConfigurations().userConfig.userName ?? "","notificationBody": message, "events" : eventDetail] as [String : Any]
         
         ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.sendMessage,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatSendMsg?,ISMChatErrorData?>) in
             switch result{
@@ -631,7 +631,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
                             continue // Skip this message if conversationId or messageId is nil
                         }
                         
-                        let myUserId = self.ismChatSDK?.getUserSession().getUserId() ?? ""
+                        let myUserId = self.ismChatSDK?.getChatClient().getConfigurations().userConfig.userId ?? ""
                         
                         // Check if your userId is contained in the deliveredTo array
                         let containsUserId = message.deliveredTo?.contains(where: { $0.userId == myUserId }) ?? false

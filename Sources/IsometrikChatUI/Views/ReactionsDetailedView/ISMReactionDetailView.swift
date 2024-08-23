@@ -22,7 +22,7 @@ struct ISMReactionDetailView: View {
     @Binding var showReactionDetail : Bool
     @Binding var reactionRemoved : String
     @EnvironmentObject var realmManager : RealmManager
-    @State var userSession = ISMChatSdk.getInstance().getUserSession()
+    @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     //MARK:  - LIFECYCLE
     var body: some View {
@@ -85,8 +85,8 @@ struct ISMReactionDetailView: View {
                                 subViewForGroup(userId: user, reactionType: reactionType)
                             }else{
                                 subView(userId: user,
-                                        profilePicture: user == userSession.getUserId() ? (userSession.getUserProfilePicture() ?? "") : (opponentDeatil.userProfileImageUrl ?? ""),
-                                        userName: user == userSession.getUserId() ? (userSession.getUserName() ?? "") : (opponentDeatil.userName ?? ""),
+                                        profilePicture: user == userData.userId ? (userData.userProfileImage ?? "") : (opponentDeatil.userProfileImageUrl ?? ""),
+                                        userName: user == userData.userId ? (userData.userName ?? "") : (opponentDeatil.userName ?? ""),
                                         userIdentifier: opponentDeatil.userIdentifier ?? "",
                                         reactionType: reactionType)
                             }
@@ -99,7 +99,7 @@ struct ISMReactionDetailView: View {
                         if isGroup == true{
                             subViewForGroup(userId: item, reactionType: message.reactions[selectedTab - 1].reactionType)
                         }else{
-                            subView(userId: item, profilePicture: item == userSession.getUserId() ? (userSession.getUserProfilePicture() ?? "") : (opponentDeatil.userProfileImageUrl ?? ""),
+                            subView(userId: item, profilePicture: item == userData.userId ? (userData.userProfileImage ?? "") : (opponentDeatil.userProfileImageUrl ?? ""),
                                     userName: opponentDeatil.userName ?? "",
                                     userIdentifier: opponentDeatil.userIdentifier ?? "",
                                     reactionType: message.reactions[selectedTab - 1].reactionType)
@@ -126,7 +126,7 @@ struct ISMReactionDetailView: View {
         viewModel.removeReaction(conversationId: self.message.conversationId, messageId: self.message.messageId, emojiReaction: reaction) { _ in
             reactionRemoved = reaction
             showReactionDetail = false
-            realmManager.addLastMessageOnAddAndRemoveReaction(conversationId: self.message.conversationId, action: ISMChatActionType.reactionRemove.value, emoji: reaction, userId: userSession.getUserId() ?? "")
+            realmManager.addLastMessageOnAddAndRemoveReaction(conversationId: self.message.conversationId, action: ISMChatActionType.reactionRemove.value, emoji: reaction, userId: userData.userId ?? "")
         }
     }
     
@@ -134,10 +134,10 @@ struct ISMReactionDetailView: View {
         HStack {
             UserAvatarView(avatar: profilePicture, showOnlineIndicator: false, size: CGSize(width: 38, height: 38), userName: userName, font: .regular(size: 14))
             VStack(alignment: .leading) {
-                Text(userId == userSession.getUserId() ? ConstantStrings.you : userName)
+                Text(userId == userData.userId ? ConstantStrings.you : userName)
                     .font(Font.regular(size: 16))
                     .foregroundColor(Color(hex: "#294566"))
-                Text(userId == userSession.getUserId() ? ConstantStrings.tapToRemove : userIdentifier)
+                Text(userId == userData.userId ? ConstantStrings.tapToRemove : userIdentifier)
                     .font(Font.regular(size: 12))
                     .foregroundColor(Color(hex: "#9EA4C3"))
             }
@@ -145,7 +145,7 @@ struct ISMReactionDetailView: View {
             Text(ISMChatHelper.getEmoji(valueString: reactionType))
                 .font(Font.regular(size: 28))
         }.onTapGesture {
-            if userId == userSession.getUserId() {
+            if userId == userData.userId {
                 removeReaction(reaction: reactionType)
             }
         }
@@ -158,10 +158,10 @@ struct ISMReactionDetailView: View {
             }
             UserAvatarView(avatar: groupMember?.userProfileImageUrl ?? "", showOnlineIndicator: false, size: CGSize(width: 38, height: 38), userName: groupMember?.userName ?? "", font: .regular(size: 14))
             VStack(alignment: .leading) {
-                Text(groupMember?.userId == userSession.getUserId() ? ConstantStrings.you : (groupMember?.userName ?? ""))
+                Text(groupMember?.userId == userData.userId ? ConstantStrings.you : (groupMember?.userName ?? ""))
                     .font(Font.regular(size: 16))
                     .foregroundColor(Color(hex: "#294566"))
-                Text(groupMember?.userId == userSession.getUserId() ? ConstantStrings.tapToRemove : (groupMember?.userIdentifier ?? ""))
+                Text(groupMember?.userId == userData.userId ? ConstantStrings.tapToRemove : (groupMember?.userIdentifier ?? ""))
                     .font(Font.regular(size: 12))
                     .foregroundColor(Color(hex: "#9EA4C3"))
             }
@@ -169,7 +169,7 @@ struct ISMReactionDetailView: View {
             Text(ISMChatHelper.getEmoji(valueString: reactionType))
                 .font(Font.regular(size: 28))
         }.onTapGesture {
-            if userId == userSession.getUserId() {
+            if userId == userData.userId {
                 removeReaction(reaction: reactionType)
             }
         }

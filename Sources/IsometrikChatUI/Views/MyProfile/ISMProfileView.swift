@@ -31,7 +31,7 @@ public struct ISMProfileView: View {
     @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State public var userSession = ISMChatSdk.getInstance().getUserSession()
+    @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     //MARK: - BODY
     public var body: some View {
@@ -137,16 +137,16 @@ public struct ISMProfileView: View {
                     }
                     .listStyle(DefaultListStyle())
                     .onAppear(perform: {
-                        self.userName = userSession.getUserName()
-                        self.email = userSession.getEmailId()
-                        self.userProfileImageUrl = userSession.getUserProfilePicture()
-                        self.isSwitchOn = userSession.getNotificationStatus()
-                        if userSession.getUserBio() != ""{
-                            self.about = userSession.getUserBio()
+                        self.userName = userData.userName
+                        self.email = userData.userEmail
+                        self.userProfileImageUrl = userData.userProfileImage
+                        self.isSwitchOn = userData.allowNotification
+                        if userData.userBio != ""{
+                            self.about = userData.userBio
                         }else{
 //                            self.about = "Hey there! I m using Wetalk."
                         }
-                        self.showLastSeen = userSession.getLastSeenStatus()
+                        self.showLastSeen = userData.showLastSeen
                     })
                     .sheet(isPresented: $showSheet){
                         ISMMediaPickerView(selectedMedia: $selectedMedia, selectedProfilePicture: $image, isProfile: true)
@@ -210,12 +210,12 @@ public struct ISMProfileView: View {
         viewModel.getUserData { data in
             if let user = data {
                 self.viewModel.userData = user
-                userSession.setUserProfilePicture(url: user.userProfileImageUrl ?? "")
-                userSession.setUserName(userName: user.userName ?? "")
-                userSession.setUserEmailId(email: user.userIdentifier ?? "")
-                userSession.setUserBio(bio: user.metaData?.about ?? "")
-                userSession.setnotification(on: user.notification ?? true)
-                userSession.setLastSeen(showLastSeen: user.metaData?.showlastSeen ?? true)
+                userData.userProfileImage = user.userProfileImageUrl ?? ""
+                userData.userName =  user.userName ?? ""
+                userData.userEmail =  user.userIdentifier ?? ""
+                userData.userBio =  user.metaData?.about ?? ""
+                userData.allowNotification = user.notification ?? true
+                userData.showLastSeen = user.metaData?.showlastSeen ?? true
                 completion()
             }
         }

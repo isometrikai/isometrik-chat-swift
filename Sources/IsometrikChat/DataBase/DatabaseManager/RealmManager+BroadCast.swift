@@ -18,7 +18,10 @@ extension RealmManager{
     
     //MARK: - get all broadcast
     public func getBroadCasts() -> [BroadCastListDB] {
-        broadcasts
+        broadcasts = broadcasts.sorted(by: { lhsData, rhsData in
+            Int(lhsData.createdAt ?? 0) > Int(rhsData.createdAt ?? 0)
+        })
+        return broadcasts
     }
     
     //MARK: - manage broadcast list, if already there update else add.

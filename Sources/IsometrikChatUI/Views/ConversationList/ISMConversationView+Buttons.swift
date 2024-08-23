@@ -14,7 +14,7 @@ extension ISMConversationView{
             Button {
                 showProfile = true
             } label: {
-                UserAvatarView(avatar: userSession.getUserProfilePicture() , showOnlineIndicator: false,size: CGSize(width: 38, height: 38),userName : userSession.getUserName() ,font: .regular(size: 14))
+                UserAvatarView(avatar: userData.userProfileImage , showOnlineIndicator: false,size: CGSize(width: 38, height: 38),userName : userData.userName ,font: .regular(size: 14))
             }
             Text("Chats")
                 .font(Font.bold(size: 25))

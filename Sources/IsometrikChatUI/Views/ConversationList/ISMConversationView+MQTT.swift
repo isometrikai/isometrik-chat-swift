@@ -17,7 +17,7 @@ extension ISMConversationView{
             //check action == memberLeave or removeMEMBER and then remove that member from localdb
             realmManager.updateMemberCount(convId: messageInfo.conversationId ?? "", inc: false, dec: true, count: 1)
             if onScreen == true{
-                if userSession.getNotificationStatus() == true{
+                if userData.allowNotification == true{
                     ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.conversationTitle ?? "")", body: "\(messageInfo.userName ?? "") left group", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? ""])
                 }
             }
@@ -26,8 +26,8 @@ extension ISMConversationView{
             if messageInfo.meetingId == nil{
                 realmManager.updateMemberCount(convId: messageInfo.conversationId ?? "", inc: false, dec: true, count: 1)
                 if onScreen == true{
-                    let memberName = messageInfo.members?.first?.memberId == userSession.getUserId() ? ConstantStrings.you.lowercased() : messageInfo.members?.first?.memberName
-                    if userSession.getNotificationStatus() == true{
+                    let memberName = messageInfo.members?.first?.memberId == userData.userId ? ConstantStrings.you.lowercased() : messageInfo.members?.first?.memberName
+                    if userData.allowNotification == true{
                         ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.conversationTitle ?? "")", body: "\(messageInfo.userName ?? "") removed \(memberName ?? "")", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? ""])
                     }
                 }
@@ -37,8 +37,8 @@ extension ISMConversationView{
             if messageInfo.meetingId == nil{
                 realmManager.updateMemberCount(convId: messageInfo.conversationId ?? "", inc: true, dec: false, count: 1)
                 if onScreen == true{
-                    let memberName = messageInfo.members?.first?.memberId == userSession.getUserId() ? ConstantStrings.you.lowercased() : messageInfo.members?.first?.memberName
-                    if userSession.getNotificationStatus() == true{
+                    let memberName = messageInfo.members?.first?.memberId == userData.userId ? ConstantStrings.you.lowercased() : messageInfo.members?.first?.memberName
+                    if userData.allowNotification == true{
                         ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.conversationTitle ?? "")", body: "\(messageInfo.userName ?? "") added \(memberName ?? "")", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? ""])
                     }
                 }
@@ -47,7 +47,7 @@ extension ISMConversationView{
             //update conversationTilte in localdb
             if onScreen == true{
                 realmManager.changeGroupName(conversationId: messageInfo.conversationId ?? "", conversationTitle: messageInfo.conversationTitle ?? "")
-                if userSession.getNotificationStatus() == true{
+                if userData.allowNotification == true{
                     ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.conversationTitle ?? "")", body: "\(messageInfo.userName ?? "") changed group name", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? ""])
                 }
             }
@@ -55,7 +55,7 @@ extension ISMConversationView{
             //update conversationImage in localdb
             if onScreen == true{
                 realmManager.changeGroupIcon(conversationId: messageInfo.conversationId ?? "", conversationIcon: messageInfo.conversationImageUrl ?? "")
-                if userSession.getNotificationStatus() == true{
+                if userData.allowNotification == true{
                     ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.conversationTitle ?? "")", body: "\(messageInfo.userName ?? "") changed group icon", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? ""])
                 }
             }
@@ -96,7 +96,7 @@ extension ISMConversationView{
     }
     
     func blockUnblockUserEvent(messageInfo : ISMChatUserBlockAndUnblock){
-        if userSession.getUserId() != messageInfo.initiatorId{
+        if userData.userId != messageInfo.initiatorId{
             let msg = ISMChatLastMessage(sentAt: messageInfo.sentAt,conversationId: messageInfo.conversationId, body: nil, messageId: messageInfo.messageId, deliveredToUser: messageInfo.opponentId, timeStamp: messageInfo.sentAt, action: messageInfo.action, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName,initiatorIdentifier: messageInfo.initiatorIdentifier)
             
             self.realmManager.updateLastmsg(conId: messageInfo.conversationId ?? "", msg: msg)
@@ -144,7 +144,7 @@ extension ISMConversationView{
     }
     
     func msgReceived(messageInfo: ISMChatMessageDelivered) {
-        if userSession.getUserId() != messageInfo.senderId{
+        if userData.userId != messageInfo.senderId{
             //add members in Message
             
             var membersArray : [ISMChatMemberAdded] = []
@@ -186,7 +186,7 @@ extension ISMConversationView{
                 }
             }
             if onScreen == true{
-                if userSession.getNotificationStatus() == true{
+                if userData.allowNotification == true{
                     ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.senderName ?? "")", body: "\(messageInfo.notificationBody ?? (messageInfo.body ?? ""))", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? "","messageId" : messageInfo.messageId ?? ""])
                 }
             }
@@ -195,7 +195,7 @@ extension ISMConversationView{
     
     
     func msgDelivered(messageInfo: ISMChatMessageDelivered) {
-        if userSession.getUserId() != messageInfo.senderId {
+        if userData.userId != messageInfo.senderId {
             let msg = ISMChatLastMessage(sentAt: messageInfo.sentAt,senderName: messageInfo.senderName,senderIdentifier: messageInfo.senderIdentifier,senderId: messageInfo.senderId,conversationId: messageInfo.conversationId,body: messageInfo.body ?? "",messageId: messageInfo.messageId,deliveredToUser: messageInfo.userId,timeStamp: messageInfo.sentAt,customType: messageInfo.customType,action: messageInfo.action, userId: messageInfo.userId, initiatorId: messageInfo.initiatorId, memberName: messageInfo.memberName, initiatorName: messageInfo.initiatorName, memberId: messageInfo.memberId, userName: messageInfo.userName,userIdentifier: messageInfo.userIdentifier,userProfileImageUrl: messageInfo.userProfileImageUrl)
             
             self.realmManager.updateLastmsg(conId: messageInfo.conversationId ?? "", msg: msg)

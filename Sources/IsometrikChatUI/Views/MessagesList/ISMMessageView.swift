@@ -164,7 +164,7 @@ public struct ISMMessageView: View {
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State public var themePlaceholder = ISMChatSdkUI.getInstance().getAppAppearance().appearance.placeholders
-    @State public var userSession = ISMChatSdk.getInstance().getUserSession()
+    @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     @State var postIdToNavigate : String = ""
     @State var navigateToAddParticipantsInGroupViaDelegate : Bool = false
@@ -216,31 +216,31 @@ public struct ISMMessageView: View {
                     }.onTapGesture {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     }
-                    if isGroup == true{
-                        if !networkMonitor.isConnected{
-                            toolBarView()
-                        }else{
-                            //here we are checking if your a member of group anymore
-                            if let conversation = conversationDetail?.conversationDetails{
-                                if let members = conversation.members,
-                                    members.contains(where: { member in
-                                       return member.userId == userSession.getUserId()
-                                   }) {
-                                    toolBarView()
-                                } else {
-                                    NoLongerMemberToolBar()
-                                }
-                            }else{
-                                toolBarView()
-                            }
-                        }
-                    }else{
-                        if ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true && showOptionToAllow() == true{
-                            acceptRejectView()
-                        }else{
-                            toolBarView()
-                        }
-                    }
+//                    if isGroup == true{
+//                        if !networkMonitor.isConnected{
+//                            toolBarView()
+//                        }else{
+//                            //here we are checking if your a member of group anymore
+//                            if let conversation = conversationDetail?.conversationDetails{
+//                                if let members = conversation.members,
+//                                    members.contains(where: { member in
+//                                       return member.userId == userSession.getUserId()
+//                                   }) {
+//                                    toolBarView()
+//                                } else {
+//                                    NoLongerMemberToolBar()
+//                                }
+//                            }else{
+//                                toolBarView()
+//                            }
+//                        }
+//                    }else{
+//                        if ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true && showOptionToAllow() == true{
+//                            acceptRejectView()
+//                        }else{
+//                            toolBarView()
+//                        }
+//                    }
                 }//VStack
                 .onAppear {
                     setupOnAppear()
@@ -636,7 +636,7 @@ public struct ISMMessageView: View {
     //checking if we are allowed to send message or not
     func isMessagingEnabled() -> Bool{
         if self.conversationDetail?.conversationDetails?.messagingDisabled == true{
-            if realmManager.messages.last?.last?.initiatorId != userSession.getUserId(){
+            if realmManager.messages.last?.last?.initiatorId != userData.userId{
                 uAreBlock = true
             }else{
                 showUnblockPopUp = true
@@ -666,7 +666,7 @@ public struct ISMMessageView: View {
                         //mentionUser Flow
                         mentionUsers.removeAll()
                         filteredUsers.removeAll()
-                        let filteredMembers = members.filter { $0.userId != userSession.getUserId() }
+                        let filteredMembers = members.filter { $0.userId != userData.userId }
                         mentionUsers.append(contentsOf: filteredMembers)
                     }
                     if self.isGroup == true{

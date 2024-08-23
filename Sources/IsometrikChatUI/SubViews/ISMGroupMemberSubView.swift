@@ -16,7 +16,7 @@ struct ISMGroupMemberSubView: View {
     @Binding var selectedMember : ISMChatGroupMember
     @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var userSession = ISMChatSdk.getInstance().getUserSession()
+    @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     //MARK: - BODY
     var body: some View {
         Button {
@@ -26,7 +26,7 @@ struct ISMGroupMemberSubView: View {
                 UserAvatarView(avatar: member.userProfileImageUrl ?? "", showOnlineIndicator: false,size: CGSize(width: 29, height: 29), userName: member.userName ?? "",font: themeFonts.chatListUserMessage)
                 
                 VStack(alignment: .leading,spacing: 5){
-                    if member.userId != userSession.getUserId(){
+                    if member.userId != userData.userId{
                         Text(member.userName?.capitalizingFirstLetter() ?? "")
                             .font(themeFonts.messageListMessageText)
                             .foregroundColor(themeColor.messageListHeaderTitle)
@@ -47,7 +47,7 @@ struct ISMGroupMemberSubView: View {
                         .font(themeFonts.chatListUserMessage)
                         .foregroundColor(themeColor.chatListUserMessage)
                 }
-                if member.userId != userSession.getUserId(){
+                if member.userId != userData.userId{
                     if hideDisclosure == false{
                         Image("chevron_right")
                             .resizable()
