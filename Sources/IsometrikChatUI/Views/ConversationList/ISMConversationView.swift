@@ -67,7 +67,7 @@ public struct ISMConversationView : View {
     @State public var navigateToBroadCastMessages : Bool = false
     
     @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    @State public var myUserData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     @State public var hideNavigationBar = ISMChatSdkUI.getInstance().getChatProperties().hideNavigationBarForConversationList
     
     public var delegate : ISMConversationViewDelegate? = nil
@@ -88,12 +88,6 @@ public struct ISMConversationView : View {
             ZStack{
                 themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
-                    
-//                    if ISMChatSdk.getInstance().getFramework() == .UIKit{
-//                        CustomSearchBar(searchText: $query).padding(.horizontal,15)
-//                    }
-                    
-                    
                     if (ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ? realmManager.getPrimaryConversationCount() : realmManager.getConversationCount()) == 0 && query == ""{
                         // default placeholder
                         if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true{
@@ -124,31 +118,32 @@ public struct ISMConversationView : View {
                                                 }
                                             }
                                     }
-                                }else{
-                                    ZStack{
-                                        ISMConversationSubView(chat: data, hasUnreadCount: (data.unreadMessagesCount ) > 0)
-                                            .onAppear {
-                                                // pagination code
-                                                if self.shouldLoadMoreData(data) {
-                                                    self.loadMoreData()
-                                                }
-                                            }
-                                        NavigationLink {
-                                            //navigation to chat
-                                            ISMMessageView(conversationViewModel : self.viewModel,conversationID: data.lastMessageDetails?.conversationId,opponenDetail : data.opponentDetails,myUserId: viewModel.userData?.userId ?? "", isGroup: data.isGroup,fromBroadCastFlow: false,groupCastId: "",groupConversationTitle: data.conversationTitle,groupImage: data.conversationImageUrl)
-                                                .environmentObject(realmManager)
-                                                .onAppear{
-                                                    onScreen = false
-                                                    query = ""
-                                                }
-                                        } label: {
-                                            EmptyView()
-                                        }.buttonStyle(PlainButtonStyle())
-                                            .frame(width :0)
-                                            .opacity(0)
-                                    }
-                                    //:ZStack
                                 }
+//                                else{
+//                                    ZStack{
+//                                        ISMConversationSubView(chat: data, hasUnreadCount: (data.unreadMessagesCount ) > 0)
+//                                            .onAppear {
+//                                                // pagination code
+//                                                if self.shouldLoadMoreData(data) {
+//                                                    self.loadMoreData()
+//                                                }
+//                                            }
+//                                        NavigationLink {
+//                                            //navigation to chat
+//                                            ISMMessageView(conversationViewModel : self.viewModel,conversationID: data.lastMessageDetails?.conversationId,opponenDetail : data.opponentDetails,myUserId: viewModel.userData?.userId ?? "", isGroup: data.isGroup,fromBroadCastFlow: false,groupCastId: "",groupConversationTitle: data.conversationTitle,groupImage: data.conversationImageUrl)
+//                                                .environmentObject(realmManager)
+//                                                .onAppear{
+//                                                    onScreen = false
+//                                                    query = ""
+//                                                }
+//                                        } label: {
+//                                            EmptyView()
+//                                        }.buttonStyle(PlainButtonStyle())
+//                                            .frame(width :0)
+//                                            .opacity(0)
+//                                    }
+//                                    //:ZStack
+//                                }
                             }//:FOREACH
                             .onDelete { offsets in   //on slide of item in list give delete option
                                 for row in offsets{
@@ -231,7 +226,7 @@ public struct ISMConversationView : View {
                 .background(NavigationLink(
                     "",
                    destination:
-                        ISMMessageView(conversationViewModel : self.viewModel,conversationID: conversationIdForNotification ,opponenDetail : opponentDetailforNotification, myUserId: userData.userId, isGroup: isGroupFromNotification,fromBroadCastFlow: false,groupCastId: "", groupConversationTitle: groupTitleFromNotification ?? "", groupImage: groupImageFromNotification ?? "").environmentObject(realmManager).onAppear{onScreen = false},
+                        ISMMessageView(conversationViewModel : self.viewModel,conversationID: conversationIdForNotification ,opponenDetail : opponentDetailforNotification, myUserId: myUserData.userId, isGroup: isGroupFromNotification,fromBroadCastFlow: false,groupCastId: "", groupConversationTitle: groupTitleFromNotification ?? "", groupImage: groupImageFromNotification ?? "").environmentObject(realmManager).onAppear{onScreen = false},
                    isActive: $navigateToMessageViewFromLocalNotification)
                 )
                 .background(NavigationLink("", destination:  ISMMessageView(conversationViewModel : self.viewModel,conversationID: "",opponenDetail: nil,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: true,groupCastId: self.groupCastIdToNavigate ?? "", groupConversationTitle: nil, groupImage: nil)
@@ -258,7 +253,9 @@ public struct ISMConversationView : View {
                         return
                     }
                     ISMChatHelper.print("USER UPDATED ----------------->\(messageInfo)")
-                    self.userData { _ in
+                    if ISMChatSdk.sharedInstance.getFramework() == .SwiftUI{
+                        self.getuserData { _ in
+                        }
                     }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttmessageDetailsUpdated.name)){ notification in
@@ -309,7 +306,6 @@ public struct ISMConversationView : View {
                     }
                     ISMChatHelper.print("USER BLOCKED ----------------->\(messageInfo)")
                     blockUnblockUserEvent(messageInfo: messageInfo)
-                    
                 }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name)){
                     notification in
@@ -318,7 +314,6 @@ public struct ISMConversationView : View {
                     }
                     ISMChatHelper.print("USER UNBLOCKED ----------------->\(messageInfo)")
                     blockUnblockUserEvent(messageInfo: messageInfo)
-                    
                 }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name)){ notification in
                     guard let messageInfo = notification.userInfo?["data"] as? ISMChatMultipleMessageRead else {
@@ -425,7 +420,7 @@ public struct ISMConversationView : View {
             if !networkMonitor.isConnected {
                 showingNoInternetAlert = true
             }
-            userData { userId in
+            getuserData{ userId in
                 self.chatViewModel.getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId: userId ?? "")
             }
         }

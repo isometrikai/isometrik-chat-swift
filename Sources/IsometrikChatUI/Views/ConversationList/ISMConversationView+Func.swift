@@ -26,7 +26,7 @@ extension ISMConversationView{
         }
     }
     
-    func userData(completion :@escaping (String?)->()){
+    func getuserData(completion :@escaping (String?)->()){
         viewModel.getUserData { data in
             if let user = data {
                 viewModel.userData = user

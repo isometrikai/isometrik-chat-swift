@@ -17,8 +17,6 @@ public class ISMChatSdk{
     //MARK: - PROPERTIES
     //chat client
     private var chatClient: ISMChatClient?
-//    //user session
-//    private var userSession: ISMChatUserSession?
     //mqtt session
     private var mqttSession: ISMChatMQTTManager?
     //instance
@@ -50,14 +48,6 @@ public class ISMChatSdk{
         }
         return chatClient!
     }
-    
-//    public func getUserSession() -> ISMChatUserSession{
-//        if userSession == nil{
-//            print("Create configuration before trying to access user session object.")
-//        }
-//        return userSession!
-//    }
-    
     public func getFramework() -> FrameworkType{
         return hostFrameworksType
     }
@@ -117,17 +107,6 @@ public class ISMChatSdk{
         
         //chatClient
         self.chatClient = ISMChatClient(communicationConfig: communicationConfiguration, apiManager: apiManager)
-        
-        //userSession
-//        let userSession = ISMChatUserSession()
-//        userSession.setUserId(userId: userConfig.userId)
-//        userSession.setUserToken(token: userConfig.userToken)
-//        userSession.setUserEmailId(email: userConfig.userEmail)
-//        userSession.setUserProfilePicture(url: userConfig.userProfileImage)
-//        userSession.setUserName(userName: userConfig.userName)
-//        userSession.setProfileType(type: userConfig.userProfileType)
-//        self.userSession = userSession
-        
         //mqttSession
         let viewcontrollers = ISMChatViewController(conversationListViewController: conversationListViewControllerName, messagesListViewController: messagesListViewControllerName)
         

@@ -716,7 +716,6 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
                 completion(true)
             case .failure(let error):
                 ISMChatHelper.print("Delivered Message Indicator Api failed -----> \(String(describing: error))")
-                completion(true)
             }
         }
     }
