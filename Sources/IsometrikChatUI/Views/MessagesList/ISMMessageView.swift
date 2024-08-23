@@ -216,31 +216,31 @@ public struct ISMMessageView: View {
                     }.onTapGesture {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     }
-//                    if isGroup == true{
-//                        if !networkMonitor.isConnected{
-//                            toolBarView()
-//                        }else{
-//                            //here we are checking if your a member of group anymore
-//                            if let conversation = conversationDetail?.conversationDetails{
-//                                if let members = conversation.members,
-//                                    members.contains(where: { member in
-//                                       return member.userId == userSession.getUserId()
-//                                   }) {
-//                                    toolBarView()
-//                                } else {
-//                                    NoLongerMemberToolBar()
-//                                }
-//                            }else{
-//                                toolBarView()
-//                            }
-//                        }
-//                    }else{
-//                        if ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true && showOptionToAllow() == true{
-//                            acceptRejectView()
-//                        }else{
-//                            toolBarView()
-//                        }
-//                    }
+                    if isGroup == true{
+                        if !networkMonitor.isConnected{
+                            toolBarView()
+                        }else{
+                            //here we are checking if your a member of group anymore
+                            if let conversation = conversationDetail?.conversationDetails{
+                                if let members = conversation.members,
+                                    members.contains(where: { member in
+                                       return member.userId == userSession.getUserId()
+                                   }) {
+                                    toolBarView()
+                                } else {
+                                    NoLongerMemberToolBar()
+                                }
+                            }else{
+                                toolBarView()
+                            }
+                        }
+                    }else{
+                        if ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true && showOptionToAllow() == true{
+                            acceptRejectView()
+                        }else{
+                            toolBarView()
+                        }
+                    }
                 }//VStack
                 .onAppear {
                     setupOnAppear()
