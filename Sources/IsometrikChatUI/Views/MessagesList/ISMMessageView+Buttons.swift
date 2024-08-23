@@ -159,9 +159,9 @@ extension ISMMessageView{
                                         delegate?.navigateToAppProfile(appUserId:
                                                                         self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? (opponenDetail?.metaData?.userId ?? ""))
                                     }
+                                }else{
+                                    
                                 }
-                            }else{
-                                navigateToProfile = true
                             }
 //                        }else{
 //                            showingNoInternetAlert = true

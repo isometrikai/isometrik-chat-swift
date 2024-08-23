@@ -224,7 +224,7 @@ public struct ISMMessageView: View {
                             if let conversation = conversationDetail?.conversationDetails{
                                 if let members = conversation.members,
                                     members.contains(where: { member in
-                                       return member.userId == userSession.getUserId()
+                                        return member.userId == userData.userId
                                    }) {
                                     toolBarView()
                                 } else {
