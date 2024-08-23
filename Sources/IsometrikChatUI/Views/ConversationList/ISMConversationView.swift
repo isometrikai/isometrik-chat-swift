@@ -308,9 +308,8 @@ public struct ISMConversationView : View {
                         return
                     }
                     ISMChatHelper.print("USER BLOCKED ----------------->\(messageInfo)")
-                    if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
-                        blockUnblockUserEvent(messageInfo: messageInfo)
-                    }
+                    blockUnblockUserEvent(messageInfo: messageInfo)
+                    
                 }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name)){
                     notification in
@@ -318,9 +317,8 @@ public struct ISMConversationView : View {
                         return
                     }
                     ISMChatHelper.print("USER UNBLOCKED ----------------->\(messageInfo)")
-                    if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
-                        blockUnblockUserEvent(messageInfo: messageInfo)
-                    }
+                    blockUnblockUserEvent(messageInfo: messageInfo)
+                    
                 }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name)){ notification in
                     guard let messageInfo = notification.userInfo?["data"] as? ISMChatMultipleMessageRead else {
