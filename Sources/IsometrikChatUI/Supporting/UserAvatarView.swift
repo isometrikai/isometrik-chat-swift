@@ -54,26 +54,18 @@ public struct AvatarView: View {
     var size: CGSize = .defaultAvatarSize
     var userName : String
     var font : Font = .headline
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeFont = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     
     public var body: some View {
-        if avatar == "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg" || avatar == "" || avatar == "https://admin-media.isometrik.io/profile/def_profile.png"{
+        if avatar == "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg" || avatar == "" || avatar == "https://admin-media.isometrik.io/profile/def_profile.png" || avatar == "https://cdn.getfudo.com/adminAssets/0/0/Logo.png"{
             ZStack{
                 Circle()
                     .frame(width: size.width,height: size.height)
-                    .foregroundColor(Color(hex: "#EDEBFE"))
+                    .foregroundColor(themeColor.avatarBackground)
                 Text(userName.uppercased())
-                    .font(font)
-                    .overlay {
-                        LinearGradient(
-                            colors: [Color(hex: "#A399F7"),Color(hex: "#7062E9")],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                        .mask(
-                            Text(userName.uppercased())
-                                .font(font)
-                        )
-                    }
+                    .font(themeFont.avatarText)
+                    .foregroundColor(themeColor.avatarText)
             }.frame(
                 width: size.width,
                 height: size.height
