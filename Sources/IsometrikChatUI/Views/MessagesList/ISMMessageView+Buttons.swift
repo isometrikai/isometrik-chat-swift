@@ -169,10 +169,10 @@ extension ISMMessageView{
                     } label: {
                         
                         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
-                            UserAvatarView(avatar: ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userProfileImageUrl ?? "", showOnlineIndicator: opponenDetail?.online ?? false,size: CGSize(width: 40, height: 40), userName: isGroup == false ? (opponenDetail?.userName ?? "") : (self.conversationDetail?.conversationDetails?.conversationTitle ?? "") ,font: .regular(size: 14))
+                            UserAvatarView(avatar: ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userProfileImageUrl ?? "", showOnlineIndicator: self.conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,size: CGSize(width: 40, height: 40), userName: isGroup == false ? (opponenDetail?.userName ?? "") : (self.conversationDetail?.conversationDetails?.conversationTitle ?? "") ,font: .regular(size: 14))
                                 .padding(.trailing,5)
                         }else{
-                            UserAvatarView(avatar: isGroup == false ? opponenDetail?.userProfileImageUrl ?? "" : (self.conversationDetail?.conversationDetails?.conversationImageUrl ?? (self.groupImage ?? "")), showOnlineIndicator: opponenDetail?.online ?? false,size: CGSize(width: 40, height: 40), userName: isGroup == false ? (opponenDetail?.userName ?? "") : (self.conversationDetail?.conversationDetails?.conversationTitle ?? "") ,font: .regular(size: 14))
+                            UserAvatarView(avatar: isGroup == false ? opponenDetail?.userProfileImageUrl ?? "" : (self.conversationDetail?.conversationDetails?.conversationImageUrl ?? (self.groupImage ?? "")), showOnlineIndicator: self.conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,size: CGSize(width: 40, height: 40), userName: isGroup == false ? (opponenDetail?.userName ?? "") : (self.conversationDetail?.conversationDetails?.conversationTitle ?? "") ,font: .regular(size: 14))
                                 .padding(.trailing,5)
                         }
                         
