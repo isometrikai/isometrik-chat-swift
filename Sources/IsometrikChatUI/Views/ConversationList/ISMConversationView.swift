@@ -88,84 +88,12 @@ public struct ISMConversationView : View {
             ZStack{
                 themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
-                    if (ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ? realmManager.getPrimaryConversationCount() : realmManager.getConversationCount()) == 0 && query == ""{
-                        // default placeholder
-                        if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true{
-                            themePlaceholder.chatListPlaceholder
-                        }else{
-                            Button {
-                                if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
-                                    createChat = true
-                                }
-                            } label: {
-                                themeImages.conversationListPlaceholder
-                                    .resizable()
-                                    .frame(width: 251, height: 163, alignment: .center)
-                            }
-                        }
-                    }else{
-                        List{
-                            ForEach(ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ? realmManager.getPrimaryConversation() : realmManager.getConversation()){ data in
-                                if ISMChatSdk.getInstance().getFramework() == .UIKit{
-                                    Button {
-                                        delegate?.navigateToMessageList(selectedUserToNavigate: data.opponentDetails, conversationId: data.lastMessageDetails?.conversationId, isGroup: data.isGroup, groupImage: data.conversationImageUrl,groupName: data.conversationTitle)
-                                    } label: {
-                                        ISMConversationSubView(chat: data, hasUnreadCount: (data.unreadMessagesCount) > 0)
-                                            .onAppear {
-                                                // pagination code
-                                                if self.shouldLoadMoreData(data) {
-                                                    self.loadMoreData()
-                                                }
-                                            }
-                                    }
-                                }
-//                                else{
-//                                    ZStack{
-//                                        ISMConversationSubView(chat: data, hasUnreadCount: (data.unreadMessagesCount ) > 0)
-//                                            .onAppear {
-//                                                // pagination code
-//                                                if self.shouldLoadMoreData(data) {
-//                                                    self.loadMoreData()
-//                                                }
-//                                            }
-//                                        NavigationLink {
-//                                            //navigation to chat
-//                                            ISMMessageView(conversationViewModel : self.viewModel,conversationID: data.lastMessageDetails?.conversationId,opponenDetail : data.opponentDetails,myUserId: viewModel.userData?.userId ?? "", isGroup: data.isGroup,fromBroadCastFlow: false,groupCastId: "",groupConversationTitle: data.conversationTitle,groupImage: data.conversationImageUrl)
-//                                                .environmentObject(realmManager)
-//                                                .onAppear{
-//                                                    onScreen = false
-//                                                    query = ""
-//                                                }
-//                                        } label: {
-//                                            EmptyView()
-//                                        }.buttonStyle(PlainButtonStyle())
-//                                            .frame(width :0)
-//                                            .opacity(0)
-//                                    }
-//                                    //:ZStack
-//                                }
-                            }//:FOREACH
-                            .onDelete { offsets in   //on slide of item in list give delete option
-                                for row in offsets{
-                                    print(row)
-                                    showDeleteOptions = true
-                                    selectedForDelete = realmManager.conversations[row]
-                                }
-                            }
-                            .listRowBackground(Color.clear)
-                        }
-                        .listStyle(.plain)
-                        .listRowSeparatorTint(Color.border)
-//                        .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
-                        .keyboardType(.default)
-                        .textContentType(.oneTimeCode)
-                        .autocorrectionDisabled(true)
-                        .refreshable {
-                            self.viewModel.resetdata()
-                            self.getConversationList()
-                        }
+                    if shouldShowPlaceholder {
+                        showPlaceholderView
+                    } else {
+                        conversationListView
                     }
-                }//:VStack
+                }
                 .onChange(of: query, perform: { newValue in
                     if newValue == "" {
                         realmManager.conversations = realmManager.storeConv
@@ -221,16 +149,16 @@ public struct ISMConversationView : View {
                 .background(NavigationLink("", destination:  ISMMessageView(conversationViewModel : self.viewModel,conversationID: selectedUserConversationId,opponenDetail: selectedUserToNavigate,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: false,groupCastId: "", groupConversationTitle: nil, groupImage: nil)
                     .environmentObject(realmManager), isActive: $navigatetoSelectedUser))
                 .background(NavigationLink("", destination:  ISMBlockUserView(conversationViewModel: self.viewModel), isActive: $navigateToBlockUsers))
-                .background(NavigationLink("", destination:  ISMBroadCastList()
-                    .environmentObject(realmManager), isActive: $navigateToBroadcastList))
-                .background(NavigationLink(
-                    "",
-                   destination:
-                        ISMMessageView(conversationViewModel : self.viewModel,conversationID: conversationIdForNotification ,opponenDetail : opponentDetailforNotification, myUserId: myUserData.userId, isGroup: isGroupFromNotification,fromBroadCastFlow: false,groupCastId: "", groupConversationTitle: groupTitleFromNotification ?? "", groupImage: groupImageFromNotification ?? "").environmentObject(realmManager).onAppear{onScreen = false},
-                   isActive: $navigateToMessageViewFromLocalNotification)
-                )
-                .background(NavigationLink("", destination:  ISMMessageView(conversationViewModel : self.viewModel,conversationID: "",opponenDetail: nil,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: true,groupCastId: self.groupCastIdToNavigate ?? "", groupConversationTitle: nil, groupImage: nil)
-                    .environmentObject(realmManager).onAppear{onScreen = false}, isActive: $navigateToBroadCastMessages))
+//                .background(NavigationLink("", destination:  ISMBroadCastList()
+//                    .environmentObject(realmManager), isActive: $navigateToBroadcastList))
+//                .background(NavigationLink(
+//                    "",
+//                   destination:
+//                        ISMMessageView(conversationViewModel : self.viewModel,conversationID: conversationIdForNotification ,opponenDetail : opponentDetailforNotification, myUserId: myUserData.userId, isGroup: isGroupFromNotification,fromBroadCastFlow: false,groupCastId: "", groupConversationTitle: groupTitleFromNotification ?? "", groupImage: groupImageFromNotification ?? "").environmentObject(realmManager).onAppear{onScreen = false},
+//                   isActive: $navigateToMessageViewFromLocalNotification)
+//                )
+//                .background(NavigationLink("", destination:  ISMMessageView(conversationViewModel : self.viewModel,conversationID: "",opponenDetail: nil,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: true,groupCastId: self.groupCastIdToNavigate ?? "", groupConversationTitle: nil, groupImage: nil)
+//                    .environmentObject(realmManager).onAppear{onScreen = false}, isActive: $navigateToBroadCastMessages))
                 .onAppear {
                     onScreen = true
                     self.viewModel.resetdata()
@@ -425,4 +353,127 @@ public struct ISMConversationView : View {
             }
         }
     }//:Body
+    
+    
+    // MARK: - Helper Computed Properties
+
+    private var shouldShowPlaceholder: Bool {
+        let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
+        let conversationCount = isOtherConversationList ? realmManager.getPrimaryConversationCount() : realmManager.getConversationCount()
+        return conversationCount == 0 && query.isEmpty
+    }
+
+    private var showPlaceholderView: some View {
+        Group {
+            if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder {
+                themePlaceholder.chatListPlaceholder
+            } else {
+                Button {
+                    if ISMChatSdk.getInstance().getFramework() == .SwiftUI {
+                        createChat = true
+                    }
+                } label: {
+                    themeImages.conversationListPlaceholder
+                        .resizable()
+                        .frame(width: 251, height: 163)
+                }
+            }
+        }
+    }
+
+    private var conversationListView: some View {
+        List {
+            ForEach(conversationData) { data in
+                if ISMChatSdk.getInstance().getFramework() == .UIKit {
+                    Button {
+                        navigateToMessageList(for: data)
+                    } label: {
+                        conversationSubView(for: data)
+                            .onAppear {
+                                handlePagination(for: data)
+                            }
+                    }
+                } 
+//                else {
+//                    ZStack {
+//                        conversationSubView(for: data)
+//                            .onAppear {
+//                                handlePagination(for: data)
+//                            }
+//                        NavigationLink(destination: messageView(for: data)) {
+//                            EmptyView()
+//                        }
+//                        .buttonStyle(PlainButtonStyle())
+//                        .frame(width: 0)
+//                        .opacity(0)
+//                    }
+//                }
+            }
+            .onDelete(perform: handleDelete)
+            .listRowBackground(Color.clear)
+        }
+        .listStyle(.plain)
+        .listRowSeparatorTint(Color.border)
+    //    .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
+        .keyboardType(.default)
+        .textContentType(.oneTimeCode)
+        .autocorrectionDisabled(true)
+        .refreshable {
+            viewModel.resetdata()
+            getConversationList()
+        }
+    }
+
+    // MARK: - Helper Methods
+
+    private var conversationData: [ConversationDB] {
+        let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
+        return isOtherConversationList ? realmManager.getPrimaryConversation() : realmManager.getConversation()
+    }
+
+    private func navigateToMessageList(for data: ConversationDB) {
+        delegate?.navigateToMessageList(
+            selectedUserToNavigate: data.opponentDetails,
+            conversationId: data.lastMessageDetails?.conversationId,
+            isGroup: data.isGroup,
+            groupImage: data.conversationImageUrl,
+            groupName: data.conversationTitle
+        )
+    }
+
+    private func conversationSubView(for data: ConversationDB) -> some View {
+        ISMConversationSubView(chat: data, hasUnreadCount: data.unreadMessagesCount > 0)
+    }
+
+    private func handlePagination(for data: ConversationDB) {
+        if shouldLoadMoreData(data) {
+            loadMoreData()
+        }
+    }
+
+    private func handleDelete(offsets: IndexSet) {
+        for row in offsets {
+            showDeleteOptions = true
+            selectedForDelete = realmManager.conversations[row]
+        }
+    }
+
+    private func messageView(for data: ConversationDB) -> some View {
+        ISMMessageView(
+            conversationViewModel: viewModel,
+            conversationID: data.lastMessageDetails?.conversationId,
+            opponenDetail: data.opponentDetails,
+            myUserId: viewModel.userData?.userId ?? "",
+            isGroup: data.isGroup,
+            fromBroadCastFlow: false,
+            groupCastId: "",
+            groupConversationTitle: data.conversationTitle,
+            groupImage: data.conversationImageUrl
+        )
+        .environmentObject(realmManager)
+        .onAppear {
+            onScreen = false
+            query = ""
+        }
+    }
 }

@@ -75,7 +75,15 @@ public struct AvatarView: View {
                     placeholderView
                 }
             } else {
-                ProgressView() // Optional: Show a loading indicator while checking the image URL
+                ZStack {
+                    ProgressView()
+                }
+                .frame(width: size.width, height: size.height)
+                .clipShape(Circle())
+                .overlay {
+                    Circle()
+                        .stroke(.gray.opacity(0.3), lineWidth: 1)
+                }
             }
         }
         .onAppear {
