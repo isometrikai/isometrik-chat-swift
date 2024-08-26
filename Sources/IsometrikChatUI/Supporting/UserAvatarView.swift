@@ -57,38 +57,77 @@ public struct AvatarView: View {
     var font : Font = .headline
     @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State var themeFont = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State private var isValid: Bool?
     
     public var body: some View {
-        if avatar == "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg" || avatar == "" || avatar == "https://admin-media.isometrik.io/profile/def_profile.png" || avatar == "https://cdn.getfudo.com/adminAssets/0/0/Logo.png"{
-            ZStack{
-                Circle()
-                    .frame(width: size.width,height: size.height)
-                    .foregroundColor(themeColor.avatarBackground)
-                Text(userName.uppercased())
-                    .font(themeFont.avatarText)
-                    .foregroundColor(themeColor.avatarText)
-            }.frame(
-                width: size.width,
-                height: size.height
-            ) 
-            .clipShape(
-                Circle()
-            )
-        }else{
-            ISMChatImageCahcingManger.networkImage(url: avatar, isprofileImage: true,size: self.size)
-                .scaledToFill()
-                .frame(
-                    width: size.width,
-                    height: size.height
-                )
-                .clipShape(
-                    Circle()
-                )
-                .overlay {
-                    Circle()
-                        .stroke(.gray.opacity(0.3), lineWidth: 1)
+        Group {
+            if let isValid = isValid {
+                if isValid && !shouldShowPlaceholder(avatar: avatar) {
+                    ISMChatImageCahcingManger.networkImage(url: avatar, isprofileImage: true, size: size)
+                        .scaledToFill()
+                        .frame(width: size.width, height: size.height)
+                        .clipShape(Circle())
+                        .overlay {
+                            Circle()
+                                .stroke(.gray.opacity(0.3), lineWidth: 1)
+                        }
+                } else {
+                    placeholderView
                 }
+            } else {
+                ProgressView() // Optional: Show a loading indicator while checking the image URL
+            }
         }
+        .onAppear {
+            validateImageURL()
+        }
+    }
+    
+    private var placeholderView: some View {
+        ZStack {
+            Circle()
+                .frame(width: size.width, height: size.height)
+                .foregroundColor(themeColor.avatarBackground)
+            Text(userName.uppercased())
+                .font(themeFont.avatarText)
+                .foregroundColor(themeColor.avatarText)
+        }
+        .frame(width: size.width, height: size.height)
+        .clipShape(Circle())
+    }
+    
+    private func validateImageURL() {
+        isValidImageURL(avatar) { isValid in
+            DispatchQueue.main.async {
+                self.isValid = isValid
+            }
+        }
+    }
+    private func shouldShowPlaceholder(avatar: String) -> Bool {
+        return avatar == "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg" ||
+        avatar.isEmpty ||
+        avatar == "https://admin-media.isometrik.io/profile/def_profile.png" ||
+        avatar.contains("svg")
+    }
+    
+    func isValidImageURL(_ urlString: String, completion: @escaping (Bool) -> Void) {
+        guard let url = URL(string: urlString) else {
+            completion(false)
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "HEAD" // Use HEAD to avoid downloading the full image
+        
+        let task = URLSession.shared.dataTask(with: request) { (_, response, error) in
+            if let httpResponse = response as? HTTPURLResponse {
+                // Check for a valid status code (200 is typically what we want)
+                completion(httpResponse.statusCode == 200)
+            } else {
+                completion(false)
+            }
+        }
+        task.resume()
     }
 }
 
