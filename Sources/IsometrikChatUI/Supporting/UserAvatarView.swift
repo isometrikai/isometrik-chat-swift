@@ -25,10 +25,11 @@ public struct UserAvatarView: View {
         self.avatar = avatar
         self.showOnlineIndicator = showOnlineIndicator
         self.size = size
-        self.userName = userName.components(separatedBy: " ")
+        self.userName = userName
+            .components(separatedBy: " ")
             .compactMap { $0.first }
             .prefix(2)
-            .map(String.init)
+            .map { String($0).uppercased() }
             .joined()
         self.font = font
     }
