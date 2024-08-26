@@ -474,7 +474,7 @@ extension ISMMessageView{
                 return false
                 
             case ISMChatUserProfileType.Influencer.value:
-                if conversation.metaData?.profileType == ISMChatUserProfileType.NormalUser.value &&
+                if conversation.opponentDetails?.metaData?.userType == 1 &&
                     conversation.metaData?.chatStatus != ISMChatStatus.Reject.value {
                     return true
                 } else {
@@ -482,8 +482,7 @@ extension ISMMessageView{
                 }
                 
             case ISMChatUserProfileType.Bussiness.value:
-                if (conversation.metaData?.profileType == ISMChatUserProfileType.NormalUser.value ||
-                    conversation.metaData?.profileType == ISMChatUserProfileType.Influencer.value) &&
+                if conversation.opponentDetails?.metaData?.userType == 1 &&
                     conversation.metaData?.chatStatus != ISMChatStatus.Reject.value {
                     return true
                 } else {

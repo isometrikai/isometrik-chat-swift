@@ -556,9 +556,9 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
     
     //MARK: - create conversation
-    public func createConversation(user : UserDB,profileType : String? = nil,chatStatus : String? = nil,completion:@escaping(ISMChatCreateConversationResponse?)->()){
+    public func createConversation(user : UserDB,chatStatus : String? = nil,completion:@escaping(ISMChatCreateConversationResponse?)->()){
         var body : [String : Any]
-        let metaDataValue : [String : Any] = ["profileType" : profileType ?? "", "chatStatus" : chatStatus ?? ""]
+        let metaDataValue : [String : Any] = ["chatStatus" : chatStatus ?? ""]
         body = ["typingEvents" : true ,
                 "readEvents" : true,
                 "pushNotifications" : true,

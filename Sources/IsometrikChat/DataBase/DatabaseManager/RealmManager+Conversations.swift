@@ -16,9 +16,9 @@ extension RealmManager {
             // Check if the user is a business user
             if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Bussiness.value {
                 // If user is a business user
-                if let metaData = conversation.metaData {
+                if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
                     // Check if opponent's profileType is not "user" or "influencer" or allowToMessage is true
-                    if (metaData.profileType == ISMChatUserProfileType.NormalUser.value || metaData.profileType == ISMChatUserProfileType.Influencer.value) && metaData.chatStatus == ISMChatStatus.Reject.value{
+                    if metaData.userType == 1 && ConversationMetaData.chatStatus == ISMChatStatus.Reject.value{
                         return true
                     }else{
                         return false
@@ -26,9 +26,9 @@ extension RealmManager {
                 }
                 return false // Reject conversations with opponents other than "user" or "influencer"
             } else  if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Influencer.value {
-                if let metaData = conversation.metaData {
+                if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
                     // Check if opponent's profileType is not "user" or allowToMessage is true
-                    if metaData.profileType == ISMChatUserProfileType.NormalUser.value && metaData.chatStatus == ISMChatStatus.Reject.value{
+                    if metaData.userType == 1 && ConversationMetaData.chatStatus == ISMChatStatus.Reject.value{
                         return true
                     } else {
                         return false
@@ -48,9 +48,9 @@ extension RealmManager {
             // Check if the user is a business user
             if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Bussiness.value {
                 // If user is a business user
-                if let metaData = conversation.metaData {
+                if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
                     // Check if opponent's profileType is not "user" or "influencer" or allowToMessage is true
-                    if (metaData.profileType == ISMChatUserProfileType.NormalUser.value || metaData.profileType == ISMChatUserProfileType.Influencer.value) && metaData.chatStatus == ISMChatStatus.Reject.value{
+                    if metaData.userType == 1 && ConversationMetaData.chatStatus == ISMChatStatus.Reject.value{
                         return true
                     }else{
                         return false
@@ -58,9 +58,9 @@ extension RealmManager {
                 }
                 return false // Reject conversations with opponents other than "user" or "influencer"
             } else  if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Influencer.value {
-                if let metaData = conversation.metaData {
+                if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
                     // Check if opponent's profileType is not "user" or allowToMessage is true
-                    if metaData.profileType == ISMChatUserProfileType.NormalUser.value && metaData.chatStatus == ISMChatStatus.Reject.value{
+                    if metaData.userType == 1 && ConversationMetaData.chatStatus == ISMChatStatus.Reject.value{
                         return true
                     } else {
                         return false
@@ -157,7 +157,6 @@ extension RealmManager {
                         
                         let convmetaData = ConversationMetaData()
                         convmetaData.chatStatus = value.metaData?.chatStatus
-                        convmetaData.profileType = value.metaData?.profileType
                         obj.metaData = convmetaData
                         
                         let config = ConfigDB()
@@ -173,6 +172,12 @@ extension RealmManager {
                         user.userIdentifier = value.opponentDetails?.userIdentifier
                         user.userName = value.opponentDetails?.userName
                         user.userProfileImageUrl = value.opponentDetails?.userProfileImageUrl
+                        
+                        let oppoMetaData = UserMetaDataDB()
+                        oppoMetaData.userId = value.opponentDetails?.metaData?.userId
+                        oppoMetaData.userType = value.opponentDetails?.metaData?.userType
+                        
+                        user.metaData = oppoMetaData
                         
                         obj.opponentDetails = user
                         
@@ -315,6 +320,8 @@ extension RealmManager {
                     listToUpdate.first?.opponentDetails?.userIdentifier = obj.opponentDetails?.userIdentifier
                     listToUpdate.first?.opponentDetails?.userName = obj.opponentDetails?.userName
                     listToUpdate.first?.opponentDetails?.userProfileImageUrl = obj.opponentDetails?.userProfileImageUrl
+                    listToUpdate.first?.opponentDetails?.metaData?.userId = obj.opponentDetails?.metaData?.userId
+                    listToUpdate.first?.opponentDetails?.metaData?.userType = obj.opponentDetails?.metaData?.userType
                     
                     listToUpdate.first?.lastMessageDetails?.sentAt = obj.lastMessageDetails?.sentAt
                     listToUpdate.first?.lastMessageDetails?.updatedAt = obj.lastMessageDetails?.updatedAt

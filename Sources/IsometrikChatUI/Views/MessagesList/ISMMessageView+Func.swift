@@ -190,7 +190,7 @@ extension ISMMessageView{
         }else{
             if isGroup == false{
                 if self.conversationID == nil || self.conversationID == ""{
-                    viewModel.createConversation(user: self.opponenDetail ?? UserDB(),profileType: ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType,chatStatus: ISMChatStatus.Reject.value) { data in
+                    viewModel.createConversation(user: self.opponenDetail ?? UserDB(),chatStatus: ISMChatStatus.Reject.value) { data in
                         self.conversationID = data?.conversationId
                         viewModel.getConversationDetail(conversationId: self.conversationID ?? "", isGroup: self.isGroup ?? false) { data in
                             //1. first check if conversation is deleted locally

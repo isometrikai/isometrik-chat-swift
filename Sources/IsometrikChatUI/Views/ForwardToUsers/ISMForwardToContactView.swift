@@ -228,8 +228,7 @@ private extension ISMForwardToContactView{
                 user.userId = newUser.userId
                 let metaDataValue = UserMetaDataDB()
                 metaDataValue.userId = newUser.metaData?.userId
-                metaDataValue.profileType = newUser.metaData?.profileType
-                metaDataValue.chatStatus = newUser.metaData?.chatStatus
+                metaDataValue.userType = newUser.metaData?.userType
                 user.metaData = metaDataValue
 
                 viewModel.createConversation(user: user) { data in

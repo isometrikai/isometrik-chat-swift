@@ -24,6 +24,5 @@ public class UserDB : Object, ObjectKeyIdentifiable{
 public class UserMetaDataDB : Object, ObjectKeyIdentifiable {
     @Persisted(primaryKey: true) public var id: ObjectId
     @Persisted public var userId : String?
-    @Persisted public var profileType : String?
-    @Persisted public var chatStatus : String?
+    @Persisted public var userType : Int?  //1 - normal user, 9 -  business user
 }
