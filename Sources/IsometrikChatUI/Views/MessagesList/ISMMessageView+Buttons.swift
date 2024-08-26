@@ -156,8 +156,11 @@ extension ISMMessageView{
                                         navigateToProfile = true
                                     }else{
                                         //when conversation is not created then conversationdetail will be empty, so it will pick from opponenedetail,this happens only when we try to craete converasation from profile
-                                        delegate?.navigateToAppProfile(appUserId:
-                                                                        self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? (opponenDetail?.metaData?.userId ?? ""))
+                                        if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
+                                                   ?? opponenDetail?.metaData?.userId
+                                                   ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
+                                            delegate?.navigateToAppProfile(appUserId: userId)
+                                        }
                                     }
                                 }else{
                                     
