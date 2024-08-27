@@ -1536,3 +1536,130 @@ public struct ImageAsset {
      let title: String
      let durationText: String
  }
+
+
+
+enum PaymentRequestStatus {
+    case active
+    case accept
+    case declined
+    case expired
+}
+
+struct PaymentRequestUI: View {
+    var status: PaymentRequestStatus
+    
+    var body: some View {
+        ZStack {
+            VStack(spacing: 16) {
+                // Header and Payment Status
+                headerView
+                
+                // Payment Amount
+                VStack(spacing: 8) {
+                    Text("Total you pay")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    
+                    Text("28.00 JOD")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundColor(.black)
+                    
+                    // Conditional Messages Based on Status
+                    if status == .active {
+                        Text("Payment request will expire in 5:3:00")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                    } else if status == .declined {
+                        Text("You declined the payment request")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                    } else if status == .expired {
+                        Text("Payment request expired")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                    }
+                }
+                .padding(.horizontal, 16)
+                
+                // Action Buttons for Active Request Only
+                if status == .active {
+                    HStack(spacing: 20) {
+                        Button(action: {
+                            // Decline action
+                        }) {
+                            Text("Decline")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 1))
+                        }
+                        
+                        Button(action: {
+                            // View Details action
+                        }) {
+                            Text("View Details")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.green)
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                }
+                
+                // Timestamp
+                HStack {
+                    Spacer()
+                    Text("11:27 pm")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+                .padding(.trailing, 16)
+            }
+            .background(Color.white)
+            .cornerRadius(16)
+            .shadow(radius: 4)
+            .padding()
+            .blur(radius: status == .expired ? 2 : 0) // Blurred effect when expired
+            
+            // Dimmed overlay for the expired view
+            if status == .expired {
+                Color.black.opacity(0.2)
+                    .cornerRadius(16)
+                    .padding()
+            }
+        }
+    }
+    
+    // Header View Based on Status
+    @ViewBuilder
+    private var headerView: some View {
+        if status == .active {
+            Text("Payment Request")
+                .font(.headline)
+                .foregroundColor(.black)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.green)
+                .cornerRadius(10, corners: [.topLeft, .topRight])
+        } else if status == .declined {
+            Text("Request Declined")
+                .font(.headline)
+                .foregroundColor(.black)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.red)
+                .cornerRadius(10, corners: [.topLeft, .topRight])
+        } else if status == .expired {
+            Text("Payment Request")
+                .font(.headline)
+                .foregroundColor(.black)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.gray)
+                .cornerRadius(10, corners: [.topLeft, .topRight])
+        }
+    }
+}
