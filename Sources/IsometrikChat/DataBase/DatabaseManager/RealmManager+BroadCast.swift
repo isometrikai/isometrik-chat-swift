@@ -19,7 +19,7 @@ extension RealmManager{
     //MARK: - get all broadcast
     public func getBroadCasts() -> [BroadCastListDB] {
         broadcasts = broadcasts.sorted(by: { lhsData, rhsData in
-            Int(lhsData.createdAt ?? 0) > Int(rhsData.createdAt ?? 0)
+            Int(lhsData.updatedAt ?? 0) > Int(rhsData.updatedAt ?? 0)
         })
         return broadcasts
     }
@@ -58,6 +58,7 @@ extension RealmManager{
                     listToUpdate.first?.customType = obj.customType
                     listToUpdate.first?.createdBy = obj.createdBy
                     listToUpdate.first?.createdAt = obj.createdAt
+                    listToUpdate.first?.updatedAt = obj.updatedAt
                     
                     var memberDetails = List<BroadCastMemberDetailDB>()
                     
@@ -76,7 +77,7 @@ extension RealmManager{
                     
                     listToUpdate.first?.metaData?.membersDetail.removeAll()
                     listToUpdate.first?.metaData?.membersDetail.append(objectsIn: memberDetails)
-                    getAllBroadCasts()
+                    getAllLocalBroadCasts()
                 }
             }catch {
                 print("Error updating task \(obj.id) to Realm: \(error)")
@@ -99,6 +100,7 @@ extension RealmManager{
                         obj.customType = value.customType
                         obj.createdBy = value.createdBy
                         obj.createdAt = value.createdAt
+                        obj.updatedAt = value.updatedAt
                         
                         var memberDetails = List<BroadCastMemberDetailDB>()
                         
@@ -118,7 +120,7 @@ extension RealmManager{
                         localRealm.add(obj)
                         
                     }
-                    getAllBroadCasts()
+                    getAllLocalBroadCasts()
                 }
             }catch {
                 print("Error adding task to Realm: \(error)")
@@ -134,7 +136,7 @@ extension RealmManager{
                 guard !taskToDelete.isEmpty else { return }
                 try localRealm.write {
                     taskToDelete.first?.isDelete = true
-                    getAllBroadCasts()
+                    getAllLocalBroadCasts()
                 }
             } catch {
                 print("Error deleting task \(groupcastId) to Realm: \(error)")
@@ -157,9 +159,12 @@ extension RealmManager{
     }
     
     //MARK: - get all local broadcasts
-    public func getAllBroadCasts() {
+    public func getAllLocalBroadCasts() {
         if let localRealm = localRealm {
             broadcasts =  Array(localRealm.objects(BroadCastListDB.self).where{$0.isDelete == false })
+            broadcasts = broadcasts.sorted(by: { lhsData, rhsData in
+                Int(lhsData.updatedAt ?? 0) > Int(rhsData.updatedAt ?? 0)
+            })
             storeBroadcasts = broadcasts
         }
     }

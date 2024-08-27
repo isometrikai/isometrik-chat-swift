@@ -30,6 +30,7 @@ public struct ISMChatBroadCastDetail : Identifiable, Codable{
     public var createdBy : String?
     public var createdAt : Double?
     public var metaData : ISMChatBroadMetadata?
+    public var updatedAt : Int?
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         membersCount = try? container.decodeIfPresent(Int.self, forKey: .membersCount)
@@ -40,6 +41,7 @@ public struct ISMChatBroadCastDetail : Identifiable, Codable{
         createdBy = try? container.decodeIfPresent(String.self, forKey: .createdBy)
         createdAt = try? container.decodeIfPresent(Double.self, forKey: .createdAt)
         metaData = try? container.decodeIfPresent(ISMChatBroadMetadata.self, forKey: .metaData)
+        updatedAt = try? container.decodeIfPresent(Int.self, forKey: .updatedAt)
     }
 }
 

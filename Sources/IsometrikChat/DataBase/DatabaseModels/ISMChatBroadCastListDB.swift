@@ -18,6 +18,7 @@ public class BroadCastListDB: Object, ObjectKeyIdentifiable {
     @Persisted public var createdAt : Double?
     @Persisted public var metaData : BroadCastMetaDataDB?
     @Persisted public var isDelete : Bool = false
+    @Persisted public var updatedAt : Int?
 }
 
 public class BroadCastMetaDataDB : Object, ObjectKeyIdentifiable {

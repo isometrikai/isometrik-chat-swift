@@ -91,6 +91,9 @@ public struct ISMConversationView : View {
                     if shouldShowPlaceholder {
                         showPlaceholderView
                     } else {
+                        if ISMChatSdk.getInstance().getFramework() == .UIKit{
+                            CustomSearchBar(searchText: $query).padding(.horizontal,15)
+                        }
                         conversationListView
                     }
                 }

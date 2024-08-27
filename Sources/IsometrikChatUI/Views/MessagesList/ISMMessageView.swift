@@ -24,6 +24,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToAppMemberInGroup(conversationId : String,groupMembers : [ISMChatGroupMember]?)
     func uploadOnExternalCDN(messageKind : ISMChatMessageType,mediaUrl : URL,completion:@escaping(String,Int)->())
     func externalBlockMechanism(appUserId : String,block: Bool)
+    func navigateToBroadCastInfo(groupcastId : String)
 }
 
 public struct ISMMessageView: View {

@@ -132,7 +132,11 @@ extension ISMMessageView{
                 
                 if self.fromBroadCastFlow == true{
                     Button {
-                        navigateToGroupCastInfo = true
+                        if ISMChatSdk.getInstance().getFramework() == .UIKit{
+                            delegate?.navigateToBroadCastInfo(groupcastId: self.groupCastId ?? "")
+                        }else{
+                            navigateToGroupCastInfo = true
+                        }
                     } label: {
                         BroadCastAvatarView(size: CGSize(width: 40, height: 40), broadCastImageSize: CGSize(width: 17.7, height: 17.7),broadCastLogo: themeImages.broadCastLogo)
                         if let groupConversationTitle = groupConversationTitle, !groupConversationTitle.isEmpty && groupConversationTitle != "Default"{
