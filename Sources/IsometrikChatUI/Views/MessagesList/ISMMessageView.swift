@@ -18,7 +18,7 @@ import ISMSwiftCall
 import IsometrikChat
 
 public protocol ISMMessageViewDelegate{
-    func navigateToAppProfile(appUserId : String)
+    func navigateToAppProfile(userId : String,userType : Int)
     func navigateToPost(postId : String)
     func navigateToUserListToForward(messages : [MessagesDB])
     func navigateToAppMemberInGroup(conversationId : String,groupMembers : [ISMChatGroupMember]?)
