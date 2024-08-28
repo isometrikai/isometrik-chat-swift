@@ -156,6 +156,9 @@ public struct ISMChatImages {
     public var fileFallback: Image = loadImageSafely(with: "generic")
     public var searchIcon : Image = loadImageSafely(with: "search-normal")
     
+    public var influencerUserIcon : Image = loadImageSafely(with: "gif_logo")
+    public var businessUserIcon : Image = loadImageSafely(with: "gif_logo")
+    
     public init(){}
     
     public init(
@@ -240,7 +243,9 @@ public struct ISMChatImages {
         audioLock: Image? = nil,
         blockIcon: Image? = nil,
         fileFallback: Image? = nil,
-        searchIcon : Image? = nil
+        searchIcon : Image? = nil,
+        influencerUserIcon : Image? = nil,
+        businessUserIcon : Image? = nil
     ) {
         if let addConversation = addConversation { self.addConversation = addConversation }
         if let conversationListPlaceholder = conversationListPlaceholder { self.conversationListPlaceholder = conversationListPlaceholder }
@@ -324,6 +329,8 @@ public struct ISMChatImages {
         if let blockIcon = blockIcon { self.blockIcon = blockIcon }
         if let fileFallback = fileFallback { self.fileFallback = fileFallback }
         if let searchIcon = searchIcon { self.searchIcon = searchIcon }
+        if let influencerUserIcon = influencerUserIcon { self.influencerUserIcon = influencerUserIcon }
+        if let businessUserIcon = businessUserIcon { self.businessUserIcon = businessUserIcon }
     }
     
 }

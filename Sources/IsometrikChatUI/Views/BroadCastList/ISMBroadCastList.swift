@@ -9,8 +9,8 @@ import SwiftUI
 import IsometrikChat
 
 public protocol ISMBroadCastListDelegate{
-    func navigateToBroadCastList(groupcastId : String,groupCastTitle : String)
-    func navigateToBroadCastInfo(groupcastId : String)
+    func navigateToBroadCastList(groupcastId : String,groupCastTitle : String,groupcastImage : String)
+    func navigateToBroadCastInfo(groupcastId : String,groupcastTitle : String,groupcastImage : String)
 }
 
 public struct ISMBroadCastList: View {
@@ -181,7 +181,7 @@ public struct ISMBroadCastList: View {
 //                navigateToBrocastDetail = broadcast
 //                navigateToBrocastInfo = true
             } else {
-                delegate?.navigateToBroadCastInfo(groupcastId: broadcast.groupcastId ?? "")
+                delegate?.navigateToBroadCastInfo(groupcastId: broadcast.groupcastId ?? "", groupcastTitle: broadcast.groupcastTitle ?? "", groupcastImage: broadcast.groupcastImageUrl ?? "")
             }
         } label: {
             themeImage.broadcastInfo
@@ -218,7 +218,7 @@ public struct ISMBroadCastList: View {
         if ISMChatSdk.getInstance().getFramework() == .UIKit {
             delegate?.navigateToBroadCastList(
                 groupcastId: broadcast.groupcastId ?? "",
-                groupCastTitle: broadcast.groupcastTitle ?? ""
+                groupCastTitle: broadcast.groupcastTitle ?? "", groupcastImage: broadcast.groupcastImageUrl ?? ""
             )
         } else {
             // SwiftUI navigation

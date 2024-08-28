@@ -82,11 +82,13 @@ import IsometrikChat
                         // update status of message to deleivered
                         viewModel.readMessageIndicator(conversationId: converId, messageId: messId) { _ in
                             // update status of message to read
+                            
+                            //after message is read then only resent unread count
+                            realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
                         }
                     }
                 }
             }
-            realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
         }
     }
     

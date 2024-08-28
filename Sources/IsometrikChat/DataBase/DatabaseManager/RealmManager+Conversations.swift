@@ -14,28 +14,33 @@ extension RealmManager {
     public func getOtherConversationCount() -> Int {
         let filteredOutConversations = conversations.filter { conversation in
             // Check if the user is a business user
-            if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Bussiness.value {
-                // If user is a business user
-                if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
-                    // Check if opponent's profileType is not "user" or "influencer" or allowToMessage is true
-                    if metaData.userType == 1 && ConversationMetaData.chatStatus == ISMChatStatus.Reject.value{
-                        return true
-                    }else{
-                        return false
+            if conversation.createdBy != userData.userId{
+                if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Bussiness.value {
+                    // If user is a business user
+                    if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
+                        // Check if opponent's profileType is not "user" or "influencer" or allowToMessage is true
+                        if metaData.userType == 1 && ConversationMetaData.chatStatus == ISMChatStatus.Reject.value{
+                            return true
+                        }else{
+                            return false
+                        }
                     }
-                }
-                return false // Reject conversations with opponents other than "user" or "influencer"
-            } else  if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Influencer.value {
-                if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
-                    // Check if opponent's profileType is not "user" or allowToMessage is true
-                    if metaData.userType == 1 && ConversationMetaData.chatStatus == ISMChatStatus.Reject.value{
-                        return true
-                    } else {
-                        return false
+                    return false // Reject conversations with opponents other than "user" or "influencer"
+                } else  if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Influencer.value {
+                    if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
+                        // Check if opponent's profileType is not "user" or allowToMessage is true
+                        if metaData.userType == 1 && metaData.isStarUser != true && ConversationMetaData.chatStatus == ISMChatStatus.Reject.value{
+                            return true
+                        } else {
+                            return false
+                        }
                     }
+                    return false
+                } else {
+                    return false
                 }
-                return false
-            } else {
+            }else{
+                //if created by me then it should be in primary list
                 return false
             }
         }
@@ -46,28 +51,33 @@ extension RealmManager {
     public func getOtherConversation() -> [ConversationDB] {
         let filteredOutConversations = conversations.filter { conversation in
             // Check if the user is a business user
-            if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Bussiness.value {
-                // If user is a business user
-                if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
-                    // Check if opponent's profileType is not "user" or "influencer" or allowToMessage is true
-                    if metaData.userType == 1 && ConversationMetaData.chatStatus == ISMChatStatus.Reject.value{
-                        return true
-                    }else{
-                        return false
+            if conversation.createdBy != userData.userId{
+                if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Bussiness.value {
+                    // If user is a business user
+                    if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
+                        // Check if opponent's profileType is not "user" or "influencer" or allowToMessage is true
+                        if metaData.userType == 1 && ConversationMetaData.chatStatus == ISMChatStatus.Reject.value{
+                            return true
+                        }else{
+                            return false
+                        }
                     }
-                }
-                return false // Reject conversations with opponents other than "user" or "influencer"
-            } else  if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Influencer.value {
-                if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
-                    // Check if opponent's profileType is not "user" or allowToMessage is true
-                    if metaData.userType == 1 && ConversationMetaData.chatStatus == ISMChatStatus.Reject.value{
-                        return true
-                    } else {
-                        return false
+                    return false // Reject conversations with opponents other than "user" or "influencer"
+                } else  if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Influencer.value {
+                    if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
+                        // Check if opponent's profileType is not "user" or allowToMessage is true
+                        if metaData.userType == 1 && metaData.isStarUser != true && ConversationMetaData.chatStatus == ISMChatStatus.Reject.value{
+                            return true
+                        } else {
+                            return false
+                        }
                     }
+                    return false
+                } else {
+                    return false
                 }
-                return false
-            } else {
+            }else{
+                //if created by me then it should be in primary list
                 return false
             }
         }
@@ -176,6 +186,7 @@ extension RealmManager {
                         let oppoMetaData = UserMetaDataDB()
                         oppoMetaData.userId = value.opponentDetails?.metaData?.userId
                         oppoMetaData.userType = value.opponentDetails?.metaData?.userType
+                        oppoMetaData.isStarUser = value.opponentDetails?.metaData?.isStarUser
                         
                         user.metaData = oppoMetaData
                         
@@ -322,6 +333,7 @@ extension RealmManager {
                     listToUpdate.first?.opponentDetails?.userProfileImageUrl = obj.opponentDetails?.userProfileImageUrl
                     listToUpdate.first?.opponentDetails?.metaData?.userId = obj.opponentDetails?.metaData?.userId
                     listToUpdate.first?.opponentDetails?.metaData?.userType = obj.opponentDetails?.metaData?.userType
+                    listToUpdate.first?.opponentDetails?.metaData?.isStarUser = obj.opponentDetails?.metaData?.isStarUser
                     
                     listToUpdate.first?.lastMessageDetails?.sentAt = obj.lastMessageDetails?.sentAt
                     listToUpdate.first?.lastMessageDetails?.updatedAt = obj.lastMessageDetails?.updatedAt

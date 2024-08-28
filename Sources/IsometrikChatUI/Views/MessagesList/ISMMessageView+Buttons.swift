@@ -116,151 +116,162 @@ extension ISMMessageView{
     }
     
     //MARK: - NAVIGATION LEADING BUTTON
-    func navigationBarLeadingButtons()  -> some View {
-        Button(action : {}) {
-            HStack{
-                Button(action: {
-                    dismiss()
-                }) {
-                    themeImages.backButton
-                        .resizable()
-                        .frame(width: 18, height: 18)
-                }
-                
-                Spacer()
-                    .frame(width: 15)
-                
-                if self.fromBroadCastFlow == true{
-                    Button {
-                        if ISMChatSdk.getInstance().getFramework() == .UIKit{
-                            delegate?.navigateToBroadCastInfo(groupcastId: self.groupCastId ?? "")
-                        }else{
-                            navigateToGroupCastInfo = true
-                        }
-                    } label: {
-                        BroadCastAvatarView(size: CGSize(width: 40, height: 40), broadCastImageSize: CGSize(width: 17.7, height: 17.7),broadCastLogo: themeImages.broadCastLogo)
-                        if let groupConversationTitle = groupConversationTitle, !groupConversationTitle.isEmpty && groupConversationTitle != "Default"{
-                            Text(groupConversationTitle)
-                                .foregroundColor(themeColor.messageListHeaderTitle)
-                                .font(themeFonts.messageListHeaderTitle)
-                        }else{
-                            Text("Messages")
-                                .foregroundColor(themeColor.messageListHeaderTitle)
-                                .font(themeFonts.messageListHeaderTitle)
-                        }
-                    }
-                }else{
-                    
-                    Button {
-//                        if conversationDetail != nil{
-                            if ISMChatSdkUI.getInstance().getChatProperties().allowToNavigateToAppProfile == true{
-                                if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true{
-                                    if isGroup == true{
-                                        //group profile will not be there in uikit apps
-                                        navigateToProfile = true
-                                    }else{
-                                        //when conversation is not created then conversationdetail will be empty, so it will pick from opponenedetail,this happens only when we try to craete converasation from profile
-                                        if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
-                                            ?? opponenDetail?.metaData?.userId
-                                            ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
-                                            delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
-                                        }
-                                    }
-                                }else{
-                                    
-                                }
-                            }
-//                        }else{
-//                            showingNoInternetAlert = true
-//                        }
-                    } label: {
-                        
-                        if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
-                            UserAvatarView(avatar: ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userProfileImageUrl ?? "", showOnlineIndicator: self.conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,size: CGSize(width: 40, height: 40), userName: isGroup == false ? (opponenDetail?.userName ?? "") : (self.conversationDetail?.conversationDetails?.conversationTitle ?? "") ,font: .regular(size: 14))
-                                .padding(.trailing,5)
-                        }else{
-                            UserAvatarView(avatar: isGroup == false ? opponenDetail?.userProfileImageUrl ?? "" : (self.conversationDetail?.conversationDetails?.conversationImageUrl ?? (self.groupImage ?? "")), showOnlineIndicator: self.conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,size: CGSize(width: 40, height: 40), userName: isGroup == false ? (opponenDetail?.userName ?? "") : (self.conversationDetail?.conversationDetails?.conversationTitle ?? "") ,font: .regular(size: 14))
-                                .padding(.trailing,5)
-                        }
-                        
-                        VStack(alignment: .leading){
-                            if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
-                                Text(self.conversationDetail?.conversationDetails?.conversationTitle ?? "")
-                                    .foregroundColor(themeColor.messageListHeaderTitle)
-                                    .font(themeFonts.messageListHeaderTitle)
-                            }else{
-                                Text(isGroup == false ? (opponenDetail?.userName ?? "") : (self.conversationDetail?.conversationDetails?.conversationTitle ?? (self.groupConversationTitle ?? "")))
-                                    .foregroundColor(themeColor.messageListHeaderTitle)
-                                    .font(themeFonts.messageListHeaderTitle)
-                            }
-                            if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
-                                Text(ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userName ?? "")
-                                    .foregroundColor(themeColor.messageListHeaderDescription)
-                                    .font(themeFonts.messageListHeaderDescription)
-                                    .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                            }else if isGroup == true{
-                                if otherUserTyping == true{
-                                    Text("\(typingUserName ?? "") is typing...")
-                                        .foregroundColor(themeColor.messageListHeaderDescription)
-                                        .font(themeFonts.messageListHeaderDescription)
-                                        .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                                }else{
-                                    if let memberString =  memberString , !memberString.isEmpty{
-                                        Text(memberString)
-                                            .foregroundColor(themeColor.messageListHeaderDescription)
-                                            .font(themeFonts.messageListHeaderDescription)
-                                            .lineLimit(1)
-                                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                                    }else{
-                                        Text("Tap here for more info")
-                                            .foregroundColor(themeColor.messageListHeaderDescription)
-                                            .font(themeFonts.messageListHeaderDescription)
-                                            .lineLimit(1)
-                                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                                    }
-                                }
-                            }else{
-                                if otherUserTyping == true{
-                                    Text("Typing...")
-                                        .foregroundColor(themeColor.messageListHeaderDescription)
-                                        .font(themeFonts.messageListHeaderDescription)
-                                        .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                                }else{
-                                    if self.conversationDetail?.conversationDetails?.opponentDetails?.online == true{
-                                        Text("Online")
-                                            .foregroundColor(themeColor.messageListHeaderDescription)
-                                            .font(themeFonts.messageListHeaderDescription)
-                                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                                    }else{
-                                        if let lastSeen = self.conversationDetail?.conversationDetails?.opponentDetails?.lastSeen, lastSeen != -1 {
-                                            //last seen text
-                                            if self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true{
-                                                let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
-                                                Text("Last seen at \(date)")
-                                                    .foregroundColor(themeColor.messageListHeaderDescription)
-                                                    .font(themeFonts.messageListHeaderDescription)
-                                                    .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                                            }
-                                            
-                                        }else if let lastSeen = self.opponenDetail?.lastSeen, lastSeen != -1{
-                                            //last seen text
-                                            if self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true{
-                                                let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
-                                                Text("Last seen at \(date)")
-                                                    .foregroundColor(themeColor.messageListHeaderDescription)
-                                                    .font(themeFonts.messageListHeaderDescription)
-                                                    .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+    func navigationBarLeadingButtons() -> some View {
+        Button(action: {}) {
+            HStack {
+                backButtonView()
+
+                Spacer().frame(width: 15)
+
+                if self.fromBroadCastFlow  == true{
+                    broadcastButtonView()
+                } else {
+                    profileButtonView()
                 }
             }
         }
     }
+
+     func backButtonView() -> some View {
+        Button(action: {
+            dismiss()
+        }) {
+            themeImages.backButton
+                .resizable()
+                .frame(width: 18, height: 18)
+        }
+    }
+
+     func broadcastButtonView() -> some View {
+        Button {
+            if ISMChatSdk.getInstance().getFramework() == .UIKit {
+                delegate?.navigateToBroadCastInfo(groupcastId: self.groupCastId ?? "", groupcastTitle: self.groupConversationTitle ?? "", groupcastImage: self.groupImage ?? "")
+                
+            } else {
+                navigateToGroupCastInfo = true
+            }
+        } label: {
+            if ISMChatSdk.getInstance().getFramework() == .UIKit {
+                UserAvatarView(
+                    avatar: groupImage ?? "",
+                    showOnlineIndicator: false,
+                    size: CGSize(width: 40, height: 40),
+                    userName: groupConversationTitle ?? "",
+                    font: themeFonts.messageListMessageText
+                )
+            }else{
+                BroadCastAvatarView(
+                    size: CGSize(width: 40, height: 40),
+                    broadCastImageSize: CGSize(width: 17.7, height: 17.7),
+                    broadCastLogo: themeImages.broadCastLogo
+                )
+            }
+            Text(getBroadcastTitle())
+                .frame(width: 200,alignment: .leading)
+                .foregroundColor(themeColor.messageListHeaderTitle)
+                .font(themeFonts.messageListHeaderTitle)
+        }
+    }
+
+     func getBroadcastTitle() -> String {
+        if let groupConversationTitle = groupConversationTitle, !groupConversationTitle.isEmpty, groupConversationTitle != "Default" {
+            return groupConversationTitle
+        } else {
+            return "Messages"
+        }
+    }
+
+     func profileButtonView() -> some View {
+        Button {
+            handleProfileNavigation()
+        } label: {
+            UserAvatarView(
+                avatar: getAvatarUrl(),
+                showOnlineIndicator: self.conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,
+                size: CGSize(width: 40, height: 40),
+                userName: getProfileName(),
+                font: .regular(size: 14)
+            )
+            .padding(.trailing, 5)
+            
+            VStack(alignment: .leading) {
+                Text(getProfileTitle())
+                    .frame(width: 200,alignment: .leading)
+                    .foregroundColor(themeColor.messageListHeaderTitle)
+                    .font(themeFonts.messageListHeaderTitle)
+                
+                Text(getProfileSubtitle())
+                    .foregroundColor(themeColor.messageListHeaderDescription)
+                    .font(themeFonts.messageListHeaderDescription)
+                    .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.3)))
+            }
+        }
+    }
+
+     func handleProfileNavigation() {
+        guard ISMChatSdkUI.getInstance().getChatProperties().allowToNavigateToAppProfile else { return }
+
+        if !ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup, isGroup == true {
+            navigateToProfile = true
+        } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
+            ?? opponenDetail?.metaData?.userId
+            ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
+            delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
+        }
+    }
+
+     func getAvatarUrl() -> String {
+        if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
+            return ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userProfileImageUrl ?? ""
+        } else {
+            return (isGroup == true) ? self.conversationDetail?.conversationDetails?.conversationImageUrl ?? (self.groupImage ?? "") : opponenDetail?.userProfileImageUrl ?? ""
+        }
+    }
+
+     func getProfileName() -> String {
+        if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
+            return ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userName ?? ""
+        } else {
+            return (isGroup == true) ? self.conversationDetail?.conversationDetails?.conversationTitle ?? "" : opponenDetail?.userName ?? ""
+        }
+    }
+
+     func getProfileTitle() -> String {
+        if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
+            return self.conversationDetail?.conversationDetails?.conversationTitle ?? ""
+        } else {
+            return (isGroup == true) ? self.conversationDetail?.conversationDetails?.conversationTitle ?? (self.groupConversationTitle ?? "") : opponenDetail?.userName ?? ""
+        }
+    }
+
+     func getProfileSubtitle() -> String {
+        if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
+            return ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userName ?? ""
+        } else if (isGroup == true) {
+            if otherUserTyping {
+                return "\(typingUserName ?? "") is typing..."
+            } else if let memberString = memberString, !memberString.isEmpty {
+                return memberString
+            } else {
+                return "Tap here for more info"
+            }
+        } else {
+            if otherUserTyping {
+                return "Typing..."
+            } else if let lastSeen = self.conversationDetail?.conversationDetails?.opponentDetails?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
+                let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
+                return "Last seen at \(date)"
+            } else if let lastSeen = self.opponenDetail?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
+                let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
+                return "Last seen at \(date)"
+            } else if self.conversationDetail?.conversationDetails?.opponentDetails?.online == true{
+                return "Online"
+            }else{
+                return "Tap here for more info"
+            }
+        }
+    }
+
     
     //MARK: - NAVIGATION TRAILING BUTTONS
     
@@ -344,18 +355,6 @@ extension ISMMessageView{
             callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType: type)
         }
     }
-    
-//    func audioCallUser(){
-//        self.endEditing(true)
-//        let callsdk = IsometrikCall()
-//        callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType:  .AudioCall)
-//    }
-    
-//    func videoCallUser(){
-//        self.endEditing(true)
-//        let callsdk = IsometrikCall()
-//        callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType:  .VideoCall)
-//    }
     
     func clearChatButton() -> some View{
         Button {

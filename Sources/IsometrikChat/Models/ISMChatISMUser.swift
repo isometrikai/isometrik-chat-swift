@@ -67,6 +67,7 @@ public struct ISMChatUserMetaData: Codable, Hashable {
     public var userId : String?
     public var storeId : String?
     public var userType : Int?
+    public var isStarUser : Bool?
     public var chatStatus : String?
     public var users : [ISMChatCustomUsers]?
     
@@ -84,6 +85,7 @@ public struct ISMChatUserMetaData: Codable, Hashable {
         userId = try? container.decodeIfPresent(String.self, forKey: .userId)
         storeId = try? container.decodeIfPresent(String.self, forKey: .storeId)
         userType = try? container.decodeIfPresent(Int.self, forKey: .userType)
+        isStarUser = try? container.decodeIfPresent(Bool.self, forKey: .isStarUser)
         chatStatus = try? container.decodeIfPresent(String.self, forKey: .chatStatus)
         users = try? container.decodeIfPresent([ISMChatCustomUsers].self, forKey: .users)
     }

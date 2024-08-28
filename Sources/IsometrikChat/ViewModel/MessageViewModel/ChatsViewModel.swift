@@ -317,6 +317,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             switch result{
             case .success(let data):
                 completion(data?.messageId ?? "", objectId ?? "")
+                NotificationCenter.default.post(name: NSNotification.refrestConversationListLocally,object: nil)
             case .failure(let error):
                 ISMChatHelper.print("Get send Message Api failed -----> \(String(describing: error))")
             }

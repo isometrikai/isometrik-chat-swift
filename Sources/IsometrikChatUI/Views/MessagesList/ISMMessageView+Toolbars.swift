@@ -474,7 +474,7 @@ extension ISMMessageView{
                 return false
                 
             case ISMChatUserProfileType.Influencer.value:
-                if conversation.opponentDetails?.metaData?.userType == 1 &&
+                if conversation.opponentDetails?.metaData?.userType == 1 && conversation.opponentDetails?.metaData?.isStarUser != true &&
                     conversation.metaData?.chatStatus != ISMChatStatus.Reject.value {
                     return true
                 } else {
@@ -533,6 +533,7 @@ extension ISMMessageView{
                 Button {
                     //call api
                     viewModel.acceptRequestToAllowMessage(conversationId: self.conversationID ?? "", completion: { _ in
+                        NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
                         getConversationDetail()
                     })
                 } label: {

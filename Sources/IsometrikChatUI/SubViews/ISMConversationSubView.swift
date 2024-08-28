@@ -31,6 +31,13 @@ struct ISMConversationSubView: View {
                     size: CGSize(width: 54, height: 54),
                     userName: chat.isGroup == true ? chat.conversationTitle  : chat.opponentDetails?.userName ?? "",
                     font: themeFonts.messageListMessageText)
+                .overlay(
+                    ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ?
+                    
+                    userTypeImageView(userType: chat.opponentDetails?.metaData?.userType ?? 0, isStarUser: chat.opponentDetails?.metaData?.isStarUser ?? false)
+                    
+                    : nil
+                )
             }
             VStack(alignment: .leading, spacing: 5, content: {
                 HStack{
@@ -393,6 +400,28 @@ struct ISMConversationSubView: View {
             )
         } else {
             return AnyView(EmptyView())
+        }
+    }
+    
+    func userTypeImageView(userType : Int,isStarUser : Bool) -> some View{
+        VStack{
+            if userType == 1 && isStarUser == true{
+                themeImage.influencerUserIcon
+                    .resizable()
+                    .frame(width: 16, height: 16)
+                    .background(Color.white)
+                    .clipShape(Circle())
+                    .offset(x: 54 * 0.35, y: 54 * 0.35)
+            }else if userType == 9{
+                themeImage.businessUserIcon
+                    .resizable()
+                    .frame(width: 16, height: 16)
+                    .background(Color.white)
+                    .clipShape(Circle())
+                    .offset(x: 54 * 0.35, y: 54 * 0.35)
+            }else{
+                
+            }
         }
     }
 }
