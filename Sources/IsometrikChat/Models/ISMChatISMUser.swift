@@ -89,6 +89,17 @@ public struct ISMChatUserMetaData: Codable, Hashable {
         chatStatus = try? container.decodeIfPresent(String.self, forKey: .chatStatus)
         users = try? container.decodeIfPresent([ISMChatCustomUsers].self, forKey: .users)
     }
+    public init(about : String? = nil,showlastSeen : Bool? = nil,profilePic : String? = nil, userId : String? = nil,storeId : String? = nil,userType : Int? = nil,isStarUser : Bool? = nil,chatStatus : String? = nil,users : [ISMChatCustomUsers]? = nil){
+        self.about = about
+        self.showlastSeen = showlastSeen
+        self.profilePic = profilePic
+        self.userId = userId
+        self.storeId = storeId
+        self.userType = userType
+        self.isStarUser = isStarUser
+        self.chatStatus = chatStatus
+        self.users = users
+    }
 }
 
 public struct ISMChatCustomUsers : Codable,Hashable{
