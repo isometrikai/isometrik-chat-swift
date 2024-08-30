@@ -84,95 +84,178 @@ public class ConversationViewModel : NSObject ,ObservableObject{
         }
     }
     
-    public func getChatListWithCustomType(customType : String,search : String?,skip :Int,completion:@escaping(ISMChatConversations?,ISMChatErrorData?)->()){
-        var baseUrl = ""
-        if let search = search , search != ""{
-            baseUrl = "\(ISMChatNetworkServices.Urls.chatList)?includeConversationStatusMessagesInUnreadMessagesCount=false&customType=\(customType)&searchTag=\(search)&skip=\(skip)"
-        }else{
-            baseUrl = "\(ISMChatNetworkServices.Urls.chatList)?includeConversationStatusMessagesInUnreadMessagesCount=false&customType=\(customType)&skip=\(skip)"
-        }
+    public func getChatListWithCustomType(customType : String,search : String?,skip :Int,completion:@escaping(ISMChatConversations?,ISMChatNewAPIError?)->()){
         
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseUrl,httpMethod: .get,params: nil) { (result : ISMChatResponse<ISMChatConversations?,ISMChatErrorData?>) in
+        let endPoint = ISMChatConversationEndpoint.getconversationListWithCustomType(includeConversationStatusMessagesInUnreadMessagesCount: false, customType: customType, searchTag: search ?? "", skip: skip)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatConversations, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
+            case .success(let data,_) :
                 completion(data,nil)
-            case .failure(let error):
+            case .failure(let error) :
                 completion(nil,error)
                 ISMChatHelper.print("Get Chat Api failed -----> \(String(describing: error))")
-                
             }
         }
+//        
+//        var baseUrl = ""
+//        if let search = search , search != ""{
+//            baseUrl = "\(ISMChatNetworkServices.Urls.chatList)?includeConversationStatusMessagesInUnreadMessagesCount=false&customType=\(customType)&searchTag=\(search)&skip=\(skip)"
+//        }else{
+//            baseUrl = "\(ISMChatNetworkServices.Urls.chatList)?includeConversationStatusMessagesInUnreadMessagesCount=false&customType=\(customType)&skip=\(skip)"
+//        }
+//        
+//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseUrl,httpMethod: .get,params: nil) { (result : ISMChatResponse<ISMChatConversations?,ISMChatErrorData?>) in
+//            switch result{
+//            case .success(let data):
+//                completion(data,nil)
+//            case .failure(let error):
+//                completion(nil,error)
+//                ISMChatHelper.print("Get Chat Api failed -----> \(String(describing: error))")
+//                
+//            }
+//        }
     }
     
     public func getChatList(search : String?,completion:@escaping(ISMChatConversations?)->()){
-        var body : [String : Any]? = nil
+        var body : [String : Any] = [:]
         if let search = search , search != ""{
             body = ["searchTag" : search] as [String : Any]
         }
-        let skip = self.conversations.count
+        let skipNew = self.conversations.count
         
-        let newUrl = "\(ISMChatNetworkServices.Urls.chatList)?includeConversationStatusMessagesInUnreadMessagesCount=false&skip=\(skip)"
+        let endPoint = ISMChatConversationEndpoint.getconversationList(includeConversationStatusMessagesInUnreadMessagesCount: false, skip: skipNew)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
         
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: newUrl,httpMethod: .get,params: body) { (result : ISMChatResponse<ISMChatConversations?,ISMChatErrorData?>) in
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatConversations, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
+            case .success(let data,_) :
                 completion(data)
-            case .failure(let error):
+            case .failure(let error) :
                 self.moreDataAvailableForChatList = false
                 ISMChatHelper.print("Get Chat Api failed -----> \(String(describing: error))")
-                
             }
         }
+        
+//        let newUrl = "\(ISMChatNetworkServices.Urls.chatList)?includeConversationStatusMessagesInUnreadMessagesCount=false&skip=\(skip)"
+//        
+//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: newUrl,httpMethod: .get,params: body) { (result : ISMChatResponse<ISMChatConversations?,ISMChatErrorData?>) in
+//            switch result{
+//            case .success(let data):
+//                completion(data)
+//            case .failure(let error):
+//                self.moreDataAvailableForChatList = false
+//                ISMChatHelper.print("Get Chat Api failed -----> \(String(describing: error))")
+//                
+//            }
+//        }
     }
     
     public func deleteConversation(conversationId: String, completion:@escaping()->()){
-        let baseURL = "\(ISMChatNetworkServices.Urls.deleteConversationLocal)?conversationId=\(conversationId)"
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .delete) { (result : ISMChatResponse<ISMChatUser?,ISMChatErrorData?>) in
+        
+        let endPoint = ISMChatConversationEndpoint.deleteConversationLocally(conversationId: conversationId)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatUser, ISMChatNewAPIError>) in
             switch result{
-            case .success(_):
+            case .success(let data,_) :
                 completion()
-            case .failure(let error):
+            case .failure(let error) :
+                self.moreDataAvailableForChatList = false
                 ISMChatHelper.print("Get delete Conversation Api failed -----> \(String(describing: error))")
             }
         }
+        
+        
+//        let baseURL = "\(ISMChatNetworkServices.Urls.deleteConversationLocal)?conversationId=\(conversationId)"
+//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .delete) { (result : ISMChatResponse<ISMChatUser?,ISMChatErrorData?>) in
+//            switch result{
+//            case .success(_):
+//                completion()
+//            case .failure(let error):
+//                ISMChatHelper.print("Get delete Conversation Api failed -----> \(String(describing: error))")
+//            }
+//        }
     }
     
     public func exitGroup(conversationId: String, completion:@escaping()->()){
-        let baseURL = "\(ISMChatNetworkServices.Urls.exitGroup)?conversationId=\(conversationId)"
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .delete) { (result : ISMChatResponse<ISMChatUser?,ISMChatErrorData?>) in
+        
+        let endPoint = ISMChatGroupEndpoint.exitGroup(conversationId: conversationId)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatUsers, ISMChatNewAPIError>) in
             switch result{
-            case .success(_):
+            case .success(let data,_) :
                 completion()
-            case .failure(let error):
-                ISMChatHelper.print("Get delete Conversation Api failed -----> \(String(describing: error))")
+            case .failure(let error) :
+                ISMChatHelper.print("exit group Api failed -----> \(String(describing: error))")
             }
         }
+        
+//        let baseURL = "\(ISMChatNetworkServices.Urls.exitGroup)?conversationId=\(conversationId)"
+//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .delete) { (result : ISMChatResponse<ISMChatUser?,ISMChatErrorData?>) in
+//            switch result{
+//            case .success(_):
+//                completion()
+//            case .failure(let error):
+//                ISMChatHelper.print("Get delete Conversation Api failed -----> \(String(describing: error))")
+//            }
+//        }
     }
     
     public func muteUnmuteNotification(conversationId: String,pushNotifications : Bool, completion:@escaping(Bool?)->()){
         var body = [String : Any]()
         body["pushNotifications"] = pushNotifications
         body["conversationId"] = conversationId
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.conversationSetting,httpMethod: .patch,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
+        
+        let endPoint = ISMChatConversationEndpoint.updateConversationSetting
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
-            case .success(_):
+            case .success(let data,_) :
                 completion(true)
-            case .failure(let error):
-                ISMChatHelper.print("update title Api fail -----> \(String(describing: error))")
+            case .failure(let error) :
+                ISMChatHelper.print("update conversation Api fail -----> \(String(describing: error))")
             }
         }
+        
+        
+//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.conversationSetting,httpMethod: .patch,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
+//            switch result{
+//            case .success(_):
+//                completion(true)
+//            case .failure(let error):
+//                ISMChatHelper.print("update title Api fail -----> \(String(describing: error))")
+//            }
+//        }
     }
     
     public func clearChat(conversationId: String, completion:@escaping()->()){
-        let baseURL = "\(ISMChatNetworkServices.Urls.clearChat)?conversationId=\(conversationId)"
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .delete) { (result : ISMChatResponse<ISMChatUser?,ISMChatErrorData?>) in
+        
+        let endPoint = ISMChatConversationEndpoint.clearConversationMessages(conversationId: conversationId)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatUser, ISMChatNewAPIError>) in
             switch result{
-            case .success(_):
+            case .success(let data,_) :
                 completion()
-            case .failure(let error):
+            case .failure(let error) :
                 ISMChatHelper.print("Get clear chat Api failed -----> \(String(describing: error))")
             }
         }
+        
+        
+//        let baseURL = "\(ISMChatNetworkServices.Urls.clearChat)?conversationId=\(conversationId)"
+//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .delete) { (result : ISMChatResponse<ISMChatUser?,ISMChatErrorData?>) in
+//            switch result{
+//            case .success(_):
+//                completion()
+//            case .failure(let error):
+//                ISMChatHelper.print("Get clear chat Api failed -----> \(String(describing: error))")
+//            }
+//        }
     }
     
     public func getSortedFilteredChats(conversation : [ISMChatConversationsDetail],query : String) -> [ISMChatConversationsDetail]{
@@ -291,27 +374,46 @@ public class ConversationViewModel : NSObject ,ObservableObject{
     }
     
     public func getBroadCastEligibleUsers(groupCastId : String ,search : String,completion:@escaping(ISMChatUsers?)->()){
-        var baseURL = "\(ISMChatNetworkServices.Urls.getnonBlockUsers)?skip=0&limit=20&sort=1"
+        
         let skip = self.users.count
-        if search != "" {
-            baseURL = "\(ISMChatNetworkServices.Urls.eligibleuserForGroupcast)?groupcastId=\(groupCastId)&searchTag=\(search)&sort=1&skip=\(skip)&limit=\(getUsersLimit)"
-        }else {
-            baseURL = "\(ISMChatNetworkServices.Urls.eligibleuserForGroupcast)?groupcastId=\(groupCastId)&sort=1&skip=\(skip)&limit=\(getUsersLimit)"
-           
-        }
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatUsers?,ISMChatErrorData?>) in
-            self.apiCalling = false
+        let endPoint = ISMChatBroadCastEndpoint.getEligibleUsersListtoAddInBroadcast(groupcastId: groupCastId, searchTag: search, sort: 1, skip: skip, limit: getUsersLimit)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatUsers, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
+            case .success(let data,_) :
                 if skip == 0 {
                     self.users.removeAll()
                 }
                 completion(data)
-            case .failure(_):
+            case .failure(let error) :
                 ISMChatHelper.print("get users Failed")
                 self.moreDataAvailableForGetUsers = false
             }
         }
+        
+        
+//        var baseURL = "\(ISMChatNetworkServices.Urls.getnonBlockUsers)?skip=0&limit=20&sort=1"
+//       
+//        if search != "" {
+//            baseURL = "\(ISMChatNetworkServices.Urls.eligibleuserForGroupcast)?groupcastId=\(groupCastId)&searchTag=\(search)&sort=1&skip=\(skip)&limit=\(getUsersLimit)"
+//        }else {
+//            baseURL = "\(ISMChatNetworkServices.Urls.eligibleuserForGroupcast)?groupcastId=\(groupCastId)&sort=1&skip=\(skip)&limit=\(getUsersLimit)"
+//           
+//        }
+//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatUsers?,ISMChatErrorData?>) in
+//            self.apiCalling = false
+//            switch result{
+//            case .success(let data):
+//                if skip == 0 {
+//                    self.users.removeAll()
+//                }
+//                completion(data)
+//            case .failure(_):
+//                ISMChatHelper.print("get users Failed")
+//                self.moreDataAvailableForGetUsers = false
+//            }
+//        }
     }
     
     public func getEligibleUsers(search : String,conversationId: String,completion:@escaping(ISMChatUsers?)->()){

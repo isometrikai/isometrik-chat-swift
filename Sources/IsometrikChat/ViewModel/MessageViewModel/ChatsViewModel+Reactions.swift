@@ -15,16 +15,30 @@ extension ChatsViewModel{
         body = ["conversationId" : conversationId ,
                 "messageId" : messageId,
                 "reactionType" : emojiReaction] as [String : Any]
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.emojiReaction,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
+        
+        let endPoint = ISMChatReactionEndpoint.sendReaction
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
-                ISMChatHelper.print("Send reaction Api succedded -----> \(String(describing: data?.msg))")
+            case .success(let data,_) :
+                ISMChatHelper.print("Send reaction Api succedded -----> \(String(describing: data.msg))")
                 completion(true)
-            case .failure(let error):
+            case .failure(let error) :
                 ISMChatHelper.print("Send reaction Api failed -----> \(String(describing: error))")
-                completion(true)
             }
         }
+        
+//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.emojiReaction,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
+//            switch result{
+//            case .success(let data):
+//                ISMChatHelper.print("Send reaction Api succedded -----> \(String(describing: data?.msg))")
+//                completion(true)
+//            case .failure(let error):
+//                ISMChatHelper.print("Send reaction Api failed -----> \(String(describing: error))")
+//                completion(true)
+//            }
+//        }
     }
     
     //MARK: - get reactions
@@ -32,16 +46,30 @@ extension ChatsViewModel{
         var body : [String : Any]
         body = ["conversationId" : conversationId ,
                 "messageId" : messageId] as [String : Any]
-        let url = ISMChatNetworkServices.Urls.emojiReaction + "/\(emojiReaction)"
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: url,httpMethod: .get,params: body) { (result : ISMChatResponse<ISMChatReactionsData?,ISMChatErrorData?>) in
+        
+        let endPoint = ISMChatReactionEndpoint.getReaction(reaction: emojiReaction)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatReactionsData, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
-                ISMChatHelper.print("Get reaction Api succedded -----> \(String(describing: data?.msg))")
+            case .success(let data,_) :
+                ISMChatHelper.print("Get reaction Api succedded -----> \(String(describing: data.msg))")
                 completion(data)
-            case .failure(let error):
+            case .failure(let error) :
                 ISMChatHelper.print("Get reaction Api failed -----> \(String(describing: error))")
             }
         }
+        
+//        let url = ISMChatNetworkServices.Urls.emojiReaction + "/\(emojiReaction)"
+//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: url,httpMethod: .get,params: body) { (result : ISMChatResponse<ISMChatReactionsData?,ISMChatErrorData?>) in
+//            switch result{
+//            case .success(let data):
+//                ISMChatHelper.print("Get reaction Api succedded -----> \(String(describing: data?.msg))")
+//                completion(data)
+//            case .failure(let error):
+//                ISMChatHelper.print("Get reaction Api failed -----> \(String(describing: error))")
+//            }
+//        }
     }
     
     //MARK: - remove reaction
@@ -49,16 +77,30 @@ extension ChatsViewModel{
         var body : [String : Any]
         body = ["conversationId" : conversationId ,
                 "messageId" : messageId] as [String : Any]
-        let url = ISMChatNetworkServices.Urls.emojiReaction + "/\(emojiReaction)"
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: url,httpMethod: .delete,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
+        let endPoint = ISMChatReactionEndpoint.removeReaction(reaction: emojiReaction)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
-                ISMChatHelper.print("Send reaction Api succedded -----> \(String(describing: data?.msg))")
+            case .success(let data,_) :
+                ISMChatHelper.print("remove reaction Api succedded -----> \(String(describing: data.msg))")
                 completion(true)
-            case .failure(let error):
-                ISMChatHelper.print("Send reaction Api failed -----> \(String(describing: error))")
-                completion(true)
+            case .failure(let error) :
+                ISMChatHelper.print("remove reaction Api failed -----> \(String(describing: error))")
             }
         }
+        
+        
+//        let url = ISMChatNetworkServices.Urls.emojiReaction + "/\(emojiReaction)"
+//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: url,httpMethod: .delete,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
+//            switch result{
+//            case .success(let data):
+//                ISMChatHelper.print("Send reaction Api succedded -----> \(String(describing: data?.msg))")
+//                completion(true)
+//            case .failure(let error):
+//                ISMChatHelper.print("Send reaction Api failed -----> \(String(describing: error))")
+//                completion(true)
+//            }
+//        }
     }
 }
