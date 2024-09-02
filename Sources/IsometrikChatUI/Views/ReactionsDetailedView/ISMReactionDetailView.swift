@@ -18,7 +18,7 @@ struct ISMReactionDetailView: View {
     let opponentDeatil : ISMChatUser
     @State private var selectedTab: Int = 0
     @State private var allReactions : [String : [String]] = [:]
-    var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    var viewModel = ChatsViewModel()
     @Binding var showReactionDetail : Bool
     @Binding var reactionRemoved : String
     @EnvironmentObject var realmManager : RealmManager

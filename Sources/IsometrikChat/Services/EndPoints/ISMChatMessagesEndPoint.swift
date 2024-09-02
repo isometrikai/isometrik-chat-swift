@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
     
     case getMessages(conversationId: String,lastMessageTimestamp: String)
@@ -16,6 +15,10 @@ enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
     case deleteMessageForMe(conversationId: String,messageIds: String)
     case deleteMessageForEveryone(conversationId: String,messageIds: String)
     case forwardMessage
+    case messageDeliveredInfo(conversationId: String,messageId: String)
+    case messageReadInfo(conversationId: String,messageId: String)
+    case allUnreadMessagesFromAllConversation(senderIdsExclusive: Bool,deliveredToMe: Bool,senderIds: String,limit: Int,skip: Int,sort : Int)
+    case markMessageStatusRead
     
     var baseURL: URL {
         return URL(string:ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.origin)!
@@ -35,6 +38,14 @@ enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
             return "/chat/messages/everyone"
         case .forwardMessage:
             return "/chat/message/forward"
+        case .messageDeliveredInfo:
+            return "/chat/message/status/delivery"
+        case .messageReadInfo:
+            return "/chat/message/status/read"
+        case .allUnreadMessagesFromAllConversation:
+            return "/chat/messages/user"
+        case .markMessageStatusRead:
+            return "/chat/messages/read"
         }
     }
     
@@ -52,6 +63,14 @@ enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
             return .delete
         case .forwardMessage:
             return .post
+        case .messageDeliveredInfo:
+            return .get
+        case .messageReadInfo:
+            return .get
+        case .allUnreadMessagesFromAllConversation(senderIdsExclusive: let senderIdsExclusive, deliveredToMe: let deliveredToMe, senderIds: let senderIds, limit: let limit, skip: let skip, sort: let sort):
+            return .get
+        case .markMessageStatusRead:
+            return .put
         }
     }
     
@@ -81,12 +100,29 @@ enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
             return params
         case .forwardMessage:
             return [:]
+        case .messageDeliveredInfo(let conversationId, let messageId):
+            var params : [String : String] = [
+                "conversationId" : "\(conversationId)", "messageId" : "\(messageId)"
+            ]
+            return params
+        case .messageReadInfo(let conversationId, let messageId):
+            var params : [String : String] = [
+                "conversationId" : "\(conversationId)", "messageId" : "\(messageId)"
+            ]
+            return params
+        case .allUnreadMessagesFromAllConversation(senderIdsExclusive: let senderIdsExclusive, deliveredToMe: let deliveredToMe, senderIds: let senderIds, limit: let limit, skip: let skip, sort: let sort):
+            var params : [String : String] = [
+                "senderIdsExclusive" : "\(senderIdsExclusive)", "deliveredToMe" : "\(deliveredToMe)", "senderIds" : "\(senderIds)", "limit" : "\(limit)" , "skip" : "\(skip)" , "sort" : "\(sort)"
+            ]
+            return params
+        case .markMessageStatusRead:
+            return [:]
         }
     }
     
     var headers: [String: String]? {
         switch self {
-        case .getMessages, .editMessage,.sendMessage,.deleteMessageForMe,.deleteMessageForEveryone,.forwardMessage:
+        case .getMessages, .editMessage,.sendMessage,.deleteMessageForMe,.deleteMessageForEveryone,.forwardMessage,.messageDeliveredInfo,.messageReadInfo,.allUnreadMessagesFromAllConversation,.markMessageStatusRead:
             return ["userToken": ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userToken,
                     "userSecret": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.userSecret,
                     "projectId": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.projectId,
@@ -94,7 +130,6 @@ enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
                     "appSecret": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.appSecret,
                     "accept" : "application/json",
                     "Content-Type" : "application/json"]
-            
         }
     }
 }

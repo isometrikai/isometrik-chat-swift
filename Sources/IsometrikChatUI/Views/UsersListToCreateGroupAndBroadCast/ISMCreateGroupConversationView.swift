@@ -22,8 +22,8 @@ public struct ISMCreateGroupConversationView: View {
     @State public var image : UIImage?
     @State public var groupName = ""
     @State public var userSelected : [ISMChatUser] = []
-    @ObservedObject public var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @ObservedObject public var chatViewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject public var viewModel = ConversationViewModel()
+    @ObservedObject public var chatViewModel = ChatsViewModel()
     public var conversationId : String? = nil
     public var selectUserFor : SelectUserFor = .Group
     @State public var navigateTocreateGroup : Bool = false

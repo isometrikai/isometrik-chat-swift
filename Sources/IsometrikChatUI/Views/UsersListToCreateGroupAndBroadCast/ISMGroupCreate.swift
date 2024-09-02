@@ -18,8 +18,8 @@ public struct ISMGroupCreate: View {
     @State public var cancelPicker : Bool = false
     @State public var image : [UIImage] = []
     @State public var selectedMedia : [URL] = []
-    public var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    public var chatViewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    public var viewModel = ConversationViewModel()
+    public var chatViewModel = ChatsViewModel()
     @State public var groupNameAlert : Bool = false
     @State public var groupName = ""
     @State public var hasCreatedGroup = false

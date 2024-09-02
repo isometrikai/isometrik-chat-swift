@@ -38,16 +38,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("Create Group Api failed -----> \(String(describing: error))")
             }
         }
-        
-        
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.createConversation,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("Create Group Api failed -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - add member in group
@@ -66,15 +56,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("Add member Api fail -----> \(String(describing: error))")
             }
         }
-        
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.groupMembers,httpMethod: .put,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("Add member Api fail -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - make user as group admin
@@ -93,16 +74,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("add group admin member Api fail -----> \(String(describing: error))")
             }
         }
-        
-        
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.groupAdmin,httpMethod: .put,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("add group admin member Api fail -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - remove user as group admin
@@ -121,16 +92,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("remove group admin member Api fail -----> \(String(describing: error))")
             }
         }
-        
-        
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.groupAdmin,httpMethod: .delete,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("remove group admin member Api fail -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - remove user as group
@@ -150,16 +111,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("remove member Api fail -----> \(String(describing: error))")
             }
         }
-        
-        
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.groupMembers,httpMethod: .delete,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("remove member Api fail -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - get group members
@@ -176,17 +127,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("get member Api fail -----> \(String(describing: error))")
             }
         }
-        
-        
-//        let baseUrl = "\(ISMChatNetworkServices.Urls.groupMembers)?conversationId=\(conversationId)"
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseUrl,httpMethod: .get) { (result : ISMChatResponse<ISMGroupMember?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("get member Api fail -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - update group title
@@ -205,16 +145,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("update title Api fail -----> \(String(describing: error))")
             }
         }
-        
-        
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.groupTitle,httpMethod: .patch,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("update title Api fail -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - update group image
@@ -233,14 +163,21 @@ extension ChatsViewModel{
                 ISMChatHelper.print("update image Api fail -----> \(String(describing: error))")
             }
         }
+    }
+    //MARK: - EXIT GROUP
+    
+    public func exitGroup(conversationId: String, completion:@escaping()->()){
         
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.groupImage,httpMethod: .patch,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("update image Api fail -----> \(String(describing: error))")
-//            }
-//        }
+        let endPoint = ISMChatGroupEndpoint.exitGroup(conversationId: conversationId)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatUsers, ISMChatNewAPIError>) in
+            switch result{
+            case .success(let data,_) :
+                completion()
+            case .failure(let error) :
+                ISMChatHelper.print("exit group Api failed -----> \(String(describing: error))")
+            }
+        }
     }
 }

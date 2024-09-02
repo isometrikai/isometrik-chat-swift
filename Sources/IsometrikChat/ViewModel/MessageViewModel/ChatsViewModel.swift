@@ -23,7 +23,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     @Published public var allMessages : [ISMChatMessage]? = []
     @Published public var forwardToConversations : [ISMChatConversationsDetail] = []
     @Published public var documentSelectedFromPicker : URL?
-    //    @Published var cameraImageToUse : URL?
+    
     public var skip : Int = 0
     public var skipUser : Int = 0
     @Published public var isBusy = false
@@ -44,12 +44,6 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     
     //grp
     @Published public var groupTitleImage : URL?
-    
-    var ismChatSDK: ISMChatSdk?
-    
-    public init(ismChatSDK: ISMChatSdk) {
-        self.ismChatSDK = ismChatSDK
-    }
 
  
     //MARK: - get conversation Detail
@@ -66,32 +60,19 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
                 ISMChatHelper.print("Get CONVERSATION detail Api failed -----> \(String(describing: error))")
             }
         }
-        
-//        
-//        var baseURL = ""
-//        if isGroup == true{
-//            baseURL = "\(ISMChatNetworkServices.Urls.conversationDetail)\(conversationId)?includeMembers=true"
-//        }else{
-//            baseURL = "\(ISMChatNetworkServices.Urls.conversationDetail)\(conversationId)"
-//        }
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatConversationDetail?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("Get CONVERSATION Api failed -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - message read info
     public func getMessageReadInfo(messageId : String,conversationId : String,completion:@escaping(ISMChatConversationDetail?)->()){
-        let baseURL = "\(ISMChatNetworkServices.Urls.messageRead)?conversationId=\(conversationId)&messageId=\(messageId)"
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatConversationDetail?,ISMChatErrorData?>) in
+        
+        let endPoint = ISMChatMessagesEndpoint.messageReadInfo(conversationId: conversationId, messageId: messageId)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatConversationDetail, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
+            case .success(let data,_) :
                 completion(data)
-            case .failure(_):
+            case .failure(let error) :
                 ISMChatHelper.print("Message Read Info Failed")
             }
         }
@@ -99,12 +80,15 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     
     //MARK: - message delivered info
     public func getMessageDeliveredInfo(messageId : String,conversationId : String,completion:@escaping(ISMChatConversationDetail?)->()){
-        let baseURL = "\(ISMChatNetworkServices.Urls.messageDelivered)?conversationId=\(conversationId)&messageId=\(messageId)"
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatConversationDetail?,ISMChatErrorData?>) in
+        
+        let endPoint = ISMChatMessagesEndpoint.messageDeliveredInfo(conversationId: conversationId, messageId: messageId)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatConversationDetail, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
+            case .success(let data,_) :
                 completion(data)
-            case .failure(_):
+            case .failure(let error) :
                 ISMChatHelper.print("Message deleivered Info Failed")
             }
         }
@@ -135,16 +119,6 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
                 ISMChatHelper.print("Create Conversation Api failed -----> \(String(describing: error))")
             }
         }
-        
-        
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.createConversation,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("Create Conversation Api failed -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - accept rquest to chat
@@ -152,11 +126,15 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         var body : [String : Any]
         let metaData = ["chatStatus" : ISMChatStatus.Accept.value]
         body = ["metaData" : metaData,"conversationId" : conversationId] as [String : Any]
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.conversationDetail,httpMethod: .patch,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
+        
+        let endPoint = ISMChatConversationEndpoint.updateConversationDetail
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
+            case .success(let data,_) :
                 completion(data)
-            case .failure(let error):
+            case .failure(let error) :
                 ISMChatHelper.print("Meta data changed to allow message -----> \(String(describing: error))")
             }
         }
@@ -166,13 +144,15 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     //MARK: - get all messages not delivered yet
     public func getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId : String,skip : Int = 0){
         let limit = 20
-        let baseUrl = "\(ISMChatNetworkServices.Urls.getMessagesInConersation)?senderIdsExclusive=true&deliveredToMe=false&senderIds=\(myUserId)&limit=\(limit)&skip=\(skip)&sort=-1"
         
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseUrl,httpMethod: .get) { (result : ISMChatResponse<ISMChatMessages?,ISMChatErrorData?>) in
+        let endPoint = ISMChatMessagesEndpoint.allUnreadMessagesFromAllConversation(senderIdsExclusive: true, deliveredToMe: false, senderIds: myUserId, limit: limit, skip: skip, sort: -1)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatMessages, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
+            case .success(let data,_) :
                 print("success")
-                let filteredMessages = data?.messages?.filter { message in
+                let filteredMessages = data.messages?.filter { message in
                     return message.action != ISMChatActionType.userBlock.value &&
                     message.action != ISMChatActionType.userUnblock.value &&
                     message.action != ISMChatActionType.userBlockConversation.value &&
@@ -202,7 +182,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
                             continue // Skip this message if conversationId or messageId is nil
                         }
                         
-                        let myUserId = self.ismChatSDK?.getChatClient().getConfigurations().userConfig.userId ?? ""
+                        let myUserId = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId
                         
                         // Check if your userId is contained in the deliveredTo array
                         let containsUserId = message.deliveredTo?.contains(where: { $0.userId == myUserId }) ?? false
@@ -222,7 +202,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
                         print("Pagination stopped")
                     }
                 }
-            case .failure(let error):
+            case .failure(let error) :
                 ISMChatHelper.print("get all messages Api fail -----> \(String(describing: error))")
             }
         }
@@ -235,11 +215,15 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         let timeStamp = UInt64(floor(Date().timeIntervalSince1970 * 1000))
         body = ["conversationId" : conversationId ,
                 "timestamp" : timeStamp] as [String : Any]
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.markMessageAsRead,httpMethod: .put,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
+        
+        let endPoint = ISMChatMessagesEndpoint.markMessageStatusRead
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
-                ISMChatHelper.print("Mark Message Read Api succedded -----> \(String(describing: data?.msg))")
-            case .failure(let error):
+            case .success(let data,_) :
+                ISMChatHelper.print("Mark Message Read Api succedded -----> \(String(describing: data.msg))")
+            case .failure(let error) :
                 ISMChatHelper.print("Mark Message Read Api failed -----> \(String(describing: error))")
             }
         }
@@ -250,12 +234,16 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         var body : [String : Any]
         body = ["conversationId" : conversationId ,
                 "messageId" : messageId] as [String : Any]
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.readMessageIndicator,httpMethod: .put,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
+        
+        let endPoint = ISMChatIndicatorEndpoint.readIndicator
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
-                ISMChatHelper.print("Read Message Indicator Api succedded -----> \(String(describing: data?.msg))")
+            case .success(let data,_) :
+                ISMChatHelper.print("Read Message Indicator Api succedded -----> \(String(describing: data.msg))")
                 completion(true)
-            case .failure(let error):
+            case .failure(let error) :
                 ISMChatHelper.print("Read Message Indicator Api failed -----> \(String(describing: error))")
             }
         }
@@ -265,11 +253,15 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     public func typingMessageIndicator(conversationId : String){
         var body : [String : Any]
         body = ["conversationId" : conversationId] as [String : Any]
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.typingMessageIndicator,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
+        
+        let endPoint = ISMChatIndicatorEndpoint.typingIndicator
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
-                ISMChatHelper.print("Typing Message Indicator Api succedded -----> \(String(describing: data?.msg))")
-            case .failure(let error):
+            case .success(let data,_) :
+                ISMChatHelper.print("Typing Message Indicator Api succedded -----> \(String(describing: data.msg))")
+            case .failure(let error) :
                 ISMChatHelper.print("Typing Message Indicator Api failed -----> \(String(describing: error))")
             }
         }
@@ -280,12 +272,16 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         var body : [String : Any]
         body = ["conversationId" : conversationId ,
                 "messageId" : messageId] as [String : Any]
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.deliveredMessageIndicator,httpMethod: .put,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
+        
+        let endPoint = ISMChatIndicatorEndpoint.deliveredIndicator
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
-                ISMChatHelper.print("Delivered Message Indicator Api succedded -----> \(String(describing: data?.msg))")
+            case .success(let data,_) :
+                ISMChatHelper.print("Delivered Message Indicator Api succedded -----> \(String(describing: data.msg))")
                 completion(true)
-            case .failure(let error):
+            case .failure(let error) :
                 ISMChatHelper.print("Delivered Message Indicator Api failed -----> \(String(describing: error))")
             }
         }

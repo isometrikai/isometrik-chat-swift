@@ -13,20 +13,6 @@ extension ChatsViewModel{
     
     //MARK: - get messages
     public func getMessages(refresh : Bool? = nil,conversationId : String,lastMessageTimestamp:String,completion:@escaping(ISMChatMessages?)->()){
-//        var baseURL = String()
-//        if lastMessageTimestamp == "" {
-//            baseURL = "\(ISMChatNetworkServices.Urls.messages)?conversationId=\(conversationId)"
-//        }else {
-//            baseURL = "\(ISMChatNetworkServices.Urls.messages)?conversationId=\(conversationId)&lastMessageTimestamp=\(lastMessageTimestamp)"
-//        }
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatMessages?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("Get Message Api failed -----> \(String(describing: error))")
-//            }
-//        }
         
         let endPoint = ISMChatMessagesEndpoint.getMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp)
         let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
@@ -52,7 +38,7 @@ extension ChatsViewModel{
         
         let endPoint = ISMChatMessagesEndpoint.editMessage
         let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
-//
+
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatSendMsg, ISMChatNewAPIError>) in
             switch result{
             case .success(let data,_):
@@ -61,15 +47,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("Get send Message Api failed -----> \(String(describing: error))")
             }
         }
-        
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.sendMessage,httpMethod: .patch,params: body) { (result : ISMChatResponse<ISMChatSendMsg?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data?.messageId ?? "")
-//            case .failure(let error):
-//                ISMChatHelper.print("Get send Message Api failed -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     
@@ -264,7 +241,7 @@ extension ChatsViewModel{
         body["conversationId"] = conversationId
         body["body"] = messageInBody
         body["customType"] = customType
-        body["notificationTitle"] = ismChatSDK?.getChatClient().getConfigurations().userConfig.userName ?? "Message"
+        body["notificationTitle"] = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userName
         body["notificationBody"] = notificationBody
         body["searchableTags"] = searchTags
         body["events"] = eventDetail
@@ -298,7 +275,7 @@ extension ChatsViewModel{
         
         let endPoint : ISMChatURLConvertible = isBroadCastMessage == false ? ISMChatMessagesEndpoint.sendMessage : ISMChatBroadCastEndpoint.sendBroadcastMessage
         let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
-//
+        
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatSendMsg, ISMChatNewAPIError>) in
             switch result{
             case .success(let data,_):
@@ -308,33 +285,15 @@ extension ChatsViewModel{
                 ISMChatHelper.print("Get send Message Api failed -----> \(String(describing: error))")
             }
         }
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: isBroadCastMessage == false ?  ISMChatNetworkServices.Urls.sendMessage : ISMChatNetworkServices.Urls.postbroadCastMessage,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatSendMsg?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data?.messageId ?? "", objectId ?? "")
-//                NotificationCenter.default.post(name: NSNotification.refrestConversationListLocally,object: nil)
-//            case .failure(let error):
-//                ISMChatHelper.print("Get send Message Api failed -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     
     //MARK: - delete message
     public func deleteMsg(messageDeleteType : ISMChatDeleteMessageType,messageId : [String],conversationId : String,completion:@escaping()->()){
         let totalMessageId = messageId.joined(separator: ",")
-//        var baseURL = ""
-//        switch messageDeleteType{
-//        case .DeleteForYou:
-//            baseURL = "\(ISMChatNetworkServices.Urls.messageDeleteForMe)?conversationId=\(conversationId)&messageIds=\(totalMessageId)"
-//        case .DeleteForEveryone:
-//            baseURL = "\(ISMChatNetworkServices.Urls.messageDeleteForEveryone)?conversationId=\(conversationId)&messageIds=\(totalMessageId)"
-//        }
-//
-        
         let endPoint : ISMChatURLConvertible = messageDeleteType == .DeleteForYou ? ISMChatMessagesEndpoint.deleteMessageForMe(conversationId: conversationId, messageIds: totalMessageId) : ISMChatMessagesEndpoint.deleteMessageForEveryone(conversationId: conversationId, messageIds: totalMessageId)
         let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
-//
+
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
             case .success(let data,_):
@@ -343,16 +302,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("Message deleivered Info Failed")
             }
         }
-        
-//
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .delete) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(_):
-//                completion()
-//            case .failure(_):
-//                ISMChatHelper.print("Message deleivered Info Failed")
-//            }
-//        }
     }
     
     public func forwardToMutipleUsers(users : [UserDB],messages : [MessagesDB],completion:@escaping()->()){
@@ -411,7 +360,7 @@ extension ChatsViewModel{
         var body : [String : Any]
         var metaDataValue : [String : Any] = [:]
         let deviceId = UniqueIdentifierManager.shared.getUniqueIdentifier()
-        body = ["showInConversation" : true , "messageType" : 1 ,"encrypted" : false, "conversationIds" : conversationIds,"body" : message,"deviceId" : deviceId,"notificationTitle": ismChatSDK?.getChatClient().getConfigurations().userConfig.userName ?? "","customType" : customType] as [String : Any]
+        body = ["showInConversation" : true , "messageType" : 1 ,"encrypted" : false, "conversationIds" : conversationIds,"body" : message,"deviceId" : deviceId,"notificationTitle": ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userName,"customType" : customType] as [String : Any]
         
         if let obj = attachments{
             if attachments?.attachmentType == 3  {
@@ -483,7 +432,7 @@ extension ChatsViewModel{
         
         let endPoint : ISMChatURLConvertible = ISMChatMessagesEndpoint.forwardMessage
         let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
-//
+
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatSendMsg, ISMChatNewAPIError>) in
             switch result{
             case .success(let data,_):
@@ -492,15 +441,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("post forward msg Api failed -----> \(String(describing: error))")
             }
         }
-        
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.forwardMessage,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatSendMsg?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(_):
-//                completion()
-//            case .failure(let error):
-//                ISMChatHelper.print("post forward msg Api failed -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - reply message
@@ -517,14 +457,14 @@ extension ChatsViewModel{
         }
         let replyMessageData : [String : Any] = ["parentMessageBody" : parentMessage.body,
                                                  "parentMessageUserId" : parentMessage.senderInfo?.userId ?? "",
-                                                 "parentMessageInitiator" : ismChatSDK?.getChatClient().getConfigurations().userConfig.userId == parentMessage.senderInfo?.userId,
+                                                 "parentMessageInitiator" : ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId == parentMessage.senderInfo?.userId,
                                                  "parentMessageUserName" : parentMessage.senderInfo?.userName ?? "",
                                                  "parentMessageMessageType" : parentMessage.customType,
                                                  "parentMessageAttachmentUrl" : thumbnailUrl,
                                                  "parentMessagecaptionMessage" : parentMessage.metaData?.captionMessage ?? ""]
         let metaData : [String : Any] = ["replyMessage" : replyMessageData]
         let eventDetail : [String : Any] = ["sendPushNotification" : true,"updateUnreadCount" : true]
-        body = ["showInConversation" : true , "messageType" : 2 , "encrypted" : false ,"deviceId" : deviceId,"conversationId" : conversationId, "body" : message,"customType" : customType,"parentMessageId" : parentMessage.messageId,"metaData" : metaData,"notificationTitle": ismChatSDK?.getChatClient().getConfigurations().userConfig.userName ?? "","notificationBody": message, "events" : eventDetail] as [String : Any]
+        body = ["showInConversation" : true , "messageType" : 2 , "encrypted" : false ,"deviceId" : deviceId,"conversationId" : conversationId, "body" : message,"customType" : customType,"parentMessageId" : parentMessage.messageId,"metaData" : metaData,"notificationTitle": ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userName,"notificationBody": message, "events" : eventDetail] as [String : Any]
         
         let endPoint : ISMChatURLConvertible = ISMChatMessagesEndpoint.sendMessage
         let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
@@ -537,15 +477,5 @@ extension ChatsViewModel{
                 ISMChatHelper.print("Get send Message Api failed -----> \(String(describing: error))")
             }
         }
-        
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.sendMessage,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatSendMsg?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data?.messageId ?? "")
-//            case .failure(let error):
-//                ISMChatHelper.print("Get send Message Api failed -----> \(String(describing: error))")
-//            }
-//        }
     }
-    
 }

@@ -46,10 +46,10 @@ public struct ISMConversationView : View {
     @State public var selectedUserConversationId : String = ""
     @State public var navigatetoSelectedUser : Bool = false
     
-    @ObservedObject public var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject public var viewModel = ConversationViewModel()
     @StateObject public var realmManager = RealmManager()
     @StateObject public var networkMonitor = NetworkMonitor()
-    @ObservedObject public var chatViewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject public var chatViewModel = ChatsViewModel()
     @State public var showBroadCastOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.BroadCastConversation)
     
     public let NC = NotificationCenter.default
@@ -265,7 +265,7 @@ public struct ISMConversationView : View {
                 .onReceive(NotificationCenter.default.publisher(for: NSNotification.localNotification)) { data in
                     if let conversationId = data.userInfo?["conversationId"] as? String, let messageId = data.userInfo?["messageId"] as? String{
                         handleLocalNotification(conversationId: conversationId)
-                        viewModel.deliveredMessageIndicator(conversationId: conversationId, messageId: messageId) { _ in
+                        chatViewModel.deliveredMessageIndicator(conversationId: conversationId, messageId: messageId) { _ in
                         }
                     }
                 }
@@ -345,7 +345,7 @@ public struct ISMConversationView : View {
         }
         .onLoad{
             realmManager.hardDeleteAll()
-            self.viewModel.userData = UserDefaults.standard.retrieveCodable(for: "userInfo")
+//            self.viewModel.userData = UserDefaults.standard.retrieveCodable(for: "userInfo")
             self.getConversationList()
             self.realmManager.hardDeleteMsgs()
             if !networkMonitor.isConnected {

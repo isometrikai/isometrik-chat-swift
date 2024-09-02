@@ -19,7 +19,7 @@ struct ISMShareContactList: View {
     
     
     @State private var query = ""
-    @ObservedObject var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject var viewModel = ConversationViewModel()
     @State private var contacts : [ISMChatContacts] = []
     @State var contactSectionDictionary : Dictionary<String , [ISMChatContacts]> = [:]
     

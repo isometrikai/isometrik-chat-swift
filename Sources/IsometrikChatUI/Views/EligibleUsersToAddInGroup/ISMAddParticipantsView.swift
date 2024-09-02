@@ -14,8 +14,8 @@ struct ISMAddParticipantsView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var userSelected : [ISMChatUser] = []
-    @ObservedObject var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @ObservedObject var chatViewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject var viewModel = ConversationViewModel()
+    @ObservedObject var chatViewModel = ChatsViewModel()
     var conversationId : String? = nil
     @EnvironmentObject var realmManager : RealmManager
     @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts

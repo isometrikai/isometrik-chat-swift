@@ -14,9 +14,11 @@ enum ISMChatConversationEndpoint : ISMChatURLConvertible {
     case getconversationListWithCustomType(includeConversationStatusMessagesInUnreadMessagesCount: Bool,customType: String,searchTag : String,skip :Int)
     case createConversation
     case conversationDetail(conversationId: String,includeMembers:Bool,isGroup: Bool)
+    case updateConversationDetail
     case deleteConversationLocally(conversationId: String)
     case clearConversationMessages(conversationId: String)
     case updateConversationSetting
+    
     
     var baseURL: URL {
         return URL(string:ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.origin)!
@@ -32,6 +34,8 @@ enum ISMChatConversationEndpoint : ISMChatURLConvertible {
             return "/chat/conversation"
         case .conversationDetail(let conversationId,let includeMembers,let isGroup):
             return "/chat/conversation/details/" + "\(conversationId)"
+        case .updateConversationDetail:
+            return "/chat/conversation/details"
         case .deleteConversationLocally:
             return "/chat/conversation/local"
         case .clearConversationMessages:
@@ -51,6 +55,8 @@ enum ISMChatConversationEndpoint : ISMChatURLConvertible {
             return .post
         case .conversationDetail:
             return .get
+        case .updateConversationDetail:
+            return .patch
         case .deleteConversationLocally:
             return .delete
         case .clearConversationMessages:
@@ -93,6 +99,8 @@ enum ISMChatConversationEndpoint : ISMChatURLConvertible {
             }else{
                 return [:]
             }
+        case .updateConversationDetail:
+            return  [:]
         case .deleteConversationLocally(let conversationId):
             var params : [String : String] = [
                 "conversationId" : "\(conversationId)"
@@ -110,7 +118,7 @@ enum ISMChatConversationEndpoint : ISMChatURLConvertible {
     
     var headers: [String: String]? {
         switch self {
-        case .getconversationList,.getconversationListWithCustomType,.createConversation,.conversationDetail,.deleteConversationLocally,.clearConversationMessages,.updateConversationSetting:
+        case .getconversationList,.getconversationListWithCustomType,.createConversation,.conversationDetail,.updateConversationDetail,.deleteConversationLocally,.clearConversationMessages,.updateConversationSetting:
             return ["userToken": ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userToken,
                     "userSecret": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.userSecret,
                     "projectId": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.projectId,

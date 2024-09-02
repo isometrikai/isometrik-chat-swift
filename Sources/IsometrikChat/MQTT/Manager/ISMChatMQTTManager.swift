@@ -441,7 +441,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
     }
         
     public func whenInOtherScreen(messageInfo : ISMChatMessageDelivered){
-        let viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+        let viewModel = ChatsViewModel()
         if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
             ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.senderName ?? "")", body: "\(messageInfo.notificationBody ?? (messageInfo.body ?? ""))", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? "","senderProfileImageUrl" : messageInfo.senderProfileImageUrl ?? ""])
             viewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in

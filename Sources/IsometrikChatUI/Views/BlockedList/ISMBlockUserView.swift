@@ -11,7 +11,7 @@ import IsometrikChat
 public struct ISMBlockUserView: View {
     
     //MARK:  - PROPERTIES
-    @ObservedObject public var conversationViewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject public var conversationViewModel = ConversationViewModel()
     @Environment(\.dismiss) public var dismiss
     @State public var edit : Bool = false
     @State public var blockedUser : [ISMChatUser] = []

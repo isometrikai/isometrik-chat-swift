@@ -37,17 +37,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("Create Broadcast Api failed -----> \(String(describing: error))")
             }
         }
-        
-//        
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.createBroadCast,httpMethod: .post,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                NotificationCenter.default.post(name: NSNotification.refreshBroadCastListNotification,object: nil)
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("Create Conversation Api failed -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - get list of broadcasts api
@@ -64,15 +53,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("Get Broadcast Api failed -----> \(String(describing: error))")
             }
         }
-        
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.getBroadCast,httpMethod: .get) { (result : ISMChatResponse<ISMChatConversations?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("Get CONVERSATION Api failed -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - get broadcast members api
@@ -90,17 +70,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("Get broadcast member Api failed -----> \(String(describing: error))")
             }
         }
-        
-        
-//        let baseUrl = "\(ISMChatNetworkServices.Urls.getBroadCastMembers)?groupcastId=\(groupcastId)"
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseUrl,httpMethod: .get) { (result : ISMChatResponse<ISMChatBroadCastMembers?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("Get broadcast member Api failed -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - delete broadcast api
@@ -121,20 +90,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("delete broadcast Api fail -----> \(String(describing: error))")
             }
         }
-        
-        
-        
-//        var body : [String : Any]
-//        body = ["groupcastId" : groupcastId] as [String : Any]
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.createBroadCast,httpMethod: .delete,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                ISMChatHelper.print(data?.msg)
-//                completion(true)
-//            case .failure(let error):
-//                ISMChatHelper.print("delete broadcast Api fail -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - get broadcast messages api
@@ -152,23 +107,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("delete broadcast Api fail -----> \(String(describing: error))")
             }
         }
-        
-        
-        
-//        var baseURL = String()
-//        if lastMessageTimestamp == "" {
-//             baseURL = "\(ISMChatNetworkServices.Urls.getbroadCastMessage)?groupcastId=\(groupcastId)"
-//        }else {
-//             baseURL = "\(ISMChatNetworkServices.Urls.getbroadCastMessage)?groupcastId=\(groupcastId)&lastMessageTimestamp=\(lastMessageTimestamp)"
-//        }
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatMessages?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("Get Message Api failed -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - update broadcast title api
@@ -189,16 +127,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("update title Api fail -----> \(String(describing: error))")
             }
         }
-        
-        
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.createBroadCast,httpMethod: .patch,params: body) { (result : ISMChatResponse<ISMChatBroadCastMembers?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(let error):
-//                ISMChatHelper.print("update title Api fail -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - add members in broadcast api
@@ -223,16 +151,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("Add member Api fail -----> \(String(describing: error))")
             }
         }
-        
-        
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.addmembersToBroadCast,httpMethod: .put,params: body) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(true)
-//            case .failure(let error):
-//                ISMChatHelper.print("Add member Api fail -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - remove members from broadcast api
@@ -250,17 +168,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("Add member Api fail -----> \(String(describing: error))")
             }
         }
-        
-        
-//        let baseUrl = "\(ISMChatNetworkServices.Urls.addmembersToBroadCast)?groupcastId=\(groupcastId)&members=\(totalMessageId)"
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseUrl,httpMethod: .delete) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(_):
-//                completion(true)
-//            case .failure(let error):
-//                ISMChatHelper.print("Add member Api fail -----> \(String(describing: error))")
-//            }
-//        }
     }
     
     //MARK: - get broadcast message info if read
@@ -277,17 +184,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("Message Read Info Failed")
             }
         }
-        
-        
-//        let baseURL = "\(ISMChatNetworkServices.Urls.groupcastMessageRead)?groupcastId=\(groupcastId)&groupcastMessageId=\(messageId)"
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatConversationDetail?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(_):
-//                ISMChatHelper.print("Message Read Info Failed")
-//            }
-//        }
     }
     
     //MARK: - get broadcast message info if delivered
@@ -304,16 +200,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print("Message deleivered Info Failed")
             }
         }
-        
-//        let baseURL = "\(ISMChatNetworkServices.Urls.groupcastMessageDelivered)?groupcastId=\(groupcastId)&groupcastMessageId=\(messageId)"
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .get) { (result : ISMChatResponse<ISMChatConversationDetail?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                completion(data)
-//            case .failure(_):
-//                ISMChatHelper.print("Message deleivered Info Failed")
-//            }
-//        }
     }
     
     //MARK: - delete broadcast message
@@ -332,21 +218,5 @@ extension ChatsViewModel{
                 ISMChatHelper.print("Message deleivered Info Failed")
             }
         }
-        
-//        var baseURL = ""
-//        switch messageDeleteType{
-//        case .DeleteForYou:
-//            baseURL = "\(ISMChatNetworkServices.Urls.broadcastmessageDeleteForMe)?groupcastId=\(groupcastId)&messageId=\(messageId)&notifyOnCompletion=false&deleteForAll=true&sendPushForMessageDeleted=false"
-//        case .DeleteForEveryone:
-//            baseURL = "\(ISMChatNetworkServices.Urls.broadcastmessageDeleteForEveryone)?groupcastId=\(groupcastId)&messageId=\(messageId)&notifyOnCompletion=false&deleteForAll=true&sendPushForMessageDeleted=false"
-//        }
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseURL,httpMethod: .delete) { (result : ISMChatResponse<ISMChatCreateConversationResponse?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(_):
-//                completion()
-//            case .failure(_):
-//                ISMChatHelper.print("Message deleivered Info Failed")
-//            }
-//        }
     }
 }

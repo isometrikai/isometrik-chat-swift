@@ -19,7 +19,7 @@ public struct ISMMessageInfoView: View {
     let message : MessagesDB
     let viewWidth : CGFloat
     let mediaType : ISMChatMediaType
-    var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    var viewModel = ChatsViewModel()
     let isGroup : Bool
     let groupMember : [ISMChatGroupMember]
     let fromBroadCastFlow : Bool?

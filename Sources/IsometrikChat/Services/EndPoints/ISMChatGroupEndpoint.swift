@@ -20,6 +20,7 @@ enum ISMChatGroupEndpoint : ISMChatURLConvertible {
     case updateGroupTitle
     case updateGroupImage
     case exitGroup(conversationId: String)
+    case eligibleUsersToAddInGroup(conversationId: String,sort: Int,skip: Int,limit: Int,searchTag: String)
     
     
     var baseURL: URL {
@@ -46,6 +47,8 @@ enum ISMChatGroupEndpoint : ISMChatURLConvertible {
             return "/chat/conversation/image"
         case .exitGroup:
             return "/chat/conversation/leave"
+        case .eligibleUsersToAddInGroup:
+            return "/chat/conversation/eligible/members"
         }
     }
     
@@ -69,6 +72,8 @@ enum ISMChatGroupEndpoint : ISMChatURLConvertible {
             return .patch
         case .exitGroup:
             return .delete
+        case .eligibleUsersToAddInGroup:
+            return .get
         }
     }
     
@@ -98,12 +103,23 @@ enum ISMChatGroupEndpoint : ISMChatURLConvertible {
                 "conversationId" : "\(conversationId)"
             ]
             return params
+        case .eligibleUsersToAddInGroup(conversationId: let conversationId, sort: let sort, skip: let skip, limit: let limit, searchTag: let searchTag):
+            var params : [String : String] = [
+                "conversationId" : "\(conversationId)",
+                "sort" : "\(sort)",
+                "skip" : "\(skip)",
+                "limit" : "\(limit)"
+            ]
+            if !searchTag.isEmpty{
+                params.updateValue(searchTag, forKey: "searchTag")
+            }
+            return params
         }
     }
     
     var headers: [String: String]? {
         switch self {
-        case .createGroup,.addMembersInGroup,.addMemberAsGroupAdmin,.removeMemberAsGroupAdmin,.removeMemberFromGroup,.getMembersInGroup,.updateGroupTitle,.updateGroupImage,.exitGroup:
+        case .createGroup,.addMembersInGroup,.addMemberAsGroupAdmin,.removeMemberAsGroupAdmin,.removeMemberFromGroup,.getMembersInGroup,.updateGroupTitle,.updateGroupImage,.exitGroup,.eligibleUsersToAddInGroup:
             return ["userToken": ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userToken,
                     "userSecret": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.userSecret,
                     "projectId": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.projectId,

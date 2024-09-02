@@ -12,7 +12,7 @@ import IsometrikChat
 public struct ISMProfileView: View {
     
     //MARK:  - PROPERTIES
-    @ObservedObject public var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject public var viewModel = ConversationViewModel()
 //    @EnvironmentObject var vm: OnboardingViewModel
     @State public var showSheet = false
     @State public var image : [UIImage] = []

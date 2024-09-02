@@ -181,7 +181,7 @@ extension ISMConversationView{
             self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: viewModel.conversations, query: query))
             //DELIVERED MSG API
             if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
-                viewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
+                chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
                     
                 }
             }
@@ -218,7 +218,7 @@ extension ISMConversationView{
             self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: viewModel.conversations, query: query))
             //DELIVERED MSG API
             if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
-                viewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
+                chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
                     
                 }
             }

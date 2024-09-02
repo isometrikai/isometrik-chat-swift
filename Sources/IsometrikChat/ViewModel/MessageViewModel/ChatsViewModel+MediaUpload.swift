@@ -85,25 +85,6 @@ extension ChatsViewModel{
                 ISMChatHelper.print(error ?? "Error")
             }
         }
-        
-        
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.presignedUrl,httpMethod: .post,params: params) { (result : ISMChatResponse<ISMChatPresignedUrl?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                if let url = data?.presignedUrls?.first?.mediaPresignedUrl{
-//                    AF.upload(mediaData, to: url, method: .put, headers: [:]).responseData { response in
-//                        ISMChatHelper.print(response)
-//                        if response.response?.statusCode == 200{
-//                            completion(data?.presignedUrls?.first, mediaName, mediaData.count)
-//                        }else{
-//                            ISMChatHelper.print("Error in Image upload")
-//                        }
-//                    }
-//                }
-//            case .failure(let error):
-//                ISMChatHelper.print(error ?? "Error")
-//            }
-//        }
     }
     
     
@@ -136,29 +117,5 @@ extension ChatsViewModel{
                 ISMChatHelper.print("Error in Image upload Api failed -----> \(String(describing: error))")
             }
         }
-        
-//        var baseUrl = ""
-//        if newConversation == true{
-//            baseUrl = "\(ISMChatNetworkServices.Urls.conversationPresignedUrl)?mediaExtension=png&conversationType=\(conversationType)&newConversation=\(newConversation)&conversationTitle=\(conversationTitle)"
-//        }else{
-//            baseUrl = "\(ISMChatNetworkServices.Urls.conversationPresignedUrl)?mediaExtension=png&conversationType=\(conversationType)&newConversation=\(newConversation)&conversationTitle=\(conversationTitle)&conversationId=\(conversationId)"
-//        }
-//        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseUrl,httpMethod: .get) { (result : ISMChatResponse<ISMChatPresignedUrlDetail?,ISMChatErrorData?>) in
-//            switch result{
-//            case .success(let data):
-//                if let url = data?.presignedUrl, let urlData = image.pngData(){
-//                    AF.upload(urlData, to: url, method: .put, headers: [:]).responseData { response in
-//                        ISMChatHelper.print(response)
-//                        if response.response?.statusCode == 200{
-//                            completion(data?.mediaUrl)
-//                        }else{
-//                            ISMChatHelper.print("Error in Image upload")
-//                        }
-//                    }
-//                }
-//            case .failure(let error):
-//                ISMChatHelper.print("Error in Image upload Api failed -----> \(String(describing: error))")
-//            }
-//        }
     }
 }

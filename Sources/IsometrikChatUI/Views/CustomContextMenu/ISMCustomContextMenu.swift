@@ -16,7 +16,7 @@ struct ISMCustomContextMenu: View {
     let conversationId : String
     let message : MessagesDB
     let viewWidth : CGFloat
-    var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    var viewModel = ChatsViewModel()
     let isGroup : Bool
     let isReceived : Bool
     let pasteboard = UIPasteboard.general

@@ -102,7 +102,7 @@ extension ISMConversationView{
     }
     
     func exitGroup(conversationId : String){
-        viewModel.exitGroup(conversationId: conversationId) {
+        chatViewModel.exitGroup(conversationId: conversationId) {
             realmManager.deleteConversation(convID: conversationId)
             realmManager.deleteMessagesThroughConvId(convID: conversationId)
             DispatchQueue.main.asyncAfter(deadline: .now(), execute: {

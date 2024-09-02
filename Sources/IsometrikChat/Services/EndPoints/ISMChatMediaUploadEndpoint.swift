@@ -11,6 +11,8 @@ enum ISMChatMediaUploadEndpoint : ISMChatURLConvertible {
     
     case messageMediaUpload
     case conversationProfileUpload(mediaExtension: String,conversationType: Int,newConversation : Bool,conversationTitle: String)
+    case userImage(userIdentifier: String,mediaExtension: String)
+    case updateUserImage(mediaExtension: String)
     
     var baseURL: URL {
         return URL(string:ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.origin)!
@@ -22,6 +24,10 @@ enum ISMChatMediaUploadEndpoint : ISMChatURLConvertible {
             return "/chat/messages/presignedurls"
         case .conversationProfileUpload:
             return "/chat/conversation/presignedurl"
+        case .userImage:
+            return "/chat/user/presignedurl/create"
+        case .updateUserImage:
+            return "/chat/user/presignedurl/update"
         }
     }
     
@@ -30,6 +36,10 @@ enum ISMChatMediaUploadEndpoint : ISMChatURLConvertible {
         case .messageMediaUpload:
             return .post
         case .conversationProfileUpload:
+            return .get
+        case .userImage:
+            return .get
+        case .updateUserImage:
             return .get
         }
     }
@@ -46,12 +56,23 @@ enum ISMChatMediaUploadEndpoint : ISMChatURLConvertible {
                 "conversationTitle" : "\(conversationTitle)"
             ]
             return params
+        case .userImage(let userIdentifier,let mediaExtension):
+            var params : [String : String] = [
+                "userIdentifier" : "\(userIdentifier)",
+                "mediaExtension" : "\(mediaExtension)"
+            ]
+            return params
+        case .updateUserImage(let mediaExtension):
+            var params : [String : String] = [
+                "mediaExtension" : "\(mediaExtension)"
+            ]
+            return params
         }
     }
     
     var headers: [String: String]? {
         switch self {
-        case .messageMediaUpload,.conversationProfileUpload:
+        case .messageMediaUpload,.conversationProfileUpload,.userImage,.updateUserImage:
             return ["userToken": ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userToken,
                     "userSecret": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.userSecret,
                     "projectId": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.projectId,

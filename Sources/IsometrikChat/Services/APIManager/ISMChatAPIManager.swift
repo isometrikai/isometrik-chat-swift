@@ -66,13 +66,13 @@ extension ISMChatURLConvertible {
 
 
 
-struct ISMChatAPIRequest<R> {
-    let endPoint : ISMChatURLConvertible
-    let requestBody: R?
+ struct ISMChatAPIRequest<R> {
+     let endPoint : ISMChatURLConvertible
+     let requestBody: R?
 }
 
 
-struct ISMChatNewAPIManager {
+ struct ISMChatNewAPIManager {
     
     static func sendRequest<T: Codable, R: Any>(request: ISMChatAPIRequest<R>, showLoader: Bool = true, completion: @escaping (_ result: ISMChatResult<T, ISMChatNewAPIError>) -> Void) {
         

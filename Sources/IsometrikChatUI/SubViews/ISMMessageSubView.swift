@@ -74,7 +74,7 @@ struct ISMMessageSubView: View {
     
    
     @EnvironmentObject var realmManager : RealmManager
-    @ObservedObject var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject var viewModel = ChatsViewModel()
     @Environment(\.viewController) public var viewControllerHolder: UIViewController?
     @Binding var postIdToNavigate : String
     

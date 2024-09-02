@@ -14,8 +14,8 @@ struct ISMForwardToContactView: View {
     @Environment(\.dismiss) var dismiss
     @State var selections: [ISMChatUser] = []
     @State var showSendView = false
-    var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @ObservedObject var conversationViewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    var viewModel = ChatsViewModel()
+    @ObservedObject var conversationViewModel = ConversationViewModel()
     @Binding var messages : [MessagesDB]
     @State var selectedUser : [String] = []
     @Binding var showforwardMultipleMessage : Bool

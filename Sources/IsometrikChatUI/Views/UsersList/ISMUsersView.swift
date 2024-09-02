@@ -15,7 +15,7 @@ public struct ISMUsersView: View {
     //MARK:  - PROPERTIES
     @Environment(\.dismiss) public var dismiss
     
-    @ObservedObject public var viewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject public var viewModel = ConversationViewModel()
     
     @Binding public var selectedUser : UserDB
     @Binding public var selectedUserconversationId : String

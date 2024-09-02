@@ -99,14 +99,12 @@ public class ISMChatSdk{
         
         let communicationConfiguration = ISMChatCommunicationConfiguration(userConfig: userConfiguration, projectConfig: projectConfiguration, mqttConfig: mqttConfiguration)
         
-        let apiManager = ISMChatAPIManager(configuration: projectConfiguration)
-        
         self.hostFrameworksType = hostFrameworkType
         
         self.uploadOnExternalCDN = uploadOnExternalCDN
         
         //chatClient
-        self.chatClient = ISMChatClient(communicationConfig: communicationConfiguration, apiManager: apiManager)
+        self.chatClient = ISMChatClient(communicationConfig: communicationConfiguration)
         //mqttSession
         let viewcontrollers = ISMChatViewController(conversationListViewController: conversationListViewControllerName, messagesListViewController: messagesListViewControllerName)
         
@@ -128,7 +126,7 @@ public class ISMChatSdk{
                 self.mqttSession?.unSubscribe()
             }
             //3. delete local data
-            RealmManager().deleteRealm(for: self.getChatClient().getConfigurations().userConfig.userId ?? "")
+            RealmManager().deleteRealm(for: self.getChatClient().getConfigurations().userConfig.userId)
             //4. For call
             IsometrikCall().clearSession()
             ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
@@ -162,7 +160,7 @@ public class ISMChatSdk{
     }
     
     public func getUserDetail(isometrikUserId : String,userName : String,completion: @escaping (ISMChatUser?) -> Void) {
-        let viewModel = ConversationViewModel(ismChatSDK: self)
+        let viewModel = ConversationViewModel()
         viewModel.getUserDetail(userId: isometrikUserId, userName: userName) { data in
             completion(data)
         }
