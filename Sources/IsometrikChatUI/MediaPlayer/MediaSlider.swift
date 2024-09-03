@@ -13,7 +13,7 @@ import IsometrikChat
 
 struct MediaSlider: View {
     
-    var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    var viewModel = ChatsViewModel()
     @State var index = 2
     @State var media = [MediaDB]()
     @EnvironmentObject var realmManager : RealmManager

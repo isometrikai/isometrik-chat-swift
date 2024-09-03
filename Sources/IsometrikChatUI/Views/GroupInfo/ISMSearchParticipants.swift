@@ -13,8 +13,8 @@ struct ISMSearchParticipants: View {
     //MARK: - PROPERTIES
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @ObservedObject var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @ObservedObject var conversationViewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject var viewModel = ChatsViewModel()
+    @ObservedObject var conversationViewModel = ConversationViewModel()
     @State var selectedMember : ISMChatGroupMember = ISMChatGroupMember()
     @State private var query = ""
     @State var showOptions : Bool = false

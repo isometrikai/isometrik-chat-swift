@@ -12,7 +12,7 @@ struct MediaSliderView: View {
     
     //MARK:  - PROPERTIES
     
-    var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    var viewModel = ChatsViewModel()
     var index = 2
     var messageId = "0"
     @State var description : String = ""

@@ -63,20 +63,25 @@ extension ChatsViewModel{
             }
         }
         params["attachments"] = [["nameWithExtension": mediaName ,"mediaType" : mediaType,"mediaId" : UIDevice.current.identifierForVendor!.uuidString] as [String : Any]]
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: ISMChatNetworkServices.Urls.presignedUrl,httpMethod: .post,params: params) { (result : ISMChatResponse<ISMChatPresignedUrl?,ISMChatErrorData?>) in
+        
+        
+        let endPoint = ISMChatMediaUploadEndpoint.messageMediaUpload
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: params)
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatPresignedUrl, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
-                if let url = data?.presignedUrls?.first?.mediaPresignedUrl{
+            case .success(let data,_) :
+                if let url = data.presignedUrls?.first?.mediaPresignedUrl{
                     AF.upload(mediaData, to: url, method: .put, headers: [:]).responseData { response in
                         ISMChatHelper.print(response)
                         if response.response?.statusCode == 200{
-                            completion(data?.presignedUrls?.first, mediaName, mediaData.count)
+                            completion(data.presignedUrls?.first, mediaName, mediaData.count)
                         }else{
                             ISMChatHelper.print("Error in Image upload")
                         }
                     }
                 }
-            case .failure(let error):
+            case .failure(let error) :
                 ISMChatHelper.print(error ?? "Error")
             }
         }
@@ -91,26 +96,24 @@ extension ChatsViewModel{
         //        "0" ->#Conversation
         //        "1" ->"BroadcastLists"
         //        "2" ->#Groupcast
-        var baseUrl = ""
-        if newConversation == true{
-            baseUrl = "\(ISMChatNetworkServices.Urls.conversationPresignedUrl)?mediaExtension=png&conversationType=\(conversationType)&newConversation=\(newConversation)&conversationTitle=\(conversationTitle)"
-        }else{
-            baseUrl = "\(ISMChatNetworkServices.Urls.conversationPresignedUrl)?mediaExtension=png&conversationType=\(conversationType)&newConversation=\(newConversation)&conversationTitle=\(conversationTitle)&conversationId=\(conversationId)"
-        }
-        ismChatSDK?.getChatClient().getApiManager().requestService(serviceUrl: baseUrl,httpMethod: .get) { (result : ISMChatResponse<ISMChatPresignedUrlDetail?,ISMChatErrorData?>) in
+        
+        let endPoint = ISMChatMediaUploadEndpoint.conversationProfileUpload(mediaExtension: "png", conversationType: conversationType, newConversation: newConversation, conversationTitle: conversationTitle)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatPresignedUrlDetail, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data):
-                if let url = data?.presignedUrl, let urlData = image.pngData(){
+            case .success(let data,_) :
+                if let url = data.presignedUrl, let urlData = image.pngData(){
                     AF.upload(urlData, to: url, method: .put, headers: [:]).responseData { response in
                         ISMChatHelper.print(response)
                         if response.response?.statusCode == 200{
-                            completion(data?.mediaUrl)
+                            completion(data.mediaUrl)
                         }else{
                             ISMChatHelper.print("Error in Image upload")
                         }
                     }
                 }
-            case .failure(let error):
+            case .failure(let error) :
                 ISMChatHelper.print("Error in Image upload Api failed -----> \(String(describing: error))")
             }
         }

@@ -14,8 +14,8 @@ struct ISMChatBroadCastInfo: View {
     let broadcastTitle : String?
     let groupcastId : String?
     
-    @ObservedObject var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @ObservedObject var conversationviewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject var viewModel = ChatsViewModel()
+    @ObservedObject var conversationviewModel = ConversationViewModel()
     @EnvironmentObject var realmManager : RealmManager
     @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette

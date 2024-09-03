@@ -27,7 +27,7 @@ struct ISMMessageInfoSubView: View {
     var isReceived : Bool
     var messageDeliveredType : ISMChatMessageStatus = .Clock
     let conversationId : String
-    @ObservedObject var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject var viewModel = ChatsViewModel()
     @State private var offset = CGSize.zero
     @State var metaData : LPLinkMetadata? = nil
     let pasteboard = UIPasteboard.general

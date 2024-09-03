@@ -18,8 +18,8 @@ public struct ISMBroadCastList: View {
     //MARK:  - PROPERTIES
     @Environment(\.dismiss) public var dismiss
     
-    @ObservedObject public var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @ObservedObject public var conversationviewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject public var viewModel = ChatsViewModel()
+    @ObservedObject public var conversationviewModel = ConversationViewModel()
 //    @EnvironmentObject public var realmManager : RealmManager
     @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette

@@ -32,8 +32,8 @@ public struct ISMMessageView: View {
     //MARK: - PROPERTIES
     
     @Environment(\.dismiss) public var dismiss
-    @ObservedObject public var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    public var conversationViewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject public var viewModel = ChatsViewModel()
+    public var conversationViewModel = ConversationViewModel()
     @State public var text = ""
     @State public var textFieldtxt = ""
     @State public var keyboardFocused = false
@@ -572,9 +572,6 @@ public struct ISMMessageView: View {
                 showScrollToBottomView = false
             }
             onLoad = true
-//            ISMChatSdk.getInstance().getUserDetail(isometrikUserId: self.opponenDetail?.userId ?? "", userName: self.opponenDetail?.userName ?? "", completion: { data in
-//                print(data)
-//            })
         }
     }
     

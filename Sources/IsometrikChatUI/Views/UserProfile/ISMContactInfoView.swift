@@ -16,12 +16,12 @@ struct ISMContactInfoView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var showingAlert = false
     @State private var alertStr = ""
-    var conversationViewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    var conversationViewModel = ConversationViewModel()
     let conversationID : String?
     @State var conversationDetail : ISMChatConversationDetail?
     @EnvironmentObject var realmManager : RealmManager
     @State private var selectedOption : ISMChatContactInfo = .BlockUser
-    var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    var viewModel = ChatsViewModel()
     let isGroup : Bool?
     @State var navigatetoAddparticipant : Bool = false
     @State var navigatetoMedia : Bool = false
@@ -316,7 +316,7 @@ struct ISMContactInfoView: View {
                 })
             }
         }else if selectedOption == .ExitGroup{
-            conversationViewModel.exitGroup(conversationId: conversationID ?? "") {
+            viewModel.exitGroup(conversationId: conversationID ?? "") {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                     realmManager.deleteConversation(convID: conversationID ?? "")
                     realmManager.deleteMessagesThroughConvId(convID: conversationID ?? "")

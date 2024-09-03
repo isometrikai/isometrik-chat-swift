@@ -17,8 +17,8 @@ struct ISMEditGroupView: View {
     @State private var showSheet = false
     @State private var image : [UIImage] = []
     @State private var selectedMedia : [URL] = []
-    @ObservedObject var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
-    @ObservedObject var conversationViewModel = ConversationViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    @ObservedObject var viewModel = ChatsViewModel()
+    @ObservedObject var conversationViewModel = ConversationViewModel()
     @State private var groupName = ""
     var existingGroupName : String
     var existingImage : String

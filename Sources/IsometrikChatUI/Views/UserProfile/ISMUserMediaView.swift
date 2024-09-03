@@ -18,7 +18,7 @@ struct ISMUserMediaView: View {
     @State public var groupLink = [Date: [MessagesDB]]()
     @EnvironmentObject var realmManager: RealmManager
     
-    public var viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
+    public var viewModel = ChatsViewModel()
     public var columns: [GridItem] {
         Array(repeating: GridItem(.flexible(), spacing: 1, alignment: nil), count: 3)
     }
