@@ -19,7 +19,7 @@ let package = Package(
         .package(url: "https://github.com/googlemaps/ios-places-sdk", from: "9.0.0"),
         .package(url: "https://github.com/googlemaps/ios-maps-sdk", from: "9.0.0"),
         .package(url: "https://github.com/optonaut/ActiveLabel.swift", from: "1.1.5"),
-        .package(url: "https://github.com/guoyingtao/Mantis", from: "1.9.0"),
+        .package(url: "https://github.com/guoyingtao/Mantis", from: "2.22.0"),
         .package(url: "https://github.com/Yummypets/YPImagePicker", from: "5.2.2"),
         .package(url: "https://github.com/UWAppDev/SwiftUI-MediaPicker", from: "0.2.0"),
         .package(url: "https://github.com/Alamofire/Alamofire", from: "5.8.1"),
