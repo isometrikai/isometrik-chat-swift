@@ -397,20 +397,20 @@ public struct ISMConversationView : View {
                             }
                     }
                 } 
-//                else {
-//                    ZStack {
-//                        conversationSubView(for: data)
-//                            .onAppear {
-//                                handlePagination(for: data)
-//                            }
-//                        NavigationLink(destination: messageView(for: data)) {
-//                            EmptyView()
-//                        }
-//                        .buttonStyle(PlainButtonStyle())
-//                        .frame(width: 0)
-//                        .opacity(0)
-//                    }
-//                }
+                else {
+                    ZStack {
+                        conversationSubView(for: data)
+                            .onAppear {
+                                handlePagination(for: data)
+                            }
+                        NavigationLink(destination: messageView(for: data)) {
+                            EmptyView()
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .frame(width: 0)
+                        .opacity(0)
+                    }
+                }
             }
             .onDelete(perform: handleDelete)
             .listRowBackground(Color.clear)

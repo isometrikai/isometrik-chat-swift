@@ -250,7 +250,7 @@ struct ISMMessageSubView: View {
                                             }
                                             HStack(spacing: 10){
                                                 
-                                                ISMChatImageCahcingManger.networkImage(url: metaData.contacts.first?.contactImageUrl ?? "" ,isprofileImage: true)
+                                                UserAvatarView(avatar: metaData.contacts.first?.contactImageUrl ?? "", showOnlineIndicator: false, userName: metaData.contacts.first?.contactName ?? "")
                                                     .scaledToFill()
                                                     .frame(width: 40, height: 40)
                                                     .cornerRadius(20)

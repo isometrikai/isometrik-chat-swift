@@ -9,9 +9,14 @@ import Foundation
 import Contacts
 
 public struct ISMChatContacts: Identifiable {
-    public let id: UUID
-    public let contact: CNContact
-    public var selected : Bool = false
+    public var id: UUID
+    public var contact: CNContact
+    public var selected: Bool = false
+    
+    public init(id: UUID, contact: CNContact) {
+        self.id = id
+        self.contact = contact
+    }
 }
 
 

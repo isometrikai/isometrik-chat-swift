@@ -340,8 +340,8 @@ extension ISMMessageView{
                             }
                             
                             HStack(spacing : 5){
-                                ResizeableTextView(text: $textFieldtxt, height: $textViewHeight, typingStarted: $keyboardFocused, placeholderText: "Type a message", showMentionList: $showMentionList,filteredMentionUserCount: filteredUsers.count,mentionUser : $selectedUserToMention, placeholderColor : themeColor.messageListTextViewPlaceholder,textViewColor : themeColor.messageListTextViewText)
-                                    .frame(height: textViewHeight < 160 ? self.textViewHeight : 160)
+//                                ResizeableTextView(text: $textFieldtxt, height: $textViewHeight, typingStarted: $keyboardFocused, placeholderText: "Type a message", showMentionList: $showMentionList,filteredMentionUserCount: filteredUsers.count,mentionUser : $selectedUserToMention, placeholderColor : themeColor.messageListTextViewPlaceholder,textViewColor : themeColor.messageListTextViewText)
+//                                    .frame(height: textViewHeight < 160 ? self.textViewHeight : 160)
                                 if showGifOption == true && textFieldtxt.isEmpty{
                                     Button {
                                         showGifPicker = true

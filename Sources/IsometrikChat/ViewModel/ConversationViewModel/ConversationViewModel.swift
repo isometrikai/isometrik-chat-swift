@@ -190,12 +190,10 @@ extension ConversationViewModel {
     
     public func getContactDictionary(data: [ISMChatContacts]) -> [String: [ISMChatContacts]] {
         let sectionDictionary: [String: [ISMChatContacts]] = Dictionary(grouping: data, by: { contact in
-            if !contact.contact.givenName.isEmpty {
-                let name = contact.contact.givenName
-                let normalizedName = name.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
-                if let firstChar = normalizedName.first {
-                    return String(firstChar).uppercased()
-                }
+            let name = contact.contact.givenName
+            let normalizedName = name.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
+            if let firstChar = normalizedName.first, !name.isEmpty {
+                return String(firstChar).uppercased()
             }
             return "Un"
         })

@@ -45,37 +45,34 @@ struct ISMShareContactList: View {
                                 HeaderView()
                             }
                             
-                            ForEach(contactSectionDictionary.keys.sorted(), id:\.self) { key in
-                                if let contacts = contactSectionDictionary[key]?.filter({ (contact) -> Bool in
-                                    self.query.isEmpty ? true :
-                                    "\(contact)".lowercased().contains(self.query.lowercased())
+                            ForEach(contactSectionDictionary.keys.sorted(), id: \.self) { key in
+                                if let contacts = contactSectionDictionary[key]?.filter({ contact in
+                                    self.query.isEmpty ? true : "\(contact.contact)".lowercased().contains(self.query.lowercased())
                                 }), !contacts.isEmpty {
-                                    Section(header: Text("\(key)").font(Font.regular(size: 14))) {
+                                    Section(header: Text("\(key)").font(.system(size: 14))) {
                                         ForEach(contacts) { value in
                                             ZStack {
-                                                HStack(spacing : 10) {
-                                                    if value.contact.imageDataAvailable{
-                                                        if let data = value.contact.imageData, let image = UIImage(data: data) {
-                                                            Image(uiImage: image)
-                                                                .resizable()
-                                                                .frame(width: 29, height: 29)
-                                                                .aspectRatio(contentMode: .fill)
-                                                                .clipShape(Circle())
-                                                        } else {
-                                                            UserAvatarView(avatar: "", showOnlineIndicator: false, userName: key)
-                                                                .frame(width: 29, height: 29)
-                                                                .clipShape(Circle())
-                                                        }
-                                                    }else{
+                                                HStack(spacing: 10) {
+                                                    // Display contact image or fallback avatar
+                                                    if value.contact.imageDataAvailable,
+                                                       let data = value.contact.imageData,
+                                                       let image = UIImage(data: data) {
+                                                        Image(uiImage: image)
+                                                            .resizable()
+                                                            .frame(width: 37, height: 37)
+                                                            .aspectRatio(contentMode: .fill)
+                                                            .clipShape(Circle())
+                                                    } else {
                                                         UserAvatarView(avatar: "", showOnlineIndicator: false, userName: key)
-                                                            .frame(width: 29, height: 29)
+                                                            .frame(width: 37, height: 37)
                                                             .clipShape(Circle())
                                                     }
                                                     
+                                                    // Display contact name and phone number
                                                     VStack(alignment: .leading, spacing: 5) {
                                                         Text("\(value.contact.givenName) \(value.contact.familyName)")
-                                                            .font(themeFonts.messageListMessageText)
-                                                            .foregroundColor(themeColor.messageListHeaderTitle)
+                                                            .font(themeFonts.chatListUserName)
+                                                            .foregroundColor(themeColor.chatListUserName)
                                                             .lineLimit(nil)
                                                         
                                                         if let phoneNumber = value.contact.phoneNumbers.first?.value {
@@ -87,13 +84,12 @@ struct ISMShareContactList: View {
                                                     
                                                     Spacer()
                                                     
-                                                    if contactSelected.contains(where: { user in
-                                                        user.id == value.id
-                                                    }) {
+                                                    // Selection indicator
+                                                    if contactSelected.contains(where: { $0.id == value.id }) {
                                                         themeImage.selected
                                                             .resizable()
                                                             .frame(width: 20, height: 20)
-                                                    }else{
+                                                    } else {
                                                         themeImage.deselected
                                                             .resizable()
                                                             .frame(width: 20, height: 20)
@@ -102,12 +98,16 @@ struct ISMShareContactList: View {
                                                 
                                                 Button {
                                                     contactSelection(value: value)
-                                                } label: {}
+                                                } label: {
+                                                    // Empty label for button tap area
+                                                    EmptyView()
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
+
                         }
                         .listStyle(DefaultListStyle())
                     }
@@ -144,7 +144,7 @@ struct ISMShareContactList: View {
                             ZStack{
                                 VStack(spacing: 3){
                                     ZStack(alignment: .topTrailing) {
-                                        UserAvatarView(avatar: "", showOnlineIndicator: false, userName: user.contact.givenName)
+                                        UserAvatarView(avatar: "", showOnlineIndicator: false, userName: user.contact.givenName ?? "")
                                             .frame(width: 48, height: 48)
                                             .clipShape(Circle())
                                         themeImage.removeUserFromSelectedFromList
@@ -152,7 +152,7 @@ struct ISMShareContactList: View {
                                             .frame(width: 20, height: 20)
                                     }
                                     
-                                    Text(user.contact.givenName)
+                                    Text(user.contact.givenName ?? "")
                                         .font(themeFonts.chatListUserMessage)
                                         .foregroundColor(themeColor.chatListUserMessage)
                                         .lineLimit(2)
@@ -254,7 +254,7 @@ struct ISMShareContactList: View {
             
             do {
                 try store.enumerateContacts(with: request) { (contact, _) in
-//                    contacts.append(ISMChatContacts(id: UUID(), contact: contact))
+                    contacts.append(ISMChatContacts(id: UUID(), contact: contact))
                 }
             } catch {
                 // Handle the error
