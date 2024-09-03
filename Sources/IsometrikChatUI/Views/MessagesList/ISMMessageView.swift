@@ -504,7 +504,7 @@ public struct ISMMessageView: View {
         .background(NavigationLink("", destination: ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId,placeName : $placeName, address: $placeAddress),isActive: $showLocationSharing))
 //        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
         .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.viewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $navigateToAddParticipantsInGroupViaDelegate).environmentObject(self.realmManager),isActive: $navigateToProfile))
-        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))
+//        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))
         .background(NavigationLink("", destination: ISMImageAndViderEditor(media: $videoSelectedFromPicker, sendToUser: opponenDetail?.userName ?? "",sendMedia: $sendMedia),isActive: $navigateToImageEditor))
         .onReceive(timer, perform: { firedDate in
             print("timer fired")
