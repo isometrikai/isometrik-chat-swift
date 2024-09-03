@@ -102,10 +102,13 @@ extension ISMChatURLConvertible {
             urlRequest.setValue(value, forHTTPHeaderField: key)
         }
         
-        if let requestBody = request.requestBody as? Codable {
+        if let requestBody = request.requestBody as? [String: Any] {
             do {
-                let jsonBody = try JSONEncoder().encode(requestBody)
+                // Serialize dictionary to JSON data
+                let jsonBody = try JSONSerialization.data(withJSONObject: requestBody, options: [])
                 urlRequest.httpBody = jsonBody
+                // Optionally, log the JSON body to ensure it's correct
+                print("Request Body: \(String(data: jsonBody, encoding: .utf8) ?? "Unable to encode body")")
             } catch {
                 DispatchQueue.main.async {
                     completion(.failure(.invalidResponse))
