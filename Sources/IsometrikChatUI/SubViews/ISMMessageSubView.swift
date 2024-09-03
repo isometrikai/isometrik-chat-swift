@@ -601,33 +601,37 @@ struct ISMMessageSubView: View {
                                             forwardedView()
                                         }
                                         
-                                        ISMLocationSubView(message: message)
-                                            .cornerRadius(5)
-                                            .contentShape(Rectangle())
-                                            .onTapGesture {
-                                                let data = ISMChatLocationData(coordinate:
-                                                                                    CLLocationCoordinate2D(
-                                                                                        latitude: message.attachments.first?.latitude ?? 0,
-                                                                                        longitude: message.attachments.first?.longitude ?? 0),
-                                                                                title: message.attachments.first?.title ?? "",
-                                                                                completeAddress: message.attachments.first?.address ?? "")
-                                                navigateToLocationDetail = data
+                                        Button {
+                                            let data = ISMChatLocationData(coordinate:
+                                                                                CLLocationCoordinate2D(
+                                                                                    latitude: message.attachments.first?.latitude ?? 0,
+                                                                                    longitude: message.attachments.first?.longitude ?? 0),
+                                                                            title: message.attachments.first?.title ?? "",
+                                                                            completeAddress: message.attachments.first?.address ?? "")
+                                            navigateToLocationDetail = data
+                                        } label: {
+                                            VStack(alignment: .trailing, spacing: 5){
+                                                ISMLocationSubView(message: message)
+                                                    .cornerRadius(5)
+                                                    .contentShape(Rectangle())
+                                                    .allowsHitTesting(true)
+                                                
+                                                HStack{
+                                                    Text(message.attachments.first?.title ?? "")
+                                                        .font(themeFonts.messageListMessageText)
+                                                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                                                    Spacer()
+                                                    
+                                                }
+                                                HStack{
+                                                    Text(message.attachments.first?.address ?? "")
+                                                        .font(themeFonts.messageListReplyToolbarDescription)
+                                                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                                                    Spacer()
+                                                }
                                             }
-                                            .allowsHitTesting(true)
-                                        
-                                        HStack{
-                                            Text(message.attachments.first?.title ?? "")
-                                                .font(themeFonts.messageListMessageText)
-                                                .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
-                                            Spacer()
-                                            
                                         }
-                                        HStack{
-                                            Text(message.attachments.first?.address ?? "")
-                                                .font(themeFonts.messageListReplyToolbarDescription)
-                                                .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
-                                            Spacer()
-                                        }
+                                       
                                         dateAndStatusView(onImage: false)
                                             .padding(.bottom,(message.reactions.count > 0) ? 5 : 0)
                                     }//:VStack
