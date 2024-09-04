@@ -284,49 +284,22 @@ extension ISMMessageView{
     
     func toolBarView() -> some View {
         VStack(spacing: 0) {
-            if showMentionList && isGroup == true && filteredUsers.count > 0{
-                List{
-                    ForEach(filteredUsers) { user in
-                        if let userName = user.userName {
-                            HStack(spacing : 5){
-                                UserAvatarView(
-                                    avatar: user.userProfileImageUrl ?? "",
-                                    showOnlineIndicator: false,
-                                    size: CGSize(width: 29, height: 29),
-                                    userName: userName,font: themeFonts.chatListUserMessage)
-                                Text(userName)
-                                    .font(themeFonts.chatListUserMessage)
-                                Spacer()
-                            }
-                            .onTapGesture {
-                                self.selectedUserToMention = userName
-                                if let lastAtIndex = textFieldtxt.range(of: "@", options: .backwards)?.lowerBound {
-                                    textFieldtxt.replaceSubrange(lastAtIndex..., with: "@\(userName)")
-                                    selectedUserToMention = nil
-                                }
-                                self.showMentionList = false
-                            }
-                        }
-                    }
-                }
-                .onDisappear(perform: {
-                    filteredUsers = mentionUsers
-                })
-                .listStyle(.plain)
-                .frame(height: min(CGFloat(filteredUsers.count) * 40,200))
-                .background(Color.gray.opacity(0.2))
+            if showMentionList, isGroup == true, !filteredUsers.isEmpty {
+                mentionUserList()
             }
             if showforwardMultipleMessage {
                 forwardMessageToolBarView()
             } else if showDeleteMultipleMessage {
                 deleteMessageToolBarView()
             } else {
-                if (selectedMsgToReply.messageId != "") || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall{
+                if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
                     replyMessageToolBarView()
                 }
-                if textFieldtxt.isValidURL{
-                   // LinkPreviewToolBarView(text: textFieldtxt)
+                if textFieldtxt.isValidURL {
+                    // LinkPreviewToolBarView(text: textFieldtxt)
                 }
+                
+                // Main Toolbar Content
                 VStack {
                     let height: CGFloat = 20
                     
@@ -335,127 +308,185 @@ extension ISMMessageView{
                             Button(action: { showActionSheet = true }) {
                                 themeImages.addAttcahment
                                     .resizable()
-                                    .frame(width: 20,height: 20)
-                                    .padding(.horizontal,5)
+                                    .frame(width: 20, height: 20)
+                                    .padding(.horizontal, 5)
                             }
                             
-                            HStack(spacing : 5){
-                                ResizeableTextView(text: $textFieldtxt, height: $textViewHeight, typingStarted: $keyboardFocused, placeholderText: "Type a message", showMentionList: $showMentionList,filteredMentionUserCount: filteredUsers.count,mentionUser : $selectedUserToMention, placeholderColor : themeColor.messageListTextViewPlaceholder,textViewColor : themeColor.messageListTextViewText)
-                                    .frame(height: textViewHeight < 160 ? self.textViewHeight : 160)
-                                if showGifOption == true && textFieldtxt.isEmpty{
+                            HStack(spacing: 5) {
+                                textView()
+                                
+                                if showGifOption, textFieldtxt.isEmpty {
                                     Button {
                                         showGifPicker = true
                                     } label: {
                                         themeImages.addSticker
                                             .resizable()
-                                            .frame(width: 15,height: 15)
-                                            .padding(.horizontal,10)
+                                            .frame(width: 15, height: 15)
+                                            .padding(.horizontal, 10)
                                     }
                                 }
-                            }.overlay(
+                            }
+                            .overlay(
                                 RoundedRectangle(cornerRadius: 16)
                                     .stroke(themeColor.messageListTextViewBoarder, lineWidth: 1)
                             )
                         } else {
-                            if audioLocked == false{
-                                
-                                themeImages.addAudio
-                                    .resizable()
-                                    .frame(width: 24,height: 24)
-                                    .foregroundColor(isShowingRedTimerStart ? .red : .clear)
-                                    .padding(.leading)
-                                
-                                Text(viewModel.timerValue)
-                                    .font(themeFonts.messageListMessageText)
-                                    .foregroundColor(themeColor.messageListHeaderTitle)
-                                
-                                Spacer()
-                                
-                                Text("Slide to cancel")
-                                    .foregroundStyle(Color.gray)
-                                    .font(themeFonts.messageListMessageText)
-                                
-                                themeImages.chevranbackward
-                                    .tint(.gray)
-                            }else{
-                                VStack(alignment: .leading){
-                                    Text(viewModel.timerValue)
-                                        .font(themeFonts.messageListMessageText)
-                                        .foregroundColor(themeColor.messageListHeaderTitle)
-                                    HStack(alignment : .center){
-                                        Button(action: {
-                                            if isClicked == true{
-                                                viewModel.isRecording = false
-                                                self.isClicked = false
-                                                self.audioLocked = false
-                                                viewModel.stopRecording { url in
-                                                }
-                                            }
-                                        }, label: {
-                                            themeImages.trash
-                                                .resizable()
-                                                .frame(width: 25, height: 28, alignment: .center)
-                                                .foregroundColor(themeColor.messageListHeaderTitle)
-                                        })
-                                        Spacer()
-                                        
-                                        Text("Audio Locked")
-                                            .foregroundColor(themeColor.messageListTextViewPlaceholder)
-                                            .font(themeFonts.messageListMessageText)
-                                        
-                                        Spacer()
-                                        Button(action: {
-                                            if isClicked == true{
-                                                viewModel.isRecording = false
-                                                self.isClicked = false
-                                                self.audioLocked = false
-                                                viewModel.stopRecording { url in
-                                                    viewModel.audioUrl = url
-                                                }
-                                            }
-                                        }, label: {
-                                            themeImages.sendMessage
-                                                .resizable()
-                                                .frame(width: 32, height: 32, alignment: .center)
-                                        })
-                                    }
-                                }
-                            }
+                            audioToolbarContent()
                         }
                         
-                        if !textFieldtxt.isEmpty ||  showAudioOption == false{
-                            Button(action: { sendMessage(msgType: .text) }) {
-                                themeImages.sendMessage
-                                    .resizable()
-                                    .frame(width: 32, height: 32)
-                                    .padding(.horizontal,5)
-                            }
-                        } else {
-                            ZStack{
-                                if audioLocked == false{
-                                    if viewModel.isRecording{
-                                        VStack{
-                                            themeImages.audioLock
-                                                .padding()
-                                            Spacer()
-                                        }.background(themeColor.messageListToolBarBackground)
-                                            .cornerRadius(20,corners: .topLeft)
-                                            .cornerRadius(20,corners: .topRight)
-                                            .frame(width: 30, height: 50, alignment: .center)
-                                            .offset(y : -50)
-                                    }
-                                    AudioMessageButton(height: height)
-                                }
-                            }
-                        }
+                        sendMessageButton()
                     }
                 }
                 .padding(.top, 10)
-                .padding(.bottom,20)
+                .padding(.bottom, 20)
                 .padding(.horizontal, 10)
                 .background(themeColor.messageListToolBarBackground)
             }
         }
+    }
+
+    // Split audio toolbar content into a separate function
+    func audioToolbarContent() -> some View {
+        HStack{
+            if audioLocked == false {
+                themeImages.addAudio
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(isShowingRedTimerStart ? .red : .clear)
+                    .padding(.leading)
+                
+                Text(viewModel.timerValue)
+                    .font(themeFonts.messageListMessageText)
+                    .foregroundColor(themeColor.messageListHeaderTitle)
+                
+                Spacer()
+                
+                Text("Slide to cancel")
+                    .foregroundStyle(Color.gray)
+                    .font(themeFonts.messageListMessageText)
+                
+                themeImages.chevranbackward
+                    .tint(.gray)
+            } else {
+                VStack(alignment: .leading) {
+                    Text(viewModel.timerValue)
+                        .font(themeFonts.messageListMessageText)
+                        .foregroundColor(themeColor.messageListHeaderTitle)
+                    HStack(alignment: .center) {
+                        Button(action: cancelRecording) {
+                            themeImages.trash
+                                .resizable()
+                                .frame(width: 25, height: 28)
+                                .foregroundColor(themeColor.messageListHeaderTitle)
+                        }
+                        Spacer()
+                        Text("Audio Locked")
+                            .foregroundColor(themeColor.messageListTextViewPlaceholder)
+                            .font(themeFonts.messageListMessageText)
+                        Spacer()
+                        Button(action: stopRecording) {
+                            themeImages.sendMessage
+                                .resizable()
+                                .frame(width: 32, height: 32)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Separate sendMessage button for readability and isolation
+    func sendMessageButton() -> some View {
+        VStack{
+            if !textFieldtxt.isEmpty || showAudioOption == false {
+                Button(action: { sendMessage(msgType: .text) }) {
+                    themeImages.sendMessage
+                        .resizable()
+                        .frame(width: 32, height: 32)
+                        .padding(.horizontal, 5)
+                }
+            } else {
+                ZStack {
+                    if !audioLocked {
+                        if viewModel.isRecording {
+                            VStack {
+                                themeImages.audioLock
+                                    .padding()
+                                Spacer()
+                            }
+                            .background(themeColor.messageListToolBarBackground)
+                            .cornerRadius(20, corners: .topLeft)
+                            .cornerRadius(20, corners: .topRight)
+                            .frame(width: 30, height: 50)
+                            .offset(y: -50)
+                        }
+                        AudioMessageButton(height: 20)
+                    }
+                }
+            }
+        }
+    }
+
+
+    // Cancel recording action handler
+    func cancelRecording() {
+        if isClicked {
+            viewModel.isRecording = false
+            isClicked = false
+            audioLocked = false
+            viewModel.stopRecording { _ in }
+        }
+    }
+
+    // Stop recording action handler
+    func stopRecording() {
+        if isClicked {
+            viewModel.isRecording = false
+            isClicked = false
+            audioLocked = false
+            viewModel.stopRecording { url in
+                viewModel.audioUrl = url
+            }
+        }
+    }
+
+    
+    func textView() -> some View{
+        ResizeableTextView(text: $textFieldtxt, height: $textViewHeight, typingStarted: $keyboardFocused, placeholderText: "Type a message", showMentionList: $showMentionList, filteredMentionUserCount: filteredUsers.count, mentionUser: $selectedUserToMention, placeholderColor: themeColor.messageListTextViewPlaceholder, textViewColor: themeColor.messageListTextViewText)
+            .frame(height: textViewHeight < 160 ? self.textViewHeight : 160)
+    }
+    
+    func mentionUserList() -> some View{
+        List{
+            ForEach(filteredUsers) { user in
+                if let userName = user.userName {
+                    HStack(spacing : 5){
+                        UserAvatarView(
+                            avatar: user.userProfileImageUrl ?? "",
+                            showOnlineIndicator: false,
+                            size: CGSize(width: 29, height: 29),
+                            userName: userName,font: themeFonts.chatListUserMessage)
+                        Text(userName)
+                            .font(themeFonts.chatListUserMessage)
+                        Spacer()
+                    }
+                    .onTapGesture {
+                        self.selectedUserToMention = userName
+                        if let lastAtIndex = textFieldtxt.range(of: "@", options: .backwards)?.lowerBound {
+                            textFieldtxt.replaceSubrange(lastAtIndex..., with: "@\(userName)")
+                            selectedUserToMention = nil
+                        }
+                        self.showMentionList = false
+                    }
+                }
+            }
+        }
+        .onDisappear(perform: {
+            filteredUsers = mentionUsers
+        })
+        .listStyle(.plain)
+        .frame(height: min(CGFloat(filteredUsers.count) * 40,200))
+        .background(Color.gray.opacity(0.2))
     }
     
     func showOptionToAllow() -> Bool {
