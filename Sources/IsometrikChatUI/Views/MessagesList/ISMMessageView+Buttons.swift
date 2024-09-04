@@ -209,15 +209,17 @@ extension ISMMessageView{
     }
 
      func handleProfileNavigation() {
-        guard ISMChatSdkUI.getInstance().getChatProperties().allowToNavigateToAppProfile else { return }
-
-        if !ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup, isGroup == true {
-            navigateToProfile = true
-        } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
-            ?? opponenDetail?.metaData?.userId
-            ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
-            delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
-        }
+         if ISMChatSdkUI.getInstance().getChatProperties().navigateToAppProfileFromMessageList == true{
+             if !ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup, isGroup == true {
+                 navigateToProfile = true
+             } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
+                 ?? opponenDetail?.metaData?.userId
+                 ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
+                 delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
+             }
+         }else{
+             navigateToProfile = true
+         }
     }
 
      func getAvatarUrl() -> String {

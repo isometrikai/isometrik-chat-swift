@@ -78,6 +78,8 @@ struct ISMMessageSubView: View {
     @Environment(\.viewController) public var viewControllerHolder: UIViewController?
     @Binding var postIdToNavigate : String
     
+    @Binding var navigateToSocialProfileId : String
+    
     
     //MARK:  - BODY
     var body: some View {
@@ -202,8 +204,6 @@ struct ISMMessageSubView: View {
                                             .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                                         ) : AnyView(EmptyView())
                                 )
-                                .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId, message: message, viewWidth: viewWidth, mediaType: .Text, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
-                                .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser, navigateToAddParticipantsInGroupViaDelegate: $navigateToAddMember).environmentObject(self.realmManager), isActive: $navigateToInfo))
                             }
                             if message.reactions.count > 0{
                                 reactionsView()
@@ -297,8 +297,6 @@ struct ISMMessageSubView: View {
                                                     .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                                                 ) : AnyView(EmptyView())
                                         )
-                                        .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
-                                        .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser, navigateToAddParticipantsInGroupViaDelegate: $navigateToAddMember).environmentObject(self.realmManager), isActive: $navigateToInfo))
                                     }
                                 }
                             }
@@ -375,8 +373,6 @@ struct ISMMessageSubView: View {
                                                 .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                                             ) : AnyView(EmptyView())
                                     )
-                                    .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
-                                    .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser, navigateToAddParticipantsInGroupViaDelegate: $navigateToAddMember).environmentObject(self.realmManager), isActive: $navigateToInfo))
                                 }
                             }
                             
@@ -489,8 +485,6 @@ struct ISMMessageSubView: View {
                                                     .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                                                 ) : AnyView(EmptyView())
                                         )
-                                        .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
-                                        .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser, navigateToAddParticipantsInGroupViaDelegate: $navigateToAddMember).environmentObject(self.realmManager), isActive: $navigateToInfo))
                                 }//:NavigationLink
                                 //                                }
                             }
@@ -569,9 +563,6 @@ struct ISMMessageSubView: View {
                                                         .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                                                     ) : AnyView(EmptyView())
                                             )
-                                            .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId, message: message, viewWidth: viewWidth, mediaType: .Text, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow)
-                                                .environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
-                                            .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser, navigateToAddParticipantsInGroupViaDelegate: $navigateToAddMember).environmentObject(self.realmManager), isActive: $navigateToInfo))
                                         }//:ZStack
                                     }
                                 }
@@ -652,8 +643,6 @@ struct ISMMessageSubView: View {
                                                 .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                                             ) : AnyView(EmptyView())
                                     )
-                                    .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
-                                    .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser, navigateToAddParticipantsInGroupViaDelegate: $navigateToAddMember).environmentObject(self.realmManager), isActive: $navigateToInfo))
                                 }//:ZStack
                             }
                             if message.reactions.count > 0{
@@ -700,8 +689,6 @@ struct ISMMessageSubView: View {
                                                 .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                                             ) : AnyView(EmptyView())
                                     )
-                                    .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId, message: message, viewWidth: viewWidth, mediaType: .Text, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
-                                    .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser, navigateToAddParticipantsInGroupViaDelegate: $navigateToAddMember).environmentObject(self.realmManager), isActive: $navigateToInfo))
                                 }//:ZStack
                             }
                             if message.reactions.count > 0{
@@ -750,8 +737,6 @@ struct ISMMessageSubView: View {
                                             videoCallToUser = true
                                         }
                                     })
-                                    .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId, message: message, viewWidth: viewWidth, mediaType: .Text, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
-                                    .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser, navigateToAddParticipantsInGroupViaDelegate: $navigateToAddMember).environmentObject(self.realmManager), isActive: $navigateToInfo))
                                 }//:ZStack
                             }
                             if message.reactions.count > 0{
@@ -802,8 +787,6 @@ struct ISMMessageSubView: View {
                                             audioCallToUser = true
                                         }
                                     })
-                                    .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId, message: message, viewWidth: viewWidth, mediaType: .Text, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
-                                    .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser, navigateToAddParticipantsInGroupViaDelegate: $navigateToAddMember).environmentObject(self.realmManager), isActive: $navigateToInfo))
                                 }//:ZStack
                             }
                             if message.reactions.count > 0{
@@ -879,8 +862,6 @@ struct ISMMessageSubView: View {
                                                 .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                                             ) : AnyView(EmptyView())
                                     )
-                                    .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
-                                    .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser, navigateToAddParticipantsInGroupViaDelegate: $navigateToAddMember).environmentObject(self.realmManager), isActive: $navigateToInfo))
                                 }
                             }
                             if message.reactions.count > 0{
@@ -933,8 +914,6 @@ struct ISMMessageSubView: View {
                                 }//:ZStack
                                 .padding(5)
                                 .padding(.vertical,5)
-                                .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
-                                .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser, navigateToAddParticipantsInGroupViaDelegate: $navigateToAddMember).environmentObject(self.realmManager), isActive: $navigateToInfo))
                             }
                             if message.reactions.count > 0{
                                 reactionsView()
@@ -979,9 +958,6 @@ struct ISMMessageSubView: View {
                                                 .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                                             ) : AnyView(EmptyView())
                                     )
-                                    .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
-                                    .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser, navigateToAddParticipantsInGroupViaDelegate: $navigateToAddMember).environmentObject(self.realmManager), isActive: $navigateToInfo))
-                                
                             }
                             
                             if message.reactions.count > 0{
@@ -994,6 +970,8 @@ struct ISMMessageSubView: View {
                 }
             }
         }
+        .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
+        .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser, navigateToAddParticipantsInGroupViaDelegate: $navigateToAddMember,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager), isActive: $navigateToInfo))
         .padding(.bottom, (message.reactions.count > 0) ? 20 : 0)
         .frame(maxWidth: .infinity, alignment: isReceived ? .leading : .trailing)
         .multilineTextAlignment(.leading) // Aligning the text based on message type

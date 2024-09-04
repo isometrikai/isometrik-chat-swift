@@ -172,6 +172,8 @@ public struct ISMMessageView: View {
     
     public var delegate : ISMMessageViewDelegate?
     
+    @State var navigateToSocialProfileId : String = ""
+    
     //MARK: - BODY
     public var body: some View {
         VStack{
@@ -462,6 +464,12 @@ public struct ISMMessageView: View {
                 isShowingRedTimerStart.toggle()
             }
         })
+        .onChange(of: navigateToSocialProfileId) { newValue in
+            if !navigateToSocialProfileId.isEmpty {
+                delegate?.navigateToAppProfile(userId: navigateToSocialProfileId, userType: 0)
+                navigateToSocialProfileId = ""
+            }
+        }
         .onChange(of: postIdToNavigate) { newValue in
             if !postIdToNavigate.isEmpty{
                 delegate?.navigateToPost(postId: postIdToNavigate)
@@ -503,7 +511,7 @@ public struct ISMMessageView: View {
         .background(NavigationLink("", destination: ISMForwardToContactView(viewModel : self.viewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $showforwardMultipleMessage),isActive: $movetoForwardList))
         .background(NavigationLink("", destination: ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId,placeName : $placeName, address: $placeAddress),isActive: $showLocationSharing))
 //        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
-        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.viewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $navigateToAddParticipantsInGroupViaDelegate).environmentObject(self.realmManager),isActive: $navigateToProfile))
+        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.viewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager),isActive: $navigateToProfile))
 //        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))
         .background(NavigationLink("", destination: ISMImageAndViderEditor(media: $videoSelectedFromPicker, sendToUser: opponenDetail?.userName ?? "",sendMedia: $sendMedia),isActive: $navigateToImageEditor))
         .onReceive(timer, perform: { firedDate in

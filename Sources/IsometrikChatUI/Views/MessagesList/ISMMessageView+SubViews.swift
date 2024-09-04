@@ -129,7 +129,7 @@ extension ISMMessageView{
                               audioCallToUser: $audioCallToUser,
                               videoCallToUser: $videoCallToUser,
                               parentMsgToScroll: $parentMsgToScroll,
-                              message: message, postIdToNavigate: $postIdToNavigate) .environmentObject(self.realmManager)
+                              message: message, postIdToNavigate: $postIdToNavigate,navigateToSocialProfileId: $navigateToSocialProfileId) .environmentObject(self.realmManager)
                
         }
     }

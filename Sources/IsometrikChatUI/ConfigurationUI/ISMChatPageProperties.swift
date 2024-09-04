@@ -13,17 +13,17 @@ public struct ISMChatPageProperties {
     public var features : [ISMChatConfigFeature] // Array of chat features
     public var conversationType : [ISMChatConversationTypeConfig] // Array of conversation types
     public var hideNavigationBarForConversationList : Bool
-    public var allowToNavigateToAppProfile : Bool
+    public var navigateToAppProfileFromMessageList : Bool
     public var createConversationFromChatList : Bool
     public var otherConversationList : Bool = false
     public var showCustomPlaceholder : Bool = false
     public var isOneToOneGroup : Bool = false
-    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, allowToNavigateToAppProfile: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool) {
+    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, navigateToAppProfileFromMessageList: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool) {
         self.attachments = attachments
         self.features = features
         self.conversationType = conversationType
         self.hideNavigationBarForConversationList = hideNavigationBarForConversationList
-        self.allowToNavigateToAppProfile = allowToNavigateToAppProfile
+        self.navigateToAppProfileFromMessageList = navigateToAppProfileFromMessageList
         self.createConversationFromChatList = createConversationFromChatList
         self.otherConversationList = otherConversationList
         self.showCustomPlaceholder = showCustomPlaceholder

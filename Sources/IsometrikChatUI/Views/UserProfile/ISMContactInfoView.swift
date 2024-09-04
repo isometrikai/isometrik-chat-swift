@@ -48,6 +48,7 @@ struct ISMContactInfoView: View {
     @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     @Binding var navigateToAddParticipantsInGroupViaDelegate : Bool
+    @Binding var navigateToSocialProfileId : String
     
     //MARK:  - BODY
     var body: some View {
@@ -62,9 +63,25 @@ struct ISMContactInfoView: View {
                     //Bio
                     if isGroup == false{
                         Section {
-                            Text(conversationDetail?.conversationDetails?.opponentDetails?.metaData?.about ?? "")
-                                .font(themeFonts.messageListMessageText)
-                                .foregroundColor(themeColor.messageListHeaderTitle)
+                            if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
+                                Text(conversationDetail?.conversationDetails?.opponentDetails?.metaData?.about ?? "")
+                                    .font(themeFonts.messageListMessageText)
+                                    .foregroundColor(themeColor.messageListHeaderTitle)
+                            }else{
+                                Button {
+                                    navigateToSocialProfileId = conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? ""
+                                } label: {
+                                    HStack{
+                                        themeImage.mediaIcon
+                                            .resizable()
+                                            .frame(width: 29,height: 29)
+                                        Text("View Social Profile")
+                                            .font(themeFonts.messageListMessageText)
+                                            .foregroundColor(themeColor.messageListHeaderTitle)
+                                        Spacer()
+                                    }
+                                }
+                            }
                         } header: {
                             HStack(alignment: .center){
                                 Spacer()
@@ -180,7 +197,7 @@ struct ISMContactInfoView: View {
         .background(NavigationLink("", destination:  ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager), isActive: $navigatetoAddparticipant))
         .background(NavigationLink("", destination:  ISMUserMediaView(viewModel:viewModel)
             .environmentObject(self.realmManager), isActive: $navigatetoMedia))
-        .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: self.selectedConversationId,viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.selectedToShowInfo,navigateToAddParticipantsInGroupViaDelegate: $navigateToAddParticipantsInGroupViaDelegate).environmentObject(self.realmManager), isActive: $showInfo))
+        .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: self.selectedConversationId,viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.selectedToShowInfo,navigateToAddParticipantsInGroupViaDelegate: $navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager), isActive: $showInfo))
         .background(NavigationLink("", destination:  ISMSearchParticipants(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel ,conversationID: self.conversationID), isActive: $showSearch))
         .background(NavigationLink("", destination:  ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID,updateData : $updateData), isActive: $showEdit))
         .onChange(of: selectedMember, perform: { newValue in
@@ -240,7 +257,7 @@ struct ISMContactInfoView: View {
                 HStack {
                     Text(obj.title)
                         .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.chatListUnreadMessageCountBackground)
+                        .foregroundColor(themeColor.messageListHeaderTitle)
                     Button {
                         showingAlert = true
                         if obj == .BlockUser {
@@ -339,7 +356,7 @@ struct ISMContactInfoView: View {
     func customHeaderView() -> some View{
         VStack(alignment: .center){
             if onlyInfo == true{
-                UserAvatarView(avatar: (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")), showOnlineIndicator: conversationDetail?.conversationDetails?.opponentDetails?.online ?? (selectedToShowInfo?.online ?? false),size: CGSize(width: 116, height: 116), userName: conversationDetail?.conversationDetails?.opponentDetails?.userName ?? (selectedToShowInfo?.userName ?? ""),font: .regular(size: 30))
+                UserAvatarView(avatar: (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")), showOnlineIndicator: conversationDetail?.conversationDetails?.opponentDetails?.online ?? (selectedToShowInfo?.online ?? false),size: CGSize(width: 116, height: 116), userName: conversationDetail?.conversationDetails?.opponentDetails?.userName ?? (selectedToShowInfo?.userName ?? ""),font: .regular(size: 50))
                     .onTapGesture {
                         fullScreenImageURL = conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")
                         withAnimation {
@@ -353,13 +370,14 @@ struct ISMContactInfoView: View {
                     .foregroundColor(themeColor.chatListTitle)
                     .textCase(nil)
                 Spacer()
-                Text(conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier ?? (selectedToShowInfo?.userIdentifier ?? ""))
+                let text = NSDate().descriptiveStringLastSeen(time: conversationDetail?.conversationDetails?.opponentDetails?.lastSeen ?? 0)
+                Text(text ?? (selectedToShowInfo?.userIdentifier ?? ""))
                     .font(themeFonts.messageListMessageText)
                     .foregroundColor(themeColor.chatListUserMessage)
                     .padding(.bottom,15)
                     .textCase(nil)
             }else{
-                UserAvatarView(avatar: isGroup == false ? (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? "") : (conversationDetail?.conversationDetails?.conversationImageUrl ?? ""), showOnlineIndicator: conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,size: CGSize(width: 116, height: 116), userName: isGroup == false ? (conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "") : (conversationDetail?.conversationDetails?.conversationTitle ?? ""),font: .regular(size: 30))
+                UserAvatarView(avatar: isGroup == false ? (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? "") : (conversationDetail?.conversationDetails?.conversationImageUrl ?? ""), showOnlineIndicator: conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,size: CGSize(width: 116, height: 116), userName: isGroup == false ? (conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "") : (conversationDetail?.conversationDetails?.conversationTitle ?? ""),font: .regular(size: 50))
                     .onTapGesture {
                         fullScreenImageURL = conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? ""
                         withAnimation {
