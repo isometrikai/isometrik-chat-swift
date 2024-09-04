@@ -97,7 +97,7 @@ extension ChatsViewModel{
         //        "1" ->"BroadcastLists"
         //        "2" ->#Groupcast
         
-        let endPoint = ISMChatMediaUploadEndpoint.conversationProfileUpload(mediaExtension: "png", conversationType: conversationType, newConversation: newConversation, conversationTitle: conversationTitle)
+        let endPoint = ISMChatMediaUploadEndpoint.conversationProfileUpload(mediaExtension: "png", conversationType: conversationType, newConversation: newConversation, conversationTitle: conversationTitle,conversationId: conversationId)
         let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
         
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatPresignedUrlDetail, ISMChatNewAPIError>) in

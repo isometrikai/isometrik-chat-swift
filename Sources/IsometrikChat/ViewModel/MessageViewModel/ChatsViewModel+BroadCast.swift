@@ -110,19 +110,38 @@ extension ChatsViewModel{
     }
     
     //MARK: - update broadcast title api
-    public func updateBroadCastTitle(groupcastId:String, broadcastTitle : String,completion:@escaping(ISMChatBroadCastMembers?)->()){
+    public func updateBroadCastTitle(groupcastId:String, broadcastTitle : String,completion:@escaping(Bool?)->()){
         var body : [String : Any]
         body = ["groupcastTitle" : broadcastTitle,"groupcastId" : groupcastId] as [String : Any]
-        
-        
         
         let endPoint = ISMChatBroadCastEndpoint.updateBroadCast
         let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
         
-        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatBroadCastMembers, ISMChatNewAPIError>) in
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
             case .success(let data,_) :
-                completion(data)
+                NotificationCenter.default.post(name: NSNotification.refreshBroadCastListNotification,object: nil)
+                completion(true)
+            case .failure(let error) :
+                ISMChatHelper.print("update title Api fail -----> \(String(describing: error))")
+            }
+        }
+    }
+    
+    //MARK: - update broadcast Image Api
+    
+    public func updateBroadCastImage(groupcastId:String, broadcastImage: String,completion:@escaping(Bool?)->()){
+        var body : [String : Any]
+        body = ["groupcastImageUrl" : broadcastImage,"groupcastId" : groupcastId] as [String : Any]
+        
+        let endPoint = ISMChatBroadCastEndpoint.updateBroadCast
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
+            switch result{
+            case .success(let data,_) :
+                NotificationCenter.default.post(name: NSNotification.refreshBroadCastListNotification,object: nil)
+                completion(true)
             case .failure(let error) :
                 ISMChatHelper.print("update title Api fail -----> \(String(describing: error))")
             }

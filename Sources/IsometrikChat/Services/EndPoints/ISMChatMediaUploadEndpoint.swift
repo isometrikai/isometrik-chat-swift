@@ -10,7 +10,7 @@ import Foundation
 enum ISMChatMediaUploadEndpoint : ISMChatURLConvertible {
     
     case messageMediaUpload
-    case conversationProfileUpload(mediaExtension: String,conversationType: Int,newConversation : Bool,conversationTitle: String)
+    case conversationProfileUpload(mediaExtension: String,conversationType: Int,newConversation : Bool,conversationTitle: String,conversationId: String)
     case userImage(userIdentifier: String,mediaExtension: String)
     case updateUserImage(mediaExtension: String)
     
@@ -48,12 +48,13 @@ enum ISMChatMediaUploadEndpoint : ISMChatURLConvertible {
         switch self {
         case .messageMediaUpload:
             return [:]
-        case .conversationProfileUpload(let mediaExtension, let conversationType, let newConversation, let conversationTitle):
+        case .conversationProfileUpload(let mediaExtension, let conversationType, let newConversation, let conversationTitle,let conversationId):
             var params : [String : String] = [
                 "mediaExtension" : "\(mediaExtension)",
                 "conversationType" : "\(conversationType)",
                 "newConversation" : "\(newConversation)",
-                "conversationTitle" : "\(conversationTitle)"
+                "conversationTitle" : "\(conversationTitle)",
+                "conversationId" : "\(conversationId)"
             ]
             return params
         case .userImage(let userIdentifier,let mediaExtension):
