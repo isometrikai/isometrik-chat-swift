@@ -709,12 +709,16 @@ public struct ISMMessageView: View {
                     realmManager.fetchFiles(conId: self.conversationID ?? "")
                     realmManager.fetchLinks(conId: self.conversationID ?? "")
                 }
-                //only call read api when there are any new msg in conversation
-                if networkMonitor.isConnected{
-                    viewModel.markMessagesAsRead(conversationId: self.conversationID ?? "")
-                }
+//                //only call read api when there are any new msg in conversation
+//                if networkMonitor.isConnected{
+//                    viewModel.markMessagesAsRead(conversationId: self.conversationID ?? "")
+//                }
                 self.sendLocalMsg()
             }
+        }
+        //unread count is not getting updated
+        if networkMonitor.isConnected{
+            viewModel.markMessagesAsRead(conversationId: self.conversationID ?? "")
         }
     }
     
