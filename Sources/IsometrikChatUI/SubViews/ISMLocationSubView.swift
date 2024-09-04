@@ -22,6 +22,7 @@ struct ISMLocationSubView: View {
     @State private var mapImage: UIImage?
     @State private var latitude : Double?
     @State private var longitute : Double?
+    @State private var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
     init(message : MessagesDB) {
         if let latitude = message.attachments.first?.latitude, let longitude = message.attachments.first?.longitude {
@@ -61,7 +62,7 @@ struct ISMLocationSubView: View {
                     .scaledToFit()
                     
                 
-                Image("map_Pin")
+                themeImage.mapPinLogo
                     .resizable()
                     .frame(width: 30,height: 30)
             }

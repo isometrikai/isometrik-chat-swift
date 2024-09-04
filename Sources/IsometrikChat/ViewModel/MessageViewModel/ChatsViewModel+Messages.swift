@@ -165,6 +165,7 @@ extension ChatsViewModel{
         case .location:
             if let latitude = latitude, let longitude = longitude, let placeName = placeName,let placeAddress = placeAddress{
                 attachmentValue = ["latitude" : latitude, "title": placeName, "longitude" : longitude , "address" : placeAddress,"attachmentType" : ISMChatAttachmentType.Location.type]
+                body["attachments"] = [attachmentValue]
             }
             
             messageInBody = message
