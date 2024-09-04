@@ -57,7 +57,7 @@ public enum ISMChatMediaType : CaseIterable{
         case .GroupCall:
             return "GroupCall"
         case .Post:
-            return "Post"
+            return "AttachmentMessage:Post"
         }
     }
 }
