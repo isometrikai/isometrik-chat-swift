@@ -8,21 +8,20 @@
 import Foundation
 import SwiftUI
 
-struct ResizeableTextView: UIViewRepresentable{
-    
-    //MARK:  - PROPERTIES
-    @Binding var text:String
-    @Binding var height:CGFloat
-    @Binding var typingStarted : Bool
+struct ResizeableTextView: UIViewRepresentable {
+
+    // MARK: - PROPERTIES
+    @Binding var text: String
+    @Binding var height: CGFloat
+    @Binding var typingStarted: Bool
     var placeholderText: String
-    @State var editing:Bool = false
-    @Binding var showMentionList : Bool
-    var filteredMentionUserCount : Int
-    @Binding var mentionUser : String?
-    let placeholderColor : Color
-    let textViewColor : UIColor
-    
-    //MARK: - CONFIGURE
+    @Binding var showMentionList: Bool
+    var filteredMentionUserCount: Int
+    @Binding var mentionUser: String?
+    let placeholderColor: Color
+    let textViewColor: UIColor
+
+    // MARK: - CONFIGURE
     func makeUIView(context: Context) -> UITextView {
         let textView = UITextView()
         textView.delegate = context.coordinator
@@ -37,58 +36,59 @@ struct ResizeableTextView: UIViewRepresentable{
         textView.keyboardType = .default
         return textView
     }
-    
+
     func updateUIView(_ textView: UITextView, context: Context) {
-        textView.text = text
-        if typingStarted { // If typingStarted is true, set the text view as the first responder
+        if !text.isEmpty || textView.isFirstResponder {
+            textView.text = text
+            textView.textColor = textViewColor
+        } else {
+            textView.text = placeholderText
+            textView.textColor = UIColor(placeholderColor)
+        }
+
+        if typingStarted {
             textView.becomeFirstResponder()
         }
-        if self.text.isEmpty == true{
-            textView.text = self.editing ? "" : self.placeholderText
-            textView.textColor = textView.text == self.placeholderText ? UIColor(placeholderColor) : textViewColor
-        }
-        
+
         DispatchQueue.main.async {
             self.height = max(textView.contentSize.height, 32)
         }
     }
-    
+
     func makeCoordinator() -> Coordinator {
-        ResizeableTextView.Coordinator(self)
+        Coordinator(self)
     }
-    
-    class Coordinator: NSObject, UITextViewDelegate{
+
+    class Coordinator: NSObject, UITextViewDelegate {
         var parent: ResizeableTextView
-        
-        init(_ params: ResizeableTextView) {
-            self.parent = params
+
+        init(_ parent: ResizeableTextView) {
+            self.parent = parent
         }
-        
+
         func textViewDidBeginEditing(_ textView: UITextView) {
-            parent.typingStarted = true
             DispatchQueue.main.async {
-                self.parent.editing = true
+                self.parent.typingStarted = true
             }
         }
-        
+
         func textViewDidEndEditing(_ textView: UITextView) {
-            parent.typingStarted = false
             DispatchQueue.main.async {
-                self.parent.editing = false
+                self.parent.typingStarted = false
             }
         }
-        
+
         func textViewDidChange(_ textView: UITextView) {
             DispatchQueue.main.async {
-                self.parent.height = textView.contentSize.height
                 self.parent.text = textView.text
-                
-                //Mention User Flow
+                self.parent.height = max(textView.contentSize.height, 32)
+
+                // Mention User Flow
                 if textView.text.last == "@" {
                     self.parent.showMentionList = true
-                }else if !textView.text.contains("@"){
+                } else if !textView.text.contains("@") {
                     self.parent.showMentionList = false
-                }else if textView.text.isEmpty{
+                } else if textView.text.isEmpty {
                     self.parent.showMentionList = false
                 }
             }
