@@ -158,16 +158,12 @@ extension ISMMessageView{
                 let text = senderId == userId ? "You changed this group image" : "\(userName) changed this group image"
                 customText(text: text)
             }else if action == .conversationCreated{
-                if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
-                    Text("")
+                if isGroup == false{
+                    let text = "Messages are end to end encrypted. No one \noutside of this chat can read to them."
+                    customText(text: text)
                 }else{
-                    if isGroup == false{
-                        let text = "Messages are end to end encrypted. No one \noutside of this chat can read to them."
-                        customText(text: text)
-                    }else{
-                        let text = senderId == userId ? "You created group" : "\(userName) created group"
-                        customText(text: text)
-                    }
+                    let text = senderId == userId ? "You created group" : "\(userName) created group"
+                    customText(text: text)
                 }
             }else if action == .membersAdd{
                 let memberName = memberId == userId ? ConstantStrings.you.lowercased() : "\(member ?? "")"

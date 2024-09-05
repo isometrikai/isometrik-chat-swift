@@ -704,7 +704,9 @@ public struct ISMMessageView: View {
                 if let msg = msg {
                     self.viewModel.allMessages = msg.messages
                     self.viewModel.allMessages = self.viewModel.allMessages?.filter { message in
-                        if isGroup == false {
+                        if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
+                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated" && message.action != ISMChatActionType.conversationCreated.value
+                        }else if isGroup == false {
                             return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
                         } else {
                             return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"

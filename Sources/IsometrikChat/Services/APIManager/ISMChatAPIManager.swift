@@ -92,7 +92,7 @@ extension ISMChatURLConvertible {
             }
             return
         }
-        
+        print(url)
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = request.endPoint.method.rawValue
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")

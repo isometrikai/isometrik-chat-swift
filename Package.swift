@@ -24,7 +24,7 @@ let package = Package(
         .package(url: "https://github.com/UWAppDev/SwiftUI-MediaPicker", from: "0.2.0"),
         .package(url: "https://github.com/Alamofire/Alamofire", from: "5.8.1"),
         .package(url: "https://github.com/isometrikai/isometrik-call-ios",branch: "main"),
-        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "9.0.0"),
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", branch: "main"),
         .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", from: "3.1.1"),
         .package(url: "https://github.com/realm/realm-swift",branch: "master"),
         .package(url: "https://github.com/kishikawakatsumi/KeychainAccess",branch: "master"),
