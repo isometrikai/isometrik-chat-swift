@@ -139,7 +139,7 @@ extension ISMChatURLConvertible {
                 print(JSON(data))
                 
                 switch httpResponse.statusCode {
-                case 200:
+                case 200,201:
                     do {
                         let responseObject = try JSONDecoder().decode(T.self, from: data)
                         completion(.success(responseObject, nil))
