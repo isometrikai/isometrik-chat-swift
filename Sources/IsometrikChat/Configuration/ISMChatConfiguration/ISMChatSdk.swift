@@ -143,9 +143,7 @@ public class ISMChatSdk{
         }
         //3. delete local data
         RealmManager().switchProfile(oldUserId:  self.getChatClient().getConfigurations().userConfig.userId ?? "", newUserId: userConfig.userId)
-        //4. For call
-        IsometrikCall().clearSession()
-        ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
+        
         self.chatInitialized = nil
         
         self.appConfiguration(appConfig: appConfig, userConfig: userConfig, hostFrameworkType: hostFrameworkType, conversationListViewControllerName: conversationListViewControllerName, messagesListViewControllerName: messagesListViewControllerName)
