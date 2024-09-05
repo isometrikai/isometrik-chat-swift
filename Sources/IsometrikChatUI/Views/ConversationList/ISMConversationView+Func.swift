@@ -113,11 +113,18 @@ extension ISMConversationView{
         }
     }
     
-    func searchInConversationList(){
-        let  conversation = realmManager.storeConv
+    func searchInConversationList() {
+        let conversation = realmManager.storeConv
         realmManager.conversations = conversation.filter { conversation in
-            let createdByUserNameCondition = conversation.opponentDetails?.userName?.contains(query) ?? false
-            let conversationTitleCondition = conversation.conversationTitle.contains(query)
+            // Convert query to lowercase for case-insensitive search
+            let lowercasedQuery = query.lowercased()
+            
+            // Check opponent's username for the query (case-insensitive)
+            let createdByUserNameCondition = conversation.opponentDetails?.userName?.lowercased().contains(lowercasedQuery) ?? false
+            
+            // Check conversation title for the query (case-insensitive)
+            let conversationTitleCondition = conversation.conversationTitle.lowercased().contains(lowercasedQuery)
+            
             return (createdByUserNameCondition || conversationTitleCondition)
         }
     }
