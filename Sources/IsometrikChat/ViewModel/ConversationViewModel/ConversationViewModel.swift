@@ -72,13 +72,8 @@ public class ConversationViewModel : NSObject ,ObservableObject{
     
     //MARK: - Get Conversations List
     public func getChatList(search : String?,completion:@escaping(ISMChatConversations?)->()){
-        var body : [String : Any] = [:]
-        if let search = search , search != ""{
-            body = ["searchTag" : search] as [String : Any]
-        }
         let skipNew = self.conversations.count
-        
-        let endPoint = ISMChatConversationEndpoint.getconversationList(includeConversationStatusMessagesInUnreadMessagesCount: false, skip: skipNew)
+        let endPoint = ISMChatConversationEndpoint.getconversationList(includeConversationStatusMessagesInUnreadMessagesCount: false, skip: skipNew, searchTag: search ?? "")
         let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
         
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatConversations, ISMChatNewAPIError>) in
