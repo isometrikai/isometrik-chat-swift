@@ -523,4 +523,27 @@ extension ISMChatHelper{
         // Return the opponent in the completion handler
         return (opponent)
     }
+    
+    public class func formatDateRange(startDate: String, endDate: String) -> String? {
+        // Create a DateFormatter to parse the input date string
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        
+        // Create a DateFormatter to format the output date string
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "dd MMMM" // Format for "10 October"
+
+        // Convert the start and end date strings to Date objects
+        guard let start = inputFormatter.date(from: startDate),
+              let end = inputFormatter.date(from: endDate) else {
+            return nil
+        }
+
+        // Format the Date objects to the desired output format
+        let formattedStartDate = outputFormatter.string(from: start)
+        let formattedEndDate = outputFormatter.string(from: end)
+        
+        // Combine the formatted start and end dates into a single string
+        return "\(formattedStartDate) - \(formattedEndDate)"
+    }
 }

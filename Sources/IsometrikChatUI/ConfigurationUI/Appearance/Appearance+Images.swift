@@ -159,6 +159,8 @@ public struct ISMChatImages {
     public var influencerUserIcon : Image = loadImageSafely(with: "gif_logo")
     public var businessUserIcon : Image = loadImageSafely(with: "gif_logo")
     
+    public var calanderLogo : Image = loadImageSafely(with: "gif_logo")
+    
     public init(){}
     
     public init(

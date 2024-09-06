@@ -18,7 +18,8 @@ public struct ISMChatPageProperties {
     public var otherConversationList : Bool = false
     public var showCustomPlaceholder : Bool = false
     public var isOneToOneGroup : Bool = false
-    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, navigateToAppProfileFromMessageList: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool) {
+    public var customJobCardInMessageList : Bool = false
+    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, navigateToAppProfileFromMessageList: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool,customJobCardInMessageList : Bool) {
         self.attachments = attachments
         self.features = features
         self.conversationType = conversationType
@@ -28,5 +29,6 @@ public struct ISMChatPageProperties {
         self.otherConversationList = otherConversationList
         self.showCustomPlaceholder = showCustomPlaceholder
         self.isOneToOneGroup = isOneToOneGroup
+        self.customJobCardInMessageList = customJobCardInMessageList
     }
 }
