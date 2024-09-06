@@ -10,7 +10,7 @@ import Foundation
 
 enum ISMChatConversationEndpoint : ISMChatURLConvertible {
     
-    case getconversationList(includeConversationStatusMessagesInUnreadMessagesCount: Bool,skip :Int)
+    case getconversationList(includeConversationStatusMessagesInUnreadMessagesCount: Bool,skip :Int,searchTag : String)
     case getconversationListWithCustomType(includeConversationStatusMessagesInUnreadMessagesCount: Bool,customType: String,searchTag : String,skip :Int)
     case createConversation
     case conversationDetail(conversationId: String,includeMembers:Bool,isGroup: Bool)
@@ -68,11 +68,14 @@ enum ISMChatConversationEndpoint : ISMChatURLConvertible {
     
     var queryParams: [String: String]? {
         switch self {
-        case .getconversationList(let includeConversationStatusMessagesInUnreadMessagesCount,let skip):
+        case .getconversationList(let includeConversationStatusMessagesInUnreadMessagesCount,let skip,let searchTag):
             var params : [String : String] = [
                 "includeConversationStatusMessagesInUnreadMessagesCount" : "\(includeConversationStatusMessagesInUnreadMessagesCount)",
                 "skip" : "\(skip)"
             ]
+            if !searchTag.isEmpty{
+                params.updateValue(searchTag, forKey: "searchTag")
+            }
             return params
         case .getconversationListWithCustomType(let includeConversationStatusMessagesInUnreadMessagesCount, let customType, let searchTag, let skip):
                                                    
