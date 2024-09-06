@@ -263,7 +263,17 @@ public struct ISMMessageView: View {
                     ActivityIndicatorView(isPresented: $viewModel.isBusy)
                 }
                 if messageCopied == true{
-                    messageCopiedView()
+                    Text("Message copied")
+                        .font(themeFonts.alertText)
+                        .padding()
+                        .background(themeColor.alertBackground)
+                        .foregroundColor(themeColor.alertText)
+                        .cornerRadius(5)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                messageCopied = false
+                            }
+                        }
                 }
             }
         }//:vStack
