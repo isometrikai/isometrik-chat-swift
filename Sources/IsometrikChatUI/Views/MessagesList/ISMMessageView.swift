@@ -173,6 +173,7 @@ public struct ISMMessageView: View {
     public var delegate : ISMMessageViewDelegate?
     
     @State var navigateToSocialProfileId : String = ""
+    @State private var cancellables = Set<AnyCancellable>()
     
     //MARK: - BODY
     public var body: some View {
@@ -248,11 +249,13 @@ public struct ISMMessageView: View {
                 .onAppear {
                     setupOnAppear()
                     navigateToImageEditor = false
+                    addNotificationObservers()
                 }
                 .onDisappear{
                     executeRepeatly = false
                     executeRepeatlyForOfflineMessage = false
                     onLoad = false
+                    removeObservers()
                 }
                 //zstack views
                 if viewModel.isBusy{
@@ -260,17 +263,7 @@ public struct ISMMessageView: View {
                     ActivityIndicatorView(isPresented: $viewModel.isBusy)
                 }
                 if messageCopied == true{
-                    Text("Message copied")
-                        .font(themeFonts.alertText)
-                        .padding()
-                        .background(themeColor.alertBackground)
-                        .foregroundColor(themeColor.alertText)
-                        .cornerRadius(5)
-                        .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                messageCopied = false
-                            }
-                        }
+                    messageCopiedView()
                 }
             }
         }//:vStack
@@ -335,22 +328,6 @@ public struct ISMMessageView: View {
             ISMChatHelper.print("MESSAGE READ ----------------->\(messageInfo)")
             messageRead(messageInfo: messageInfo)
         }
-        .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttUserBlockConversation.name)){
-            notification in
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
-                return
-            }
-            ISMChatHelper.print("USER BLOCKED ----------------->\(messageInfo)")
-            messageReceived(messageInfo: messageInfo)
-        }
-        .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name)){
-            notification in
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
-                return
-            }
-            ISMChatHelper.print("USER UNBLOCKED ----------------->\(messageInfo)")
-            messageReceived(messageInfo: messageInfo)
-        }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttTypingEvent.name)){ notification in
             guard let messageInfo = notification.userInfo?["data"] as? ISMChatTypingEvent else {
                 return
@@ -358,15 +335,6 @@ public struct ISMMessageView: View {
             ISMChatHelper.print("TYPING EVENT----------------->\(messageInfo)")
             userTyping(messageInfo: messageInfo)
         }
-//        .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMeetingCreated.name)){ notification in
-//            guard let messageInfo = notification.userInfo?["data"] as? ISMMeeting else {
-//                return
-//            }
-//            ISMChatHelper.print("Meeting craeted----------------->\(messageInfo)")
-//            if messageInfo.conversationId == self.conversationID{
-//                addMeeting(messageInfo: messageInfo)
-//            }
-//        }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMeetingEnded.name)){ notification in
             guard let messageInfo = notification.userInfo?["data"] as? ISMMeeting else {
                 return
@@ -751,3 +719,46 @@ public struct ISMMessageView: View {
     }
 }
 
+extension ISMMessageView{
+    private func addNotificationObservers() {
+            // List of notification types you want to observe
+            let notificationTypes: [Notification.Name] = [
+                ISMChatMQTTNotificationType.mqttUserBlockConversation.name,
+                ISMChatMQTTNotificationType.mqttUserUnblockConversation.name,
+            ]
+
+            // Iterate over each notification type and add a subscriber
+            for notificationType in notificationTypes {
+                NotificationCenter.default.publisher(for: notificationType)
+                    .sink { notification in
+                        handleNotification(notification, type: notificationType)
+                    }
+                    .store(in: &cancellables)
+            }
+        }
+
+        private func handleNotification(_ notification: Notification, type: Notification.Name) {
+            // Handle the notification based on its type
+            switch type {
+            case ISMChatMQTTNotificationType.mqttUserBlockConversation.name:
+                if let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered {
+                    ISMChatHelper.print("USER BLOCKED ----------------->\(messageInfo)")
+                    messageReceived(messageInfo: messageInfo)
+                }
+                
+            case ISMChatMQTTNotificationType.mqttUserUnblockConversation.name:
+                if let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered {
+                    ISMChatHelper.print("USER UNBLOCKED ----------------->\(messageInfo)")
+                    messageReceived(messageInfo: messageInfo)
+                }
+            default:
+                break
+            }
+        }
+
+        private func removeObservers() {
+            // Cancel all observers
+            cancellables.forEach { $0.cancel() }
+            cancellables.removeAll()
+        }
+}
