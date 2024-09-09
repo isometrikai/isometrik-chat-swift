@@ -78,9 +78,9 @@ import IsometrikChat
                 
                 realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
                 if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
-                    viewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
+                    chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
                         // update status of message to deleivered
-                        viewModel.readMessageIndicator(conversationId: converId, messageId: messId) { _ in
+                        chatViewModel.readMessageIndicator(conversationId: converId, messageId: messId) { _ in
                             // update status of message to read
                             
                             //after message is read then only resent unread count
@@ -104,9 +104,9 @@ import IsometrikChat
              }else{
                  realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
                  if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
-                     viewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
+                     chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
                          // update status of message to deleivered
-                         viewModel.readMessageIndicator(conversationId: converId, messageId: messId) { _ in
+                         chatViewModel.readMessageIndicator(conversationId: converId, messageId: messId) { _ in
                              // update status of message to read
                          }
                      }
@@ -115,7 +115,7 @@ import IsometrikChat
              realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
          }else{
              if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
-                 viewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
+                 chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
                      // update status of message to deleivered
                      
                  }

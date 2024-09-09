@@ -24,7 +24,7 @@ extension ISMMessageView{
         if otherUserMessage {
             handleDeleteCompletion()
         } else {
-            viewModel.deleteMsg(messageDeleteType: type, messageId: messageIds, conversationId: conversationID ?? "") {
+            chatViewModel.deleteMsg(messageDeleteType: type, messageId: messageIds, conversationId: conversationID ?? "") {
                 handleDeleteCompletion()
             }
         }
@@ -34,7 +34,7 @@ extension ISMMessageView{
     func deleteMultipleBroadcastMessages(otherUserMessage: Bool, type: ISMChatDeleteMessageType) {
         let messageIds = deleteMessage.map { $0.messageId }
         for id in messageIds{
-            viewModel.deleteBroadCastMsg(messageDeleteType: type, messageId: id, groupcastId: self.groupCastId ?? "") {
+            chatViewModel.deleteBroadCastMsg(messageDeleteType: type, messageId: id, groupcastId: self.groupCastId ?? "") {
                 realmManager.deleteBroadCastMessages(groupcastId: self.groupCastId ?? "", messageId: id)
             }
         }
@@ -45,12 +45,12 @@ extension ISMMessageView{
     //MARK: - REPLY MESSAGE
     func replyMessage(message : ISMChatMessage) -> Bool{
         if message.messageType == 2{ //reply
-            if ((self.viewModel.allMessages?.contains(where: { msg in
+            if ((self.chatViewModel.allMessages?.contains(where: { msg in
                 msg.messageId == message.parentMessageId
-            })) != nil),let index = self.viewModel.allMessages?.firstIndex(where: { element in
+            })) != nil),let index = self.chatViewModel.allMessages?.firstIndex(where: { element in
                 element.messageId == message.parentMessageId
             }){
-                if let message = viewModel.allMessages{
+                if let message = chatViewModel.allMessages{
                     parentMessage = message[index]
                     return true
                 }
@@ -62,14 +62,14 @@ extension ISMMessageView{
     //MARK: - ON CHANGE FUNCTIONS
     
     func sendMessageIfDocumentSelected() {
-        if viewModel.documentSelectedFromPicker != nil{
+        if chatViewModel.documentSelectedFromPicker != nil{
             sendMessage(msgType: .document)
-            viewModel.documentSelectedFromPicker = nil
+            chatViewModel.documentSelectedFromPicker = nil
         }
     }
     
     func sendMessageIfAudioUrl() {
-        if viewModel.audioUrl != nil {
+        if chatViewModel.audioUrl != nil {
             sendMessage(msgType: .audio)
         }
     }
@@ -82,7 +82,7 @@ extension ISMMessageView{
             }
             // when typing send typing indicator
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                viewModel.typingMessageIndicator(conversationId: self.conversationID ?? "")
+                chatViewModel.typingMessageIndicator(conversationId: self.conversationID ?? "")
             }
         }
     }
@@ -100,7 +100,7 @@ extension ISMMessageView{
     
     //MARK: - ON APPEAR
     func setupOnAppear() {
-        viewModel.skip = 0
+        chatViewModel.skip = 0
         stateViewModel.executeRepeatly = true
         stateViewModel.executeRepeatlyForOfflineMessage = true
     }
@@ -145,7 +145,7 @@ extension ISMMessageView{
             for obj in realmManager.localMessages ?? [] {
                 group.enter()
                 if obj.customType == ISMChatMediaType.Text.value && obj.body != "" {
-                    viewModel.sendMessage(messageKind: .text, customType: ISMChatMediaType.Text.value, conversationId: obj.conversationId, message: obj.body, fileName: nil, fileSize: nil, mediaId: nil,objectId: obj.id.description,isGroup: self.isGroup,groupMembers: self.mentionUsers,isBroadCastMessage: self.fromBroadCastFlow,groupcastId: self.groupCastId) { msgId,objId  in
+                    chatViewModel.sendMessage(messageKind: .text, customType: ISMChatMediaType.Text.value, conversationId: obj.conversationId, message: obj.body, fileName: nil, fileSize: nil, mediaId: nil,objectId: obj.id.description,isGroup: self.isGroup,groupMembers: self.mentionUsers,isBroadCastMessage: self.fromBroadCastFlow,groupcastId: self.groupCastId) { msgId,objId  in
                         realmManager.updateMsgId(objectId: objId, msgId: msgId)
                         if fromBroadCastFlow == true{
                             //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
@@ -154,7 +154,7 @@ extension ISMMessageView{
                         group.leave()
                     }
                 }else if obj.customType == ISMChatMediaType.Location.value {
-                    viewModel.sendMessage(messageKind: .location, customType: ISMChatMediaType.Location.value, conversationId: self.conversationID ?? "", message: obj.body, fileName: nil, fileSize: nil, mediaId: nil, placeName: obj.placeName,isBroadCastMessage: self.fromBroadCastFlow,groupcastId: self.groupCastId) { msgId,objId in
+                    chatViewModel.sendMessage(messageKind: .location, customType: ISMChatMediaType.Location.value, conversationId: self.conversationID ?? "", message: obj.body, fileName: nil, fileSize: nil, mediaId: nil, placeName: obj.placeName,isBroadCastMessage: self.fromBroadCastFlow,groupcastId: self.groupCastId) { msgId,objId in
                         realmManager.updateMsgId(objectId: objId, msgId: msgId)
                         if fromBroadCastFlow == true{
                             //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
@@ -190,9 +190,9 @@ extension ISMMessageView{
         }else{
             if isGroup == false{
                 if self.conversationID == nil || self.conversationID == ""{
-                    viewModel.createConversation(user: self.opponenDetail ?? UserDB(),chatStatus: ISMChatStatus.Reject.value) { data in
+                    chatViewModel.createConversation(user: self.opponenDetail ?? UserDB(),chatStatus: ISMChatStatus.Reject.value) { data in
                         self.conversationID = data?.conversationId
-                        viewModel.getConversationDetail(conversationId: self.conversationID ?? "", isGroup: self.isGroup ?? false) { data in
+                        chatViewModel.getConversationDetail(conversationId: self.conversationID ?? "", isGroup: self.isGroup ?? false) { data in
                             //1. first check if conversation is deleted locally
                             realmManager.undodeleteConversation(convID: self.conversationID ?? "")
                             
@@ -223,7 +223,7 @@ extension ISMMessageView{
     
     func sendReaction(){
         if let selectedReaction = selectedReaction{
-            viewModel.sendReaction(conversationId: self.conversationID ?? "", messageId: self.sentRecationToMessageId, emojiReaction: selectedReaction) { _ in
+            chatViewModel.sendReaction(conversationId: self.conversationID ?? "", messageId: self.sentRecationToMessageId, emojiReaction: selectedReaction) { _ in
                 //add my reactions here, and for other added in mqtt event
                 realmManager.addReactionToMessage(conversationId: self.conversationID ?? "", messageId:  self.sentRecationToMessageId, reaction: selectedReaction, userId: userData.userId ?? "")
                 self.selectedReaction = nil
@@ -300,7 +300,7 @@ extension ISMMessageView{
             localIds.append(id)
             
             //3. reply message api
-            viewModel.replyToMessage(customType: ISMChatMediaType.ReplyText.value, conversationId: self.conversationID ?? "", message: text, parentMessage: selectedMsgToReply) { messageId in
+            chatViewModel.replyToMessage(customType: ISMChatMediaType.ReplyText.value, conversationId: self.conversationID ?? "", message: text, parentMessage: selectedMsgToReply) { messageId in
                 self.text = ""
                 
                 //4. update messageId locally
@@ -312,7 +312,7 @@ extension ISMMessageView{
         }else if updateMessage.body != ""{
             //MARK: - UPDATE MESSAGE
             let text = self.text
-            viewModel.updateMessage(messageId: updateMessage.messageId , conversationId: updateMessage.conversationId , message: text ) { messageID in
+            chatViewModel.updateMessage(messageId: updateMessage.messageId , conversationId: updateMessage.conversationId , message: text ) { messageID in
                 //update message locally
                 realmManager.updateMessageBody(conversationId: updateMessage.conversationId, messageId: updateMessage.messageId, body: text)
                 realmManager.updateLastMessageOnEdit(conversationId: updateMessage.conversationId, messageId: updateMessage.messageId, newBody: text)
@@ -335,7 +335,7 @@ extension ISMMessageView{
             localIds.append(id)
             
             //3. send message api
-            viewModel.sendMessage(messageKind: .contact, customType: ISMChatMediaType.Contact.value, conversationId: self.conversationID ?? "", message: "", fileName: nil, fileSize: nil, mediaId: nil,contactInfo: selectedContactToShare) { messageId, _ in
+            chatViewModel.sendMessage(messageKind: .contact, customType: ISMChatMediaType.Contact.value, conversationId: self.conversationID ?? "", message: "", fileName: nil, fileSize: nil, mediaId: nil,contactInfo: selectedContactToShare) { messageId, _ in
                 
                 //4. update messageId locally
                 realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId)
@@ -384,9 +384,9 @@ extension ISMMessageView{
                             })
                         })
                     }else{
-                    viewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", image: thumbnailUrl, document: nil, video: nil, audio: nil, mediaName: "\(UUID()).jpg") { thumbnailmedia, thumbnailfilename, thumbnailsize in
+                        chatViewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", image: thumbnailUrl, document: nil, video: nil, audio: nil, mediaName: "\(UUID()).jpg") { thumbnailmedia, thumbnailfilename, thumbnailsize in
                         //upload video
-                        viewModel.upload(messageKind: .video, conversationId: self.conversationID ?? "", image: nil, document: nil, video: videoUrl, audio: nil, mediaName: mediaName) {  data, filename, size in
+                            chatViewModel.upload(messageKind: .video, conversationId: self.conversationID ?? "", image: nil, document: nil, video: videoUrl, audio: nil, mediaName: mediaName) {  data, filename, size in
                             if let dataValue = data {
                                 sendMediaMessage(messageKind: messageKind, customType: customType, mediaId: dataValue.mediaId ?? "", mediaName: filename, mediaUrl: data?.mediaUrl ?? "", mediaData: size, thubnailUrl: thumbnailmedia?.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
                                 localIds.removeFirst()
@@ -415,7 +415,7 @@ extension ISMMessageView{
                         localIds.removeFirst()
                     })
                 }else{
-                    viewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", image: cameraImage, document: nil, video: nil, audio: nil, mediaName: mediaName) {  data, filename, size in
+                    chatViewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", image: cameraImage, document: nil, video: nil, audio: nil, mediaName: mediaName) {  data, filename, size in
                         if let data = data {
                             sendMediaMessage(messageKind: .photo, customType: ISMChatMediaType.Image.value, mediaId: data.mediaId ?? "", mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
                             localIds.removeFirst()
@@ -436,7 +436,7 @@ extension ISMMessageView{
                     }
                 }
             }
-        }else if let documentSelected = viewModel.documentSelectedFromPicker {
+        }else if let documentSelected = chatViewModel.documentSelectedFromPicker {
             //MARK: - DOCUMENT MESSAGE
             var  messageKind : ISMChatMessageType = .document
             var imageUrl : URL? = nil
@@ -484,7 +484,7 @@ extension ISMMessageView{
                     localIds.removeFirst()
                 })
             }else{
-                viewModel.upload(messageKind: messageKind, conversationId: self.conversationID ?? "", image: nil, document: documentSelected, video: imageUrl, audio: nil, mediaName: mediaName ,isfromDocument: true) { data, filename, size in
+                chatViewModel.upload(messageKind: messageKind, conversationId: self.conversationID ?? "", image: nil, document: documentSelected, video: imageUrl, audio: nil, mediaName: mediaName ,isfromDocument: true) { data, filename, size in
                     if let data = data {
                         
                         sendMediaMessage(messageKind: messageKind, customType: customType.value, mediaId: data.mediaId ?? "", mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
@@ -505,7 +505,7 @@ extension ISMMessageView{
                     }
                 }
             }
-        } else if let audioUrl = viewModel.audioUrl {
+        } else if let audioUrl = chatViewModel.audioUrl {
             //MARK: - AUDIO MESSAGE
             
             let mediaName = "\(UUID()).m4a"
@@ -528,7 +528,7 @@ extension ISMMessageView{
                     localIds.removeFirst()
                 })
             }else{
-                viewModel.upload(messageKind: .audio, conversationId: self.conversationID ?? "", image: nil, document: nil, video: nil, audio: audioUrl, mediaName: mediaName) { data, filename, size in
+                chatViewModel.upload(messageKind: .audio, conversationId: self.conversationID ?? "", image: nil, document: nil, video: nil, audio: audioUrl, mediaName: mediaName) { data, filename, size in
                     if let data = data {
                         
                         sendMediaMessage(messageKind: .audio, customType: ISMChatMediaType.Voice.value, mediaId: mediaId, mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
@@ -570,8 +570,8 @@ extension ISMMessageView{
                                 })
                             })
                         }else{
-                            viewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", image: thumbnailUrl, document: nil, video: nil, audio: nil, mediaName: "\(UUID()).jpg") { thumbnailmedia, _, _ in
-                                viewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: nil, document: nil, video: media.url, audio: nil, mediaName:  mediaName) {  data, filename, size in
+                            chatViewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", image: thumbnailUrl, document: nil, video: nil, audio: nil, mediaName: "\(UUID()).jpg") { thumbnailmedia, _, _ in
+                                chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: nil, document: nil, video: media.url, audio: nil, mediaName:  mediaName) {  data, filename, size in
                                     sendMediaMessage(messageKind: .video, customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: filename, mediaUrl: data?.mediaUrl ?? "", mediaData: size, thubnailUrl: thumbnailmedia?.mediaUrl ?? "", sentAt: sentAt, objectId:  localIds.first ?? "")
                                     localIds.removeFirst()
                                 }
@@ -629,7 +629,7 @@ extension ISMMessageView{
                             localIds.removeFirst()
                         })
                     }else{
-                        viewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: nil, document: nil, video: media.url, audio: nil, mediaName: mediaName) {  data, filename, size in
+                        chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: nil, document: nil, video: media.url, audio: nil, mediaName: mediaName) {  data, filename, size in
                             if let data = data {
                                 sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.thumbnailUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
                                 localIds.removeFirst()
@@ -673,7 +673,7 @@ extension ISMMessageView{
             localIds.append(id)
             
             //3. send messaga api
-            viewModel.sendMessage(messageKind: .location, customType: ISMChatMediaType.Location.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,latitude : latitude,longitude: longitude, placeName: name,placeAddress: placeAddress) { msgId,_ in
+            chatViewModel.sendMessage(messageKind: .location, customType: ISMChatMediaType.Location.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,latitude : latitude,longitude: longitude, placeName: name,placeAddress: placeAddress) { msgId,_ in
                 
                 //4. update messageId locally
                 realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: msgId)
@@ -696,7 +696,7 @@ extension ISMMessageView{
                 localIds.append(id)
                 
                 //3. send message api
-                viewModel.sendMessage(messageKind: .text, customType: ISMChatMediaType.Text.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,isGroup: self.isGroup,groupMembers: self.mentionUsers) { msgId,_ in
+                chatViewModel.sendMessage(messageKind: .text, customType: ISMChatMediaType.Text.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,isGroup: self.isGroup,groupMembers: self.mentionUsers) { msgId,_ in
                     
                     //4. update messageId locally
                     realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: msgId)
@@ -719,7 +719,7 @@ extension ISMMessageView{
     
     
     func sendMediaMessage(messageKind : ISMChatMessageType,customType : String,mediaId : String,mediaName: String,mediaUrl : String,mediaData: Int,thubnailUrl : String,sentAt : Double,objectId : String){
-        viewModel.sendMessage(messageKind: messageKind, customType: customType, conversationId: self.conversationID ?? "", message: mediaUrl, fileName: mediaName, fileSize: mediaData, mediaId: mediaId,thumbnailUrl: thubnailUrl) {messageId,_ in
+        chatViewModel.sendMessage(messageKind: messageKind, customType: customType, conversationId: self.conversationID ?? "", message: mediaUrl, fileName: mediaName, fileSize: mediaData, mediaId: mediaId,thumbnailUrl: thubnailUrl) {messageId,_ in
             
             //4. update messageId locally
             realmManager.updateMsgId(objectId: objectId, msgId: messageId,mediaUrl: mediaUrl,thumbnailUrl: thubnailUrl,mediaSize: mediaData,mediaId: mediaId)
@@ -799,7 +799,7 @@ extension ISMMessageView{
             
             //1. nill data if any
             nilData()
-            viewModel.sendMessage(messageKind: .contact, customType: ISMChatMediaType.Contact.value, conversationId: self.conversationID ?? "", message: "", fileName: nil, fileSize: nil, mediaId: nil,contactInfo: selectedContactToShare,isBroadCastMessage: true,groupcastId: self.groupCastId) { messageId, _ in
+            chatViewModel.sendMessage(messageKind: .contact, customType: ISMChatMediaType.Contact.value, conversationId: self.conversationID ?? "", message: "", fileName: nil, fileSize: nil, mediaId: nil,contactInfo: selectedContactToShare,isBroadCastMessage: true,groupcastId: self.groupCastId) { messageId, _ in
                 reloadBroadCastMessages()
                 //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                 NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
@@ -838,11 +838,11 @@ extension ISMMessageView{
             if messageKind == .video , let videoUrl = videoUrl{
                 ISMChatHelper.generateThumbnailImageURL(from: videoUrl) { thumbnailUrl in
                     //upload thumbnail image
-                    viewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: thumbnailUrl, document: nil, video: nil, audio: nil, mediaName: "\(UUID()).jpg") { thumbnailmedia, thumbnailfilename, thumbnailsize in
+                    chatViewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: thumbnailUrl, document: nil, video: nil, audio: nil, mediaName: "\(UUID()).jpg") { thumbnailmedia, thumbnailfilename, thumbnailsize in
                         //upload video
-                        viewModel.upload(messageKind: .video, conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: nil, video: videoUrl, audio: nil, mediaName: mediaName) {  data, filename, size in
+                        chatViewModel.upload(messageKind: .video, conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: nil, video: videoUrl, audio: nil, mediaName: mediaName) {  data, filename, size in
                             if let data = data {
-                                viewModel.sendMessage(messageKind: messageKind, customType: customType, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,thumbnailUrl: thumbnailmedia?.mediaUrl,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_ in
+                                chatViewModel.sendMessage(messageKind: messageKind, customType: customType, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,thumbnailUrl: thumbnailmedia?.mediaUrl,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_ in
                                     reloadBroadCastMessages()
                                     //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                                     NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
@@ -862,9 +862,9 @@ extension ISMMessageView{
                     }
                 }
             }else{
-                viewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: cameraImage, document: nil, video: nil, audio: nil, mediaName: mediaName) {  data, filename, size in
+                chatViewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: cameraImage, document: nil, video: nil, audio: nil, mediaName: mediaName) {  data, filename, size in
                     if let data = data {
-                        viewModel.sendMessage(messageKind: .photo, customType: ISMChatMediaType.Image.value, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_  in
+                        chatViewModel.sendMessage(messageKind: .photo, customType: ISMChatMediaType.Image.value, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_  in
                             reloadBroadCastMessages()
                             //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                             NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
@@ -882,7 +882,7 @@ extension ISMMessageView{
                     }
                 }
             }
-        }else if let documentSelected = viewModel.documentSelectedFromPicker {
+        }else if let documentSelected = chatViewModel.documentSelectedFromPicker {
             //MARK: - DOCUMENT MESSAGE
             var  messageKind : ISMChatMessageType = .document
             var imageUrl : URL? = nil
@@ -923,9 +923,9 @@ extension ISMMessageView{
 //            localIds.append(id)
 //            
 //            
-            viewModel.upload(messageKind: messageKind, conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: documentSelected, video: imageUrl, audio: nil, mediaName: mediaName ,isfromDocument: true) { data, filename, size in
+            chatViewModel.upload(messageKind: messageKind, conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: documentSelected, video: imageUrl, audio: nil, mediaName: mediaName ,isfromDocument: true) { data, filename, size in
                 if let data = data {
-                    viewModel.sendMessage(messageKind: messageKind, customType: customType.value, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_  in
+                    chatViewModel.sendMessage(messageKind: messageKind, customType: customType.value, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_  in
                         reloadBroadCastMessages()
                         //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                         NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
@@ -943,7 +943,7 @@ extension ISMMessageView{
                     }
                 }
             }
-        } else if let audioUrl = viewModel.audioUrl {
+        } else if let audioUrl = chatViewModel.audioUrl {
             //MARK: - AUDIO MESSAGE
             
             let mediaName = "\(UUID()).m4a"
@@ -958,9 +958,9 @@ extension ISMMessageView{
 //            localIds.append(id)
             
             //3. send message api
-            viewModel.upload(messageKind: .audio, conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: nil, video: nil, audio: audioUrl, mediaName: mediaName) { data, filename, size in
+            chatViewModel.upload(messageKind: .audio, conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: nil, video: nil, audio: audioUrl, mediaName: mediaName) { data, filename, size in
                 if let data = data {
-                    viewModel.sendMessage(messageKind: .audio, customType: ISMChatMediaType.Voice.value, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_ in
+                    chatViewModel.sendMessage(messageKind: .audio, customType: ISMChatMediaType.Voice.value, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_ in
                         reloadBroadCastMessages()
                         //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                         NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
@@ -989,11 +989,11 @@ extension ISMMessageView{
                     
                     ISMChatHelper.generateThumbnailImageURL(from: media.url) { thumbnailUrl in
                         //upload thumbnail image
-                        viewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: thumbnailUrl, document: nil, video: nil, audio: nil, mediaName: "\(UUID()).jpg") { thumbnailmedia, thumbnailfilename, thumbnailsize in
+                        chatViewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: thumbnailUrl, document: nil, video: nil, audio: nil, mediaName: "\(UUID()).jpg") { thumbnailmedia, thumbnailfilename, thumbnailsize in
                             //upload video
-                            viewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: nil, video: media.url, audio: nil, mediaName:  mediaName) {  data, filename, size in
+                            chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: nil, video: media.url, audio: nil, mediaName:  mediaName) {  data, filename, size in
                                 if let data = data {
-                                    viewModel.sendMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,thumbnailUrl: thumbnailmedia?.mediaUrl,caption: media.caption,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_ in
+                                    chatViewModel.sendMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,thumbnailUrl: thumbnailmedia?.mediaUrl,caption: media.caption,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_ in
                                         if media == self.videoSelectedFromPicker.last {
                                             self.videoSelectedFromPicker.removeAll()
                                         }
@@ -1033,9 +1033,9 @@ extension ISMMessageView{
 //                    localIds.append(id)
                     
                     
-                    viewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: nil, video: media.url, audio: nil, mediaName: mediaName) {  data, filename, size in
+                    chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: nil, video: media.url, audio: nil, mediaName: mediaName) {  data, filename, size in
                         if let data = data {
-                            viewModel.sendMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,caption: media.caption,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_ in
+                            chatViewModel.sendMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,caption: media.caption,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_ in
                                 if media == self.videoSelectedFromPicker.last {
                                     self.videoSelectedFromPicker.removeAll()
                                 }
@@ -1073,7 +1073,7 @@ extension ISMMessageView{
 //            localIds.append(id)
             
             //3. send messaga api
-            viewModel.sendMessage(messageKind: .location, customType: ISMChatMediaType.Location.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,latitude : latitude,longitude: longitude, placeName: name,placeAddress: placeAddress,isBroadCastMessage: true,groupcastId: self.groupCastId) { msgId,_ in
+            chatViewModel.sendMessage(messageKind: .location, customType: ISMChatMediaType.Location.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,latitude : latitude,longitude: longitude, placeName: name,placeAddress: placeAddress,isBroadCastMessage: true,groupcastId: self.groupCastId) { msgId,_ in
                 reloadBroadCastMessages()
                 //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                 NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
@@ -1098,7 +1098,7 @@ extension ISMMessageView{
 //                localIds.append(id)
                 
                 //3. send message api
-                viewModel.sendMessage(messageKind: .text, customType: ISMChatMediaType.Text.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,isGroup: self.isGroup,groupMembers: self.mentionUsers,isBroadCastMessage: true,groupcastId: self.groupCastId) { msgId,_ in
+                chatViewModel.sendMessage(messageKind: .text, customType: ISMChatMediaType.Text.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,isGroup: self.isGroup,groupMembers: self.mentionUsers,isBroadCastMessage: true,groupcastId: self.groupCastId) { msgId,_ in
                     reloadBroadCastMessages()
                     //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                     NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
@@ -1128,13 +1128,13 @@ extension ISMMessageView{
         self.placeId = nil
         self.placeAddress = nil
         self.text = ""
-        self.viewModel.audioUrl = nil
+        self.chatViewModel.audioUrl = nil
       //  self.selectedGIF = nil
         self.selectedMsgToReply = MessagesDB()
         self.selectedContactToShare.removeAll()
         self.cameraImageToUse = nil
-        self.viewModel.isBusy = false
-        self.viewModel.documentSelectedFromPicker = nil
+        self.chatViewModel.isBusy = false
+        self.chatViewModel.documentSelectedFromPicker = nil
     }
     
     

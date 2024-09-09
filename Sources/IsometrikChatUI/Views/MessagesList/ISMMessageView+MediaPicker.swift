@@ -16,7 +16,7 @@ import IsometrikChat
         case .success(let urls):
             DispatchQueue.main.async {
                 if videoSelectedFromPicker.count == 0{
-                    viewModel.isBusy = true
+                    chatViewModel.isBusy = true
                     let mediaUploads: [ISMMediaUpload] = urls.map { url in
                         if ISMChatHelper.isVideo(media: url) == true {
                             return ISMMediaUpload(url: url, caption: "", isVideo: true)

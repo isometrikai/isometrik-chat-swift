@@ -18,8 +18,8 @@ extension ISMMessageView{
             Divider()
             HStack{
                 Text("\(forwardMessageSelected.count) Selected")
-                    .font(themeFonts.messageListtoolbarSelected)
-                    .foregroundColor(themeColor.messageListtoolbarSelected)
+                    .font(appearance.fonts.messageListtoolbarSelected)
+                    .foregroundColor(appearance.colorPalette.messageListtoolbarSelected)
                 Spacer()
                 Button {
                     if ISMChatSdk.getInstance().getFramework() == .UIKit{
@@ -29,8 +29,8 @@ extension ISMMessageView{
                     }
                 } label: {
                     Text("Forward")
-                        .foregroundColor(forwardMessageSelected.count == 0 ? themeColor.messageListTextViewPlaceholder : themeColor.messageListtoolbarAction)
-                        .font(themeFonts.messageListtoolbarAction)
+                        .foregroundColor(forwardMessageSelected.count == 0 ? appearance.colorPalette.messageListTextViewPlaceholder : appearance.colorPalette.messageListtoolbarAction)
+                        .font(appearance.fonts.messageListtoolbarAction)
                 }
                 .disabled(forwardMessageSelected.count == 0)
             }
@@ -38,7 +38,7 @@ extension ISMMessageView{
             .padding(.vertical,10)
             .padding(.horizontal,20)
         }
-        .background(themeColor.messageListToolBarBackground)
+        .background(appearance.colorPalette.messageListToolBarBackground)
     }
     
     //MARK: - NO LONGER MEMBER TOOLBAR
@@ -47,15 +47,15 @@ extension ISMMessageView{
         VStack{
             HStack{
                 Text("You can't send messages to this group because you're no longer a member.")
-                    .foregroundColor(themeColor.messageListTextViewPlaceholder)
-                    .font(themeFonts.messageListMessageText)
+                    .foregroundColor(appearance.colorPalette.messageListTextViewPlaceholder)
+                    .font(appearance.fonts.messageListMessageText)
                     .multilineTextAlignment(.center)
             }
             .padding(.vertical,10)
             .padding(.horizontal,20)
         }
         .frame(height: 80)
-        .background(themeColor.messageListToolBarBackground)
+        .background(appearance.colorPalette.messageListToolBarBackground)
     }
     
     //MARK: - DELETE MESSAGE TOOLBAR
@@ -79,7 +79,7 @@ extension ISMMessageView{
             .padding(.horizontal,20)
         }
         .frame(height: 50)
-        .background(themeColor.messageListToolBarBackground)
+        .background(appearance.colorPalette.messageListToolBarBackground)
     }
     
     //MARK: - REPLY MESSAGE TOOLBAR
@@ -88,73 +88,73 @@ extension ISMMessageView{
         HStack {
             Rectangle()
                 .frame(width: 5, height: 50)
-                .foregroundColor(themeColor.messageListReplyToolbarRectangle)
+                .foregroundColor(appearance.colorPalette.messageListReplyToolbarRectangle)
             Spacer()
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text((selectedMsgToReply.senderInfo?.userId ?? selectedMsgToReply.initiatorId) != myUserId ? "\(selectedMsgToReply.senderInfo?.userName ?? selectedMsgToReply.initiatorName)" : ConstantStrings.you)
-                        .font(themeFonts.messageListReplyToolbarHeader)
-                        .foregroundColor(themeColor.messageListReplyToolbarHeader)
+                        .font(appearance.fonts.messageListReplyToolbarHeader)
+                        .foregroundColor(appearance.colorPalette.messageListReplyToolbarHeader)
                     
                     let msg = selectedMsgToReply.body
                     switch ISMChatHelper.getMessageType(message: selectedMsgToReply) {
                     case .video:
                         Label {
                             Text(selectedMsgToReply.metaData?.captionMessage != nil ? (selectedMsgToReply.metaData?.captionMessage ?? "Video") : "Video")
-                                .font(themeFonts.messageListReplyToolbarDescription)
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                .font(appearance.fonts.messageListReplyToolbarDescription)
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                                 .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                         } icon: {
-                            themeImages.replyVideoIcon
+                            appearance.images.replyVideoIcon
                                 .resizable()
                                 .frame(width: 14,height: 12)
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                         }
                     case .photo:
                         Label {
                             Text(selectedMsgToReply.metaData?.captionMessage != nil ? (selectedMsgToReply.metaData?.captionMessage ?? "Photo") : "Photo")
-                                .font(themeFonts.messageListReplyToolbarDescription)
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                .font(appearance.fonts.messageListReplyToolbarDescription)
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                                 .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                         } icon: {
-                            themeImages.replyCameraIcon
+                            appearance.images.replyCameraIcon
                                 .resizable()
                                 .frame(width: 14,height: 12)
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                         }
                     case .audio:
                         Label {
                             Text("Audio")
-                                .font(themeFonts.messageListReplyToolbarDescription)
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                .font(appearance.fonts.messageListReplyToolbarDescription)
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                                 .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                         } icon: {
-                            themeImages.replyAudioIcon
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                            appearance.images.replyAudioIcon
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                         }
                     case .document:
                         Label {
                             let str = URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? "")?.lastPathComponent.components(separatedBy: "_").last
                             Text(str ?? "Document")
-                                .font(themeFonts.messageListReplyToolbarDescription)
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                .font(appearance.fonts.messageListReplyToolbarDescription)
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                                 .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                         } icon: {
-                            themeImages.replyDocumentIcon
+                            appearance.images.replyDocumentIcon
                                 .resizable()
                                 .frame(width: 14,height: 12)
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                         }
                     case .location:
                         Label {
                             let location = "\(selectedMsgToReply.attachments.first?.title ?? "Location") \(selectedMsgToReply.attachments.first?.address ?? "")"
                             Text(location)
-                                .font(themeFonts.messageListReplyToolbarDescription)
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                .font(appearance.fonts.messageListReplyToolbarDescription)
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                                 .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                         } icon: {
-                            themeImages.replyLocationIcon
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                            appearance.images.replyLocationIcon
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                         }
                     case .contact:
                         Label {
@@ -162,26 +162,26 @@ extension ISMMessageView{
                                 if count == 1{
                                     let contactText = "\(selectedMsgToReply.metaData?.contacts.first?.contactName ?? "")"
                                     Text(contactText)
-                                        .font(themeFonts.messageListReplyToolbarDescription)
-                                        .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                        .font(appearance.fonts.messageListReplyToolbarDescription)
+                                        .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                                         .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                                 }else{
                                     let contactText = "\(selectedMsgToReply.metaData?.contacts.first?.contactName ?? "") and \(count - 1) other contacts"
                                     Text(contactText)
-                                        .font(themeFonts.messageListReplyToolbarDescription)
-                                        .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                        .font(appearance.fonts.messageListReplyToolbarDescription)
+                                        .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                                         .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                                 }
                             }else{
                                 let contactText = "Contacts"
                                 Text(contactText)
-                                    .font(themeFonts.messageListReplyToolbarDescription)
-                                    .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                    .font(appearance.fonts.messageListReplyToolbarDescription)
+                                    .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                                     .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                             }
                         } icon: {
-                            themeImages.replyContactIcon
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                            appearance.images.replyContactIcon
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                         }
                     case .sticker:
                         AnimatedImage(url: URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? ""))
@@ -190,40 +190,40 @@ extension ISMMessageView{
                     case .gif:
                         Label {
                             Text("GIF")
-                                .font(themeFonts.messageListReplyToolbarDescription)
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                .font(appearance.fonts.messageListReplyToolbarDescription)
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                                 .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                         } icon: {
-                            themeImages.replyGifIcon
+                            appearance.images.replyGifIcon
                                 .resizable()
                                 .frame(width: 20, height: 15)
                         }
                     case .AudioCall:
                         Label {
                             Text("Audio Call")
-                                .font(themeFonts.messageListReplyToolbarDescription)
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                .font(appearance.fonts.messageListReplyToolbarDescription)
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                                 .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                         } icon: {
-                            themeImages.audioCall
+                            appearance.images.audioCall
                                 .resizable()
                                 .frame(width: 20, height: 15)
                         }
                     case .VideoCall:
                         Label {
                             Text("Video Call")
-                                .font(themeFonts.messageListReplyToolbarDescription)
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                                .font(appearance.fonts.messageListReplyToolbarDescription)
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                                 .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                         } icon: {
-                            themeImages.videoCall
+                            appearance.images.videoCall
                                 .resizable()
                                 .frame(width: 20, height: 15)
                         }
                     default:
                         Text(msg)
-                            .font(themeFonts.messageListReplyToolbarDescription)
-                            .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                             .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                             .overlay(
                                 GeometryReader { proxy in
@@ -246,7 +246,7 @@ extension ISMMessageView{
                         .cornerRadius(5)
                 }else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .document{
                     if let documentUrl = URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? ""){
-                        themeImages.pdfLogo
+                        appearance.images.pdfLogo
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 40, height: 40, alignment: .center)
@@ -269,14 +269,14 @@ extension ISMMessageView{
                 Button {
                     selectedMsgToReply = MessagesDB()
                 } label: {
-                    themeImages.cancelReplyMessageSelected
+                    appearance.images.cancelReplyMessageSelected
                         .resizable()
                         .frame(width: 20, height: 20)
                 }
                 .padding()
             }
         }
-        .background(themeColor.messageListReplyToolBarBackground)
+        .background(appearance.colorPalette.messageListReplyToolBarBackground)
         .frame(height: 50)
     }
     
@@ -304,9 +304,9 @@ extension ISMMessageView{
                     let height: CGFloat = 20
                     
                     HStack {
-                        if !viewModel.isRecording {
+                        if !chatViewModel.isRecording {
                             Button(action: { stateViewModel.showActionSheet = true }) {
-                                themeImages.addAttcahment
+                                appearance.images.addAttcahment
                                     .resizable()
                                     .frame(width: 20, height: 20)
                                     .padding(.horizontal, 5)
@@ -315,11 +315,11 @@ extension ISMMessageView{
                             HStack(spacing: 5) {
                                 textView()
                                 
-                                if showGifOption, textFieldtxt.isEmpty {
+                                if chatFeatures.contains(.gif), textFieldtxt.isEmpty {
                                     Button {
                                         stateViewModel.showGifPicker = true
                                     } label: {
-                                        themeImages.addSticker
+                                        appearance.images.addSticker
                                             .resizable()
                                             .frame(width: 15, height: 15)
                                             .padding(.horizontal, 10)
@@ -328,7 +328,7 @@ extension ISMMessageView{
                             }
                             .overlay(
                                 RoundedRectangle(cornerRadius: 16)
-                                    .stroke(themeColor.messageListTextViewBoarder, lineWidth: 1)
+                                    .stroke(appearance.colorPalette.messageListTextViewBoarder, lineWidth: 1)
                             )
                         } else {
                             audioToolbarContent()
@@ -340,7 +340,7 @@ extension ISMMessageView{
                 .padding(.top, 10)
                 .padding(.bottom, 20)
                 .padding(.horizontal, 10)
-                .background(themeColor.messageListToolBarBackground)
+                .background(appearance.colorPalette.messageListToolBarBackground)
             }
         }
     }
@@ -349,43 +349,43 @@ extension ISMMessageView{
     func audioToolbarContent() -> some View {
         HStack{
             if stateViewModel.audioLocked == false {
-                themeImages.addAudio
+                appearance.images.addAudio
                     .resizable()
                     .frame(width: 24, height: 24)
                     .foregroundColor(stateViewModel.isShowingRedTimerStart ? .red : .clear)
                     .padding(.leading)
                 
-                Text(viewModel.timerValue)
-                    .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListHeaderTitle)
+                Text(chatViewModel.timerValue)
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                 
                 Spacer()
                 
                 Text("Slide to cancel")
                     .foregroundStyle(Color.gray)
-                    .font(themeFonts.messageListMessageText)
+                    .font(appearance.fonts.messageListMessageText)
                 
-                themeImages.chevranbackward
+                appearance.images.chevranbackward
                     .tint(.gray)
             } else {
                 VStack(alignment: .leading) {
-                    Text(viewModel.timerValue)
-                        .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.messageListHeaderTitle)
+                    Text(chatViewModel.timerValue)
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                     HStack(alignment: .center) {
                         Button(action: cancelRecording) {
-                            themeImages.trash
+                            appearance.images.trash
                                 .resizable()
                                 .frame(width: 25, height: 28)
-                                .foregroundColor(themeColor.messageListHeaderTitle)
+                                .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                         }
                         Spacer()
                         Text("Audio Locked")
-                            .foregroundColor(themeColor.messageListTextViewPlaceholder)
-                            .font(themeFonts.messageListMessageText)
+                            .foregroundColor(appearance.colorPalette.messageListTextViewPlaceholder)
+                            .font(appearance.fonts.messageListMessageText)
                         Spacer()
                         Button(action: stopRecording) {
-                            themeImages.sendMessage
+                            appearance.images.sendMessage
                                 .resizable()
                                 .frame(width: 32, height: 32)
                         }
@@ -398,9 +398,9 @@ extension ISMMessageView{
     // Separate sendMessage button for readability and isolation
     func sendMessageButton() -> some View {
         VStack{
-            if !textFieldtxt.isEmpty || showAudioOption == false {
+            if !textFieldtxt.isEmpty || chatFeatures.contains(.audio) == false {
                 Button(action: { sendMessage(msgType: .text) }) {
-                    themeImages.sendMessage
+                    appearance.images.sendMessage
                         .resizable()
                         .frame(width: 32, height: 32)
                         .padding(.horizontal, 5)
@@ -408,13 +408,13 @@ extension ISMMessageView{
             } else {
                 ZStack {
                     if !stateViewModel.audioLocked {
-                        if viewModel.isRecording {
+                        if chatViewModel.isRecording {
                             VStack {
-                                themeImages.audioLock
+                                appearance.images.audioLock
                                     .padding()
                                 Spacer()
                             }
-                            .background(themeColor.messageListToolBarBackground)
+                            .background(appearance.colorPalette.messageListToolBarBackground)
                             .cornerRadius(20, corners: .topLeft)
                             .cornerRadius(20, corners: .topRight)
                             .frame(width: 30, height: 50)
@@ -431,28 +431,28 @@ extension ISMMessageView{
     // Cancel recording action handler
     func cancelRecording() {
         if stateViewModel.isClicked {
-            viewModel.isRecording = false
+            chatViewModel.isRecording = false
             stateViewModel.isClicked = false
             stateViewModel.audioLocked = false
-            viewModel.stopRecording { _ in }
+            chatViewModel.stopRecording { _ in }
         }
     }
 
     // Stop recording action handler
     func stopRecording() {
         if stateViewModel.isClicked {
-            viewModel.isRecording = false
+            chatViewModel.isRecording = false
             stateViewModel.isClicked = false
             stateViewModel.audioLocked = false
-            viewModel.stopRecording { url in
-                viewModel.audioUrl = url
+            chatViewModel.stopRecording { url in
+                chatViewModel.audioUrl = url
             }
         }
     }
 
     
     func textView() -> some View{
-        ResizeableTextView(text: $textFieldtxt, height: $textViewHeight, typingStarted: $stateViewModel.keyboardFocused, placeholderText: "Type a message", showMentionList: $stateViewModel.showMentionList, filteredMentionUserCount: filteredUsers.count, mentionUser: $selectedUserToMention, placeholderColor: themeColor.messageListTextViewPlaceholder, textViewColor: themeColor.messageListTextViewText)
+        ResizeableTextView(text: $textFieldtxt, height: $textViewHeight, typingStarted: $stateViewModel.keyboardFocused, placeholderText: "Type a message", showMentionList: $stateViewModel.showMentionList, filteredMentionUserCount: filteredUsers.count, mentionUser: $selectedUserToMention, placeholderColor: appearance.colorPalette.messageListTextViewPlaceholder, textViewColor: appearance.colorPalette.messageListTextViewText)
             .frame(height: textViewHeight < 160 ? self.textViewHeight : 160)
     }
     
@@ -465,9 +465,9 @@ extension ISMMessageView{
                             avatar: user.userProfileImageUrl ?? "",
                             showOnlineIndicator: false,
                             size: CGSize(width: 29, height: 29),
-                            userName: userName,font: themeFonts.chatListUserMessage)
+                            userName: userName,font: appearance.fonts.chatListUserMessage)
                         Text(userName)
-                            .font(themeFonts.chatListUserMessage)
+                            .font(appearance.fonts.chatListUserMessage)
                         Spacer()
                     }
                     .onTapGesture {
@@ -532,16 +532,16 @@ extension ISMMessageView{
         VStack{
             Divider()
             Text("Accept message request from \(self.opponenDetail?.userName ?? "")?")
-                .font(themeFonts.messageListMessageText)
-                .foregroundColor(themeColor.chatListUserName)
+                .font(appearance.fonts.messageListMessageText)
+                .foregroundColor(appearance.colorPalette.chatListUserName)
                 .padding(.top,34)
                 .padding(.horizontal,15)
                 .padding(.bottom,10)
                 .multilineTextAlignment(.leading)
                 
             Text("If you accept, you both can see information such as when you’ve read messages.")
-                .font(themeFonts.messageListMessageText)
-                .foregroundColor(themeColor.chatListUserMessage)
+                .font(appearance.fonts.messageListMessageText)
+                .foregroundColor(appearance.colorPalette.chatListUserMessage)
                 .padding(.horizontal,15)
                 .padding(.bottom,29)
                 .multilineTextAlignment(.leading)
@@ -552,27 +552,27 @@ extension ISMMessageView{
 //                    self.messageVCDelegate?.navigateBack(isFromProfile: self.fromProfile ?? false, isfromBroadcast: self.fromBroadCastFlow ?? false)
                 } label: {
                     Text("Reject")
-                        .font(themeFonts.navigationBarTitle)
-                        .foregroundColor(themeColor.chatListUnreadMessageCountBackground)
+                        .font(appearance.fonts.navigationBarTitle)
+                        .foregroundColor(appearance.colorPalette.chatListUnreadMessageCountBackground)
                         .frame(maxWidth: .infinity, minHeight: 49)
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(themeColor.chatListUnreadMessageCountBackground, lineWidth: 1)
+                                .stroke(appearance.colorPalette.chatListUnreadMessageCountBackground, lineWidth: 1)
                         )
                 }
                 
                 Button {
                     //call api
-                    viewModel.acceptRequestToAllowMessage(conversationId: self.conversationID ?? "", completion: { _ in
+                    chatViewModel.acceptRequestToAllowMessage(conversationId: self.conversationID ?? "", completion: { _ in
                         NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
                         getConversationDetail()
                     })
                 } label: {
                     Text("Accept")
-                        .font(themeFonts.navigationBarTitle)
+                        .font(appearance.fonts.navigationBarTitle)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity, minHeight: 49)
-                        .background(themeColor.chatListUnreadMessageCountBackground)
+                        .background(appearance.colorPalette.chatListUnreadMessageCountBackground)
                         .cornerRadius(10)
                 }
                 

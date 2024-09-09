@@ -19,15 +19,15 @@ extension ISMMessageView{
             Button(action: {
                 ISMChatHelper.print("recording done")
                 if stateViewModel.isClicked == true{
-                    viewModel.isRecording = false
+                    chatViewModel.isRecording = false
                     stateViewModel.isClicked = false
-                    viewModel.stopRecording { url in
-                        viewModel.audioUrl = url
+                    chatViewModel.stopRecording { url in
+                        chatViewModel.audioUrl = url
                     }
                 }
             }) {
                 ZStack {
-                    themeImages.addAudio
+                    appearance.images.addAudio
                         .resizable()
                         .frame(width: 24, height: 24)
                         .padding(.horizontal,5)
@@ -37,11 +37,11 @@ extension ISMMessageView{
                 LongPressGesture(minimumDuration: 0.1)
                     .onEnded { value in
                         ISMChatHelper.print("Tap currently holded")
-                        if isMessagingEnabled() == true && viewModel.isBusy == false{
+                        if isMessagingEnabled() == true && chatViewModel.isBusy == false{
                             if stateViewModel.audioPermissionCheck == true{
                                 stateViewModel.isClicked = true
-                                viewModel.isRecording = true
-                                viewModel.startRecording()
+                                chatViewModel.isRecording = true
+                                chatViewModel.startRecording()
                             }else{
                                 ISMChatHelper.print("Access Denied for audio permission")
                             }
@@ -53,12 +53,12 @@ extension ISMMessageView{
                             if value.translation.width < -50 {
                                 UINotificationFeedbackGenerator().notificationOccurred(.warning)
                                 if stateViewModel.isClicked == true{
-                                    viewModel.isRecording = false
+                                    chatViewModel.isRecording = false
                                     stateViewModel.isClicked = false
-                                    viewModel.stopRecording { url in
+                                    chatViewModel.stopRecording { url in
                                     }
                                 }
-                            }else if viewModel.isRecording && value.translation.height < -50 {
+                            }else if chatViewModel.isRecording && value.translation.height < -50 {
                                 UINotificationFeedbackGenerator().notificationOccurred(.success)
                                 print("Dragged up")
                                 stateViewModel.audioLocked = true
@@ -74,11 +74,11 @@ extension ISMMessageView{
         if forwardMessageSelected.contains(where: { msg in
             msg.messageId == message.messageId
         }){
-            return   themeImages.selected
+            return   appearance.images.selected
                 .resizable()
                 .frame(width: 20, height: 20)
         }else{
-            return    themeImages.deselected
+            return    appearance.images.deselected
                 .resizable()
                 .frame(width: 20, height: 20)
         }
@@ -89,11 +89,11 @@ extension ISMMessageView{
         if deleteMessage.contains(where: { msg in
             msg.messageId == message.messageId
         }) {
-            return  themeImages.selected
+            return  appearance.images.selected
                 .resizable()
                 .frame(width: 20, height: 20)
         } else {
-            return themeImages.deselected
+            return appearance.images.deselected
                 .resizable()
                 .frame(width: 20, height: 20)
         }
@@ -104,7 +104,7 @@ extension ISMMessageView{
         return Button(action: {
             realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
         }, label: {
-            themeImages.scrollToBottomArrow
+            appearance.images.scrollToBottomArrow
                 .resizable()
                 .frame(width: 32, height: 32)
                 .padding()
@@ -136,7 +136,7 @@ extension ISMMessageView{
         Button(action: {
             dismiss()
         }) {
-            themeImages.backButton
+            appearance.images.backButton
                 .resizable()
                 .frame(width: 18, height: 18)
         }
@@ -157,19 +157,19 @@ extension ISMMessageView{
                     showOnlineIndicator: false,
                     size: CGSize(width: 40, height: 40),
                     userName: groupConversationTitle ?? "",
-                    font: themeFonts.messageListMessageText
+                    font: appearance.fonts.messageListMessageText
                 )
             }else{
                 BroadCastAvatarView(
                     size: CGSize(width: 40, height: 40),
                     broadCastImageSize: CGSize(width: 17.7, height: 17.7),
-                    broadCastLogo: themeImages.broadCastLogo
+                    broadCastLogo: appearance.images.broadCastLogo
                 )
             }
             Text(getBroadcastTitle())
                 .frame(width: 200,alignment: .leading)
-                .foregroundColor(themeColor.messageListHeaderTitle)
-                .font(themeFonts.messageListHeaderTitle)
+                .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+                .font(appearance.fonts.messageListHeaderTitle)
         }
     }
 
@@ -197,12 +197,12 @@ extension ISMMessageView{
             VStack(alignment: .leading) {
                 Text(getProfileTitle())
                     .frame(width: 200,alignment: .leading)
-                    .foregroundColor(themeColor.messageListHeaderTitle)
-                    .font(themeFonts.messageListHeaderTitle)
+                    .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+                    .font(appearance.fonts.messageListHeaderTitle)
                 
                 Text(getProfileSubtitle())
-                    .foregroundColor(themeColor.messageListHeaderDescription)
-                    .font(themeFonts.messageListHeaderDescription)
+                    .foregroundColor(appearance.colorPalette.messageListHeaderDescription)
+                    .font(appearance.fonts.messageListHeaderDescription)
                     .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.3)))
             }
         }
@@ -299,21 +299,21 @@ extension ISMMessageView{
                 }else{
                     if self.conversationDetail != nil{
                         //calling Button
-                        if showVideoCallingOption == true{
+                        if chatFeatures.contains(.videocall) == true{
                             Button {
                                 calling(type: .VideoCall)
                             } label: {
-                                themeImages.videoCall
+                                appearance.images.videoCall
                                     .resizable()
                                     .frame(width: 26, height: 26, alignment: .center)
                             }
                         }
                         
-                        if showAudioCallingOption == true{
+                        if chatFeatures.contains(.audiocall) == true{
                             Button {
                                 calling(type: .AudioCall)
                             } label: {
-                                themeImages.audioCall
+                                appearance.images.audioCall
                                     .resizable()
                                     .frame(width: 26, height: 26, alignment: .center)
                             }
@@ -325,7 +325,7 @@ extension ISMMessageView{
                                     blockUserButton()
                                 }
                             } label: {
-                                themeImages.threeDots
+                                appearance.images.threeDots
                                     .resizable()
                                     .frame(width: 5, height: 20, alignment: .center)
                             }
@@ -365,7 +365,7 @@ extension ISMMessageView{
             stateViewModel.clearThisChat = true
         } label: {
             HStack(spacing: 10){
-                themeImages.trash
+                appearance.images.trash
                 Text("Clear Chat")
             }
         }
@@ -378,7 +378,7 @@ extension ISMMessageView{
             }
         } label: {
             HStack(spacing: 10){
-                themeImages.blockIcon
+                appearance.images.blockIcon
                 if self.conversationDetail?.conversationDetails?.messagingDisabled == true && realmManager.messages.last?.last?.initiatorId == userData.userId{
                     Text("UnBlock User")
                 }else{

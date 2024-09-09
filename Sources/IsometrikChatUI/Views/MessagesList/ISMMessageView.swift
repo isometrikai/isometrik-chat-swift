@@ -34,10 +34,22 @@ public struct ISMMessageView: View {
     
     @Environment(\.dismiss) public var dismiss
     
-    @ObservedObject public var viewModel = ChatsViewModel()
+    @ObservedObject public var chatViewModel = ChatsViewModel()
     public var conversationViewModel: ConversationViewModel
-    
     @ObservedObject public var stateViewModel = UIStateViewModel()
+    
+    @EnvironmentObject public var realmManager : RealmManager
+    @EnvironmentObject public var networkMonitor: NetworkMonitor
+    
+    let chatFeatures = ISMChatSdkUI.getInstance().getChatProperties().features
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    let userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    
+    let columns = [GridItem(.flexible(minimum: 10))]
+    let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    let onlinetimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
+    
+    
     
     @State var text = ""
     @State var textFieldtxt = ""
@@ -53,7 +65,7 @@ public struct ISMMessageView: View {
     
     
     @State var selectedSheetIndex : Int = 0
-    public let columns = [GridItem(.flexible(minimum: 10))]
+    
     
     @State var selectedContactToShare : [ISMChatPhoneContact] = []
    
@@ -62,7 +74,7 @@ public struct ISMMessageView: View {
     @State var conversationDetail : ISMChatConversationDetail?
     
     
-    @EnvironmentObject public var realmManager : RealmManager
+    
     
     @State var previousAudioRef: AudioPlayViewModel?
     
@@ -77,7 +89,7 @@ public struct ISMMessageView: View {
    
     @State var forwardMessageSelected : [MessagesDB] = []
     
-    @EnvironmentObject public var networkMonitor: NetworkMonitor
+    
     
     
     @State var memberString : String?
@@ -97,11 +109,11 @@ public struct ISMMessageView: View {
     @State var startDate = Date.now
     @State var timeElapsed: Int = 0
    
-    public let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    
     
     @State var startTimeForOnline = Date.now
     @State var timeElapsedForOnline: Int = 0
-    public let onlinetimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
+    
     
     
     
@@ -119,10 +131,7 @@ public struct ISMMessageView: View {
     @State var mentionUsers: [ISMChatGroupMember] = []
     @State var filteredUsers: [ISMChatGroupMember] = []
     
-    @State var showAudioOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.audio)
-    @State var showAudioCallingOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.audiocall)
-    @State var showVideoCallingOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.videocall)
-    @State var showGifOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.gif)
+    
     
     
     @State var videoSelectedFromPicker : [ISMMediaUpload] = []
@@ -137,11 +146,7 @@ public struct ISMMessageView: View {
     
     @State var parentMsgToScroll : MessagesDB? =  nil
     
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State var themePlaceholder = ISMChatSdkUI.getInstance().getAppAppearance().appearance.placeholders
-    @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    
     
     @State var postIdToNavigate : String = ""
     
@@ -156,7 +161,7 @@ public struct ISMMessageView: View {
     public var body: some View {
         VStack{
             ZStack{
-                themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
+                appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack(spacing: 0) {
                     if ISMChatSdkUI.getInstance().getChatProperties().customJobCardInMessageList == true {
                         if let conversation = self.conversationDetail?.conversationDetails,
@@ -195,9 +200,9 @@ public struct ISMMessageView: View {
                         if realmManager.allMessages?.count == 0 || realmManager.messages.count == 0{
                             //
                             if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true{
-                                themePlaceholder.messageListPlaceholder
+                                appearance.placeholders.messageListPlaceholder
                             }else{
-                                themeImages.noMessagePlaceholder
+                                appearance.images.noMessagePlaceholder
                                     .resizable()
                                     .frame(width: 206, height: 144, alignment: .center)
                             }
@@ -244,16 +249,16 @@ public struct ISMMessageView: View {
                     removeObservers()
                 }
                 //zstack views
-                if viewModel.isBusy{
+                if chatViewModel.isBusy{
                     //Custom Progress View
-                    ActivityIndicatorView(isPresented: $viewModel.isBusy)
+                    ActivityIndicatorView(isPresented: $chatViewModel.isBusy)
                 }
                 if stateViewModel.messageCopied == true{
                     Text("Message copied")
-                        .font(themeFonts.alertText)
+                        .font(appearance.fonts.alertText)
                         .padding()
-                        .background(themeColor.alertBackground)
-                        .foregroundColor(themeColor.alertText)
+                        .background(appearance.colorPalette.alertBackground)
+                        .foregroundColor(appearance.colorPalette.alertText)
                         .cornerRadius(5)
                         .onAppear {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -352,7 +357,7 @@ public struct ISMMessageView: View {
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.memberAddAndRemove)) { _ in
             self.getConversationDetail()
         }
-        .onChange(of: viewModel.documentSelectedFromPicker) { newValue in
+        .onChange(of: chatViewModel.documentSelectedFromPicker) { newValue in
             sendMessageIfDocumentSelected()
         }
         .onChange(of: selectedReaction) { newValue in
@@ -396,7 +401,7 @@ public struct ISMMessageView: View {
                 sendMessage(msgType: .photo)
             }
         })
-        .onChange(of: viewModel.audioUrl) { newValue in
+        .onChange(of: chatViewModel.audioUrl) { newValue in
             sendMessageIfAudioUrl()
         }
         .onChange(of: stateViewModel.keyboardFocused) { newValue in
@@ -423,7 +428,7 @@ public struct ISMMessageView: View {
                 stateViewModel.navigateToAddParticipantsInGroupViaDelegate = false
             }
         }
-        .onChange(of: viewModel.timerValue, perform: { newValue in
+        .onChange(of: chatViewModel.timerValue, perform: { newValue in
             withAnimation {
                 stateViewModel.isShowingRedTimerStart.toggle()
             }
@@ -458,7 +463,7 @@ public struct ISMMessageView: View {
             if selectedSheetIndex == 0 {
                 ISMCameraView(media : $cameraImageToUse, isShown: $stateViewModel.showSheet, uploadMedia: $stateViewModel.uploadMedia)
             } else if selectedSheetIndex == 1 {
-                DocumentPicker(documents: $viewModel.documentSelectedFromPicker, isShown: self.$stateViewModel.showSheet)
+                DocumentPicker(documents: $chatViewModel.documentSelectedFromPicker, isShown: self.$stateViewModel.showSheet)
             } else{
                 ISMShareContactList(dissmiss: $stateViewModel.showSheet , selectedContact: self.$selectedContactToShare, shareContact: $stateViewModel.shareContact)
             }
@@ -472,10 +477,10 @@ public struct ISMMessageView: View {
                 ProgressView()
             }
         )
-        .background(NavigationLink("", destination: ISMForwardToContactView(viewModel : self.viewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage),isActive: $stateViewModel.movetoForwardList))
+        .background(NavigationLink("", destination: ISMForwardToContactView(viewModel : self.chatViewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage),isActive: $stateViewModel.movetoForwardList))
         .background(NavigationLink("", destination: ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId,placeName : $placeName, address: $placeAddress),isActive: $stateViewModel.showLocationSharing))
 //        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
-        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.viewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager),isActive: $stateViewModel.navigateToProfile))
+        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager),isActive: $stateViewModel.navigateToProfile))
 //        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))
         .background(NavigationLink("", destination: ISMImageAndViderEditor(media: $videoSelectedFromPicker, sendToUser: opponenDetail?.userName ?? "",sendMedia: $stateViewModel.sendMedia),isActive: $stateViewModel.navigateToImageEditor))
         .onReceive(timer, perform: { firedDate in
@@ -528,7 +533,7 @@ public struct ISMMessageView: View {
                 getConversationDetail()
                 reload()
             }
-            if showAudioOption == true{
+            if chatFeatures.contains(.audio) == true{
                 checkAudioPermission()
             }
             realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
@@ -556,7 +561,7 @@ public struct ISMMessageView: View {
     //locally getting messages here
     func getMessages() {
         realmManager.getMsgsThroughConversationId(conversationId: self.conversationID ?? "")
-        self.realmManager.messages = viewModel.getSectionMessage(for: self.realmManager.allMessages ?? [])
+        self.realmManager.messages = chatViewModel.getSectionMessage(for: self.realmManager.allMessages ?? [])
         if self.realmManager.messages.count > 0 {
             if (self.realmManager.messages.last?.count ?? 0) > 0 {
                 if let msgObj = self.realmManager.messages.last?.last {
@@ -589,7 +594,7 @@ public struct ISMMessageView: View {
     func getConversationDetail(){
         if self.conversationID != nil && self.conversationID != ""{
             //GET CONVERSATION DETAIL API
-            viewModel.getConversationDetail(conversationId: self.conversationID ?? "", isGroup: self.isGroup ?? false) { data in
+            chatViewModel.getConversationDetail(conversationId: self.conversationID ?? "", isGroup: self.isGroup ?? false) { data in
                 self.conversationDetail = data
                 if isGroup == true{
                     if let members = data?.conversationDetails?.members {
@@ -633,13 +638,13 @@ public struct ISMMessageView: View {
             lastSent = ""
         }
         if let groupCastId = groupCastId, !groupCastId.isEmpty{
-            viewModel.getBroadCastMessages(groupcastId: groupCastId, lastMessageTimestamp: lastSent ?? "") { msg in
+            chatViewModel.getBroadCastMessages(groupcastId: groupCastId, lastMessageTimestamp: lastSent ?? "") { msg in
                 if let msg = msg {
-                    self.viewModel.allMessages = msg.messages
-                    self.viewModel.allMessages = self.viewModel.allMessages?.filter { message in
+                    self.chatViewModel.allMessages = msg.messages
+                    self.chatViewModel.allMessages = self.chatViewModel.allMessages?.filter { message in
                         return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
                     }
-                    self.realmManager.manageMessagesList(arr: self.viewModel.allMessages ?? [])
+                    self.realmManager.manageMessagesList(arr: self.chatViewModel.allMessages ?? [])
                     realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
                     self.getMessages()
                     realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
@@ -648,7 +653,7 @@ public struct ISMMessageView: View {
                 }
                 //only call read api when there are any new msg in conversation
                 if networkMonitor.isConnected{
-                    viewModel.markMessagesAsRead(conversationId: self.conversationID ?? "")
+                    chatViewModel.markMessagesAsRead(conversationId: self.conversationID ?? "")
                 }
                 self.sendLocalMsg()
             }
@@ -664,10 +669,10 @@ public struct ISMMessageView: View {
             lastSent = ""
         }
         if let conversationID = conversationID , !conversationID.isEmpty{
-            viewModel.getMessages(conversationId: conversationID ,lastMessageTimestamp: lastSent) { msg in
+            chatViewModel.getMessages(conversationId: conversationID ,lastMessageTimestamp: lastSent) { msg in
                 if let msg = msg {
-                    self.viewModel.allMessages = msg.messages
-                    self.viewModel.allMessages = self.viewModel.allMessages?.filter { message in
+                    self.chatViewModel.allMessages = msg.messages
+                    self.chatViewModel.allMessages = self.chatViewModel.allMessages?.filter { message in
                         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
                             return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated" && message.action != ISMChatActionType.conversationCreated.value
                         }else if isGroup == false {
@@ -676,7 +681,7 @@ public struct ISMMessageView: View {
                             return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
                         }
                     }
-                    self.realmManager.manageMessagesList(arr: self.viewModel.allMessages ?? [])
+                    self.realmManager.manageMessagesList(arr: self.chatViewModel.allMessages ?? [])
                     realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
                     self.getMessages()
                     realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
@@ -692,7 +697,7 @@ public struct ISMMessageView: View {
         }
         //unread count is not getting updated
         if networkMonitor.isConnected{
-            viewModel.markMessagesAsRead(conversationId: self.conversationID ?? "")
+            chatViewModel.markMessagesAsRead(conversationId: self.conversationID ?? "")
         }
     }
     
@@ -709,7 +714,7 @@ public struct ISMMessageView: View {
     }
     
     private func executeRepeatedly() {
-        viewModel.getConversationDetail(conversationId: self.conversationID ?? "", isGroup: self.isGroup ?? false) { data in
+        chatViewModel.getConversationDetail(conversationId: self.conversationID ?? "", isGroup: self.isGroup ?? false) { data in
             self.conversationDetail = data
         }
     }
