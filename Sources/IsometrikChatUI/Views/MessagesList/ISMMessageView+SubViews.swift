@@ -45,9 +45,9 @@ extension ISMMessageView{
                             }else{
                                 defaultMessageView(message: message, scrollReader: scrollReader, viewWidth: viewWidth)
                                     .onTapGesture {
-                                        if showforwardMultipleMessage == true{
+                                        if stateViewModel.showforwardMultipleMessage == true{
                                             self.forwardMessageView(message: message)
-                                        }else if showDeleteMultipleMessage == true{
+                                        }else if stateViewModel.showDeleteMultipleMessage == true{
                                             self.deleteMsgFromView(message: message)
                                         }else {
                                             scrollToParentMessage(message: message, scrollReader: scrollReader)
@@ -58,20 +58,20 @@ extension ISMMessageView{
                             .onAppear{
                                 //hide scroll to bottom button at last message
                                 if message.id ==  realmManager.messages.last?.last?.id{
-                                    showScrollToBottomView = false
+                                    stateViewModel.showScrollToBottomView = false
                                 }
                             }
                             .onDisappear{
                                 //show scroll to bottom button if not at last message
                                 if message.id.description ==  realmManager.messages.last?.last?.id.description{
-                                    showScrollToBottomView = true
+                                    stateViewModel.showScrollToBottomView = true
                                 }
                             }
                     }
                 }//:SECTION
             }//:ForEach
             .onAppear(perform: {
-                if onLoad == true{
+                if stateViewModel.onLoad == true{
                     if let messageIdToScroll =  realmManager.messages.last?.last?.id.description{
                         scrollTo(messageId: messageIdToScroll, anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader)
                     }
@@ -102,10 +102,10 @@ extension ISMMessageView{
     
     func defaultMessageView(message : MessagesDB,scrollReader : ScrollViewProxy,viewWidth : CGFloat) -> some View{
         HStack{
-            if showforwardMultipleMessage == true && (ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall){
+            if stateViewModel.showforwardMultipleMessage == true && (ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall){
                 multipleForwardMessageButtonView(message: message)
             }
-            if showDeleteMultipleMessage == true{
+            if stateViewModel.showDeleteMultipleMessage == true{
                 multipleDeleteMessageButtonView(message: message)
             }
             ISMMessageSubView(messageType: ISMChatHelper.getMessageType(message: message),
@@ -117,17 +117,17 @@ extension ISMMessageView{
                               opponentDeatil: (self.conversationDetail?.conversationDetails?.opponentDetails ?? ISMChatUser()),
                               isGroup:  self.isGroup,
                               fromBroadCastFlow: self.fromBroadCastFlow,
-                              navigateToDeletePopUp: $showDeleteMultipleMessage,
+                              navigateToDeletePopUp: $stateViewModel.showDeleteMultipleMessage,
                               selectedMessageToReply: $selectedMsgToReply,
-                              messageCopied: $messageCopied,
+                              messageCopied: $stateViewModel.messageCopied,
                               previousAudioRef: $previousAudioRef,
                               updateMessage: $updateMessage,
-                              showForward: $showforwardMultipleMessage,
+                              showForward: $stateViewModel.showforwardMultipleMessage,
                               navigateToLocationDetail: $navigateToLocationDetail,
                               selectedReaction:  $selectedReaction,
                               sentRecationToMessageId: $sentRecationToMessageId,
-                              audioCallToUser: $audioCallToUser,
-                              videoCallToUser: $videoCallToUser,
+                              audioCallToUser: $stateViewModel.audioCallToUser,
+                              videoCallToUser: $stateViewModel.videoCallToUser,
                               parentMsgToScroll: $parentMsgToScroll,
                               message: message, postIdToNavigate: $postIdToNavigate,navigateToSocialProfileId: $navigateToSocialProfileId) .environmentObject(self.realmManager)
                

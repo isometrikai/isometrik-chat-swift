@@ -16,7 +16,7 @@ extension ISMMessageView{
     func deleteMultipleMessages(otherUserMessage: Bool, type: ISMChatDeleteMessageType) {
         let messageIds = deleteMessage.map { $0.messageId }
         func handleDeleteCompletion() {
-            showDeleteMultipleMessage = false
+            stateViewModel.showDeleteMultipleMessage = false
             realmManager.deleteMessages(msgs: deleteMessage)
             getMessages()
             deleteMessage.removeAll()
@@ -38,7 +38,7 @@ extension ISMMessageView{
                 realmManager.deleteBroadCastMessages(groupcastId: self.groupCastId ?? "", messageId: id)
             }
         }
-        showDeleteMultipleMessage = false
+        stateViewModel.showDeleteMultipleMessage = false
         deleteMessage.removeAll()
     }
     
@@ -75,7 +75,7 @@ extension ISMMessageView{
     }
     
     func sendMessageTypingIndicator() {
-        if keyboardFocused {
+        if stateViewModel.keyboardFocused {
             //when keyboard is open scroll to last message
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
@@ -101,23 +101,23 @@ extension ISMMessageView{
     //MARK: - ON APPEAR
     func setupOnAppear() {
         viewModel.skip = 0
-        executeRepeatly = true
-        executeRepeatlyForOfflineMessage = true
+        stateViewModel.executeRepeatly = true
+        stateViewModel.executeRepeatlyForOfflineMessage = true
     }
     
     //MARK: - CHECK AUDIO PERMISSION
     func checkAudioPermission(){
         switch AVAudioSession.sharedInstance().recordPermission {
         case AVAudioSession.RecordPermission.granted:
-            audioPermissionCheck = true
+            stateViewModel.audioPermissionCheck = true
         case AVAudioSession.RecordPermission.denied:
-            audioPermissionCheck = false
+            stateViewModel.audioPermissionCheck = false
         case AVAudioSession.RecordPermission.undetermined:
             AVAudioSession.sharedInstance().requestRecordPermission({ (granted) in
                 if granted {
-                    audioPermissionCheck = true
+                    stateViewModel.audioPermissionCheck = true
                 } else {
-                    audioPermissionCheck = false
+                    stateViewModel.audioPermissionCheck = false
                 }
             })
         default:
@@ -320,7 +320,7 @@ extension ISMMessageView{
                 self.updateMessage = MessagesDB()
                 
             }
-        }else if shareContact == true{
+        }else if stateViewModel.shareContact == true{
             //MARK: - CONTACT MESSAGE
             
             let selectedContactToShare = self.selectedContactToShare
@@ -792,7 +792,7 @@ extension ISMMessageView{
 //                }
 //            }
 //        }else if shareContact == true{
-         if shareContact == true{
+        if stateViewModel.shareContact == true{
             //MARK: - CONTACT MESSAGE
             
             let selectedContactToShare = self.selectedContactToShare

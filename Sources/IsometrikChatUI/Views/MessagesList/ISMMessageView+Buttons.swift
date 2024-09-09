@@ -18,9 +18,9 @@ extension ISMMessageView{
         HStack{
             Button(action: {
                 ISMChatHelper.print("recording done")
-                if isClicked == true{
+                if stateViewModel.isClicked == true{
                     viewModel.isRecording = false
-                    self.isClicked = false
+                    stateViewModel.isClicked = false
                     viewModel.stopRecording { url in
                         viewModel.audioUrl = url
                     }
@@ -38,8 +38,8 @@ extension ISMMessageView{
                     .onEnded { value in
                         ISMChatHelper.print("Tap currently holded")
                         if isMessagingEnabled() == true && viewModel.isBusy == false{
-                            if audioPermissionCheck == true{
-                                isClicked = true
+                            if stateViewModel.audioPermissionCheck == true{
+                                stateViewModel.isClicked = true
                                 viewModel.isRecording = true
                                 viewModel.startRecording()
                             }else{
@@ -52,16 +52,16 @@ extension ISMMessageView{
                         .onEnded { value in
                             if value.translation.width < -50 {
                                 UINotificationFeedbackGenerator().notificationOccurred(.warning)
-                                if isClicked == true{
+                                if stateViewModel.isClicked == true{
                                     viewModel.isRecording = false
-                                    self.isClicked = false
+                                    stateViewModel.isClicked = false
                                     viewModel.stopRecording { url in
                                     }
                                 }
                             }else if viewModel.isRecording && value.translation.height < -50 {
                                 UINotificationFeedbackGenerator().notificationOccurred(.success)
                                 print("Dragged up")
-                                audioLocked = true
+                                stateViewModel.audioLocked = true
                             }
                         }
                               )
@@ -148,7 +148,7 @@ extension ISMMessageView{
                 delegate?.navigateToBroadCastInfo(groupcastId: self.groupCastId ?? "", groupcastTitle: self.groupConversationTitle ?? "", groupcastImage: self.groupImage ?? "")
                 
             } else {
-                navigateToGroupCastInfo = true
+                stateViewModel.navigateToGroupCastInfo = true
             }
         } label: {
             if ISMChatSdk.getInstance().getFramework() == .UIKit {
@@ -212,14 +212,14 @@ extension ISMMessageView{
          if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true{
              if ISMChatSdkUI.getInstance().getChatProperties().navigateToAppProfileFromMessageList == true{
                  if isGroup == true {
-                     navigateToProfile = true
+                     stateViewModel.navigateToProfile = true
                  } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
                             ?? opponenDetail?.metaData?.userId
                             ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
                      delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
                  }
              }else{
-                 navigateToProfile = true
+                 stateViewModel.navigateToProfile = true
              }
          }
     }
@@ -252,7 +252,7 @@ extension ISMMessageView{
         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
             return ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userName ?? ""
         } else if (isGroup == true) {
-            if otherUserTyping {
+            if stateViewModel.otherUserTyping {
                 return "\(typingUserName ?? "") is typing..."
             } else if let memberString = memberString, !memberString.isEmpty {
                 return memberString
@@ -260,7 +260,7 @@ extension ISMMessageView{
                 return "Tap here for more info"
             }
         } else {
-            if otherUserTyping {
+            if stateViewModel.otherUserTyping {
                 return "Typing..."
             } else if let lastSeen = self.conversationDetail?.conversationDetails?.opponentDetails?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
                 let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
@@ -282,11 +282,11 @@ extension ISMMessageView{
     
     func navigationBarTrailingButtons() -> some View {
         HStack {
-            if showforwardMultipleMessage || showDeleteMultipleMessage {
+            if stateViewModel.showforwardMultipleMessage || stateViewModel.showDeleteMultipleMessage {
                 Button {
-                    showforwardMultipleMessage = false
+                    stateViewModel.showforwardMultipleMessage = false
                     forwardMessageSelected.removeAll()
-                    showDeleteMultipleMessage = false
+                    stateViewModel.showDeleteMultipleMessage = false
                     deleteMessage.removeAll()
                 } label: {
                     Text("Cancel")
@@ -333,7 +333,7 @@ extension ISMMessageView{
                     }
                 }
             }
-        }.background(NavigationLink("", destination:  ISMBlockUserView(conversationViewModel: self.conversationViewModel), isActive: $navigateToBlockUsers))
+        }.background(NavigationLink("", destination:  ISMBlockUserView(conversationViewModel: self.conversationViewModel), isActive: $stateViewModel.navigateToBlockUsers))
     }
     
     func calling(type : ISMLiveCallType){
@@ -362,7 +362,7 @@ extension ISMMessageView{
     
     func clearChatButton() -> some View{
         Button {
-            clearThisChat = true
+            stateViewModel.clearThisChat = true
         } label: {
             HStack(spacing: 10){
                 themeImages.trash
@@ -374,7 +374,7 @@ extension ISMMessageView{
     func blockUserButton() -> some View{
         Button {
             if isMessagingEnabled(){
-                blockThisChat = true
+                stateViewModel.blockThisChat = true
             }
         } label: {
             HStack(spacing: 10){

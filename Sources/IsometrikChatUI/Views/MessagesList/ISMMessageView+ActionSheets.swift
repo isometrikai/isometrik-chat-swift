@@ -19,21 +19,21 @@ extension ISMMessageView{
                         switch option {
                         case .camera:
                             selectedSheetIndex = 0
-                            showSheet = true
+                            stateViewModel.showSheet = true
                             break
                         case .gallery:
-                            showVideoPicker = true
+                            stateViewModel.showVideoPicker = true
                             break
                         case .document:
                             selectedSheetIndex = 1
-                            showSheet = true
+                            stateViewModel.showSheet = true
                             break
                         case .location:
-                            showLocationSharing = true
+                            stateViewModel.showLocationSharing = true
                             break
                         case .contact:
                             selectedSheetIndex = 2
-                            showSheet = true
+                            stateViewModel.showSheet = true
                             break
                         }
                     }

@@ -33,143 +33,118 @@ public struct ISMMessageView: View {
     //MARK: - PROPERTIES
     
     @Environment(\.dismiss) public var dismiss
-    @ObservedObject public var viewModel = ChatsViewModel()
-    public var conversationViewModel = ConversationViewModel()
-    @State public var text = ""
-    @State public var textFieldtxt = ""
-    @State public var keyboardFocused = false
     
-    @State public var showActionSheet = false
-    @State public var conversationID : String?
+    @ObservedObject public var viewModel = ChatsViewModel()
+    public var conversationViewModel: ConversationViewModel
+    
+    @ObservedObject public var stateViewModel = UIStateViewModel()
+    
+    @State var text = ""
+    @State var textFieldtxt = ""
+    
+    @State var conversationID : String?
     public let opponenDetail : UserDB?
     public var myUserId : String?
     public let isGroup : Bool?
     public let fromBroadCastFlow : Bool?
     public let groupCastId : String?
 
-    @State public var textViewHeight : CGFloat = 32
+    @State var textViewHeight : CGFloat = 32
     
-    @State public var showVideoPicker: Bool = false
     
-    @State public var showLocationSharing: Bool = false
-    
-    @State public var showSheet : Bool = false
-    @State public var selectedSheetIndex : Int = 0
+    @State var selectedSheetIndex : Int = 0
     public let columns = [GridItem(.flexible(minimum: 10))]
     
-    @State public var selectedContactToShare : [ISMChatPhoneContact] = []
-    @State public var shareContact : Bool = false
+    @State var selectedContactToShare : [ISMChatPhoneContact] = []
+   
     
     
-    @State public var conversationDetail : ISMChatConversationDetail?
-    @State public var showScrollToBottomView = true
+    @State var conversationDetail : ISMChatConversationDetail?
+    
     
     @EnvironmentObject public var realmManager : RealmManager
     
-    @State public var previousAudioRef: AudioPlayViewModel?
-    @State public var audioLocked : Bool = false
+    @State var previousAudioRef: AudioPlayViewModel?
     
-    @State public var isShowingRedTimerStart : Bool = false
     
-    @State public var showDeleteMultipleMessage = false
-    @State public var deleteMessage : [MessagesDB] = []
-    @State public var showDeleteActionSheet = false
+   
+    @State var deleteMessage : [MessagesDB] = []
     
-    @State public var selectedMsgToReply : MessagesDB = MessagesDB()
-    @State public var parentMessage : ISMChatMessage = ISMChatMessage()
     
-    @State public var showforwardMultipleMessage : Bool = false
-    @State public var forwardMessageSelected : [MessagesDB] = []
-    @State public var movetoForwardList : Bool = false
+    @State var selectedMsgToReply : MessagesDB = MessagesDB()
+    @State var parentMessage : ISMChatMessage = ISMChatMessage()
+    
+   
+    @State var forwardMessageSelected : [MessagesDB] = []
+    
     @EnvironmentObject public var networkMonitor: NetworkMonitor
     
-    @State public var isClicked : Bool = false
-    @State public var uploadMedia : Bool = false
     
-    @State public var audioPermissionCheck :Bool = false
-    @State public var memberString : String?
+    @State var memberString : String?
     
-    @State public var executeRepeatly : Bool = false
-    @State public var otherUserTyping : Bool = false
     
-    @State public var navigateToBlockUsers = false
-    @State public var navigateToProfile = false
-    @State public var navigateToGroupCastInfo  : Bool = false
     
     //location
-    @State public var longitude : Double?
-    @State public var latitude : Double?
-    @State public var placeId : String?
-    @State public var placeName : String?
-    @State public var placeAddress : String?
+    @State var longitude : Double?
+    @State var latitude : Double?
+    @State var placeId : String?
+    @State var placeName : String?
+    @State var placeAddress : String?
     
-    @State public var typingUserName : String?
-    @State public var showUnblockPopUp : Bool = false
-    @State public var uAreBlock : Bool = false
+    @State var typingUserName : String?
+   
     
-    @State public var clearThisChat : Bool = false
-    @State public var blockThisChat : Bool = false
-    
-    @State public var startDate = Date.now
-    @State public var timeElapsed: Int = 0
-    @State public var showingNoInternetAlert = false
+    @State var startDate = Date.now
+    @State var timeElapsed: Int = 0
+   
     public let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     
-    @State public var startTimeForOnline = Date.now
-    @State public var timeElapsedForOnline: Int = 0
+    @State var startTimeForOnline = Date.now
+    @State var timeElapsedForOnline: Int = 0
     public let onlinetimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
-    @State public var executeRepeatlyForOfflineMessage : Bool = false
     
-    @State public var onLoad : Bool = false
     
-    @State public var messageCopied : Bool = false
+    
     
     public let groupConversationTitle : String?
     public let groupImage : String?
     
-    @State public var navigateToLocationDetail : ISMChatLocationData = ISMChatLocationData()
-    @State public var navigateToLocation = false
+    @State var navigateToLocationDetail : ISMChatLocationData = ISMChatLocationData()
     
-    @State public var updateMessage : MessagesDB = MessagesDB()
     
-    @State public var selectedUserToMention : String?
-    @State public var showMentionList : Bool = false
-    @State public var mentionUsers: [ISMChatGroupMember] = []
-    @State public var filteredUsers: [ISMChatGroupMember] = []
+    @State var updateMessage : MessagesDB = MessagesDB()
     
-    @State public var showAudioOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.audio)
-    @State public var showAudioCallingOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.audiocall)
-    @State public var showVideoCallingOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.videocall)
-    @State public var showGifOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.gif)
-    @State public var showGifPicker : Bool = false
-
+    @State var selectedUserToMention : String?
     
-    @State public var navigateToImageEditor : Bool = false
-    @State public var sendMedia : Bool = false
+    @State var mentionUsers: [ISMChatGroupMember] = []
+    @State var filteredUsers: [ISMChatGroupMember] = []
     
-    @State public var videoSelectedFromPicker : [ISMMediaUpload] = []
+    @State var showAudioOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.audio)
+    @State var showAudioCallingOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.audiocall)
+    @State var showVideoCallingOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.videocall)
+    @State var showGifOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.gif)
+    
+    
+    @State var videoSelectedFromPicker : [ISMMediaUpload] = []
     
     //camera click
-    @State public var cameraImageToUse : URL?
+    @State var cameraImageToUse : URL?
     
     //reaction
-    @State public var selectedReaction : String? = nil
-    @State public var sentRecationToMessageId : String = ""
+    @State var selectedReaction : String? = nil
+    @State var sentRecationToMessageId : String = ""
     // call
-    @State public var audioCallToUser : Bool = false
-    @State public var videoCallToUser : Bool = false
-    @State public var showCallPopUp : Bool = false
-    @State public var isAnimating = false
-    @State public var parentMsgToScroll : MessagesDB? =  nil
     
-    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State public var themePlaceholder = ISMChatSdkUI.getInstance().getAppAppearance().appearance.placeholders
-    @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    @State var parentMsgToScroll : MessagesDB? =  nil
+    
+    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @State var themePlaceholder = ISMChatSdkUI.getInstance().getAppAppearance().appearance.placeholders
+    @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     @State var postIdToNavigate : String = ""
-    @State var navigateToAddParticipantsInGroupViaDelegate : Bool = false
+    
     
     public var delegate : ISMMessageViewDelegate?
     
@@ -202,7 +177,7 @@ public struct ISMMessageView: View {
                             }
                             .coordinateSpace(name: "scroll")
                             .coordinateSpace(name: "pullToRefresh")
-                            .overlay(showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
+                            .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
                             .gesture(DragGesture().onChanged { value in
                                 // Calculate the velocity
                                 let velocity = value.predictedEndTranslation.height - value.translation.height
@@ -259,13 +234,13 @@ public struct ISMMessageView: View {
                 }//VStack
                 .onAppear {
                     setupOnAppear()
-                    navigateToImageEditor = false
+                    stateViewModel.navigateToImageEditor = false
                     addNotificationObservers()
                 }
                 .onDisappear{
-                    executeRepeatly = false
-                    executeRepeatlyForOfflineMessage = false
-                    onLoad = false
+                    stateViewModel.executeRepeatly = false
+                    stateViewModel.executeRepeatlyForOfflineMessage = false
+                    stateViewModel.onLoad = false
                     removeObservers()
                 }
                 //zstack views
@@ -273,7 +248,7 @@ public struct ISMMessageView: View {
                     //Custom Progress View
                     ActivityIndicatorView(isPresented: $viewModel.isBusy)
                 }
-                if messageCopied == true{
+                if stateViewModel.messageCopied == true{
                     Text("Message copied")
                         .font(themeFonts.alertText)
                         .padding()
@@ -282,7 +257,7 @@ public struct ISMMessageView: View {
                         .cornerRadius(5)
                         .onAppear {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                messageCopied = false
+                                stateViewModel.messageCopied = false
                             }
                         }
                 }
@@ -292,29 +267,29 @@ public struct ISMMessageView: View {
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(leading: navigationBarLeadingButtons(), trailing: navigationBarTrailingButtons())
         .navigationBarBackButtonHidden(true)
-        .confirmationDialog("", isPresented: $showActionSheet, titleVisibility: .hidden) {
+        .confirmationDialog("", isPresented: $stateViewModel.showActionSheet, titleVisibility: .hidden) {
             attachmentActionSheetButtons()
         }
-        .confirmationDialog("", isPresented: $showDeleteActionSheet, titleVisibility: .hidden) {
+        .confirmationDialog("", isPresented: $stateViewModel.showDeleteActionSheet, titleVisibility: .hidden) {
             deleteActionSheetButtons()
         }
-        .confirmationDialog("", isPresented: $showUnblockPopUp) {
+        .confirmationDialog("", isPresented: $stateViewModel.showUnblockPopUp) {
             unblockActionSheetButton()
         } message: {
             Text("Unblock contact to send a message")
         }
-        .confirmationDialog("", isPresented: $uAreBlock) {
+        .confirmationDialog("", isPresented: $stateViewModel.uAreBlock) {
         } message: {
             Text("Action not allowed, the user has already blocked You")
         }
-        .confirmationDialog("", isPresented: $clearThisChat) {
+        .confirmationDialog("", isPresented: $stateViewModel.clearThisChat) {
             Button("Delete", role: .destructive) {
                 clearChat()
             }
         } message: {
             Text("Clear all messages from \(conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "this chat")? \n This chat will be empty but will remain in your chat list.")
         }
-        .confirmationDialog("", isPresented: $blockThisChat) {
+        .confirmationDialog("", isPresented: $stateViewModel.blockThisChat) {
             Button("Block", role: .destructive) {
                 blockChatFromUser()
             }
@@ -396,7 +371,7 @@ public struct ISMMessageView: View {
                     // If there are no matching users, set filteredUsers to an empty array
                     if filteredUsers.isEmpty {
                         filteredUsers = []
-                        showMentionList = false
+                        stateViewModel.showMentionList = false
                     }
                 } else {
                     filteredUsers = mentionUsers
@@ -404,16 +379,16 @@ public struct ISMMessageView: View {
             }
         }
         .onChange(of: navigateToLocationDetail.title){
-            navigateToLocation = true
+            stateViewModel.navigateToLocation = true
         }
-        .onChange(of: audioCallToUser, { _, _ in
-            if audioCallToUser == true{
-                showCallPopUp = true
+        .onChange(of: stateViewModel.audioCallToUser, { _, _ in
+            if stateViewModel.audioCallToUser == true{
+                stateViewModel.showCallPopUp = true
             }
         })
-        .onChange(of: videoCallToUser, { _, _ in
-            if videoCallToUser == true{
-                showCallPopUp = true
+        .onChange(of: stateViewModel.videoCallToUser, { _, _ in
+            if stateViewModel.videoCallToUser == true{
+                stateViewModel.showCallPopUp = true
             }
         })
         .onChange(of: cameraImageToUse, { _, _ in
@@ -424,7 +399,7 @@ public struct ISMMessageView: View {
         .onChange(of: viewModel.audioUrl) { newValue in
             sendMessageIfAudioUrl()
         }
-        .onChange(of: keyboardFocused) { newValue in
+        .onChange(of: stateViewModel.keyboardFocused) { newValue in
             if conversationDetail != nil{
                 sendMessageTypingIndicator()
             }
@@ -432,25 +407,25 @@ public struct ISMMessageView: View {
 //        .onChange(of: selectedGIF, { _, _ in
 //            sendMessageIfGif()
 //        })
-        .onChange(of: sendMedia, { _, _ in
+        .onChange(of: stateViewModel.sendMedia, { _, _ in
             sendMessageIfUploadMedia()
         })
         .onChange(of: updateMessage.body) { newValue in
             self.textFieldtxt = updateMessage.body
-            keyboardFocused = true
+            stateViewModel.keyboardFocused = true
         }
         .onChange(of: self.placeId) { newValue in
             sendMessageIfPlaceId()
         }
-        .onChange(of: navigateToAddParticipantsInGroupViaDelegate) { newValue in
-            if navigateToAddParticipantsInGroupViaDelegate == true{
+        .onChange(of: stateViewModel.navigateToAddParticipantsInGroupViaDelegate) { newValue in
+            if stateViewModel.navigateToAddParticipantsInGroupViaDelegate == true{
                 delegate?.navigateToAppMemberInGroup(conversationId: self.conversationID ?? "", groupMembers: self.conversationDetail?.conversationDetails?.members)
-                navigateToAddParticipantsInGroupViaDelegate = false
+                stateViewModel.navigateToAddParticipantsInGroupViaDelegate = false
             }
         }
         .onChange(of: viewModel.timerValue, perform: { newValue in
             withAnimation {
-                isShowingRedTimerStart.toggle()
+                stateViewModel.isShowingRedTimerStart.toggle()
             }
         })
         .onChange(of: navigateToSocialProfileId) { newValue in
@@ -465,13 +440,13 @@ public struct ISMMessageView: View {
                 postIdToNavigate = ""
             }
         }
-        .onChange(of: shareContact, perform: { newValue in
+        .onChange(of: stateViewModel.shareContact, perform: { newValue in
             if !self.selectedContactToShare.isEmpty {
                 sendMessage(msgType: .contact)
-                shareContact = false
+                stateViewModel.shareContact = false
             }
         })
-        .sheet(isPresented: $showGifPicker, content: {
+        .sheet(isPresented: $stateViewModel.showGifPicker, content: {
 //            GiphyPicker { media in
 //                if let media = media{
 //                    selectedGIF = media
@@ -479,17 +454,17 @@ public struct ISMMessageView: View {
 //                }
 //            }
         })
-        .sheet(isPresented: $showSheet){
+        .sheet(isPresented: $stateViewModel.showSheet){
             if selectedSheetIndex == 0 {
-                ISMCameraView(media : $cameraImageToUse, isShown: self.$showSheet, uploadMedia: $uploadMedia)
+                ISMCameraView(media : $cameraImageToUse, isShown: $stateViewModel.showSheet, uploadMedia: $stateViewModel.uploadMedia)
             } else if selectedSheetIndex == 1 {
-                DocumentPicker(documents: $viewModel.documentSelectedFromPicker, isShown: self.$showSheet)
+                DocumentPicker(documents: $viewModel.documentSelectedFromPicker, isShown: self.$stateViewModel.showSheet)
             } else{
-                ISMShareContactList(dissmiss: self.$showSheet , selectedContact: self.$selectedContactToShare, shareContact: self.$shareContact)
+                ISMShareContactList(dissmiss: $stateViewModel.showSheet , selectedContact: self.$selectedContactToShare, shareContact: $stateViewModel.shareContact)
             }
         }
         .mediaImporter(
-            isPresented: self.$showVideoPicker,
+            isPresented: self.$stateViewModel.showVideoPicker,
             allowedMediaTypes: [.videos, .images],
             allowsMultipleSelection: true,
             onCompletion: handleMediaImporterResult,
@@ -497,47 +472,47 @@ public struct ISMMessageView: View {
                 ProgressView()
             }
         )
-        .background(NavigationLink("", destination: ISMForwardToContactView(viewModel : self.viewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $showforwardMultipleMessage),isActive: $movetoForwardList))
-        .background(NavigationLink("", destination: ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId,placeName : $placeName, address: $placeAddress),isActive: $showLocationSharing))
+        .background(NavigationLink("", destination: ISMForwardToContactView(viewModel : self.viewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage),isActive: $stateViewModel.movetoForwardList))
+        .background(NavigationLink("", destination: ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId,placeName : $placeName, address: $placeAddress),isActive: $stateViewModel.showLocationSharing))
 //        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
-        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.viewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager),isActive: $navigateToProfile))
+        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.viewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager),isActive: $stateViewModel.navigateToProfile))
 //        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))
-        .background(NavigationLink("", destination: ISMImageAndViderEditor(media: $videoSelectedFromPicker, sendToUser: opponenDetail?.userName ?? "",sendMedia: $sendMedia),isActive: $navigateToImageEditor))
+        .background(NavigationLink("", destination: ISMImageAndViderEditor(media: $videoSelectedFromPicker, sendToUser: opponenDetail?.userName ?? "",sendMedia: $stateViewModel.sendMedia),isActive: $stateViewModel.navigateToImageEditor))
         .onReceive(timer, perform: { firedDate in
             print("timer fired")
             timeElapsed = Int(firedDate.timeIntervalSince(startDate))
-            if executeRepeatly == true && fromBroadCastFlow != true{
+            if stateViewModel.executeRepeatly == true && fromBroadCastFlow != true{
                 self.executeRepeatedly()
             }
         })
         .onReceive(onlinetimer, perform: { firedtime in
             print("online timer fired")
             timeElapsedForOnline = Int(firedtime.timeIntervalSince(startTimeForOnline))
-            if executeRepeatlyForOfflineMessage == true{
+            if stateViewModel.executeRepeatlyForOfflineMessage == true{
                 sendLocalMsg()
             }
         })
-        .alert("Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.", isPresented: $showingNoInternetAlert) {
+        .alert("Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.", isPresented: $stateViewModel.showingNoInternetAlert) {
             Button("OK", role: .cancel) { }
         }
-        .alert("Call \(self.opponenDetail?.userName ?? "")", isPresented: $showCallPopUp) {
+        .alert("Call \(self.opponenDetail?.userName ?? "")", isPresented: $stateViewModel.showCallPopUp) {
             Button("Cancel", role: .cancel) {
-                if audioCallToUser == true{
-                    audioCallToUser = false
+                if stateViewModel.audioCallToUser == true{
+                    stateViewModel.audioCallToUser = false
                 }
-                if videoCallToUser == true{
-                    videoCallToUser = false
+                if stateViewModel.videoCallToUser == true{
+                    stateViewModel.videoCallToUser = false
                 }
             }
-            if audioCallToUser {
+            if stateViewModel.audioCallToUser {
                 Button("Voice Call") {
-                    audioCallToUser = false
+                    stateViewModel.audioCallToUser = false
                     calling(type: .AudioCall)
                 }
             }
-            if videoCallToUser {
+            if stateViewModel.videoCallToUser {
                 Button("Video Call") {
-                    videoCallToUser = false
+                    stateViewModel.videoCallToUser = false
                     calling(type: .VideoCall)
                 }
             }
@@ -562,13 +537,13 @@ public struct ISMMessageView: View {
             
             realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
             if !networkMonitor.isConnected {
-                showingNoInternetAlert = true
+                stateViewModel.showingNoInternetAlert = true
             }
             //fix to don't show scroll to Bottom button when message count is zero
             if realmManager.allMessages?.count == 0{
-                showScrollToBottomView = false
+                stateViewModel.showScrollToBottomView = false
             }
-            onLoad = true
+            stateViewModel.onLoad = true
         }
     }
     
@@ -600,9 +575,9 @@ public struct ISMMessageView: View {
     func isMessagingEnabled() -> Bool{
         if self.conversationDetail?.conversationDetails?.messagingDisabled == true{
             if realmManager.messages.last?.last?.initiatorId != userData.userId{
-                uAreBlock = true
+                stateViewModel.uAreBlock = true
             }else{
-                showUnblockPopUp = true
+                stateViewModel.showUnblockPopUp = true
             }
             return false
         }else{

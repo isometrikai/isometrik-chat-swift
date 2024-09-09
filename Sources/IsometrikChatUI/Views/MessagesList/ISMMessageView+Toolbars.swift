@@ -25,7 +25,7 @@ extension ISMMessageView{
                     if ISMChatSdk.getInstance().getFramework() == .UIKit{
                         self.delegate?.navigateToUserListToForward(messages: forwardMessageSelected)
                     }else{
-                        movetoForwardList = true
+                        stateViewModel.movetoForwardList = true
                     }
                 } label: {
                     Text("Forward")
@@ -67,7 +67,7 @@ extension ISMMessageView{
                     .font(Font.regular(size: 16))
                 Spacer()
                 Button {
-                    showDeleteActionSheet = true
+                    stateViewModel.showDeleteActionSheet = true
                 } label: {
                     Text("Delete")
                         .foregroundColor(deleteMessage.count == 0 ? Color.onboardingPlaceholder : .red)
@@ -253,7 +253,7 @@ extension ISMMessageView{
                     }
                 }
                 else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .gif{
-                    AnimatedImage(url: URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? ""),isAnimating: $isAnimating)
+                    AnimatedImage(url: URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? ""),isAnimating: $stateViewModel.isAnimating)
                         .resizable()
                         .frame(width: 45, height: 40)
                         .cornerRadius(5)
@@ -284,12 +284,12 @@ extension ISMMessageView{
     
     func toolBarView() -> some View {
         VStack(spacing: 0) {
-            if showMentionList, isGroup == true, !filteredUsers.isEmpty {
+            if stateViewModel.showMentionList, isGroup == true, !filteredUsers.isEmpty {
                 mentionUserList()
             }
-            if showforwardMultipleMessage {
+            if stateViewModel.showforwardMultipleMessage {
                 forwardMessageToolBarView()
-            } else if showDeleteMultipleMessage {
+            } else if stateViewModel.showDeleteMultipleMessage {
                 deleteMessageToolBarView()
             } else {
                 if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
@@ -305,7 +305,7 @@ extension ISMMessageView{
                     
                     HStack {
                         if !viewModel.isRecording {
-                            Button(action: { showActionSheet = true }) {
+                            Button(action: { stateViewModel.showActionSheet = true }) {
                                 themeImages.addAttcahment
                                     .resizable()
                                     .frame(width: 20, height: 20)
@@ -317,7 +317,7 @@ extension ISMMessageView{
                                 
                                 if showGifOption, textFieldtxt.isEmpty {
                                     Button {
-                                        showGifPicker = true
+                                        stateViewModel.showGifPicker = true
                                     } label: {
                                         themeImages.addSticker
                                             .resizable()
@@ -348,11 +348,11 @@ extension ISMMessageView{
     // Split audio toolbar content into a separate function
     func audioToolbarContent() -> some View {
         HStack{
-            if audioLocked == false {
+            if stateViewModel.audioLocked == false {
                 themeImages.addAudio
                     .resizable()
                     .frame(width: 24, height: 24)
-                    .foregroundColor(isShowingRedTimerStart ? .red : .clear)
+                    .foregroundColor(stateViewModel.isShowingRedTimerStart ? .red : .clear)
                     .padding(.leading)
                 
                 Text(viewModel.timerValue)
@@ -407,7 +407,7 @@ extension ISMMessageView{
                 }
             } else {
                 ZStack {
-                    if !audioLocked {
+                    if !stateViewModel.audioLocked {
                         if viewModel.isRecording {
                             VStack {
                                 themeImages.audioLock
@@ -430,20 +430,20 @@ extension ISMMessageView{
 
     // Cancel recording action handler
     func cancelRecording() {
-        if isClicked {
+        if stateViewModel.isClicked {
             viewModel.isRecording = false
-            isClicked = false
-            audioLocked = false
+            stateViewModel.isClicked = false
+            stateViewModel.audioLocked = false
             viewModel.stopRecording { _ in }
         }
     }
 
     // Stop recording action handler
     func stopRecording() {
-        if isClicked {
+        if stateViewModel.isClicked {
             viewModel.isRecording = false
-            isClicked = false
-            audioLocked = false
+            stateViewModel.isClicked = false
+            stateViewModel.audioLocked = false
             viewModel.stopRecording { url in
                 viewModel.audioUrl = url
             }
@@ -452,7 +452,7 @@ extension ISMMessageView{
 
     
     func textView() -> some View{
-        ResizeableTextView(text: $textFieldtxt, height: $textViewHeight, typingStarted: $keyboardFocused, placeholderText: "Type a message", showMentionList: $showMentionList, filteredMentionUserCount: filteredUsers.count, mentionUser: $selectedUserToMention, placeholderColor: themeColor.messageListTextViewPlaceholder, textViewColor: themeColor.messageListTextViewText)
+        ResizeableTextView(text: $textFieldtxt, height: $textViewHeight, typingStarted: $stateViewModel.keyboardFocused, placeholderText: "Type a message", showMentionList: $stateViewModel.showMentionList, filteredMentionUserCount: filteredUsers.count, mentionUser: $selectedUserToMention, placeholderColor: themeColor.messageListTextViewPlaceholder, textViewColor: themeColor.messageListTextViewText)
             .frame(height: textViewHeight < 160 ? self.textViewHeight : 160)
     }
     
@@ -476,7 +476,7 @@ extension ISMMessageView{
                             textFieldtxt.replaceSubrange(lastAtIndex..., with: "@\(userName)")
                             selectedUserToMention = nil
                         }
-                        self.showMentionList = false
+                        stateViewModel.showMentionList = false
                     }
                 }
             }
