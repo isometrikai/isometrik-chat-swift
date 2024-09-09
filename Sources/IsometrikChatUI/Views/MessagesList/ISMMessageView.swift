@@ -25,6 +25,7 @@ public protocol ISMMessageViewDelegate{
     func uploadOnExternalCDN(messageKind : ISMChatMessageType,mediaUrl : URL,completion:@escaping(String,Int)->())
     func externalBlockMechanism(appUserId : String,block: Bool)
     func navigateToBroadCastInfo(groupcastId : String,groupcastTitle : String,groupcastImage : String)
+    func navigateToJobDetail(jobId : String)
 }
 
 public struct ISMMessageView: View {
@@ -174,6 +175,7 @@ public struct ISMMessageView: View {
     
     @State var navigateToSocialProfileId : String = ""
     @State private var cancellables = Set<AnyCancellable>()
+    @State var navigateToJobId : String = ""
     
     //MARK: - BODY
     public var body: some View {
@@ -181,6 +183,12 @@ public struct ISMMessageView: View {
             ZStack{
                 themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack(spacing: 0) {
+                    if ISMChatSdkUI.getInstance().getChatProperties().customJobCardInMessageList == true {
+                        if let conversation = self.conversationDetail?.conversationDetails,
+                           let metaData = conversation.metaData {
+                            JobCardView(jobTitle: metaData.jobTitle ?? "", jobId: metaData.jobId ?? "", startDate: metaData.startDate ?? "", endDate: metaData.endDate ?? "")
+                        }
+                    }
                     ZStack{
                         GeometryReader{ reader in
                             ScrollView{

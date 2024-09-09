@@ -7,12 +7,15 @@
 
 import Foundation
 import SwiftUI
+import IsometrikChat
 
 //this view is only used for flexcrew project
 
 struct JobCardView: View {
-    var jobTitle: String = "Hire an experienced handyman in Austin, TX"
-    var dateRange: String = "10 October - 10 December"
+    var jobTitle: String = ""
+    var jobId : String = ""
+    var startDate : String = ""
+    var endDate : String = ""
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -24,9 +27,10 @@ struct JobCardView: View {
             HStack {
                 // Date Range with Icon
                 HStack(spacing: 4) {
-                    Image(systemName: "calendar")
-                        .foregroundColor(.gray)
-                    Text(dateRange)
+                    ISMChatSdkUI.getInstance().getAppAppearance().appearance.images.calanderLogo
+                        .resizable()
+                        .frame(width: 17, height: 17, alignment: .center)
+                    Text(ISMChatHelper.formatDateRange(startDate: startDate, endDate: endDate) ?? "")
                         .font(.regular(size: 14))
                         .foregroundColor(Color(hex: "#858AA8"))
                 }
@@ -34,7 +38,7 @@ struct JobCardView: View {
                 Spacer()
                 
                 Button(action: {
-                    
+                 
                 }, label: {
                     // View Details Link
                     Text("View details")
@@ -46,13 +50,5 @@ struct JobCardView: View {
         .padding(.horizontal, 15)
         .padding(.vertical, 15)
         .background(Color(.systemBlue).opacity(0.1))
-        .frame(height: 101)
-    }
-}
-
-struct JobCardView_Previews: PreviewProvider {
-    static var previews: some View {
-        JobCardView()
-            .previewLayout(.sizeThatFits)
     }
 }
