@@ -187,6 +187,9 @@ public struct ISMMessageView: View {
                         if let conversation = self.conversationDetail?.conversationDetails,
                            let metaData = conversation.metaData {
                             JobCardView(jobTitle: metaData.jobTitle ?? "", jobId: metaData.jobId ?? "", startDate: metaData.startDate ?? "", endDate: metaData.endDate ?? "")
+                                .onTapGesture {
+                                    self.delegate?.navigateToJobDetail(jobId: metaData.jobId ?? "")
+                                }
                         }
                     }
                     ZStack{
