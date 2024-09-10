@@ -139,7 +139,7 @@ struct ISMImageAndViderEditor: View {
                     Spacer()
                     
                     Button(action: {
-                        sendMedia = true
+                        sendMedia.toggle()
                         dismiss()
                     }) {
                         themeImages.sendMedia

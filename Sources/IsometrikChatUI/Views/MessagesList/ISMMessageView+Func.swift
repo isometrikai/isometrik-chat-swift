@@ -1252,7 +1252,7 @@ extension ISMMessageView{
         lastMessage = ISMChatLastMessage(sentAt: sentAt, senderName: userData.userName, senderIdentifier: userData.userEmail, senderId: userData.userId, conversationId: self.conversationID ?? "", body: message, messageId: messageId, customType: customType.value)
         
         //6. append in list
-        realmManager.saveMessage(obj: [messageValue])
+        realmManager.saveMessage(obj: [messageValue],isLocal: true)
         //7. sort messages by sentTime
         self.getMessages()
         //8. scroll to last message

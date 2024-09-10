@@ -110,7 +110,7 @@ extension RealmManager{
     }
     
     //MARK: - save message locally
-    public func saveMessage(obj: [ISMChatMessage]) {
+    public func saveMessage(obj: [ISMChatMessage],isLocal : Bool? = false) {
         if let localRealm = localRealm {
             do {
                 try localRealm.write {
@@ -147,7 +147,7 @@ extension RealmManager{
                                 obj.conversationId = groupcastId
                             }
                         }
-                        obj.msgSyncStatus = ISMChatSyncStatus.Synch.txt
+                        obj.msgSyncStatus = isLocal == true ? ISMChatSyncStatus.Local.txt : ISMChatSyncStatus.Synch.txt
                         obj.userName = value.userName ?? ""
                         obj.userId = value.userId ?? ""
                         obj.userIdentifier = value.userIdentifier ?? ""

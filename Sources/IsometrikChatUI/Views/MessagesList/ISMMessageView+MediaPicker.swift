@@ -26,7 +26,8 @@ import IsometrikChat
                     }
                     videoSelectedFromPicker.append(contentsOf: mediaUploads)
                     if urls.count == videoSelectedFromPicker.count{
-                        stateViewModel.navigateToImageEditor.toggle()
+                        stateViewModel.navigateToImageEditor = false // Reset before setting to true
+                        stateViewModel.navigateToImageEditor = true
                     }
                 }
             }
