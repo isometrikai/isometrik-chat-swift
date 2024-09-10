@@ -320,8 +320,8 @@ struct ISMMessageSubView: View {
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }
-                                let index = self.realmManager.medias?.firstIndex(where: {$0.messageId == message.messageId})
-                                NavigationLink(destination:  MediaSliderView(viewModel: self.viewModel, index:index ?? 0).environmentObject(self.realmManager))
+                                
+                                NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
                                 {
                                     VStack(alignment: .trailing,spacing: 5){
                                         if message.messageType == 1{
@@ -395,8 +395,9 @@ struct ISMMessageSubView: View {
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }
-                                let index = self.realmManager.medias?.firstIndex(where: {$0.messageId == message.messageId})
-                                NavigationLink(destination: MediaSliderView(viewModel: self.viewModel, index:index ?? 0).environmentObject(self.realmManager)){
+                                
+                                
+                                NavigationLink(destination: MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager)){
                                     VStack(alignment: .trailing,spacing : 5){
                                         if message.messageType == 1{
                                             forwardedView()
@@ -808,8 +809,7 @@ struct ISMMessageSubView: View {
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }
-                                let index = self.realmManager.medias?.firstIndex(where: {$0.messageId == message.messageId})
-                                NavigationLink(destination:  MediaSliderView(viewModel: self.viewModel, index:index ?? 0).environmentObject(self.realmManager))
+                                NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
                                 {
                                     VStack(alignment: .trailing,spacing: 5){
                                         if message.messageType == 1{

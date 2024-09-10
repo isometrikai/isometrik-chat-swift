@@ -272,7 +272,7 @@ struct ISMUserMediaView: View {
     
     func showVideoView(_ value: MediaDB) -> some View {
         NavigationLink(
-            destination: MediaSliderView(viewModel: viewModel, messageId: value.messageId)
+            destination: MediaSliderView(messageId: value.messageId)
                 .environmentObject(realmManager)
         ) {
             let url = URL(string: (value.mediaUrl ))
@@ -284,7 +284,7 @@ struct ISMUserMediaView: View {
     
     func showGifView(_ value: MediaDB) -> some View {
         NavigationLink(
-            destination: MediaSliderView(viewModel: viewModel, messageId: value.messageId)
+            destination: MediaSliderView(messageId: value.messageId)
                 .environmentObject(realmManager)
         ) {
             let url = URL(string: (value.mediaUrl ))
@@ -298,7 +298,7 @@ struct ISMUserMediaView: View {
     
     func showImageView(_ value: MediaDB) -> some View {
         NavigationLink(
-            destination: MediaSliderView(viewModel: viewModel, messageId: value.messageId)
+            destination: MediaSliderView(messageId: value.messageId)
                 .environmentObject(realmManager)
         ) {
             ISMChatImageCahcingManger.networkImage(url: value.mediaUrl ,isprofileImage: false)

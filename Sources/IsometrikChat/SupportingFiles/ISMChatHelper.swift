@@ -100,6 +100,14 @@ public class ISMChatHelper: NSObject {
         }
     }
     
+    public class func isVideoString(media : String) -> Bool{
+        if media.contains(".mov") || media.contains(".mp4"){
+            return true
+        }else{
+            return false
+        }
+    }
+    
     public class func isVideo(media : URL) -> Bool{
         if media.lastPathComponent.contains(".mov") || media.lastPathComponent.contains(".mp4"){
             return true

@@ -161,6 +161,11 @@ public struct ISMChatImages {
     
     public var calanderLogo : Image = loadImageSafely(with: "gif_logo")
     
+    public var mediaEditorCrop : Image = loadImageSafely(with: "crop_Image")
+    public var mediaEditorText : Image = loadImageSafely(with: "AddText")
+    public var mediaEditorEdit : Image = loadImageSafely(with: "edit_Image")
+    public var mediaEditorCancel : Image = loadImageSafely(with: "close_black_background")
+    
     public init(){}
     
     public init(

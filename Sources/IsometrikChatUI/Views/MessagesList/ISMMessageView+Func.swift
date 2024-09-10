@@ -557,10 +557,13 @@ extension ISMMessageView{
                     //2. save message locally
                     var localIds = [String]()
                     let sentAt = Date().timeIntervalSince1970 * 1000
-                    let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Video", mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: .video,customType: .Video, messageKind: .normal,mediaCaption: media.caption)
-                    localIds.append(id)
+                    
                     
                     ISMChatHelper.generateThumbnailImageURL(from: media.url) { thumbnailUrl in
+                        
+                        let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Video", mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: .video,customType: .Video, messageKind: .normal,mediaCaption: media.caption,localMediaUrl: media.url.absoluteString,localThumbnailUrl: thumbnailUrl?.absoluteString)
+                        localIds.append(id)
+                        
                         
                         if ISMChatSdk.getInstance().checkuploadOnExternalCDN() == true{
                             self.delegate?.uploadOnExternalCDN(messageKind: .photo, mediaUrl: thumbnailUrl! , completion: { imageUrl, imageData in
@@ -619,7 +622,7 @@ extension ISMMessageView{
                     //2. save message locally
                     var localIds = [String]()
                     let sentAt = Date().timeIntervalSince1970 * 1000
-                    let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Image", mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: .photo,customType: .Image, messageKind: .normal,mediaCaption: media.caption)
+                    let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Image", mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: .photo,customType: .Image, messageKind: .normal,mediaCaption: media.caption,localMediaUrl: media.url.absoluteString)
                     localIds.append(id)
                     
                     
@@ -1141,7 +1144,7 @@ extension ISMMessageView{
     
     //MARK: - SAVE TEXT MESSAGE LOCALLY WHEN SEND WITHOUT CALLING API
     
-    func saveMessageToLocalDB(sentAt: Double,messageId : String,message : String,mentionUsers : [ISMChatGroupMember],fileName : String? = nil,fileUrl : String? = nil,messageType : ISMChatMessageType,contactInfo: [ISMChatPhoneContact]? = [],customType : ISMChatMediaType,messageKind : ISMChatMessageKind,parentMessage : MessagesDB? = nil,longitude :Double? = nil,latitude : Double? = nil,placeName : String? = nil, placeAddress : String? = nil,mediaCaption : String? = nil) -> String{
+    func saveMessageToLocalDB(sentAt: Double,messageId : String,message : String,mentionUsers : [ISMChatGroupMember],fileName : String? = nil,fileUrl : String? = nil,messageType : ISMChatMessageType,contactInfo: [ISMChatPhoneContact]? = [],customType : ISMChatMediaType,messageKind : ISMChatMessageKind,parentMessage : MessagesDB? = nil,longitude :Double? = nil,latitude : Double? = nil,placeName : String? = nil, placeAddress : String? = nil,mediaCaption : String? = nil,localMediaUrl : String? = nil,localThumbnailUrl : String? = nil) -> String{
         
         //1. senderInfo
         let senderInfo = ISMChatUser(userId: userData.userId, userName: userData.userName, userIdentifier: userData.userEmail, userProfileImage: userData.userProfileImage)
@@ -1232,12 +1235,12 @@ extension ISMMessageView{
         case .location:
             attachment = ISMChatAttachment(latitude: latitude,longitude: longitude, title: placeName, address: placeAddress)
         case .photo:
-            attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Image.type, extensions: ISMChatExtensionType.Image.type, mediaUrl: "", mimeType: ISMChatExtensionType.Image.type, name: fileName, thumbnailUrl: "")
+            attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Image.type, extensions: ISMChatExtensionType.Image.type, mediaUrl: localMediaUrl, mimeType: ISMChatExtensionType.Image.type, name: fileName, thumbnailUrl: localMediaUrl)
             if let caption  = mediaCaption, !caption.isEmpty{
                 metaData = ISMChatMetaData(captionMessage: caption)
             }
         case .video:
-            attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Video.type, extensions: ISMChatExtensionType.Video.type, mediaUrl: "", mimeType: ISMChatExtensionType.Video.type, name: fileName, thumbnailUrl: "")
+            attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Video.type, extensions: ISMChatExtensionType.Video.type, mediaUrl: localMediaUrl, mimeType: ISMChatExtensionType.Video.type, name: fileName, thumbnailUrl: localThumbnailUrl)
             if let caption  = mediaCaption, !caption.isEmpty{
                 metaData = ISMChatMetaData(captionMessage: caption)
             }

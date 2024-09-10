@@ -178,7 +178,7 @@ struct ISMImageAndViderEditor: View {
                     Button(action: {
                         showCropper = true
                     }) {
-                        Image("crop_Image")
+                        themeImages.mediaEditorCrop
                             .resizable()
                             .frame(width: 36, height: 36, alignment: .center)
                     }
@@ -187,7 +187,7 @@ struct ISMImageAndViderEditor: View {
                     Button(action: {
                         addText = true
                     }) {
-                        Image("AddText")
+                        themeImages.mediaEditorText
                             .resizable()
                             .frame(width: 36, height: 36, alignment: .center)
                     }
@@ -195,7 +195,7 @@ struct ISMImageAndViderEditor: View {
                     Button(action: {
                         navigateToDraw = true
                     }) {
-                        Image("edit_Image")
+                        themeImages.mediaEditorEdit
                             .resizable()
                             .frame(width: 36, height: 36, alignment: .center)
                     }
@@ -209,7 +209,7 @@ struct ISMImageAndViderEditor: View {
             media.removeAll()
             dismiss()
         }) {
-            Image("close_black_background")
+            themeImages.mediaEditorCancel
                 .resizable()
                 .frame(width: 36, height: 36, alignment: .center)
         }
