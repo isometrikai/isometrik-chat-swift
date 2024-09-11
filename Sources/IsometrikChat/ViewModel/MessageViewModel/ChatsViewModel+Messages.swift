@@ -53,9 +53,9 @@ extension ChatsViewModel{
     
     //MARK: - send Reel
     public func sharePost(user: UserDB,postId : String,postURL : String,postCaption : String,completion:@escaping()->()){
-        self.createConversation(user: user) { response in
+        self.createConversation(user: user,chatStatus: ISMChatStatus.Reject.value) { response in
+            NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
             self.sendMessage(messageKind: .post, customType: ISMChatMediaType.Post.value, conversationId: response?.conversationId ?? "", message: postURL, fileName: "", fileSize: nil, mediaId: nil,caption: postCaption,postId: postId) { _, _ in
-                NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
                 completion()
             }
         }
@@ -313,7 +313,7 @@ extension ChatsViewModel{
             
             for newUser in users {
                 conversationGroup.enter()
-                self.createConversation(user: newUser) { data in
+                self.createConversation(user: newUser,chatStatus: ISMChatStatus.Reject.value) { data in
                     guard let conversationId = data?.conversationId else {
                         conversationGroup.leave()
                         return
