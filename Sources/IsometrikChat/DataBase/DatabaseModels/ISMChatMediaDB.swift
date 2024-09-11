@@ -26,4 +26,5 @@ public class MediaDB : Object, ObjectKeyIdentifiable {
     @Persisted public var messageId : String = ""
     @Persisted public var userName : String = ""
     @Persisted public var caption : String = ""
+    @Persisted public var isDelete : Bool = false
 }

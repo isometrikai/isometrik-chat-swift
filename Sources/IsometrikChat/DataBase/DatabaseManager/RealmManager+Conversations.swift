@@ -144,155 +144,146 @@ extension RealmManager {
     
     //MARK: - Add conversation locally
     public func addConversation(obj: [ISMChatConversationsDetail]) {
-        if let localRealm = localRealm {
-            do {
-                try localRealm.write {
-                    for value in obj {
-                        
-                        let obj = ConversationDB()
-                        obj.conversationId = value.conversationId ?? ""
-                        obj.updatedAt = value.lastMessageDetails?.updatedAt ?? 00
-                        obj.unreadMessagesCount = value.unreadMessagesCount ?? 0
-                        obj.membersCount = value.membersCount ?? 0
-                        obj.lastMessageSentAt = value.lastMessageSentAt ?? 0
-                        obj.createdAt = value.createdAt ?? 00
-                        obj.mode = "mode"
-                        obj.conversationTitle = value.conversationTitle ?? ""
-                        obj.conversationImageUrl = value.conversationImageUrl ?? ""
-                        obj.createdBy = value.createdBy ?? ""
-                        obj.createdByUserName = value.createdByUserName ?? ""
-                        obj.privateOneToOne = value.privateOneToOne ?? false
-                        obj.messagingDisabled = false
-                        obj.isGroup = value.isGroup ?? false
-                        
-                        let convmetaData = ConversationMetaData()
-                        convmetaData.chatStatus = value.metaData?.chatStatus
-                        obj.metaData = convmetaData
-                        
-                        let config = ConfigDB()
-                        config.typingEvents = value.config?.typingEvents
-                        config.pushNotifications = value.config?.pushNotifications
-                        config.readEvents = value.config?.readEvents
-                        obj.config = config
-                        
-                        let user = UserDB()
-                        user.lastSeen = value.opponentDetails?.lastSeen ?? 00
-                        user.online = value.opponentDetails?.online
-                        user.userId = value.opponentDetails?.userId
-                        user.userIdentifier = value.opponentDetails?.userIdentifier
-                        user.userName = value.opponentDetails?.userName
-                        user.userProfileImageUrl = value.opponentDetails?.userProfileImageUrl
-                        
-                        let oppoMetaData = UserMetaDataDB()
-                        oppoMetaData.userId = value.opponentDetails?.metaData?.userId
-                        oppoMetaData.userType = value.opponentDetails?.metaData?.userType
-                        oppoMetaData.isStarUser = value.opponentDetails?.metaData?.isStarUser
-                        
-                        user.metaData = oppoMetaData
-                        
-                        obj.opponentDetails = user
-                        
-                        let lastMsg = LastMessageDB()
-                        lastMsg.sentAt = value.lastMessageDetails?.sentAt
-                        lastMsg.updatedAt = value.lastMessageDetails?.updatedAt
-                        lastMsg.senderName = value.lastMessageDetails?.senderName
-                        lastMsg.senderIdentifier = value.lastMessageDetails?.senderIdentifier
-                        lastMsg.senderId = value.lastMessageDetails?.senderId
-                        lastMsg.conversationId = value.lastMessageDetails?.conversationId
-                        lastMsg.body = value.lastMessageDetails?.body
-                        lastMsg.messageId = value.lastMessageDetails?.messageId
-                        lastMsg.customType = value.lastMessageDetails?.customType
-                        lastMsg.action = value.lastMessageDetails?.action
-                        lastMsg.userId = value.lastMessageDetails?.userId ?? ""
-                        lastMsg.reactionType = value.lastMessageDetails?.reactionType ?? ""
-                        lastMsg.memberName = value.lastMessageDetails?.memberName ?? ""
-                        lastMsg.memberId = value.lastMessageDetails?.memberId ?? ""
-                        lastMsg.userName = value.lastMessageDetails?.userName ?? ""
-                        lastMsg.initiatorName = value.lastMessageDetails?.initiatorName
-                        lastMsg.initiatorId = value.lastMessageDetails?.initiatorId
-                        lastMsg.initiatorIdentifier = value.lastMessageDetails?.initiatorIdentifier
-                        lastMsg.reactionType = value.lastMessageDetails?.reactionType ?? ""
-                        lastMsg.meetingId = value.lastMessageDetails?.meetingId
-                        
-                        if let missedByMembers = value.lastMessageDetails?.missedByMembers {
-                            for x in missedByMembers{
-                                lastMsg.missedByMembers.append(x)
-                            }
-                        }
-                        
-                        if let callDurations = value.lastMessageDetails?.callDurations{
-                            for x in callDurations{
-                                let objV = ISMMeetingDuration()
-                                objV.memberId = x.memberId
-                                objV.durationInMilliseconds = x.durationInMilliseconds
-                                lastMsg.callDurations.append(objV)
-                            }
-                        }
-                        
-                        if lastMsg.action == ISMChatActionType.messageDetailsUpdated.value{
-                            lastMsg.body = value.lastMessageDetails?.details?.body
-                        }
-                        
-                        
-                        for x in value.lastMessageDetails?.members ?? []{
-                            let obj = LastMessageMemberDB()
-                            obj.memberProfileImageUrl = x.memberProfileImageUrl
-                            obj.memberName = x.memberName
-                            obj.memberIdentifier = x.memberIdentifier
-                            obj.memberId = x.memberId
-                            lastMsg.members.append(obj)
-                        }
-                        
-                        
-                        let metaData = MetaDataDB()
-                        
-                        let replyMessageData = ReplyMessageDB()
-                        replyMessageData.parentMessageId = value.lastMessageDetails?.metaData?.replyMessage?.parentMessageId
-                        replyMessageData.parentMessageBody = value.lastMessageDetails?.metaData?.replyMessage?.parentMessageBody
-                        replyMessageData.parentMessageUserId = value.lastMessageDetails?.metaData?.replyMessage?.parentMessageUserId
-                        replyMessageData.parentMessageUserName = value.lastMessageDetails?.metaData?.replyMessage?.parentMessageUserName
-                        replyMessageData.parentMessageMessageType = value.lastMessageDetails?.metaData?.replyMessage?.parentMessageMessageType
-                        replyMessageData.parentMessageAttachmentUrl = value.lastMessageDetails?.metaData?.replyMessage?.parentMessageAttachmentUrl
-                        replyMessageData.parentMessageInitiator = value.lastMessageDetails?.metaData?.replyMessage?.parentMessageInitiator
-                        replyMessageData.parentMessagecaptionMessage = value.lastMessageDetails?.metaData?.replyMessage?.parentMessagecaptionMessage
-                        
-                        metaData.replyMessage = replyMessageData
-                        metaData.locationAddress = value.lastMessageDetails?.metaData?.locationAddress
-                        metaData.captionMessage = value.lastMessageDetails?.metaData?.captionMessage
-                        
-                        var post = PostDB()
-                        post.postId = value.lastMessageDetails?.metaData?.post?.postId
-                        post.postUrl = value.lastMessageDetails?.metaData?.post?.postUrl
-                        metaData.post = post
-                        
-                        metaData.isBroadCastMessage = value.lastMessageDetails?.metaData?.isBroadCastMessage
-                        lastMsg.metaData = metaData
-                        
-                        
-                        for obj in value.lastMessageDetails?.deliveredTo ?? [] {
-                            let deliverObj = MessageDeliveryStatusDB()
-                            deliverObj.userId = obj.userId
-                            deliverObj.timestamp = obj.timestamp
-                            
-                            lastMsg.deliveredTo.append(deliverObj)
-                        }
-                        
-                        for obj in value.lastMessageDetails?.readBy ?? [] {
-                            let deliverObj = MessageDeliveryStatusDB()
-                            deliverObj.userId = obj.userId
-                            deliverObj.timestamp = obj.timestamp
-                            
-                            lastMsg.readBy.append(deliverObj)
-                        }
-                        obj.lastMessageDetails = lastMsg
-                        
-                        localRealm.add(obj)
+        guard let localRealm = localRealm else { return }
+        
+        do {
+            try localRealm.write {
+                for value in obj {
+                    
+                    let conversation = ConversationDB()
+                    conversation.conversationId = value.conversationId ?? ""
+                    conversation.updatedAt = value.lastMessageDetails?.updatedAt ?? 0
+                    conversation.unreadMessagesCount = value.unreadMessagesCount ?? 0
+                    conversation.membersCount = value.membersCount ?? 0
+                    conversation.lastMessageSentAt = value.lastMessageSentAt ?? 0
+                    conversation.createdAt = value.createdAt ?? 0
+                    conversation.mode = "mode"
+                    conversation.conversationTitle = value.conversationTitle ?? ""
+                    conversation.conversationImageUrl = value.conversationImageUrl ?? ""
+                    conversation.createdBy = value.createdBy ?? ""
+                    conversation.createdByUserName = value.createdByUserName ?? ""
+                    conversation.privateOneToOne = value.privateOneToOne ?? false
+                    conversation.messagingDisabled = false
+                    conversation.isGroup = value.isGroup ?? false
+                    
+                    let metaData = ConversationMetaData()
+                    metaData.chatStatus = value.metaData?.chatStatus
+                    conversation.metaData = metaData
+                    
+                    let config = ConfigDB()
+                    config.typingEvents = value.config?.typingEvents
+                    config.pushNotifications = value.config?.pushNotifications
+                    config.readEvents = value.config?.readEvents
+                    conversation.config = config
+                    
+                    let user = UserDB()
+                    user.lastSeen = value.opponentDetails?.lastSeen ?? 0
+                    user.online = value.opponentDetails?.online ?? false
+                    user.userId = value.opponentDetails?.userId ?? ""
+                    user.userIdentifier = value.opponentDetails?.userIdentifier ?? ""
+                    user.userName = value.opponentDetails?.userName ?? ""
+                    user.userProfileImageUrl = value.opponentDetails?.userProfileImageUrl ?? ""
+                    
+                    let opponentMetaData = UserMetaDataDB()
+                    opponentMetaData.userId = value.opponentDetails?.metaData?.userId ?? ""
+                    opponentMetaData.userType = value.opponentDetails?.metaData?.userType ?? 0
+                    opponentMetaData.isStarUser = value.opponentDetails?.metaData?.isStarUser ?? false
+                    
+                    user.metaData = opponentMetaData
+                    conversation.opponentDetails = user
+                    
+                    let lastMessage = LastMessageDB()
+                    lastMessage.sentAt = value.lastMessageDetails?.sentAt ?? 0
+                    lastMessage.updatedAt = value.lastMessageDetails?.updatedAt ?? 0
+                    lastMessage.senderName = value.lastMessageDetails?.senderName ?? ""
+                    lastMessage.senderIdentifier = value.lastMessageDetails?.senderIdentifier ?? ""
+                    lastMessage.senderId = value.lastMessageDetails?.senderId ?? ""
+                    lastMessage.conversationId = value.lastMessageDetails?.conversationId ?? ""
+                    lastMessage.body = value.lastMessageDetails?.body ?? ""
+                    lastMessage.messageId = value.lastMessageDetails?.messageId ?? ""
+                    lastMessage.customType = value.lastMessageDetails?.customType ?? ""
+                    lastMessage.action = value.lastMessageDetails?.action ?? ""
+                    lastMessage.userId = value.lastMessageDetails?.userId ?? ""
+                    lastMessage.reactionType = value.lastMessageDetails?.reactionType ?? ""
+                    lastMessage.memberName = value.lastMessageDetails?.memberName ?? ""
+                    lastMessage.memberId = value.lastMessageDetails?.memberId ?? ""
+                    lastMessage.userName = value.lastMessageDetails?.userName ?? ""
+                    lastMessage.initiatorName = value.lastMessageDetails?.initiatorName ?? ""
+                    lastMessage.initiatorId = value.lastMessageDetails?.initiatorId ?? ""
+                    lastMessage.initiatorIdentifier = value.lastMessageDetails?.initiatorIdentifier ?? ""
+                    lastMessage.meetingId = value.lastMessageDetails?.meetingId ?? ""
+                    
+                    if let missedByMembers = value.lastMessageDetails?.missedByMembers {
+                        lastMessage.missedByMembers.append(objectsIn: missedByMembers)
                     }
-                    getAllConversations()
+                    
+                    if let callDurations = value.lastMessageDetails?.callDurations {
+                        for duration in callDurations {
+                            let meetingDuration = ISMMeetingDuration()
+                            meetingDuration.memberId = duration.memberId
+                            meetingDuration.durationInMilliseconds = duration.durationInMilliseconds ?? 0
+                            lastMessage.callDurations.append(meetingDuration)
+                        }
+                    }
+                    
+                    if lastMessage.action == ISMChatActionType.messageDetailsUpdated.value {
+                        lastMessage.body = value.lastMessageDetails?.details?.body ?? ""
+                    }
+                    
+                    for member in value.lastMessageDetails?.members ?? [] {
+                        let lastMessageMember = LastMessageMemberDB()
+                        lastMessageMember.memberProfileImageUrl = member.memberProfileImageUrl ?? ""
+                        lastMessageMember.memberName = member.memberName ?? ""
+                        lastMessageMember.memberIdentifier = member.memberIdentifier ?? ""
+                        lastMessageMember.memberId = member.memberId ?? ""
+                        lastMessage.members.append(lastMessageMember)
+                    }
+                    
+                    let messageMetaData = MetaDataDB()
+                    
+                    let replyMessage = ReplyMessageDB()
+                    replyMessage.parentMessageId = value.lastMessageDetails?.metaData?.replyMessage?.parentMessageId ?? ""
+                    replyMessage.parentMessageBody = value.lastMessageDetails?.metaData?.replyMessage?.parentMessageBody ?? ""
+                    replyMessage.parentMessageUserId = value.lastMessageDetails?.metaData?.replyMessage?.parentMessageUserId ?? ""
+                    replyMessage.parentMessageUserName = value.lastMessageDetails?.metaData?.replyMessage?.parentMessageUserName ?? ""
+                    replyMessage.parentMessageMessageType = value.lastMessageDetails?.metaData?.replyMessage?.parentMessageMessageType ?? ""
+                    replyMessage.parentMessageAttachmentUrl = value.lastMessageDetails?.metaData?.replyMessage?.parentMessageAttachmentUrl ?? ""
+                    replyMessage.parentMessageInitiator = value.lastMessageDetails?.metaData?.replyMessage?.parentMessageInitiator ?? false
+                    replyMessage.parentMessagecaptionMessage = value.lastMessageDetails?.metaData?.replyMessage?.parentMessagecaptionMessage ?? ""
+                    
+                    messageMetaData.replyMessage = replyMessage
+                    messageMetaData.locationAddress = value.lastMessageDetails?.metaData?.locationAddress ?? ""
+                    messageMetaData.captionMessage = value.lastMessageDetails?.metaData?.captionMessage ?? ""
+                    
+                    let post = PostDB()
+                    post.postId = value.lastMessageDetails?.metaData?.post?.postId ?? ""
+                    post.postUrl = value.lastMessageDetails?.metaData?.post?.postUrl ?? ""
+                    messageMetaData.post = post
+                    
+                    messageMetaData.isBroadCastMessage = value.lastMessageDetails?.metaData?.isBroadCastMessage ?? false
+                    lastMessage.metaData = messageMetaData
+                    
+                    for delivered in value.lastMessageDetails?.deliveredTo ?? [] {
+                        let deliveryStatus = MessageDeliveryStatusDB()
+                        deliveryStatus.userId = delivered.userId ?? ""
+                        deliveryStatus.timestamp = delivered.timestamp ?? 0
+                        lastMessage.deliveredTo.append(deliveryStatus)
+                    }
+                    
+                    for read in value.lastMessageDetails?.readBy ?? [] {
+                        let readStatus = MessageDeliveryStatusDB()
+                        readStatus.userId = read.userId ?? ""
+                        readStatus.timestamp = read.timestamp ?? 0
+                        lastMessage.readBy.append(readStatus)
+                    }
+                    
+                    conversation.lastMessageDetails = lastMessage
+                    localRealm.add(conversation)
                 }
-            } catch {
-                print("Error adding task to Realm: \(error)")
+                getAllConversations()
             }
+        } catch {
+            print("Error adding task to Realm: \(error.localizedDescription)")
         }
     }
     

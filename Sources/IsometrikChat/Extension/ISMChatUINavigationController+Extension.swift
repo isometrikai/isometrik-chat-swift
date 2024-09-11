@@ -28,6 +28,7 @@ extension NSNotification {
     public static let localNotification = Notification.Name.init("localNotification")
     public static let memberAddAndRemove = Notification.Name.init("memberAddAndRemove")
     public static let refrestConversationListLocally = Notification.Name.init("refrestConversationListLocally")
+    public static let refrestMessagesListLocally = Notification.Name.init("refrestMessagesListLocally")
     public static let refreshBroadCastListNotification = Notification.Name.init("refreshBroadCastList")
     public static let refreshOtherChatCount = Notification.Name.init("refreshOtherChatCount")
     public static let updateChatCount = Notification.Name.init("updateChatCount")

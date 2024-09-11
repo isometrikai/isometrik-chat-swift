@@ -354,6 +354,9 @@ public struct ISMMessageView: View {
             ISMChatHelper.print("MULTIPLE MESSAGE READ ----------------->\(messageInfo)")
             multipleMessageRead(messageInfo: messageInfo)
         }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.refrestMessagesListLocally)) { _ in
+            getMessages()
+        }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.memberAddAndRemove)) { _ in
             self.getConversationDetail()
         }
