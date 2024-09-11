@@ -24,5 +24,6 @@ public class AttachmentDB : Object, ObjectKeyIdentifiable {
     @Persisted public var longitude : Double = 0.0
     @Persisted public var title : String = ""
     @Persisted public var address : String = ""
+    @Persisted public var caption : String = ""
     
 }

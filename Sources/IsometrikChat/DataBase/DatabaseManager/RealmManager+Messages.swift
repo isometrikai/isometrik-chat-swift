@@ -282,6 +282,7 @@ extension RealmManager{
                             attach.longitude = result.longitude ?? 0
                             attach.title = result.title ?? ""
                             attach.address = result.address ?? ""
+                            attach.caption = value.metaData?.captionMessage ?? ""
                             obj.attachments.append(attach)
                         }
                         
@@ -448,6 +449,48 @@ extension RealmManager{
             }
         }
     }
+    
+    public func deleteMediaThroughConversationId(convID: String)  {
+        if let localRealm = localRealm {
+            let taskToUpdate = localRealm.objects(MediaDB.self).filter(NSPredicate(format: "conversationId == %@", (convID )))
+            if !taskToUpdate.isEmpty {
+                try! localRealm.write {
+                    for x in taskToUpdate{
+                        x.isDelete = true
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    public func deleteMediaMessage(convID: String, messageId: String) {
+        guard let localRealm = localRealm else { return }
+        
+        // Fetch matching messages in MessagesDB with both conversationId and messageId
+        let messagesToUpdate = localRealm.objects(MessagesDB.self).filter("conversationId == %@ AND messageId == %@", convID, messageId)
+        
+        // Fetch matching media entries in MediaDB with both conversationId and messageId
+        let mediaToUpdate = localRealm.objects(MediaDB.self).filter("conversationId == %@ AND messageId == %@", convID, messageId)
+        
+        do {
+            try localRealm.write {
+                // Update isDelete to true in MessagesDB
+                for message in messagesToUpdate {
+                    message.isDelete = true
+                }
+                
+                // Update isDelete to true in MediaDB
+                for media in mediaToUpdate {
+                    media.isDelete = true
+                }
+                fetchPhotosAndVideos(conId:convID)
+            }
+        } catch {
+            print("Error updating records in Realm: \(error.localizedDescription)")
+        }
+    }
+
     
     //MARK: - Add read for all users
     public func addReadByUser(convId:String,messageId:String,userId:String,updatedAt:Double) {

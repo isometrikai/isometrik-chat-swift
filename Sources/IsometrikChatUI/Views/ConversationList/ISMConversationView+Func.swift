@@ -81,6 +81,7 @@ extension ISMConversationView{
         viewModel.deleteConversation(conversationId: conversationId) {
             realmManager.deleteConversation(convID: conversationId)
             realmManager.deleteMessagesThroughConvId(convID: conversationId)
+            realmManager.deleteMediaThroughConversationId(convID: conversationId)
             DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
                 self.viewModel.resetdata()
                 self.viewModel.clearMessages()
@@ -105,6 +106,7 @@ extension ISMConversationView{
         chatViewModel.exitGroup(conversationId: conversationId) {
             realmManager.deleteConversation(convID: conversationId)
             realmManager.deleteMessagesThroughConvId(convID: conversationId)
+            realmManager.deleteMediaThroughConversationId(convID: conversationId)
             DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
                 self.viewModel.resetdata()
                 self.viewModel.clearMessages()

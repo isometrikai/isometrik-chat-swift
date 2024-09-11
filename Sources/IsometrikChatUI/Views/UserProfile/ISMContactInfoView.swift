@@ -337,6 +337,7 @@ struct ISMContactInfoView: View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                     realmManager.deleteConversation(convID: conversationID ?? "")
                     realmManager.deleteMessagesThroughConvId(convID: conversationID ?? "")
+                    realmManager.deleteMediaThroughConversationId(convID: conversationID ?? "")
                     NavigationUtil.popToRootView()
                 })
             }

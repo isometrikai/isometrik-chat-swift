@@ -65,7 +65,8 @@ extension RealmManager{
             
             let media = Array(localRealm.objects(MediaDB.self)
                 .filter(NSPredicate(format: "conversationId == %@", conId))
-                .filter(predicateCompound))
+                .filter(predicateCompound)
+                .filter(NSPredicate(format: "isDelete == %@", NSNumber(value: false))))
             self.medias = media
         }
     }
@@ -75,7 +76,8 @@ extension RealmManager{
         if let localRealm = localRealm {
             let media = Array(localRealm.objects(MediaDB.self)
                 .filter(NSPredicate(format: "conversationId == %@", conId))
-                .filter(NSPredicate(format: "customType == %@", ISMChatMediaType.File.value)))
+                .filter(NSPredicate(format: "customType == %@", ISMChatMediaType.File.value))
+                .filter(NSPredicate(format: "isDelete == %@", NSNumber(value: false))))
             self.filesMedia = media
         }
     }
@@ -84,7 +86,8 @@ extension RealmManager{
     public func fetchLinks(conId: String) {
         if let localRealm = localRealm {
             let messages = Array(localRealm.objects(MessagesDB.self)
-                .filter(NSPredicate(format: "conversationId == %@", conId)))
+                .filter(NSPredicate(format: "conversationId == %@", conId))
+                .filter(NSPredicate(format: "isDelete == %@", NSNumber(value: false))))
             
             // Filter messages that contain "www" or "https" and do not contain "map"
             let filteredMessages = messages.filter { message in
