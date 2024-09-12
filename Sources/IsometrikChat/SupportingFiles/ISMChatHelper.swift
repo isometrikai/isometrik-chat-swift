@@ -441,8 +441,8 @@ public class ISMChatHelper: NSObject {
         return NSURL(fileURLWithPath: lastComponent).pathExtension
     }
     
-    public class func subscribeFCM(){
-        let userId = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId
+    public class func subscribeFCM(userId : String){
+//        let userId = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId
         Messaging.messaging().subscribe(toTopic: "chat-\(userId)") { (error) in
             if error != nil {
                 print("errror fcm topic ", error as Any)

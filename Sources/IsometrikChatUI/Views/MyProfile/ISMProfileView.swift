@@ -13,12 +13,10 @@ public struct ISMProfileView: View {
     
     //MARK:  - PROPERTIES
     @ObservedObject public var viewModel = ConversationViewModel()
-//    @EnvironmentObject var vm: OnboardingViewModel
     @State public var showSheet = false
     @State public var image : [UIImage] = []
     @EnvironmentObject public var realmManager : RealmManager
     @Environment(\.dismiss) public var dismiss
-//    public var ismChatSDK: ISMChatSdk?
     @State public var isSwitchOn : Bool = true
     @State public var showLastSeen : Bool = true
     @State public var userName : String = ""
@@ -114,14 +112,7 @@ public struct ISMProfileView: View {
                                 Toggle("", isOn: $showLastSeen)
                             }
                             Button {
-                                Task{
-                                    
-//                                    vm.signOut { _ in
-//                                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-//                                            ismChatSDK?.onTerminate()
-//                                        })
-//                                    }
-                                }
+                                ISMChatSdk.getInstance().onTerminate()
                             } label: {
                                 HStack(spacing: 15){
                                     themeImage.LogoutIcon
