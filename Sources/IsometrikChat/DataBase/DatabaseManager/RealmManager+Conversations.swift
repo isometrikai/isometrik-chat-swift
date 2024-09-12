@@ -734,4 +734,15 @@ extension RealmManager {
             }
         }
     }
+    
+    public func isConversationExists(conversationID: String) -> Bool {
+        do {
+            let realm = try Realm()
+            // Query the ConversationDB table to find an existing conversation with the given primary key
+            return realm.object(ofType: ConversationDB.self, forPrimaryKey: conversationID) != nil
+        } catch {
+            print("Error checking if conversation exists: \(error.localizedDescription)")
+            return false
+        }
+    }
 }

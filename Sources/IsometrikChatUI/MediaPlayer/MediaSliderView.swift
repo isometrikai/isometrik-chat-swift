@@ -94,16 +94,16 @@ struct MediaSliderView: View {
                                 .frame(width: 25, height: 25) // Set the desired width and height
                                 .foregroundColor(.black)
                         }
-                        Spacer()
-                        Button { 
-                            
-                        } label: {
-                            Image(systemName: "arrowshape.turn.up.right")
-                                .resizable() // Makes the image resizable
-                                .aspectRatio(contentMode: .fit) // Maintains the aspect ratio of the image
-                                .frame(width: 25, height: 25) // Set the desired width and height
-                                .foregroundColor(.black)
-                        }
+//                        Spacer()
+//                        Button { 
+//                            
+//                        } label: {
+//                            Image(systemName: "arrowshape.turn.up.right")
+//                                .resizable() // Makes the image resizable
+//                                .aspectRatio(contentMode: .fit) // Maintains the aspect ratio of the image
+//                                .frame(width: 25, height: 25) // Set the desired width and height
+//                                .foregroundColor(.black)
+//                        }
                         if onScreen == true{
                             if  selectedIndex >= 0 && selectedIndex < data.count {
                                 if ISMChatHelper.isVideoString(media: data[selectedIndex].mediaUrl){
@@ -130,8 +130,8 @@ struct MediaSliderView: View {
                                 .frame(width: 25, height: 25) // Set the desired width and height
                                 .foregroundColor(.black)
                         }
-                        Spacer()
-                        Button { 
+//                        Spacer()
+//                        Button { 
 //                            // Perform the delete operation
 //                            reamlManager.deleteMediaMessage(convID: data[selectedIndex].conversationId, messageId: data[selectedIndex].messageId)
 //                            
@@ -147,13 +147,13 @@ struct MediaSliderView: View {
 //                            if data.isEmpty {
 //                                dismiss() // Or handle empty state, e.g., show a placeholder
 //                            }
-                        } label: {
-                            Image(systemName: "trash")
-                                .resizable() // Makes the image resizable
-                                .aspectRatio(contentMode: .fit) // Maintains the aspect ratio of the image
-                                .frame(width: 20, height: 20) // Set the desired width and height
-                                .foregroundColor(.black)
-                        }
+//                        } label: {
+//                            Image(systemName: "trash")
+//                                .resizable() // Makes the image resizable
+//                                .aspectRatio(contentMode: .fit) // Maintains the aspect ratio of the image
+//                                .frame(width: 20, height: 20) // Set the desired width and height
+//                                .foregroundColor(.black)
+//                        }
                     }
                     .padding(.horizontal, 25)
                 }

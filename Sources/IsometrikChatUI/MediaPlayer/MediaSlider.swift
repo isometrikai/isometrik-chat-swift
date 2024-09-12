@@ -7,7 +7,7 @@
 
 import SwiftUI
 import AVKit
-import SDWebImageSwiftUI
+//import SDWebImageSwiftUI
 import IsometrikChat
 
 
