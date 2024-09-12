@@ -196,7 +196,7 @@ extension ISMMessageView{
             
             VStack(alignment: .leading) {
                 Text(getProfileTitle())
-                    .frame(width: 200,alignment: .leading)
+                    .frame(width: chatFeatures.contains(.videocall) && self.fromBroadCastFlow == false ? 120 : 200,alignment: .leading)
                     .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                     .font(appearance.fonts.messageListHeaderTitle)
                 
