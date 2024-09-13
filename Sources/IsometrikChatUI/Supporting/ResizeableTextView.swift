@@ -38,12 +38,12 @@ struct ResizeableTextView: UIViewRepresentable {
     }
 
     func updateUIView(_ textView: UITextView, context: Context) {
-        if !text.isEmpty || textView.isFirstResponder {
-            textView.text = text
-            textView.textColor = textViewColor
-        } else {
+        if text.isEmpty && !textView.isFirstResponder {
             textView.text = placeholderText
             textView.textColor = UIColor(placeholderColor)
+        } else {
+            textView.text = text
+            textView.textColor = textViewColor
         }
 
         if typingStarted {
@@ -67,12 +67,20 @@ struct ResizeableTextView: UIViewRepresentable {
         }
 
         func textViewDidBeginEditing(_ textView: UITextView) {
+            if textView.text == parent.placeholderText {
+                textView.text = ""
+                textView.textColor = parent.textViewColor
+            }
             DispatchQueue.main.async {
                 self.parent.typingStarted = true
             }
         }
 
         func textViewDidEndEditing(_ textView: UITextView) {
+            if textView.text.isEmpty {
+                textView.text = parent.placeholderText
+                textView.textColor = UIColor(parent.placeholderColor)
+            }
             DispatchQueue.main.async {
                 self.parent.typingStarted = false
             }
