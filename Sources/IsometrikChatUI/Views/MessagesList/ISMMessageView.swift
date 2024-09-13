@@ -416,7 +416,10 @@ public struct ISMMessageView: View {
 //            sendMessageIfGif()
 //        })
         .onChange(of: stateViewModel.sendMedia, { _, _ in
-            sendMessageIfUploadMedia()
+            if stateViewModel.sendMedia == true{
+                stateViewModel.sendMedia = false
+                sendMessageIfUploadMedia()
+            }
         })
         .onChange(of: updateMessage.body) { newValue in
             self.textFieldtxt = updateMessage.body
