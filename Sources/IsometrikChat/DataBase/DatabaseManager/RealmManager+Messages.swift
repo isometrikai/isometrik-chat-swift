@@ -34,27 +34,33 @@ extension RealmManager{
     }
     
     //MARK: - update message Id for locally added message before api call, for best performance
-    public func updateMsgId(objectId: String, msgId: String,mediaUrl : String? = nil,thumbnailUrl : String? = nil,mediaSize : Int? = nil,mediaId : String? = nil) {
+    public func updateMsgId(objectId: String, msgId: String,conversationId : String,mediaUrl : String? = nil,thumbnailUrl : String? = nil,mediaSize : Int? = nil,mediaId : String? = nil) {
         if let localRealm = localRealm {
             do {
                 let id = try ObjectId(string: objectId)
-                let existingDog = localRealm.object(ofType: MessagesDB.self, forPrimaryKey: id)
+                let message = localRealm.object(ofType: MessagesDB.self, forPrimaryKey: id)
                 try! localRealm.write {
-                    existingDog?.messageId = msgId
-                    existingDog?.msgSyncStatus = ISMChatSyncStatus.Synch.txt
+                    message?.messageId = msgId
+                    message?.msgSyncStatus = ISMChatSyncStatus.Synch.txt
                     if let url = mediaUrl{
-                        existingDog?.attachments.first?.mediaUrl = url
+                        message?.attachments.first?.mediaUrl = url
                     }
                     if let thumbnailUrl = thumbnailUrl{
-                        existingDog?.attachments.first?.thumbnailUrl = thumbnailUrl
+                        message?.attachments.first?.thumbnailUrl = thumbnailUrl
                     }
                     if let mediaSize = mediaSize{
-                        existingDog?.attachments.first?.size = mediaSize
+                        message?.attachments.first?.size = mediaSize
                     }
                     if let mediaId = mediaId{
-                        existingDog?.attachments.first?.mediaId = mediaId
+                        message?.attachments.first?.mediaId = mediaId
                     }
                     
+                    if let taskToUpdate = localRealm.objects(ConversationDB.self).where({ $0.conversationId == conversationId }).first {
+                        taskToUpdate.lastMessageDetails?.msgSyncStatus = ISMChatSyncStatus.Synch.txt
+                        taskToUpdate.lastMessageDetails?.messageId = msgId
+                    } else {
+                        print("Conversation not found with the given conversationId: \(conversationId)")
+                    }
                 }
             }catch {
                 print("ERROR UPDATE")

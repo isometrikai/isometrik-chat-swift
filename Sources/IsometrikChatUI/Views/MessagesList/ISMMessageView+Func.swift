@@ -146,7 +146,7 @@ extension ISMMessageView{
                 group.enter()
                 if obj.customType == ISMChatMediaType.Text.value && obj.body != "" {
                     chatViewModel.sendMessage(messageKind: .text, customType: ISMChatMediaType.Text.value, conversationId: obj.conversationId, message: obj.body, fileName: nil, fileSize: nil, mediaId: nil,objectId: obj.id.description,isGroup: self.isGroup,groupMembers: self.mentionUsers,isBroadCastMessage: self.fromBroadCastFlow,groupcastId: self.groupCastId) { msgId,objId  in
-                        realmManager.updateMsgId(objectId: objId, msgId: msgId)
+                        realmManager.updateMsgId(objectId: objId, msgId: msgId, conversationId: self.conversationID ?? "")
                         if fromBroadCastFlow == true{
                             //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                             NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
@@ -155,7 +155,7 @@ extension ISMMessageView{
                     }
                 }else if obj.customType == ISMChatMediaType.Location.value {
                     chatViewModel.sendMessage(messageKind: .location, customType: ISMChatMediaType.Location.value, conversationId: self.conversationID ?? "", message: obj.body, fileName: nil, fileSize: nil, mediaId: nil, placeName: obj.placeName,isBroadCastMessage: self.fromBroadCastFlow,groupcastId: self.groupCastId) { msgId,objId in
-                        realmManager.updateMsgId(objectId: objId, msgId: msgId)
+                        realmManager.updateMsgId(objectId: objId, msgId: msgId, conversationId: self.conversationID ?? "")
                         if fromBroadCastFlow == true{
                             //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                             NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
@@ -329,7 +329,7 @@ extension ISMMessageView{
                 self.text = ""
                 
                 //4. update messageId locally
-                realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId)
+                realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId, conversationId: self.conversationID ?? "")
                 localIds.removeFirst()
                 
                 
@@ -363,7 +363,7 @@ extension ISMMessageView{
             chatViewModel.sendMessage(messageKind: .contact, customType: ISMChatMediaType.Contact.value, conversationId: self.conversationID ?? "", message: "", fileName: nil, fileSize: nil, mediaId: nil,contactInfo: selectedContactToShare) { messageId, _ in
                 
                 //4. update messageId locally
-                realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId)
+                realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId, conversationId: self.conversationID ?? "")
                 localIds.removeFirst()
                 
             }
@@ -558,13 +558,6 @@ extension ISMMessageView{
                         
                         sendMediaMessage(messageKind: .audio, customType: ISMChatMediaType.Voice.value, mediaId: mediaId, mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
                         localIds.removeFirst()
-//                        viewModel.sendMessage(messageKind: .audio, customType: ISMChatMediaType.Voice.value, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId) {messageId,_ in
-//                            
-//                            //4. update messageId locally
-//                            realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",mediaSize: size,mediaId: data.mediaId)
-//                            localIds.removeFirst()
-//                            
-//                        }
                     }
                 }
             }
@@ -606,36 +599,6 @@ extension ISMMessageView{
                             }
                             
                         }
-                        
-                        
-                        //upload thumbnail image
-//                        viewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", image: thumbnailUrl, document: nil, video: nil, audio: nil, mediaName: "\(UUID()).jpg") { thumbnailmedia, thumbnailfilename, thumbnailsize in
-//                            //upload video
-//                            viewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: nil, document: nil, video: media.url, audio: nil, mediaName:  mediaName) {  data, filename, size in
-//                                if let data = data {
-//                                    viewModel.sendMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,thumbnailUrl: thumbnailmedia?.mediaUrl,caption: media.caption) {messageId,_ in
-//                                        if media == self.videoSelectedFromPicker.last {
-//                                            self.videoSelectedFromPicker.removeAll()
-//                                        }
-//                                        
-//                                        //4. update messageId locally
-//                                        realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",thumbnailUrl: thumbnailmedia?.mediaUrl,mediaSize: size,mediaId: data.mediaId)
-//                                        localIds.removeFirst()
-//                                        
-//                                        //5. we need to save media
-//                                        let attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Video.type, extensions: ISMChatExtensionType.Video.type, mediaUrl: data.mediaUrl ?? "", mimeType: ISMChatExtensionType.Video.type, name: filename, thumbnailUrl: thumbnailmedia?.mediaUrl,caption: media.caption)
-//                                        realmManager.saveMedia(arr: [attachment], conId: self.conversationID ?? "", customType: ISMChatMediaType.Video.value , sentAt: sentAt, messageId: messageId, userName: userSession.getUserName() ?? "", fromView: true)
-//                                        
-//                                        
-//                                        //6. if we add image or video, we need to save it to show in media
-//                                        realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
-//                                        
-//                                        
-//                                        
-//                                    }
-//                                }
-//                            }
-//                        }
                     }
                 }else{
                     
@@ -664,24 +627,6 @@ extension ISMMessageView{
                                 if media == self.videoSelectedFromPicker.last {
                                     self.videoSelectedFromPicker.removeAll()
                                 }
-//                                viewModel.sendMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,caption: media.caption) {messageId,_ in
-//                                    if media == self.videoSelectedFromPicker.last {
-//                                        self.videoSelectedFromPicker.removeAll()
-//                                    }
-//                                    
-//                                    //4. update messageId locally
-//                                    realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",mediaSize: size,mediaId: data.mediaId)
-//                                    localIds.removeFirst()
-//                                    
-//                                    //5. we need to save media
-//                                    let attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Image.type, extensions: ISMChatExtensionType.Image.type, mediaUrl: data.mediaUrl ?? "", mimeType: ISMChatExtensionType.Image.type, name: filename, thumbnailUrl: "",caption: media.caption)
-//                                    realmManager.saveMedia(arr: [attachment], conId: self.conversationID ?? "", customType: ISMChatMediaType.Image.value , sentAt: sentAt, messageId: messageId, userName: userSession.getUserName() ?? "", fromView: true)
-//                                    
-//                                    //6. if we add image or video, we need to save it to show in media
-//                                    realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
-//                                    
-//                                    
-//                                }
                             }
                         }
                     }
@@ -704,7 +649,7 @@ extension ISMMessageView{
             chatViewModel.sendMessage(messageKind: .location, customType: ISMChatMediaType.Location.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,latitude : latitude,longitude: longitude, placeName: name,placeAddress: placeAddress) { msgId,_ in
                 
                 //4. update messageId locally
-                realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: msgId)
+                realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: msgId, conversationId: self.conversationID ?? "")
                 localIds.removeFirst()
                 
             }
@@ -727,7 +672,7 @@ extension ISMMessageView{
                 chatViewModel.sendMessage(messageKind: .text, customType: ISMChatMediaType.Text.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,isGroup: self.isGroup,groupMembers: self.mentionUsers) { msgId,_ in
                     
                     //4. update messageId locally
-                    realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: msgId)
+                    realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: msgId, conversationId: self.conversationID ?? "")
                     localIds.removeFirst()
                     
                     //5. if we send url in text, we need to save it to show in media
@@ -750,7 +695,7 @@ extension ISMMessageView{
         chatViewModel.sendMessage(messageKind: messageKind, customType: customType, conversationId: self.conversationID ?? "", message: mediaUrl, fileName: mediaName, fileSize: mediaData, mediaId: mediaId,thumbnailUrl: thubnailUrl) {messageId,_ in
             
             //4. update messageId locally
-            realmManager.updateMsgId(objectId: objectId, msgId: messageId,mediaUrl: mediaUrl,thumbnailUrl: thubnailUrl,mediaSize: mediaData,mediaId: mediaId)
+            realmManager.updateMsgId(objectId: objectId, msgId: messageId, conversationId: self.conversationID ?? "",mediaUrl: mediaUrl,thumbnailUrl: thubnailUrl,mediaSize: mediaData,mediaId: mediaId)
             
             //5. we need to save media
             if messageKind != .audio{
@@ -767,59 +712,6 @@ extension ISMMessageView{
     }
     
     func sendMessageInBroadcast(){
-//        if selectedGIF != nil{
-//            if selectedGIF?.isSticker == true{
-//                //MARK: - STICKER
-//                
-//                if let url = selectedGIF?.url(rendition: .fixedWidth, fileType: .gif),let filename = selectedGIF?.description{
-////                    
-////                    //1. nill data if any
-//                    nilData()
-////                    
-////                    
-////                    //2. save message locally
-////                    var localIds = [String]()
-////                    let id = saveMessageToLocalDB(sentAt: Date().timeIntervalSince1970 * 1000, messageId: "", message: "Sticker", mentionUsers: [], fileName: filename, fileUrl: url, messageType: .sticker,customType: .sticker, messageKind: .normal)
-////                    localIds.append(id)
-////                    
-//                    //3. send message Api
-//                    viewModel.sendMessage(messageKind: .sticker, customType: ISMChatMediaType.sticker.value, conversationId: self.conversationID ?? "", message: url, fileName: filename, fileSize: nil, mediaId: nil,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_  in
-//                        reloadBroadCastMessages()
-//                        //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
-//                        NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
-////                        //4. update messageId locally
-////                        realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId)
-////                        localIds.removeFirst()
-//                        
-//                    }
-//                }
-//            }else{
-//                //MARK: - GIF
-//                if let url = selectedGIF?.url(rendition: .fixedWidth, fileType: .gif),let filename = selectedGIF?.description{
-//                    
-//                    //1. nill data if any
-//                    nilData()
-//                    
-//                    //2. save message locally
-////                    var localIds = [String]()
-////                    let sentAt = Date().timeIntervalSince1970 * 1000
-////                    
-////                    let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Gif", mentionUsers: [], fileName: filename, fileUrl: url, messageType: .gif,customType: .gif, messageKind: .normal)
-////                    localIds.append(id)
-//                    
-//                    //3. send message api
-//                    viewModel.sendMessage(messageKind: .gif, customType: ISMChatMediaType.gif.value, conversationId: self.conversationID ?? "", message: url, fileName: filename, fileSize: nil, mediaId: nil,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_  in
-//                        reloadBroadCastMessages()
-//                        //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
-//                        NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
-//                        //4. update messageId locally
-////                        realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId)
-////                        localIds.removeFirst()
-//                        
-//                    }
-//                }
-//            }
-//        }else if shareContact == true{
         if stateViewModel.shareContact == true{
             //MARK: - CONTACT MESSAGE
             
@@ -852,17 +744,8 @@ extension ISMMessageView{
             let mediaName = messageKind == .photo ? "\(UUID()).jpg" : "\(UUID()).mp4"
             let msg = messageKind == .photo ? "Image" : "Video"
             
-            //1. nill data if any
+           
             nilData()
-            
-            //2. save message locally
-//            var localIds = [String]()
-//            let sentAt = Date().timeIntervalSince1970 * 1000
-//            let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: msg, mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: messageKind,customType: messageKind == .video ? .Video : .Image, messageKind: .normal)
-//            localIds.append(id)
-            
-            
-            
             if messageKind == .video , let videoUrl = videoUrl{
                 ISMChatHelper.generateThumbnailImageURL(from: videoUrl) { thumbnailUrl in
                     //upload thumbnail image
@@ -874,16 +757,6 @@ extension ISMMessageView{
                                     reloadBroadCastMessages()
                                     //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                                     NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
-                                    //4. update messageId locally
-//                                    realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",thumbnailUrl: thumbnailmedia?.mediaUrl)
-//                                    localIds.removeFirst()
-                                    
-                                    //5. we need to save media
-//                                    let attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Video.type, extensions: ISMChatExtensionType.Video.type, mediaUrl: data.mediaUrl ?? "", mimeType: ISMChatExtensionType.Video.type, name: filename, thumbnailUrl: thumbnailmedia?.mediaUrl)
-//                                    realmManager.saveMedia(arr: [attachment], conId: self.conversationID ?? "", customType: ISMChatMediaType.Video.value , sentAt: sentAt, messageId: messageId, userName: ChatKeychain.shared.userName ?? "", fromView: true)
-//                                    
-//                                    //6. if we add image or video, we need to save it to show in media
-//                                    realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
                                 }
                             }
                         }
@@ -896,16 +769,6 @@ extension ISMMessageView{
                             reloadBroadCastMessages()
                             //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                             NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
-                            //4. update messageId locally
-//                            realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "")
-//                            localIds.removeFirst()
-//                            
-//                            //5. we need to save media
-//                            let attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Image.type, extensions: ISMChatExtensionType.Image.type, mediaUrl: data.mediaUrl ?? "", mimeType: ISMChatExtensionType.Image.type, name: filename, thumbnailUrl: "")
-//                            realmManager.saveMedia(arr: [attachment], conId: self.conversationID ?? "", customType: ISMChatMediaType.Image.value , sentAt: sentAt, messageId: messageId, userName: ChatKeychain.shared.userName ?? "", fromView: true)
-//                            
-//                            //6. if we add image or video, we need to save it to show in media
-//                            realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
                         }
                     }
                 }
@@ -944,11 +807,6 @@ extension ISMMessageView{
             //1. nill data if any
             nilData()
             
-            //2. save message locally
-//            var localIds = [String]()
-//            let sentAt = Date().timeIntervalSince1970 * 1000
-//            let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Document", mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: messageKind,customType: customType, messageKind: .normal)
-//            localIds.append(id)
 //            
 //            
             chatViewModel.upload(messageKind: messageKind, conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: documentSelected, video: imageUrl, audio: nil, mediaName: mediaName ,isfromDocument: true) { data, filename, size in
@@ -957,17 +815,6 @@ extension ISMMessageView{
                         reloadBroadCastMessages()
                         //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                         NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
-                        //4. update messageId locally
-//                        realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "")
-//                        localIds.removeFirst()
-//                        
-//                        //5. we need to save media
-//                        let attachment = ISMChatAttachment(attachmentType: attachment.type, extensions: extensionType.type, mediaUrl: data.mediaUrl ?? "", mimeType: extensionType.type, name: filename, thumbnailUrl: "")
-//                        realmManager.saveMedia(arr: [attachment], conId: self.conversationID ?? "", customType:  customType.value, sentAt: sentAt, messageId: messageId, userName: ChatKeychain.shared.userName ?? "", fromView: true)
-//                        
-//                        //6. if we add image or video, we need to save it to show in media
-//                        realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
-//                        realmManager.fetchFiles(conId: self.conversationID ?? "")
                     }
                 }
             }
@@ -978,13 +825,7 @@ extension ISMMessageView{
             
             //1. nill data if any
             nilData()
-            
-            //2. save message locally
-//            var localIds = [String]()
-//            let sentAt = Date().timeIntervalSince1970 * 1000
-//            let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Audio", mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: .audio,customType: .Voice, messageKind: .normal)
-//            localIds.append(id)
-            
+
             //3. send message api
             chatViewModel.upload(messageKind: .audio, conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: nil, video: nil, audio: audioUrl, mediaName: mediaName) { data, filename, size in
                 if let data = data {
@@ -992,9 +833,7 @@ extension ISMMessageView{
                         reloadBroadCastMessages()
                         //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                         NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
-                        //4. update messageId locally
-//                        realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "")
-//                        localIds.removeFirst()
+                       
                         
                     }
                 }
@@ -1009,11 +848,7 @@ extension ISMMessageView{
                     //1. nill data if any
                     nilData()
                     
-                    //2. save message locally
-//                    var localIds = [String]()
-//                    let sentAt = Date().timeIntervalSince1970 * 1000
-//                    let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Video", mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: .video,customType: .Video, messageKind: .normal,mediaCaption: media.caption)
-//                    localIds.append(id)
+    
                     
                     ISMChatHelper.generateThumbnailImageURL(from: media.url) { thumbnailUrl in
                         //upload thumbnail image
@@ -1028,20 +863,6 @@ extension ISMMessageView{
                                         reloadBroadCastMessages()
                                         //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                                         NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
-                                        //4. update messageId locally
-//                                        realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",thumbnailUrl: thumbnailmedia?.mediaUrl)
-//                                        localIds.removeFirst()
-//                                        
-//                                        //5. we need to save media
-//                                        let attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Video.type, extensions: ISMChatExtensionType.Video.type, mediaUrl: data.mediaUrl ?? "", mimeType: ISMChatExtensionType.Video.type, name: filename, thumbnailUrl: thumbnailmedia?.mediaUrl,caption: media.caption)
-//                                        realmManager.saveMedia(arr: [attachment], conId: self.conversationID ?? "", customType: ISMChatMediaType.Video.value , sentAt: sentAt, messageId: messageId, userName: ChatKeychain.shared.userName ?? "", fromView: true)
-//                                        
-//                                        
-//                                        //6. if we add image or video, we need to save it to show in media
-//                                        realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
-//                                        
-                                        
-                                        
                                     }
                                 }
                             }
@@ -1053,14 +874,7 @@ extension ISMMessageView{
                     
                     //1. nill data if any
                     nilData()
-                    
-                    //2. save message locally
-//                    var localIds = [String]()
-//                    let sentAt = Date().timeIntervalSince1970 * 1000
-//                    let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Image", mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: .photo,customType: .Image, messageKind: .normal,mediaCaption: media.caption)
-//                    localIds.append(id)
-                    
-                    
+
                     chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: nil, video: media.url, audio: nil, mediaName: mediaName) {  data, filename, size in
                         if let data = data {
                             chatViewModel.sendMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,caption: media.caption,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_ in
@@ -1070,18 +884,7 @@ extension ISMMessageView{
                                 reloadBroadCastMessages()
                                 //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                                 NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
-                                //4. update messageId locally
-//                                realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "")
-//                                localIds.removeFirst()
-//                                
-//                                //5. we need to save media
-//                                let attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Image.type, extensions: ISMChatExtensionType.Image.type, mediaUrl: data.mediaUrl ?? "", mimeType: ISMChatExtensionType.Image.type, name: filename, thumbnailUrl: "",caption: media.caption)
-//                                realmManager.saveMedia(arr: [attachment], conId: self.conversationID ?? "", customType: ISMChatMediaType.Image.value , sentAt: sentAt, messageId: messageId, userName: ChatKeychain.shared.userName ?? "", fromView: true)
-//                                
-//                                //6. if we add image or video, we need to save it to show in media
-//                                realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
-                                
-                                
+   
                             }
                         }
                     }
@@ -1094,20 +897,12 @@ extension ISMMessageView{
             
             //1. nill data if any
             nilData()
-            
-            //2. save message locally
-//            var localIds = [String]()
-//            let id = saveMessageToLocalDB(sentAt: Date().timeIntervalSince1970 * 1000, messageId: "", message: text, mentionUsers: [],fileName: "",fileUrl: "", messageType: .location,customType: .Location, messageKind: .normal,longitude: longitude,latitude: latitude,placeName: name,placeAddress: placeAddress)
-//            localIds.append(id)
-            
+  
             //3. send messaga api
             chatViewModel.sendMessage(messageKind: .location, customType: ISMChatMediaType.Location.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,latitude : latitude,longitude: longitude, placeName: name,placeAddress: placeAddress,isBroadCastMessage: true,groupcastId: self.groupCastId) { msgId,_ in
                 reloadBroadCastMessages()
                 //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                 NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
-                //4. update messageId locally
-//                realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: msgId)
-//                localIds.removeFirst()
                 
             }
         } else if self.text.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
@@ -1118,27 +913,13 @@ extension ISMMessageView{
                 
                 //1. nil data if any
                 nilData()
-                
-                //2. save message locally
-//                var localIds = [String]()
-//                let sentAt = Date().timeIntervalSince1970 * 1000
-//                let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: text, mentionUsers: self.mentionUsers,fileName: "",fileUrl: "", messageType: .text,customType: .Text, messageKind: .normal)
-//                localIds.append(id)
-                
+ 
                 //3. send message api
                 chatViewModel.sendMessage(messageKind: .text, customType: ISMChatMediaType.Text.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,isGroup: self.isGroup,groupMembers: self.mentionUsers,isBroadCastMessage: true,groupcastId: self.groupCastId) { msgId,_ in
                     reloadBroadCastMessages()
                     //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
                     NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
-                    //4. update messageId locally
-//                    realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: msgId)
-//                    localIds.removeFirst()
-//                    
-//                    //5. if we send url in text, we need to save it to show in media
-//                    if text.isValidURL{
-//                        realmManager.fetchLinks(conId: self.conversationID ?? "")
-//                    }
-                    
+                
                 }
             }else {
 //                let id = realmManager.saveLocalMessage(sent: Date().timeIntervalSince1970 * 1000, txt: self.text, parentMessageId: "", initiatorIdentifier: "", conversationId: self.conversationID ?? "", userEmailId: self.userId ?? "", customType: ISMChatMediaType.Text.value, msgSyncStatus: ISMChatSyncStatus.Local.txt)
