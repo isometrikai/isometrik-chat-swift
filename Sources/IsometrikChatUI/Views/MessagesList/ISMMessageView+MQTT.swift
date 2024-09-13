@@ -74,6 +74,15 @@ import IsometrikChat
                 
                 realmManager.saveMessage(obj: [message])
                 
+                //after saving message, just want to fetchor save all media in realmManager media,link and file
+                if messageInfo.customType == ISMChatMediaType.Image.value || messageInfo.customType == ISMChatMediaType.Video.value || messageInfo.customType == ISMChatMediaType.gif.value{
+                    realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
+                }else if  messageInfo.customType == ISMChatMediaType.File.value {
+                    realmManager.fetchFiles(conId: self.conversationID ?? "")
+                }else if let body = messageInfo.body, body.isValidURL && !body.contains("map"){
+                    realmManager.fetchLinks(conId: self.conversationID ?? "")
+                }
+                
                 self.getMessages()
                 
                 realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""

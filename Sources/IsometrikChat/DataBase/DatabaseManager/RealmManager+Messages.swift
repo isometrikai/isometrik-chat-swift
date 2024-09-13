@@ -288,7 +288,7 @@ extension RealmManager{
                         
                         localRealm.add(obj)
                         if (value.attachments?.count ?? 0) > 0 ,let msgId = value.messageId ,!msgId.isEmpty{
-                            saveMedia(arr: value.attachments ?? [], conId: value.conversationId ?? "", customType: value.customType ?? "",sentAt: (value.sentAt ?? 00),messageId: value.messageId ?? "", userName: value.userName ?? "", fromView: false)
+                            saveMedia(arr: value.attachments ?? [], conId: value.conversationId ?? "", customType: value.customType ?? "",sentAt: (value.sentAt ?? 00),messageId: value.messageId ?? "", userName: user.userName ?? "", fromView: false)
                         }
                     }
                 }
