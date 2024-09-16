@@ -302,11 +302,17 @@ extension ISMMessageView{
                     //BroadCast Message
                     EmptyView()
                 }else{
-                    if self.conversationDetail != nil{
+//                    if self.conversationDetail != nil{
                         //calling Button
                         if chatFeatures.contains(.videocall) == true{
                             Button {
-                                calling(type: .VideoCall)
+                                if self.conversationDetail != nil{
+                                    calling(type: .VideoCall)
+                                }else{
+                                    self.createConversation { _ in
+                                        calling(type: .VideoCall)
+                                    }
+                                }
                             } label: {
                                 appearance.images.videoCall
                                     .resizable()
@@ -316,7 +322,13 @@ extension ISMMessageView{
                         
                         if chatFeatures.contains(.audiocall) == true{
                             Button {
-                                calling(type: .AudioCall)
+                                if self.conversationDetail != nil{
+                                    calling(type: .AudioCall)
+                                }else{
+                                    self.createConversation { _ in
+                                        calling(type: .AudioCall)
+                                    }
+                                }
                             } label: {
                                 appearance.images.audioCall
                                     .resizable()
@@ -335,7 +347,7 @@ extension ISMMessageView{
                                     .frame(width: 5, height: 20, alignment: .center)
                             }
                         }
-                    }
+//                    }
                 }
             }
         }.background(NavigationLink("", destination:  ISMBlockUserView(conversationViewModel: self.conversationViewModel), isActive: $stateViewModel.navigateToBlockUsers))
@@ -367,7 +379,13 @@ extension ISMMessageView{
     
     func clearChatButton() -> some View{
         Button {
-            stateViewModel.clearThisChat = true
+            if self.conversationDetail != nil{
+                stateViewModel.clearThisChat = true
+            }else{
+                self.createConversation { _ in
+                    stateViewModel.clearThisChat = true
+                }
+            }
         } label: {
             HStack(spacing: 10){
                 appearance.images.trash
@@ -378,8 +396,16 @@ extension ISMMessageView{
     
     func blockUserButton() -> some View{
         Button {
-            if isMessagingEnabled(){
-                stateViewModel.blockThisChat = true
+            if self.conversationDetail != nil{
+                if isMessagingEnabled(){
+                    stateViewModel.blockThisChat = true
+                }
+            }else{
+                self.createConversation { _ in
+                    if isMessagingEnabled(){
+                        stateViewModel.blockThisChat = true
+                    }
+                }
             }
         } label: {
             HStack(spacing: 10){

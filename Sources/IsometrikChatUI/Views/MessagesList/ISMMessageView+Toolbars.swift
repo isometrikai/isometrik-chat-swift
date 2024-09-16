@@ -452,41 +452,100 @@ extension ISMMessageView{
 
     
     func textView() -> some View{
-        ResizeableTextView(text: $textFieldtxt, height: $textViewHeight, typingStarted: $stateViewModel.keyboardFocused, placeholderText: "Type a message", showMentionList: $stateViewModel.showMentionList, filteredMentionUserCount: filteredUsers.count, mentionUser: $selectedUserToMention, placeholderColor: appearance.colorPalette.messageListTextViewPlaceholder, textViewColor: appearance.colorPalette.messageListTextViewText)
-            .frame(height: textViewHeight < 160 ? self.textViewHeight : 160)
+        TextField("", text: $textFieldtxt, axis: .vertical)
+            .onChange(of: textFieldtxt) { newValue in
+                // Update showMentionList based on conditions
+                if newValue.last == "@" {
+                    stateViewModel.showMentionList = true
+                } else if !newValue.contains("@") || newValue.isEmpty {
+                    stateViewModel.showMentionList = false
+                }
+            }
+            .placeholder(when: textFieldtxt.isEmpty) {
+                Text("Type a message")
+                    .foregroundColor(appearance.colorPalette.messageListTextViewPlaceholder)
+            }
+            .foregroundColor(appearance.colorPalette.messageListTextViewText)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
     }
     
+    private func styledText(for text: String) -> AttributedString {
+            var attributedText = AttributedString(text)
+            
+            if let range = text.range(of: "@\\w+", options: .regularExpression) {
+                let nsRange = NSRange(range, in: text)
+                if let attributedRange = Range<AttributedString.Index>(nsRange, in: attributedText) {
+                    attributedText[attributedRange].foregroundColor = .blue // Color the mention
+                }
+            }
+            
+            return attributedText
+        }
+    private func appendUserToText(user: String) {
+        let trimmedText = textFieldtxt.trimmingCharacters(in: .whitespacesAndNewlines) // Trim any whitespace/newline
+        print("Current trimmed text: \(trimmedText)")
+        
+        // Get the first name (first word of the user)
+        let firstName = user.components(separatedBy: " ").first ?? user
+        
+        if let atSymbolRange = trimmedText.range(of: "@", options: .backwards) {
+            let prefixText = trimmedText[..<atSymbolRange.upperBound]
+            
+            // Combine the prefix and the selected first name
+            let combinedText = prefixText + firstName + " "
+            
+            // Create an AttributedString for the combined text
+            var attributedText = AttributedString(combinedText)
+            
+            // Find the range of the "@username"
+            if let mentionRange = combinedText.range(of: "@\(firstName)") {
+                let nsRange = NSRange(mentionRange, in: combinedText)
+                if let attributedRange = Range<AttributedString.Index>(nsRange, in: attributedText) {
+                    attributedText[attributedRange].foregroundColor = .blue // Set blue color to @username
+                }
+            }
+            
+            // Convert AttributedString back to String to update the text
+            textFieldtxt = String(attributedText.characters)
+            
+            stateViewModel.showMentionList = false
+            print("Updated text: \(text)")
+        } else {
+            print("No @ symbol found")
+        }
+    }
+
+
+    
     func mentionUserList() -> some View{
-        List{
-            ForEach(filteredUsers) { user in
+        VStack{
+            Divider()
+            List(filteredUsers, id: \.self){ user in
                 if let userName = user.userName {
-                    HStack(spacing : 5){
-                        UserAvatarView(
-                            avatar: user.userProfileImageUrl ?? "",
-                            showOnlineIndicator: false,
-                            size: CGSize(width: 29, height: 29),
-                            userName: userName,font: appearance.fonts.chatListUserMessage)
-                        Text(userName)
-                            .font(appearance.fonts.chatListUserMessage)
-                        Spacer()
-                    }
-                    .onTapGesture {
-                        self.selectedUserToMention = userName
-                        if let lastAtIndex = textFieldtxt.range(of: "@", options: .backwards)?.lowerBound {
-                            textFieldtxt.replaceSubrange(lastAtIndex..., with: "@\(userName)")
-                            selectedUserToMention = nil
+                    Button {
+                        appendUserToText(user: userName)
+                    } label: {
+                        HStack(spacing : 5){
+                            UserAvatarView(
+                                avatar: user.userProfileImageUrl ?? "",
+                                showOnlineIndicator: false,
+                                size: CGSize(width: 35, height: 35),
+                                userName: userName,font: appearance.fonts.messageListMessageText)
+                            Text(userName)
+                                .font(appearance.fonts.messageListMessageText)
+                            Spacer()
                         }
-                        stateViewModel.showMentionList = false
                     }
                 }
             }
+            .onDisappear(perform: {
+                filteredUsers = mentionUsers
+            })
+            .listStyle(.plain)
+            .frame(height: min(CGFloat(filteredUsers.count) * 35,200))
+            .background(Color.white)
         }
-        .onDisappear(perform: {
-            filteredUsers = mentionUsers
-        })
-        .listStyle(.plain)
-        .frame(height: min(CGFloat(filteredUsers.count) * 40,200))
-        .background(Color.gray.opacity(0.2))
     }
     
     func showOptionToAllow() -> Bool {

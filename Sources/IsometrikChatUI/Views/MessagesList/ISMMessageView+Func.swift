@@ -190,48 +190,54 @@ extension ISMMessageView{
         }else{
             if isGroup == false{
                 if self.conversationID == nil || self.conversationID == "" {
-                    chatViewModel.createConversation(user: self.opponenDetail ?? UserDB(), chatStatus: ISMChatStatus.Reject.value) { data in
-                        self.conversationID = data?.conversationId
-                        
-                        // Ensure that conversationID is not nil or empty before proceeding
-                        guard let conversationID = self.conversationID, !conversationID.isEmpty else { return }
-                        
-                        chatViewModel.getConversationDetail(conversationId: conversationID, isGroup: self.isGroup ?? false) { data in
-                            // First check if conversation is deleted locally
-                            realmManager.undodeleteConversation(convID: conversationID)
-                            
-                            self.conversationDetail = data
-                            
-                            // Check if conversation already exists in Realm to avoid duplicate primary key error
-                            if !realmManager.isConversationExists(conversationID: conversationID) {
-                                // Save conversation locally, no need to call API again
-                                let conv = ISMChatConversationsDetail(
-                                    opponentDetails: self.conversationDetail?.conversationDetails?.opponentDetails,
-                                    lastMessageDetails: nil,
-                                    unreadMessagesCount: 0,
-                                    isGroup: self.conversationDetail?.conversationDetails?.isGroup,
-                                    membersCount: self.conversationDetail?.conversationDetails?.membersCount,
-                                    createdAt: self.conversationDetail?.conversationDetails?.createdAt,
-                                    conversationTitle: self.conversationDetail?.conversationDetails?.conversationTitle,
-                                    conversationImageUrl: self.conversationDetail?.conversationDetails?.conversationImageUrl,
-                                    createdBy: self.conversationDetail?.conversationDetails?.createdBy,
-                                    createdByUserName: self.conversationDetail?.conversationDetails?.createdByUserName,
-                                    privateOneToOne: self.conversationDetail?.conversationDetails?.privateOneToOne,
-                                    conversationId: conversationID,
-                                    members: self.conversationDetail?.conversationDetails?.members,
-                                    config: self.conversationDetail?.conversationDetails?.config,
-                                    metaData: self.conversationDetail?.conversationDetails?.metaData
-                                )
-                                realmManager.addConversation(obj: [conv])
-                                NotificationCenter.default.post(name: NSNotification.refrestConversationListLocally, object: nil)
-                            }
-                            
-                            
-                            
-                            // Check if user is not blocked or you're blocked
-                            if isMessagingEnabled() {
-                                sendMessageDetail()
-                            }
+//                    chatViewModel.createConversation(user: self.opponenDetail ?? UserDB(), chatStatus: ISMChatStatus.Reject.value) { data in
+//                        self.conversationID = data?.conversationId
+//                        
+//                        // Ensure that conversationID is not nil or empty before proceeding
+//                        guard let conversationID = self.conversationID, !conversationID.isEmpty else { return }
+//                        
+//                        chatViewModel.getConversationDetail(conversationId: conversationID, isGroup: self.isGroup ?? false) { data in
+//                            // First check if conversation is deleted locally
+//                            realmManager.undodeleteConversation(convID: conversationID)
+//                            
+//                            self.conversationDetail = data
+//                            
+//                            // Check if conversation already exists in Realm to avoid duplicate primary key error
+//                            if !realmManager.isConversationExists(conversationID: conversationID) {
+//                                // Save conversation locally, no need to call API again
+//                                let conv = ISMChatConversationsDetail(
+//                                    opponentDetails: self.conversationDetail?.conversationDetails?.opponentDetails,
+//                                    lastMessageDetails: nil,
+//                                    unreadMessagesCount: 0,
+//                                    isGroup: self.conversationDetail?.conversationDetails?.isGroup,
+//                                    membersCount: self.conversationDetail?.conversationDetails?.membersCount,
+//                                    createdAt: self.conversationDetail?.conversationDetails?.createdAt,
+//                                    conversationTitle: self.conversationDetail?.conversationDetails?.conversationTitle,
+//                                    conversationImageUrl: self.conversationDetail?.conversationDetails?.conversationImageUrl,
+//                                    createdBy: self.conversationDetail?.conversationDetails?.createdBy,
+//                                    createdByUserName: self.conversationDetail?.conversationDetails?.createdByUserName,
+//                                    privateOneToOne: self.conversationDetail?.conversationDetails?.privateOneToOne,
+//                                    conversationId: conversationID,
+//                                    members: self.conversationDetail?.conversationDetails?.members,
+//                                    config: self.conversationDetail?.conversationDetails?.config,
+//                                    metaData: self.conversationDetail?.conversationDetails?.metaData
+//                                )
+//                                realmManager.addConversation(obj: [conv])
+//                                NotificationCenter.default.post(name: NSNotification.refrestConversationListLocally, object: nil)
+//                            }
+//                            
+//                            
+//                            
+//                            // Check if user is not blocked or you're blocked
+//                            if isMessagingEnabled() {
+//                                sendMessageDetail()
+//                            }
+//                        }
+//                    }
+                    self.createConversation { _ in
+                        //Check if user is not blocked or you're blocked
+                        if isMessagingEnabled() {
+                            sendMessageDetail()
                         }
                     }
                 } else {
@@ -242,6 +248,47 @@ extension ISMMessageView{
                 }
             }else{
                 sendMessageDetail()
+            }
+        }
+    }
+    
+    func createConversation(completion:@escaping(Bool)->()){
+        chatViewModel.createConversation(user: self.opponenDetail ?? UserDB(), chatStatus: ISMChatStatus.Reject.value) { data in
+            self.conversationID = data?.conversationId
+            
+            // Ensure that conversationID is not nil or empty before proceeding
+            guard let conversationID = self.conversationID, !conversationID.isEmpty else { return }
+            
+            chatViewModel.getConversationDetail(conversationId: conversationID, isGroup: self.isGroup ?? false) { data in
+                // First check if conversation is deleted locally
+                realmManager.undodeleteConversation(convID: conversationID)
+                
+                self.conversationDetail = data
+                
+                // Check if conversation already exists in Realm to avoid duplicate primary key error
+                if !realmManager.isConversationExists(conversationID: conversationID) {
+                    // Save conversation locally, no need to call API again
+                    let conv = ISMChatConversationsDetail(
+                        opponentDetails: self.conversationDetail?.conversationDetails?.opponentDetails,
+                        lastMessageDetails: nil,
+                        unreadMessagesCount: 0,
+                        isGroup: self.conversationDetail?.conversationDetails?.isGroup,
+                        membersCount: self.conversationDetail?.conversationDetails?.membersCount,
+                        createdAt: self.conversationDetail?.conversationDetails?.createdAt,
+                        conversationTitle: self.conversationDetail?.conversationDetails?.conversationTitle,
+                        conversationImageUrl: self.conversationDetail?.conversationDetails?.conversationImageUrl,
+                        createdBy: self.conversationDetail?.conversationDetails?.createdBy,
+                        createdByUserName: self.conversationDetail?.conversationDetails?.createdByUserName,
+                        privateOneToOne: self.conversationDetail?.conversationDetails?.privateOneToOne,
+                        conversationId: conversationID,
+                        members: self.conversationDetail?.conversationDetails?.members,
+                        config: self.conversationDetail?.conversationDetails?.config,
+                        metaData: self.conversationDetail?.conversationDetails?.metaData
+                    )
+                    realmManager.addConversation(obj: [conv])
+                    NotificationCenter.default.post(name: NSNotification.refrestConversationListLocally, object: nil)
+                }
+                completion(true)
             }
         }
     }
