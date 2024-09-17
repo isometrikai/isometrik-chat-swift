@@ -84,7 +84,7 @@ public struct ISMConversationView : View {
     
     //MARK:  - BODY
     public var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack{
                 themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
@@ -149,9 +149,13 @@ public struct ISMConversationView : View {
                         }
                     }
                 }
-                .background(NavigationLink("", destination:  ISMMessageView(conversationViewModel : self.viewModel,conversationID: selectedUserConversationId,opponenDetail: selectedUserToNavigate,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: false,groupCastId: "", groupConversationTitle: nil, groupImage: nil)
-                    .environmentObject(realmManager), isActive: $navigatetoSelectedUser))
-                .background(NavigationLink("", destination:  ISMBlockUserView(conversationViewModel: self.viewModel), isActive: $navigateToBlockUsers))
+                .navigationDestination(isPresented: $navigatetoSelectedUser) {
+                    ISMMessageView(conversationViewModel : self.viewModel,conversationID: selectedUserConversationId,opponenDetail: selectedUserToNavigate,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: false,groupCastId: "", groupConversationTitle: nil, groupImage: nil)
+                        .environmentObject(realmManager)
+                }
+                .navigationDestination(isPresented: $navigateToBlockUsers) {
+                    ISMBlockUserView(conversationViewModel: self.viewModel)
+                }
 //                .background(NavigationLink("", destination:  ISMBroadCastList()
 //                    .environmentObject(realmManager), isActive: $navigateToBroadcastList))
 //                .background(NavigationLink(

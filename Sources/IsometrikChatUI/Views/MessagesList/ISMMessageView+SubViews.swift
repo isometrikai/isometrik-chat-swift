@@ -129,8 +129,11 @@ extension ISMMessageView{
                               audioCallToUser: $stateViewModel.audioCallToUser,
                               videoCallToUser: $stateViewModel.videoCallToUser,
                               parentMsgToScroll: $parentMsgToScroll,
-                              message: message, postIdToNavigate: $postIdToNavigate,navigateToSocialProfileId: $navigateToSocialProfileId) .environmentObject(self.realmManager)
-               
+                              navigateToMediaSliderId: $navigateToMediaSliderId,
+                              message: message, 
+                              postIdToNavigate: $postIdToNavigate,
+                              navigateToSocialProfileId: $navigateToSocialProfileId)
+            .environmentObject(self.realmManager)
         }
     }
     func getIsReceived(message : MessagesDB) -> Bool{

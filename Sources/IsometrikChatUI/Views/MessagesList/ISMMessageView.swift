@@ -50,6 +50,9 @@ public struct ISMMessageView: View {
     let onlinetimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     
     
+    @State var navigateToMediaSliderId : String = ""
+    
+    
     
     @State var text = ""
     @State var textFieldtxt = ""
@@ -218,8 +221,8 @@ public struct ISMMessageView: View {
                             //here we are checking if your a member of group anymore
                             if let conversation = conversationDetail?.conversationDetails{
                                 if let members = conversation.members,
-                                    members.contains(where: { member in
-                                        return member.userId == userData.userId
+                                   members.contains(where: { member in
+                                       return member.userId == userData.userId
                                    }) {
                                     toolBarView()
                                 } else {
@@ -368,6 +371,12 @@ public struct ISMMessageView: View {
                 sendReaction()
             }
         }
+        .onChange(of: navigateToMediaSliderId, { _, _ in
+            if !navigateToMediaSliderId.isEmpty{
+                stateViewModel.navigateToMediaSlider = true
+                navigateToMediaSliderId = ""
+            }
+        })
         .onChange(of: textFieldtxt){ newValue in
             if isGroup == true{
                 let filterUserName = getMentionedString(inputString: textFieldtxt)
@@ -412,9 +421,9 @@ public struct ISMMessageView: View {
                 sendMessageTypingIndicator()
             }
         }
-//        .onChange(of: selectedGIF, { _, _ in
-//            sendMessageIfGif()
-//        })
+        //        .onChange(of: selectedGIF, { _, _ in
+        //            sendMessageIfGif()
+        //        })
         .onChange(of: stateViewModel.sendMedia, { _, _ in
             if stateViewModel.sendMedia == true{
                 stateViewModel.sendMedia = false
@@ -458,12 +467,12 @@ public struct ISMMessageView: View {
             }
         })
         .sheet(isPresented: $stateViewModel.showGifPicker, content: {
-//            GiphyPicker { media in
-//                if let media = media{
-//                    selectedGIF = media
-//                    showGifPicker = false
-//                }
-//            }
+            //            GiphyPicker { media in
+            //                if let media = media{
+            //                    selectedGIF = media
+            //                    showGifPicker = false
+            //                }
+            //            }
         })
         .sheet(isPresented: $stateViewModel.showSheet){
             if selectedSheetIndex == 0 {
@@ -483,11 +492,14 @@ public struct ISMMessageView: View {
                 ProgressView()
             }
         )
+        .navigationDestination(isPresented: $stateViewModel.navigateToMediaSlider) {
+            MediaSliderView(messageId: navigateToMediaSliderId).environmentObject(self.realmManager)
+        }
         .background(NavigationLink("", destination: ISMForwardToContactView(viewModel : self.chatViewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage),isActive: $stateViewModel.movetoForwardList))
         .background(NavigationLink("", destination: ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId,placeName : $placeName, address: $placeAddress),isActive: $stateViewModel.showLocationSharing))
-//        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
+        //        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
         .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager),isActive: $stateViewModel.navigateToProfile))
-//        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))
+        //        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))
         .background(NavigationLink("", destination: ISMImageAndViderEditor(media: $videoSelectedFromPicker, sendToUser: opponenDetail?.userName ?? "",sendMedia: $stateViewModel.sendMedia),isActive: $stateViewModel.navigateToImageEditor))
         .onReceive(timer, perform: { firedDate in
             print("timer fired")
@@ -532,7 +544,7 @@ public struct ISMMessageView: View {
             self.realmManager.clearMessages()
             self.getMessages()
             //added this from on appear
-           
+            
             if fromBroadCastFlow == true{
                 reloadBroadCastMessages()
             }else{

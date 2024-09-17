@@ -47,6 +47,7 @@ struct ISMMessageSubView: View {
     @Binding var audioCallToUser : Bool
     @Binding var videoCallToUser : Bool
     @Binding var parentMsgToScroll : MessagesDB?
+    @Binding var navigateToMediaSliderId : String
     
     
     
@@ -321,31 +322,38 @@ struct ISMMessageSubView: View {
                                     inGroupUserName()
                                 }
                                 
-                                NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
-                                {
+//                                NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
+//                                {
                                     VStack(alignment: .trailing,spacing: 5){
                                         if message.messageType == 1{
                                             forwardedView()
                                         }
-                                        ZStack(alignment: .bottomTrailing){
-                                            ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.mediaUrl ?? "",isprofileImage: false)
-                                                .scaledToFill()
-                                                .frame(width: 250, height: 300)
-                                                .cornerRadius(5)
-                                                .overlay(
-                                                    LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                                                        .frame(width: 250, height: 300)
-                                                        .mask(
-                                                            RoundedRectangle(cornerRadius: 5)
-                                                                .fill(Color.white)
-                                                        )
-                                                )
-                                            if message.metaData?.captionMessage == nil{
-                                                dateAndStatusView(onImage: true)
-                                                    .padding(.bottom,5)
-                                                    .padding(.trailing,5)
+                                        
+                                        Button {
+                                            navigateToMediaSliderId = message.messageId
+                                        } label: {
+                                            ZStack(alignment: .bottomTrailing){
+                                                ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.mediaUrl ?? "",isprofileImage: false)
+                                                    .scaledToFill()
+                                                    .frame(width: 250, height: 300)
+                                                    .cornerRadius(5)
+                                                    .overlay(
+                                                        LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                                                            .frame(width: 250, height: 300)
+                                                            .mask(
+                                                                RoundedRectangle(cornerRadius: 5)
+                                                                    .fill(Color.white)
+                                                            )
+                                                    )
+                                                if message.metaData?.captionMessage == nil{
+                                                    dateAndStatusView(onImage: true)
+                                                        .padding(.bottom,5)
+                                                        .padding(.trailing,5)
+                                                }
                                             }
                                         }
+
+                                       
                                         if let caption = message.metaData?.captionMessage, !caption.isEmpty{
                                             Text(caption)
                                                 .font(themeFonts.messageListMessageText)
@@ -373,7 +381,7 @@ struct ISMMessageSubView: View {
                                                 .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                                             ) : AnyView(EmptyView())
                                     )
-                                }
+//                                }
                             }
                             
                             if message.reactions.count > 0{
@@ -397,20 +405,46 @@ struct ISMMessageSubView: View {
                                 }
                                 
                                 
-                                NavigationLink(destination: MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager)){
+//                                NavigationLink(destination: MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager)){
                                     VStack(alignment: .trailing,spacing : 5){
                                         if message.messageType == 1{
                                             forwardedView()
                                         }
-                                        ZStack(alignment: .center){
-                                            if let thumbnailUrl = message.attachments.first?.thumbnailUrl,
-                                               thumbnailUrl.contains(".mp4") {
-                                                if let image = ISMChatHelper.getThumbnailImage(url: thumbnailUrl){
-                                                    Image(uiImage: image)
-                                                        .scaledToFill()
-                                                        .frame(width: 250, height: 300)
-                                                        .cornerRadius(5)
-                                                }else{
+                                        
+                                        Button {
+                                            navigateToMediaSliderId = message.messageId
+                                        } label: {
+                                            ZStack(alignment: .center){
+                                                if let thumbnailUrl = message.attachments.first?.thumbnailUrl,
+                                                   thumbnailUrl.contains(".mp4") {
+                                                    if let image = ISMChatHelper.getThumbnailImage(url: thumbnailUrl){
+                                                        Image(uiImage: image)
+                                                            .scaledToFill()
+                                                            .frame(width: 250, height: 300)
+                                                            .cornerRadius(5)
+                                                    }else{
+                                                        // Display the thumbnail image for non-videos
+                                                        ZStack(alignment: .bottomTrailing){
+                                                            ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.thumbnailUrl ?? "", isprofileImage: false)
+                                                                .scaledToFill()
+                                                                .frame(width: 250, height: 300)
+                                                                .cornerRadius(5)
+                                                                .overlay(
+                                                                    LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                                                                        .frame(width: 250, height: 300)
+                                                                        .mask(
+                                                                            RoundedRectangle(cornerRadius: 5)
+                                                                                .fill(Color.white)
+                                                                        )
+                                                                )
+                                                            if message.metaData?.captionMessage == nil{
+                                                                dateAndStatusView(onImage: true)
+                                                                    .padding(.bottom,5)
+                                                                    .padding(.trailing,5)
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
                                                     // Display the thumbnail image for non-videos
                                                     ZStack(alignment: .bottomTrailing){
                                                         ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.thumbnailUrl ?? "", isprofileImage: false)
@@ -432,33 +466,14 @@ struct ISMMessageSubView: View {
                                                         }
                                                     }
                                                 }
-                                            } else {
-                                                // Display the thumbnail image for non-videos
-                                                ZStack(alignment: .bottomTrailing){
-                                                    ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.thumbnailUrl ?? "", isprofileImage: false)
-                                                        .scaledToFill()
-                                                        .frame(width: 250, height: 300)
-                                                        .cornerRadius(5)
-                                                        .overlay(
-                                                            LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                                                                .frame(width: 250, height: 300)
-                                                                .mask(
-                                                                    RoundedRectangle(cornerRadius: 5)
-                                                                        .fill(Color.white)
-                                                                )
-                                                        )
-                                                    if message.metaData?.captionMessage == nil{
-                                                        dateAndStatusView(onImage: true)
-                                                            .padding(.bottom,5)
-                                                            .padding(.trailing,5)
-                                                    }
-                                                }
+                                                themeImages.playVideo
+                                                    .resizable()
+                                                    .frame(width: 48,height: 48)
+                                                
                                             }
-                                            themeImages.playVideo
-                                                .resizable()
-                                                .frame(width: 48,height: 48)
-                                            
                                         }
+
+                                        
                                         
                                         if let caption = message.metaData?.captionMessage, !caption.isEmpty{
                                             Text(caption)
@@ -486,7 +501,7 @@ struct ISMMessageSubView: View {
                                                     .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                                                 ) : AnyView(EmptyView())
                                         )
-                                }//:NavigationLink
+//                                }//:NavigationLink
                                 //                                }
                             }
                             if message.reactions.count > 0{
@@ -809,31 +824,38 @@ struct ISMMessageSubView: View {
                                     //when its group show member name in message
                                     inGroupUserName()
                                 }
-                                NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
-                                {
+//                                NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
+//                                {
                                     VStack(alignment: .trailing,spacing: 5){
                                         if message.messageType == 1{
                                             forwardedView()
                                         }
-                                        ZStack(alignment: .bottomTrailing){
-                                            AnimatedImage(url: URL(string: message.attachments.first?.mediaUrl ?? ""))
-                                                .resizable()
-                                                .frame(width: 250, height: 300)
-                                                .cornerRadius(5)
-                                                .overlay(
-                                                    LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                                                        .frame(width: 250, height: 300)
-                                                        .mask(
-                                                            RoundedRectangle(cornerRadius: 5)
-                                                                .fill(Color.white)
-                                                        )
-                                                )
-                                            if message.metaData?.captionMessage == nil{
-                                                dateAndStatusView(onImage: true)
-                                                    .padding(.bottom,5)
-                                                    .padding(.trailing,5)
+                                        
+                                        Button {
+                                            navigateToMediaSliderId = message.messageId
+                                        } label: {
+                                            ZStack(alignment: .bottomTrailing){
+                                                AnimatedImage(url: URL(string: message.attachments.first?.mediaUrl ?? ""))
+                                                    .resizable()
+                                                    .frame(width: 250, height: 300)
+                                                    .cornerRadius(5)
+                                                    .overlay(
+                                                        LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                                                            .frame(width: 250, height: 300)
+                                                            .mask(
+                                                                RoundedRectangle(cornerRadius: 5)
+                                                                    .fill(Color.white)
+                                                            )
+                                                    )
+                                                if message.metaData?.captionMessage == nil{
+                                                    dateAndStatusView(onImage: true)
+                                                        .padding(.bottom,5)
+                                                        .padding(.trailing,5)
+                                                }
                                             }
                                         }
+
+                                        
                                         if let caption = message.metaData?.captionMessage, !caption.isEmpty{
                                             Text(caption)
                                                 .font(themeFonts.messageListMessageText)
@@ -862,7 +884,7 @@ struct ISMMessageSubView: View {
                                                 .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                                             ) : AnyView(EmptyView())
                                     )
-                                }
+//                                }
                             }
                             if message.reactions.count > 0{
                                 reactionsView()
