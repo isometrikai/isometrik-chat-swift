@@ -144,8 +144,15 @@ public struct ISMUsersView: View {
                         }
                     }
                 }//:VStack
-                .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .Group,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate),isActive: $navigatetoCreatGroup).environmentObject(realmManager))
-                .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .BroadCast,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate),isActive: $navigatetoCreatBroadCast).environmentObject(realmManager))
+                .navigationDestination(isPresented: $navigatetoCreatGroup, destination: {
+                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .Group,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
+                })
+                .navigationDestination(isPresented: $navigatetoCreatBroadCast, destination: {
+                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .BroadCast,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
+                })
+                
+//                .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .Group,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate),isActive: $navigatetoCreatGroup).environmentObject(realmManager))
+//                .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .BroadCast,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate),isActive: $navigatetoCreatBroadCast).environmentObject(realmManager))
                 .searchable(text: $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always))
                 .onChange(of: viewModel.debounceSearchedText, { _, _ in
                     print("~~SEARCHING WITH DEBOUNCING \(viewModel.searchedText)")
