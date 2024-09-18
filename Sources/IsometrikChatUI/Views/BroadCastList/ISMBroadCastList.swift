@@ -293,7 +293,7 @@ public struct ISMBroadCastList: View {
             Button(action: { dismiss() }) {
                 themeImage.backButton
                     .resizable()
-                    .frame(width: 29,height: 29)
+                    .frame(width: 18,height: 18)
             }
         }else{
             //don't show back button

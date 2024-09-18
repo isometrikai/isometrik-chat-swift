@@ -117,17 +117,15 @@ extension ISMMessageView{
     
     //MARK: - NAVIGATION LEADING BUTTON
     func navigationBarLeadingButtons() -> some View {
-        Button(action: {}) {
-            HStack {
-                backButtonView()
-
-                Spacer().frame(width: 15)
-
-                if self.fromBroadCastFlow  == true{
-                    broadcastButtonView()
-                } else {
-                    profileButtonView()
-                }
+        HStack {
+            backButtonView()
+            
+            Spacer().frame(width: 15)
+            
+            if self.fromBroadCastFlow  == true{
+                broadcastButtonView()
+            } else {
+                profileButtonView()
             }
         }
     }
@@ -139,7 +137,7 @@ extension ISMMessageView{
             //sometimes keyboard doesn't get dismissed
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             //dismiss
-            dismiss()
+            presentationMode.wrappedValue.dismiss()
         }) {
             appearance.images.backButton
                 .resizable()

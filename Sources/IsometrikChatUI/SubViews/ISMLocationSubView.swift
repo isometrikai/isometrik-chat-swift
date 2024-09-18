@@ -102,27 +102,31 @@ struct CustomAnnotation: Identifiable {
     var coordinate: CLLocationCoordinate2D
 }
 
-
 struct GoogleMapsView: UIViewRepresentable {
-    
-    //MARK:  - PROPERTIES
+
+    // MARK: - PROPERTIES
     private let zoom: Float = 15.0
     var markers: GMSMarker
-    var latitude : Double?
-    var longitude : Double?
-    
-    //MARK:  - LIFECYCLE
+    var latitude: Double?
+    var longitude: Double?
+
+    // MARK: - LIFECYCLE
     func makeUIView(context: Self.Context) -> GMSMapView {
+        // Create the camera with the given latitude, longitude, and zoom
         let camera = GMSCameraPosition.camera(withLatitude: latitude ?? 0, longitude: longitude ?? 0, zoom: zoom)
-        let mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
+        
+        // Initialize GMSMapView using the recommended initializer
+        let mapView = GMSMapView()
+        mapView.camera = camera
         mapView.isUserInteractionEnabled = false
         mapView.selectedMarker = markers
         return mapView
     }
-    
+
     func updateUIView(_ mapView: GMSMapView, context: Context) {
-        let marker : GMSMarker = GMSMarker()
+        let marker = GMSMarker()
         marker.position = markers.position
         marker.map = mapView
     }
 }
+

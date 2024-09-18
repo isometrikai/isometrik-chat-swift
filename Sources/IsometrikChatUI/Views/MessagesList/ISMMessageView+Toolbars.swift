@@ -613,7 +613,7 @@ extension ISMMessageView{
             
             HStack(spacing: 14){
                 Button {
-                    dismiss()
+                    presentationMode.wrappedValue.dismiss()
 //                    self.messageVCDelegate?.navigateBack(isFromProfile: self.fromProfile ?? false, isfromBroadcast: self.fromBroadCastFlow ?? false)
                 } label: {
                     Text("Reject")

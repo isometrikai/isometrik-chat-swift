@@ -14,38 +14,48 @@ extension ISMMessageView{
     func attachmentActionSheetButtons() -> some View {
         VStack {
             ForEach(ISMChatSdkUI.getInstance().getChatProperties().attachments, id: \.self) { option in
-                Button(option.name) {
-                    if isMessagingEnabled() {
-                        switch option {
-                        case .camera:
-                            selectedSheetIndex = 0
-                            DispatchQueue.main.async {
-                                stateViewModel.showSheet = true
-                            }
-                            break
-                        case .gallery:
-                            DispatchQueue.main.async {
-                                stateViewModel.showVideoPicker = true
-                            }
-                            break
-                        case .document:
-                            selectedSheetIndex = 1
-                            DispatchQueue.main.async {
-                                stateViewModel.showSheet = true
-                            }
-                            break
-                        case .location:
-                            DispatchQueue.main.async {
-                                stateViewModel.showLocationSharing = true
-                            }
-                            break
-                        case .contact:
-                            selectedSheetIndex = 2
-                            DispatchQueue.main.async {
-                                stateViewModel.showSheet = true
-                            }
-                            break
+                if option == .camera {
+                    Button(action: {
+                        selectedSheetIndex = 0
+                        DispatchQueue.main.async {
+                            stateViewModel.showSheet = true
                         }
+                    }) {
+                        Text(option.name)
+                    }
+                }
+                else if option == .gallery{
+                    Button(action: {
+                        DispatchQueue.main.async {
+                            stateViewModel.showVideoPicker = true
+                        }
+                    }) {
+                        Text(option.name)
+                    }
+                    
+                }else if option == .document{
+                    Button(action: {
+                        selectedSheetIndex = 1
+                        DispatchQueue.main.async {
+                            stateViewModel.showSheet = true
+                        }
+                    }) {
+                        Text(option.name)
+                    }
+                    
+                }else if option == .contact{
+                    Button(action: {
+                        selectedSheetIndex = 2
+                        DispatchQueue.main.async {
+                            stateViewModel.showSheet = true
+                        }
+                    }) {
+                        Text(option.name)
+                    }
+                    
+                }else if option == .location {
+                    NavigationLink(destination: ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId, placeName: $placeName, address: $placeAddress)) {
+                        Text(option.name)
                     }
                 }
             }

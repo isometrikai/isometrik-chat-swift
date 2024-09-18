@@ -93,8 +93,9 @@ struct ISMContactInfoView: View {
                     }
                     //media, link and doc
                     Section {
-                        Button {
-                            navigatetoMedia = true
+                        NavigationLink {
+                            ISMUserMediaView(viewModel:viewModel)
+                                .environmentObject(self.realmManager)
                         } label: {
                             HStack{
                                 themeImage.mediaIcon
@@ -113,6 +114,12 @@ struct ISMContactInfoView: View {
                                     .frame(width: 7,height: 12)
                             }
                         }
+
+                        Button {
+                            navigatetoMedia = true
+                        } label: {
+                            
+                        }
                     } header: {
                         if isGroup == true{
                             HStack(alignment: .center){
@@ -128,12 +135,8 @@ struct ISMContactInfoView: View {
                         Section {
                             
                             if conversationDetail?.conversationDetails?.usersOwnDetails?.isAdmin == true{
-                                Button {
-                                    if ISMChatSdk.getInstance().getFramework() == .UIKit{
-                                        navigateToAddParticipantsInGroupViaDelegate = true
-                                    }else{
-                                        navigatetoAddparticipant = true
-                                    }
+                                NavigationLink {
+                                    ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager)
                                 } label: {
                                     HStack(spacing: 12){
                                         
@@ -144,9 +147,31 @@ struct ISMContactInfoView: View {
                                         Text("Add Members")
                                             .font(themeFonts.messageListMessageText)
                                             .foregroundColor(themeColor.messageListReplyToolbarRectangle)
-                                    }
-                                }.frame(height: 50)
+                                    }.frame(height: 50)
+                                }
                             }
+
+                            
+//                            if conversationDetail?.conversationDetails?.usersOwnDetails?.isAdmin == true{
+//                                Button {
+//                                    if ISMChatSdk.getInstance().getFramework() == .UIKit{
+//                                        navigateToAddParticipantsInGroupViaDelegate = true
+//                                    }else{
+//                                        navigatetoAddparticipant = true
+//                                    }
+//                                } label: {
+//                                    HStack(spacing: 12){
+//                                        
+//                                        themeImage.addMembers
+//                                            .resizable()
+//                                            .frame(width: 29, height: 29, alignment: .center)
+//                                        
+//                                        Text("Add Members")
+//                                            .font(themeFonts.messageListMessageText)
+//                                            .foregroundColor(themeColor.messageListReplyToolbarRectangle)
+//                                    }
+//                                }.frame(height: 50)
+//                            }
                             
                             
                             if let members = conversationDetail?.conversationDetails?.members{
@@ -162,14 +187,24 @@ struct ISMContactInfoView: View {
                                     .foregroundColor(themeColor.messageListHeaderTitle)
                                     .textCase(nil)
                                 Spacer()
-                                Button {
-                                    showSearch = true
+                                
+                                NavigationLink {
+                                    ISMSearchParticipants(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel ,conversationID: self.conversationID)
                                 } label: {
                                     themeImage.searchMagnifingGlass
                                         .resizable()
                                         .frame(width: 28, height: 28, alignment: .center)
                                         .padding(8)
                                 }
+
+//                                Button {
+//                                    showSearch = true
+//                                } label: {
+//                                    themeImage.searchMagnifingGlass
+//                                        .resizable()
+//                                        .frame(width: 28, height: 28, alignment: .center)
+//                                        .padding(8)
+//                                }
                                 
                             }.listRowInsets(EdgeInsets())
                         } footer: {
@@ -194,12 +229,14 @@ struct ISMContactInfoView: View {
             }
         }
         .navigationBarItems(leading: navBarLeadingBtn, trailing: navBarTrailingBtn)
-        .background(NavigationLink("", destination:  ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager), isActive: $navigatetoAddparticipant))
-        .background(NavigationLink("", destination:  ISMUserMediaView(viewModel:viewModel)
-            .environmentObject(self.realmManager), isActive: $navigatetoMedia))
-        .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: self.selectedConversationId,viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.selectedToShowInfo,navigateToAddParticipantsInGroupViaDelegate: $navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager), isActive: $showInfo))
-        .background(NavigationLink("", destination:  ISMSearchParticipants(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel ,conversationID: self.conversationID), isActive: $showSearch))
-        .background(NavigationLink("", destination:  ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID,updateData : $updateData), isActive: $showEdit))
+//        .navigationDestination(isPresented: $navigatetoAddparticipant) {
+//            ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager)
+//        }
+//        .background(NavigationLink("", destination:  ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager), isActive: $navigatetoAddparticipant))
+//        .background(NavigationLink("", destination:  , isActive: $navigatetoMedia))
+//        .background(NavigationLink("", destination:  , isActive: $showInfo))
+//        .background(NavigationLink("", destination:  ISMSearchParticipants(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel ,conversationID: self.conversationID), isActive: $showSearch))
+//        .background(NavigationLink("", destination:  , isActive: $showEdit))
         .onChange(of: selectedMember, { _, _ in
             if selectedMember.userId != userData.userId{
                 showOptions = true
@@ -214,13 +251,19 @@ struct ISMContactInfoView: View {
             }
         })
         .confirmationDialog("", isPresented: $showOptions) {
-            Button {
-                selectedToShowInfo = selectedMember
-                selectedConversationId = realmManager.getConversationId(userId: selectedMember.userId ?? "")
-                showInfo = true
+            NavigationLink {
+                ISMContactInfoView(conversationID: realmManager.getConversationId(userId: selectedMember.userId ?? ""),viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : selectedMember,navigateToAddParticipantsInGroupViaDelegate: $navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
             } label: {
                 Text("Info")
             }
+
+//            Button {
+//                selectedToShowInfo = selectedMember
+//                selectedConversationId = realmManager.getConversationId(userId: selectedMember.userId ?? "")
+//                showInfo = true
+//            } label: {
+//               
+//            }
             if checkIfAdmin() == true{
                 Button {
                     makeGroupAdmin()
@@ -437,13 +480,19 @@ struct ISMContactInfoView: View {
     var navBarTrailingBtn: some View {
         VStack{
             if isGroup == true{
-                Button {
-                   showEdit = true
+                NavigationLink {
+                    ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID,updateData : $updateData)
                 } label: {
                     Text("Edit")
                         .font(themeFonts.messageListMessageText)
                         .foregroundColor(themeColor.userProfileEditText)
                 }
+
+//                Button {
+//                   showEdit = true
+//                } label: {
+//                    
+//                }
             }else{
                 Text("")
             }

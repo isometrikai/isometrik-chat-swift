@@ -182,9 +182,7 @@ import IsometrikChat
     
     func userTyping(messageInfo : ISMChatTypingEvent){
         if messageInfo.conversationId == self.conversationID{
-            DispatchQueue.main.async {
-                stateViewModel.otherUserTyping = true
-            }
+            stateViewModel.otherUserTyping = true
             typingUserName = messageInfo.userName
             DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
                 stateViewModel.otherUserTyping = false

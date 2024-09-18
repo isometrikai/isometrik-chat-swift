@@ -40,7 +40,7 @@ open class ISMChatMQTTManager: NSObject{
         mqtt?.keepAlive = 60
         mqtt?.autoReconnect = true
         mqtt?.logLevel = .debug
-        mqtt?.connect()
+        _ = mqtt?.connect()
         mqtt?.delegate = self
         mqtt?.didConnectAck = { mqtt, ack in
             if ack == .accept{

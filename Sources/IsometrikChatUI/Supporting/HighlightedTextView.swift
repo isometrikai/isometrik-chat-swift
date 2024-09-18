@@ -123,18 +123,15 @@ struct HashtagTextModifier: TextModifier {
                 }
             }
             else {
-                if let matchedUser = mentionedUsers.first(where: { member in
+                // Check if there's a match and update `output` accordingly
+                _ = mentionedUsers.contains { member in
                     if let memberUsername = member.userName {
                         return memberUsername.lowercased().contains(String(word.dropFirst()).lowercased())
                     }
                     return false
-                }) {
-                    output = output + Text(" ") +
-                    Text(String(word))
-                    
-                }else{
-                    output = output + Text(" ") + Text(String(word))
                 }
+
+                output = output + Text(" ") + Text(String(word))
             }
         }
         return output

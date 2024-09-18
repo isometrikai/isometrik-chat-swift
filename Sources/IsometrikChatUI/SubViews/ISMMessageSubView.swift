@@ -113,7 +113,6 @@ struct ISMMessageSubView: View {
                                 .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                             ) : AnyView(EmptyView())
                     )
-                    .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId, message: message, viewWidth: viewWidth, mediaType: .Text, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
                 }//:ZStack
                 .padding(.vertical,2)
             }else{

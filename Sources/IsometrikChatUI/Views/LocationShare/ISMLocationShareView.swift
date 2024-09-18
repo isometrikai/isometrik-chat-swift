@@ -13,29 +13,28 @@ import Combine
 import IsometrikChat
 
 struct ISMLocationShareView: View {
-    
-    //MARK:  - PROPERTIES
+    // MARK: - PROPERTIES
     @Environment(\.dismiss) var dismiss
     
-    @StateObject var mapViewModel = MapViewModel()
-    @State var locationManager = CLLocationManager()
+    @StateObject private var mapViewModel = MapViewModel()
+    @StateObject private var locationManager = LocationManager() // Custom wrapper for CLLocationManager
     @State private var showSheet = true
-    @Binding var longitude : Double?
-    @Binding var latitude : Double?
-    @Binding var placeId : String?
-    @Binding var placeName : String?
-    @Binding var address : String?
+    @Binding var longitude: Double?
+    @Binding var latitude: Double?
+    @Binding var placeId: String?
+    @Binding var placeName: String?
+    @Binding var address: String?
     @FocusState private var isTextFieldFocused: Bool
     @State private var searchText = ""
     @State private var predictions: [GMSAutocompletePrediction] = []
-    @State private var selectedPlaceAfterSerch: GMSPlace?
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    @State private var selectedPlaceAfterSearch: GMSPlace?
+    @State private var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    @State private var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    @State private var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     
-    //MARK:  - LIFECYCLE
+    // MARK: - LIFECYCLE
     var body: some View {
-        ZStack{
+        ZStack {
             VStack(spacing: 0) {
                 HStack {
                     HStack {
@@ -44,7 +43,7 @@ struct ISMLocationShareView: View {
                         TextField("Search or enter an address", text: $searchText)
                             .focused($isTextFieldFocused)
                             .font(themeFonts.messageListMessageText)
-                    }//:HSTACK
+                    } // HSTACK
                     .padding(5)
                     .background(Color(.systemFill).opacity(0.5))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -55,19 +54,19 @@ struct ISMLocationShareView: View {
                             withAnimation {
                                 isTextFieldFocused = false
                             }
-                        })//:BUTTON
+                        }) // BUTTON
                         .transition(.move(edge: .trailing))
                     }
-                }//:HSTACK
+                } // HSTACK
                 .padding()
-                if isTextFieldFocused == false{
+                if !isTextFieldFocused {
                     mapView(coordinate: CLLocationCoordinate2D(latitude: mapViewModel.latitude, longitude: mapViewModel.longitude))
                         .frame(height: 300)
                     nearByPlacesListView()
-                }else{
+                } else {
                     searchPlacesView()
                 }
-            }//:VSTACK
+            } // VSTACK
             .navigationBarBackButtonHidden(true)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -79,37 +78,39 @@ struct ISMLocationShareView: View {
                     }
                 }
             }
-            .navigationBarItems(leading: isTextFieldFocused == false ? navBarLeadingBtn : nil,trailing:  isTextFieldFocused == false ? navBarTrailingBtn : nil)
-            .onAppear(){
-                //setting
-                locationManager.delegate = mapViewModel
+            .navigationBarItems(leading: !isTextFieldFocused ? navBarLeadingBtn : nil, trailing: !isTextFieldFocused ? navBarTrailingBtn : nil)
+            .onAppear {
+                // Settings
                 locationManager.requestWhenInUseAuthorization()
                 getPlaces()
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                locationManager.delegate = mapViewModel
                 locationManager.requestWhenInUseAuthorization()
                 getPlaces()
             }
-            //permission denied alert
+            // Permission denied alert
             .alert(isPresented: $mapViewModel.permissionDenied) {
-                Alert(title: Text("Permission Denied"),message: Text("Please Enable Permission in App Settings"),dismissButton: .default(Text("Go to Settings"),action: {
-                    //redirecting user to app settings
-                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
-                }))
+                Alert(
+                    title: Text("Permission Denied"),
+                    message: Text("Please Enable Permission in App Settings"),
+                    dismissButton: .default(Text("Go to Settings")) {
+                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                    }
+                )
             }
             .onChange(of: searchText, { newValue, _ in
                 //searching places
                 let delay = 0.3
-                DispatchQueue.main.asyncAfter(deadline: .now() + delay){
-                    if newValue == searchText{
-                        //searching
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                    if newValue == searchText {
+                        // Searching
                         fetchAutoCompletePredictions()
                     }
                 }
             })
-        }//:ZSTACK
+        } // ZSTACK
     }
+    
     
     //MARK: - SUBVIEW
     func nearByPlacesListView() -> some View{
@@ -141,7 +142,7 @@ struct ISMLocationShareView: View {
                     }//:BUTTON
                 }.listRowSeparator(.hidden)
             }//:SECTION
-
+            
             Section(header: Text("NEARBY PLACES")) {
                 ForEach(self.mapViewModel.places, id: \.place.placeID) { placeLikelihood in
                     PlaceRow(place: placeLikelihood.place)
@@ -159,7 +160,7 @@ struct ISMLocationShareView: View {
         .listRowSeparatorTint(Color.border)
         .listStyle(.insetGrouped)
         .background(Color.listBackground)
-            .scrollContentBackground(.hidden)
+        .scrollContentBackground(.hidden)
     }
     
     func mapView(coordinate : CLLocationCoordinate2D?) -> some View{
@@ -229,11 +230,7 @@ struct ISMLocationShareView: View {
     }
     private func selectPlace(_ prediction: GMSAutocompletePrediction) {
         let placesClient = GMSPlacesClient.shared()
-        let fields: GMSPlaceField = GMSPlaceField(rawValue:UInt64(UInt(UInt64(UInt(GMSPlaceField.name.rawValue) |
-                                                                              UInt(GMSPlaceField.placeID.rawValue) |
-                                                                              UInt(GMSPlaceField.coordinate.rawValue) |
-                                                                              UInt(GMSPlaceField.formattedAddress.rawValue)))))
-        placesClient.fetchPlace(fromPlaceID: prediction.placeID, placeFields: fields, sessionToken: nil, callback: { place, error in
+        placesClient.fetchPlace(with: GMSFetchPlaceRequest(placeID: prediction.placeID, placeProperties: [], sessionToken: nil)) { place, error in
             if let error = error {
                 ISMChatHelper.print("An error occurred: \(error.localizedDescription)")
                 return
@@ -247,7 +244,7 @@ struct ISMLocationShareView: View {
                 address = place.formattedAddress
                 self.dismiss()
             }
-        })
+        }
     }
 }
 extension View {
@@ -255,4 +252,20 @@ extension View {
         UIApplication.shared.sendAction(
             #selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
+}
+
+
+final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+    private let locationManager = CLLocationManager()
+    
+    override init() {
+        super.init()
+        locationManager.delegate = self
+    }
+    
+    func requestWhenInUseAuthorization() {
+        locationManager.requestWhenInUseAuthorization()
+    }
+    
+    // CLLocationManagerDelegate methods can be implemented here
 }

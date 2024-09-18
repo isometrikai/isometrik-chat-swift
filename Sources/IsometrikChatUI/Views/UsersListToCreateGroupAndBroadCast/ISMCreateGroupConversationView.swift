@@ -244,7 +244,7 @@ public struct ISMCreateGroupConversationView: View {
         Button(action: { dismiss() }) {
             themeImage.backButton
                 .resizable()
-                .frame(width: 29, height: 29, alignment: .center)
+                .frame(width: 18, height: 18, alignment: .center)
         }
     }
     
