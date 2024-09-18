@@ -97,7 +97,7 @@ public struct ISMConversationView : View {
                         conversationListView
                     }
                 }
-                .onChange(of: query, perform: { newValue in
+                .onChange(of: query, { newValue, _ in
                     if newValue == "" {
                         realmManager.conversations = realmManager.storeConv
                         isTextFieldFocused = false
@@ -105,8 +105,8 @@ public struct ISMConversationView : View {
                         searchInConversationList()
                     }
                 })
-                .onChange(of: groupCastIdToNavigate, perform: { newValue in
-                    if groupCastIdToNavigate != "" || groupCastIdToNavigate != nil {
+                .onChange(of: groupCastIdToNavigate, { _, _ in
+                    if groupCastIdToNavigate != "" {
                         navigateToBroadCastMessages = true
                         createChat = false
                     }
@@ -127,7 +127,7 @@ public struct ISMConversationView : View {
                 .navigationBarHidden(hideNavigationBar)
                 .navigationBarItems(leading: navigationLeading(),
                                     trailing: navigationTrailing())
-                .onChange(of: selectedUserToNavigate, perform: { newValue in
+                .onChange(of: selectedUserToNavigate, { _, _ in
                     if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
                         navigatetoSelectedUser = true
                     }else{

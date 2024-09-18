@@ -82,7 +82,7 @@ extension ChatsViewModel{
                     }
                 }
             case .failure(let error) :
-                ISMChatHelper.print(error ?? "Error")
+                ISMChatHelper.print(error)
             }
         }
     }

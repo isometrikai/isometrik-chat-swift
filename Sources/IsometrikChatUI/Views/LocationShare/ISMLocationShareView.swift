@@ -98,7 +98,7 @@ struct ISMLocationShareView: View {
                     UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                 }))
             }
-            .onChange(of: searchText) { newValue in
+            .onChange(of: searchText, { newValue, _ in
                 //searching places
                 let delay = 0.3
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay){
@@ -107,7 +107,7 @@ struct ISMLocationShareView: View {
                         fetchAutoCompletePredictions()
                     }
                 }
-            }
+            })
         }//:ZSTACK
     }
     

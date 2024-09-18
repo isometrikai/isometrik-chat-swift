@@ -96,7 +96,7 @@ public class ConversationViewModel : NSObject ,ObservableObject{
         
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatUser, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data,_) :
+            case .success(_,_) :
                 completion()
             case .failure(let error) :
                 self.moreDataAvailableForChatList = false
@@ -117,7 +117,7 @@ public class ConversationViewModel : NSObject ,ObservableObject{
         
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data,_) :
+            case .success(_,_) :
                 completion(true)
             case .failure(let error) :
                 ISMChatHelper.print("update conversation Api fail -----> \(String(describing: error))")
@@ -134,7 +134,7 @@ public class ConversationViewModel : NSObject ,ObservableObject{
         
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatUser, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data,_) :
+            case .success(_,_) :
                 completion()
             case .failure(let error) :
                 ISMChatHelper.print("Get clear chat Api failed -----> \(String(describing: error))")

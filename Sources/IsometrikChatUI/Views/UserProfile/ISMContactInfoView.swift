@@ -200,7 +200,7 @@ struct ISMContactInfoView: View {
         .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: self.selectedConversationId,viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.selectedToShowInfo,navigateToAddParticipantsInGroupViaDelegate: $navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager), isActive: $showInfo))
         .background(NavigationLink("", destination:  ISMSearchParticipants(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel ,conversationID: self.conversationID), isActive: $showSearch))
         .background(NavigationLink("", destination:  ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID,updateData : $updateData), isActive: $showEdit))
-        .onChange(of: selectedMember, perform: { newValue in
+        .onChange(of: selectedMember, { _, _ in
             if selectedMember.userId != userData.userId{
                 showOptions = true
             }
@@ -208,7 +208,7 @@ struct ISMContactInfoView: View {
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.memberAddAndRemove)) { _ in
             getConversationDetail {}
         }
-        .onChange(of: updateData, perform: { _ in
+        .onChange(of: updateData, { _, _ in
             getConversationDetail {
                 realmManager.updateImageAndNameOfGroup(name: conversationDetail?.conversationDetails?.conversationTitle ?? "", image: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", convID: self.conversationID ?? "")
             }
@@ -372,7 +372,7 @@ struct ISMContactInfoView: View {
                     .textCase(nil)
                 Spacer()
                 let text = NSDate().descriptiveStringLastSeen(time: conversationDetail?.conversationDetails?.opponentDetails?.lastSeen ?? 0)
-                Text(text ?? (selectedToShowInfo?.userIdentifier ?? ""))
+                Text(text)
                     .font(themeFonts.messageListMessageText)
                     .foregroundColor(themeColor.chatListUserMessage)
                     .padding(.bottom,15)

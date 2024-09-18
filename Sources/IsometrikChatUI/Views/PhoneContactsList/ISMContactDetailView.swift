@@ -70,7 +70,7 @@ struct ContactSavingView: View {
     
     //MARK: - BODY
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 Section {
                     TextField("First Name", text: $contact.givenName)
@@ -143,7 +143,7 @@ struct ContactDetailCell : View {
     var body: some View {
         VStack(spacing:0){
             HStack(spacing: 10){
-                if let name = index.contactName, let firstLetter = name.first {
+                if let name = index.contactName{
                     UserAvatarView(avatar: "", showOnlineIndicator: false, userName: name)
                         .frame(width: 44, height: 44)
                         .clipShape(Circle())

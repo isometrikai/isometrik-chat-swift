@@ -37,7 +37,7 @@ struct ISMShareContactList: View {
     //MARK: - BODY
     var body: some View {
         ZStack{
-            NavigationView {
+            NavigationStack {
                 VStack {
                     ScrollViewReader { proxy in
                         List {
@@ -144,7 +144,7 @@ struct ISMShareContactList: View {
                             ZStack{
                                 VStack(spacing: 3){
                                     ZStack(alignment: .topTrailing) {
-                                        UserAvatarView(avatar: "", showOnlineIndicator: false, userName: user.contact.givenName ?? "")
+                                        UserAvatarView(avatar: "", showOnlineIndicator: false, userName: user.contact.givenName)
                                             .frame(width: 48, height: 48)
                                             .clipShape(Circle())
                                         themeImage.removeUserFromSelectedFromList
@@ -152,7 +152,7 @@ struct ISMShareContactList: View {
                                             .frame(width: 20, height: 20)
                                     }
                                     
-                                    Text(user.contact.givenName ?? "")
+                                    Text(user.contact.givenName)
                                         .font(themeFonts.chatListUserMessage)
                                         .foregroundColor(themeColor.chatListUserMessage)
                                         .lineLimit(2)
@@ -167,11 +167,11 @@ struct ISMShareContactList: View {
                                 .id(user.id)
                         }
                     }
-                } .onChange(of: contactSelected.count) { _ in
+                } .onChange(of: contactSelected.count, { _, _ in
                     withAnimation {  // add animation for scroll to top
                         reader.scrollTo(contactSelected.last?.id, anchor: .center) // scroll
                     }
-                }
+                })
             }
         }.padding(.vertical,5)
     }

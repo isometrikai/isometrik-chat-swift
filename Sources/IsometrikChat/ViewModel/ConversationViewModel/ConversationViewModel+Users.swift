@@ -60,7 +60,7 @@ extension ConversationViewModel{
         
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse?, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data,_) :
+            case .success(_,_) :
                 completion(true)
             case .failure(let error) :
                 ISMChatHelper.print("update title Api fail -----> \(String(describing: error))")
@@ -83,7 +83,7 @@ extension ConversationViewModel{
                     self.users.removeAll()
                 }
                 completion(data)
-            case .failure(let error) :
+            case .failure(_) :
                 ISMChatHelper.print("get users Failed")
                 self.moreDataAvailableForGetUsers = false
             }
@@ -111,7 +111,7 @@ extension ConversationViewModel{
                         return
                     }
                 }
-            case .failure(let error) :
+            case .failure(_) :
                 ISMChatHelper.print("get users Failed")
             }
         }
@@ -131,7 +131,7 @@ extension ConversationViewModel{
                     self.users.removeAll()
                 }
                 completion(data)
-            case .failure(let error) :
+            case .failure(_) :
                 ISMChatHelper.print("get users Failed")
                 self.moreDataAvailableForGetUsers = false
             }
@@ -152,7 +152,7 @@ extension ConversationViewModel{
                     self.eligibleUsers.removeAll()
                 }
                 completion(data)
-            case .failure(let error) :
+            case .failure(_) :
                 ISMChatHelper.print("get users Failed")
                 self.moreDataAvailableForGetUsers = false
             }
@@ -186,7 +186,7 @@ extension ConversationViewModel{
             case .success(let data,_) :
                 self.blockUser = data.users ?? []
                 completion(data)
-            case .failure(let error) :
+            case .failure(_) :
                 ISMChatHelper.print("get users Failed")
             }
         }
@@ -203,7 +203,7 @@ extension ConversationViewModel{
             switch result{
             case .success(let data,_) :
                 completion(data)
-            case .failure(let error) :
+            case .failure(_) :
                 ISMChatHelper.print("get users Failed")
             }
         }

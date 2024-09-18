@@ -24,7 +24,7 @@ public struct ISMBlockUserView: View {
     public var body: some View {
         ZStack{
             VStack {
-                NavigationView {
+                NavigationStack {
                     List {
                         ForEach(blockedUser){ obj in
                             ZStack{
@@ -53,11 +53,11 @@ public struct ISMBlockUserView: View {
                                     })//:VStack
                                 }//:HStack
                                 .buttonStyle(.bordered)
-                                .onChange(of: removedUser) {
+                                .onChange(of: removedUser, { _, _ in
                                     blockedUser = blockedUser.filter({ user in
                                         !removedUser.contains(where: { $0.id == user.id })
                                     })
-                                }
+                                })
                             }//:ZStack
                         }
                     }

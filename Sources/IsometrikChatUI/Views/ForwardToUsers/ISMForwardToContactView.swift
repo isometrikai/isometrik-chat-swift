@@ -166,7 +166,7 @@ struct ISMForwardToContactView: View {
             }
         }//:ZSTACK
         .searchable(text: $conversationViewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always))
-        .onChange(of: conversationViewModel.debounceSearchedText, perform: { newValue in
+        .onChange(of: conversationViewModel.debounceSearchedText, { _, _ in
             print("~~SEARCHING WITH DEBOUNCING \(conversationViewModel.searchedText)")
             self.conversationViewModel.resetGetUsersdata()
             getUsers()
@@ -221,7 +221,7 @@ private extension ISMForwardToContactView{
 
             for newUser in selections {
                 conversationGroup.enter()
-                var user = UserDB()
+                let user = UserDB()
                 user.userProfileImageUrl = newUser.userProfileImageUrl
                 user.userName = newUser.userName
                 user.userIdentifier = newUser.userIdentifier

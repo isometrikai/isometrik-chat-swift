@@ -90,7 +90,7 @@ enum ISMChatGroupEndpoint : ISMChatURLConvertible {
         case .removeMemberFromGroup:
             return [:]
         case .getMembersInGroup(let conversationId):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "conversationId" : "\(conversationId)"
             ]
             return params
@@ -99,7 +99,7 @@ enum ISMChatGroupEndpoint : ISMChatURLConvertible {
         case .updateGroupImage:
             return [:]
         case .exitGroup(let conversationId):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "conversationId" : "\(conversationId)"
             ]
             return params

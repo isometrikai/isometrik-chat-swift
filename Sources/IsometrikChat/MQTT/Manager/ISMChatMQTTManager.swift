@@ -508,7 +508,10 @@ protocol ISMChatMQTTManagerDelegate: AnyObject {
 
 extension UIApplication {
     
-    class func topViewController(_ viewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+    class func topViewController(_ viewController: UIViewController? = UIApplication.shared.connectedScenes
+                                    .filter { $0.activationState == .foregroundActive }
+                                    .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+                                    .first?.rootViewController) -> UIViewController? {
         if let nav = viewController as? UINavigationController {
             return topViewController(nav.visibleViewController)
         }

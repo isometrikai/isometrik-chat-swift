@@ -63,9 +63,9 @@ import IsometrikChat
                 }
                 
                 var mentionedUser : [ISMChatMentionedUser] = []
-                if let Users = messageInfo.mentionedUsers{
+                if messageInfo.mentionedUsers != nil{
                     for x in mentionedUser{
-                        var user = ISMChatMentionedUser(wordCount: x.wordCount, userId: x.userId, order: x.order)
+                        let user = ISMChatMentionedUser(wordCount: x.wordCount, userId: x.userId, order: x.order)
                         mentionedUser.append(user)
                     }
                 }
@@ -182,7 +182,9 @@ import IsometrikChat
     
     func userTyping(messageInfo : ISMChatTypingEvent){
         if messageInfo.conversationId == self.conversationID{
-            stateViewModel.otherUserTyping = true
+            DispatchQueue.main.async {
+                stateViewModel.otherUserTyping = true
+            }
             typingUserName = messageInfo.userName
             DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
                 stateViewModel.otherUserTyping = false

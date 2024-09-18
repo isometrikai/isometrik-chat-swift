@@ -161,11 +161,11 @@ struct ISMAddParticipantsView: View {
                                 .id(user.id)
                         }
                     }
-                } .onChange(of: userSelected.count) { _ in
+                } .onChange(of: userSelected.count, { _, _ in
                     withAnimation {  // add animation for scroll to top
                         reader.scrollTo(userSelected.last?.id, anchor: .center) // scroll
                     }
-                }
+                })
             }
         }.padding(.vertical,5)
     }

@@ -35,7 +35,6 @@ struct MediaSliderView: View {
                     GeometryReader { proxy in
                         TabView(selection: $selectedIndex) {
                             ForEach(0..<data.count, id: \.self) { i in
-                                let userName = data[i].userName
                                 MediaContentView(data: data[i], proxy: proxy, isPlaying: $isPlaying) // Move content to a separate view for better performance
                                     .frame(width: proxy.size.width, height: proxy.size.height)
                                     .tag(i)
@@ -69,11 +68,11 @@ struct MediaSliderView: View {
                             }.onAppear {
                                 scrollToCenter(proxy: scrollViewProxy, index: selectedIndex, count: data.count)
                             }
-                            .onChange(of: selectedIndex) { index in
+                            .onChange(of: selectedIndex, { index, _ in
                                 withAnimation {
                                     scrollToCenter(proxy: scrollViewProxy, index: index, count: data.count)
                                 }
-                            }
+                            })
                         }
                         
                     }
@@ -295,13 +294,13 @@ struct MediaContentView: View {
                             // Pause and remove the player when leaving the view
                             player?.pause()
                             player = nil
-                        }.onChange(of: isPlaying) { oldValue, newValue in
+                        }.onChange(of: isPlaying, { _, _ in
                             if isPlaying {
                                 player?.play()
                             } else {
                                 player?.pause()
                             }
-                        }
+                        })
                     
                     Button {
                         isPlaying.toggle()

@@ -130,7 +130,7 @@ public struct ISMCreateGroupConversationView: View {
                 refreshUsers()
             }
             .searchable(text: $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always))
-            .onChange(of: viewModel.debounceSearchedText, perform: { newValue in
+            .onChange(of: viewModel.debounceSearchedText, { _, _ in
                 print("~~SEARCHING WITH DEBOUNCING \(viewModel.searchedText)")
                 self.viewModel.resetGetUsersdata()
                 getUsers()
@@ -186,11 +186,12 @@ public struct ISMCreateGroupConversationView: View {
                                 .id(user.id)
                         }
                     }
-                } .onChange(of: userSelected.count) { _ in
+                } 
+                .onChange(of: userSelected.count, { _, _ in
                     withAnimation {  // add animation for scroll to top
                         reader.scrollTo(userSelected.last?.id, anchor: .center) // scroll
                     }
-                }
+                })
             }
         }.padding(.vertical,5)
     }

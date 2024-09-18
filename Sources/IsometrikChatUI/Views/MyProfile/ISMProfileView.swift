@@ -33,7 +33,7 @@ public struct ISMProfileView: View {
     
     //MARK: - BODY
     public var body: some View {
-        NavigationView{
+        NavigationStack{
             ZStack {
                 themeColor.messageListBackgroundColor.edgesIgnoringSafeArea(.all)
                 VStack(alignment: .center){
@@ -142,12 +142,12 @@ public struct ISMProfileView: View {
                     .sheet(isPresented: $showSheet){
                         ISMMediaPickerView(selectedMedia: $selectedMedia, selectedProfilePicture: $image, isProfile: true)
                     }
-                    .onChange(of: isSwitchOn) { _ in
+                    .onChange(of: isSwitchOn, { _, _ in
                         updateNotification()
-                    }
-                    .onChange(of: showLastSeen) { _ in
+                    })
+                    .onChange(of: showLastSeen, { _, _ in
                         updateLastSeen()
-                    }
+                    })
                 }
                 
                 if userNameAlert == true{

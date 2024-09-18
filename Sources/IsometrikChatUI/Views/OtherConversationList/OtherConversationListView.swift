@@ -20,7 +20,7 @@ public struct OtherConversationListView : View {
     @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State public var themePlaceholder = ISMChatSdkUI.getInstance().getAppAppearance().appearance.placeholders
     public var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack{
                 themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {

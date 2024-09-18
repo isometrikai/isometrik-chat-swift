@@ -36,7 +36,7 @@ public struct ISMUsersView: View {
     //MARK:  - LIFECYCLE
     public var body: some View {
         ZStack{
-            NavigationView{
+            NavigationStack{
                 VStack {
                     if viewModel.users.count == 0{
                         ProgressView()
@@ -147,11 +147,11 @@ public struct ISMUsersView: View {
                 .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .Group,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate),isActive: $navigatetoCreatGroup).environmentObject(realmManager))
                 .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .BroadCast,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate),isActive: $navigatetoCreatBroadCast).environmentObject(realmManager))
                 .searchable(text: $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always))
-                .onChange(of: viewModel.debounceSearchedText){ newValue in
+                .onChange(of: viewModel.debounceSearchedText, { _, _ in
                     print("~~SEARCHING WITH DEBOUNCING \(viewModel.searchedText)")
                     self.viewModel.resetGetUsersdata()
                     getUsers()
-                }
+                })
                 .onDisappear {
                     viewModel.searchedText = ""
                     viewModel.debounceSearchedText = ""

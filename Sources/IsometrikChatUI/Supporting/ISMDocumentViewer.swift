@@ -113,9 +113,18 @@ struct ISMDocumentViewer: View {
     }
     
     func actionSheet() {
-        if let url = url{
+        if let url = url {
             let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-            UIApplication.shared.windows.first?.rootViewController?.present(activityVC, animated: true, completion: nil)
+
+            // Get the active window from the foreground scene
+            if let keyWindow = UIApplication.shared.connectedScenes
+                .filter({ $0.activationState == .foregroundActive })
+                .compactMap({ $0 as? UIWindowScene })
+                .flatMap({ $0.windows })
+                .first(where: { $0.isKeyWindow }) {
+
+                keyWindow.rootViewController?.present(activityVC, animated: true, completion: nil)
+            }
         }
     }
 }

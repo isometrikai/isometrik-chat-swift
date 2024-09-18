@@ -1047,12 +1047,12 @@ struct ISMMessageSubView: View {
                     selection: $settingsDetent
                 )
         }
-        .onChange(of: reactionRemoved) { newVALUE in
+        .onChange(of: reactionRemoved, { _, _ in
             if !reactionRemoved.isEmpty{
                 realmManager.removeReactionFromMessage(conversationId: self.message.conversationId, messageId: self.message.messageId, reaction: reactionRemoved, userId: userData.userId)
                 reactionRemoved = ""
             }
-        }
+        })
     }//:Body
     
     func forwardedView() -> some View{

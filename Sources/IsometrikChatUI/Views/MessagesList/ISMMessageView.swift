@@ -363,21 +363,21 @@ public struct ISMMessageView: View {
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.memberAddAndRemove)) { _ in
             self.getConversationDetail()
         }
-        .onChange(of: chatViewModel.documentSelectedFromPicker) { newValue in
+        .onChange(of: chatViewModel.documentSelectedFromPicker, { _, _ in
             sendMessageIfDocumentSelected()
-        }
-        .onChange(of: selectedReaction) { newValue in
+        })
+        .onChange(of: selectedReaction, { _, _ in
             if selectedReaction != nil{
                 sendReaction()
             }
-        }
+        })
         .onChange(of: navigateToMediaSliderId, { _, _ in
             if !navigateToMediaSliderId.isEmpty{
                 stateViewModel.navigateToMediaSlider = true
                 navigateToMediaSliderId = ""
             }
         })
-        .onChange(of: textFieldtxt){ newValue in
+        .onChange(of: textFieldtxt, { _, _ in
             if isGroup == true{
                 let filterUserName = getMentionedString(inputString: textFieldtxt)
                 if !filterUserName.isEmpty {
@@ -394,10 +394,10 @@ public struct ISMMessageView: View {
                     filteredUsers = mentionUsers
                 }
             }
-        }
-        .onChange(of: navigateToLocationDetail.title){
+        })
+        .onChange(of: navigateToLocationDetail.title, { _, _ in
             stateViewModel.navigateToLocation = true
-        }
+        })
         .onChange(of: stateViewModel.audioCallToUser, { _, _ in
             if stateViewModel.audioCallToUser == true{
                 stateViewModel.showCallPopUp = true
@@ -413,14 +413,14 @@ public struct ISMMessageView: View {
                 sendMessage(msgType: .photo)
             }
         })
-        .onChange(of: chatViewModel.audioUrl) { newValue in
+        .onChange(of: chatViewModel.audioUrl, { _, _ in
             sendMessageIfAudioUrl()
-        }
-        .onChange(of: stateViewModel.keyboardFocused) { newValue in
+        })
+        .onChange(of: stateViewModel.keyboardFocused, { _, _ in
             if conversationDetail != nil{
                 sendMessageTypingIndicator()
             }
-        }
+        })
         //        .onChange(of: selectedGIF, { _, _ in
         //            sendMessageIfGif()
         //        })
@@ -430,37 +430,37 @@ public struct ISMMessageView: View {
                 sendMessageIfUploadMedia()
             }
         })
-        .onChange(of: updateMessage.body) { newValue in
+        .onChange(of: updateMessage.body, { _, _ in
             self.textFieldtxt = updateMessage.body
             stateViewModel.keyboardFocused = true
-        }
-        .onChange(of: self.placeId) { newValue in
+        })
+        .onChange(of: self.placeId, { _, _ in
             sendMessageIfPlaceId()
-        }
-        .onChange(of: stateViewModel.navigateToAddParticipantsInGroupViaDelegate) { newValue in
+        })
+        .onChange(of: stateViewModel.navigateToAddParticipantsInGroupViaDelegate, { _, _ in
             if stateViewModel.navigateToAddParticipantsInGroupViaDelegate == true{
                 delegate?.navigateToAppMemberInGroup(conversationId: self.conversationID ?? "", groupMembers: self.conversationDetail?.conversationDetails?.members)
                 stateViewModel.navigateToAddParticipantsInGroupViaDelegate = false
             }
-        }
-        .onChange(of: chatViewModel.timerValue, perform: { newValue in
+        })
+        .onChange(of: chatViewModel.timerValue, { _, _ in
             withAnimation {
                 stateViewModel.isShowingRedTimerStart.toggle()
             }
         })
-        .onChange(of: navigateToSocialProfileId) { newValue in
+        .onChange(of: navigateToSocialProfileId, { _, _ in
             if !navigateToSocialProfileId.isEmpty {
                 delegate?.navigateToAppProfile(userId: navigateToSocialProfileId, userType: 0)
                 navigateToSocialProfileId = ""
             }
-        }
-        .onChange(of: postIdToNavigate) { newValue in
+        })
+        .onChange(of: postIdToNavigate, { _, _ in
             if !postIdToNavigate.isEmpty{
                 delegate?.navigateToPost(postId: postIdToNavigate)
                 postIdToNavigate = ""
             }
-        }
-        .onChange(of: stateViewModel.shareContact, perform: { newValue in
+        })
+        .onChange(of: stateViewModel.shareContact, { _, _ in
             if !self.selectedContactToShare.isEmpty {
                 sendMessage(msgType: .contact)
                 stateViewModel.shareContact = false
@@ -656,7 +656,7 @@ public struct ISMMessageView: View {
             lastSent = ""
         }
         if let groupCastId = groupCastId, !groupCastId.isEmpty{
-            chatViewModel.getBroadCastMessages(groupcastId: groupCastId, lastMessageTimestamp: lastSent ?? "") { msg in
+            chatViewModel.getBroadCastMessages(groupcastId: groupCastId, lastMessageTimestamp: lastSent) { msg in
                 if let msg = msg {
                     self.chatViewModel.allMessages = msg.messages
                     self.chatViewModel.allMessages = self.chatViewModel.allMessages?.filter { message in

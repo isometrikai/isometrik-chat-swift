@@ -25,6 +25,8 @@ public enum ISMChatLocalNotificationDurationType {
 public struct ISMChatLocalNotificationManager {
     
     static public var notifications = [ISMChatLocalNotification]()
+    // A key for storing badge count in UserDefaults
+    static public let badgeCountKey = "badgeCount"
     
     static public func requestPermission() -> Void {
         UNUserNotificationCenter
@@ -40,27 +42,51 @@ public struct ISMChatLocalNotificationManager {
         notifications.append(ISMChatLocalNotification(id: UUID().uuidString, title: title, body: body))
     }
     
+    
+
     static public func scheduleNotifications(_ durationInSeconds: Int, repeats: Bool, userInfo: [AnyHashable : Any]) {
-        UIApplication.shared.applicationIconBadgeNumber = 0
-        for notification in notifications {
-            let content = UNMutableNotificationContent()
-            content.title = notification.title
-            content.body = notification.body
-            content.sound = UNNotificationSound.default
-            content.badge = NSNumber(value: UIApplication.shared.applicationIconBadgeNumber + 1)
-            content.userInfo = userInfo
-            
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(durationInSeconds), repeats: repeats)
-            let request = UNNotificationRequest(identifier: notification.id, content: content, trigger: trigger)
-            
-            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-            UNUserNotificationCenter.current().add(request) { error in
-                guard error == nil else { return }
-                print("Scheduling notification with id: \(notification.id)")
-            }
-        }
-        notifications.removeAll()
-    }
+           // Reset badge count to 0
+           UNUserNotificationCenter.current().setBadgeCount(0) { error in
+               if let error = error {
+                   print("Error resetting badge count: \(error)")
+               }
+           }
+
+           // Retrieve current badge count from UserDefaults (default is 0 if not set)
+           let currentBadgeCount = UserDefaults.standard.integer(forKey: badgeCountKey)
+
+           for notification in notifications {
+               let content = UNMutableNotificationContent()
+               content.title = notification.title
+               content.body = notification.body
+               content.sound = UNNotificationSound.default
+               
+               // Increment the badge count
+               let newBadgeCount = currentBadgeCount + 1
+               UNUserNotificationCenter.current().setBadgeCount(newBadgeCount) { error in
+                   if let error = error {
+                       print("Error setting badge count: \(error)")
+                   }
+               }
+               content.badge = NSNumber(value: newBadgeCount)
+               content.userInfo = userInfo
+
+               // Save the new badge count in UserDefaults
+               UserDefaults.standard.set(newBadgeCount, forKey: badgeCountKey)
+               
+               let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(durationInSeconds), repeats: repeats)
+               let request = UNNotificationRequest(identifier: notification.id, content: content, trigger: trigger)
+               
+               UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+               UNUserNotificationCenter.current().add(request) { error in
+                   guard error == nil else { return }
+                   print("Scheduling notification with id: \(notification.id)")
+               }
+           }
+           
+           // Clear the notifications array after scheduling
+           notifications.removeAll()
+       }
     
     static public func scheduleNotifications(_ duration: Int, of type: ISMChatLocalNotificationDurationType, repeats: Bool, userInfo: [AnyHashable : Any]) {
         var seconds = 0

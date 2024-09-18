@@ -67,7 +67,7 @@ enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
             return .get
         case .messageReadInfo:
             return .get
-        case .allUnreadMessagesFromAllConversation(senderIdsExclusive: let senderIdsExclusive, deliveredToMe: let deliveredToMe, senderIds: let senderIds, limit: let limit, skip: let skip, sort: let sort):
+        case .allUnreadMessagesFromAllConversation(_, _, _, _, _, _):
             return .get
         case .markMessageStatusRead:
             return .put
@@ -89,29 +89,29 @@ enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
         case .sendMessage:
             return [:]
         case .deleteMessageForMe(conversationId: let conversationId, messageIds: let messageIds):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "conversationId" : "\(conversationId)", "messageIds" : "\(messageIds)"
             ]
             return params
         case .deleteMessageForEveryone(conversationId: let conversationId, messageIds: let messageIds):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "conversationId" : "\(conversationId)", "messageIds" : "\(messageIds)"
             ]
             return params
         case .forwardMessage:
             return [:]
         case .messageDeliveredInfo(let conversationId, let messageId):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "conversationId" : "\(conversationId)", "messageId" : "\(messageId)"
             ]
             return params
         case .messageReadInfo(let conversationId, let messageId):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "conversationId" : "\(conversationId)", "messageId" : "\(messageId)"
             ]
             return params
         case .allUnreadMessagesFromAllConversation(senderIdsExclusive: let senderIdsExclusive, deliveredToMe: let deliveredToMe, senderIds: let senderIds, limit: let limit, skip: let skip, sort: let sort):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "senderIdsExclusive" : "\(senderIdsExclusive)", "deliveredToMe" : "\(deliveredToMe)", "senderIds" : "\(senderIds)", "limit" : "\(limit)" , "skip" : "\(skip)" , "sort" : "\(sort)"
             ]
             return params

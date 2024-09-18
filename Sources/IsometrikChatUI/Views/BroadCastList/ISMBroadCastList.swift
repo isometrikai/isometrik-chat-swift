@@ -84,13 +84,13 @@ public struct ISMBroadCastList: View {
                         .foregroundColor(themeColor.navigationBarTitle)
                 }
             }
-            .onChange(of: query) { newValue in
+            .onChange(of: query, { newValue, _ in
                 if newValue.isEmpty {
                     allBroadCasts = storeBroadCasts
                 } else {
                     searchInBroadCastList()
                 }
-            }
+            })
         }
         .onLoad {
             getBroadcastList()

@@ -158,9 +158,9 @@ struct ISMImageAndViderEditor: View {
         .fullScreenCover(isPresented: $addText, content: {
             ISMImageText(url: $media[selectedIndex].url, isShowing: $addText)
         })
-        .onChange(of: selectedIndex){ _ in
+        .onChange(of: selectedIndex, { _, _ in
             print("selected Index ---> \(selectedIndex)")
-        }
+        })
         .onAppear(perform: {
             print("selected Index ---> \(selectedIndex)")
             print(media)

@@ -173,7 +173,7 @@ extension ChatsViewModel{
         
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatUsers, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data,_) :
+            case .success(_,_) :
                 completion()
             case .failure(let error) :
                 ISMChatHelper.print("exit group Api failed -----> \(String(describing: error))")

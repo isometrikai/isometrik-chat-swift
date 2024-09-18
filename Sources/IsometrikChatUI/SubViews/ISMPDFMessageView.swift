@@ -70,7 +70,7 @@ struct ISMPDFMessageView: View {
             let screenSize = CGSize(width: pageSize.width * scale,
                                     height: pageSize.height * scale)
 
-            completion(page.thumbnail(of: screenSize, for: .mediaBox) ?? UIImage())
+            completion(page.thumbnail(of: screenSize, for: .mediaBox))
             
         }
     }

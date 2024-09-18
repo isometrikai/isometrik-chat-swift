@@ -47,7 +47,7 @@ struct ISMUserMediaView: View {
                 }
                 Spacer()
             }
-            .onChange(of: selectIndex, perform: { newValue in
+            .onChange(of: selectIndex, { newValue, _ in
                 handlePickerSelection(newValue)
             })
             .navigationBarItems(leading: navigationLeading())

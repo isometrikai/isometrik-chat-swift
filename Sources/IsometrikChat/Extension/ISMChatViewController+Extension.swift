@@ -15,7 +15,13 @@ public struct ViewControllerHolder {
 
 public struct ViewControllerKey: EnvironmentKey {
     public static var defaultValue: ViewControllerHolder {
-        return ViewControllerHolder(value: UIApplication.shared.windows.first?.rootViewController)
+        let rootViewController = UIApplication.shared.connectedScenes
+            .filter { $0.activationState == .foregroundActive }
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first(where: { $0.isKeyWindow })?.rootViewController
+        
+        return ViewControllerHolder(value: rootViewController)
     }
 }
 

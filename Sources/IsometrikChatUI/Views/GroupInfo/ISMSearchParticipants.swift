@@ -50,7 +50,7 @@ struct ISMSearchParticipants: View {
                 .background(themeColor.chatListBackground)
                 .scrollContentBackground(.hidden)
                 .searchable(text:  $query, placement: .navigationBarDrawer(displayMode: .always)) {}
-                .onChange(of: query, perform: { newValue in
+                .onChange(of: query, { _, _ in
                     if query == ""{
                         isEditing = false
                         members?.conversationMembers =  originalMembers?.conversationMembers
@@ -59,17 +59,17 @@ struct ISMSearchParticipants: View {
                         members?.conversationMembers =  members?.conversationMembers?.filter({ $0.userName?.range(of: query, options: .caseInsensitive) != nil })
                     }
                 })
-                .onChange(of: isEditing) { newValue in
+                .onChange(of: isEditing, { _, _ in
                     if isEditing == false && query == ""{
                         members?.conversationMembers =  originalMembers?.conversationMembers
                     }
-                }
+                })
             
         }
         .onAppear{
             getMembers()
         }
-        .onChange(of: selectedMember, perform: { newValue in
+        .onChange(of: selectedMember, { _, _ in
             showOptions = true
         })
         .confirmationDialog("", isPresented: $showOptions) {
