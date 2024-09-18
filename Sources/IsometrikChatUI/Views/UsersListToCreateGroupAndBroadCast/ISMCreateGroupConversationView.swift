@@ -26,7 +26,7 @@ public struct ISMCreateGroupConversationView: View {
     @ObservedObject public var chatViewModel = ChatsViewModel()
     public var conversationId : String? = nil
     public var selectUserFor : SelectUserFor = .Group
-    @State public var navigateTocreateGroup : Bool = false
+//    @State public var navigateTocreateGroup : Bool = false
 //    @State var navigateToMessageView : Bool = false
     @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
@@ -117,7 +117,6 @@ public struct ISMCreateGroupConversationView: View {
                         }
                     }
                     .navigationBarItems(leading: navBarLeadingBtn, trailing: navBarTrailingBtn)
-                    .background(NavigationLink("", destination: ISMGroupCreate(showSheetView: self.$showSheetView, userSelected: self.$userSelected,viewModel: self.viewModel, chatViewModel: self.chatViewModel),isActive: $navigateTocreateGroup))
 //                    .background(NavigationLink("", destination:  ISMMessageView(conversationViewModel : self.viewModel,conversationID: "",opponenDetail: nil,userId: viewModel.userData?.userIdentifier, isGroup: false,fromBroadCastFlow: true,groupCastId: self.groupCastId ?? "", groupConversationTitle: nil, groupImage: nil)
 //                        .environmentObject(realmManager), isActive: $navigateToMessageView))
                 }
@@ -201,8 +200,8 @@ public struct ISMCreateGroupConversationView: View {
             ZStack{
                 if userSelected.count > 0{
                     if selectUserFor == .Group{
-                        Button {
-                            navigateTocreateGroup = true
+                        NavigationLink {
+                            ISMGroupCreate(showSheetView: self.$showSheetView, userSelected: self.$userSelected,viewModel: self.viewModel, chatViewModel: self.chatViewModel)
                         } label: {
                             Text("Next")
                                 .font(themeFonts.messageListMessageText)

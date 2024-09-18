@@ -352,7 +352,7 @@ extension ISMMessageView{
 //                    }
                 }
             }
-        }.background(NavigationLink("", destination:  ISMBlockUserView(conversationViewModel: self.conversationViewModel), isActive: $stateViewModel.navigateToBlockUsers))
+        }
     }
     
     func calling(type : ISMLiveCallType){

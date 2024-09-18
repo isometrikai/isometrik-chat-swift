@@ -32,7 +32,7 @@ public class UIStateViewModel: ObservableObject {
     @Published public var executeRepeatly : Bool = false
     @Published public var otherUserTyping : Bool = false
     
-    @Published public var navigateToBlockUsers = false
+//    @Published public var navigateToBlockUsers = false
     @Published public var navigateToProfile = false
     @Published public var navigateToGroupCastInfo  : Bool = false
     @Published public var showUnblockPopUp : Bool = false
