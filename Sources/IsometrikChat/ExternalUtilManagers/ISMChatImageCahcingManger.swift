@@ -24,4 +24,10 @@ public class ISMChatImageCahcingManger{
             }
         }.resizable()
     }
+    
+    static public func viewImage(url: String,size: CGSize? = nil)-> KFImage{
+        return KFImage(URL(string: url)).placeholder {
+            ProgressView()
+        }.resizable()
+    }
 }

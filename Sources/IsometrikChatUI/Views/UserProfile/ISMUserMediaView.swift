@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import AVKit
 import SDWebImageSwiftUI
 import IsometrikChat
 
@@ -23,9 +22,7 @@ struct ISMUserMediaView: View {
         Array(repeating: GridItem(.flexible(), spacing: 1, alignment: nil), count: 3)
     }
     @Environment(\.dismiss) var dismiss
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK: - BODY
     public var body: some View {
@@ -47,7 +44,7 @@ struct ISMUserMediaView: View {
                 }
                 Spacer()
             }
-            .onChange(of: selectIndex, { newValue, _ in
+            .onChange(of: selectIndex, { _, newValue in
                 handlePickerSelection(newValue)
             })
             .navigationBarItems(leading: navigationLeading())
@@ -59,16 +56,16 @@ struct ISMUserMediaView: View {
                         Picker("Media Picker", selection: $selectIndex) {
                             Text("Media")
                                 .tag(0)
-                                .font(themeFonts.messageListMessageText)
-                                .foregroundColor(themeColor.messageListHeaderTitle)
+                                .font(appearance.fonts.messageListMessageText)
+                                .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                             Text("Links")
                                 .tag(1)
-                                .font(themeFonts.messageListMessageText)
-                                .foregroundColor(themeColor.messageListHeaderTitle)
+                                .font(appearance.fonts.messageListMessageText)
+                                .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                             Text("Docs")
                                 .tag(2)
-                                .font(themeFonts.messageListMessageText)
-                                .foregroundColor(themeColor.messageListHeaderTitle)
+                                .font(appearance.fonts.messageListMessageText)
+                                .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                             
                         }
                         .pickerStyle(.segmented)
@@ -133,13 +130,13 @@ struct ISMUserMediaView: View {
         
         switch selectIndex {
         case 0:
-            placeholderImage = themeImage.noMediaPlaceholder
+            placeholderImage = appearance.images.noMediaPlaceholder
         case 1:
-            placeholderImage = themeImage.noLinkPlaceholder
+            placeholderImage = appearance.images.noLinkPlaceholder
         case 2:
-            placeholderImage = themeImage.noDocPlaceholder
+            placeholderImage = appearance.images.noDocPlaceholder
         default:
-            placeholderImage = themeImage.fileFallback
+            placeholderImage = appearance.images.fileFallback
         }
         
         return VStack{
@@ -155,7 +152,7 @@ struct ISMUserMediaView: View {
         Button(action: {
             dismiss()
         }) {
-            themeImage.backButton
+            appearance.images.backButton
                 .resizable()
                 .frame(width: 18, height: 18)
         }
@@ -168,8 +165,8 @@ struct ISMUserMediaView: View {
                     // Section Header
                     Section(header: Text(key.toString(dateFormat: "dd MMM yyyy"))
                         .foregroundColor(.black)
-                        .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.messageListHeaderTitle)
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding()
                     ) {
@@ -202,8 +199,8 @@ struct ISMUserMediaView: View {
             spacing: 1
         ) {
             Section(header: Text(key.toString(dateFormat: "dd MMM yyyy"))
-                .font(themeFonts.messageListMessageText)
-                .foregroundColor(themeColor.messageListHeaderTitle)
+                .font(appearance.fonts.messageListMessageText)
+                .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
             ) {
@@ -242,7 +239,7 @@ struct ISMUserMediaView: View {
                     HStack(alignment: .center,spacing: 5){
                         ZStack(alignment: .center){
                             Color.backgroundView
-                            themeImage.linkLogo
+                            appearance.images.linkLogo
                                 .resizable()
                                 .frame(width: 25,height: 25)
                         }
@@ -251,8 +248,8 @@ struct ISMUserMediaView: View {
                         .padding(5)
                         
                         Text(msg)
-                            .font(themeFonts.messageListMessageTime)
-                            .foregroundColor(themeColor.messageListHeaderTitle)
+                            .font(appearance.fonts.messageListMessageTime)
+                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                             .lineLimit(3)
                         
                         Spacer()
@@ -271,42 +268,48 @@ struct ISMUserMediaView: View {
     }
     
     func showVideoView(_ value: MediaDB) -> some View {
-        NavigationLink(
-            destination: MediaSliderView(messageId: value.messageId)
-                .environmentObject(realmManager)
-        ) {
-            let url = URL(string: (value.mediaUrl ))
-            let player = AVPlayer(url: url!)
-            VideoPlayer(player: player)
-                .frame(width: ((UIScreen.main.bounds.width / 3) - 1), height: ((UIScreen.main.bounds.width / 3) - 1))
-        }
+        Button(action: {
+            
+        }, label: {
+                ISMChatImageCahcingManger.networkImage(url: value.thumbnailUrl ,isprofileImage: false)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: ((UIScreen.main.bounds.width / 3) - 1), height: ((UIScreen.main.bounds.width / 3) - 1))
+                    .clipped()
+            
+        })
     }
     
     func showGifView(_ value: MediaDB) -> some View {
-        NavigationLink(
-            destination: MediaSliderView(messageId: value.messageId)
-                .environmentObject(realmManager)
-        ) {
+        Button(action: {
+            
+        }, label: {
             let url = URL(string: (value.mediaUrl ))
             AnimatedImage(url: url)
                 .resizable()
                 .frame(width: ((UIScreen.main.bounds.width / 3) - 1), height: ((UIScreen.main.bounds.width / 3) - 1))
-        }
+        })
     }
        
     
     
     func showImageView(_ value: MediaDB) -> some View {
-        NavigationLink(
-            destination: MediaSliderView(messageId: value.messageId)
-                .environmentObject(realmManager)
-        ) {
+        
+        Button(action: {
+            
+        }, label: {
             ISMChatImageCahcingManger.networkImage(url: value.mediaUrl ,isprofileImage: false)
                 .resizable()
                 .scaledToFill()
                 .frame(width: ((UIScreen.main.bounds.width / 3) - 1), height: ((UIScreen.main.bounds.width / 3) - 1))
                 .clipped()
-        }
+                .overlay {
+                    appearance.images.playVideo
+                        .resizable()
+                        .foregroundColor(.white)
+                        .frame(width: 36, height: 36)
+                }
+        })
     }
     
     func showFileView(_ value: MediaDB) -> some View {
@@ -316,15 +319,15 @@ struct ISMUserMediaView: View {
             ZStack(alignment: .leading) {
                 Color.white.cornerRadius(8)
                 HStack(alignment: .center, spacing: 10){
-                    themeImage.pdfLogo
+                    appearance.images.pdfLogo
                         .resizable()
                         .scaledToFit()
                         .frame(width: 26, height: 32)
                         .padding(.leading, 10)
                     
                     Text(value.name)
-                        .font(themeFonts.messageListMessageTime)
-                        .foregroundColor(themeColor.messageListHeaderTitle)
+                        .font(appearance.fonts.messageListMessageTime)
+                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                         .lineLimit(3)
                     
                     Spacer()

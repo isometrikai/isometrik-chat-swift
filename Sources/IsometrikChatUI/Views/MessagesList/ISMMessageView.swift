@@ -374,7 +374,6 @@ public struct ISMMessageView: View {
         .onChange(of: navigateToMediaSliderId, { _, _ in
             if !navigateToMediaSliderId.isEmpty{
                 stateViewModel.navigateToMediaSlider = true
-                navigateToMediaSliderId = ""
             }
         })
         .onChange(of: textFieldtxt, { _, _ in
@@ -492,8 +491,16 @@ public struct ISMMessageView: View {
                 ProgressView()
             }
         )
-        .navigationDestination(isPresented: $stateViewModel.navigateToMediaSlider) {
-            MediaSliderView(messageId: navigateToMediaSliderId).environmentObject(self.realmManager)
+        .fullScreenCover(isPresented: $stateViewModel.navigateToMediaSlider) {
+            let attachments = self.realmManager.medias ?? []
+            let currentMediaId = navigateToMediaSliderId
+            //reset value
+            let index = attachments.firstIndex { $0.messageId == currentMediaId } ?? 0
+            ISMChatMediaViewer(viewModel: ISMChatMediaViewerViewModel(attachments: attachments, index: index)) {
+                stateViewModel.navigateToMediaSlider = false
+            }.onAppear {
+                self.navigateToMediaSliderId = ""
+            }
         }
         .background(NavigationLink("", destination: ISMForwardToContactView(viewModel : self.chatViewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage),isActive: $stateViewModel.movetoForwardList))
         //        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))

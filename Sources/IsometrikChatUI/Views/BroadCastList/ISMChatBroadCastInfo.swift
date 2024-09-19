@@ -93,7 +93,9 @@ struct ISMChatBroadCastInfo: View {
             }
             .navigationBarItems(leading : navBarLeadingBtn,trailing: trailingBarLeadingBtn)
             .navigationBarTitleDisplayMode(.inline)
-            .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.conversationviewModel,selectUserFor: .AddMemberInBroadcast,groupCastId: self.groupcastId ?? "", groupCastIdToNavigate : $groupCastIdToNavigate),isActive: $navigatetoAddMember).environmentObject(realmManager))
+            .navigationDestination(isPresented: $navigatetoAddMember, destination: {
+                ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.conversationviewModel,selectUserFor: .AddMemberInBroadcast,groupCastId: self.groupcastId ?? "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
+            })
             .onAppear {
                 viewModel.getBroadMembers(groupcastId: self.groupcastId ?? "") { data in
                     membersInfo = data

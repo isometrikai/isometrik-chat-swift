@@ -98,7 +98,7 @@ struct ISMLocationShareView: View {
                     }
                 )
             }
-            .onChange(of: searchText, { newValue, _ in
+            .onChange(of: searchText, { _, newValue in
                 //searching places
                 let delay = 0.3
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {

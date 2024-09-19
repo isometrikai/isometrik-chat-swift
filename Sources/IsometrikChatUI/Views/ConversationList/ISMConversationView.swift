@@ -97,7 +97,7 @@ public struct ISMConversationView : View {
                         conversationListView
                     }
                 }
-                .onChange(of: query, { newValue, _ in
+                .onChange(of: query, {_ , newValue in
                     if newValue == "" {
                         realmManager.conversations = realmManager.storeConv
                         isTextFieldFocused = false

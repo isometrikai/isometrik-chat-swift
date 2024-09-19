@@ -459,7 +459,7 @@ extension ISMMessageView{
     
     func textView() -> some View{
         TextField("", text: $textFieldtxt, axis: .vertical)
-            .onChange(of: textFieldtxt, { newValue, _ in
+            .onChange(of: textFieldtxt, { _, newValue in
                 // Update showMentionList based on conditions
                 if newValue.last == "@" {
                     stateViewModel.showMentionList = true

@@ -231,8 +231,8 @@ struct ISMMessageInfoSubView: View {
                             //when its group show member name in message
                             inGroupUserName()
                         }
-                        NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
-                        {
+//                        NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
+//                        {
                             VStack(alignment: .trailing,spacing: 5){
                                 if message.messageType == 1{
                                     forwardedView()
@@ -283,7 +283,7 @@ struct ISMMessageInfoSubView: View {
                                         .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                                     ) : AnyView(EmptyView())
                             )
-                        }
+//                        }
                     }.padding(.vertical,2)
                 }
                 
@@ -299,7 +299,7 @@ struct ISMMessageInfoSubView: View {
                             inGroupUserName()
                         }
                      
-                        NavigationLink(destination: MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager)){
+//                        NavigationLink(destination: MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager)){
                             VStack(alignment: .trailing,spacing : 5){
                                 if message.messageType == 1{
                                     forwardedView()
@@ -388,7 +388,7 @@ struct ISMMessageInfoSubView: View {
                                             .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                                         ) : AnyView(EmptyView())
                                 )
-                        }//:NavigationLink
+//                        }//:NavigationLink
                         //                                }
                     } .padding(.vertical, 2)
                 }
@@ -650,8 +650,8 @@ struct ISMMessageInfoSubView: View {
                             inGroupUserName()
                         }
                         
-                        NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
-                        {
+//                        NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
+//                        {
                             VStack(alignment: .trailing,spacing: 5){
                                 if message.messageType == 1{
                                     forwardedView()
@@ -703,7 +703,7 @@ struct ISMMessageInfoSubView: View {
                                         .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
                                     ) : AnyView(EmptyView())
                             )
-                        }
+//                        }
                     }.padding(.vertical,2)
                 }
             case .sticker:

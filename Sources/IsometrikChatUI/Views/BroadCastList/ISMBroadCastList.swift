@@ -84,7 +84,7 @@ public struct ISMBroadCastList: View {
                         .foregroundColor(themeColor.navigationBarTitle)
                 }
             }
-            .onChange(of: query, { newValue, _ in
+            .onChange(of: query, { _, newValue in
                 if newValue.isEmpty {
                     allBroadCasts = storeBroadCasts
                 } else {
