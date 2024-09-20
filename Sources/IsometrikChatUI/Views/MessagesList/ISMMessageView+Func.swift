@@ -597,9 +597,9 @@ extension ISMMessageView{
                     }
                 }
             }
-        } else if !videoSelectedFromPicker.isEmpty {
+        } else if !mediaSelectedFromPicker.isEmpty {
             // Messages as media
-            for media in videoSelectedFromPicker {
+            for media in mediaSelectedFromPicker {
                 if ISMChatHelper.checkMediaType(media: media.url) == .video{
                     
                     let mediaName = "\(UUID()).mp4"
@@ -660,8 +660,8 @@ extension ISMMessageView{
                             if let data = data {
                                 sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.thumbnailUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
                                 localIds.removeFirst()
-                                if media == self.videoSelectedFromPicker.last {
-                                    self.videoSelectedFromPicker.removeAll()
+                                if media == self.mediaSelectedFromPicker.last {
+                                    self.mediaSelectedFromPicker.removeAll()
                                 }
                             }
                         }
@@ -874,9 +874,9 @@ extension ISMMessageView{
                     }
                 }
             }
-        } else if !videoSelectedFromPicker.isEmpty {
+        } else if !mediaSelectedFromPicker.isEmpty {
             // Messages as media
-            for media in videoSelectedFromPicker {
+            for media in mediaSelectedFromPicker {
                 if ISMChatHelper.checkMediaType(media: media.url) == .video{
                     
                     let mediaName = "\(UUID()).mp4"
@@ -893,8 +893,8 @@ extension ISMMessageView{
                             chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: nil, video: media.url, audio: nil, mediaName:  mediaName) {  data, filename, size in
                                 if let data = data {
                                     chatViewModel.sendMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,thumbnailUrl: thumbnailmedia?.mediaUrl,caption: media.caption,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_ in
-                                        if media == self.videoSelectedFromPicker.last {
-                                            self.videoSelectedFromPicker.removeAll()
+                                        if media == self.mediaSelectedFromPicker.last {
+                                            self.mediaSelectedFromPicker.removeAll()
                                         }
                                         reloadBroadCastMessages()
                                         //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
@@ -914,8 +914,8 @@ extension ISMMessageView{
                     chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: nil, video: media.url, audio: nil, mediaName: mediaName) {  data, filename, size in
                         if let data = data {
                             chatViewModel.sendMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,caption: media.caption,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_ in
-                                if media == self.videoSelectedFromPicker.last {
-                                    self.videoSelectedFromPicker.removeAll()
+                                if media == self.mediaSelectedFromPicker.last {
+                                    self.mediaSelectedFromPicker.removeAll()
                                 }
                                 reloadBroadCastMessages()
                                 //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list

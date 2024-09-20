@@ -52,6 +52,9 @@ public struct ISMMessageView: View {
     
     @State var navigateToMediaSliderId : String = ""
     
+    @State var mediaSelectedFromPicker : [ISMMediaUpload] = []
+    @State var mediaCaption : String = ""
+    
     
     
     @State var text = ""
@@ -134,10 +137,6 @@ public struct ISMMessageView: View {
     @State var mentionUsers: [ISMChatGroupMember] = []
     @State var filteredUsers: [ISMChatGroupMember] = []
     
-    
-    
-    
-    @State var videoSelectedFromPicker : [ISMMediaUpload] = []
     
     //camera click
     @State var cameraImageToUse : URL?
@@ -482,15 +481,18 @@ public struct ISMMessageView: View {
                 ISMShareContactList(dissmiss: $stateViewModel.showSheet , selectedContact: self.$selectedContactToShare, shareContact: $stateViewModel.shareContact)
             }
         }
-        .mediaImporter(
-            isPresented: self.$stateViewModel.showVideoPicker,
-            allowedMediaTypes: [.videos, .images],
-            allowsMultipleSelection: true,
-            onCompletion: handleMediaImporterResult,
-            loadingOverlay: { _ in
-                ProgressView()
-            }
-        )
+        .sheet(isPresented: self.$stateViewModel.showVideoPicker) {
+            ISMMediaPicker(isPresented: self.$stateViewModel.showVideoPicker, sendMedias: $mediaSelectedFromPicker,opponenetName: isGroup == true ? (self.conversationDetail?.conversationDetails?.conversationTitle ?? "" ) : (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""),mediaCaption: $mediaCaption,sendMediaToMessage: $stateViewModel.sendMedia)
+        }
+//        .mediaImporter(
+//            isPresented: self.$stateViewModel.showVideoPicker,
+//            allowedMediaTypes: [.videos, .images],
+//            allowsMultipleSelection: true,
+//            onCompletion: handleMediaImporterResult,
+//            loadingOverlay: { _ in
+//                ProgressView()
+//            }
+//        )
         .fullScreenCover(isPresented: $stateViewModel.navigateToMediaSlider) {
             let attachments = self.realmManager.medias ?? []
             let currentMediaId = navigateToMediaSliderId
@@ -506,7 +508,6 @@ public struct ISMMessageView: View {
         //        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
         .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager),isActive: $stateViewModel.navigateToProfile))
         //        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))
-        .background(NavigationLink("", destination: ISMImageAndViderEditor(media: $videoSelectedFromPicker, sendToUser: opponenDetail?.userName ?? "",sendMedia: $stateViewModel.sendMedia),isActive: $stateViewModel.navigateToImageEditor))
         .onReceive(timer, perform: { firedDate in
             print("timer fired")
             timeElapsed = Int(firedDate.timeIntervalSince(startDate))

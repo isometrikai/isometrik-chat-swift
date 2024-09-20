@@ -28,6 +28,7 @@ let package = Package(
         .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", from: "3.1.1"),
         .package(url: "https://github.com/realm/realm-swift",branch: "master"),
         .package(url: "https://github.com/kishikawakatsumi/KeychainAccess",branch: "master"),
+        .package(url: "https://github.com/exyte/MediaPicker",branch: "2.2.3"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -48,6 +49,7 @@ let package = Package(
                 .product(name: "SDWebImageSwiftUI", package: "sdwebimageswiftui"),
                 .product(name: "RealmSwift", package: "realm-swift"),
                 .product(name: "KeychainAccess", package: "keychainaccess"),
+                .product(name: "ExyteMediaPicker", package: "MediaPicker"),
             ]),
         .target(
             name: "IsometrikChatUI",
@@ -66,6 +68,7 @@ let package = Package(
                 .product(name: "SDWebImageSwiftUI", package: "sdwebimageswiftui"),
                 .product(name: "RealmSwift", package: "realm-swift"),
                 .product(name: "KeychainAccess", package: "keychainaccess"),
+                .product(name: "ExyteMediaPicker", package: "MediaPicker"),
             ],resources: [
                 .process("Resources/Assets.xcassets")
             ])

@@ -9,6 +9,7 @@ import SwiftUI
 import AVKit
 import Kingfisher
 import IsometrikChat
+import ExyteMediaPicker
 
 
 public struct ISMMediaUpload : Hashable {
@@ -21,36 +22,72 @@ struct ISMImageAndViderEditor: View {
     
     //MARK:  - PROPERTIES
     @State public var selectedIndex = 0
-    @Binding public var media : [ISMMediaUpload]
+    @Binding public var media : [Media]
     @Environment(\.dismiss) var dismiss
     @State public var scale: CGFloat = 1.0
     @State public var height: CGFloat = 32.0
     public var sendToUser : String
-    @Binding public var sendMedia : Bool
     @State public var showCropper : Bool = false
     @State public var navigateToDraw : Bool = false
     @State public var addText : Bool = false
     
-    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    @Binding var caption : String
+    var onSend: () -> Void
     
     //MARK:  - LIFECYCLE
     var body: some View {
         ZStack {
             Color.black.edgesIgnoringSafeArea(.all)
             VStack {
+                HStack(spacing: 10){
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        appearance.images.mediaEditorCancel
+                            .resizable()
+                            .frame(width: 36, height: 36, alignment: .center)
+                    }
+                    
+                    Spacer()
+                    
+                    if media.count > 0{
+                        if media[selectedIndex].type != .video{
+                            Button(action: {
+                                showCropper = true
+                            }) {
+                                appearance.images.mediaEditorCrop
+                                    .resizable()
+                                    .frame(width: 36, height: 36, alignment: .center)
+                            }
+                            
+                            
+                            Button(action: {
+                                addText = true
+                            }) {
+                                appearance.images.mediaEditorText
+                                    .resizable()
+                                    .frame(width: 36, height: 36, alignment: .center)
+                            }
+                            
+                            Button(action: {
+                                navigateToDraw = true
+                            }) {
+                                appearance.images.mediaEditorEdit
+                                    .resizable()
+                                    .frame(width: 36, height: 36, alignment: .center)
+                            }
+                        }
+                    }
+                }.padding(.horizontal,15).padding(.vertical,15)
                 GeometryReader { proxy in
                     TabView(selection: $selectedIndex) {
-                        ForEach(media.indices, id: \.self) { ind in
+                        ForEach(Array(media.enumerated()), id: \.element.id) { index, media in
                             VStack {
-                                if media[ind].isVideo {
-                                    VideoPlayerView(url: media[ind].url)
-                                } else {
-                                    ImageView(url: media[ind].url)
-                                }
+                                MediaCell(viewModel: MediaCellViewModel(media: media))
+                                    .aspectRatio(1, contentMode: .fill)
                             }
-                            .tag(ind)
+                            .tag(index)
                         }
                     }
                 }
@@ -60,72 +97,83 @@ struct ISMImageAndViderEditor: View {
             VStack{
                 Spacer()
                 LazyHStack(spacing: 10) {
-                    ForEach(media.indices, id: \.self) { index in
-                        GeometryReader { geometry in
-                            if let uiImage = ISMChatHelper.isVideo(media: media[index].url) == true ? ISMChatHelper.getThumbnailImage(url: media[index].url.absoluteString) : loadImageFromURL(fileURL: media[index].url) {
-                                ZStack{
-                                    Image(uiImage: uiImage)
-                                        .resizable()
-                                        .cornerRadius(8)
-                                        .frame(width: 46, height: 46, alignment: .center)
-                                        .scaledToFill()
-                                        .overlay(RoundedRectangle(cornerRadius: 8)
-                                            .stroke(lineWidth: 2)
-                                            .foregroundColor(selectedIndex == index ? Color.white : Color.clear)
-                                        )
-                                        .overlay(
-                                            LinearGradient(gradient: Gradient(colors: selectedIndex == index ? [Color.gray.opacity(0.6), Color.clear] : [Color.clear,Color.clear]), startPoint: .leading, endPoint: .trailing)
-                                                .frame(width: 46, height: 46) // Adjust the width as needed
-                                                .offset(x: 5)
-                                        )
-                                        .onTapGesture {
-                                            if selectedIndex == index{
-                                                //delete
-                                                if self.media.count == 1{
-                                                    self.media.removeAll()
-                                                    dismiss()
-                                                }else{
-                                                    self.media.remove(at: index)
-                                                }
-                                            }else{
-                                                selectedIndex = index
-                                            }
+                    ForEach(Array(media.enumerated()), id: \.element.id) { index, media in
+                        ZStack {
+                            MediaEditorCell(viewModel: MediaCellViewModel(media: media), selectedIndex: selectedIndex)
+                                .frame(width: 46, height: 46) // Ensure that the image and border have the same frame
+                                .cornerRadius(8) // Make sure this is added to the main frame
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(lineWidth: 2)
+                                        .foregroundColor(selectedIndex == index ? Color.white : Color.clear)
+                                )
+                                .overlay(
+                                    LinearGradient(gradient: Gradient(colors: selectedIndex == index ? [Color.gray.opacity(0.6), Color.clear] : [Color.clear, Color.clear]), startPoint: .leading, endPoint: .trailing)
+                                        .frame(width: 46, height: 46) // Match the size of the image
+                                        .cornerRadius(8) // Match the corner radius to the main image
+                                        .offset(x: 5)
+                                )
+                                .onTapGesture {
+                                    if selectedIndex == index {
+                                        // Delete action
+                                        if self.media.count == 1 {
+                                            self.media.removeAll()
+                                            dismiss()
+                                        } else {
+                                            self.media.remove(at: index)
                                         }
-                                    if selectedIndex == index{
-                                        Image("Delete_Image")
-                                            .resizable()
-                                            .frame(width: 21, height: 23, alignment: .center)
+                                    } else {
+                                        selectedIndex = index
                                     }
                                 }
-                            } else {
-                                Text("Image not found").foregroundColor(.white)
+                            
+                            // Trash icon, only shown when selected
+                            if selectedIndex == index {
+                                Image(systemName: "trash")
+                                    .foregroundColor(.white)
+                                    .frame(width: 31, height: 33)
                             }
                         }
-                        .frame(width: 50, height: 50)
                     }
-                    .padding(.horizontal, 10)
                 }
-                .frame(height: 55)
+                .frame(height: 55) // Set the height of the entire LazyHStack
+
                 
                 if selectedIndex <= (media.count - 1){
-                    TextField("", text: $media[selectedIndex].caption,  axis: .vertical)
-                        .lineLimit(1...10)
-                        .font(Font.regular(size: 16))
-                        .foregroundColor(Color.white)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.horizontal,15)
-                        .background(Color.black)
-                        .colorScheme(.dark)
-                        .disableAutocorrection(true)
-                        .overlay(
-                            HStack{
-                                Text("Add a caption....")
-                                    .foregroundColor(Color.white)
-                                    .padding(.horizontal,25)
-                                    .opacity(media[selectedIndex].caption.isEmpty ? 1 : 0)
-                                Spacer()
-                            }
-                        )
+                    HStack(spacing: 15) {
+                        
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            Image(systemName: "plus.square.on.square")
+                                .resizable()
+                                .frame(width: 15,height: 15)
+                                .foregroundColor(Color.white)
+                        }
+                        
+                        TextField("", text: $caption,  axis: .vertical)
+                            .lineLimit(1...10)
+                            .font(appearance.fonts.messageListTextViewText)
+                            .foregroundColor(Color.white)
+                            .background(Color.black)
+                            .overlay(
+                                    alignment: .leading, // Aligns overlay content to leading
+                                    content: {
+                                        if caption.isEmpty {
+                                            Text("Add a caption...")
+                                                .font(appearance.fonts.messageListTextViewText)
+                                                .foregroundColor(.white)
+                                        }
+                                    }
+                                )
+                    }
+                    .padding(.vertical,10)
+                    .padding(.horizontal,16)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Color.gray, lineWidth: 1)
+                    )
+                    .padding(.horizontal,15)
                 }
                 HStack {
                     Text(sendToUser)
@@ -138,26 +186,23 @@ struct ISMImageAndViderEditor: View {
                     
                     Spacer()
                     
-                    Button(action: {
-                        sendMedia = true
-                        dismiss()
-                    }) {
-                        themeImages.sendMedia
+                    Button(action: {onSend()}) {
+                        appearance.images.sendMedia
                             .resizable()
                             .frame(width: 36, height: 36, alignment: .center)
                     }
                 }.padding(.bottom,20).padding(.horizontal,15)
             }
         }
-        .sheet(isPresented: $showCropper, content: {
-            ISMImageCropper(imageUrl: $media[selectedIndex].url, isShowing: $showCropper)
-        })
-        .fullScreenCover(isPresented: $navigateToDraw, content: {
-            ISMImageDraw(url: $media[selectedIndex].url, isShowing: $navigateToDraw)
-        })
-        .fullScreenCover(isPresented: $addText, content: {
-            ISMImageText(url: $media[selectedIndex].url, isShowing: $addText)
-        })
+//        .sheet(isPresented: $showCropper, content: {
+//            ISMImageCropper(imageUrl: $media[selectedIndex].url, isShowing: $showCropper)
+//        })
+//        .fullScreenCover(isPresented: $navigateToDraw, content: {
+//            ISMImageDraw(url: $media[selectedIndex].url, isShowing: $navigateToDraw)
+//        })
+//        .fullScreenCover(isPresented: $addText, content: {
+//            ISMImageText(url: $media[selectedIndex].url, isShowing: $addText)
+//        })
         .onChange(of: selectedIndex, { _, _ in
             print("selected Index ---> \(selectedIndex)")
         })
@@ -165,56 +210,17 @@ struct ISMImageAndViderEditor: View {
             print("selected Index ---> \(selectedIndex)")
             print(media)
         })
+        .onTapGesture {
+            dismissKeyboard()
+        }
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarItems(leading: navBarLeadingBtn, trailing: navBarTrailingBtn)
     }
     
     //MARK: - CONFIGURE
-    var navBarTrailingBtn: some View {
-        HStack {
-            if media.count > 0{
-                if media[selectedIndex].isVideo == false{
-                    Button(action: {
-                        showCropper = true
-                    }) {
-                        themeImages.mediaEditorCrop
-                            .resizable()
-                            .frame(width: 36, height: 36, alignment: .center)
-                    }
-                    
-                    
-                    Button(action: {
-                        addText = true
-                    }) {
-                        themeImages.mediaEditorText
-                            .resizable()
-                            .frame(width: 36, height: 36, alignment: .center)
-                    }
-                    
-                    Button(action: {
-                        navigateToDraw = true
-                    }) {
-                        themeImages.mediaEditorEdit
-                            .resizable()
-                            .frame(width: 36, height: 36, alignment: .center)
-                    }
-                }
-            }
-        }
+    func dismissKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
-    
-    var navBarLeadingBtn: some View {
-        Button(action: {
-            media.removeAll()
-            dismiss()
-        }) {
-            themeImages.mediaEditorCancel
-                .resizable()
-                .frame(width: 36, height: 36, alignment: .center)
-        }
-    }
-    
     func loadImageFromURL(fileURL: URL) -> UIImage? {
         do {
             let imageData = try Data(contentsOf: fileURL)
@@ -242,5 +248,335 @@ struct ISMImageAndViderEditor: View {
                     .scaledToFit()
             }
         }
+    }
+}
+
+
+struct MediaCell: View {
+    @StateObject var viewModel: MediaCellViewModel
+    @ObservedObject var keyboardHeightHelper = KeyboardHeightHelper.shared
+
+    var body: some View {
+        GeometryReader { g in
+            Group {
+                if let image = viewModel.image {
+                    let useFill = g.size.width / g.size.height > image.size.width / image.size.height
+                    ZoomableScrollView {
+                        imageView(image: image, useFill: useFill)
+                    }
+                } else if let player = viewModel.player {
+                    let useFill = g.size.width / g.size.height > viewModel.videoSize.width / viewModel.videoSize.height
+                    ZoomableScrollView {
+                        videoView(player: player, useFill: useFill)
+                    }
+                } else {
+                    ProgressView()
+                        .tint(.white)
+                }
+            }
+            .allowsHitTesting(!keyboardHeightHelper.keyboardDisplayed)
+            .position(x: g.frame(in: .local).midX, y: g.frame(in: .local).midY)
+        }
+        .task {
+            await viewModel.onStart()
+        }
+        .onDisappear {
+            viewModel.onStop()
+        }
+    }
+    @ViewBuilder
+    func imageView(image: UIImage, useFill: Bool) -> some View {
+        Image(uiImage: image)
+            .resizable()
+            .aspectRatio(contentMode: useFill ? .fill : .fit)
+    }
+
+    func videoView(player: AVPlayer, useFill: Bool) -> some View {
+        PlayerView(player: player, bgColor: .black, useFill: useFill)
+            .disabled(true)
+            .overlay {
+                ZStack {
+                    Color.clear
+                    if !viewModel.isPlaying {
+                        Image(systemName: "play.fill")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(.white.opacity(0.8))
+                    }
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    viewModel.togglePlay()
+                }
+            }
+    }
+}
+
+struct PlayerView: UIViewRepresentable {
+
+    var player: AVPlayer
+    var bgColor: Color
+    var useFill: Bool
+
+    func makeUIView(context: Context) -> PlayerUIView {
+        PlayerUIView(player: player, bgColor: bgColor, useFill: useFill)
+    }
+
+    func updateUIView(_ uiView: PlayerUIView, context: UIViewRepresentableContext<PlayerView>) {
+        uiView.playerLayer.player = player
+        uiView.playerLayer.videoGravity = useFill ? .resizeAspectFill : .resizeAspect
+    }
+}
+
+class PlayerUIView: UIView {
+
+    // MARK: Class Property
+
+    let playerLayer = AVPlayerLayer()
+
+    // MARK: Init
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    init(player: AVPlayer, bgColor: Color, useFill: Bool) {
+        super.init(frame: .zero)
+        self.playerSetup(player: player, bgColor: bgColor, useFill: useFill)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    // MARK: Life-Cycle
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        playerLayer.frame = bounds
+    }
+
+    // MARK: Class Methods
+
+    private func playerSetup(player: AVPlayer, bgColor: Color, useFill: Bool) {
+        playerLayer.player = player
+        playerLayer.videoGravity = useFill ? .resizeAspectFill : .resizeAspect
+        player.actionAtItemEnd = .none
+        layer.addSublayer(playerLayer)
+        playerLayer.backgroundColor = bgColor.cgColor
+    }
+}
+
+
+
+
+struct ZoomableScrollView<Content: View>: UIViewRepresentable {
+    private var content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    func makeUIView(context: Context) -> UIScrollView {
+
+        let scrollView = UIScrollView()
+        scrollView.delegate = context.coordinator
+        scrollView.maximumZoomScale = 10
+        scrollView.minimumZoomScale = 1
+        scrollView.bouncesZoom = true
+
+        let hostedView = context.coordinator.hostingController.view!
+        hostedView.translatesAutoresizingMaskIntoConstraints = true
+        hostedView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        hostedView.frame = scrollView.bounds
+        scrollView.addSubview(hostedView)
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+
+        return scrollView
+    }
+
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(hostingController: UIHostingController(rootView: self.content))
+    }
+
+    func updateUIView(_ uiView: UIScrollView, context: Context) {
+        context.coordinator.hostingController.rootView = self.content
+        assert(context.coordinator.hostingController.view.superview == uiView)
+    }
+
+    class Coordinator: NSObject, UIScrollViewDelegate {
+        var hostingController: UIHostingController<Content>
+
+        init(hostingController: UIHostingController<Content>) {
+            self.hostingController = hostingController
+            self.hostingController.view.backgroundColor = UIColor.clear
+        }
+
+        func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+            return hostingController.view
+        }
+    }
+}
+
+
+class KeyboardHeightHelper: ObservableObject {
+
+    static var shared = KeyboardHeightHelper()
+
+    @Published var keyboardHeight: CGFloat = 0
+    @Published var keyboardDisplayed: Bool = false
+
+    init() {
+        self.listenForKeyboardNotifications()
+    }
+
+    private func listenForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { (notification) in
+            guard let userInfo = notification.userInfo,
+                  let keyboardRect = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+
+            DispatchQueue.main.async {
+                self.keyboardHeight = keyboardRect.height
+                self.keyboardDisplayed = true
+            }
+        }
+
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { (notification) in
+            DispatchQueue.main.async {
+                self.keyboardHeight = 0
+            }
+        }
+
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidHideNotification, object: nil, queue: .main) { (notification) in
+            DispatchQueue.main.async {
+                self.keyboardDisplayed = false
+            }
+        }
+    }
+}
+
+
+
+struct MediaEditorCell: View {
+
+    @StateObject var viewModel: MediaCellViewModel
+    let selectedIndex : Int
+
+    var body: some View {
+        GeometryReader { g in
+            VStack {
+                if let url = viewModel.imageUrl {
+                    AsyncImage(url: url) { phase in
+                        if case let .success(image) = phase {
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        }
+                    }
+                } else if let videourl = viewModel.videoThumbnailUrl {
+                    AsyncImage(url: videourl) { phase in
+                        if case let .success(image) = phase {
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        }
+                    }
+                } else {
+                    ProgressView()
+                }
+            }
+        }
+        .task {
+            await viewModel.onStart()
+        }
+        .onDisappear {
+            viewModel.onStop()
+        }
+    }
+}
+
+
+final class MediaCellViewModel: ObservableObject {
+
+    let media: Media
+
+    @Published var imageUrl: URL? = nil
+    @Published var videoThumbnailUrl: URL? = nil
+    @Published var player: AVPlayer? = nil
+    @Published var image: UIImage? = nil
+    @Published var isPlaying = false
+    @Published var videoSize: CGSize = .zero
+
+    init(media: Media) {
+        self.media = media
+    }
+
+    func onStart() async {
+            guard imageUrl == nil || player == nil else { return }
+
+            // Fetch the URLs asynchronously
+            let url = await media.getURL()
+            guard let url = url else { return }
+
+            let videothumbnail = await media.getThumbnailURL()
+            guard let videothumbnail = videothumbnail else { return }
+
+            // Now, update the UI on the main thread
+            DispatchQueue.main.async {
+                switch self.media.type {
+                case .image:
+                    Task {
+                        let data = try? await self.media.getData()
+                        guard let data = data else { return }
+                        
+                        DispatchQueue.main.async {
+                            self.image = UIImage(data: data)
+                            self.imageUrl = url
+                        }
+                    }
+                case .video:
+                    Task {
+                        let videoSize = await self.getVideoSize(url)
+                        DispatchQueue.main.async {
+                            self.player = AVPlayer(url: url)
+                            self.videoThumbnailUrl = videothumbnail
+                            self.videoSize = videoSize
+                        }
+                    }
+                }
+            }
+        }
+    
+    func getVideoSize(_ url: URL) async -> CGSize {
+        let videoAsset = AVURLAsset(url : url)
+
+        let videoAssetTrack = try? await videoAsset.loadTracks(withMediaType: .video).first
+        let naturalSize = (try? await videoAssetTrack?.load(.naturalSize)) ?? .zero
+        let transform = try? await videoAssetTrack?.load(.preferredTransform)
+        if (transform?.tx == naturalSize.width && transform?.ty == naturalSize.height) || (transform?.tx == 0 && transform?.ty == 0) {
+            return naturalSize
+        } else {
+            return CGSize(width: naturalSize.height, height: naturalSize.width)
+        }
+    }
+
+    func togglePlay() {
+        if isPlaying {
+            player?.pause()
+        } else {
+            player?.play()
+        }
+        isPlaying = !isPlaying
+    }
+
+    func onStop() {
+        imageUrl = nil
+        player = nil
+        isPlaying = false
     }
 }
