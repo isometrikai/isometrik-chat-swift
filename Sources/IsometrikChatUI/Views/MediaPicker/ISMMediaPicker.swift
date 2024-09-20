@@ -59,7 +59,7 @@ struct ISMMediaPicker: View {
             .background(Color.white)
             .foregroundColor(.black)
             .fullScreenCover(isPresented: $navigateToEditor, onDismiss: {navigateToEditor = false}, content: {
-                ISMImageAndViderEditor(media: $medias, sendToUser: opponenetName, caption: $mediaCaption) {
+                ISMMediaEditor(media: $medias, sendToUser: opponenetName, caption: $mediaCaption) {
                     Task {
                         await appendMediaToSendMedias {
                             DispatchQueue.main.async{

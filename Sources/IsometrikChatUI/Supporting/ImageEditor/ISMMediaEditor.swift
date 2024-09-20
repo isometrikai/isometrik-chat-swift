@@ -18,7 +18,7 @@ public struct ISMMediaUpload : Hashable {
     public var isVideo: Bool
 }
 
-struct ISMImageAndViderEditor: View {
+struct ISMMediaEditor: View {
     
     //MARK:  - PROPERTIES
     @State public var selectedIndex = 0
@@ -51,34 +51,34 @@ struct ISMImageAndViderEditor: View {
                     
                     Spacer()
                     
-                    if media.count > 0{
-                        if media[selectedIndex].type != .video{
-                            Button(action: {
-                                showCropper = true
-                            }) {
-                                appearance.images.mediaEditorCrop
-                                    .resizable()
-                                    .frame(width: 36, height: 36, alignment: .center)
-                            }
-                            
-                            
-                            Button(action: {
-                                addText = true
-                            }) {
-                                appearance.images.mediaEditorText
-                                    .resizable()
-                                    .frame(width: 36, height: 36, alignment: .center)
-                            }
-                            
-                            Button(action: {
-                                navigateToDraw = true
-                            }) {
-                                appearance.images.mediaEditorEdit
-                                    .resizable()
-                                    .frame(width: 36, height: 36, alignment: .center)
-                            }
-                        }
-                    }
+//                    if media.count > 0{
+//                        if media[selectedIndex].type != .video{
+//                            Button(action: {
+//                                showCropper = true
+//                            }) {
+//                                appearance.images.mediaEditorCrop
+//                                    .resizable()
+//                                    .frame(width: 36, height: 36, alignment: .center)
+//                            }
+//                            
+//                            
+//                            Button(action: {
+//                                addText = true
+//                            }) {
+//                                appearance.images.mediaEditorText
+//                                    .resizable()
+//                                    .frame(width: 36, height: 36, alignment: .center)
+//                            }
+//                            
+//                            Button(action: {
+//                                navigateToDraw = true
+//                            }) {
+//                                appearance.images.mediaEditorEdit
+//                                    .resizable()
+//                                    .frame(width: 36, height: 36, alignment: .center)
+//                            }
+//                        }
+//                    }
                 }.padding(.horizontal,15).padding(.vertical,15)
                 GeometryReader { proxy in
                     TabView(selection: $selectedIndex) {
@@ -254,19 +254,19 @@ struct ISMImageAndViderEditor: View {
 
 struct MediaCell: View {
     @StateObject var viewModel: MediaCellViewModel
-    @ObservedObject var keyboardHeightHelper = KeyboardHeightHelper.shared
+    @ObservedObject var keyboardHeightHelper = ISMKeyboardHeightHelper.shared
 
     var body: some View {
         GeometryReader { g in
             Group {
                 if let image = viewModel.image {
                     let useFill = g.size.width / g.size.height > image.size.width / image.size.height
-                    ZoomableScrollView {
+                    ISMZoomableScrollView {
                         imageView(image: image, useFill: useFill)
                     }
                 } else if let player = viewModel.player {
                     let useFill = g.size.width / g.size.height > viewModel.videoSize.width / viewModel.videoSize.height
-                    ZoomableScrollView {
+                    ISMZoomableScrollView {
                         videoView(player: player, useFill: useFill)
                     }
                 } else {
@@ -372,96 +372,6 @@ class PlayerUIView: UIView {
 }
 
 
-
-
-struct ZoomableScrollView<Content: View>: UIViewRepresentable {
-    private var content: Content
-
-    init(@ViewBuilder content: () -> Content) {
-        self.content = content()
-    }
-
-    func makeUIView(context: Context) -> UIScrollView {
-
-        let scrollView = UIScrollView()
-        scrollView.delegate = context.coordinator
-        scrollView.maximumZoomScale = 10
-        scrollView.minimumZoomScale = 1
-        scrollView.bouncesZoom = true
-
-        let hostedView = context.coordinator.hostingController.view!
-        hostedView.translatesAutoresizingMaskIntoConstraints = true
-        hostedView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        hostedView.frame = scrollView.bounds
-        scrollView.addSubview(hostedView)
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.showsHorizontalScrollIndicator = false
-
-        return scrollView
-    }
-
-    func makeCoordinator() -> Coordinator {
-        return Coordinator(hostingController: UIHostingController(rootView: self.content))
-    }
-
-    func updateUIView(_ uiView: UIScrollView, context: Context) {
-        context.coordinator.hostingController.rootView = self.content
-        assert(context.coordinator.hostingController.view.superview == uiView)
-    }
-
-    class Coordinator: NSObject, UIScrollViewDelegate {
-        var hostingController: UIHostingController<Content>
-
-        init(hostingController: UIHostingController<Content>) {
-            self.hostingController = hostingController
-            self.hostingController.view.backgroundColor = UIColor.clear
-        }
-
-        func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-            return hostingController.view
-        }
-    }
-}
-
-
-class KeyboardHeightHelper: ObservableObject {
-
-    static var shared = KeyboardHeightHelper()
-
-    @Published var keyboardHeight: CGFloat = 0
-    @Published var keyboardDisplayed: Bool = false
-
-    init() {
-        self.listenForKeyboardNotifications()
-    }
-
-    private func listenForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { (notification) in
-            guard let userInfo = notification.userInfo,
-                  let keyboardRect = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
-
-            DispatchQueue.main.async {
-                self.keyboardHeight = keyboardRect.height
-                self.keyboardDisplayed = true
-            }
-        }
-
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { (notification) in
-            DispatchQueue.main.async {
-                self.keyboardHeight = 0
-            }
-        }
-
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidHideNotification, object: nil, queue: .main) { (notification) in
-            DispatchQueue.main.async {
-                self.keyboardDisplayed = false
-            }
-        }
-    }
-}
-
-
-
 struct MediaEditorCell: View {
 
     @StateObject var viewModel: MediaCellViewModel
@@ -541,7 +451,7 @@ final class MediaCellViewModel: ObservableObject {
                     }
                 case .video:
                     Task {
-                        let videoSize = await self.getVideoSize(url)
+                        let videoSize = await ISMChatHelper.getVideoSize(url)
                         DispatchQueue.main.async {
                             self.player = AVPlayer(url: url)
                             self.videoThumbnailUrl = videothumbnail
@@ -551,19 +461,6 @@ final class MediaCellViewModel: ObservableObject {
                 }
             }
         }
-    
-    func getVideoSize(_ url: URL) async -> CGSize {
-        let videoAsset = AVURLAsset(url : url)
-
-        let videoAssetTrack = try? await videoAsset.loadTracks(withMediaType: .video).first
-        let naturalSize = (try? await videoAssetTrack?.load(.naturalSize)) ?? .zero
-        let transform = try? await videoAssetTrack?.load(.preferredTransform)
-        if (transform?.tx == naturalSize.width && transform?.ty == naturalSize.height) || (transform?.tx == 0 && transform?.ty == 0) {
-            return naturalSize
-        } else {
-            return CGSize(width: naturalSize.height, height: naturalSize.width)
-        }
-    }
 
     func togglePlay() {
         if isPlaying {

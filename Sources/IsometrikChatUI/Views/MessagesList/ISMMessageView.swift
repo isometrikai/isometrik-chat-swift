@@ -9,10 +9,9 @@ import SwiftUI
 import Combine
 import LinkPresentation
 import UIKit
-import _PhotosUI_SwiftUI
-import MediaPicker
+
 import AVFoundation
-import PhotosUI
+
 //import GiphyUISDK
 import ISMSwiftCall
 import IsometrikChat
@@ -484,15 +483,6 @@ public struct ISMMessageView: View {
         .sheet(isPresented: self.$stateViewModel.showVideoPicker) {
             ISMMediaPicker(isPresented: self.$stateViewModel.showVideoPicker, sendMedias: $mediaSelectedFromPicker,opponenetName: isGroup == true ? (self.conversationDetail?.conversationDetails?.conversationTitle ?? "" ) : (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""),mediaCaption: $mediaCaption,sendMediaToMessage: $stateViewModel.sendMedia)
         }
-//        .mediaImporter(
-//            isPresented: self.$stateViewModel.showVideoPicker,
-//            allowedMediaTypes: [.videos, .images],
-//            allowsMultipleSelection: true,
-//            onCompletion: handleMediaImporterResult,
-//            loadingOverlay: { _ in
-//                ProgressView()
-//            }
-//        )
         .fullScreenCover(isPresented: $stateViewModel.navigateToMediaSlider) {
             let attachments = self.realmManager.medias ?? []
             let currentMediaId = navigateToMediaSliderId
@@ -506,7 +496,7 @@ public struct ISMMessageView: View {
         }
         .background(NavigationLink("", destination: ISMForwardToContactView(viewModel : self.chatViewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage),isActive: $stateViewModel.movetoForwardList))
         //        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
-        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager),isActive: $stateViewModel.navigateToProfile))
+//        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager),isActive: $stateViewModel.navigateToProfile))
         //        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))
         .onReceive(timer, perform: { firedDate in
             print("timer fired")

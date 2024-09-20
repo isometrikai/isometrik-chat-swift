@@ -185,9 +185,38 @@ extension ISMMessageView{
     }
 
      func profileButtonView() -> some View {
-        Button {
-            handleProfileNavigation()
-        } label: {
+         HStack{
+             if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true{
+                 if ISMChatSdkUI.getInstance().getChatProperties().navigateToAppProfileFromMessageList == true{
+                     if isGroup == true {
+                         
+                         NavigationLink {
+                             ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
+                         } label: {
+                             customView()
+                         }
+                     } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
+                                ?? opponenDetail?.metaData?.userId
+                                ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
+                         Button {
+                             delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
+                         } label: {
+                             customView()
+                         }
+                     }
+                 }else{
+                     NavigationLink {
+                         ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
+                     } label: {
+                         customView()
+                     }
+                 }
+             }
+         }
+    }
+    
+    func customView() -> some View{
+        HStack{
             UserAvatarView(
                 avatar: getAvatarUrl(),
                 showOnlineIndicator: self.conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,
@@ -209,26 +238,6 @@ extension ISMMessageView{
                     .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.3)))
             }
         }
-    }
-
-     func handleProfileNavigation() {
-         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true{
-             if ISMChatSdkUI.getInstance().getChatProperties().navigateToAppProfileFromMessageList == true{
-                 if isGroup == true {
-                     DispatchQueue.main.async {
-                         stateViewModel.navigateToProfile = true
-                     }
-                 } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
-                            ?? opponenDetail?.metaData?.userId
-                            ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
-                     delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
-                 }
-             }else{
-                 DispatchQueue.main.async {
-                     stateViewModel.navigateToProfile = true
-                 }
-             }
-         }
     }
 
      func getAvatarUrl() -> String {

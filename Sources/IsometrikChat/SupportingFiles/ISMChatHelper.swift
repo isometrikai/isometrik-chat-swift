@@ -86,7 +86,7 @@ public class ISMChatHelper: NSObject {
     //MARK: - CHECK IMAGE OR Video
     
     public class func checkMediaType(media : URL) -> ISMChatMessageType{
-        if media.lastPathComponent.contains(".mov") || media.lastPathComponent.contains(".mp4"){
+        if media.lastPathComponent.contains(".mov") || media.lastPathComponent.contains(".mp4") || media.lastPathComponent.contains(".MP4"){
             return .video
         }else{
             return .photo
@@ -455,6 +455,19 @@ public class ISMChatHelper: NSObject {
     public class func unSubscribeFCM(){
         let userId = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId
         Messaging.messaging().unsubscribe(fromTopic: "chat-\(userId)")
+    }
+    
+    public class func getVideoSize(_ url: URL) async -> CGSize {
+        let videoAsset = AVURLAsset(url : url)
+
+        let videoAssetTrack = try? await videoAsset.loadTracks(withMediaType: .video).first
+        let naturalSize = (try? await videoAssetTrack?.load(.naturalSize)) ?? .zero
+        let transform = try? await videoAssetTrack?.load(.preferredTransform)
+        if (transform?.tx == naturalSize.width && transform?.ty == naturalSize.height) || (transform?.tx == 0 && transform?.ty == 0) {
+            return naturalSize
+        } else {
+            return CGSize(width: naturalSize.height, height: naturalSize.width)
+        }
     }
     
     public class func getThumbnailImage(url : String) -> UIImage? {
