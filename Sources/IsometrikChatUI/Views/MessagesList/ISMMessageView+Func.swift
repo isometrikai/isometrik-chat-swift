@@ -733,6 +733,8 @@ extension ISMMessageView{
             //4. update messageId locally
             realmManager.updateMsgId(objectId: objectId, msgId: messageId, conversationId: self.conversationID ?? "",mediaUrl: mediaUrl,thumbnailUrl: thubnailUrl,mediaSize: mediaData,mediaId: mediaId)
             
+            realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+            
             //5. we need to save media
             if messageKind != .audio{
                 let attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Video.type, extensions: ISMChatExtensionType.Video.type, mediaUrl: mediaUrl, mimeType: ISMChatExtensionType.Video.type, name: mediaName, thumbnailUrl: thubnailUrl)
