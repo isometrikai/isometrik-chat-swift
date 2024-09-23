@@ -15,7 +15,7 @@ struct ISMCreateConversationButtonView: View {
     @Binding var navigate : Bool
     @Binding var showOfflinePopUp : Bool
     @EnvironmentObject var networkMonitor: NetworkMonitor
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK:  - BODY
     var body: some View {
@@ -30,7 +30,7 @@ struct ISMCreateConversationButtonView: View {
                         navigate = true
                     }
                 }, label: {
-                    themeImage.addConversation
+                    appearance.images.addConversation
                         .resizable()
                         .frame(width: 58, height: 58)
                 })

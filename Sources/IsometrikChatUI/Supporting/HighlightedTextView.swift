@@ -16,7 +16,7 @@ struct HighlightedTextView : View{
     let isReceived : Bool
     @Binding var navigateToInfo : Bool
     @Binding var navigatetoUser : ISMChatGroupMember
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
    
 
     var body: some View {

@@ -28,9 +28,7 @@ struct ISMLocationShareView: View {
     @State private var searchText = ""
     @State private var predictions: [GMSAutocompletePrediction] = []
     @State private var selectedPlaceAfterSearch: GMSPlace?
-    @State private var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State private var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State private var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     // MARK: - LIFECYCLE
     var body: some View {
@@ -38,11 +36,11 @@ struct ISMLocationShareView: View {
             VStack(spacing: 0) {
                 HStack {
                     HStack {
-                        themeImage.searchMagnifingGlass
+                        appearance.images.searchMagnifingGlass
                             .foregroundStyle(.gray.opacity(0.5))
                         TextField("Search or enter an address", text: $searchText)
                             .focused($isTextFieldFocused)
-                            .font(themeFonts.messageListMessageText)
+                            .font(appearance.fonts.messageListMessageText)
                     } // HSTACK
                     .padding(5)
                     .background(Color(.systemFill).opacity(0.5))
@@ -73,8 +71,8 @@ struct ISMLocationShareView: View {
                 ToolbarItem(placement: .principal) {
                     VStack {
                         Text("Send Location")
-                            .font(themeFonts.navigationBarTitle)
-                            .foregroundColor(themeColor.navigationBarTitle)
+                            .font(appearance.fonts.navigationBarTitle)
+                            .foregroundColor(appearance.colorPalette.navigationBarTitle)
                     }
                 }
             }
@@ -126,16 +124,16 @@ struct ISMLocationShareView: View {
                         self.dismiss()
                     } label: {
                         HStack(alignment: .center,spacing: 15){
-                            themeImage.mapTarget
+                            appearance.images.mapTarget
                                 .resizable()
                                 .frame(width: 24,height: 24)
                             VStack(alignment: .leading,spacing: 3){
                                 Text("Send your current location")
-                                    .font(themeFonts.messageListMessageText)
-                                    .foregroundColor(themeColor.messageListHeaderTitle)
+                                    .font(appearance.fonts.messageListMessageText)
+                                    .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                 Text("Accurate to 5 meters")
-                                    .font(themeFonts.chatListUserMessage)
-                                    .foregroundColor(themeColor.chatListUserMessage)
+                                    .font(appearance.fonts.chatListUserMessage)
+                                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
                             }//:VSTACK
                         }//:HSTACK
                         .padding(.vertical,5)
@@ -167,7 +165,7 @@ struct ISMLocationShareView: View {
         @State var camera : MapCameraPosition = .automatic
         return Map(position: $camera){
             Annotation("", coordinate: coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)) {
-                themeImage.mapPinLogo
+                appearance.images.mapPinLogo
                     .resizable()
                     .frame(width: 30, height: 30, alignment: .center)
             }
@@ -178,8 +176,8 @@ struct ISMLocationShareView: View {
         VStack{
             List(predictions, id: \.attributedFullText.string) { prediction in
                 Text(prediction.attributedFullText.string)
-                    .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListHeaderTitle)
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                     .onTapGesture {
                         selectPlace(prediction)
                     }
@@ -192,7 +190,7 @@ struct ISMLocationShareView: View {
         Button(action : {}) {
             HStack{
                 Button(action: { dismiss() }) {
-                    themeImage.backButton
+                    appearance.images.backButton
                         .resizable()
                         .frame(width: 18, height: 18)
                 }
@@ -203,7 +201,7 @@ struct ISMLocationShareView: View {
     var navBarTrailingBtn : some View{
         HStack{
             Button(action: { getPlaces() }) {
-                themeImage.refreshLocationLogo
+                appearance.images.refreshLocationLogo
                     .resizable()
                     .frame(width: 20, height: 20, alignment: .center)
                 .imageScale(.large) }

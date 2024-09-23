@@ -28,9 +28,7 @@ public struct ISMCreateGroupConversationView: View {
     public var selectUserFor : SelectUserFor = .Group
 //    @State public var navigateTocreateGroup : Bool = false
 //    @State var navigateToMessageView : Bool = false
-    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     public let groupCastId : String?
     @EnvironmentObject public var realmManager : RealmManager
     @Binding public var groupCastIdToNavigate : String
@@ -55,11 +53,11 @@ public struct ISMCreateGroupConversationView: View {
                                                 UserAvatarView(avatar: value.userProfileImageUrl ?? "", showOnlineIndicator: value.online ?? false,size: CGSize(width: 40, height: 40), userName: value.userName ?? "",font: .regular(size: 14))
                                                 VStack(alignment: .leading, spacing: 5, content: {
                                                     Text(value.userName ?? "User")
-                                                        .font(themeFonts.messageListMessageText)
-                                                        .foregroundColor(themeColor.messageListHeaderTitle)
+                                                        .font(appearance.fonts.messageListMessageText)
+                                                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                                     Text(value.userIdentifier ?? "")
-                                                        .font(themeFonts.chatListUserMessage)
-                                                        .foregroundColor(themeColor.chatListUserMessage)
+                                                        .font(appearance.fonts.chatListUserMessage)
+                                                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
                                                         .lineLimit(2)
                                                     
                                                 })//:VStack
@@ -69,11 +67,11 @@ public struct ISMCreateGroupConversationView: View {
                                                 if userSelected.contains(where: { user in
                                                     user.id == value.id
                                                 }){
-                                                    themeImage.selected
+                                                    appearance.images.selected
                                                         .resizable()
                                                         .frame(width: 20, height: 20)
                                                 }else{
-                                                    themeImage.deselected
+                                                    appearance.images.deselected
                                                         .resizable()
                                                         .frame(width: 20, height: 20)
                                                 }
@@ -106,12 +104,12 @@ public struct ISMCreateGroupConversationView: View {
                             VStack {
                                 if selectUserFor == .Group{
                                     Text("Add Members")
-                                        .font(themeFonts.navigationBarTitle)
-                                        .foregroundColor(themeColor.navigationBarTitle)
+                                        .font(appearance.fonts.navigationBarTitle)
+                                        .foregroundColor(appearance.colorPalette.navigationBarTitle)
                                 }else{
                                     Text("Recipients")
-                                        .font(themeFonts.navigationBarTitle)
-                                        .foregroundColor(themeColor.navigationBarTitle)
+                                        .font(appearance.fonts.navigationBarTitle)
+                                        .foregroundColor(appearance.colorPalette.navigationBarTitle)
                                 }
                             }
                         }
@@ -165,14 +163,14 @@ public struct ISMCreateGroupConversationView: View {
                                 VStack(spacing: 3){
                                     ZStack(alignment: .topTrailing) {
                                         UserAvatarView(avatar: user.userProfileImageUrl ?? "", showOnlineIndicator: false, size: CGSize(width: 48, height: 48), userName:  user.userName ?? "",font: .regular(size: 14))
-                                        themeImage.removeUserFromSelectedFromList
+                                        appearance.images.removeUserFromSelectedFromList
                                             .resizable()
                                             .frame(width: 20, height: 20)
                                     }
                                     
                                     Text(user.userName ?? "")
-                                        .font(themeFonts.chatListUserMessage)
-                                        .foregroundColor(themeColor.chatListUserMessage)
+                                        .font(appearance.fonts.chatListUserMessage)
+                                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
                                         .lineLimit(2)
                                 }.onTapGesture {
                                     if userSelected.contains(where: { user1 in
@@ -204,8 +202,8 @@ public struct ISMCreateGroupConversationView: View {
                             ISMGroupCreate(showSheetView: self.$showSheetView, userSelected: self.$userSelected,viewModel: self.viewModel, chatViewModel: self.chatViewModel)
                         } label: {
                             Text("Next")
-                                .font(themeFonts.messageListMessageText)
-                                .foregroundColor(userSelected.count > 0 ? themeColor.userProfileEditText: .gray)
+                                .font(appearance.fonts.messageListMessageText)
+                                .foregroundColor(userSelected.count > 0 ? appearance.colorPalette.userProfileEditText: .gray)
                         }
                     }else if selectUserFor == .AddMemberInBroadcast{
                         Button {
@@ -215,8 +213,8 @@ public struct ISMCreateGroupConversationView: View {
                             }
                         } label: {
                             Text("Next")
-                                .font(themeFonts.messageListMessageText)
-                                .foregroundColor(userSelected.count > 0 ? themeColor.userProfileEditText: .gray)
+                                .font(appearance.fonts.messageListMessageText)
+                                .foregroundColor(userSelected.count > 0 ? appearance.colorPalette.userProfileEditText: .gray)
                         }
                     }else{
                         Button {
@@ -230,8 +228,8 @@ public struct ISMCreateGroupConversationView: View {
                             
                         } label: {
                             Text("Create")
-                                .font(themeFonts.messageListMessageText)
-                                .foregroundColor(userSelected.count > 0 ? themeColor.userProfileEditText: .gray)
+                                .font(appearance.fonts.messageListMessageText)
+                                .foregroundColor(userSelected.count > 0 ? appearance.colorPalette.userProfileEditText: .gray)
                         }
                     }
                 }
@@ -241,7 +239,7 @@ public struct ISMCreateGroupConversationView: View {
     
     var navBarLeadingBtn: some View {
         Button(action: { dismiss() }) {
-            themeImage.backButton
+            appearance.images.backButton
                 .resizable()
                 .frame(width: 18, height: 18, alignment: .center)
         }

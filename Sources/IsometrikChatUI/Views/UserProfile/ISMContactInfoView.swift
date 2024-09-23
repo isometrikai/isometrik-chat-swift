@@ -41,9 +41,7 @@ struct ISMContactInfoView: View {
     @State private var showFullScreenImage = false
     @State private var fullScreenImageURL: String?
     
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     @Binding var navigateToSocialProfileId : String
@@ -64,19 +62,19 @@ struct ISMContactInfoView: View {
                             Section {
                                 if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
                                     Text(conversationDetail?.conversationDetails?.opponentDetails?.metaData?.about ?? "Hey there!")
-                                        .font(themeFonts.messageListMessageText)
-                                        .foregroundColor(themeColor.messageListHeaderTitle)
+                                        .font(appearance.fonts.messageListMessageText)
+                                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                 }else{
                                     Button {
                                         navigateToSocialProfileId = conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? ""
                                     } label: {
                                         HStack{
-                                            themeImage.mediaIcon
+                                            appearance.images.mediaIcon
                                                 .resizable()
                                                 .frame(width: 29,height: 29)
                                             Text("View Social Profile")
-                                                .font(themeFonts.messageListMessageText)
-                                                .foregroundColor(themeColor.messageListHeaderTitle)
+                                                .font(appearance.fonts.messageListMessageText)
+                                                .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                             Spacer()
                                         }
                                     }
@@ -97,17 +95,17 @@ struct ISMContactInfoView: View {
                                     .environmentObject(self.realmManager)
                             } label: {
                                 HStack{
-                                    themeImage.mediaIcon
+                                    appearance.images.mediaIcon
                                         .resizable()
                                         .frame(width: 29,height: 29)
                                     Text("Media, Links and Docs")
-                                        .font(themeFonts.messageListMessageText)
-                                        .foregroundColor(themeColor.messageListHeaderTitle)
+                                        .font(appearance.fonts.messageListMessageText)
+                                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                     Spacer()
                                     let count = ((realmManager.medias?.count ?? 0) + (realmManager.filesMedia?.count ?? 0) + (realmManager.linksMedia?.count ?? 0))
                                     Text(count.description)
-                                        .font(themeFonts.messageListMessageText)
-                                        .foregroundColor(themeColor.chatListUserMessage)
+                                        .font(appearance.fonts.messageListMessageText)
+                                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
                                 }
                             }
                         } header: {
@@ -130,13 +128,13 @@ struct ISMContactInfoView: View {
                                     } label: {
                                         HStack(spacing: 12){
                                             
-                                            themeImage.addMembers
+                                            appearance.images.addMembers
                                                 .resizable()
                                                 .frame(width: 29, height: 29, alignment: .center)
                                             
                                             Text("Add Members")
-                                                .font(themeFonts.messageListMessageText)
-                                                .foregroundColor(themeColor.messageListReplyToolbarRectangle)
+                                                .font(appearance.fonts.messageListMessageText)
+                                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarRectangle)
                                         }
                                     }
                                 }
@@ -148,15 +146,15 @@ struct ISMContactInfoView: View {
                             } header: {
                                 HStack{
                                     Text("\(conversationDetail?.conversationDetails?.members?.count ?? 0) Members")
-                                        .font(themeFonts.contactInfoHeader)
-                                        .foregroundColor(themeColor.messageListHeaderTitle)
+                                        .font(appearance.fonts.contactInfoHeader)
+                                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                         .textCase(nil)
                                     Spacer()
                                     
                                     NavigationLink {
                                         ISMSearchParticipants(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel ,conversationID: self.conversationID)
                                     } label: {
-                                        themeImage.searchMagnifingGlass
+                                        appearance.images.searchMagnifingGlass
                                             .resizable()
                                             .frame(width: 28, height: 28, alignment: .center)
                                             .padding(8)
@@ -188,8 +186,8 @@ struct ISMContactInfoView: View {
                 ToolbarItem(placement: .principal) {
                     VStack {
                         Text(isGroup == false ? "Contact Info" : "Group Info")
-                            .font(themeFonts.navigationBarTitle)
-                            .foregroundColor(themeColor.navigationBarTitle)
+                            .font(appearance.fonts.navigationBarTitle)
+                            .foregroundColor(appearance.colorPalette.navigationBarTitle)
                     }
                 }
             }
@@ -257,8 +255,8 @@ struct ISMContactInfoView: View {
             ForEach(contactOptions, id: \.self) { obj in
                 HStack {
                     Text(obj.title)
-                        .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.messageListHeaderTitle)
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                     Button {
                         showingAlert = true
                         if obj == .BlockUser {
@@ -297,11 +295,11 @@ struct ISMContactInfoView: View {
                 VStack(alignment: .leading){
                     let user = userData.userName == (conversationDetail?.conversationDetails?.createdByUserName ?? "") ? ConstantStrings.you.lowercased() : (conversationDetail?.conversationDetails?.createdByUserName ?? "")
                     Text("Group created by \(user)")
-                        .font(themeFonts.chatListUserMessage)
-                        .foregroundColor(themeColor.chatListUserMessage)
+                        .font(appearance.fonts.chatListUserMessage)
+                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
                     Text("Created on \(date)")
-                        .font(themeFonts.chatListUserMessage)
-                        .foregroundColor(themeColor.chatListUserMessage)
+                        .font(appearance.fonts.chatListUserMessage)
+                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
                 }.padding(.top)
             }
         }.listRowSeparatorTint(Color.border)
@@ -368,14 +366,14 @@ struct ISMContactInfoView: View {
                 
                 Spacer(minLength: 10)
                 Text(conversationDetail?.conversationDetails?.opponentDetails?.userName?.capitalizingFirstLetter() ?? (selectedToShowInfo?.userName?.capitalizingFirstLetter() ?? ""))
-                    .font(themeFonts.chatListTitle)
-                    .foregroundColor(themeColor.chatListTitle)
+                    .font(appearance.fonts.chatListTitle)
+                    .foregroundColor(appearance.colorPalette.chatListTitle)
                     .textCase(nil)
                 Spacer()
                 let text = NSDate().descriptiveStringLastSeen(time: conversationDetail?.conversationDetails?.opponentDetails?.lastSeen ?? 0)
                 Text("Last seen \(text)")
-                    .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.chatListUserMessage)
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
                     .padding(.bottom,15)
                     .textCase(nil)
             }else{
@@ -390,15 +388,15 @@ struct ISMContactInfoView: View {
                 Spacer(minLength: 10)
                 
                 Text(isGroup == false ? (conversationDetail?.conversationDetails?.opponentDetails?.userName?.capitalizingFirstLetter() ?? "") : (conversationDetail?.conversationDetails?.conversationTitle?.capitalizingFirstLetter() ?? ""))
-                    .font(themeFonts.chatListTitle)
-                    .foregroundColor(themeColor.chatListTitle)
+                    .font(appearance.fonts.chatListTitle)
+                    .foregroundColor(appearance.colorPalette.chatListTitle)
                     .textCase(nil)
                 Spacer()
                 
                 let text = NSDate().descriptiveStringLastSeen(time: conversationDetail?.conversationDetails?.opponentDetails?.lastSeen ?? 0)
                 Text(isGroup == false ? ("Last seen \(text)") : ("Group  •  \(conversationDetail?.conversationDetails?.members?.count ?? 0) members"))
-                    .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.chatListUserMessage)
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
                     .padding(.bottom,15)
                     .textCase(nil)
             }
@@ -443,8 +441,8 @@ struct ISMContactInfoView: View {
                     ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID)
                 } label: {
                     Text("Edit")
-                        .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.userProfileEditText)
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(appearance.colorPalette.userProfileEditText)
                 }
             }else{
                 Text("")
@@ -461,14 +459,14 @@ struct ISMContactInfoView: View {
                     }
                 } label: {
                     Text("Close")
-                        .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.userProfileEditText)
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(appearance.colorPalette.userProfileEditText)
                 }
             }else{
                 Button {
                     presentationMode.wrappedValue.dismiss()
                 } label: {
-                    themeImage.CloseSheet
+                    appearance.images.CloseSheet
                         .resizable()
                         .tint(.black)
                         .foregroundColor(.black)

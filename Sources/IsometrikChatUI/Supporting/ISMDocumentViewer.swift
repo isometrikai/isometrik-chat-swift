@@ -20,9 +20,7 @@ struct ISMDocumentViewer: View {
     @State var total: Int = 0
     @State private var isShowingActivityView = false
     @State private var documentSaved : Bool = false
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @Environment(\.dismiss) var dismiss
     
     //MARK:  - LIFECYCLE
@@ -38,8 +36,8 @@ struct ISMDocumentViewer: View {
                         ToolbarItem(placement: .principal) {
                             VStack {
                                 Text(title)
-                                    .font(themeFonts.mediaSliderHeader)
-                                    .foregroundColor(themeColor.mediaSliderHeader)
+                                    .font(appearance.fonts.mediaSliderHeader)
+                                    .foregroundColor(appearance.colorPalette.mediaSliderHeader)
                             }
                         }
                     }
@@ -57,7 +55,7 @@ struct ISMDocumentViewer: View {
                                     Label("Save to File", systemImage: "folder")
                                 }
                             } label: {
-                                themeImage.threeDots
+                                appearance.images.threeDots
                                     .resizable()
                                     .frame(width: 5, height: 20, alignment: .center)
                                 
@@ -93,7 +91,7 @@ struct ISMDocumentViewer: View {
                 Button(action: {
                     dismiss()
                 }) {
-                    themeImage.backButton
+                    appearance.images.backButton
                         .resizable()
                         .frame(width: 18, height: 18)
                 }

@@ -16,9 +16,7 @@ public struct ISMBlockUserView: View {
     @State public var edit : Bool = false
     @State public var blockedUser : [ISMChatUser] = []
     @State public var removedUser : [ISMChatUser] = []
-    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK:  - BODY
     public var body: some View {
@@ -33,7 +31,7 @@ public struct ISMBlockUserView: View {
                                         Button {
                                             removedUser.append(obj)
                                         } label: {
-                                            themeImage.removeMember
+                                            appearance.images.removeMember
                                                 .resizable()
                                                 .frame(width: 20, height: 20, alignment: .center)
                                             
@@ -43,11 +41,11 @@ public struct ISMBlockUserView: View {
                                     UserAvatarView(avatar: obj.userProfileImageUrl ?? "", showOnlineIndicator: obj.online ?? false,size: CGSize(width: 29, height: 29), userName: obj.userName ?? "",font: .regular(size: 12))
                                     VStack(alignment: .leading, spacing: 5, content: {
                                         Text(obj.userName ?? "")
-                                            .font(themeFonts.messageListHeaderTitle)
-                                            .foregroundColor(themeColor.messageListHeaderTitle)
+                                            .font(appearance.fonts.messageListHeaderTitle)
+                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                         Text(obj.userIdentifier ?? "")
-                                            .font(themeFonts.chatListUserMessage)
-                                            .foregroundColor(themeColor.chatListUserMessage)
+                                            .font(appearance.fonts.chatListUserMessage)
+                                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
                                             .lineLimit(2)
                                         
                                     })//:VStack
@@ -66,7 +64,7 @@ public struct ISMBlockUserView: View {
                     .navigationBarItems(leading: Button {
                         dismiss()
                     } label: {
-                        themeImage.CloseSheet
+                        appearance.images.CloseSheet
                             .resizable()
                             .tint(.black)
                             .foregroundColor(.black)
@@ -78,8 +76,8 @@ public struct ISMBlockUserView: View {
                     ToolbarItem(placement: .principal) {
                         VStack {
                             Text("Blocked")
-                                .font(themeFonts.navigationBarTitle)
-                                .foregroundColor(themeColor.navigationBarTitle)
+                                .font(appearance.fonts.navigationBarTitle)
+                                .foregroundColor(appearance.colorPalette.navigationBarTitle)
                         }
                     }
                 }
@@ -92,7 +90,7 @@ public struct ISMBlockUserView: View {
             if self.conversationViewModel.getBlockUser().count == 0{
                 VStack{
                     Spacer()
-                    themeImage.blockedUserListPlaceholder
+                    appearance.images.blockedUserListPlaceholder
                         .resizable().frame(width: 206, height: 138, alignment: .center)
                     Spacer()
                 }
@@ -126,8 +124,8 @@ public struct ISMBlockUserView: View {
             }
         }, label: {
             Text(edit == true ? "Done" : "Edit")
-                .font(themeFonts.messageListReplyToolbarHeader)
-                .foregroundColor(themeColor.userProfileEditText)
+                .font(appearance.fonts.messageListReplyToolbarHeader)
+                .foregroundColor(appearance.colorPalette.userProfileEditText)
         })
     }
 }

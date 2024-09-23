@@ -55,8 +55,7 @@ public struct AvatarView: View {
     var size: CGSize = .defaultAvatarSize
     var userName : String
     var font : Font = .headline
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeFont = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @State private var isValid: Bool?
     
     public var body: some View {
@@ -83,10 +82,10 @@ public struct AvatarView: View {
         ZStack {
             Circle()
                 .frame(width: size.width, height: size.height)
-                .foregroundColor(themeColor.avatarBackground)
+                .foregroundColor(appearance.colorPalette.avatarBackground)
             Text(userName.uppercased())
-                .font(themeFont.avatarText)
-                .foregroundColor(themeColor.avatarText)
+                .font(appearance.fonts.avatarText)
+                .foregroundColor(appearance.colorPalette.avatarText)
         }
         .frame(width: size.width, height: size.height)
         .clipShape(Circle())

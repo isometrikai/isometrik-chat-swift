@@ -21,8 +21,7 @@ public struct ISMBroadCastList: View {
     @ObservedObject public var viewModel = ChatsViewModel()
     @ObservedObject public var conversationviewModel = ConversationViewModel()
 //    @EnvironmentObject public var realmManager : RealmManager
-    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @State public var navigateToBrocastDetail : BroadCastListDB?
     @State public var navigateToBrocastInfo : Bool = false
     @State public var navigatetoCreatBroadCast : Bool = false
@@ -35,8 +34,6 @@ public struct ISMBroadCastList: View {
     @State public var navigateToMessageView : Bool = false
     @State public var groupCastIdToNavigate : String = ""
     @StateObject public var networkMonitor = NetworkMonitor()
-    @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State public var themePlaceholder = ISMChatSdkUI.getInstance().getAppAppearance().appearance.placeholders
     public var delegate : ISMBroadCastListDelegate? = nil
     @State public var query = ""
     @State var allBroadCasts : [ISMChatBroadCastDetail]? = []
@@ -80,8 +77,8 @@ public struct ISMBroadCastList: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text("Broadcast lists")
-                        .font(themeFonts.navigationBarTitle)
-                        .foregroundColor(themeColor.navigationBarTitle)
+                        .font(appearance.fonts.navigationBarTitle)
+                        .foregroundColor(appearance.colorPalette.navigationBarTitle)
                 }
             }
             .onChange(of: query, { _, newValue in
@@ -143,7 +140,7 @@ public struct ISMBroadCastList: View {
                         showOnlineIndicator: false,
                         size: CGSize(width: 54, height: 54),
                         userName: broadcast.groupcastTitle ?? "",
-                        font: themeFonts.messageListMessageText
+                        font: appearance.fonts.messageListMessageText
                     )
                 }
                 
@@ -166,7 +163,7 @@ public struct ISMBroadCastList: View {
                 deleteBroadCastList(groupcastId: groupcastId)
             }
         } label: {
-            themeImage.removeMember
+            appearance.images.removeMember
                 .resizable()
                 .frame(width: 20, height: 20, alignment: .center)
         }
@@ -184,7 +181,7 @@ public struct ISMBroadCastList: View {
                 delegate?.navigateToBroadCastInfo(groupcastId: broadcast.groupcastId ?? "", groupcastTitle: broadcast.groupcastTitle ?? "", groupcastImage: broadcast.groupcastImageUrl ?? "")
             }
         } label: {
-            themeImage.broadcastInfo
+            appearance.images.broadcastInfo
                 .resizable()
                 .frame(width: 18, height: 18, alignment: .center)
         }
@@ -197,18 +194,18 @@ public struct ISMBroadCastList: View {
         VStack(alignment: .leading, spacing: 5) {
             if broadcast.groupcastTitle != "Default" {
                 Text(broadcast.groupcastTitle ?? "")
-                    .foregroundColor(themeColor.chatListUserName)
-                    .font(themeFonts.chatListUserName)
+                    .foregroundColor(appearance.colorPalette.chatListUserName)
+                    .font(appearance.fonts.chatListUserName)
             } else {
                 Text("Recipients: \(broadcast.membersCount ?? 0)")
-                    .foregroundColor(themeColor.chatListUserName)
-                    .font(themeFonts.chatListUserName)
+                    .foregroundColor(appearance.colorPalette.chatListUserName)
+                    .font(appearance.fonts.chatListUserName)
             }
             
             if let members = broadcast.metaData?.membersDetail {
                 Text(members.map { $0.memberName ?? "" }.joined(separator: ", "))
-                    .foregroundColor(themeColor.chatListUserMessage)
-                    .font(themeFonts.chatListUserMessage)
+                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                    .font(appearance.fonts.chatListUserMessage)
             }
         }
         
@@ -233,12 +230,12 @@ public struct ISMBroadCastList: View {
     private func EmptyStateView() -> some View {
         VStack{
             if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder {
-                themePlaceholder.broadCastListPlaceholder
+                appearance.placeholders.broadCastListPlaceholder
             } else {
                 Spacer()
                 Text("You should use broadcast lists to message multiple people at once.")
-                    .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListHeaderTitle)
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                     .padding(.horizontal, 35)
                     .multilineTextAlignment(.center)
                 Spacer()
@@ -291,7 +288,7 @@ public struct ISMBroadCastList: View {
     var navBarLeadingBtn : some View{
         if editBroadCastList == false{
             Button(action: { dismiss() }) {
-                themeImage.backButton
+                appearance.images.backButton
                     .resizable()
                     .frame(width: 18,height: 18)
             }
@@ -311,16 +308,16 @@ public struct ISMBroadCastList: View {
             if allBroadCasts?.count != 0 {
                 Button(action: { editBroadCastList = true }) {
                     Text("Edit")
-                        .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.messageListHeaderTitle)
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                 }
             }else{
                 Button {
                     
                 } label: {
                     Text("")
-                        .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.messageListHeaderTitle)
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                 }
             }
         }else{
@@ -328,8 +325,8 @@ public struct ISMBroadCastList: View {
                     editBroadCastList = false
             }) {
                 Text("Done")
-                    .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListHeaderTitle)
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
             }
         }
     }

@@ -30,9 +30,7 @@ struct ISMShareContactList: View {
     
     
     @State var contactSelected : [ISMChatContacts] = []
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK: - BODY
     var body: some View {
@@ -71,14 +69,14 @@ struct ISMShareContactList: View {
                                                     // Display contact name and phone number
                                                     VStack(alignment: .leading, spacing: 5) {
                                                         Text("\(value.contact.givenName) \(value.contact.familyName)")
-                                                            .font(themeFonts.chatListUserName)
-                                                            .foregroundColor(themeColor.chatListUserName)
+                                                            .font(appearance.fonts.chatListUserName)
+                                                            .foregroundColor(appearance.colorPalette.chatListUserName)
                                                             .lineLimit(nil)
                                                         
                                                         if let phoneNumber = value.contact.phoneNumbers.first?.value {
                                                             Text(phoneNumber.stringValue)
-                                                                .font(themeFonts.chatListUserMessage)
-                                                                .foregroundColor(themeColor.chatListUserMessage)
+                                                                .font(appearance.fonts.chatListUserMessage)
+                                                                .foregroundColor(appearance.colorPalette.chatListUserMessage)
                                                         }
                                                     }
                                                     
@@ -86,11 +84,11 @@ struct ISMShareContactList: View {
                                                     
                                                     // Selection indicator
                                                     if contactSelected.contains(where: { $0.id == value.id }) {
-                                                        themeImage.selected
+                                                        appearance.images.selected
                                                             .resizable()
                                                             .frame(width: 20, height: 20)
                                                     } else {
-                                                        themeImage.deselected
+                                                        appearance.images.deselected
                                                             .resizable()
                                                             .frame(width: 20, height: 20)
                                                     }
@@ -119,8 +117,8 @@ struct ISMShareContactList: View {
                     ToolbarItem(placement: .principal) {
                         VStack {
                             Text("Share Contacts")
-                                .font(themeFonts.navigationBarTitle)
-                                .foregroundColor(themeColor.navigationBarTitle)
+                                .font(appearance.fonts.navigationBarTitle)
+                                .foregroundColor(appearance.colorPalette.navigationBarTitle)
                         }
                     }
                 }
@@ -147,14 +145,14 @@ struct ISMShareContactList: View {
                                         UserAvatarView(avatar: "", showOnlineIndicator: false, userName: user.contact.givenName)
                                             .frame(width: 48, height: 48)
                                             .clipShape(Circle())
-                                        themeImage.removeUserFromSelectedFromList
+                                        appearance.images.removeUserFromSelectedFromList
                                             .resizable()
                                             .frame(width: 20, height: 20)
                                     }
                                     
                                     Text(user.contact.givenName)
-                                        .font(themeFonts.chatListUserMessage)
-                                        .foregroundColor(themeColor.chatListUserMessage)
+                                        .font(appearance.fonts.chatListUserMessage)
+                                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
                                         .lineLimit(2)
                                 }.onTapGesture {
                                     if contactSelected.contains(where: { user1 in
@@ -184,8 +182,8 @@ struct ISMShareContactList: View {
                 self.dissmiss = false
             }) {
                 Text("Done")
-                    .font(themeFonts.messageListMessageText)
-                    .foregroundColor(contactSelected.count == 0 ? Color.gray : themeColor.userProfileEditText)
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(contactSelected.count == 0 ? Color.gray : appearance.colorPalette.userProfileEditText)
             }.disabled(contactSelected.count == 0)
         }
     }
@@ -193,8 +191,8 @@ struct ISMShareContactList: View {
     var navBarLeadingBtn: some View {
         Button(action: { self.dissmiss = false }) {
             Text("Cancel")
-                .font(themeFonts.messageListMessageText)
-                .foregroundColor(themeColor.userProfileEditText)
+                .font(appearance.fonts.messageListMessageText)
+                .foregroundColor(appearance.colorPalette.userProfileEditText)
         }
     }
     

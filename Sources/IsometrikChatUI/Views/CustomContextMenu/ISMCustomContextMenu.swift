@@ -45,7 +45,7 @@ struct ISMCustomContextMenu: View {
     
     let fromBroadCastFlow : Bool?
     
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     let groupconversationMember : [ISMChatGroupMember]
     
     
@@ -93,7 +93,7 @@ struct ISMCustomContextMenu: View {
                                     .font(Font.regular(size: 16))
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
-                                themeImage.contextMenureply
+                                appearance.images.contextMenureply
                                     .resizable()
                                     .frame(width: 18, height: 18, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
@@ -110,7 +110,7 @@ struct ISMCustomContextMenu: View {
                                     .font(Font.regular(size: 16))
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
-                                themeImage.contextMenuforward
+                                appearance.images.contextMenuforward
                                     .resizable()
                                     .frame(width: 18, height: 18, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
@@ -128,7 +128,7 @@ struct ISMCustomContextMenu: View {
                                     .font(Font.regular(size: 16))
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
-                                themeImage.contextMenuedit
+                                appearance.images.contextMenuedit
                                     .resizable()
                                     .frame(width: 18, height: 18, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
@@ -146,7 +146,7 @@ struct ISMCustomContextMenu: View {
                                     .font(Font.regular(size: 16))
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
-                                themeImage.contextMenucopy
+                                appearance.images.contextMenucopy
                                     .resizable()
                                     .frame(width: 18, height: 18, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
@@ -166,7 +166,7 @@ struct ISMCustomContextMenu: View {
                                     .font(Font.regular(size: 16))
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
-                                themeImage.contextMenuinfo
+                                appearance.images.contextMenuinfo
                                     .resizable()
                                     .frame(width: 18, height: 18, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
@@ -182,7 +182,7 @@ struct ISMCustomContextMenu: View {
                                 .font(Font.regular(size: 16))
                                 .foregroundColor(Color(hex: "#DD3719"))
                             Spacer()
-                            themeImage.contextMenudelete
+                            appearance.images.contextMenudelete
                                 .resizable()
                                 .frame(width: 18, height: 18, alignment: .center)
                         }.padding(.horizontal,15).padding(.vertical,10)

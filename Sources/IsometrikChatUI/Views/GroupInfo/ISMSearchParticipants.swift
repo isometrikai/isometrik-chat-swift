@@ -22,9 +22,7 @@ struct ISMSearchParticipants: View {
     @State var members : ISMGroupMember?
     var conversationID : String?
     @State private var isEditing  : Bool = false
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK: - BODY
     var body: some View {
@@ -39,16 +37,16 @@ struct ISMSearchParticipants: View {
                 } header: {
                     if let count = members?.membersCount{
                         Text("\(count) Members")
-                            .font(themeFonts.chatListUserMessage)
-                            .foregroundColor(themeColor.chatListUserMessage)
+                            .font(appearance.fonts.chatListUserMessage)
+                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
                     }
                 } footer: {
                     Text("")
                 }
                 
-            }.listRowSeparatorTint(themeColor.chatListSeparatorColor)
+            }.listRowSeparatorTint(appearance.colorPalette.chatListSeparatorColor)
                 .listStyle(.plain)
-                .background(themeColor.chatListBackground)
+                .background(appearance.colorPalette.chatListBackground)
                 .scrollContentBackground(.hidden)
                 .searchable(text:  $query, placement: .navigationBarDrawer(displayMode: .always)) {}
                 .onChange(of: query, { _, _ in
@@ -98,8 +96,8 @@ struct ISMSearchParticipants: View {
             ToolbarItem(placement: .principal) {
                 VStack {
                     Text("Search Participants")
-                        .font(themeFonts.navigationBarTitle)
-                        .foregroundColor(themeColor.navigationBarTitle)
+                        .font(appearance.fonts.navigationBarTitle)
+                        .foregroundColor(appearance.colorPalette.navigationBarTitle)
                 }
             }
         }
@@ -111,7 +109,7 @@ struct ISMSearchParticipants: View {
         Button {
             presentationMode.wrappedValue.dismiss()
         } label: {
-            themeImage.backButton
+            appearance.images.backButton
                 .resizable()
                 .frame(width: 18, height: 18, alignment: .center)
         }

@@ -26,16 +26,14 @@ public struct ISMProfileView: View {
     @State public var userNameAlert : Bool = false
     @State public var emailAlert : Bool = false
     @State public var selectedMedia : [URL] = []
-    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     //MARK: - BODY
     public var body: some View {
         NavigationStack{
             ZStack {
-                themeColor.messageListBackgroundColor.edgesIgnoringSafeArea(.all)
+                appearance.colorPalette.messageListBackgroundColor.edgesIgnoringSafeArea(.all)
                 VStack(alignment: .center){
                     List {
                         VStack{
@@ -56,58 +54,58 @@ public struct ISMProfileView: View {
                                         showSheet = true
                                     } label: {
                                         Text("Edit")
-                                            .foregroundColor(themeColor.userProfileEditText)
-                                            .font(themeFonts.userProfileeditText)
+                                            .foregroundColor(appearance.colorPalette.userProfileEditText)
+                                            .font(appearance.fonts.userProfileeditText)
                                     }
                                 }
                                 Text("Enter your name and add an optional profile picture")
-                                    .foregroundColor(themeColor.userProfileDescription)
-                                    .font(themeFonts.userProfileDescription)
+                                    .foregroundColor(appearance.colorPalette.userProfileDescription)
+                                    .font(appearance.fonts.userProfileDescription)
                                     .fixedSize(horizontal: false, vertical: true)
                                 
                                 Spacer()
                                 
                             }
                             Divider()
-                                .background(themeColor.userProfileSeparator)
+                                .background(appearance.colorPalette.userProfileSeparator)
                             
                             TextField("Enter name", text: $userName)
-                                .font(themeFonts.userProfilefields)
-                                .foregroundColor(themeColor.userProfileFields)
+                                .font(appearance.fonts.userProfilefields)
+                                .foregroundColor(appearance.colorPalette.userProfileFields)
                             
                         }
                         
                         Section(header: Text("Email")) {
                             TextField("Enter email", text: $email)
-                                .font(themeFonts.userProfilefields)
-                                .foregroundColor(themeColor.userProfileFields)
+                                .font(appearance.fonts.userProfilefields)
+                                .foregroundColor(appearance.colorPalette.userProfileFields)
                             
                         }
                         
                         Section(header: Text("About")) {
                             TextField("", text: $about)
-                                .font(themeFonts.userProfilefields)
-                                .foregroundColor(themeColor.userProfileFields)
+                                .font(appearance.fonts.userProfilefields)
+                                .foregroundColor(appearance.colorPalette.userProfileFields)
                         }
                         
                         Section() {
                             HStack(spacing: 15){
-                                themeImage.NotificationsIcon
+                                appearance.images.NotificationsIcon
                                     .resizable()
                                     .frame(width: 29, height: 29)
                                 Text("Notifications")
-                                    .font(themeFonts.userProfilefields)
-                                    .foregroundColor(themeColor.userProfileFields)
+                                    .font(appearance.fonts.userProfilefields)
+                                    .foregroundColor(appearance.colorPalette.userProfileFields)
                                 Spacer()
                                 Toggle("", isOn: $isSwitchOn)
                             }
                             HStack(spacing: 15){
-                                themeImage.lastSeenIcon
+                                appearance.images.lastSeenIcon
                                     .resizable()
                                     .frame(width: 29, height: 29)
                                 Text("Last Seen")
-                                    .font(themeFonts.userProfilefields)
-                                    .foregroundColor(themeColor.userProfileFields)
+                                    .font(appearance.fonts.userProfilefields)
+                                    .foregroundColor(appearance.colorPalette.userProfileFields)
                                 Spacer()
                                 Toggle("", isOn: $showLastSeen)
                             }
@@ -115,12 +113,12 @@ public struct ISMProfileView: View {
                                 ISMChatSdk.getInstance().onTerminate()
                             } label: {
                                 HStack(spacing: 15){
-                                    themeImage.LogoutIcon
+                                    appearance.images.LogoutIcon
                                         .resizable()
                                         .frame(width: 29, height: 29)
                                     Text("Logout")
-                                        .font(themeFonts.userProfilefields)
-                                        .foregroundColor(themeColor.userProfileFields)
+                                        .font(appearance.fonts.userProfilefields)
+                                        .foregroundColor(appearance.colorPalette.userProfileFields)
                                     Spacer()
                                 }
                             }
@@ -152,10 +150,10 @@ public struct ISMProfileView: View {
                 
                 if userNameAlert == true{
                     Text("User name can't be empty")
-                        .font(themeFonts.alertText)
+                        .font(appearance.fonts.alertText)
                         .padding()
-                        .background(themeColor.alertBackground)
-                        .foregroundColor(themeColor.alertText)
+                        .background(appearance.colorPalette.alertBackground)
+                        .foregroundColor(appearance.colorPalette.alertText)
                         .cornerRadius(5)
                         .onAppear {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -165,10 +163,10 @@ public struct ISMProfileView: View {
                 }
                 if emailAlert == true{
                     Text("Email can't be empty")
-                        .font(themeFonts.alertText)
+                        .font(appearance.fonts.alertText)
                         .padding()
-                        .background(themeColor.alertBackground)
-                        .foregroundColor(themeColor.alertText)
+                        .background(appearance.colorPalette.alertBackground)
+                        .foregroundColor(appearance.colorPalette.alertText)
                         .cornerRadius(5)
                         .onAppear {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -187,8 +185,8 @@ public struct ISMProfileView: View {
                     ToolbarItem(placement: .principal) {
                         VStack {
                             Text("Edit Profile")
-                                .font(themeFonts.navigationBarTitle)
-                                .foregroundColor(themeColor.navigationBarTitle)
+                                .font(appearance.fonts.navigationBarTitle)
+                                .foregroundColor(appearance.colorPalette.navigationBarTitle)
                         }
                     }
                 }
@@ -215,7 +213,7 @@ public struct ISMProfileView: View {
         Button {
             dismiss()
         } label: {
-            themeImage.CloseSheet
+            appearance.images.CloseSheet
                 .resizable()
                 .frame(width: 17,height: 17)
         }
@@ -227,8 +225,8 @@ public struct ISMProfileView: View {
                     updateProfile()
                 } label: {
                     Text("Done")
-                        .font(themeFonts.userProfileDoneButton)
-                        .foregroundColor(themeColor.userProfileDoneButton)
+                        .font(appearance.fonts.userProfileDoneButton)
+                        .foregroundColor(appearance.colorPalette.userProfileDoneButton)
                 }
             }
         }

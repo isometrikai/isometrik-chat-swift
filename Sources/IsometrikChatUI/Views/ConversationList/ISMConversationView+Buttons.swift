@@ -53,7 +53,7 @@ extension ISMConversationView{
 //                                Label(isDarkMode ? "Light Mode" : " Dark Mode", systemImage: isDarkMode ?  "sun.max.fill" : "moon.fill")
 //                            }
         } label: {
-            themeImages.threeDots
+            appearance.images.threeDots
                 .resizable()
                 .frame(width: 5, height: 20, alignment: .center)
             

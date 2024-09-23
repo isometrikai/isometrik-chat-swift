@@ -17,9 +17,7 @@ struct ISMContactDetailView: View {
     let data : MetaDataDB
     @State private var presentContact : Bool = false
     @Environment(\.presentationMode) var presentationMode
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK: - BODY
     var body: some View {
@@ -37,7 +35,7 @@ struct ISMContactDetailView: View {
                                 Button(action: {
             presentationMode.wrappedValue.dismiss()
         }, label: {
-            themeImage.CloseSheet
+            appearance.images.CloseSheet
                 .resizable()
                 .tint(.black)
                 .foregroundColor(.black)
@@ -48,8 +46,8 @@ struct ISMContactDetailView: View {
             ToolbarItem(placement: .principal) {
                 VStack {
                     Text("Contacts")
-                        .font(themeFonts.navigationBarTitle)
-                        .foregroundColor(themeColor.navigationBarTitle)
+                        .font(appearance.fonts.navigationBarTitle)
+                        .foregroundColor(appearance.colorPalette.navigationBarTitle)
                 }
             }
         }
@@ -64,9 +62,7 @@ struct ContactSavingView: View {
     @State private var contact = CNMutableContact()
     @State private var phoneNumbers: [String] = [String()]
     @Environment(\.presentationMode) var presentationMode
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK: - BODY
     var body: some View {
@@ -92,8 +88,8 @@ struct ContactSavingView: View {
                 ToolbarItem(placement: .principal) {
                     VStack {
                         Text("Add Contact")
-                            .font(themeFonts.navigationBarTitle)
-                            .foregroundColor(themeColor.navigationBarTitle)
+                            .font(appearance.fonts.navigationBarTitle)
+                            .foregroundColor(appearance.colorPalette.navigationBarTitle)
                     }
                 }
             }
@@ -101,7 +97,7 @@ struct ContactSavingView: View {
                                     Button(action: {
                 presentationMode.wrappedValue.dismiss()
             }, label: {
-                themeImage.CloseSheet
+                appearance.images.CloseSheet
                     .resizable()
                     .tint(.black)
                     .foregroundColor(.black)
@@ -137,8 +133,7 @@ struct ContactSavingView: View {
 
 struct ContactDetailCell : View {
     @Binding var presentContact : Bool
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     let index : ContactDB
     var body: some View {
         VStack(spacing:0){
@@ -150,13 +145,13 @@ struct ContactDetailCell : View {
                 }
                 VStack(alignment: .leading, spacing: 5, content: {
                     Text(index.contactName ?? "")
-                        .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.messageListHeaderTitle)
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                     
                     if let phones = index.contactIdentifier {
                         Text(phones)
-                            .font(themeFonts.chatListUserMessage)
-                            .foregroundColor(themeColor.chatListUserMessage)
+                            .font(appearance.fonts.chatListUserMessage)
+                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
                     }
                 })
                 Spacer()
@@ -164,7 +159,7 @@ struct ContactDetailCell : View {
             
             
             Rectangle()
-                .fill(themeColor.userProfileSeparator)
+                .fill(appearance.colorPalette.userProfileSeparator)
                 .frame(height: 1)
             
             
@@ -175,14 +170,14 @@ struct ContactDetailCell : View {
                 } label: {
                     Text("Message")
                         .padding(.vertical,5)
-                        .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.userProfileEditText)
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(appearance.colorPalette.userProfileEditText)
                     
                 }
                 .buttonStyle(PlainButtonStyle())
                 Spacer()
                 Rectangle()
-                    .fill(themeColor.userProfileSeparator)
+                    .fill(appearance.colorPalette.userProfileSeparator)
                     .frame(width: 1)
                 Spacer()
                 Button {
@@ -190,8 +185,8 @@ struct ContactDetailCell : View {
                 } label: {
                     Text("Save Contact")
                         .padding(.vertical,5)
-                        .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.userProfileEditText)
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(appearance.colorPalette.userProfileEditText)
                     
                 }
                 .buttonStyle(PlainButtonStyle())

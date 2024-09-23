@@ -15,18 +15,15 @@ public protocol OtherConversationListViewDelegate{
 public struct OtherConversationListView : View {
     @StateObject public var realmManager = RealmManager()
     public var delegate: OtherConversationListViewDelegate?
-    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State public var themePlaceholder = ISMChatSdkUI.getInstance().getAppAppearance().appearance.placeholders
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     public var body: some View {
         NavigationStack {
             ZStack{
-                themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
+                appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
                     if realmManager.getOtherConversationCount() == 0{
                         if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true{
-                            themePlaceholder.otherchatListPlaceholder
+                            appearance.placeholders.otherchatListPlaceholder
                         }else{
                             Text("No other chats found!")
                         }
@@ -61,7 +58,7 @@ public struct OtherConversationListView : View {
                         
                         Text("Open a chat to get more info about who’s messaging you. They won’t know that you’ve seen it until you accept.")
                             .foregroundColor(Color(hex: "#FF4E00"))
-                            .font(themeFonts.chatListUserMessage)
+                            .font(appearance.fonts.chatListUserMessage)
                             .padding(.horizontal,35)
                             .padding(.vertical,15)
                             .background(Color(hex: "#F5F5F5"))

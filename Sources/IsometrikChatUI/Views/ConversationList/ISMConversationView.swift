@@ -66,13 +66,11 @@ public struct ISMConversationView : View {
     @State public var groupCastIdToNavigate : String = ""
     @State public var navigateToBroadCastMessages : Bool = false
     
-    @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @State public var myUserData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     @State public var hideNavigationBar = ISMChatSdkUI.getInstance().getChatProperties().hideNavigationBarForConversationList
     
     public var delegate : ISMConversationViewDelegate? = nil
-    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State public var themePlaceholder = ISMChatSdkUI.getInstance().getAppAppearance().appearance.placeholders
     @State public var showMenuForConversationType : Bool = false
     @State public var isTextFieldFocused : Bool = false
     
@@ -88,7 +86,7 @@ public struct ISMConversationView : View {
     public var body: some View {
         NavigationStack(path: $path) {
             ZStack{
-                themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
+                appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
                     if shouldShowPlaceholder {
                         showPlaceholderView
@@ -313,7 +311,7 @@ public struct ISMConversationView : View {
                                 Button(action: {
                                     showMenuForConversationType.toggle()
                                 }, label: {
-                                    themeImages.addConversation
+                                    appearance.images.addConversation
                                         .resizable()
                                         .frame(width: 58, height: 58)
                                 })
@@ -368,14 +366,14 @@ public struct ISMConversationView : View {
     private var showPlaceholderView: some View {
         Group {
             if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder {
-                themePlaceholder.chatListPlaceholder
+                appearance.placeholders.chatListPlaceholder
             } else {
                 Button {
                     if ISMChatSdk.getInstance().getFramework() == .SwiftUI {
                         createChat = true
                     }
                 } label: {
-                    themeImages.conversationListPlaceholder
+                    appearance.images.conversationListPlaceholder
                         .resizable()
                         .frame(width: 251, height: 163)
                 }
