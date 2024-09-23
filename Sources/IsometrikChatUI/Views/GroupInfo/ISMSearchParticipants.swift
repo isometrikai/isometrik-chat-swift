@@ -47,6 +47,7 @@ struct ISMSearchParticipants: View {
                 }
                 
             }.listRowSeparatorTint(themeColor.chatListSeparatorColor)
+                .listStyle(.plain)
                 .background(themeColor.chatListBackground)
                 .scrollContentBackground(.hidden)
                 .searchable(text:  $query, placement: .navigationBarDrawer(displayMode: .always)) {}
@@ -112,7 +113,7 @@ struct ISMSearchParticipants: View {
         } label: {
             themeImage.backButton
                 .resizable()
-                .frame(width: 29, height: 29, alignment: .center)
+                .frame(width: 18, height: 18, alignment: .center)
         }
     }
     

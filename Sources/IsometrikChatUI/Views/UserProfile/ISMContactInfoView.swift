@@ -29,7 +29,6 @@ struct ISMContactInfoView: View {
     @State var showOptions : Bool = false
     @State var showInfo : Bool = false
     @State var selectedMember : ISMChatGroupMember = ISMChatGroupMember()
-    @State var updateData : Bool = false
     
     @State var onlyInfo : Bool = false
     
@@ -47,238 +46,197 @@ struct ISMContactInfoView: View {
     @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
     @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
-    @Binding var navigateToAddParticipantsInGroupViaDelegate : Bool
     @Binding var navigateToSocialProfileId : String
     
     //MARK:  - BODY
     var body: some View {
-        VStack{
-            if showFullScreenImage {
-                // To show profile Image on tap of user Image
-                ISMChatImageCahcingManger.networkImage(url: fullScreenImageURL ?? "",isprofileImage: false)
-                    .resizable()
-                    .scaledToFit()
-            }else{
-                List {
-                    //Bio
-                    if isGroup == false{
-                        Section {
-                            if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
-                                Text(conversationDetail?.conversationDetails?.opponentDetails?.metaData?.about ?? "")
-                                    .font(themeFonts.messageListMessageText)
-                                    .foregroundColor(themeColor.messageListHeaderTitle)
-                            }else{
-                                Button {
-                                    navigateToSocialProfileId = conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? ""
-                                } label: {
-                                    HStack{
-                                        themeImage.mediaIcon
-                                            .resizable()
-                                            .frame(width: 29,height: 29)
-                                        Text("View Social Profile")
-                                            .font(themeFonts.messageListMessageText)
-                                            .foregroundColor(themeColor.messageListHeaderTitle)
-                                        Spacer()
+        NavigationStack{
+            VStack{
+                if showFullScreenImage {
+                    // To show profile Image on tap of user Image
+                    ISMChatImageCahcingManger.viewImage(url: fullScreenImageURL ?? "")
+                        .resizable()
+                        .scaledToFit()
+                }else{
+                    List {
+                        //Bio
+                        if isGroup == false{
+                            Section {
+                                if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
+                                    Text(conversationDetail?.conversationDetails?.opponentDetails?.metaData?.about ?? "Hey there!")
+                                        .font(themeFonts.messageListMessageText)
+                                        .foregroundColor(themeColor.messageListHeaderTitle)
+                                }else{
+                                    Button {
+                                        navigateToSocialProfileId = conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? ""
+                                    } label: {
+                                        HStack{
+                                            themeImage.mediaIcon
+                                                .resizable()
+                                                .frame(width: 29,height: 29)
+                                            Text("View Social Profile")
+                                                .font(themeFonts.messageListMessageText)
+                                                .foregroundColor(themeColor.messageListHeaderTitle)
+                                            Spacer()
+                                        }
                                     }
                                 }
-                            }
-                        } header: {
-                            HStack(alignment: .center){
-                                Spacer()
-                                customHeaderView()
-                                    .listRowInsets(EdgeInsets())
-                                Spacer()
-                            }
-                        }.listRowSeparatorTint(Color.border)
-                    }
-                    //media, link and doc
-                    Section {
-                        NavigationLink {
-                            ISMUserMediaView(viewModel:viewModel)
-                                .environmentObject(self.realmManager)
-                        } label: {
-                            HStack{
-                                themeImage.mediaIcon
-                                    .resizable()
-                                    .frame(width: 29,height: 29)
-                                Text("Media, Links and Docs")
-                                    .font(themeFonts.messageListMessageText)
-                                    .foregroundColor(themeColor.messageListHeaderTitle)
-                                Spacer()
-                                let count = ((realmManager.medias?.count ?? 0) + (realmManager.filesMedia?.count ?? 0) + (realmManager.linksMedia?.count ?? 0))
-                                Text(count.description)
-                                    .font(themeFonts.messageListMessageText)
-                                    .foregroundColor(themeColor.chatListUserMessage)
-                                themeImage.disclouser
-                                    .resizable()
-                                    .frame(width: 7,height: 12)
-                            }
+                            } header: {
+                                HStack(alignment: .center){
+                                    Spacer()
+                                    customHeaderView()
+                                        .listRowInsets(EdgeInsets())
+                                    Spacer()
+                                }
+                            }.listRowSeparatorTint(Color.border)
                         }
-
-                        Button {
-                            navigatetoMedia = true
-                        } label: {
-                            
-                        }
-                    } header: {
-                        if isGroup == true{
-                            HStack(alignment: .center){
-                                Spacer()
-                                customHeaderView()
-                                    .listRowInsets(EdgeInsets())
-                                Spacer()
-                            }
-                        }
-                    }.listRowSeparatorTint(Color.border)
-                    
-                    if isGroup == true{
+                        //media, link and doc
                         Section {
-                            
-                            if conversationDetail?.conversationDetails?.usersOwnDetails?.isAdmin == true{
-                                NavigationLink {
-                                    ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager)
-                                } label: {
-                                    HStack(spacing: 12){
-                                        
-                                        themeImage.addMembers
-                                            .resizable()
-                                            .frame(width: 29, height: 29, alignment: .center)
-                                        
-                                        Text("Add Members")
-                                            .font(themeFonts.messageListMessageText)
-                                            .foregroundColor(themeColor.messageListReplyToolbarRectangle)
-                                    }.frame(height: 50)
-                                }
-                            }
-
-                            
-//                            if conversationDetail?.conversationDetails?.usersOwnDetails?.isAdmin == true{
-//                                Button {
-//                                    if ISMChatSdk.getInstance().getFramework() == .UIKit{
-//                                        navigateToAddParticipantsInGroupViaDelegate = true
-//                                    }else{
-//                                        navigatetoAddparticipant = true
-//                                    }
-//                                } label: {
-//                                    HStack(spacing: 12){
-//                                        
-//                                        themeImage.addMembers
-//                                            .resizable()
-//                                            .frame(width: 29, height: 29, alignment: .center)
-//                                        
-//                                        Text("Add Members")
-//                                            .font(themeFonts.messageListMessageText)
-//                                            .foregroundColor(themeColor.messageListReplyToolbarRectangle)
-//                                    }
-//                                }.frame(height: 50)
-//                            }
-                            
-                            
-                            if let members = conversationDetail?.conversationDetails?.members{
-                                ForEach(members, id: \.self) { member in
-                                    ISMGroupMemberSubView(member: member, selectedMember: $selectedMember)
-                                        .frame(height: 50)
+                            NavigationLink {
+                                ISMUserMediaView(viewModel:viewModel)
+                                    .environmentObject(self.realmManager)
+                            } label: {
+                                HStack{
+                                    themeImage.mediaIcon
+                                        .resizable()
+                                        .frame(width: 29,height: 29)
+                                    Text("Media, Links and Docs")
+                                        .font(themeFonts.messageListMessageText)
+                                        .foregroundColor(themeColor.messageListHeaderTitle)
+                                    Spacer()
+                                    let count = ((realmManager.medias?.count ?? 0) + (realmManager.filesMedia?.count ?? 0) + (realmManager.linksMedia?.count ?? 0))
+                                    Text(count.description)
+                                        .font(themeFonts.messageListMessageText)
+                                        .foregroundColor(themeColor.chatListUserMessage)
                                 }
                             }
                         } header: {
-                            HStack{
-                                Text("\(conversationDetail?.conversationDetails?.members?.count ?? 0) Members")
-                                    .font(themeFonts.contactInfoHeader)
-                                    .foregroundColor(themeColor.messageListHeaderTitle)
-                                    .textCase(nil)
-                                Spacer()
-                                
-                                NavigationLink {
-                                    ISMSearchParticipants(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel ,conversationID: self.conversationID)
-                                } label: {
-                                    themeImage.searchMagnifingGlass
-                                        .resizable()
-                                        .frame(width: 28, height: 28, alignment: .center)
-                                        .padding(8)
+                            if isGroup == true{
+                                HStack(alignment: .center){
+                                    Spacer()
+                                    customHeaderView()
+                                        .listRowInsets(EdgeInsets())
+                                    Spacer()
                                 }
-
-//                                Button {
-//                                    showSearch = true
-//                                } label: {
-//                                    themeImage.searchMagnifingGlass
-//                                        .resizable()
-//                                        .frame(width: 28, height: 28, alignment: .center)
-//                                        .padding(8)
-//                                }
-                                
-                            }.listRowInsets(EdgeInsets())
-                        } footer: {
-                            Text("")
+                            }
                         }.listRowSeparatorTint(Color.border)
+                        
+                        if isGroup == true{
+                            Section {
+                                
+                                if conversationDetail?.conversationDetails?.usersOwnDetails?.isAdmin == true{
+                                    NavigationLink {
+                                        ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager)
+                                    } label: {
+                                        HStack(spacing: 12){
+                                            
+                                            themeImage.addMembers
+                                                .resizable()
+                                                .frame(width: 29, height: 29, alignment: .center)
+                                            
+                                            Text("Add Members")
+                                                .font(themeFonts.messageListMessageText)
+                                                .foregroundColor(themeColor.messageListReplyToolbarRectangle)
+                                        }
+                                    }
+                                }
+                                if let members = conversationDetail?.conversationDetails?.members{
+                                    ForEach(members, id: \.self) { member in
+                                        ISMGroupMemberSubView(member: member, selectedMember: $selectedMember)
+                                    }
+                                }
+                            } header: {
+                                HStack{
+                                    Text("\(conversationDetail?.conversationDetails?.members?.count ?? 0) Members")
+                                        .font(themeFonts.contactInfoHeader)
+                                        .foregroundColor(themeColor.messageListHeaderTitle)
+                                        .textCase(nil)
+                                    Spacer()
+                                    
+                                    NavigationLink {
+                                        ISMSearchParticipants(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel ,conversationID: self.conversationID)
+                                    } label: {
+                                        themeImage.searchMagnifingGlass
+                                            .resizable()
+                                            .frame(width: 28, height: 28, alignment: .center)
+                                            .padding(8)
+                                    }
+                                    
+                                    //                                Button {
+                                    //                                    showSearch = true
+                                    //                                } label: {
+                                    //                                    themeImage.searchMagnifingGlass
+                                    //                                        .resizable()
+                                    //                                        .frame(width: 28, height: 28, alignment: .center)
+                                    //                                        .padding(8)
+                                    //                                }
+                                    
+                                }.listRowInsets(EdgeInsets())
+                            } footer: {
+                                Text("")
+                            }.listRowSeparatorTint(Color.border)
+                        }
+                        otherSection()
+                        
+                    }.background(Color.backgroundView)
+                        .scrollContentBackground(.hidden)
+                }
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    VStack {
+                        Text(isGroup == false ? "Contact Info" : "Group Info")
+                            .font(themeFonts.navigationBarTitle)
+                            .foregroundColor(themeColor.navigationBarTitle)
                     }
-                    otherSection()
-                    
-                }.background(Color.backgroundView)
-                    .scrollContentBackground(.hidden)
-            }
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                VStack {
-                    Text(isGroup == false ? "Contact Info" : "Group Info")
-                        .font(themeFonts.navigationBarTitle)
-                        .foregroundColor(themeColor.navigationBarTitle)
                 }
             }
-        }
-        .navigationBarItems(leading: navBarLeadingBtn, trailing: navBarTrailingBtn)
-//        .navigationDestination(isPresented: $navigatetoAddparticipant) {
-//            ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager)
-//        }
-//        .background(NavigationLink("", destination:  ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager), isActive: $navigatetoAddparticipant))
-//        .background(NavigationLink("", destination:  , isActive: $navigatetoMedia))
-//        .background(NavigationLink("", destination:  , isActive: $showInfo))
-//        .background(NavigationLink("", destination:  ISMSearchParticipants(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel ,conversationID: self.conversationID), isActive: $showSearch))
-//        .background(NavigationLink("", destination:  , isActive: $showEdit))
-        .onChange(of: selectedMember, { _, _ in
-            if selectedMember.userId != userData.userId{
-                showOptions = true
+            .navigationBarItems(leading: navBarLeadingBtn, trailing: navBarTrailingBtn)
+            //        .navigationDestination(isPresented: $navigatetoAddparticipant) {
+            //            ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager)
+            //        }
+            //        .background(NavigationLink("", destination:  ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager), isActive: $navigatetoAddparticipant))
+            //        .background(NavigationLink("", destination:  , isActive: $navigatetoMedia))
+            //        .background(NavigationLink("", destination:  , isActive: $showInfo))
+            //        .background(NavigationLink("", destination:  ISMSearchParticipants(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel ,conversationID: self.conversationID), isActive: $showSearch))
+            //        .background(NavigationLink("", destination:  , isActive: $showEdit))
+            .onChange(of: selectedMember, { _, _ in
+                if selectedMember.userId != userData.userId{
+                    showOptions = true
+                }
+            })
+            .onReceive(NotificationCenter.default.publisher(for: NSNotification.memberAddAndRemove)) { _ in
+                getConversationDetail {}
             }
-        })
-        .onReceive(NotificationCenter.default.publisher(for: NSNotification.memberAddAndRemove)) { _ in
-            getConversationDetail {}
-        }
-        .onChange(of: updateData, { _, _ in
-            getConversationDetail {
-                realmManager.updateImageAndNameOfGroup(name: conversationDetail?.conversationDetails?.conversationTitle ?? "", image: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", convID: self.conversationID ?? "")
+            .onReceive(NotificationCenter.default.publisher(for: NSNotification.updateGroupInfo)) { _ in
+                getConversationDetail {
+                    realmManager.updateImageAndNameOfGroup(name: conversationDetail?.conversationDetails?.conversationTitle ?? "", image: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", convID: self.conversationID ?? "")
+                }
             }
-        })
-        .confirmationDialog("", isPresented: $showOptions) {
-            NavigationLink {
-                ISMContactInfoView(conversationID: realmManager.getConversationId(userId: selectedMember.userId ?? ""),viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : selectedMember,navigateToAddParticipantsInGroupViaDelegate: $navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
-            } label: {
-                Text("Info")
-            }
-
-//            Button {
-//                selectedToShowInfo = selectedMember
-//                selectedConversationId = realmManager.getConversationId(userId: selectedMember.userId ?? "")
-//                showInfo = true
-//            } label: {
-//               
-//            }
-            if checkIfAdmin() == true{
-                Button {
-                    makeGroupAdmin()
+            .confirmationDialog("", isPresented: $showOptions) {
+                NavigationLink {
+                    ISMContactInfoView(conversationID: realmManager.getConversationId(userId: selectedMember.userId ?? ""),viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : selectedMember,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
                 } label: {
-                    Text(selectedMember.isAdmin == false ? "Make Group Admin" : "Dismiss as Admin")
+                    Text("Info")
                 }
-                Button {
-                    removefromGroup()
-                } label: {
-                    Text("Remove from Group")
+                if checkIfAdmin() == true{
+                    Button {
+                        makeGroupAdmin()
+                    } label: {
+                        Text(selectedMember.isAdmin == false ? "Make Group Admin" : "Dismiss as Admin")
+                    }
+                    Button {
+                        removefromGroup()
+                    } label: {
+                        Text("Remove from Group")
+                    }
                 }
+                Button("Cancel", role: .cancel, action: {})
+            } message: {
+                Text(selectedMember.userName ?? "")
             }
-            Button("Cancel", role: .cancel, action: {})
-        } message: {
-            Text(selectedMember.userName ?? "")
         }
     }
     
@@ -415,7 +373,7 @@ struct ISMContactInfoView: View {
                     .textCase(nil)
                 Spacer()
                 let text = NSDate().descriptiveStringLastSeen(time: conversationDetail?.conversationDetails?.opponentDetails?.lastSeen ?? 0)
-                Text(text)
+                Text("Last seen \(text)")
                     .font(themeFonts.messageListMessageText)
                     .foregroundColor(themeColor.chatListUserMessage)
                     .padding(.bottom,15)
@@ -437,7 +395,8 @@ struct ISMContactInfoView: View {
                     .textCase(nil)
                 Spacer()
                 
-                Text(isGroup == false ? (conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier ?? "") : ("Group  •  \(conversationDetail?.conversationDetails?.members?.count ?? 0) members"))
+                let text = NSDate().descriptiveStringLastSeen(time: conversationDetail?.conversationDetails?.opponentDetails?.lastSeen ?? 0)
+                Text(isGroup == false ? ("Last seen \(text)") : ("Group  •  \(conversationDetail?.conversationDetails?.members?.count ?? 0) members"))
                     .font(themeFonts.messageListMessageText)
                     .foregroundColor(themeColor.chatListUserMessage)
                     .padding(.bottom,15)
@@ -481,18 +440,12 @@ struct ISMContactInfoView: View {
         VStack{
             if isGroup == true{
                 NavigationLink {
-                    ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID,updateData : $updateData)
+                    ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID)
                 } label: {
                     Text("Edit")
                         .font(themeFonts.messageListMessageText)
                         .foregroundColor(themeColor.userProfileEditText)
                 }
-
-//                Button {
-//                   showEdit = true
-//                } label: {
-//                    
-//                }
             }else{
                 Text("")
             }

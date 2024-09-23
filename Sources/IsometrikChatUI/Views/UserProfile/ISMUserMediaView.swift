@@ -271,7 +271,7 @@ struct ISMUserMediaView: View {
         Button(action: {
             
         }, label: {
-                ISMChatImageCahcingManger.networkImage(url: value.thumbnailUrl ,isprofileImage: false)
+            ISMChatImageCahcingManger.viewImage(url: value.thumbnailUrl)
                     .resizable()
                     .scaledToFill()
                     .frame(width: ((UIScreen.main.bounds.width / 3) - 1), height: ((UIScreen.main.bounds.width / 3) - 1))
@@ -298,7 +298,7 @@ struct ISMUserMediaView: View {
         Button(action: {
             
         }, label: {
-            ISMChatImageCahcingManger.networkImage(url: value.mediaUrl ,isprofileImage: false)
+            ISMChatImageCahcingManger.viewImage(url: value.mediaUrl)
                 .resizable()
                 .scaledToFill()
                 .frame(width: ((UIScreen.main.bounds.width / 3) - 1), height: ((UIScreen.main.bounds.width / 3) - 1))

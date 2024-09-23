@@ -60,6 +60,7 @@ public class UIStateViewModel: ObservableObject {
     @Published public var navigateToAddParticipantsInGroupViaDelegate : Bool = false
     
     @Published public var navigateToMediaSlider : Bool = false
+    @Published public var navigateToUserProfile : Bool = false
     
     public init() {}
 }

@@ -332,7 +332,7 @@ struct ISMMessageSubView: View {
                                             navigateToMediaSliderId = message.messageId
                                         } label: {
                                             ZStack(alignment: .bottomTrailing){
-                                                ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.mediaUrl ?? "",isprofileImage: false)
+                                                ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.mediaUrl ?? "")
                                                     .scaledToFill()
                                                     .frame(width: 250, height: 300)
                                                     .cornerRadius(5)
@@ -424,7 +424,7 @@ struct ISMMessageSubView: View {
                                                     }else{
                                                         // Display the thumbnail image for non-videos
                                                         ZStack(alignment: .bottomTrailing){
-                                                            ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.thumbnailUrl ?? "", isprofileImage: false)
+                                                            ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.thumbnailUrl ?? "")
                                                                 .scaledToFill()
                                                                 .frame(width: 250, height: 300)
                                                                 .cornerRadius(5)
@@ -446,7 +446,7 @@ struct ISMMessageSubView: View {
                                                 } else {
                                                     // Display the thumbnail image for non-videos
                                                     ZStack(alignment: .bottomTrailing){
-                                                        ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.thumbnailUrl ?? "", isprofileImage: false)
+                                                        ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.thumbnailUrl ?? "")
                                                             .scaledToFill()
                                                             .frame(width: 250, height: 300)
                                                             .cornerRadius(5)
@@ -535,7 +535,7 @@ struct ISMMessageSubView: View {
                                                 HStack(alignment: .center, spacing: 5){
                                                     if let urlExtension = urlExtension{
                                                         if urlExtension.contains(".jpg") ||  urlExtension.contains(".png"){
-                                                            ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.mediaUrl ?? "",isprofileImage: false)
+                                                            ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.mediaUrl ?? "")
                                                                 .scaledToFill()
                                                                 .frame(width: 250, height: 300)
                                                                 .cornerRadius(5)
@@ -991,14 +991,14 @@ struct ISMMessageSubView: View {
                 }
             }
         }
-        .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
-        .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser, navigateToAddParticipantsInGroupViaDelegate: $navigateToAddMember,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager), isActive: $navigateToInfo))
+//        .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
+        .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager), isActive: $navigateToInfo))
         .padding(.bottom, (message.reactions.count > 0) ? 20 : 0)
         .frame(maxWidth: .infinity, alignment: isReceived ? .leading : .trailing)
         .multilineTextAlignment(.leading) // Aligning the text based on message type
         .simultaneousGesture(LongPressGesture(minimumDuration: 0.5).onEnded { _ in
             self.viewControllerHolder?.present(style: .overCurrentContext, transitionStyle: .crossDissolve) {
-                ISMCustomContextMenu(conversationId: self.conversationId, message: self.message, viewWidth: self.viewWidth, isGroup: self.isGroup ?? false, isReceived: self.isReceived, selectedMessageToReply: $selectedMessageToReply, showForward: $showForward, updateMessage: $updateMessage, messageCopied: $messageCopied, navigatetoMessageInfo: $navigatetoMessageInfo, navigateToDeletePopUp: $navigateToDeletePopUp, selectedReaction: $selectedReaction,sentRecationToMessageId: $sentRecationToMessageId,fromBroadCastFlow: self.fromBroadCastFlow)
+                ISMCustomContextMenu(conversationId: self.conversationId, message: self.message, viewWidth: self.viewWidth, isGroup: self.isGroup ?? false, isReceived: self.isReceived, selectedMessageToReply: $selectedMessageToReply, showForward: $showForward, updateMessage: $updateMessage, messageCopied: $messageCopied, navigateToDeletePopUp: $navigateToDeletePopUp, selectedReaction: $selectedReaction,sentRecationToMessageId: $sentRecationToMessageId,fromBroadCastFlow: self.fromBroadCastFlow,groupconversationMember: self.groupconversationMember)
                     .environmentObject(self.realmManager)
             }
         })
@@ -1078,7 +1078,7 @@ struct ISMMessageSubView: View {
             }
             ZStack(alignment: .bottomTrailing){
                 ZStack(alignment: .topTrailing){
-                    ISMChatImageCahcingManger.networkImage(url: message.metaData?.post?.postUrl ?? "",isprofileImage: false)
+                    ISMChatImageCahcingManger.viewImage(url: message.metaData?.post?.postUrl ?? "")
                         .scaledToFill()
                         .frame(width: 124, height: 249)
                         .cornerRadius(5)
@@ -1241,11 +1241,11 @@ struct ISMMessageSubView: View {
             }
             .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 8))
             if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Image.value{
-                ISMChatImageCahcingManger.networkImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "",isprofileImage: false)
+                ISMChatImageCahcingManger.viewImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "")
                     .scaledToFill()
                     .frame(width: 45, height: 40)
             }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Video.value{
-                ISMChatImageCahcingManger.networkImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "",isprofileImage: false)
+                ISMChatImageCahcingManger.viewImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "")
                     .scaledToFill()
                     .frame(width: 45, height: 40)
             }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.File.value{

@@ -76,6 +76,8 @@ public struct ISMConversationView : View {
     @State public var showMenuForConversationType : Bool = false
     @State public var isTextFieldFocused : Bool = false
     
+    @State var path = NavigationPath()
+    
     public init(delegate : ISMConversationViewDelegate? = nil){
         self.delegate = delegate
     }
@@ -84,7 +86,7 @@ public struct ISMConversationView : View {
     
     //MARK:  - BODY
     public var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ZStack{
                 themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {

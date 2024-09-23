@@ -18,117 +18,119 @@ struct ISMAddParticipantsView: View {
     @ObservedObject var chatViewModel = ChatsViewModel()
     var conversationId : String? = nil
     @EnvironmentObject var realmManager : RealmManager
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK: - BODY
     var body: some View {
         ZStack{
-//            VStack {
-//                ScrollViewReader { proxy in
-//                    List {
-//                        if userSelected.count > 0{
-//                            HeaderView()
-//                        }
-//                        ForEach(viewModel.elogibleUsersSectionDictionary.keys.sorted(), id:\.self) { key in
-//                            if let contacts = viewModel.elogibleUsersSectionDictionary[key]?.filter({ (contact) -> Bool in
-//                                self.viewModel.searchedText.isEmpty ? true :
-//                                "\(contact)".lowercased().contains(self.viewModel.searchedText.lowercased())}), !contacts.isEmpty{
-//                                Section(header: Text("\(key)")) {
-//                                    ForEach(contacts){ value in
-//                                        ZStack{
-//                                            HStack(alignment: .center, spacing:20){
-//                                                UserAvatarView(avatar: value.userProfileImageUrl ?? "", showOnlineIndicator: value.online ?? false,size: CGSize(width: 29, height: 29), userName : value.userName ?? "",font: .regular(size: 12))
-//                                                VStack(alignment: .leading, spacing: 5, content: {
-//                                                    Text(value.userName ?? "User")
-//                                                        .font(themeFonts.messageListMessageText)
-//                                                        .foregroundColor(themeColor.messageListMessageText)
-//                                                    Text(value.userIdentifier ?? "")
-//                                                        .font(themeFonts.chatListUserMessage)
-//                                                        .foregroundColor(themeColor.chatListUserMessage)
-//                                                        .lineLimit(2)
-//                                                    
-//                                                })//:VStack
-//                                                Spacer()
-//                                                
-//                                                if userSelected.contains(where: { user in
-//                                                    user.id == value.id
-//                                                }) {
-//                                                    themeImage.selected
-//                                                        .resizable()
-//                                                        .frame(width: 20, height: 20)
-//                                                }else{
-//                                                    themeImage.deselected
-//                                                        .resizable()
-//                                                        .frame(width: 20, height: 20)
-//                                                }
-//                                            }//:HStack
-//                                            Button {
-//                                                if userSelected.contains(where: { user in
-//                                                    user.id == value.id
-//                                                }){
-//                                                    userSelected.removeAll(where: { $0.id == value.id })
-//                                                }else{
-//                                                    userSelected.append(value)
-//                                                }
-//                                            } label: {
-//                                                
-//                                            }
-//                                            
-//                                        }//:Zstack
-//                                        .onAppear {
-//                                            if viewModel.moreDataAvailableForGetUsers && viewModel.apiCalling == false{
-//                                                if self.viewModel.eligibleUsers.last?.userId == contacts.last?.userId {
-//                                                    self.getUsers()
-//                                                }
-//                                            }
-//                                        }// For LoadMore
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }//:LIST
-//                    .searchable(text:  $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always)) {}
-//                    .navigationBarBackButtonHidden(true)
-//                    .navigationBarTitleDisplayMode(.inline)
-//                    .toolbar {
-//                        ToolbarItem(placement: .principal) {
-//                            VStack {
-//                                Text("Add participants")
-//                                    .font(themeFonts.navigationBarTitle)
-//                                    .foregroundColor(themeColor.navigationBarTitle)
-//                            }
-//                        }
-//                    }
-//                    .navigationBarItems(leading: navBarLeadingBtn,trailing: navBarTrailingBtn)
-//                }
-//            }//:VStack
-//            .onChange(of: viewModel.debounceSearchedText, perform: { newValue in
-//                print("~~SEARCHING WITH DEBOUNCING \(viewModel.searchedText)")
-//                self.viewModel.resetEligibleUsersdata()
-//                getUsers()
-//            })
-//            .onDisappear {
-//                viewModel.searchedText = ""
-//                viewModel.debounceSearchedText = ""
-//            }
-//            .onAppear {
-//                self.viewModel.resetEligibleUsersdata()
-//                getUsers()
-//            }
-//            .onLoad{
-//                
-//            }
-//            if chatViewModel.isBusy{
-//                //Custom Progress View
-//                ActivityIndicatorView(isPresented: $chatViewModel.isBusy)
-//            }
+            VStack {
+                ScrollViewReader { proxy in
+                    List {
+                        if userSelected.count > 0{
+                            HeaderView()
+                        }
+                        ForEach(viewModel.elogibleUsersSectionDictionary.keys.sorted(), id:\.self) { key in
+                            if let contacts = viewModel.elogibleUsersSectionDictionary[key]?.filter({ (contact) -> Bool in
+                                self.viewModel.searchedText.isEmpty ? true :
+                                "\(contact)".lowercased().contains(self.viewModel.searchedText.lowercased())}), !contacts.isEmpty{
+                                Section(header: Text("\(key)")) {
+                                    ForEach(contacts){ value in
+                                        participantsSubView(value: value)
+                                    }
+                                }
+                            }
+                        }
+                    }//:LIST
+                    .searchable(text:  $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always)) {}
+                    .navigationBarBackButtonHidden(true)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            VStack {
+                                Text("Add participants")
+                                    .font(appearance.fonts.navigationBarTitle)
+                                    .foregroundColor(appearance.colorPalette.navigationBarTitle)
+                            }
+                        }
+                    }
+                    .navigationBarItems(leading: navBarLeadingBtn,trailing: navBarTrailingBtn)
+                }
+            }//:VStack
+            .onChange(of: viewModel.debounceSearchedText, perform: { newValue in
+                print("~~SEARCHING WITH DEBOUNCING \(viewModel.searchedText)")
+                self.viewModel.resetEligibleUsersdata()
+                getUsers()
+            })
+            .onDisappear {
+                viewModel.searchedText = ""
+                viewModel.debounceSearchedText = ""
+            }
+            .onAppear {
+                self.viewModel.resetEligibleUsersdata()
+                getUsers()
+            }
+            .onLoad{
+                
+            }
+            if chatViewModel.isBusy{
+                //Custom Progress View
+                ActivityIndicatorView(isPresented: $chatViewModel.isBusy)
+            }
         }
     }
     
     
     //MARK:  - CONFIGURE
+    
+    func participantsSubView(value : ISMChatUser) -> some View{
+        ZStack{
+            HStack(alignment: .center, spacing:20){
+                UserAvatarView(avatar: value.userProfileImageUrl ?? "", showOnlineIndicator: value.online ?? false,size: CGSize(width: 29, height: 29), userName : value.userName ?? "",font: .regular(size: 12))
+                VStack(alignment: .leading, spacing: 5, content: {
+                    Text(value.userName ?? "User")
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(appearance.colorPalette.messageListMessageTextSend)
+                    Text(value.userIdentifier ?? "")
+                        .font(appearance.fonts.chatListUserMessage)
+                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                        .lineLimit(2)
+                    
+                })//:VStack
+                Spacer()
+                
+                if userSelected.contains(where: { user in
+                    user.id == value.id
+                }) {
+                    appearance.images.selected
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                }else{
+                    appearance.images.deselected
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                }
+            }//:HStack
+            Button {
+                if userSelected.contains(where: { user in
+                    user.id == value.id
+                }){
+                    userSelected.removeAll(where: { $0.id == value.id })
+                }else{
+                    userSelected.append(value)
+                }
+            } label: {
+                
+            }
+            
+        }//:Zstack
+        .onAppear {
+//            if viewModel.moreDataAvailableForGetUsers && viewModel.apiCalling == false{
+                if self.viewModel.eligibleUsers.last?.userId == value.userId {
+                    self.getUsers()
+                }
+//            }
+        }// For LoadMore
+    }
     
     
     func HeaderView() -> some View{
@@ -141,14 +143,14 @@ struct ISMAddParticipantsView: View {
                                 VStack(spacing: 3){
                                     ZStack(alignment: .topTrailing) {
                                         UserAvatarView(avatar: user.userProfileImageUrl ?? "", showOnlineIndicator: false, size: CGSize(width: 48, height: 48), userName:  user.userName ?? "",font: .regular(size: 20))
-                                        themeImage.removeUserFromSelectedFromList
+                                        appearance.images.removeUserFromSelectedFromList
                                             .resizable()
                                             .frame(width: 20, height: 20)
                                     }
                                     
                                     Text(user.userName ?? "")
-                                        .font(themeFonts.chatListUserMessage)
-                                        .foregroundColor(themeColor.messageListHeaderTitle)
+                                        .font(appearance.fonts.chatListUserMessage)
+                                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                         .lineLimit(2)
                                 }.onTapGesture {
                                     if userSelected.contains(where: { user1 in
@@ -185,9 +187,9 @@ struct ISMAddParticipantsView: View {
     
     var navBarLeadingBtn : some View{
         Button(action: { dismiss() }) {
-            themeImage.backButton
+            appearance.images.backButton
                 .resizable()
-                .frame(width: 29, height: 29)
+                .frame(width: 18, height: 18)
         }
     }
     
@@ -197,8 +199,8 @@ struct ISMAddParticipantsView: View {
                 addParticipant()
             }) {
                 Text("Add")
-                    .font(themeFonts.messageListMessageText)
-                    .foregroundColor(userSelected.count == 0 ? Color.gray : themeColor.userProfileEditText)
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(userSelected.count == 0 ? Color.gray : appearance.colorPalette.userProfileEditText)
             }.disabled(userSelected.count == 0)
         }
     }

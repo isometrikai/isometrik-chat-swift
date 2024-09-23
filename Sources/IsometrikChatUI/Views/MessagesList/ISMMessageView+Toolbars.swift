@@ -239,11 +239,11 @@ extension ISMMessageView{
                 }
                 Spacer()
                 if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .photo{
-                    ISMChatImageCahcingManger.networkImage(url: selectedMsgToReply.attachments.first?.mediaUrl ?? "",isprofileImage: false)
+                    ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply.attachments.first?.mediaUrl ?? "")
                         .frame(width: 40, height: 40, alignment: .center)
                         .cornerRadius(5)
                 }else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .video{
-                    ISMChatImageCahcingManger.networkImage(url: selectedMsgToReply.attachments.first?.thumbnailUrl ?? "",isprofileImage: false)
+                    ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply.attachments.first?.thumbnailUrl ?? "")
                         .frame(width: 40, height: 40, alignment: .center)
                         .cornerRadius(5)
                 }else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .document{

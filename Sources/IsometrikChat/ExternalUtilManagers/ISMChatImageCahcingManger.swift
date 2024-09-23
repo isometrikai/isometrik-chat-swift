@@ -10,20 +10,26 @@ import Kingfisher
 import Alamofire
 
 public class ISMChatImageCahcingManger{
-    
-    static public func networkImage(url: String,isprofileImage : Bool,size: CGSize? = nil)-> KFImage{
-        return KFImage(URL(string: url)).placeholder {
-            if isprofileImage == true{
-                Image("placeholder_New")
-                    .resizable()
-                    .frame(width: size?.width,height: size?.height)
-            }else{
-                Image("loading")
-                    .resizable()
-                    .frame(width: 20,height: 20)
+
+    static public func networkImage(url: String, isProfileImage: Bool, size: CGSize? = nil,placeholderView : some View) -> KFImage {
+        return KFImage(URL(string: url))
+            .placeholder {
+                placeholderView
             }
-        }.resizable()
+            .onFailure { error in
+                // Show the placeholder when loading fails
+                if isProfileImage {
+                    placeholderView
+                } else {
+                    Image("loading")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                }
+            }
+            .resizable()
     }
+    
+    
     
     static public func viewImage(url: String,size: CGSize? = nil)-> KFImage{
         return KFImage(URL(string: url)).placeholder {

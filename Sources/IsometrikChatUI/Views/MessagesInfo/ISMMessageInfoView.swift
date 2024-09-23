@@ -11,7 +11,7 @@ import IsometrikChat
 public struct ISMMessageInfoView: View {
     
     //MARK:  - PROPERTIES
-    @Environment(\.dismiss) var dismiss
+//    @Environment(\.dismiss) var dismiss
     
     @State var previousAudioRef: AudioPlayViewModel?
     
@@ -31,6 +31,7 @@ public struct ISMMessageInfoView: View {
     @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
     @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
     @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    var onClose: () -> Void
     
     //MARK:  - LIFECYCLE
     public var body: some View {
@@ -246,18 +247,12 @@ public struct ISMMessageInfoView: View {
     }
     
     func navigationBarLeadingButtons()  -> some View {
-        Button(action : {}) {
-            HStack{
-                Button(action: {
-                    dismiss()
-                }) {
-                    themeImage.CloseSheet
-                        .resizable()
-                        .tint(.black)
-                        .foregroundColor(.black)
-                        .frame(width: 17,height: 17)
-                }
-            }
+        Button(action: {onClose()}) {
+            themeImage.CloseSheet
+                .resizable()
+                .tint(.black)
+                .foregroundColor(.black)
+                .frame(width: 17,height: 17)
         }
     }
 }

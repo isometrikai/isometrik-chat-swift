@@ -28,7 +28,7 @@ public class ISMChatSdkUI{
     
     public func getChatProperties() -> ISMChatPageProperties {
         if chatUIProperties == nil {
-            fatalError("Create configuration before trying to access chat Properties object.")
+            print("Create configuration before trying to access chat Properties object.")
         }
         return chatUIProperties!
     }

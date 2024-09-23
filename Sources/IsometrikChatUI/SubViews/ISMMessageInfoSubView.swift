@@ -167,7 +167,7 @@ struct ISMMessageInfoSubView: View {
                                     HStack(spacing: 10){
                                         
                                         
-                                        ISMChatImageCahcingManger.networkImage(url: metaData.contacts.first?.contactImageUrl ?? "" ,isprofileImage: true)
+                                        ISMChatImageCahcingManger.viewImage(url: metaData.contacts.first?.contactImageUrl ?? "")
                                             .scaledToFill()
                                             .frame(width: 40, height: 40)
                                             .cornerRadius(20)
@@ -238,7 +238,7 @@ struct ISMMessageInfoSubView: View {
                                     forwardedView()
                                 }
                                 ZStack(alignment: .bottomTrailing){
-                                    ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.mediaUrl ?? "",isprofileImage: false)
+                                    ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.mediaUrl ?? "")
                                         .scaledToFill()
                                         .frame(width: 250, height: 300)
                                         .cornerRadius(5)
@@ -315,7 +315,7 @@ struct ISMMessageInfoSubView: View {
                                         }else{
                                             // Display the thumbnail image for non-videos
                                             ZStack(alignment: .bottomTrailing){
-                                                ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.thumbnailUrl ?? "", isprofileImage: false)
+                                                ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.thumbnailUrl ?? "")
                                                     .scaledToFill()
                                                     .frame(width: 250, height: 300)
                                                     .cornerRadius(5)
@@ -337,7 +337,7 @@ struct ISMMessageInfoSubView: View {
                                     } else {
                                         // Display the thumbnail image for non-videos
                                         ZStack(alignment: .bottomTrailing){
-                                            ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.thumbnailUrl ?? "", isprofileImage: false)
+                                            ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.thumbnailUrl ?? "")
                                                 .scaledToFill()
                                                 .frame(width: 250, height: 300)
                                                 .cornerRadius(5)
@@ -417,7 +417,7 @@ struct ISMMessageInfoSubView: View {
                                         HStack(alignment: .center, spacing: 5){
                                             if let urlExtension = urlExtension{
                                                 if urlExtension.contains(".jpg") ||  urlExtension.contains(".png"){
-                                                    ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.mediaUrl ?? "",isprofileImage: false)
+                                                    ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.mediaUrl ?? "")
                                                         .scaledToFill()
                                                         .frame(width: 250, height: 300)
                                                         .cornerRadius(5)
@@ -814,7 +814,7 @@ struct ISMMessageInfoSubView: View {
             }
             ZStack(alignment: .bottomTrailing){
                 ZStack(alignment: .topTrailing){
-                    ISMChatImageCahcingManger.networkImage(url: message.metaData?.post?.postUrl ?? "",isprofileImage: false)
+                    ISMChatImageCahcingManger.viewImage(url: message.metaData?.post?.postUrl ?? "")
                         .scaledToFill()
                         .frame(width: 124, height: 249)
                         .cornerRadius(5)
@@ -1083,11 +1083,11 @@ struct ISMMessageInfoSubView: View {
             }
             .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 8))
             if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Image.value{
-                ISMChatImageCahcingManger.networkImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "",isprofileImage: false)
+                ISMChatImageCahcingManger.viewImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "")
                     .scaledToFill()
                     .frame(width: 45, height: 40)
             }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Video.value{
-                ISMChatImageCahcingManger.networkImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "",isprofileImage: false)
+                ISMChatImageCahcingManger.viewImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "")
                     .scaledToFill()
                     .frame(width: 45, height: 40)
             }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.File.value{

@@ -190,11 +190,18 @@ extension ISMMessageView{
                  if ISMChatSdkUI.getInstance().getChatProperties().navigateToAppProfileFromMessageList == true{
                      if isGroup == true {
                          
-                         NavigationLink {
-                             ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
+                         Button {
+                             self.stateViewModel.navigateToUserProfile = true
                          } label: {
                              customView()
                          }
+
+                         
+//                         NavigationLink {
+//                             ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
+//                         } label: {
+//                             
+//                         }
                      } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
                                 ?? opponenDetail?.metaData?.userId
                                 ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
@@ -205,11 +212,18 @@ extension ISMMessageView{
                          }
                      }
                  }else{
-                     NavigationLink {
-                         ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
+                     
+                     Button {
+                         self.stateViewModel.navigateToUserProfile = true
                      } label: {
                          customView()
                      }
+
+//                     NavigationLink {
+//                         
+//                     } label: {
+//                         customView()
+//                     }
                  }
              }
          }
@@ -273,21 +287,21 @@ extension ISMMessageView{
             } else if let memberString = memberString, !memberString.isEmpty {
                 return memberString
             } else {
-                return "Tap here for more info"
+                return "tap here for more info"
             }
         } else {
             if stateViewModel.otherUserTyping {
-                return "Typing..."
+                return "typing..."
             } else if let lastSeen = self.conversationDetail?.conversationDetails?.opponentDetails?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
                 let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
-                return "Last seen at \(date)"
+                return "last seen \(date)"
             } else if let lastSeen = self.opponenDetail?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
                 let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
-                return "Last seen at \(date)"
+                return "last seen \(date)"
             } else if self.conversationDetail?.conversationDetails?.opponentDetails?.online == true{
-                return "Online"
+                return "online"
             }else{
-                return "Tap here for more info"
+                return "tap here for more info"
             }
         }
     }

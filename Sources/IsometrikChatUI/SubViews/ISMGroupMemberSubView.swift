@@ -23,7 +23,7 @@ struct ISMGroupMemberSubView: View {
             selectedMember = member
         } label: {
             HStack(spacing: 12){
-                UserAvatarView(avatar: member.userProfileImageUrl ?? "", showOnlineIndicator: false,size: CGSize(width: 29, height: 29), userName: member.userName ?? "",font: themeFonts.chatListUserMessage)
+                UserAvatarView(avatar: member.userProfileImageUrl ?? "", showOnlineIndicator: false,size: CGSize(width: 29, height: 29), userName: member.userId != userData.userId ? (member.userName ?? "") : "You",font: themeFonts.chatListUserMessage)
                 
                 VStack(alignment: .leading,spacing: 5){
                     if member.userId != userData.userId{
@@ -35,10 +35,6 @@ struct ISMGroupMemberSubView: View {
                             .font(themeFonts.messageListMessageText)
                             .foregroundColor(themeColor.messageListHeaderTitle)
                     }
-//                    Text(member.userIdentifier ?? "")
-//                        .font(themeFonts.chatListUserMessage)
-//                        .foregroundColor(themeColor.chatListUserMessage)
-//                        .lineLimit(2)
                 }
                 Spacer()
                 
@@ -47,13 +43,13 @@ struct ISMGroupMemberSubView: View {
                         .font(themeFonts.chatListUserMessage)
                         .foregroundColor(themeColor.chatListUserMessage)
                 }
-                if member.userId != userData.userId{
-                    if hideDisclosure == false{
-                        Image("chevron_right")
-                            .resizable()
-                            .frame(width: 20,height: 20)
-                    }
-                }
+//                if member.userId != userData.userId{
+//                    if hideDisclosure == false{
+//                        Image("chevron_right")
+//                            .resizable()
+//                            .frame(width: 20,height: 20)
+//                    }
+//                }
             }
         }
     }

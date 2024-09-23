@@ -358,6 +358,9 @@ public struct ISMMessageView: View {
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.refrestMessagesListLocally)) { _ in
             getMessages()
         }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.updateGroupInfo)) { _ in
+            self.getConversationDetail()
+        }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.memberAddAndRemove)) { _ in
             self.getConversationDetail()
         }
@@ -483,6 +486,11 @@ public struct ISMMessageView: View {
         .sheet(isPresented: self.$stateViewModel.showVideoPicker) {
             ISMMediaPicker(isPresented: self.$stateViewModel.showVideoPicker, sendMedias: $mediaSelectedFromPicker,opponenetName: isGroup == true ? (self.conversationDetail?.conversationDetails?.conversationTitle ?? "" ) : (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""),mediaCaption: $mediaCaption,sendMediaToMessage: $stateViewModel.sendMedia)
         }
+        .fullScreenCover(isPresented: $stateViewModel.navigateToUserProfile, onDismiss: {
+            stateViewModel.navigateToUserProfile = false
+        }, content: {
+            ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
+        })
         .fullScreenCover(isPresented: $stateViewModel.navigateToMediaSlider) {
             let attachments = self.realmManager.medias ?? []
             let currentMediaId = navigateToMediaSliderId
@@ -494,7 +502,9 @@ public struct ISMMessageView: View {
                 self.navigateToMediaSliderId = ""
             }
         }
-        .background(NavigationLink("", destination: ISMForwardToContactView(viewModel : self.chatViewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage),isActive: $stateViewModel.movetoForwardList))
+        .navigationDestination(isPresented: $stateViewModel.movetoForwardList, destination: {
+            ISMForwardToContactView(viewModel : self.chatViewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage)
+        })
         //        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
 //        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager),isActive: $stateViewModel.navigateToProfile))
         //        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))

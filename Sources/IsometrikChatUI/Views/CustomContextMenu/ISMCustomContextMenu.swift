@@ -36,7 +36,7 @@ struct ISMCustomContextMenu: View {
     @Binding var showForward: Bool
     @Binding var updateMessage : MessagesDB
     @Binding var messageCopied : Bool
-    @Binding var navigatetoMessageInfo : Bool
+    @State private var navigatetoMessageInfo : Bool = false
     @Binding var navigateToDeletePopUp : Bool
     
     @State var emojiOptions: [ISMChatEmojiReaction] = ISMChatEmojiReaction.allCases
@@ -46,9 +46,11 @@ struct ISMCustomContextMenu: View {
     let fromBroadCastFlow : Bool?
     
     @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let groupconversationMember : [ISMChatGroupMember]
     
     
     var body: some View {
+        NavigationStack{
         ZStack{
             BackdropBlurView(radius: 6)
                 .ignoresSafeArea()
@@ -153,9 +155,11 @@ struct ISMCustomContextMenu: View {
                     }
                     
                     if !isReceived && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall{
-                        Button {
-                            navigatetoMessageInfo = true
-                            dismiss()
+                        
+                        NavigationLink {
+                            ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow,onClose: {
+                                dismiss()
+                            }).environmentObject(self.realmManager)
                         } label: {
                             HStack{
                                 Text("Info")
@@ -199,6 +203,7 @@ struct ISMCustomContextMenu: View {
         .onTapGesture {
             dismiss()
         }
+    }
     }
 }
 

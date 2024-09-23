@@ -21,7 +21,7 @@ public struct ISMProfileView: View {
     @State public var showLastSeen : Bool = true
     @State public var userName : String = ""
     @State public var email : String = ""
-    @State public var about : String = ""
+    @State public var about : String = "Hey there!"
     @State public var userProfileImageUrl : String = ""
     @State public var userNameAlert : Bool = false
     @State public var emailAlert : Bool = false

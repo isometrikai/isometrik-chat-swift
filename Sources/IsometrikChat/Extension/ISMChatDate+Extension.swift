@@ -39,7 +39,7 @@ extension NSDate{
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "h:mm a"
             if isSectionHeader == false{
-                return "\(timeFormatter.string(from: exactDate as Date))"
+                return "today at \(timeFormatter.string(from: exactDate as Date))"
             }else{
                 return "Today"
             }
@@ -47,14 +47,14 @@ extension NSDate{
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "h:mm a"
             if isSectionHeader == false{
-                return "Yesterday \(timeFormatter.string(from: exactDate as Date))"
+                return "yesterday at\(timeFormatter.string(from: exactDate as Date))"
             }else{
                 return "Yesterday"
             }
         }else{
             let timeFormatter = DateFormatter()
             if isSectionHeader == false{
-                timeFormatter.dateFormat = "MMM d, yyyy h:mm a"
+                timeFormatter.dateFormat = "dd/MM/yy 'at' h:mm a"
             }else{
                 timeFormatter.dateFormat = "d MMM yyyy"
             }

@@ -61,29 +61,17 @@ public struct AvatarView: View {
     
     public var body: some View {
         Group {
-            if let isValid = isValid {
-                if isValid && !shouldShowPlaceholder(avatar: avatar) {
-                    ISMChatImageCahcingManger.networkImage(url: avatar, isprofileImage: true, size: size)
-                        .scaledToFill()
-                        .frame(width: size.width, height: size.height)
-                        .clipShape(Circle())
-                        .overlay {
-                            Circle()
-                                .stroke(.gray.opacity(0.3), lineWidth: 1)
-                        }
-                } else {
-                    placeholderView
-                }
+            if !shouldShowPlaceholder(avatar: avatar) {
+                ISMChatImageCahcingManger.networkImage(url: avatar, isProfileImage: true, placeholderView: placeholderView)
+                    .scaledToFill()
+                    .frame(width: size.width, height: size.height)
+                    .clipShape(Circle())
+                    .overlay {
+                        Circle()
+                            .stroke(.gray.opacity(0.3), lineWidth: 1)
+                    }
             } else {
-                ZStack {
-                    ProgressView()
-                }
-                .frame(width: size.width, height: size.height)
-                .clipShape(Circle())
-                .overlay {
-                    Circle()
-                        .stroke(.gray.opacity(0.3), lineWidth: 1)
-                }
+                placeholderView
             }
         }
         .onAppear {
