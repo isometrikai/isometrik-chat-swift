@@ -32,7 +32,7 @@ public class UIStateViewModel: ObservableObject {
     @Published public var executeRepeatly : Bool = false
     @Published public var otherUserTyping : Bool = false
     
-    @Published public var navigateToBlockUsers = false
+//    @Published public var navigateToBlockUsers = false
     @Published public var navigateToProfile = false
     @Published public var navigateToGroupCastInfo  : Bool = false
     @Published public var showUnblockPopUp : Bool = false
@@ -58,6 +58,9 @@ public class UIStateViewModel: ObservableObject {
     @Published public var navigateToImageEditor : Bool = false
     @Published public var sendMedia : Bool = false
     @Published public var navigateToAddParticipantsInGroupViaDelegate : Bool = false
+    
+    @Published public var navigateToMediaSlider : Bool = false
+    @Published public var navigateToUserProfile : Bool = false
     
     public init() {}
 }

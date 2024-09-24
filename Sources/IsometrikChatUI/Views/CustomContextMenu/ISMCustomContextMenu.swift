@@ -36,7 +36,7 @@ struct ISMCustomContextMenu: View {
     @Binding var showForward: Bool
     @Binding var updateMessage : MessagesDB
     @Binding var messageCopied : Bool
-    @Binding var navigatetoMessageInfo : Bool
+    @State private var navigatetoMessageInfo : Bool = false
     @Binding var navigateToDeletePopUp : Bool
     
     @State var emojiOptions: [ISMChatEmojiReaction] = ISMChatEmojiReaction.allCases
@@ -45,10 +45,12 @@ struct ISMCustomContextMenu: View {
     
     let fromBroadCastFlow : Bool?
     
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    let groupconversationMember : [ISMChatGroupMember]
     
     
     var body: some View {
+        NavigationStack{
         ZStack{
             BackdropBlurView(radius: 6)
                 .ignoresSafeArea()
@@ -91,7 +93,7 @@ struct ISMCustomContextMenu: View {
                                     .font(Font.regular(size: 16))
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
-                                themeImage.contextMenureply
+                                appearance.images.contextMenureply
                                     .resizable()
                                     .frame(width: 18, height: 18, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
@@ -108,7 +110,7 @@ struct ISMCustomContextMenu: View {
                                     .font(Font.regular(size: 16))
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
-                                themeImage.contextMenuforward
+                                appearance.images.contextMenuforward
                                     .resizable()
                                     .frame(width: 18, height: 18, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
@@ -126,7 +128,7 @@ struct ISMCustomContextMenu: View {
                                     .font(Font.regular(size: 16))
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
-                                themeImage.contextMenuedit
+                                appearance.images.contextMenuedit
                                     .resizable()
                                     .frame(width: 18, height: 18, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
@@ -144,7 +146,7 @@ struct ISMCustomContextMenu: View {
                                     .font(Font.regular(size: 16))
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
-                                themeImage.contextMenucopy
+                                appearance.images.contextMenucopy
                                     .resizable()
                                     .frame(width: 18, height: 18, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
@@ -153,16 +155,18 @@ struct ISMCustomContextMenu: View {
                     }
                     
                     if !isReceived && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall{
-                        Button {
-                            navigatetoMessageInfo = true
-                            dismiss()
+                        
+                        NavigationLink {
+                            ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow,onClose: {
+                                dismiss()
+                            }).environmentObject(self.realmManager)
                         } label: {
                             HStack{
                                 Text("Info")
                                     .font(Font.regular(size: 16))
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
-                                themeImage.contextMenuinfo
+                                appearance.images.contextMenuinfo
                                     .resizable()
                                     .frame(width: 18, height: 18, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
@@ -178,7 +182,7 @@ struct ISMCustomContextMenu: View {
                                 .font(Font.regular(size: 16))
                                 .foregroundColor(Color(hex: "#DD3719"))
                             Spacer()
-                            themeImage.contextMenudelete
+                            appearance.images.contextMenudelete
                                 .resizable()
                                 .frame(width: 18, height: 18, alignment: .center)
                         }.padding(.horizontal,15).padding(.vertical,10)
@@ -199,6 +203,7 @@ struct ISMCustomContextMenu: View {
         .onTapGesture {
             dismiss()
         }
+    }
     }
 }
 

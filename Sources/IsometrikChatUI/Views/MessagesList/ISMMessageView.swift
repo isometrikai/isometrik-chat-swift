@@ -9,10 +9,9 @@ import SwiftUI
 import Combine
 import LinkPresentation
 import UIKit
-import _PhotosUI_SwiftUI
-import MediaPicker
+
 import AVFoundation
-import PhotosUI
+
 //import GiphyUISDK
 import ISMSwiftCall
 import IsometrikChat
@@ -32,7 +31,7 @@ public struct ISMMessageView: View {
     
     //MARK: - PROPERTIES
     
-    @Environment(\.dismiss) public var dismiss
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @ObservedObject public var chatViewModel = ChatsViewModel()
     public var conversationViewModel: ConversationViewModel
@@ -48,6 +47,12 @@ public struct ISMMessageView: View {
     let columns = [GridItem(.flexible(minimum: 10))]
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     let onlinetimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
+    
+    
+    @State var navigateToMediaSliderId : String = ""
+    
+    @State var mediaSelectedFromPicker : [ISMMediaUpload] = []
+    @State var mediaCaption : String = ""
     
     
     
@@ -132,10 +137,6 @@ public struct ISMMessageView: View {
     @State var filteredUsers: [ISMChatGroupMember] = []
     
     
-    
-    
-    @State var videoSelectedFromPicker : [ISMMediaUpload] = []
-    
     //camera click
     @State var cameraImageToUse : URL?
     
@@ -218,8 +219,8 @@ public struct ISMMessageView: View {
                             //here we are checking if your a member of group anymore
                             if let conversation = conversationDetail?.conversationDetails{
                                 if let members = conversation.members,
-                                    members.contains(where: { member in
-                                        return member.userId == userData.userId
+                                   members.contains(where: { member in
+                                       return member.userId == userData.userId
                                    }) {
                                     toolBarView()
                                 } else {
@@ -357,18 +358,26 @@ public struct ISMMessageView: View {
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.refrestMessagesListLocally)) { _ in
             getMessages()
         }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.updateGroupInfo)) { _ in
+            self.getConversationDetail()
+        }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.memberAddAndRemove)) { _ in
             self.getConversationDetail()
         }
-        .onChange(of: chatViewModel.documentSelectedFromPicker) { newValue in
+        .onChange(of: chatViewModel.documentSelectedFromPicker, { _, _ in
             sendMessageIfDocumentSelected()
-        }
-        .onChange(of: selectedReaction) { newValue in
+        })
+        .onChange(of: selectedReaction, { _, _ in
             if selectedReaction != nil{
                 sendReaction()
             }
-        }
-        .onChange(of: textFieldtxt){ newValue in
+        })
+        .onChange(of: navigateToMediaSliderId, { _, _ in
+            if !navigateToMediaSliderId.isEmpty{
+                stateViewModel.navigateToMediaSlider = true
+            }
+        })
+        .onChange(of: textFieldtxt, { _, _ in
             if isGroup == true{
                 let filterUserName = getMentionedString(inputString: textFieldtxt)
                 if !filterUserName.isEmpty {
@@ -385,10 +394,10 @@ public struct ISMMessageView: View {
                     filteredUsers = mentionUsers
                 }
             }
-        }
-        .onChange(of: navigateToLocationDetail.title){
+        })
+        .onChange(of: navigateToLocationDetail.title, { _, _ in
             stateViewModel.navigateToLocation = true
-        }
+        })
         .onChange(of: stateViewModel.audioCallToUser, { _, _ in
             if stateViewModel.audioCallToUser == true{
                 stateViewModel.showCallPopUp = true
@@ -404,66 +413,66 @@ public struct ISMMessageView: View {
                 sendMessage(msgType: .photo)
             }
         })
-        .onChange(of: chatViewModel.audioUrl) { newValue in
+        .onChange(of: chatViewModel.audioUrl, { _, _ in
             sendMessageIfAudioUrl()
-        }
-        .onChange(of: stateViewModel.keyboardFocused) { newValue in
+        })
+        .onChange(of: stateViewModel.keyboardFocused, { _, _ in
             if conversationDetail != nil{
                 sendMessageTypingIndicator()
             }
-        }
-//        .onChange(of: selectedGIF, { _, _ in
-//            sendMessageIfGif()
-//        })
+        })
+        //        .onChange(of: selectedGIF, { _, _ in
+        //            sendMessageIfGif()
+        //        })
         .onChange(of: stateViewModel.sendMedia, { _, _ in
             if stateViewModel.sendMedia == true{
                 stateViewModel.sendMedia = false
                 sendMessageIfUploadMedia()
             }
         })
-        .onChange(of: updateMessage.body) { newValue in
+        .onChange(of: updateMessage.body, { _, _ in
             self.textFieldtxt = updateMessage.body
             stateViewModel.keyboardFocused = true
-        }
-        .onChange(of: self.placeId) { newValue in
+        })
+        .onChange(of: self.placeId, { _, _ in
             sendMessageIfPlaceId()
-        }
-        .onChange(of: stateViewModel.navigateToAddParticipantsInGroupViaDelegate) { newValue in
+        })
+        .onChange(of: stateViewModel.navigateToAddParticipantsInGroupViaDelegate, { _, _ in
             if stateViewModel.navigateToAddParticipantsInGroupViaDelegate == true{
                 delegate?.navigateToAppMemberInGroup(conversationId: self.conversationID ?? "", groupMembers: self.conversationDetail?.conversationDetails?.members)
                 stateViewModel.navigateToAddParticipantsInGroupViaDelegate = false
             }
-        }
-        .onChange(of: chatViewModel.timerValue, perform: { newValue in
+        })
+        .onChange(of: chatViewModel.timerValue, { _, _ in
             withAnimation {
                 stateViewModel.isShowingRedTimerStart.toggle()
             }
         })
-        .onChange(of: navigateToSocialProfileId) { newValue in
+        .onChange(of: navigateToSocialProfileId, { _, _ in
             if !navigateToSocialProfileId.isEmpty {
                 delegate?.navigateToAppProfile(userId: navigateToSocialProfileId, userType: 0)
                 navigateToSocialProfileId = ""
             }
-        }
-        .onChange(of: postIdToNavigate) { newValue in
+        })
+        .onChange(of: postIdToNavigate, { _, _ in
             if !postIdToNavigate.isEmpty{
                 delegate?.navigateToPost(postId: postIdToNavigate)
                 postIdToNavigate = ""
             }
-        }
-        .onChange(of: stateViewModel.shareContact, perform: { newValue in
+        })
+        .onChange(of: stateViewModel.shareContact, { _, _ in
             if !self.selectedContactToShare.isEmpty {
                 sendMessage(msgType: .contact)
                 stateViewModel.shareContact = false
             }
         })
         .sheet(isPresented: $stateViewModel.showGifPicker, content: {
-//            GiphyPicker { media in
-//                if let media = media{
-//                    selectedGIF = media
-//                    showGifPicker = false
-//                }
-//            }
+            //            GiphyPicker { media in
+            //                if let media = media{
+            //                    selectedGIF = media
+            //                    showGifPicker = false
+            //                }
+            //            }
         })
         .sheet(isPresented: $stateViewModel.showSheet){
             if selectedSheetIndex == 0 {
@@ -474,21 +483,31 @@ public struct ISMMessageView: View {
                 ISMShareContactList(dissmiss: $stateViewModel.showSheet , selectedContact: self.$selectedContactToShare, shareContact: $stateViewModel.shareContact)
             }
         }
-        .mediaImporter(
-            isPresented: self.$stateViewModel.showVideoPicker,
-            allowedMediaTypes: [.videos, .images],
-            allowsMultipleSelection: true,
-            onCompletion: handleMediaImporterResult,
-            loadingOverlay: { _ in
-                ProgressView()
+        .sheet(isPresented: self.$stateViewModel.showVideoPicker) {
+            ISMMediaPicker(isPresented: self.$stateViewModel.showVideoPicker, sendMedias: $mediaSelectedFromPicker,opponenetName: isGroup == true ? (self.conversationDetail?.conversationDetails?.conversationTitle ?? "" ) : (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""),mediaCaption: $mediaCaption,sendMediaToMessage: $stateViewModel.sendMedia)
+        }
+        .fullScreenCover(isPresented: $stateViewModel.navigateToUserProfile, onDismiss: {
+            stateViewModel.navigateToUserProfile = false
+        }, content: {
+            ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
+        })
+        .fullScreenCover(isPresented: $stateViewModel.navigateToMediaSlider) {
+            let attachments = self.realmManager.medias ?? []
+            let currentMediaId = navigateToMediaSliderId
+            //reset value
+            let index = attachments.firstIndex { $0.messageId == currentMediaId } ?? 0
+            ISMChatMediaViewer(viewModel: ISMChatMediaViewerViewModel(attachments: attachments, index: index)) {
+                stateViewModel.navigateToMediaSlider = false
+            }.onAppear {
+                self.navigateToMediaSliderId = ""
             }
-        )
-        .background(NavigationLink("", destination: ISMForwardToContactView(viewModel : self.chatViewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage),isActive: $stateViewModel.movetoForwardList))
-        .background(NavigationLink("", destination: ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId,placeName : $placeName, address: $placeAddress),isActive: $stateViewModel.showLocationSharing))
-//        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
-        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager),isActive: $stateViewModel.navigateToProfile))
-//        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))
-        .background(NavigationLink("", destination: ISMImageAndViderEditor(media: $videoSelectedFromPicker, sendToUser: opponenDetail?.userName ?? "",sendMedia: $stateViewModel.sendMedia),isActive: $stateViewModel.navigateToImageEditor))
+        }
+        .navigationDestination(isPresented: $stateViewModel.movetoForwardList, destination: {
+            ISMForwardToContactView(viewModel : self.chatViewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage)
+        })
+        //        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
+//        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager),isActive: $stateViewModel.navigateToProfile))
+        //        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))
         .onReceive(timer, perform: { firedDate in
             print("timer fired")
             timeElapsed = Int(firedDate.timeIntervalSince(startDate))
@@ -532,7 +551,7 @@ public struct ISMMessageView: View {
             self.realmManager.clearMessages()
             self.getMessages()
             //added this from on appear
-           
+            
             if fromBroadCastFlow == true{
                 reloadBroadCastMessages()
             }else{
@@ -644,7 +663,7 @@ public struct ISMMessageView: View {
             lastSent = ""
         }
         if let groupCastId = groupCastId, !groupCastId.isEmpty{
-            chatViewModel.getBroadCastMessages(groupcastId: groupCastId, lastMessageTimestamp: lastSent ?? "") { msg in
+            chatViewModel.getBroadCastMessages(groupcastId: groupCastId, lastMessageTimestamp: lastSent) { msg in
                 if let msg = msg {
                     self.chatViewModel.allMessages = msg.messages
                     self.chatViewModel.allMessages = self.chatViewModel.allMessages?.filter { message in

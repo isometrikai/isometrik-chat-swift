@@ -22,7 +22,7 @@ struct ISMImageDraw: View {
     
     //MARK:  - LIFECYCLE
     var body: some View {
-        NavigationView{
+        NavigationStack{
             ZStack{
                 GeometryReader{proxy -> AnyView in
                     let size = proxy.frame(in: .global).size

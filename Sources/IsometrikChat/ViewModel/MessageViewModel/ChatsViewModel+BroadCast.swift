@@ -15,7 +15,7 @@ extension ChatsViewModel{
         var membersAll : [[String : Any]] = []
         var membersDetail : [[String : Any]] = []
         for x in users{
-            let member = ["newConversationTypingEvents" : true, "newConversationReadEvents" : true, "newConversationPushNotificationsEvents" : true,"memberId" : x.userId ?? "","newConversationCustomType" : "Broadcast","newConversationMetadata" : nil] as [String : Any]
+            let member = ["newConversationTypingEvents" : true, "newConversationReadEvents" : true, "newConversationPushNotificationsEvents" : true,"memberId" : x.userId ?? "","newConversationCustomType" : "Broadcast","newConversationMetadata" : [:]] as [String : Any]
             membersAll.append(member)
             let memberDetail = ["memberId" :  x.userId ?? "","memberName" : x.userName ?? ""]
             membersDetail.append(memberDetail)
@@ -84,7 +84,7 @@ extension ChatsViewModel{
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
             case .success(let data,_) :
-                ISMChatHelper.print(data.msg)
+                ISMChatHelper.print(data.msg ?? "")
                 completion(true)
             case .failure(let error) :
                 ISMChatHelper.print("delete broadcast Api fail -----> \(String(describing: error))")
@@ -119,7 +119,7 @@ extension ChatsViewModel{
         
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data,_) :
+            case .success(_,_) :
                 NotificationCenter.default.post(name: NSNotification.refreshBroadCastListNotification,object: nil)
                 completion(true)
             case .failure(let error) :
@@ -139,7 +139,7 @@ extension ChatsViewModel{
         
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data,_) :
+            case .success(_,_) :
                 NotificationCenter.default.post(name: NSNotification.refreshBroadCastListNotification,object: nil)
                 completion(true)
             case .failure(let error) :
@@ -153,7 +153,7 @@ extension ChatsViewModel{
         var body : [String : Any]
         var membersAll : [[String : Any]] = []
         for x in members{
-            let member = ["newConversationTypingEvents" : true, "newConversationReadEvents" : true, "newConversationPushNotificationsEvents" : true,"memberId" : x.userId ?? "","newConversationCustomType" : "Broadcast","newConversationMetadata" : nil] as [String : Any]
+            let member = ["newConversationTypingEvents" : true, "newConversationReadEvents" : true, "newConversationPushNotificationsEvents" : true,"memberId" : x.userId ?? "","newConversationCustomType" : "Broadcast","newConversationMetadata" : [:]] as [String : Any]
             membersAll.append(member)
         }
         body = ["members" : membersAll,"groupcastId" : groupcastId] as [String : Any]
@@ -164,7 +164,7 @@ extension ChatsViewModel{
         
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data,_) :
+            case .success(_,_) :
                 completion(true)
             case .failure(let error) :
                 ISMChatHelper.print("Add member Api fail -----> \(String(describing: error))")
@@ -181,7 +181,7 @@ extension ChatsViewModel{
         
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data,_) :
+            case .success(_,_) :
                 completion(true)
             case .failure(let error) :
                 ISMChatHelper.print("Add member Api fail -----> \(String(describing: error))")
@@ -200,7 +200,7 @@ extension ChatsViewModel{
             case .success(let data,_) :
                 completion(data)
             case .failure(let error) :
-                ISMChatHelper.print("Message Read Info Failed")
+                ISMChatHelper.print("Message Read Info Failed ------->\(error)")
             }
         }
     }
@@ -216,7 +216,7 @@ extension ChatsViewModel{
             case .success(let data,_) :
                 completion(data)
             case .failure(let error) :
-                ISMChatHelper.print("Message deleivered Info Failed")
+                ISMChatHelper.print("Message deleivered Info Failed------->\(error)")
             }
         }
     }
@@ -231,10 +231,10 @@ extension ChatsViewModel{
         
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data,_) :
+            case .success(_,_) :
                 completion()
             case .failure(let error) :
-                ISMChatHelper.print("Message deleivered Info Failed")
+                ISMChatHelper.print("Message deleivered Info Failed------->\(error)")
             }
         }
     }

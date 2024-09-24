@@ -85,8 +85,8 @@ struct ISMReactionDetailView: View {
                                 subViewForGroup(userId: user, reactionType: reactionType)
                             }else{
                                 subView(userId: user,
-                                        profilePicture: user == userData.userId ? (userData.userProfileImage ?? "") : (opponentDeatil.userProfileImageUrl ?? ""),
-                                        userName: user == userData.userId ? (userData.userName ?? "") : (opponentDeatil.userName ?? ""),
+                                        profilePicture: user == userData.userId ? (userData.userProfileImage) : (opponentDeatil.userProfileImageUrl ?? ""),
+                                        userName: user == userData.userId ? (userData.userName) : (opponentDeatil.userName ?? ""),
                                         userIdentifier: opponentDeatil.userIdentifier ?? "",
                                         reactionType: reactionType)
                             }
@@ -99,7 +99,7 @@ struct ISMReactionDetailView: View {
                         if isGroup == true{
                             subViewForGroup(userId: item, reactionType: message.reactions[selectedTab - 1].reactionType)
                         }else{
-                            subView(userId: item, profilePicture: item == userData.userId ? (userData.userProfileImage ?? "") : (opponentDeatil.userProfileImageUrl ?? ""),
+                            subView(userId: item, profilePicture: item == userData.userId ? (userData.userProfileImage) : (opponentDeatil.userProfileImageUrl ?? ""),
                                     userName: opponentDeatil.userName ?? "",
                                     userIdentifier: opponentDeatil.userIdentifier ?? "",
                                     reactionType: message.reactions[selectedTab - 1].reactionType)
@@ -126,7 +126,7 @@ struct ISMReactionDetailView: View {
         viewModel.removeReaction(conversationId: self.message.conversationId, messageId: self.message.messageId, emojiReaction: reaction) { _ in
             reactionRemoved = reaction
             showReactionDetail = false
-            realmManager.addLastMessageOnAddAndRemoveReaction(conversationId: self.message.conversationId, action: ISMChatActionType.reactionRemove.value, emoji: reaction, userId: userData.userId ?? "")
+            realmManager.addLastMessageOnAddAndRemoveReaction(conversationId: self.message.conversationId, action: ISMChatActionType.reactionRemove.value, emoji: reaction, userId: userData.userId)
         }
     }
     

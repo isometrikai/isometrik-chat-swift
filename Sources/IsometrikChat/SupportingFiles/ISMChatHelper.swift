@@ -13,6 +13,7 @@ import PDFKit
 import CoreLocation
 import CoreLocationUI
 import FirebaseMessaging
+import PhotosUI
 
 public class ISMChatHelper: NSObject {
     
@@ -85,7 +86,7 @@ public class ISMChatHelper: NSObject {
     //MARK: - CHECK IMAGE OR Video
     
     public class func checkMediaType(media : URL) -> ISMChatMessageType{
-        if media.lastPathComponent.contains(".mov") || media.lastPathComponent.contains(".mp4"){
+        if media.lastPathComponent.contains(".mov") || media.lastPathComponent.contains(".mp4") || media.lastPathComponent.contains(".MP4"){
             return .video
         }else{
             return .photo
@@ -456,6 +457,19 @@ public class ISMChatHelper: NSObject {
         Messaging.messaging().unsubscribe(fromTopic: "chat-\(userId)")
     }
     
+    public class func getVideoSize(_ url: URL) async -> CGSize {
+        let videoAsset = AVURLAsset(url : url)
+
+        let videoAssetTrack = try? await videoAsset.loadTracks(withMediaType: .video).first
+        let naturalSize = (try? await videoAssetTrack?.load(.naturalSize)) ?? .zero
+        let transform = try? await videoAssetTrack?.load(.preferredTransform)
+        if (transform?.tx == naturalSize.width && transform?.ty == naturalSize.height) || (transform?.tx == 0 && transform?.ty == 0) {
+            return naturalSize
+        } else {
+            return CGSize(width: naturalSize.height, height: naturalSize.width)
+        }
+    }
+    
     public class func getThumbnailImage(url : String) -> UIImage? {
         
         guard let videoURL = URL(string: url) else {
@@ -501,6 +515,38 @@ public class ISMChatHelper: NSObject {
         let currentTime = Date()
         let timeInSeconds = currentTime.timeIntervalSince1970
         return timeInSeconds
+    }
+    
+    public class func downloadImage(from url: String) {
+        guard let imageURL = URL(string: url) else { return }
+        
+        // Fetch the image data from URL
+        URLSession.shared.dataTask(with: imageURL) { data, response, error in
+            if let error = error {
+                ISMChatHelper.print("Error downloading image: \(error)")
+                return
+            }
+            
+            guard let data = data, let image = UIImage(data: data) else {
+                ISMChatHelper.print("Invalid image data")
+                return
+            }
+            
+            // Save the image to the photo library
+            self.saveImageToGallery(image: image)
+        }.resume()
+    }
+
+    // Function to save the image to the gallery
+    public class func saveImageToGallery(image: UIImage) {
+        PHPhotoLibrary.requestAuthorization { status in
+            if status == .authorized {
+                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                ISMChatHelper.print("Image saved successfully")
+            } else {
+                ISMChatHelper.print("Permission to save photos denied")
+            }
+        }
     }
 }
 

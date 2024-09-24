@@ -227,7 +227,7 @@ extension RealmManager{
                         metaData.locationAddress = value.metaData?.locationAddress
                         metaData.captionMessage = value.metaData?.captionMessage
                         
-                        var postvalue = PostDB()
+                        let postvalue = PostDB()
                         postvalue.postId = value.metaData?.post?.postId
                         postvalue.postUrl = value.metaData?.post?.postUrl
                         

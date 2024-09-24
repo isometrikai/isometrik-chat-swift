@@ -63,9 +63,9 @@ import IsometrikChat
                 }
                 
                 var mentionedUser : [ISMChatMentionedUser] = []
-                if let Users = messageInfo.mentionedUsers{
+                if messageInfo.mentionedUsers != nil{
                     for x in mentionedUser{
-                        var user = ISMChatMentionedUser(wordCount: x.wordCount, userId: x.userId, order: x.order)
+                        let user = ISMChatMentionedUser(wordCount: x.wordCount, userId: x.userId, order: x.order)
                         mentionedUser.append(user)
                     }
                 }

@@ -41,10 +41,7 @@ struct ISMMessageInfoSubView: View {
     let groupconversationMember : [ISMChatGroupMember]
     @State private var pdfthumbnailImage : UIImage = UIImage()
     
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State var themeBubbleType = ISMChatSdkUI.getInstance().getAppAppearance().appearance.messageBubbleType
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     let fromBroadCastFlow : Bool?
@@ -81,14 +78,14 @@ struct ISMMessageInfoSubView: View {
                                     HStack{
                                         if ISMChatHelper.isValidEmail(str) == true{
                                             Link(str, destination: URL(string: "mailto:apple@me.com")!)
-                                                .font(themeFonts.messageListMessageText)
-                                                .foregroundColor(themeColor.userProfileEditText)
-                                                .underline(true, color: themeColor.userProfileEditText)
+                                                .font(appearance.fonts.messageListMessageText)
+                                                .foregroundColor(appearance.colorPalette.userProfileEditText)
+                                                .underline(true, color: appearance.colorPalette.userProfileEditText)
                                         }else if  ISMChatHelper.isValidPhone(phone: str) == true{
                                             Link(str, destination: URL(string: "tel:\(str)")!)
-                                                .font(themeFonts.messageListMessageText)
-                                                .foregroundColor(themeColor.userProfileEditText)
-                                                .underline(true, color: themeColor.userProfileEditText)
+                                                .font(appearance.fonts.messageListMessageText)
+                                                .foregroundColor(appearance.colorPalette.userProfileEditText)
+                                                .underline(true, color: appearance.colorPalette.userProfileEditText)
                                         }
                                         else if str.isValidURL || str.contains("www."){
 //                                            ISMLinkPreview(urlString: str)
@@ -100,8 +97,8 @@ struct ISMMessageInfoSubView: View {
                                                 HighlightedTextView(originalText: str, mentionedUsers: groupconversationMember, isReceived: self.isReceived, navigateToInfo: $navigateToInfo, navigatetoUser: $navigatetoUser)
                                             }else{
                                                 Text(str)
-                                                    .font(themeFonts.messageListMessageText)
-                                                    .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                                                    .font(appearance.fonts.messageListMessageText)
+                                                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                             }
                                         }
                                     }
@@ -110,10 +107,10 @@ struct ISMMessageInfoSubView: View {
                             }//:VStack
                             .padding(.horizontal, str.isValidURL || str.contains("www.") == true ? 5 : 10)
                             .padding(.vertical,str.isValidURL || str.contains("www.") == true ? 5 : 8)
-                            .background(isReceived ? themeColor.messageListReceivedMessageBackgroundColor : themeColor.messageListSendMessageBackgroundColor)
-                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: self.themeBubbleType, direction: isReceived ? .left : .right))
+                            .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                             .overlay(
-                                themeBubbleType == .BubbleWithOutTail ?
+                                appearance.messageBubbleType == .BubbleWithOutTail ?
                                     AnyView(
                                         UnevenRoundedRectangle(
                                             topLeadingRadius: 8,
@@ -122,7 +119,7 @@ struct ISMMessageInfoSubView: View {
                                             topTrailingRadius: 8,
                                             style: .circular
                                         )
-                                        .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
+                                        .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                     ) : AnyView(EmptyView())
                             )
                         }
@@ -167,7 +164,7 @@ struct ISMMessageInfoSubView: View {
                                     HStack(spacing: 10){
                                         
                                         
-                                        ISMChatImageCahcingManger.networkImage(url: metaData.contacts.first?.contactImageUrl ?? "" ,isprofileImage: true)
+                                        ISMChatImageCahcingManger.viewImage(url: metaData.contacts.first?.contactImageUrl ?? "")
                                             .scaledToFill()
                                             .frame(width: 40, height: 40)
                                             .cornerRadius(20)
@@ -175,12 +172,12 @@ struct ISMMessageInfoSubView: View {
                                         let name = metaData.contacts.first?.contactName ?? ""
                                         if metaData.contacts.count == 1{
                                             Text(name)
-                                                .font(themeFonts.messageListMessageText)
-                                                .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                                                .font(appearance.fonts.messageListMessageText)
+                                                .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                         }else{
                                             Text("\(name) and \((metaData.contacts.count) - 1) other contact")
-                                                .font(themeFonts.messageListMessageText)
-                                                .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                                                .font(appearance.fonts.messageListMessageText)
+                                                .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                         }
                                         Spacer()
                                     }.padding(5)
@@ -192,17 +189,17 @@ struct ISMMessageInfoSubView: View {
                                     HStack{
                                         Spacer()
                                         Text(metaData.contacts.count == 1 ? "View" : "View All")
-                                            .font(themeFonts.messageListMessageText)
-                                            .foregroundColor(themeColor.userProfileEditText)
+                                            .font(appearance.fonts.messageListMessageText)
+                                            .foregroundColor(appearance.colorPalette.userProfileEditText)
                                         Spacer()
                                     }.padding(.vertical,5)
                                 }
                                 .frame(width: 250)
                                 .padding(5)
-                                .background(isReceived ? themeColor.messageListReceivedMessageBackgroundColor : themeColor.messageListSendMessageBackgroundColor)
-                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: self.themeBubbleType, direction: isReceived ? .left : .right))
+                                .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                 .overlay(
-                                    themeBubbleType == .BubbleWithOutTail ?
+                                    appearance.messageBubbleType == .BubbleWithOutTail ?
                                         AnyView(
                                             UnevenRoundedRectangle(
                                                 topLeadingRadius: 8,
@@ -211,7 +208,7 @@ struct ISMMessageInfoSubView: View {
                                                 topTrailingRadius: 8,
                                                 style: .circular
                                             )
-                                            .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
+                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                         ) : AnyView(EmptyView())
                                 )
                             }
@@ -231,14 +228,14 @@ struct ISMMessageInfoSubView: View {
                             //when its group show member name in message
                             inGroupUserName()
                         }
-                        NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
-                        {
+//                        NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
+//                        {
                             VStack(alignment: .trailing,spacing: 5){
                                 if message.messageType == 1{
                                     forwardedView()
                                 }
                                 ZStack(alignment: .bottomTrailing){
-                                    ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.mediaUrl ?? "",isprofileImage: false)
+                                    ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.mediaUrl ?? "")
                                         .scaledToFill()
                                         .frame(width: 250, height: 300)
                                         .cornerRadius(5)
@@ -258,8 +255,8 @@ struct ISMMessageInfoSubView: View {
                                 }
                                 if let caption = message.metaData?.captionMessage, !caption.isEmpty{
                                     Text(caption)
-                                        .font(themeFonts.messageListMessageText)
-                                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                                        .font(appearance.fonts.messageListMessageText)
+                                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                     
                                     dateAndStatusView(onImage: false)
                                         .padding(.bottom,5)
@@ -268,10 +265,10 @@ struct ISMMessageInfoSubView: View {
                                 }
                             }//:ZStack
                             .padding(5)
-                            .background(isReceived ? themeColor.messageListReceivedMessageBackgroundColor : themeColor.messageListSendMessageBackgroundColor)
-                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: self.themeBubbleType, direction: isReceived ? .left : .right))
+                            .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                             .overlay(
-                                themeBubbleType == .BubbleWithOutTail ?
+                                appearance.messageBubbleType == .BubbleWithOutTail ?
                                     AnyView(
                                         UnevenRoundedRectangle(
                                             topLeadingRadius: 8,
@@ -280,10 +277,10 @@ struct ISMMessageInfoSubView: View {
                                             topTrailingRadius: 8,
                                             style: .circular
                                         )
-                                        .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
+                                        .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                     ) : AnyView(EmptyView())
                             )
-                        }
+//                        }
                     }.padding(.vertical,2)
                 }
                 
@@ -299,7 +296,7 @@ struct ISMMessageInfoSubView: View {
                             inGroupUserName()
                         }
                      
-                        NavigationLink(destination: MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager)){
+//                        NavigationLink(destination: MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager)){
                             VStack(alignment: .trailing,spacing : 5){
                                 if message.messageType == 1{
                                     forwardedView()
@@ -315,7 +312,7 @@ struct ISMMessageInfoSubView: View {
                                         }else{
                                             // Display the thumbnail image for non-videos
                                             ZStack(alignment: .bottomTrailing){
-                                                ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.thumbnailUrl ?? "", isprofileImage: false)
+                                                ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.thumbnailUrl ?? "")
                                                     .scaledToFill()
                                                     .frame(width: 250, height: 300)
                                                     .cornerRadius(5)
@@ -337,7 +334,7 @@ struct ISMMessageInfoSubView: View {
                                     } else {
                                         // Display the thumbnail image for non-videos
                                         ZStack(alignment: .bottomTrailing){
-                                            ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.thumbnailUrl ?? "", isprofileImage: false)
+                                            ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.thumbnailUrl ?? "")
                                                 .scaledToFill()
                                                 .frame(width: 250, height: 300)
                                                 .cornerRadius(5)
@@ -364,8 +361,8 @@ struct ISMMessageInfoSubView: View {
                                 
                                 if let caption = message.metaData?.captionMessage, !caption.isEmpty{
                                     Text(caption)
-                                        .font(themeFonts.messageListMessageText)
-                                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                                        .font(appearance.fonts.messageListMessageText)
+                                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                     
                                     dateAndStatusView(onImage: false)
                                         .padding(.bottom,5)
@@ -373,10 +370,10 @@ struct ISMMessageInfoSubView: View {
                                 }
                                 
                             }.padding(5)
-                                .background(isReceived ? themeColor.messageListReceivedMessageBackgroundColor : themeColor.messageListSendMessageBackgroundColor)
-                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: self.themeBubbleType, direction: isReceived ? .left : .right))
+                            .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                 .overlay(
-                                    themeBubbleType == .BubbleWithOutTail ?
+                                    appearance.messageBubbleType == .BubbleWithOutTail ?
                                         AnyView(
                                             UnevenRoundedRectangle(
                                                 topLeadingRadius: 8,
@@ -385,10 +382,10 @@ struct ISMMessageInfoSubView: View {
                                                 topTrailingRadius: 8,
                                                 style: .circular
                                             )
-                                            .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
+                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                         ) : AnyView(EmptyView())
                                 )
-                        }//:NavigationLink
+//                        }//:NavigationLink
                         //                                }
                     } .padding(.vertical, 2)
                 }
@@ -417,7 +414,7 @@ struct ISMMessageInfoSubView: View {
                                         HStack(alignment: .center, spacing: 5){
                                             if let urlExtension = urlExtension{
                                                 if urlExtension.contains(".jpg") ||  urlExtension.contains(".png"){
-                                                    ISMChatImageCahcingManger.networkImage(url: message.attachments.first?.mediaUrl ?? "",isprofileImage: false)
+                                                    ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.mediaUrl ?? "")
                                                         .scaledToFill()
                                                         .frame(width: 250, height: 300)
                                                         .cornerRadius(5)
@@ -426,14 +423,14 @@ struct ISMMessageInfoSubView: View {
                                                     if urlExtension == "pdf" {
                                                         ISMPDFMessageView(pdfURL: documentUrl, fileName: fileName)
                                                     } else {
-                                                        themeImages.pdfLogo
+                                                        appearance.images.pdfLogo
                                                             .resizable()
                                                             .aspectRatio(contentMode: .fit)
                                                             .frame(width: 30, height: 30)
                                                         
                                                         Text(fileName)
-                                                            .font(themeFonts.messageListMessageText)
-                                                            .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                                                            .font(appearance.fonts.messageListMessageText)
+                                                            .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                                             .fixedSize(horizontal: false, vertical: true)
                                                     }
                                                 }
@@ -445,10 +442,10 @@ struct ISMMessageInfoSubView: View {
                                     }//:VStack
                                     .frame(width: 250)
                                     .padding(5)
-                                    .background(isReceived ? themeColor.messageListReceivedMessageBackgroundColor : themeColor.messageListSendMessageBackgroundColor)
-                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: self.themeBubbleType, direction: isReceived ? .left : .right))
+                                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                     .overlay(
-                                        themeBubbleType == .BubbleWithOutTail ?
+                                        appearance.messageBubbleType == .BubbleWithOutTail ?
                                             AnyView(
                                                 UnevenRoundedRectangle(
                                                     topLeadingRadius: 8,
@@ -457,7 +454,7 @@ struct ISMMessageInfoSubView: View {
                                                     topTrailingRadius: 8,
                                                     style: .circular
                                                 )
-                                                .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
+                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                             ) : AnyView(EmptyView())
                                     )
                                 }//:ZStack
@@ -490,15 +487,15 @@ struct ISMMessageInfoSubView: View {
                                 
                                 HStack{
                                     Text(message.attachments.first?.title ?? "")
-                                        .font(themeFonts.messageListMessageText)
-                                        .foregroundColor(themeColor.userProfileEditText)
+                                        .font(appearance.fonts.messageListMessageText)
+                                        .foregroundColor(appearance.colorPalette.userProfileEditText)
                                     Spacer()
                                     
                                 }
                                 HStack{
                                     Text(message.attachments.first?.address ?? "")
-                                        .font(themeFonts.messageListReplyToolbarDescription)
-                                        .foregroundColor(themeColor.messageListTextViewPlaceholder)
+                                        .font(appearance.fonts.messageListReplyToolbarDescription)
+                                        .foregroundColor(appearance.colorPalette.messageListTextViewPlaceholder)
                                     Spacer()
                                 }
                                 dateAndStatusView(onImage: false)
@@ -506,10 +503,10 @@ struct ISMMessageInfoSubView: View {
                             }//:VStack
                             .frame(width: 250)
                             .padding(5)
-                            .background(isReceived ? themeColor.messageListReceivedMessageBackgroundColor : themeColor.messageListSendMessageBackgroundColor)
-                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: self.themeBubbleType, direction: isReceived ? .left : .right))
+                            .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                             .overlay(
-                                themeBubbleType == .BubbleWithOutTail ?
+                                appearance.messageBubbleType == .BubbleWithOutTail ?
                                     AnyView(
                                         UnevenRoundedRectangle(
                                             topLeadingRadius: 8,
@@ -518,7 +515,7 @@ struct ISMMessageInfoSubView: View {
                                             topTrailingRadius: 8,
                                             style: .circular
                                         )
-                                        .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
+                                        .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                     ) : AnyView(EmptyView())
                             )
                         }//:ZStack
@@ -546,10 +543,10 @@ struct ISMMessageInfoSubView: View {
                                     .padding(.bottom,(message.reactions.count > 0) ? 2 : 0)
                             }//:VStack
                             .padding(8)
-                            .background(isReceived ? themeColor.messageListReceivedMessageBackgroundColor : themeColor.messageListSendMessageBackgroundColor)
-                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: self.themeBubbleType, direction: isReceived ? .left : .right))
+                            .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                             .overlay(
-                                themeBubbleType == .BubbleWithOutTail ?
+                                appearance.messageBubbleType == .BubbleWithOutTail ?
                                     AnyView(
                                         UnevenRoundedRectangle(
                                             topLeadingRadius: 8,
@@ -558,7 +555,7 @@ struct ISMMessageInfoSubView: View {
                                             topTrailingRadius: 8,
                                             style: .circular
                                         )
-                                        .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
+                                        .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                     ) : AnyView(EmptyView())
                             )
                         }//:ZStack
@@ -583,10 +580,10 @@ struct ISMMessageInfoSubView: View {
                             }
                             .padding(8)
                             .frame(width: 216, height: 59, alignment: .center)
-                            .background(isReceived ? themeColor.messageListReceivedMessageBackgroundColor : themeColor.messageListSendMessageBackgroundColor)
-                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: self.themeBubbleType, direction: isReceived ? .left : .right))
+                            .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                             .overlay(
-                                themeBubbleType == .BubbleWithOutTail ?
+                                appearance.messageBubbleType == .BubbleWithOutTail ?
                                     AnyView(
                                         UnevenRoundedRectangle(
                                             topLeadingRadius: 8,
@@ -595,7 +592,7 @@ struct ISMMessageInfoSubView: View {
                                             topTrailingRadius: 8,
                                             style: .circular
                                         )
-                                        .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
+                                        .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                     ) : AnyView(EmptyView())
                             )
                         }//:ZStack
@@ -620,10 +617,10 @@ struct ISMMessageInfoSubView: View {
                             }
                             .padding(8)
                             .frame(width: 216, height: 59, alignment: .center)
-                            .background(isReceived ? themeColor.messageListReceivedMessageBackgroundColor : themeColor.messageListSendMessageBackgroundColor)
-                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: self.themeBubbleType, direction: isReceived ? .left : .right))
+                            .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                             .overlay(
-                                themeBubbleType == .BubbleWithOutTail ?
+                                appearance.messageBubbleType == .BubbleWithOutTail ?
                                     AnyView(
                                         UnevenRoundedRectangle(
                                             topLeadingRadius: 8,
@@ -632,7 +629,7 @@ struct ISMMessageInfoSubView: View {
                                             topTrailingRadius: 8,
                                             style: .circular
                                         )
-                                        .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
+                                        .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                     ) : AnyView(EmptyView())
                             )
                         }//:ZStack
@@ -650,8 +647,8 @@ struct ISMMessageInfoSubView: View {
                             inGroupUserName()
                         }
                         
-                        NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
-                        {
+//                        NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
+//                        {
                             VStack(alignment: .trailing,spacing: 5){
                                 if message.messageType == 1{
                                     forwardedView()
@@ -677,8 +674,8 @@ struct ISMMessageInfoSubView: View {
                                 }
                                 if let caption = message.metaData?.captionMessage, !caption.isEmpty{
                                     Text(caption)
-                                        .font(themeFonts.messageListMessageText)
-                                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                                        .font(appearance.fonts.messageListMessageText)
+                                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                     
                                     dateAndStatusView(onImage: false)
                                         .padding(.bottom,5)
@@ -688,10 +685,10 @@ struct ISMMessageInfoSubView: View {
                             }//:ZStack
                             .padding(5)
                             .padding(.vertical,5)
-                            .background(isReceived ? themeColor.messageListReceivedMessageBackgroundColor : themeColor.messageListSendMessageBackgroundColor)
-                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: self.themeBubbleType, direction: isReceived ? .left : .right))
+                            .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                             .overlay(
-                                themeBubbleType == .BubbleWithOutTail ?
+                                appearance.messageBubbleType == .BubbleWithOutTail ?
                                     AnyView(
                                         UnevenRoundedRectangle(
                                             topLeadingRadius: 8,
@@ -700,10 +697,10 @@ struct ISMMessageInfoSubView: View {
                                             topTrailingRadius: 8,
                                             style: .circular
                                         )
-                                        .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
+                                        .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                     ) : AnyView(EmptyView())
                             )
-                        }
+//                        }
                     }.padding(.vertical,2)
                 }
             case .sticker:
@@ -728,10 +725,10 @@ struct ISMMessageInfoSubView: View {
                                     .padding(.trailing,5)
                             }.padding(.leading,5)
                                 .padding(.top,5)
-                                .background(isReceived ? themeColor.messageListReceivedMessageBackgroundColor : themeColor.messageListSendMessageBackgroundColor)
-                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: self.themeBubbleType, direction: isReceived ? .left : .right))
+                                .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                 .overlay(
-                                    themeBubbleType == .BubbleWithOutTail ?
+                                    appearance.messageBubbleType == .BubbleWithOutTail ?
                                         AnyView(
                                             UnevenRoundedRectangle(
                                                 topLeadingRadius: 8,
@@ -740,7 +737,7 @@ struct ISMMessageInfoSubView: View {
                                                 topTrailingRadius: 8,
                                                 style: .circular
                                             )
-                                            .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
+                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                         ) : AnyView(EmptyView())
                                 )
                             
@@ -769,10 +766,10 @@ struct ISMMessageInfoSubView: View {
 
                                 }//:ZStack
                                 .padding(5)
-                                .background(isReceived ? themeColor.messageListReceivedMessageBackgroundColor : themeColor.messageListSendMessageBackgroundColor)
-                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: self.themeBubbleType, direction: isReceived ? .left : .right))
+                                .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                 .overlay(
-                                    themeBubbleType == .BubbleWithOutTail ?
+                                    appearance.messageBubbleType == .BubbleWithOutTail ?
                                         AnyView(
                                             UnevenRoundedRectangle(
                                                 topLeadingRadius: 8,
@@ -781,7 +778,7 @@ struct ISMMessageInfoSubView: View {
                                                 topTrailingRadius: 8,
                                                 style: .circular
                                             )
-                                            .stroke(themeColor.messageListMessageBorderColor, lineWidth: 1)
+                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                         ) : AnyView(EmptyView())
                                 )
                             
@@ -814,7 +811,7 @@ struct ISMMessageInfoSubView: View {
             }
             ZStack(alignment: .bottomTrailing){
                 ZStack(alignment: .topTrailing){
-                    ISMChatImageCahcingManger.networkImage(url: message.metaData?.post?.postUrl ?? "",isprofileImage: false)
+                    ISMChatImageCahcingManger.viewImage(url: message.metaData?.post?.postUrl ?? "")
                         .scaledToFill()
                         .frame(width: 124, height: 249)
                         .cornerRadius(5)
@@ -827,7 +824,7 @@ struct ISMMessageInfoSubView: View {
                                 )
                         )
                     
-                    themeImages.postIcon
+                    appearance.images.postIcon
                         .scaledToFill()
                         .frame(width: 20, height: 20)
                 }
@@ -839,8 +836,8 @@ struct ISMMessageInfoSubView: View {
             }
             if let caption = message.metaData?.captionMessage, !caption.isEmpty{
                 Text(caption)
-                    .font(themeFonts.messageListMessageText)
-                    .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTextSend)
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                 
                 dateAndStatusView(onImage: false)
                     .padding(.bottom,5)
@@ -854,7 +851,7 @@ struct ISMMessageInfoSubView: View {
         HStack(alignment: .center,spacing: 3){
             Text(message.sentAt.datetotime())
                 .font(Font.regular(size: 12))
-                .foregroundColor(onImage ? Color.white : (isReceived ? themeColor.messageListMessageTimeReceived :  themeColor.messageListMessageTimeSend))
+                .foregroundColor(onImage ? Color.white : (isReceived ? appearance.colorPalette.messageListMessageTimeReceived :  appearance.colorPalette.messageListMessageTimeSend))
             if message.metaData?.isBroadCastMessage == true && fromBroadCastFlow != true && !isReceived && !message.deletedMessage{
                 Image("broadcastMessageIcon")
                     .resizable()
@@ -863,19 +860,19 @@ struct ISMMessageInfoSubView: View {
             if !isReceived && !message.deletedMessage{
                 switch self.messageDeliveredType{
                 case .BlueTick:
-                    themeImages.messageRead
+                    appearance.images.messageRead
                         .resizable()
                         .frame(width: 15, height: 9)
                 case .DoubleTick:
-                    themeImages.messageDelivered
+                    appearance.images.messageDelivered
                         .resizable()
                         .frame(width: 15, height: 9)
                 case .SingleTick:
-                    themeImages.messageSent
+                    appearance.images.messageSent
                         .resizable()
                         .frame(width: 11, height: 9)
                 case .Clock:
-                    themeImages.messagePending
+                    appearance.images.messagePending
                         .resizable()
                         .frame(width: 9, height: 9)
                 }
@@ -905,8 +902,8 @@ struct ISMMessageInfoSubView: View {
     
     func inGroupUserName() -> some View{
         Text(message.senderInfo?.userName ?? "")
-            .font(themeFonts.messageListgroupMemberUserName)
-            .foregroundColor(themeColor.messageListgroupMemberUserName)
+            .font(appearance.fonts.messageListgroupMemberUserName)
+            .foregroundColor(appearance.colorPalette.messageListgroupMemberUserName)
     }
     
     private func getExtensionFromURL(url: URL) -> String? {
@@ -981,62 +978,62 @@ struct ISMMessageInfoSubView: View {
     func repliedMessageView() -> some View{
         HStack{
             Rectangle()
-                .fill(themeColor.messageListReplyToolbarRectangle)
+                .fill(appearance.colorPalette.messageListReplyToolbarRectangle)
                 .frame(width: 4)
             VStack(alignment: .leading, spacing: 2){
                 let parentUserName = message.metaData?.replyMessage?.parentMessageUserName ?? "User"
                 let parentUserID = message.metaData?.replyMessage?.parentMessageUserId
                 let name = parentUserID == userData.userId ? ConstantStrings.you : parentUserName
                 Text(name)
-                    .foregroundColor(themeColor.messageListReplyToolbarHeader)
-                    .font(themeFonts.messageListReplyToolbarHeader)
+                    .foregroundColor(appearance.colorPalette.messageListReplyToolbarHeader)
+                    .font(appearance.fonts.messageListReplyToolbarHeader)
                 let msg = message.metaData?.replyMessage?.parentMessageBody ?? ""
                 if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Image.value{
                     Label {
                         Text(message.metaData?.replyMessage?.parentMessagecaptionMessage != nil ? (message.metaData?.replyMessage?.parentMessagecaptionMessage ?? "Photo") : "Photo")
-                            .foregroundColor(themeColor.messageListReplyToolbarDescription)
-                            .font(themeFonts.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
                             .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                     } icon: {
                         Image(systemName: "camera.fill")
                             .resizable()
                             .frame(width: 14,height: 12)
-                            .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                     }
                 }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Video.value{
                     Label {
                         Text(message.metaData?.replyMessage?.parentMessagecaptionMessage != nil ? (message.metaData?.replyMessage?.parentMessagecaptionMessage ?? "Video") : "Video")
-                            .foregroundColor(themeColor.messageListReplyToolbarDescription)
-                            .font(themeFonts.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
                             .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                     } icon: {
                         Image(systemName: "video.fill")
                             .resizable()
                             .frame(width: 14,height: 10)
-                            .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                     }
                 }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.File.value{
                     Label {
                         let str = URL(string: message.attachments.first?.mediaUrl ?? "")?.lastPathComponent.components(separatedBy: "_").last
                         Text(str ?? "Document")
-                            .foregroundColor(themeColor.messageListReplyToolbarDescription)
-                            .font(themeFonts.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
                             .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                     } icon: {
                         Image(systemName: "doc")
                             .resizable()
                             .frame(width: 12,height: 12)
-                            .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                     }
                 }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Location.value{
                     Label {
                         Text("Location")
-                            .foregroundColor(themeColor.messageListReplyToolbarDescription)
-                            .font(themeFonts.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
                             .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                     } icon: {
                         Image(systemName: "location.fill")
-                            .foregroundColor(themeColor.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                     }
                 }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Contact.value{
                     let data = msg.getContactJson()
@@ -1048,13 +1045,13 @@ struct ISMMessageInfoSubView: View {
                             .tint(Color.onboardingPlaceholder)
                         if data?.count == 1{
                             Text(name ?? "Contact")
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
-                                .font(themeFonts.messageListReplyToolbarDescription)
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                                .font(appearance.fonts.messageListReplyToolbarDescription)
                                 .fixedSize(horizontal: false, vertical: true)
                         }else{
                             Text("\(name ?? "") and \((data?.count ?? 1) - 1) other contact")
-                                .foregroundColor(themeColor.messageListReplyToolbarDescription)
-                                .font(themeFonts.messageListReplyToolbarDescription)
+                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                                .font(appearance.fonts.messageListReplyToolbarDescription)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .lineLimit(2)
                         }
@@ -1066,8 +1063,8 @@ struct ISMMessageInfoSubView: View {
                 }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.gif.value{
                     Label {
                         Text("GIF")
-                            .foregroundColor(themeColor.messageListReplyToolbarDescription)
-                            .font(themeFonts.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
                             .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                     } icon: {
                         Image("gif_logo")
@@ -1076,18 +1073,18 @@ struct ISMMessageInfoSubView: View {
                     }
                 }else{
                     Text(msg)
-                        .foregroundColor(themeColor.messageListReplyToolbarDescription)
-                        .font(themeFonts.messageListReplyToolbarDescription)
+                        .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                        .font(appearance.fonts.messageListReplyToolbarDescription)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
             .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 8))
             if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Image.value{
-                ISMChatImageCahcingManger.networkImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "",isprofileImage: false)
+                ISMChatImageCahcingManger.viewImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "")
                     .scaledToFill()
                     .frame(width: 45, height: 40)
             }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Video.value{
-                ISMChatImageCahcingManger.networkImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "",isprofileImage: false)
+                ISMChatImageCahcingManger.viewImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "")
                     .scaledToFill()
                     .frame(width: 45, height: 40)
             }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.File.value{
@@ -1116,8 +1113,8 @@ struct ISMMessageInfoSubView: View {
     
     func editedView() -> some View{
         Text("Edited")
-            .font(themeFonts.messageListMessageEdited)
-            .foregroundColor(themeColor.messageListMessageEdited)
+            .font(appearance.fonts.messageListMessageEdited)
+            .foregroundColor(appearance.colorPalette.messageListMessageEdited)
     }
     
     func getImageAsset() -> ImageAsset {
@@ -1128,18 +1125,18 @@ struct ISMMessageInfoSubView: View {
                 if let duration = message.callDurations.first(where: { $0.memberId == userData.userId }) {
                     let durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
                     if messageType == .AudioCall {
-                        imageAsset = ImageAsset(image: themeImages.audioOutgoing, title: "Voice Call", durationText: durationText)
+                        imageAsset = ImageAsset(image: appearance.images.audioOutgoing, title: "Voice Call", durationText: durationText)
                     } else {
-                        imageAsset = ImageAsset(image: themeImages.videoOutgoing, title: "Video Call", durationText: durationText)
+                        imageAsset = ImageAsset(image: appearance.images.videoOutgoing, title: "Video Call", durationText: durationText)
                     }
                 } else {
                     imageAsset = ImageAsset(image: Image(""), title: "", durationText: "")
                 }
             } else {
                 if messageType == .AudioCall {
-                    imageAsset = ImageAsset(image: themeImages.audioOutgoing, title: "Voice Call", durationText: "No answer")
+                    imageAsset = ImageAsset(image: appearance.images.audioOutgoing, title: "Voice Call", durationText: "No answer")
                 } else {
-                    imageAsset = ImageAsset(image: themeImages.videoOutgoing, title: "Video Call", durationText: "No answer")
+                    imageAsset = ImageAsset(image: appearance.images.videoOutgoing, title: "Video Call", durationText: "No answer")
                 }
             }
         } else {
@@ -1147,22 +1144,22 @@ struct ISMMessageInfoSubView: View {
                 if let duration = message.callDurations.first(where: { $0.memberId == userData.userId }) {
                     let durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
                     if messageType == .AudioCall {
-                        imageAsset = ImageAsset(image: themeImages.audioIncoming, title: "Voice Call", durationText: durationText)
+                        imageAsset = ImageAsset(image: appearance.images.audioIncoming, title: "Voice Call", durationText: durationText)
                     } else {
-                        imageAsset = ImageAsset(image: themeImages.videoIncoming, title: "Video Call", durationText: durationText)
+                        imageAsset = ImageAsset(image: appearance.images.videoIncoming, title: "Video Call", durationText: durationText)
                     }
                 } else {
                     if messageType == .AudioCall {
-                        imageAsset = ImageAsset(image: themeImages.audioMissedCall, title: "Missed voice call", durationText: "Tap to call back")
+                        imageAsset = ImageAsset(image: appearance.images.audioMissedCall, title: "Missed voice call", durationText: "Tap to call back")
                     } else {
-                        imageAsset = ImageAsset(image: themeImages.videoMissedCall, title: "Missed video call", durationText: "Tap to call back")
+                        imageAsset = ImageAsset(image: appearance.images.videoMissedCall, title: "Missed video call", durationText: "Tap to call back")
                     }
                 }
             } else {
                 if messageType == .AudioCall {
-                    imageAsset = ImageAsset(image: themeImages.audioMissedCall, title: "Missed voice call", durationText: "Tap to call back")
+                    imageAsset = ImageAsset(image: appearance.images.audioMissedCall, title: "Missed voice call", durationText: "Tap to call back")
                 } else {
-                    imageAsset = ImageAsset(image: themeImages.videoMissedCall, title: "Missed video call", durationText: "Tap to call back")
+                    imageAsset = ImageAsset(image: appearance.images.videoMissedCall, title: "Missed video call", durationText: "Tap to call back")
                 }
             }
         }
@@ -1179,16 +1176,16 @@ struct ISMMessageInfoSubView: View {
                 .frame(width: 38, height: 38, alignment: .center)
             VStack(alignment: .leading, spacing: 5) {
                 Text(imageAsset.title)
-                    .font(themeFonts.messageListcallingHeader)
-                    .foregroundColor(themeColor.messageListcallingHeader)
+                    .font(appearance.fonts.messageListcallingHeader)
+                    .foregroundColor(appearance.colorPalette.messageListcallingHeader)
                 HStack {
                     Text(imageAsset.durationText)
-                        .font(themeFonts.messageListcallingTime)
-                        .foregroundColor(themeColor.messageListcallingTime)
+                        .font(appearance.fonts.messageListcallingTime)
+                        .foregroundColor(appearance.colorPalette.messageListcallingTime)
                     Spacer()
                     Text(message.sentAt.datetotime())
-                        .font(themeFonts.messageListMessageTime)
-                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived : themeColor.messageListMessageTimeSend)
+                        .font(appearance.fonts.messageListMessageTime)
+                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived : appearance.colorPalette.messageListMessageTimeSend)
                 }
             }
         }

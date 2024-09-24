@@ -106,20 +106,23 @@ extension ISMMessageView{
     }
     
     //MARK: - CHECK AUDIO PERMISSION
-    func checkAudioPermission(){
-        switch AVAudioSession.sharedInstance().recordPermission {
-        case AVAudioSession.RecordPermission.granted:
+    func checkAudioPermission() {
+        // Use AVAudioApplication.shared() for checking permission
+        switch AVAudioApplication.shared.recordPermission {
+        case .granted:
             stateViewModel.audioPermissionCheck = true
-        case AVAudioSession.RecordPermission.denied:
+        case .denied:
             stateViewModel.audioPermissionCheck = false
-        case AVAudioSession.RecordPermission.undetermined:
-            AVAudioSession.sharedInstance().requestRecordPermission({ (granted) in
-                if granted {
-                    stateViewModel.audioPermissionCheck = true
-                } else {
-                    stateViewModel.audioPermissionCheck = false
+        case .undetermined:
+            AVAudioApplication.requestRecordPermission { granted in
+                DispatchQueue.main.async {
+                    if granted {
+                        stateViewModel.audioPermissionCheck = true
+                    } else {
+                        stateViewModel.audioPermissionCheck = false
+                    }
                 }
-            })
+            }
         default:
             break
         }
@@ -297,9 +300,9 @@ extension ISMMessageView{
         if let selectedReaction = selectedReaction{
             chatViewModel.sendReaction(conversationId: self.conversationID ?? "", messageId: self.sentRecationToMessageId, emojiReaction: selectedReaction) { _ in
                 //add my reactions here, and for other added in mqtt event
-                realmManager.addReactionToMessage(conversationId: self.conversationID ?? "", messageId:  self.sentRecationToMessageId, reaction: selectedReaction, userId: userData.userId ?? "")
+                realmManager.addReactionToMessage(conversationId: self.conversationID ?? "", messageId:  self.sentRecationToMessageId, reaction: selectedReaction, userId: userData.userId)
                 self.selectedReaction = nil
-                realmManager.addLastMessageOnAddAndRemoveReaction(conversationId: self.conversationID ?? "", action: ISMChatActionType.reactionAdd.value, emoji: selectedReaction, userId: userData.userId ?? "")
+                realmManager.addLastMessageOnAddAndRemoveReaction(conversationId: self.conversationID ?? "", action: ISMChatActionType.reactionAdd.value, emoji: selectedReaction, userId: userData.userId)
                 
             }
         }
@@ -514,8 +517,8 @@ extension ISMMessageView{
             var imageUrl : URL? = nil
             var customType : ISMChatMediaType = .File
             var mediaName : String = ""
-            var attachment : ISMChatAttachmentType = .Document
-            var extensionType : ISMChatExtensionType = .Document
+//            var attachment : ISMChatAttachmentType = .Document
+//            var extensionType : ISMChatExtensionType = .Document
             let mediaId = "\(UUID())"
             
             if let urlextension = ISMChatHelper.getExtensionFromURL(url: documentSelected){
@@ -523,19 +526,19 @@ extension ISMMessageView{
                     messageKind = .photo
                     customType = .Image
                     mediaName = "\(UUID()).jpg"
-                    attachment = .Image
-                    extensionType = .Image
+//                    attachment = .Image
+//                    extensionType = .Image
                 }else if urlextension.contains("mp4"){
                     messageKind = .video
                     customType = .Video
                     mediaName = "\(UUID()).mp4"
-                    attachment = .Video
-                    extensionType = .Video
+//                    attachment = .Video
+//                    extensionType = .Video
                 }
                 else{
                     mediaName = documentSelected.lastPathComponent
-                    attachment = .Document
-                    extensionType = .Document
+//                    attachment = .Document
+//                    extensionType = .Document
                 }
                 imageUrl = documentSelected
             }
@@ -560,20 +563,6 @@ extension ISMMessageView{
                     if let data = data {
                         
                         sendMediaMessage(messageKind: messageKind, customType: customType.value, mediaId: data.mediaId ?? "", mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
-//                        viewModel.sendMessage(messageKind: messageKind, customType: customType.value, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId) {messageId,_  in
-//                            
-//                            //4. update messageId locally
-//                            realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",mediaSize: size,mediaId: data.mediaId)
-//                            localIds.removeFirst()
-//                            
-//                            //5. we need to save media
-//                            let attachment = ISMChatAttachment(attachmentType: attachment.type, extensions: extensionType.type, mediaUrl: data.mediaUrl ?? "", mimeType: extensionType.type, name: filename, thumbnailUrl: "")
-//                            realmManager.saveMedia(arr: [attachment], conId: self.conversationID ?? "", customType:  customType.value, sentAt: sentAt, messageId: messageId, userName: userSession.getUserName() ?? "", fromView: true)
-//                            
-//                            //6. if we add image or video, we need to save it to show in media
-//                            realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
-//                            realmManager.fetchFiles(conId: self.conversationID ?? "")
-//                        }
                     }
                 }
             }
@@ -608,9 +597,9 @@ extension ISMMessageView{
                     }
                 }
             }
-        } else if !videoSelectedFromPicker.isEmpty {
+        } else if !mediaSelectedFromPicker.isEmpty {
             // Messages as media
-            for media in videoSelectedFromPicker {
+            for media in mediaSelectedFromPicker {
                 if ISMChatHelper.checkMediaType(media: media.url) == .video{
                     
                     let mediaName = "\(UUID()).mp4"
@@ -671,8 +660,8 @@ extension ISMMessageView{
                             if let data = data {
                                 sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.thumbnailUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
                                 localIds.removeFirst()
-                                if media == self.videoSelectedFromPicker.last {
-                                    self.videoSelectedFromPicker.removeAll()
+                                if media == self.mediaSelectedFromPicker.last {
+                                    self.mediaSelectedFromPicker.removeAll()
                                 }
                             }
                         }
@@ -744,6 +733,8 @@ extension ISMMessageView{
             //4. update messageId locally
             realmManager.updateMsgId(objectId: objectId, msgId: messageId, conversationId: self.conversationID ?? "",mediaUrl: mediaUrl,thumbnailUrl: thubnailUrl,mediaSize: mediaData,mediaId: mediaId)
             
+            realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+            
             //5. we need to save media
             if messageKind != .audio{
                 let attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Video.type, extensions: ISMChatExtensionType.Video.type, mediaUrl: mediaUrl, mimeType: ISMChatExtensionType.Video.type, name: mediaName, thumbnailUrl: thubnailUrl)
@@ -789,7 +780,7 @@ extension ISMMessageView{
             }
             
             let mediaName = messageKind == .photo ? "\(UUID()).jpg" : "\(UUID()).mp4"
-            let msg = messageKind == .photo ? "Image" : "Video"
+//            let msg = messageKind == .photo ? "Image" : "Video"
             
            
             nilData()
@@ -826,27 +817,27 @@ extension ISMMessageView{
             var imageUrl : URL? = nil
             var customType : ISMChatMediaType = .File
             var mediaName : String = ""
-            var attachment : ISMChatAttachmentType = .Document
-            var extensionType : ISMChatExtensionType = .Document
+//            var attachment : ISMChatAttachmentType = .Document
+//            var extensionType : ISMChatExtensionType = .Document
             
             if let urlextension = ISMChatHelper.getExtensionFromURL(url: documentSelected){
                 if urlextension.contains("png") || urlextension.contains("jpg") || urlextension.contains("jpeg")  || urlextension.contains("heic"){
                     messageKind = .photo
                     customType = .Image
                     mediaName = "\(UUID()).jpg"
-                    attachment = .Image
-                    extensionType = .Image
+//                    attachment = .Image
+//                    extensionType = .Image
                 }else if urlextension.contains("mp4"){
                     messageKind = .video
                     customType = .Video
                     mediaName = "\(UUID()).mp4"
-                    attachment = .Video
-                    extensionType = .Video
+//                    attachment = .Video
+//                    extensionType = .Video
                 }
                 else{
                     mediaName = documentSelected.lastPathComponent
-                    attachment = .Document
-                    extensionType = .Document
+//                    attachment = .Document
+//                    extensionType = .Document
                 }
                 imageUrl = documentSelected
             }
@@ -885,9 +876,9 @@ extension ISMMessageView{
                     }
                 }
             }
-        } else if !videoSelectedFromPicker.isEmpty {
+        } else if !mediaSelectedFromPicker.isEmpty {
             // Messages as media
-            for media in videoSelectedFromPicker {
+            for media in mediaSelectedFromPicker {
                 if ISMChatHelper.checkMediaType(media: media.url) == .video{
                     
                     let mediaName = "\(UUID()).mp4"
@@ -904,8 +895,8 @@ extension ISMMessageView{
                             chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: nil, video: media.url, audio: nil, mediaName:  mediaName) {  data, filename, size in
                                 if let data = data {
                                     chatViewModel.sendMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,thumbnailUrl: thumbnailmedia?.mediaUrl,caption: media.caption,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_ in
-                                        if media == self.videoSelectedFromPicker.last {
-                                            self.videoSelectedFromPicker.removeAll()
+                                        if media == self.mediaSelectedFromPicker.last {
+                                            self.mediaSelectedFromPicker.removeAll()
                                         }
                                         reloadBroadCastMessages()
                                         //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
@@ -925,8 +916,8 @@ extension ISMMessageView{
                     chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", conversationType: (fromBroadCastFlow == true ? 2 : 0), image: nil, document: nil, video: media.url, audio: nil, mediaName: mediaName) {  data, filename, size in
                         if let data = data {
                             chatViewModel.sendMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,caption: media.caption,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_ in
-                                if media == self.videoSelectedFromPicker.last {
-                                    self.videoSelectedFromPicker.removeAll()
+                                if media == self.mediaSelectedFromPicker.last {
+                                    self.mediaSelectedFromPicker.removeAll()
                                 }
                                 reloadBroadCastMessages()
                                 //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list

@@ -20,8 +20,7 @@ struct ISMMediaPickerView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.presentationMode) var presentationMode
     var isProfile : Bool = false
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     //MARK:  - LIFECYCLE
     var body: some View {
         ZStack{
@@ -36,8 +35,8 @@ struct ISMMediaPickerView: View {
                 ToolbarItem(placement: .principal) {
                     VStack {
                         Text("")
-                            .font(themeFonts.navigationBarTitle)
-                            .foregroundColor(themeColor.navigationBarTitle)
+                            .font(appearance.fonts.navigationBarTitle)
+                            .foregroundColor(appearance.colorPalette.navigationBarTitle)
                     }
                 }
             }

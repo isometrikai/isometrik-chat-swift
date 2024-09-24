@@ -29,7 +29,7 @@ public class RealmManager: ObservableObject {
     public static let shared = RealmManager()
     
     public init() {
-        if let localRealm = localRealm {
+        if localRealm != nil {
             getAllConversations()
         }else{
             openRealm(for: userData.userId)

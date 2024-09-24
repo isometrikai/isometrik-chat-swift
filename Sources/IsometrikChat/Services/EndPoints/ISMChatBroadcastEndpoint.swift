@@ -105,7 +105,7 @@ enum ISMChatBroadCastEndpoint : ISMChatURLConvertible {
         case .updateBroadCast:
             return [:]
         case .getBroadCastMembers(let groupcastId):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "groupcastId" : "\(groupcastId)"
             ]
             return params
@@ -120,7 +120,7 @@ enum ISMChatBroadCastEndpoint : ISMChatURLConvertible {
             }
             return params
         case .deleteBroadCastMessageForMe(let groupcastId,let messageId,let notifyOnCompletion, let deleteForAll, let sendPushForMessageDeleted):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "groupcastId" : "\(groupcastId)",
                 "messageId" : "\(messageId)",
                 "notifyOnCompletion" : "\(notifyOnCompletion)",
@@ -129,7 +129,7 @@ enum ISMChatBroadCastEndpoint : ISMChatURLConvertible {
             ]
             return params
         case .deleteBroadCastMessageForEveryone(let groupcastId,let messageId,let notifyOnCompletion, let deleteForAll, let sendPushForMessageDeleted):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "groupcastId" : "\(groupcastId)",
                 "messageId" : "\(messageId)",
                 "notifyOnCompletion" : "\(notifyOnCompletion)",
@@ -140,7 +140,7 @@ enum ISMChatBroadCastEndpoint : ISMChatURLConvertible {
         case .addMembersToBroadCast:
             return [:]
         case .removeMembersInBroadcast(let groupcastId, let membersId):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "groupcastId" : "\(groupcastId)",
                 "members" : "\(membersId)"
             ]
@@ -157,13 +157,13 @@ enum ISMChatBroadCastEndpoint : ISMChatURLConvertible {
             }
             return params
         case .getBroadcastMessageDeliveredInfo(let groupcastId ,let groupcastMessageId):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "groupcastId" : "\(groupcastId)",
                 "groupcastMessageId" : "\(groupcastMessageId)"
             ]
             return params
         case .getBroadcastMessageReadInfo(let groupcastId ,let groupcastMessageId):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "groupcastId" : "\(groupcastId)",
                 "groupcastMessageId" : "\(groupcastMessageId)"
             ]

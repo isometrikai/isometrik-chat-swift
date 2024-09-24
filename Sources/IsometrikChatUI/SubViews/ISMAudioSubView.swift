@@ -25,8 +25,7 @@ struct ISMAudioSubView: View {
     private var message : MessagesDB
     private var isReceived : Bool
     private var messageDeliveredType : ISMChatMessageStatus = .Clock
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     init(audio: String,
          message : MessagesDB,
@@ -101,7 +100,7 @@ struct ISMAudioSubView: View {
                 Spacer().frame(width: 45)
                 Text(formatTime(audioVM.isPlaying ? audioVM.currentTime : audioVM.totalDuration))
                     .font(Font.regular(size: 12))
-                    .foregroundColor(isReceived ? themeColor.messageListMessageTimeReceived :  themeColor.messageListMessageTimeSend)
+                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTimeReceived :  appearance.colorPalette.messageListMessageTimeSend)
                     .onAppear(perform: {
                         audioVM.count_duration { _ in
                             // Start playing audio here if needed
@@ -129,23 +128,23 @@ struct ISMAudioSubView: View {
         HStack(alignment: .center,spacing: 3){
             Text(message.sentAt.datetotime())
                 .font(Font.regular(size: 12))
-                .foregroundColor(onImage ? Color.white : (isReceived ? themeColor.messageListMessageTimeReceived :  themeColor.messageListMessageTimeSend))
+                .foregroundColor(onImage ? Color.white : (isReceived ? appearance.colorPalette.messageListMessageTimeReceived :  appearance.colorPalette.messageListMessageTimeSend))
             if !isReceived && !message.deletedMessage{
                 switch self.messageDeliveredType{
                 case .BlueTick:
-                    themeImage.messageRead
+                    appearance.images.messageRead
                         .resizable()
                         .frame(width: 15, height: 9)
                 case .DoubleTick:
-                    themeImage.messageDelivered
+                    appearance.images.messageDelivered
                         .resizable()
                         .frame(width: 15, height: 9)
                 case .SingleTick:
-                    themeImage.messageSent
+                    appearance.images.messageSent
                         .resizable()
                         .frame(width: 11, height: 9)
                 case .Clock:
-                    themeImage.messagePending
+                    appearance.images.messagePending
                         .resizable()
                         .frame(width: 9, height: 9)
                 }

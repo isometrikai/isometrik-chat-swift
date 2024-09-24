@@ -11,7 +11,7 @@ import IsometrikChat
 public struct ISMMessageInfoView: View {
     
     //MARK:  - PROPERTIES
-    @Environment(\.dismiss) var dismiss
+//    @Environment(\.dismiss) var dismiss
     
     @State var previousAudioRef: AudioPlayViewModel?
     
@@ -28,18 +28,17 @@ public struct ISMMessageInfoView: View {
     @EnvironmentObject var realmManager : RealmManager
     @State var deliveredUsers : [ISMChatUser]?
     @State var readUsers : [ISMChatUser]?
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    var onClose: () -> Void
     
     //MARK:  - LIFECYCLE
     public var body: some View {
         ZStack{
-            themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
+            appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
             VStack{
                 VStack(alignment  :.trailing,spacing: 0){
                     //Header
-                    ISMChatHelper.sectionHeader(firstMessage: message, color: themeColor.messageListSectionHeaderText, font: themeFonts.messageListSectionHeaderText)
+                    ISMChatHelper.sectionHeader(firstMessage: message, color: appearance.colorPalette.messageListSectionHeaderText, font: appearance.fonts.messageListSectionHeaderText)
                     
                     ISMMessageInfoSubView(previousAudioRef: $previousAudioRef, messageType: ISMChatHelper.getMessageType(message: message), message: message, viewWidth: viewWidth, isReceived: false, messageDeliveredType: ISMChatHelper.checkMessageDeliveryType(message: message, isGroup: self.isGroup ,memberCount: realmManager.getMemberCount(convId: self.conversationId)), conversationId: conversationId,isGroup: self.isGroup, groupconversationMember: groupMember, fromBroadCastFlow: self.fromBroadCastFlow)
                         .padding(.trailing,15)
@@ -58,8 +57,8 @@ public struct ISMMessageInfoView: View {
                                     HStack{
                                         Spacer()
                                         Text("---")
-                                            .foregroundColor(themeColor.chatListUserMessage)
-                                            .font(themeFonts.chatListUserMessage)
+                                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                            .font(appearance.fonts.chatListUserMessage)
                                             .padding(.horizontal,10)
                                         Spacer()
                                     }
@@ -68,20 +67,20 @@ public struct ISMMessageInfoView: View {
                                 HStack{
                                     Spacer()
                                     Text("---")
-                                        .foregroundColor(themeColor.chatListUserMessage)
-                                        .font(themeFonts.chatListUserMessage)
+                                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                        .font(appearance.fonts.chatListUserMessage)
                                         .padding(.horizontal,10)
                                     Spacer()
                                 }
                             }
                         } header: {
                             HStack(spacing : 5){
-                                themeImage.messageRead
+                                appearance.images.messageRead
                                     .resizable().frame(width: 15, height: 9, alignment: .center)
                                 
                                 Text("READ BY")
-                                    .foregroundColor(themeColor.chatListUserMessage)
-                                    .font(themeFonts.chatListUserMessage)
+                                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                    .font(appearance.fonts.chatListUserMessage)
                                     .textCase(nil)
                                 
                             }.listRowInsets(EdgeInsets())
@@ -99,8 +98,8 @@ public struct ISMMessageInfoView: View {
                                     HStack{
                                         Spacer()
                                         Text("---")
-                                            .foregroundColor(themeColor.chatListUserMessage)
-                                            .font(themeFonts.chatListUserMessage)
+                                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                            .font(appearance.fonts.chatListUserMessage)
                                             .padding(.horizontal,10)
                                         Spacer()
                                     }
@@ -109,19 +108,19 @@ public struct ISMMessageInfoView: View {
                                 HStack{
                                     Spacer()
                                     Text("---")
-                                        .foregroundColor(themeColor.chatListUserMessage)
-                                        .font(themeFonts.chatListUserMessage)
+                                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                        .font(appearance.fonts.chatListUserMessage)
                                         .padding(.horizontal,10)
                                     Spacer()
                                 }
                             }
                         } header: {
                             HStack(spacing : 5){
-                                themeImage.messageDelivered
+                                appearance.images.messageDelivered
                                     .resizable().frame(width: 15, height: 9, alignment: .center)
                                 Text("DELIVERED TO")
-                                    .foregroundColor(themeColor.chatListUserMessage)
-                                    .font(themeFonts.chatListUserMessage)
+                                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                    .font(appearance.fonts.chatListUserMessage)
                                     .textCase(nil)
                                 
                             }.listRowInsets(EdgeInsets())
@@ -131,43 +130,43 @@ public struct ISMMessageInfoView: View {
                     }else{
                         Section {
                             HStack{
-                                themeImage.messageRead
+                                appearance.images.messageRead
                                     .resizable().frame(width: 15, height: 9, alignment: .center).padding(.horizontal,10)
                                 Text("Read")
-                                    .foregroundColor(themeColor.messageListHeaderTitle)
-                                    .font(themeFonts.messageListMessageText)
+                                    .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+                                    .font(appearance.fonts.messageListMessageText)
                                 Spacer()
                                 if let readAtTime = self.readAt{
                                     let text = NSDate().descriptiveStringLastSeen(time: readAtTime)
                                     Text(text)
-                                        .foregroundColor(themeColor.chatListUserMessage)
-                                        .font(themeFonts.chatListUserMessage)
+                                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                        .font(appearance.fonts.chatListUserMessage)
                                         .padding(.horizontal,10)
                                 }else{
                                     Text("---")
-                                        .foregroundColor(themeColor.chatListUserMessage)
-                                        .font(themeFonts.chatListUserMessage)
+                                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                        .font(appearance.fonts.chatListUserMessage)
                                         .padding(.horizontal,10)
                                 }
                             }//:HSTACK
                             
                             HStack{
-                                themeImage.messageDelivered
+                                appearance.images.messageDelivered
                                     .resizable().frame(width: 15, height: 9, alignment: .center).padding(.horizontal,10)
                                 Text("Delivered")
-                                    .foregroundColor(themeColor.messageListHeaderTitle)
-                                    .font(themeFonts.messageListMessageText)
+                                    .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+                                    .font(appearance.fonts.messageListMessageText)
                                 Spacer()
                                 if let deliveredAtTime = self.deliveredAt{
                                     let text = NSDate().descriptiveStringLastSeen(time: deliveredAtTime)
                                     Text(text)
-                                        .foregroundColor(themeColor.chatListUserMessage)
-                                        .font(themeFonts.chatListUserMessage)
+                                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                        .font(appearance.fonts.chatListUserMessage)
                                         .padding(.horizontal,10)
                                 }else{
                                     Text("---")
-                                        .foregroundColor(themeColor.chatListUserMessage)
-                                        .font(themeFonts.chatListUserMessage)
+                                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                        .font(appearance.fonts.chatListUserMessage)
                                         .padding(.horizontal,10)
                                 }
                                 
@@ -180,7 +179,7 @@ public struct ISMMessageInfoView: View {
                         }.listRowBackground(Color.white) 
                     }
                 }.listRowSeparatorTint(Color.border)
-                    .background(themeColor.chatListBackground)
+                    .background(appearance.colorPalette.chatListBackground)
                         .scrollContentBackground(.hidden)
                 
             }//:VSTACK
@@ -189,8 +188,8 @@ public struct ISMMessageInfoView: View {
                 ToolbarItem(placement: .principal) {
                     VStack {
                         Text("Message Info")
-                            .font(themeFonts.navigationBarTitle)
-                            .foregroundColor(themeColor.navigationBarTitle)
+                            .font(appearance.fonts.navigationBarTitle)
+                            .foregroundColor(appearance.colorPalette.navigationBarTitle)
                     }
                 }
             }
@@ -246,18 +245,12 @@ public struct ISMMessageInfoView: View {
     }
     
     func navigationBarLeadingButtons()  -> some View {
-        Button(action : {}) {
-            HStack{
-                Button(action: {
-                    dismiss()
-                }) {
-                    themeImage.CloseSheet
-                        .resizable()
-                        .tint(.black)
-                        .foregroundColor(.black)
-                        .frame(width: 17,height: 17)
-                }
-            }
+        Button(action: {onClose()}) {
+            appearance.images.CloseSheet
+                .resizable()
+                .tint(.black)
+                .foregroundColor(.black)
+                .frame(width: 17,height: 17)
         }
     }
 }
@@ -266,8 +259,7 @@ public struct ISMMessageInfoView: View {
 struct ISMMessageInfoDetailUserSubView : View {
     
     let user : ISMChatUser
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     var body: some View {
         HStack(spacing: 10){
@@ -277,15 +269,15 @@ struct ISMMessageInfoDetailUserSubView : View {
                 size: CGSize(width: 24, height: 24), userName: user.userName ?? "",font: .regular(size: 12))
             
             Text(user.userName ?? "")
-                .foregroundColor(themeColor.messageListHeaderTitle)
-                .font(themeFonts.messageListMessageText)
+                .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+                .font(appearance.fonts.messageListMessageText)
             
             Spacer()
             
             let text = NSDate().descriptiveStringLastSeen(time: user.timestamp ?? 0)
             Text(text)
-                .foregroundColor(themeColor.chatListUserMessage)
-                .font(themeFonts.chatListUserMessage)
+                .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                .font(appearance.fonts.chatListUserMessage)
         }
     }
 }

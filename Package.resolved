@@ -181,6 +181,15 @@
       }
     },
     {
+      "identity" : "mediapicker",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/exyte/MediaPicker",
+      "state" : {
+        "branch" : "2.2.3",
+        "revision" : "88769b1b69c2b5e5fa5b65522c08bc7b667a6cb8"
+      }
+    },
+    {
       "identity" : "mqttcocoaasyncsocket",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/leeway1208/MqttCocoaAsyncSocket",

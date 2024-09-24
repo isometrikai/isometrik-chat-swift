@@ -77,12 +77,12 @@ extension ISMMessageView{
                     }
                 }
             })
-            .onChange(of: realmManager.parentMessageIdToScroll) { _ in
+            .onChange(of: realmManager.parentMessageIdToScroll, { _, _ in
                 if realmManager.parentMessageIdToScroll != ""{
                     scrollTo(messageId: realmManager.parentMessageIdToScroll,  anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader)
                 }
-            }
-            .onChange(of: parentMsgToScroll){
+            })
+            .onChange(of: parentMsgToScroll, { _, _ in
                 //scroll to parent msg, if tap on reply message view
                 if parentMsgToScroll != nil{
                     if let msg = parentMsgToScroll{
@@ -90,7 +90,7 @@ extension ISMMessageView{
                         parentMsgToScroll = nil
                     }
                 }
-            }
+            })
             .onDisappear {
                 if let previousAudioRef {
                     previousAudioRef.pauseAudio()
@@ -129,8 +129,11 @@ extension ISMMessageView{
                               audioCallToUser: $stateViewModel.audioCallToUser,
                               videoCallToUser: $stateViewModel.videoCallToUser,
                               parentMsgToScroll: $parentMsgToScroll,
-                              message: message, postIdToNavigate: $postIdToNavigate,navigateToSocialProfileId: $navigateToSocialProfileId) .environmentObject(self.realmManager)
-               
+                              navigateToMediaSliderId: $navigateToMediaSliderId,
+                              message: message, 
+                              postIdToNavigate: $postIdToNavigate,
+                              navigateToSocialProfileId: $navigateToSocialProfileId)
+            .environmentObject(self.realmManager)
         }
     }
     func getIsReceived(message : MessagesDB) -> Bool{

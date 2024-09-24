@@ -25,7 +25,9 @@ extension ISMMessageView{
                     if ISMChatSdk.getInstance().getFramework() == .UIKit{
                         self.delegate?.navigateToUserListToForward(messages: forwardMessageSelected)
                     }else{
-                        stateViewModel.movetoForwardList = true
+                        DispatchQueue.main.async {
+                            stateViewModel.movetoForwardList = true
+                        }
                     }
                 } label: {
                     Text("Forward")
@@ -237,20 +239,20 @@ extension ISMMessageView{
                 }
                 Spacer()
                 if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .photo{
-                    ISMChatImageCahcingManger.networkImage(url: selectedMsgToReply.attachments.first?.mediaUrl ?? "",isprofileImage: false)
+                    ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply.attachments.first?.mediaUrl ?? "")
                         .frame(width: 40, height: 40, alignment: .center)
                         .cornerRadius(5)
                 }else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .video{
-                    ISMChatImageCahcingManger.networkImage(url: selectedMsgToReply.attachments.first?.thumbnailUrl ?? "",isprofileImage: false)
+                    ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply.attachments.first?.thumbnailUrl ?? "")
                         .frame(width: 40, height: 40, alignment: .center)
                         .cornerRadius(5)
                 }else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .document{
-                    if let documentUrl = URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? ""){
+//                    if let documentUrl = URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? ""){
                         appearance.images.pdfLogo
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 40, height: 40, alignment: .center)
-                    }
+//                    }
                 }
                 else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .gif{
                     AnimatedImage(url: URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? ""),isAnimating: $stateViewModel.isAnimating)
@@ -301,11 +303,13 @@ extension ISMMessageView{
                 
                 // Main Toolbar Content
                 VStack {
-                    let height: CGFloat = 20
-                    
                     HStack {
                         if !chatViewModel.isRecording {
-                            Button(action: { stateViewModel.showActionSheet = true }) {
+                            Button(action: {
+                                DispatchQueue.main.async {
+                                    stateViewModel.showActionSheet = true
+                                }
+                            }) {
                                 appearance.images.addAttcahment
                                     .resizable()
                                     .frame(width: 20, height: 20)
@@ -317,7 +321,9 @@ extension ISMMessageView{
                                 
                                 if chatFeatures.contains(.gif), textFieldtxt.isEmpty {
                                     Button {
-                                        stateViewModel.showGifPicker = true
+                                        DispatchQueue.main.async {
+                                            stateViewModel.showGifPicker = true
+                                        }
                                     } label: {
                                         appearance.images.addSticker
                                             .resizable()
@@ -453,14 +459,14 @@ extension ISMMessageView{
     
     func textView() -> some View{
         TextField("", text: $textFieldtxt, axis: .vertical)
-            .onChange(of: textFieldtxt) { newValue in
+            .onChange(of: textFieldtxt, { _, newValue in
                 // Update showMentionList based on conditions
                 if newValue.last == "@" {
                     stateViewModel.showMentionList = true
                 } else if !newValue.contains("@") || newValue.isEmpty {
                     stateViewModel.showMentionList = false
                 }
-            }
+            })
             .placeholder(when: textFieldtxt.isEmpty) {
                 Text("Type a message")
                     .foregroundColor(appearance.colorPalette.messageListTextViewPlaceholder)
@@ -607,7 +613,7 @@ extension ISMMessageView{
             
             HStack(spacing: 14){
                 Button {
-                    dismiss()
+                    presentationMode.wrappedValue.dismiss()
 //                    self.messageVCDelegate?.navigateBack(isFromProfile: self.fromProfile ?? false, isfromBroadcast: self.fromBroadCastFlow ?? false)
                 } label: {
                     Text("Reject")

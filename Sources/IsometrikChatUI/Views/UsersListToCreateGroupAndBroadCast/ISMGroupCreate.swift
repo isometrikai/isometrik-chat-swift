@@ -24,9 +24,7 @@ public struct ISMGroupCreate: View {
     @State public var groupName = ""
     @State public var hasCreatedGroup = false
     public let profileImage = "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg"
-    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     
@@ -44,15 +42,15 @@ public struct ISMGroupCreate: View {
                                 VStack(spacing: 3){
                                     ZStack(alignment: .topTrailing) {
                                         UserAvatarView(avatar: user.userProfileImageUrl ?? "", showOnlineIndicator: false,size: CGSize(width: 48, height: 48), userName: user.userName ?? "",font: .regular(size: 16))
-                                        themeImage.removeUserFromSelectedFromList
+                                        appearance.images.removeUserFromSelectedFromList
                                             .resizable()
                                             .foregroundColor(.white)
                                             .frame(width: 20, height: 20)
                                     }
                                     
                                     Text(user.userName ?? "")
-                                        .font(themeFonts.chatListUserMessage)
-                                        .foregroundColor(themeColor.chatListUserMessage)
+                                        .font(appearance.fonts.chatListUserMessage)
+                                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
                                         .lineLimit(2)
                                 }.onTapGesture {
                                     if userSelected.contains(where: { user1 in
@@ -73,8 +71,8 @@ public struct ISMGroupCreate: View {
                 ToolbarItem(placement: .principal) {
                     VStack {
                         Text("New Group")
-                            .font(themeFonts.navigationBarTitle)
-                            .foregroundColor(themeColor.navigationBarTitle)
+                            .font(appearance.fonts.navigationBarTitle)
+                            .foregroundColor(appearance.colorPalette.navigationBarTitle)
                     }
                 }
             }
@@ -120,7 +118,7 @@ public struct ISMGroupCreate: View {
                     }
             }else{
                 HStack{
-                    themeImage.addMembers
+                    appearance.images.addMembers
                         .resizable()
                         .frame(width: 36, height: 36)
                         .onTapGesture {
@@ -131,8 +129,8 @@ public struct ISMGroupCreate: View {
             }
             
             TextField("Group Name*", text: $groupName)
-                .font(themeFonts.messageListMessageText)
-                .foregroundColor(themeColor.messageListHeaderTitle)
+                .font(appearance.fonts.messageListMessageText)
+                .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
             
             
             Spacer()
@@ -141,8 +139,8 @@ public struct ISMGroupCreate: View {
                 Button {
                     groupName = ""
                 } label: {
-                    themeImage.removeSearchText
-                        .tint(themeColor.messageListReplyToolbarRectangle)
+                    appearance.images.removeSearchText
+                        .tint(appearance.colorPalette.messageListReplyToolbarRectangle)
                 }.frame(width: 30)
             }
             
@@ -163,15 +161,15 @@ public struct ISMGroupCreate: View {
                 }
             }) {
                 Text("Create")
-                    .font(themeFonts.messageListMessageText)
-                    .foregroundColor(userSelected.count > 0 ? themeColor.userProfileEditText : .gray)
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(userSelected.count > 0 ? appearance.colorPalette.userProfileEditText : .gray)
             }
         }
     }
     
     var navBarLeadingBtn: some View {
         Button(action: { dismiss() }) {
-            themeImage.backButton
+            appearance.images.backButton
                 .resizable()
                 .frame(width: 29, height: 29, alignment: .center)
         }

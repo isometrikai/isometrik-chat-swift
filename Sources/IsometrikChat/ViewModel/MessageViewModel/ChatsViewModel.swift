@@ -72,7 +72,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             switch result{
             case .success(let data,_) :
                 completion(data)
-            case .failure(let error) :
+            case .failure(_) :
                 ISMChatHelper.print("Message Read Info Failed")
             }
         }
@@ -88,7 +88,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
             switch result{
             case .success(let data,_) :
                 completion(data)
-            case .failure(let error) :
+            case .failure(_) :
                 ISMChatHelper.print("Message deleivered Info Failed")
             }
         }

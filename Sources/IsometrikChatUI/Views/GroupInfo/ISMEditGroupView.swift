@@ -23,12 +23,10 @@ struct ISMEditGroupView: View {
     var existingGroupName : String
     var existingImage : String
     var conversationId : String?
-    @Binding var updateData : Bool
     @State private var NameAlert : Bool = false
     @FocusState private var isFocused: Bool
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    @State var showProgressView : Bool = false
     
     //MARK: - BODY
     var body: some View {
@@ -56,16 +54,16 @@ struct ISMEditGroupView: View {
                         showSheet = true
                     }, label: {
                         Text("Edit")
-                            .font(themeFonts.messageListMessageText)
-                            .foregroundColor(themeColor.userProfileEditText)
+                            .font(appearance.fonts.messageListMessageText)
+                            .foregroundColor(appearance.colorPalette.userProfileEditText)
                     })
                 }
                 
                 TextField("Write your group name", text: $groupName)
                     .padding()
                     .frame( height: 50)
-                    .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListHeaderTitle)
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                     .keyboardType(.default)
                     .disableAutocorrection(true)
                     .textInputAutocapitalization(.words)
@@ -80,8 +78,8 @@ struct ISMEditGroupView: View {
                     ToolbarItem(placement: .principal) {
                         VStack {
                             Text("Edit Group")
-                                .font(themeFonts.navigationBarTitle)
-                                .foregroundColor(themeColor.navigationBarTitle)
+                                .font(appearance.fonts.navigationBarTitle)
+                                .foregroundColor(appearance.colorPalette.navigationBarTitle)
                         }
                     }
                 }
@@ -96,6 +94,10 @@ struct ISMEditGroupView: View {
                     imageUrl = existingImage
                     isFocused = true
                 }
+            
+            if showProgressView == true{
+                ProgressView()
+            }
             
             if NameAlert == true{
                 Text("Group name can't be empty")
@@ -119,8 +121,8 @@ struct ISMEditGroupView: View {
             editGroup()
         } label: {
             Text("Done")
-                .font(themeFonts.messageListMessageText)
-                .foregroundColor(groupName != "" || image.count != 0 ? themeColor.userProfileEditText : Color.gray)
+                .font(appearance.fonts.messageListMessageText)
+                .foregroundColor(groupName != "" || image.count != 0 ? appearance.colorPalette.userProfileEditText : Color.gray)
         }
     }
     
@@ -128,14 +130,15 @@ struct ISMEditGroupView: View {
         Button {
             presentationMode.wrappedValue.dismiss()
         } label: {
-            themeImage.backButton
+            appearance.images.backButton
                 .resizable()
-                .frame(width: 29, height: 29, alignment: .center)
+                .frame(width: 18, height: 18, alignment: .center)
         }
     }
     
     func editGroup(){
         if !groupName.isEmpty{
+            showProgressView = true
             if existingGroupName != groupName{
                 if let image = image.first{
                     viewModel.updateGroupTitle(title: groupName, conversationId: conversationId ?? "") { _ in
@@ -143,7 +146,7 @@ struct ISMEditGroupView: View {
                     }
                 }else{
                     viewModel.updateGroupTitle(title: groupName, conversationId: conversationId ?? "") { _ in
-                        updateData = true
+                        NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
                         presentationMode.wrappedValue.dismiss()
                     }
                 }
@@ -162,7 +165,7 @@ struct ISMEditGroupView: View {
     func updategroupImage(image : UIImage){
         viewModel.uploadConversationImage(image: image, conversationType: 0, newConversation: false, conversationId: conversationId ?? "", conversationTitle: groupName) { value in
             viewModel.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "") { _ in
-                updateData = true
+                NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
                 presentationMode.wrappedValue.dismiss()
             }
         }

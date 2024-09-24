@@ -14,23 +14,21 @@ struct ISMConversationSubView: View {
     
     let chat : ConversationDB
     let hasUnreadCount : Bool
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     //MARK:  - BODY
     var body: some View {
         HStack(spacing:15){
             if chat.isGroup == false && chat.opponentDetails?.userId == nil && chat.opponentDetails?.userName == nil{
-                BroadCastAvatarView(size: CGSize(width: 54, height: 54), broadCastImageSize: CGSize(width: 24, height: 24),broadCastLogo: themeImage.broadCastLogo)
+                BroadCastAvatarView(size: CGSize(width: 54, height: 54), broadCastImageSize: CGSize(width: 24, height: 24),broadCastLogo: appearance.images.broadCastLogo)
             }else{
                 UserAvatarView(
                     avatar: chat.isGroup == true ? (chat.conversationImageUrl ) : (chat.opponentDetails?.userProfileImageUrl ?? ""),
                     showOnlineIndicator: false,
                     size: CGSize(width: 54, height: 54),
                     userName: chat.isGroup == true ? chat.conversationTitle  : chat.opponentDetails?.userName ?? "",
-                    font: themeFonts.messageListMessageText)
+                    font: appearance.fonts.messageListMessageText)
                 .overlay(
                     ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ?
                     
@@ -43,19 +41,19 @@ struct ISMConversationSubView: View {
                 HStack{
                     if chat.isGroup == false && chat.opponentDetails?.userId == nil && chat.opponentDetails?.userName == nil{
                         Text("Recipients: \(chat.membersCount)")
-                            .foregroundColor(themeColor.chatListUserName)
-                            .font(themeFonts.chatListUserName)
+                            .foregroundColor(appearance.colorPalette.chatListUserName)
+                            .font(appearance.fonts.chatListUserName)
                     }else{
                         Text(chat.isGroup == true ? (chat.conversationTitle ) : (chat.opponentDetails?.userName?.capitalizingFirstLetter() ?? ""))
-                            .foregroundColor(themeColor.chatListUserName)
-                            .font(themeFonts.chatListUserName)
+                            .foregroundColor(appearance.colorPalette.chatListUserName)
+                            .font(appearance.fonts.chatListUserName)
                     }
                     Spacer()
                     let dateVar = NSDate()
                     let date = dateVar.descriptiveString(time: (chat.lastMessageDetails?.sentAt ?? 0))
                     Text(date)
-                        .foregroundColor(themeColor.chatListLastMessageTime)
-                        .font(themeFonts.chatListLastMessageTime)
+                        .foregroundColor(appearance.colorPalette.chatListLastMessageTime)
+                        .font(appearance.fonts.chatListLastMessageTime)
                 }//:HStack
                 getMessageText()
             })//:VStack
@@ -68,20 +66,20 @@ struct ISMConversationSubView: View {
         HStack {
             if chat.typing == true{
                 Text("Typing...")
-                    .foregroundColor(themeColor.chatListUserMessage)
-                    .font(themeFonts.chatListUserMessage)
+                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                    .font(appearance.fonts.chatListUserMessage)
             }else{
                 if chat.lastMessageDetails?.deletedMessage == true{
                     HStack{
                         Image(systemName: "minus.circle")
                             .resizable()
                             .frame(width: 15, height: 15, alignment: .center)
-                            .tint(themeColor.chatListUserMessage)
-                            .foregroundColor(themeColor.chatListUserMessage)
+                            .tint(appearance.colorPalette.chatListUserMessage)
+                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
                         
                         Text(chat.lastMessageDetails?.senderId == userData.userId ? "You deleted this message." : "This message was deleted")
-                            .foregroundColor(themeColor.chatListUserMessage)
-                            .font(themeFonts.chatListUserMessage)
+                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                            .font(appearance.fonts.chatListUserMessage)
                             .padding(.trailing, 40)
                             .lineLimit(1)
                     }
@@ -263,25 +261,25 @@ struct ISMConversationSubView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 19, height: 11)
-                .tint(missedCall ? Color.red : themeColor.chatListUserMessage)
-                .foregroundColor(themeColor.chatListUserMessage)
+                .tint(missedCall ? Color.red : appearance.colorPalette.chatListUserMessage)
+                .foregroundColor(appearance.colorPalette.chatListUserMessage)
             
             HStack(alignment: .center,spacing: 2){
                 Text(text1)
                     .foregroundColor(color)
-                    .font(themeFonts.chatListUserMessage)
+                    .font(appearance.fonts.chatListUserMessage)
                     .lineLimit(1)
                 
                 if addDot == true{
                     Text(".")
-                        .foregroundColor(themeColor.chatListUserMessage)
-                        .font(themeFonts.chatListUserMessage)
+                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                        .font(appearance.fonts.chatListUserMessage)
                         .lineLimit(1)
                 }
                 
                 Text(text2)
-                    .foregroundColor(themeColor.chatListUserMessage)
-                    .font(themeFonts.chatListUserMessage)
+                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                    .font(appearance.fonts.chatListUserMessage)
                     .padding(.trailing, 40)
                     .lineLimit(1)
             }
@@ -291,10 +289,10 @@ struct ISMConversationSubView: View {
             if count > 0{
                 Spacer()
                 Text("\(count)")
-                    .foregroundColor(themeColor.chatListUnreadMessageCount)
-                    .font(themeFonts.chatListUnreadMessageCount)
+                    .foregroundColor(appearance.colorPalette.chatListUnreadMessageCount)
+                    .font(appearance.fonts.chatListUnreadMessageCount)
                     .padding(7)
-                    .background(themeColor.chatListUnreadMessageCountBackground)
+                    .background(appearance.colorPalette.chatListUnreadMessageCountBackground)
                     .frame(height: 20)
                     .cornerRadius(10)
             }
@@ -327,13 +325,13 @@ struct ISMConversationSubView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 19, height: 11)
-                        .tint(themeColor.chatListUserMessage)
-                        .foregroundColor(themeColor.chatListUserMessage)
+                        .tint(appearance.colorPalette.chatListUserMessage)
+                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
                 }
             }
             Text(text)
-                .foregroundColor(themeColor.chatListUserMessage)
-                .font(themeFonts.chatListUserMessage)
+                .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                .font(appearance.fonts.chatListUserMessage)
                 .padding(.trailing, 40)
                 .lineLimit(2)
             
@@ -343,10 +341,10 @@ struct ISMConversationSubView: View {
             if count > 0{
                 Spacer()
                 Text("\(count)")
-                    .foregroundColor(themeColor.chatListUnreadMessageCount)
-                    .font(themeFonts.chatListUnreadMessageCount)
+                    .foregroundColor(appearance.colorPalette.chatListUnreadMessageCount)
+                    .font(appearance.fonts.chatListUnreadMessageCount)
                     .padding(7)
-                    .background(themeColor.chatListUnreadMessageCountBackground)
+                    .background(appearance.colorPalette.chatListUnreadMessageCountBackground)
                     .frame(height: 20)
                     .cornerRadius(10)
             }
@@ -355,20 +353,20 @@ struct ISMConversationSubView: View {
     func messageDeliveryStatus() -> some View {
         if chat.isGroup == false{
             if (chat.lastMessageDetails?.deliveredTo.count == 1 && chat.lastMessageDetails?.deliveredTo.first?.userId != nil) && (chat.lastMessageDetails?.readBy.count == 1 && chat.lastMessageDetails?.readBy.first?.userId != nil) {
-                return AnyView(themeImage.messageRead
+                return AnyView(appearance.images.messageRead
                     .resizable()
                     .frame(width: 15, height: 9))
             }else if (chat.lastMessageDetails?.deliveredTo.count == 1 && chat.lastMessageDetails?.deliveredTo.first?.userId != nil) && chat.lastMessageDetails?.readBy.count == 0{
-                return AnyView(themeImage.messageDelivered
+                return AnyView(appearance.images.messageDelivered
                     .resizable()
                     .frame(width: 15, height: 9))
             }else{
                 if chat.lastMessageDetails?.msgSyncStatus == ISMChatSyncStatus.Local.txt {
-                    return AnyView(themeImage.messagePending
+                    return AnyView(appearance.images.messagePending
                         .resizable()
                         .frame(width: 9, height: 9))
                 }
-                return AnyView(themeImage.messageSent
+                return AnyView(appearance.images.messageSent
                     .resizable()
                     .frame(width: 11, height: 9))
             }
@@ -394,8 +392,8 @@ struct ISMConversationSubView: View {
             
             return AnyView(
                 Text(prefix)
-                    .foregroundColor(themeColor.chatListUserMessage)
-                    .font(themeFonts.chatListUserMessage)
+                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                    .font(appearance.fonts.chatListUserMessage)
                     .lineLimit(1)
             )
         } else {
@@ -406,14 +404,14 @@ struct ISMConversationSubView: View {
     func userTypeImageView(userType : Int,isStarUser : Bool) -> some View{
         VStack{
             if userType == 1 && isStarUser == true{
-                themeImage.influencerUserIcon
+                appearance.images.influencerUserIcon
                     .resizable()
                     .frame(width: 16, height: 16)
                     .background(Color.white)
                     .clipShape(Circle())
                     .offset(x: 54 * 0.35, y: 54 * 0.35)
             }else if userType == 9{
-                themeImage.businessUserIcon
+                appearance.images.businessUserIcon
                     .resizable()
                     .frame(width: 16, height: 16)
                     .background(Color.white)

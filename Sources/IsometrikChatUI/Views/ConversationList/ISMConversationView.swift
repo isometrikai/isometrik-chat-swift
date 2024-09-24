@@ -66,15 +66,15 @@ public struct ISMConversationView : View {
     @State public var groupCastIdToNavigate : String = ""
     @State public var navigateToBroadCastMessages : Bool = false
     
-    @State public var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @State public var myUserData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     @State public var hideNavigationBar = ISMChatSdkUI.getInstance().getChatProperties().hideNavigationBarForConversationList
     
     public var delegate : ISMConversationViewDelegate? = nil
-    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State public var themePlaceholder = ISMChatSdkUI.getInstance().getAppAppearance().appearance.placeholders
     @State public var showMenuForConversationType : Bool = false
     @State public var isTextFieldFocused : Bool = false
+    
+    @State var path = NavigationPath()
     
     public init(delegate : ISMConversationViewDelegate? = nil){
         self.delegate = delegate
@@ -84,9 +84,9 @@ public struct ISMConversationView : View {
     
     //MARK:  - BODY
     public var body: some View {
-        NavigationView {
+        NavigationStack(path: $path) {
             ZStack{
-                themeColor.chatListBackground.edgesIgnoringSafeArea(.all)
+                appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
                     if shouldShowPlaceholder {
                         showPlaceholderView
@@ -97,7 +97,7 @@ public struct ISMConversationView : View {
                         conversationListView
                     }
                 }
-                .onChange(of: query, perform: { newValue in
+                .onChange(of: query, {_ , newValue in
                     if newValue == "" {
                         realmManager.conversations = realmManager.storeConv
                         isTextFieldFocused = false
@@ -105,8 +105,8 @@ public struct ISMConversationView : View {
                         searchInConversationList()
                     }
                 })
-                .onChange(of: groupCastIdToNavigate, perform: { newValue in
-                    if groupCastIdToNavigate != "" || groupCastIdToNavigate != nil {
+                .onChange(of: groupCastIdToNavigate, { _, _ in
+                    if groupCastIdToNavigate != "" {
                         navigateToBroadCastMessages = true
                         createChat = false
                     }
@@ -127,7 +127,7 @@ public struct ISMConversationView : View {
                 .navigationBarHidden(hideNavigationBar)
                 .navigationBarItems(leading: navigationLeading(),
                                     trailing: navigationTrailing())
-                .onChange(of: selectedUserToNavigate, perform: { newValue in
+                .onChange(of: selectedUserToNavigate, { _, _ in
                     if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
                         navigatetoSelectedUser = true
                     }else{
@@ -149,19 +149,16 @@ public struct ISMConversationView : View {
                         }
                     }
                 }
-                .background(NavigationLink("", destination:  ISMMessageView(conversationViewModel : self.viewModel,conversationID: selectedUserConversationId,opponenDetail: selectedUserToNavigate,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: false,groupCastId: "", groupConversationTitle: nil, groupImage: nil)
-                    .environmentObject(realmManager), isActive: $navigatetoSelectedUser))
-                .background(NavigationLink("", destination:  ISMBlockUserView(conversationViewModel: self.viewModel), isActive: $navigateToBlockUsers))
-//                .background(NavigationLink("", destination:  ISMBroadCastList()
-//                    .environmentObject(realmManager), isActive: $navigateToBroadcastList))
-//                .background(NavigationLink(
-//                    "",
-//                   destination:
-//                        ISMMessageView(conversationViewModel : self.viewModel,conversationID: conversationIdForNotification ,opponenDetail : opponentDetailforNotification, myUserId: myUserData.userId, isGroup: isGroupFromNotification,fromBroadCastFlow: false,groupCastId: "", groupConversationTitle: groupTitleFromNotification ?? "", groupImage: groupImageFromNotification ?? "").environmentObject(realmManager).onAppear{onScreen = false},
-//                   isActive: $navigateToMessageViewFromLocalNotification)
-//                )
-//                .background(NavigationLink("", destination:  ISMMessageView(conversationViewModel : self.viewModel,conversationID: "",opponenDetail: nil,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: true,groupCastId: self.groupCastIdToNavigate ?? "", groupConversationTitle: nil, groupImage: nil)
-//                    .environmentObject(realmManager).onAppear{onScreen = false}, isActive: $navigateToBroadCastMessages))
+                .navigationDestination(isPresented: $navigatetoSelectedUser) {
+                    ISMMessageView(conversationViewModel : self.viewModel,conversationID: selectedUserConversationId,opponenDetail: selectedUserToNavigate,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: false,groupCastId: "", groupConversationTitle: nil, groupImage: nil)
+                        .environmentObject(realmManager)
+                }
+                .navigationDestination(isPresented: $navigateToMessageViewFromLocalNotification) {
+                    ISMMessageView(conversationViewModel : self.viewModel,conversationID: conversationIdForNotification ,opponenDetail : opponentDetailforNotification, myUserId: myUserData.userId, isGroup: isGroupFromNotification,fromBroadCastFlow: false,groupCastId: "", groupConversationTitle: groupTitleFromNotification ?? "", groupImage: groupImageFromNotification ?? "").environmentObject(realmManager).onAppear{onScreen = false}
+                }
+                .navigationDestination(isPresented: $navigateToBroadCastMessages) {
+                    ISMMessageView(conversationViewModel : self.viewModel,conversationID: "",opponenDetail: nil,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: true,groupCastId: self.groupCastIdToNavigate, groupConversationTitle: nil, groupImage: nil).environmentObject(realmManager).onAppear{onScreen = false}
+                }
                 .onAppear {
                     onScreen = true
                     self.viewModel.resetdata()
@@ -314,7 +311,7 @@ public struct ISMConversationView : View {
                                 Button(action: {
                                     showMenuForConversationType.toggle()
                                 }, label: {
-                                    themeImages.addConversation
+                                    appearance.images.addConversation
                                         .resizable()
                                         .frame(width: 58, height: 58)
                                 })
@@ -369,14 +366,14 @@ public struct ISMConversationView : View {
     private var showPlaceholderView: some View {
         Group {
             if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder {
-                themePlaceholder.chatListPlaceholder
+                appearance.placeholders.chatListPlaceholder
             } else {
                 Button {
                     if ISMChatSdk.getInstance().getFramework() == .SwiftUI {
                         createChat = true
                     }
                 } label: {
-                    themeImages.conversationListPlaceholder
+                    appearance.images.conversationListPlaceholder
                         .resizable()
                         .frame(width: 251, height: 163)
                 }

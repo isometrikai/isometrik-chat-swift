@@ -28,15 +28,13 @@ public struct ISMUsersView: View {
     @EnvironmentObject public var realmManager : RealmManager
     @State public var navigatetoCreatGroup : Bool = false
     @State public var navigatetoCreatBroadCast : Bool = false
-    @State public var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State public var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State public var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @Binding public var groupCastIdToNavigate : String
     
     //MARK:  - LIFECYCLE
     public var body: some View {
         ZStack{
-            NavigationView{
+            NavigationStack{
                 VStack {
                     if viewModel.users.count == 0{
                         ProgressView()
@@ -51,10 +49,10 @@ public struct ISMUsersView: View {
                                             } label: {
                                                 HStack{
                                                     Text("New Group")
-                                                        .font(themeFonts.messageListMessageText)
-                                                        .foregroundColor(themeColor.messageListHeaderTitle)
+                                                        .font(appearance.fonts.messageListMessageText)
+                                                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                                     Spacer()
-                                                    themeImage.groupMembers
+                                                    appearance.images.groupMembers
                                                         .resizable()
                                                         .frame(width: 18,height: 18)
                                                 }
@@ -66,10 +64,10 @@ public struct ISMUsersView: View {
                                             } label: {
                                                 HStack{
                                                     Text("New Broadcast")
-                                                        .font(themeFonts.messageListMessageText)
-                                                        .foregroundColor(themeColor.messageListHeaderTitle)
+                                                        .font(appearance.fonts.messageListMessageText)
+                                                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                                     Spacer()
-                                                    themeImage.broadcastInUserList
+                                                    appearance.images.broadcastInUserList
                                                         .resizable()
                                                         .frame(width: 18,height: 18)
                                                 }
@@ -93,8 +91,8 @@ public struct ISMUsersView: View {
                                                         UserAvatarView(avatar: value.userProfileImageUrl ?? "", showOnlineIndicator: value.online ?? false,size: CGSize(width: 29, height: 29), userName: value.userName ?? "",font: .regular(size: 12))
                                                         VStack(alignment: .leading, spacing: 5, content: {
                                                             Text(value.userName ?? "User")
-                                                                .font(themeFonts.messageListMessageText)
-                                                                .foregroundColor(themeColor.messageListHeaderTitle)
+                                                                .font(appearance.fonts.messageListMessageText)
+                                                                .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
 //                                                            Text(value.metaData?.about ?? "Hey there! I am using Wetalk.")
 //                                                                .font(themeFonts.chatListUserMessage)
 //                                                                .foregroundColor(themeColor.chatListUserMessage)
@@ -139,19 +137,26 @@ public struct ISMUsersView: View {
                                     }
                                 }
                             }.listStyle(DefaultListStyle())
-                                .listRowSeparatorTint(themeColor.chatListSeparatorColor)
+                                .listRowSeparatorTint(appearance.colorPalette.chatListSeparatorColor)
                             //                            .overlay(sectionIndexTitles(proxy: proxy))
                         }
                     }
                 }//:VStack
-                .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .Group,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate),isActive: $navigatetoCreatGroup).environmentObject(realmManager))
-                .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .BroadCast,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate),isActive: $navigatetoCreatBroadCast).environmentObject(realmManager))
+                .navigationDestination(isPresented: $navigatetoCreatGroup, destination: {
+                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .Group,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
+                })
+                .navigationDestination(isPresented: $navigatetoCreatBroadCast, destination: {
+                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .BroadCast,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
+                })
+                
+//                .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .Group,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate),isActive: $navigatetoCreatGroup).environmentObject(realmManager))
+//                .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .BroadCast,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate),isActive: $navigatetoCreatBroadCast).environmentObject(realmManager))
                 .searchable(text: $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always))
-                .onChange(of: viewModel.debounceSearchedText){ newValue in
+                .onChange(of: viewModel.debounceSearchedText, { _, _ in
                     print("~~SEARCHING WITH DEBOUNCING \(viewModel.searchedText)")
                     self.viewModel.resetGetUsersdata()
                     getUsers()
-                }
+                })
                 .onDisappear {
                     viewModel.searchedText = ""
                     viewModel.debounceSearchedText = ""
@@ -170,8 +175,8 @@ public struct ISMUsersView: View {
                     ToolbarItem(placement: .principal) {
                         VStack {
                             Text("New Chat")
-                                .font(themeFonts.navigationBarTitle)
-                                .foregroundColor(themeColor.navigationBarTitle)
+                                .font(appearance.fonts.navigationBarTitle)
+                                .foregroundColor(appearance.colorPalette.navigationBarTitle)
                         }
                     }
                 }
@@ -207,7 +212,7 @@ public struct ISMUsersView: View {
     
     var navBarLeadingBtn : some View{
         Button(action: { dismiss() }) {
-            themeImage.CloseSheet
+            appearance.images.CloseSheet
                 .resizable()
                 .frame(width: 17,height: 17)
         }

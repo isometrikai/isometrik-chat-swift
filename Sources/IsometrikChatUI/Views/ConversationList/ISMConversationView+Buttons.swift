@@ -23,17 +23,29 @@ extension ISMConversationView{
     
     func navigationTrailing() -> some View{
         Menu {
-            Button {
-                navigateToBlockUsers = true
+            NavigationLink {
+                ISMBlockUserView(conversationViewModel: self.viewModel)
             } label: {
                 Label("Blocked Users", systemImage: "circle.slash")
             }
+
+//            Button {
+//                navigateToBlockUsers = true
+//            } label: {
+//                Label("Blocked Users", systemImage: "circle.slash")
+//            }
             if showBroadCastOption == true{
-                Button {
-                    navigateToBroadcastList = true
+                NavigationLink {
+                    ISMBroadCastList()
                 } label: {
                     Label("Broadcast Lists", systemImage: "circle.slash")
                 }
+
+//                Button {
+//                    navigateToBroadcastList = true
+//                } label: {
+//                    Label("Broadcast Lists", systemImage: "circle.slash")
+//                }
             }
 //                            Button {
 //                                isDarkMode.toggle()
@@ -41,7 +53,7 @@ extension ISMConversationView{
 //                                Label(isDarkMode ? "Light Mode" : " Dark Mode", systemImage: isDarkMode ?  "sun.max.fill" : "moon.fill")
 //                            }
         } label: {
-            themeImages.threeDots
+            appearance.images.threeDots
                 .resizable()
                 .frame(width: 5, height: 20, alignment: .center)
             

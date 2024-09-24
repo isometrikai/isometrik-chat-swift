@@ -14,8 +14,7 @@ struct ISMGroupMemberSubView: View {
     let member : ISMChatGroupMember
     var hideDisclosure : Bool? = false
     @Binding var selectedMember : ISMChatGroupMember
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     //MARK: - BODY
     var body: some View {
@@ -23,37 +22,33 @@ struct ISMGroupMemberSubView: View {
             selectedMember = member
         } label: {
             HStack(spacing: 12){
-                UserAvatarView(avatar: member.userProfileImageUrl ?? "", showOnlineIndicator: false,size: CGSize(width: 29, height: 29), userName: member.userName ?? "",font: themeFonts.chatListUserMessage)
+                UserAvatarView(avatar: member.userProfileImageUrl ?? "", showOnlineIndicator: false,size: CGSize(width: 29, height: 29), userName: member.userId != userData.userId ? (member.userName ?? "") : "You",font: appearance.fonts.chatListUserMessage)
                 
                 VStack(alignment: .leading,spacing: 5){
                     if member.userId != userData.userId{
                         Text(member.userName?.capitalizingFirstLetter() ?? "")
-                            .font(themeFonts.messageListMessageText)
-                            .foregroundColor(themeColor.messageListHeaderTitle)
+                            .font(appearance.fonts.messageListMessageText)
+                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                     }else{
                         Text(ConstantStrings.you)
-                            .font(themeFonts.messageListMessageText)
-                            .foregroundColor(themeColor.messageListHeaderTitle)
+                            .font(appearance.fonts.messageListMessageText)
+                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                     }
-//                    Text(member.userIdentifier ?? "")
-//                        .font(themeFonts.chatListUserMessage)
-//                        .foregroundColor(themeColor.chatListUserMessage)
-//                        .lineLimit(2)
                 }
                 Spacer()
                 
                 if member.isAdmin == true{
                     Text("Admin")
-                        .font(themeFonts.chatListUserMessage)
-                        .foregroundColor(themeColor.chatListUserMessage)
+                        .font(appearance.fonts.chatListUserMessage)
+                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
                 }
-                if member.userId != userData.userId{
-                    if hideDisclosure == false{
-                        Image("chevron_right")
-                            .resizable()
-                            .frame(width: 20,height: 20)
-                    }
-                }
+//                if member.userId != userData.userId{
+//                    if hideDisclosure == false{
+//                        Image("chevron_right")
+//                            .resizable()
+//                            .frame(width: 20,height: 20)
+//                    }
+//                }
             }
         }
     }

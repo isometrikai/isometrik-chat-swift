@@ -62,23 +62,37 @@ public class AudioPlayViewModel: ObservableObject {
             })
         }
     }
-    
-    public func count_duration(completion: @escaping(Float64) -> ()) {
-            DispatchQueue.global(qos: .background).async {
-                if let duration = self.player.currentItem?.asset.duration {
+
+    public func count_duration(completion: @escaping (Float64) -> ()) {
+        DispatchQueue.global(qos: .background).async {
+            guard let asset = self.player.currentItem?.asset else {
+                DispatchQueue.main.async {
+                    self.totalDuration = 0.2 // Set initial value
+                    completion(0.2)
+                }
+                return
+            }
+
+            // Load the duration asynchronously
+            Task {
+                do {
+                    let duration = try await asset.load(.duration)
                     let seconds = CMTimeGetSeconds(duration)
                     DispatchQueue.main.async {
                         self.totalDuration = seconds
                         completion(seconds)
                     }
-                    return
-                }
-                DispatchQueue.main.async {
-                    self.totalDuration = 0.2 // Set initial value
-                    completion(1)
+                } catch {
+                    print("Failed to load duration: \(error.localizedDescription)")
+                    DispatchQueue.main.async {
+                        self.totalDuration = 0.2 // Set initial value
+                        completion(0.2)
+                    }
                 }
             }
         }
+    }
+
     
     @objc func playerDidFinishPlaying(note: NSNotification) {
         self.player.pause()

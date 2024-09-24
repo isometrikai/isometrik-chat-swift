@@ -32,7 +32,7 @@ extension RealmManager{
                 if taskToUpdate.isEmpty {
                     addBroadCasts(obj: [obj])
                 }else {
-                    if let objID = taskToUpdate.first?.id {
+                    if (taskToUpdate.first?.id) != nil {
                         if taskToUpdate.first?.isDelete == false {
                             updateBroadCast(obj: obj)
                         }
@@ -60,7 +60,7 @@ extension RealmManager{
                     listToUpdate.first?.createdAt = obj.createdAt
                     listToUpdate.first?.updatedAt = obj.updatedAt
                     
-                    var memberDetails = List<BroadCastMemberDetailDB>()
+                    let memberDetails = List<BroadCastMemberDetailDB>()
                     
                     if let members = obj.metaData?.membersDetail {
                         for member in members {
@@ -102,7 +102,7 @@ extension RealmManager{
                         obj.createdAt = value.createdAt
                         obj.updatedAt = value.updatedAt
                         
-                        var memberDetails = List<BroadCastMemberDetailDB>()
+                        let memberDetails = List<BroadCastMemberDetailDB>()
                         
                         if let members = value.metaData?.membersDetail {
                             for member in members {

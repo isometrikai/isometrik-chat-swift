@@ -15,9 +15,7 @@ struct ISMPDFMessageView: View {
     @State private var thumbnailImage: UIImage = UIImage()
     var pdfURL: URL!
     var fileName: String = ""
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK:  - BODY
     var body: some View {
@@ -34,13 +32,13 @@ struct ISMPDFMessageView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 13, height: 16)
                     Text("\(fileName)")
-                        .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.messageListHeaderTitle)
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                         .lineLimit(2)
                 })
                 .padding(EdgeInsets(top: 3, leading: 10, bottom: 8, trailing: 10))
             }
-            .background(themeColor.messageListattachmentBackground)
+            .background(appearance.colorPalette.messageListattachmentBackground)
             .cornerRadius(5)
         }
         .onAppear( perform: {
@@ -70,7 +68,7 @@ struct ISMPDFMessageView: View {
             let screenSize = CGSize(width: pageSize.width * scale,
                                     height: pageSize.height * scale)
 
-            completion(page.thumbnail(of: screenSize, for: .mediaBox) ?? UIImage())
+            completion(page.thumbnail(of: screenSize, for: .mediaBox))
             
         }
     }

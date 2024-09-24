@@ -11,9 +11,17 @@ import UIKit
 
 public struct NavigationUtil {
     static public func popToRootView() {
-        findNavigationController(viewController: UIApplication.shared.windows.filter { $0.isKeyWindow }.first?.rootViewController)?
+        // Access windows from the active scene
+        let keyWindow = UIApplication.shared.connectedScenes
+            .filter { $0.activationState == .foregroundActive }
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }
+
+        findNavigationController(viewController: keyWindow?.rootViewController)?
             .popToRootViewController(animated: true)
     }
+
     static public func findNavigationController(viewController: UIViewController?) -> UINavigationController? {
         guard let viewController = viewController else {
             return nil
@@ -22,8 +30,11 @@ public struct NavigationUtil {
             return navigationController
         }
         for childViewController in viewController.children {
-            return findNavigationController(viewController: childViewController)
+            if let navigationController = findNavigationController(viewController: childViewController) {
+                return navigationController
+            }
         }
         return nil
     }
 }
+

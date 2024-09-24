@@ -49,7 +49,7 @@ enum ISMChatMediaUploadEndpoint : ISMChatURLConvertible {
         case .messageMediaUpload:
             return [:]
         case .conversationProfileUpload(let mediaExtension, let conversationType, let newConversation, let conversationTitle,let conversationId):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "mediaExtension" : "\(mediaExtension)",
                 "conversationType" : "\(conversationType)",
                 "newConversation" : "\(newConversation)",
@@ -58,13 +58,13 @@ enum ISMChatMediaUploadEndpoint : ISMChatURLConvertible {
             ]
             return params
         case .userImage(let userIdentifier,let mediaExtension):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "userIdentifier" : "\(userIdentifier)",
                 "mediaExtension" : "\(mediaExtension)"
             ]
             return params
         case .updateUserImage(let mediaExtension):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "mediaExtension" : "\(mediaExtension)"
             ]
             return params

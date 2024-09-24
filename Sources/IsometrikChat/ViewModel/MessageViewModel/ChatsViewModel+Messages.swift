@@ -21,7 +21,7 @@ extension ChatsViewModel{
             switch result{
             case .success(let user,_) :
                 completion(user)
-            case .failure(let error) :
+            case .failure(_) :
                 print("Error")
             }
         }
@@ -204,7 +204,7 @@ extension ChatsViewModel{
             
             metaData = ["contacts" : contacts]
         case .gif:
-            attachmentValue = ["thumbnailUrl": message, "attachmentMessageType" : "Gif","attachmentSchemaType" : "GifSticker", "attachmentType" : ISMChatAttachmentType.Gif.type,"mediaUrl" : message,"name" : fileName, "stillUrl" : message]
+            attachmentValue = ["thumbnailUrl": message, "attachmentMessageType" : "Gif","attachmentSchemaType" : "GifSticker", "attachmentType" : ISMChatAttachmentType.Gif.type,"mediaUrl" : message,"name" : fileName ?? "", "stillUrl" : message]
             body["attachments"] = attachmentValue
             notificationBody = "Gif"
             messageInBody = "Gif"
@@ -212,7 +212,7 @@ extension ChatsViewModel{
             searchTags.append(ISMChatSearchTags.gif.value)
             searchTags.append(fileName ?? "")
         case .sticker:
-            attachmentValue = ["thumbnailUrl": message, "attachmentMessageType" : "Sticker","attachmentSchemaType" : "GifSticker", "attachmentType" : ISMChatAttachmentType.Sticker.type,"mediaUrl" : message,"name" : fileName, "stillUrl" : message]
+            attachmentValue = ["thumbnailUrl": message, "attachmentMessageType" : "Sticker","attachmentSchemaType" : "GifSticker", "attachmentType" : ISMChatAttachmentType.Sticker.type,"mediaUrl" : message,"name" : fileName ?? "", "stillUrl" : message]
             body["attachments"] = attachmentValue
             notificationBody = "Sticker"
             messageInBody = "Sticker"
@@ -229,7 +229,7 @@ extension ChatsViewModel{
             if let caption  = caption, !caption.isEmpty{
                 metaData = ["captionMessage" : caption]
             }
-            var post : [String: Any] = ["postId" : postId ?? "","postUrl" : message]
+            let post : [String: Any] = ["postId" : postId ?? "","postUrl" : message]
             metaData = ["post" : post]
         default:
             break
@@ -297,9 +297,9 @@ extension ChatsViewModel{
 
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data,_):
+            case .success(_,_):
                 completion()
-            case .failure(let error):
+            case .failure(_):
                 ISMChatHelper.print("Message deleivered Info Failed")
             }
         }
@@ -436,7 +436,7 @@ extension ChatsViewModel{
 
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatSendMsg, ISMChatNewAPIError>) in
             switch result{
-            case .success(let data,_):
+            case .success(_,_):
                 completion()
             case .failure(let error):
                 ISMChatHelper.print("post forward msg Api failed -----> \(String(describing: error))")

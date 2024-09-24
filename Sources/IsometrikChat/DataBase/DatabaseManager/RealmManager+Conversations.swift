@@ -132,7 +132,7 @@ extension RealmManager {
                 if taskToUpdate.isEmpty {
                     addConversation(obj: [obj])
                 }else {
-                    if let objID = taskToUpdate.first?.id {
+                    if (taskToUpdate.first?.id) != nil {
                         if taskToUpdate.first?.isDelete == false {
                             updateConversation(obj: obj)
                         }
@@ -512,7 +512,7 @@ extension RealmManager {
                     taskToUpdate.first?.lastMessageDetails?.meetingId = msg.meetingId ?? ""
                     if let duration = msg.callDurations{
                         for x in duration{
-                            var value = ISMMeetingDuration()
+                            let value = ISMMeetingDuration()
                             value.memberId = x.memberId
                             value.durationInMilliseconds = x.durationInMilliseconds
                             taskToUpdate.first?.lastMessageDetails?.callDurations.append(value)

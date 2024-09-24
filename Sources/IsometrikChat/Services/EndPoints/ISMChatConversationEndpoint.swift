@@ -32,7 +32,7 @@ enum ISMChatConversationEndpoint : ISMChatURLConvertible {
             return "/chat/conversations"
         case .createConversation:
             return "/chat/conversation"
-        case .conversationDetail(let conversationId,let includeMembers,let isGroup):
+        case .conversationDetail(let conversationId,_,_):
             return "/chat/conversation/details/" + "\(conversationId)"
         case .updateConversationDetail:
             return "/chat/conversation/details"
@@ -93,9 +93,9 @@ enum ISMChatConversationEndpoint : ISMChatURLConvertible {
             
         case .createConversation:
             return [:]
-        case .conversationDetail(let conversationId,let includeMembers,let isGroup):
+        case .conversationDetail(_,let includeMembers,let isGroup):
             if isGroup == true{
-                var params : [String : String] = [
+                let params : [String : String] = [
                     "includeMembers" : "\(includeMembers)"
                 ]
                 return params
@@ -105,12 +105,12 @@ enum ISMChatConversationEndpoint : ISMChatURLConvertible {
         case .updateConversationDetail:
             return  [:]
         case .deleteConversationLocally(let conversationId):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "conversationId" : "\(conversationId)"
             ]
             return params
         case .clearConversationMessages(let conversationId):
-            var params : [String : String] = [
+            let params : [String : String] = [
                 "conversationId" : "\(conversationId)"
             ]
             return params

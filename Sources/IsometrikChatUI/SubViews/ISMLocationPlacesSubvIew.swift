@@ -14,20 +14,18 @@ struct PlaceRow: View {
     //MARK:  - PROPERTIES
     
     var place: GMSPlace
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImages = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK:  - LIFECYCLE
     var body: some View {
         HStack{
-            themeImages.locationLogo
+            appearance.images.locationLogo
                 .resizable()
                 .frame(width: 20, height: 20, alignment: .center)
             VStack {
                 Text(place.name ?? "")
-                    .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListHeaderTitle)
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
             }
         }
     }

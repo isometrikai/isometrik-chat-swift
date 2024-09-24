@@ -20,9 +20,7 @@ struct ISMForwardToContactView: View {
     @State var selectedUser : [String] = []
     @Binding var showforwardMultipleMessage : Bool
     @State var showAlertFormoreThan5 : Bool = false
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK:  - LIFECYCLE
     var body: some View {
@@ -40,8 +38,8 @@ struct ISMForwardToContactView: View {
                                             UserAvatarView(avatar: value.userProfileImageUrl ?? "", showOnlineIndicator: value.online ?? false,size: CGSize(width: 29, height: 29), userName: value.userName ?? "",font: .regular(size: 12))
                                             VStack(alignment: .leading, spacing: 5) {
                                                 Text(value.userName ?? "")
-                                                    .font(themeFonts.messageListMessageText)
-                                                    .foregroundColor(themeColor.messageListHeaderTitle)
+                                                    .font(appearance.fonts.messageListMessageText)
+                                                    .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                                     .lineLimit(nil)
                                                 
 //                                                Text(value.userIdentifier ?? "")
@@ -53,11 +51,11 @@ struct ISMForwardToContactView: View {
                                             if selections.contains(where: { user in
                                                 user.id == value.id
                                             }){
-                                                themeImage.selected
+                                                appearance.images.selected
                                                     .resizable()
                                                     .frame(width: 20, height: 20)
                                             }else{
-                                                themeImage.deselected
+                                                appearance.images.deselected
                                                     .resizable()
                                                     .frame(width: 20, height: 20)
                                             }
@@ -106,8 +104,8 @@ struct ISMForwardToContactView: View {
                     ToolbarItem(placement: .principal) {
                         VStack {
                             Text("Send To")
-                                .font(themeFonts.navigationBarTitle)
-                                .foregroundColor(themeColor.navigationBarTitle)
+                                .font(appearance.fonts.navigationBarTitle)
+                                .foregroundColor(appearance.colorPalette.navigationBarTitle)
                         }
                     }
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -115,7 +113,7 @@ struct ISMForwardToContactView: View {
                             self.messages.removeAll()
                             dismiss()
                         }) {
-                            themeImage.backButton
+                            appearance.images.backButton
                                 .resizable()
                                 .frame(width: 18, height: 18)
                         }
@@ -127,8 +125,8 @@ struct ISMForwardToContactView: View {
                     HStack(alignment: .center){
                         ScrollView(.horizontal) {
                             Text(selectedUser.joined(separator: ", "))
-                                .font(themeFonts.messageListMessageText)
-                                .foregroundColor(themeColor.messageListHeaderTitle)
+                                .font(appearance.fonts.messageListMessageText)
+                                .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                 .id("combinedText")
                             
                             .padding()
@@ -136,8 +134,8 @@ struct ISMForwardToContactView: View {
                         Spacer()
                         Button(action : {forwardMsg()}) {
                             Text("Forward")
-                                .font(themeFonts.messageListReplyToolbarHeader)
-                                .foregroundStyle(themeColor.userProfileEditText)
+                                .font(appearance.fonts.messageListReplyToolbarHeader)
+                                .foregroundStyle(appearance.colorPalette.userProfileEditText)
                             
                             .padding()
                         }//:BUTTON
@@ -166,7 +164,7 @@ struct ISMForwardToContactView: View {
             }
         }//:ZSTACK
         .searchable(text: $conversationViewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always))
-        .onChange(of: conversationViewModel.debounceSearchedText, perform: { newValue in
+        .onChange(of: conversationViewModel.debounceSearchedText, { _, _ in
             print("~~SEARCHING WITH DEBOUNCING \(conversationViewModel.searchedText)")
             self.conversationViewModel.resetGetUsersdata()
             getUsers()
@@ -221,7 +219,7 @@ private extension ISMForwardToContactView{
 
             for newUser in selections {
                 conversationGroup.enter()
-                var user = UserDB()
+                let user = UserDB()
                 user.userProfileImageUrl = newUser.userProfileImageUrl
                 user.userName = newUser.userName
                 user.userIdentifier = newUser.userIdentifier

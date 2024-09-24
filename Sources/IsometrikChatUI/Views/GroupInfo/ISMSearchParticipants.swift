@@ -22,9 +22,7 @@ struct ISMSearchParticipants: View {
     @State var members : ISMGroupMember?
     var conversationID : String?
     @State private var isEditing  : Bool = false
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK: - BODY
     var body: some View {
@@ -39,18 +37,19 @@ struct ISMSearchParticipants: View {
                 } header: {
                     if let count = members?.membersCount{
                         Text("\(count) Members")
-                            .font(themeFonts.chatListUserMessage)
-                            .foregroundColor(themeColor.chatListUserMessage)
+                            .font(appearance.fonts.chatListUserMessage)
+                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
                     }
                 } footer: {
                     Text("")
                 }
                 
-            }.listRowSeparatorTint(themeColor.chatListSeparatorColor)
-                .background(themeColor.chatListBackground)
+            }.listRowSeparatorTint(appearance.colorPalette.chatListSeparatorColor)
+                .listStyle(.plain)
+                .background(appearance.colorPalette.chatListBackground)
                 .scrollContentBackground(.hidden)
                 .searchable(text:  $query, placement: .navigationBarDrawer(displayMode: .always)) {}
-                .onChange(of: query, perform: { newValue in
+                .onChange(of: query, { _, _ in
                     if query == ""{
                         isEditing = false
                         members?.conversationMembers =  originalMembers?.conversationMembers
@@ -59,17 +58,17 @@ struct ISMSearchParticipants: View {
                         members?.conversationMembers =  members?.conversationMembers?.filter({ $0.userName?.range(of: query, options: .caseInsensitive) != nil })
                     }
                 })
-                .onChange(of: isEditing) { newValue in
+                .onChange(of: isEditing, { _, _ in
                     if isEditing == false && query == ""{
                         members?.conversationMembers =  originalMembers?.conversationMembers
                     }
-                }
+                })
             
         }
         .onAppear{
             getMembers()
         }
-        .onChange(of: selectedMember, perform: { newValue in
+        .onChange(of: selectedMember, { _, _ in
             showOptions = true
         })
         .confirmationDialog("", isPresented: $showOptions) {
@@ -97,8 +96,8 @@ struct ISMSearchParticipants: View {
             ToolbarItem(placement: .principal) {
                 VStack {
                     Text("Search Participants")
-                        .font(themeFonts.navigationBarTitle)
-                        .foregroundColor(themeColor.navigationBarTitle)
+                        .font(appearance.fonts.navigationBarTitle)
+                        .foregroundColor(appearance.colorPalette.navigationBarTitle)
                 }
             }
         }
@@ -110,9 +109,9 @@ struct ISMSearchParticipants: View {
         Button {
             presentationMode.wrappedValue.dismiss()
         } label: {
-            themeImage.backButton
+            appearance.images.backButton
                 .resizable()
-                .frame(width: 29, height: 29, alignment: .center)
+                .frame(width: 18, height: 18, alignment: .center)
         }
     }
     

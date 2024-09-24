@@ -17,9 +17,7 @@ struct ISMMapDetailView: View {
     @State private var showBottomSheet : Bool = false
     var data: ISMChatLocationData?
     @State var camera : MapCameraPosition = .automatic
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK:  - LIFECYCLE
     var body: some View {
@@ -27,7 +25,7 @@ struct ISMMapDetailView: View {
             VStack {
                 Map(){
                     Annotation("", coordinate: data?.coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)) {
-                        themeImage.mapPinLogo
+                        appearance.images.mapPinLogo
                             .resizable()
                             .frame(width: 30, height: 30, alignment: .center)
                     }
@@ -39,11 +37,11 @@ struct ISMMapDetailView: View {
             ToolbarItem(placement: .principal) {
                 VStack(spacing: 1){
                     Text(data?.title ?? "")
-                        .font(themeFonts.messageListMessageText)
-                        .foregroundColor(themeColor.messageListHeaderTitle)
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                     Text(data?.completeAddress ?? "")
-                        .font(themeFonts.chatListUserMessage)
-                        .foregroundColor(themeColor.chatListUserMessage)
+                        .font(appearance.fonts.chatListUserMessage)
+                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
                 }
             }
         }
@@ -59,7 +57,7 @@ struct ISMMapDetailView: View {
         Button(action: {
             showBottomSheet = true
         }, label: {
-            themeImage.share
+            appearance.images.share
                 .foregroundStyle(Color.blue)
         }).padding(.leading)
     }
@@ -69,7 +67,7 @@ struct ISMMapDetailView: View {
             Button(action: {
                 dismiss()
             }) {
-                themeImage.backButton
+                appearance.images.backButton
                     .resizable()
                     .frame(width: 29, height: 29)
                     .imageScale(.large)

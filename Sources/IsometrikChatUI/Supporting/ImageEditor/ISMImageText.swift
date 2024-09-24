@@ -28,7 +28,7 @@ struct ISMImageText: View {
     @State var rect : CGRect = .zero
     
     var body: some View {
-        NavigationView{
+        NavigationStack{
             ZStack{
                 GeometryReader{ geometry in
                     ZStack{

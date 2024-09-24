@@ -17,9 +17,7 @@ struct ISMChatBroadCastInfo: View {
     @ObservedObject var viewModel = ChatsViewModel()
     @ObservedObject var conversationviewModel = ConversationViewModel()
     @EnvironmentObject var realmManager : RealmManager
-    @State var themeFonts = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.images
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @State var listName : String = ""
     @Environment(\.dismiss) var dismiss
     @State var membersInfo : ISMChatBroadCastMembers? = nil
@@ -30,19 +28,19 @@ struct ISMChatBroadCastInfo: View {
     //MARK: - BODY
     var body: some View {
         ZStack {
-            themeColor.messageListBackgroundColor.edgesIgnoringSafeArea(.all)
+            appearance.colorPalette.messageListBackgroundColor.edgesIgnoringSafeArea(.all)
             VStack(alignment: .center){
                 List {
                     Section(header: Text("")) {
                         ZStack(alignment: .leading) {
                             if listName.isEmpty || listName == "Default"{
                                 Text("List name")
-                                    .font(themeFonts.userProfilefields)
-                                    .foregroundColor(themeColor.userProfileFields)
+                                    .font(appearance.fonts.userProfilefields)
+                                    .foregroundColor(appearance.colorPalette.userProfileFields)
                             }
                             TextField("", text: $listName)
-                                .font(themeFonts.userProfilefields)
-                                .foregroundColor(themeColor.userProfileFields)
+                                .font(appearance.fonts.userProfilefields)
+                                .foregroundColor(appearance.colorPalette.userProfileFields)
                         }
                     }
                     
@@ -52,8 +50,8 @@ struct ISMChatBroadCastInfo: View {
                                 HStack(spacing: 10) {
                                     UserAvatarView(avatar: mem.memberInfo?.userProfileImageUrl ?? "", showOnlineIndicator: false, size: CGSize(width: 25, height: 25), userName: mem.memberInfo?.userName ?? "",font: .regular(size: 12))
                                     Text(mem.memberInfo?.userName ?? "")
-                                        .font(themeFonts.messageListMessageText)
-                                        .foregroundColor(themeColor.messageListHeaderTitle)
+                                        .font(appearance.fonts.messageListMessageText)
+                                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                 }
                             }
                             Button {
@@ -61,7 +59,7 @@ struct ISMChatBroadCastInfo: View {
                                 
                             } label: {
                                 Text("Edit list....")
-                                    .font(themeFonts.messageListMessageText)
+                                    .font(appearance.fonts.messageListMessageText)
                                     .overlay {
                                         LinearGradient(
                                             colors: [Color(hex: "#A399F7"),Color(hex: "#7062E9")],
@@ -70,7 +68,7 @@ struct ISMChatBroadCastInfo: View {
                                         )
                                         .mask(
                                             Text("Edit list....")
-                                                .font(themeFonts.messageListMessageText)
+                                                .font(appearance.fonts.messageListMessageText)
                                         )
                                     }
                             }
@@ -86,14 +84,16 @@ struct ISMChatBroadCastInfo: View {
                 ToolbarItem(placement: .principal) {
                     VStack {
                         Text("List info")
-                            .font(themeFonts.navigationBarTitle)
-                            .foregroundColor(themeColor.navigationBarTitle)
+                            .font(appearance.fonts.navigationBarTitle)
+                            .foregroundColor(appearance.colorPalette.navigationBarTitle)
                     }
                 }
             }
             .navigationBarItems(leading : navBarLeadingBtn,trailing: trailingBarLeadingBtn)
             .navigationBarTitleDisplayMode(.inline)
-            .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.conversationviewModel,selectUserFor: .AddMemberInBroadcast,groupCastId: self.groupcastId ?? "", groupCastIdToNavigate : $groupCastIdToNavigate),isActive: $navigatetoAddMember).environmentObject(realmManager))
+            .navigationDestination(isPresented: $navigatetoAddMember, destination: {
+                ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.conversationviewModel,selectUserFor: .AddMemberInBroadcast,groupCastId: self.groupcastId ?? "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
+            })
             .onAppear {
                 viewModel.getBroadMembers(groupcastId: self.groupcastId ?? "") { data in
                     membersInfo = data
@@ -108,7 +108,7 @@ struct ISMChatBroadCastInfo: View {
         Button {
             dismiss()
         } label: {
-            themeImage.backButton
+            appearance.images.backButton
                 .resizable()
                 .frame(width: 18, height: 18)
         }
@@ -123,16 +123,16 @@ struct ISMChatBroadCastInfo: View {
                 }
             } label: {
                 Text("Save")
-                    .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListHeaderTitle)
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
             }
         }else{
             Button {
                 
             } label: {
                 Text("")
-                    .font(themeFonts.messageListMessageText)
-                    .foregroundColor(themeColor.messageListHeaderTitle)
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
             }
         }
     }

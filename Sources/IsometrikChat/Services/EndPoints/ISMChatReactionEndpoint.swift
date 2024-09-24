@@ -43,9 +43,9 @@ enum ISMChatReactionEndpoint : ISMChatURLConvertible {
         switch self {
         case .sendReaction:
             return [:]
-        case .getReaction(let reaction):
+        case .getReaction(_):
             return [:]
-        case .removeReaction(let reaction):
+        case .removeReaction(_):
             return [:]
         }
     }

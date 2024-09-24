@@ -55,35 +55,22 @@ public struct AvatarView: View {
     var size: CGSize = .defaultAvatarSize
     var userName : String
     var font : Font = .headline
-    @State var themeColor = ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette
-    @State var themeFont = ISMChatSdkUI.getInstance().getAppAppearance().appearance.fonts
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @State private var isValid: Bool?
     
     public var body: some View {
         Group {
-            if let isValid = isValid {
-                if isValid && !shouldShowPlaceholder(avatar: avatar) {
-                    ISMChatImageCahcingManger.networkImage(url: avatar, isprofileImage: true, size: size)
-                        .scaledToFill()
-                        .frame(width: size.width, height: size.height)
-                        .clipShape(Circle())
-                        .overlay {
-                            Circle()
-                                .stroke(.gray.opacity(0.3), lineWidth: 1)
-                        }
-                } else {
-                    placeholderView
-                }
+            if !shouldShowPlaceholder(avatar: avatar) {
+                ISMChatImageCahcingManger.networkImage(url: avatar, isProfileImage: true, placeholderView: placeholderView)
+                    .scaledToFill()
+                    .frame(width: size.width, height: size.height)
+                    .clipShape(Circle())
+                    .overlay {
+                        Circle()
+                            .stroke(.gray.opacity(0.3), lineWidth: 1)
+                    }
             } else {
-                ZStack {
-                    ProgressView()
-                }
-                .frame(width: size.width, height: size.height)
-                .clipShape(Circle())
-                .overlay {
-                    Circle()
-                        .stroke(.gray.opacity(0.3), lineWidth: 1)
-                }
+                placeholderView
             }
         }
         .onAppear {
@@ -95,10 +82,10 @@ public struct AvatarView: View {
         ZStack {
             Circle()
                 .frame(width: size.width, height: size.height)
-                .foregroundColor(themeColor.avatarBackground)
+                .foregroundColor(appearance.colorPalette.avatarBackground)
             Text(userName.uppercased())
-                .font(themeFont.avatarText)
-                .foregroundColor(themeColor.avatarText)
+                .font(appearance.fonts.avatarText)
+                .foregroundColor(appearance.colorPalette.avatarText)
         }
         .frame(width: size.width, height: size.height)
         .clipShape(Circle())

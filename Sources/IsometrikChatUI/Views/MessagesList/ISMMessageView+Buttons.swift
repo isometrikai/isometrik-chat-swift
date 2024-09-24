@@ -117,17 +117,15 @@ extension ISMMessageView{
     
     //MARK: - NAVIGATION LEADING BUTTON
     func navigationBarLeadingButtons() -> some View {
-        Button(action: {}) {
-            HStack {
-                backButtonView()
-
-                Spacer().frame(width: 15)
-
-                if self.fromBroadCastFlow  == true{
-                    broadcastButtonView()
-                } else {
-                    profileButtonView()
-                }
+        HStack {
+            backButtonView()
+            
+            Spacer().frame(width: 15)
+            
+            if self.fromBroadCastFlow  == true{
+                broadcastButtonView()
+            } else {
+                profileButtonView()
             }
         }
     }
@@ -139,7 +137,7 @@ extension ISMMessageView{
             //sometimes keyboard doesn't get dismissed
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             //dismiss
-            dismiss()
+            presentationMode.wrappedValue.dismiss()
         }) {
             appearance.images.backButton
                 .resizable()
@@ -187,9 +185,52 @@ extension ISMMessageView{
     }
 
      func profileButtonView() -> some View {
-        Button {
-            handleProfileNavigation()
-        } label: {
+         HStack{
+             if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true{
+                 if ISMChatSdkUI.getInstance().getChatProperties().navigateToAppProfileFromMessageList == true{
+                     if isGroup == true {
+                         
+                         Button {
+                             self.stateViewModel.navigateToUserProfile = true
+                         } label: {
+                             customView()
+                         }
+
+                         
+//                         NavigationLink {
+//                             ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
+//                         } label: {
+//                             
+//                         }
+                     } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
+                                ?? opponenDetail?.metaData?.userId
+                                ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
+                         Button {
+                             delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
+                         } label: {
+                             customView()
+                         }
+                     }
+                 }else{
+                     
+                     Button {
+                         self.stateViewModel.navigateToUserProfile = true
+                     } label: {
+                         customView()
+                     }
+
+//                     NavigationLink {
+//                         
+//                     } label: {
+//                         customView()
+//                     }
+                 }
+             }
+         }
+    }
+    
+    func customView() -> some View{
+        HStack{
             UserAvatarView(
                 avatar: getAvatarUrl(),
                 showOnlineIndicator: self.conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,
@@ -211,22 +252,6 @@ extension ISMMessageView{
                     .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.3)))
             }
         }
-    }
-
-     func handleProfileNavigation() {
-         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true{
-             if ISMChatSdkUI.getInstance().getChatProperties().navigateToAppProfileFromMessageList == true{
-                 if isGroup == true {
-                     stateViewModel.navigateToProfile = true
-                 } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
-                            ?? opponenDetail?.metaData?.userId
-                            ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
-                     delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
-                 }
-             }else{
-                 stateViewModel.navigateToProfile = true
-             }
-         }
     }
 
      func getAvatarUrl() -> String {
@@ -262,21 +287,21 @@ extension ISMMessageView{
             } else if let memberString = memberString, !memberString.isEmpty {
                 return memberString
             } else {
-                return "Tap here for more info"
+                return "tap here for more info"
             }
         } else {
             if stateViewModel.otherUserTyping {
-                return "Typing..."
+                return "typing..."
             } else if let lastSeen = self.conversationDetail?.conversationDetails?.opponentDetails?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
                 let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
-                return "Last seen at \(date)"
+                return "last seen \(date)"
             } else if let lastSeen = self.opponenDetail?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
                 let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
-                return "Last seen at \(date)"
+                return "last seen \(date)"
             } else if self.conversationDetail?.conversationDetails?.opponentDetails?.online == true{
-                return "Online"
+                return "online"
             }else{
-                return "Tap here for more info"
+                return "tap here for more info"
             }
         }
     }
@@ -350,7 +375,7 @@ extension ISMMessageView{
 //                    }
                 }
             }
-        }.background(NavigationLink("", destination:  ISMBlockUserView(conversationViewModel: self.conversationViewModel), isActive: $stateViewModel.navigateToBlockUsers))
+        }
     }
     
     func calling(type : ISMLiveCallType){
