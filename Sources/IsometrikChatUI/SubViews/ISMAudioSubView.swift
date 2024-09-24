@@ -111,7 +111,9 @@ struct ISMAudioSubView: View {
                     })
                 
                 Spacer().frame(width: 100)
-                dateAndStatusView(onImage: false)
+                if appearance.timeInsideBubble == true{
+                    dateAndStatusView(onImage: false)
+                }
             }
             
         }//:VSTACK

@@ -69,6 +69,7 @@ public struct ISMChatImages {
     public var messageSent : Image = loadImageSafely(with: "single_tick_sent")
     public var messageDelivered : Image = loadImageSafely(with: "double_tick_sent")
     public var messageRead : Image = loadImageSafely(with: "double_tick_received")
+    public var broadcastMessageStatus : Image = loadImageSafely(with: "broadcastMessageIcon")
     
     //contextMenu
     public var contextMenureply : Image = loadImageSafely(with: "reply_CM")
@@ -197,6 +198,7 @@ public struct ISMChatImages {
         messageSent: Image? = nil,
         messageDelivered: Image? = nil,
         messageRead: Image? = nil,
+        broadcastMessageStatus: Image? = nil,
         contextMenureply: Image? = nil,
         contextMenuforward: Image? = nil,
         contextMenuedit: Image? = nil,
@@ -282,6 +284,7 @@ public struct ISMChatImages {
         if let messageSent = messageSent { self.messageSent = messageSent }
         if let messageDelivered = messageDelivered { self.messageDelivered = messageDelivered }
         if let messageRead = messageRead { self.messageRead = messageRead }
+        if let broadcastMessageStatus = broadcastMessageStatus { self.broadcastMessageStatus = broadcastMessageStatus}
         if let contextMenureply = contextMenureply { self.contextMenureply = contextMenureply }
         if let contextMenuforward = contextMenuforward { self.contextMenuforward = contextMenuforward }
         if let contextMenuedit = contextMenuedit { self.contextMenuedit = contextMenuedit }

@@ -23,18 +23,21 @@ public class ISMAppearance {
     public var images :  ISMChatImages
     public var messageBubbleType : ISMChatBubbleType
     public var placeholders : ISMChatPlaceholders
+    public var timeInsideBubble : Bool
     public init(
         colorPalette: ISMChatColorPalette = ISMChatColorPalette(),
         images: ISMChatImages = ISMChatImages(),
         fonts: ISMChatFonts = ISMChatFonts(),
         messageBubbleType : ISMChatBubbleType = .BubbleWithOutTail,
-        placeholders: ISMChatPlaceholders = ISMChatPlaceholders()
+        placeholders: ISMChatPlaceholders = ISMChatPlaceholders(),
+        timeInsideBubble : Bool = true
     ) {
         self.colorPalette = colorPalette
         self.images = images
         self.fonts = fonts
         self.messageBubbleType = messageBubbleType
         self.placeholders = placeholders
+        self.timeInsideBubble = timeInsideBubble
     }
 }
 

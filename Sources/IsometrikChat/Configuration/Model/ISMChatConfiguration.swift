@@ -22,7 +22,7 @@ public struct ISMChatConfiguration {
     public var userSecret: String
     public var authToken : String
     
-    public init(accountId: String = "", projectId: String = "", keySetId: String = "", licensekey: String = "", origin: String = "https://apis.isometrik.io" , headers: HTTPHeaders = [:], MQTTHost: String = "connections.isometrik.io", MQTTPort: Int = 2052, appSecret: String = "", userSecret: String = "",authToken : String = "") {
+    public init(accountId: String = "", projectId: String = "", keySetId: String = "", licensekey: String = "", origin: String = "https://apis.isometrik.ai" , headers: HTTPHeaders = [:], MQTTHost: String = "connections.isometrik.ai", MQTTPort: Int = 2052, appSecret: String = "", userSecret: String = "",authToken : String = "") {
         self.accountId = accountId
         self.projectId = projectId
         self.keySetId = keySetId

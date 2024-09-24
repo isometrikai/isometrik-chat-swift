@@ -1156,7 +1156,7 @@ extension ISMMessageView{
     func clearChat(){
         conversationViewModel.clearChat(conversationId: conversationID ?? "") {
             print("Success")
-//            self.realmManager.clearMessages()
+            self.realmManager.clearMessages()
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
 //                self.realmManager.clearMessages(convID: conversationID ?? "")
                 self.realmManager.deleteMessagesThroughConvId(convID:  conversationID ?? "")

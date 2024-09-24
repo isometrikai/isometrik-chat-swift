@@ -124,7 +124,7 @@ struct ISMMessageSubView: View {
                         }
                         ZStack(alignment: .bottomTrailing){
                             let str = message.body
-                            VStack(alignment: .leading, spacing: 2){
+                            VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
                                  if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
@@ -181,7 +181,9 @@ struct ISMMessageSubView: View {
                                                 }
                                             }
                                         }
-                                        dateAndStatusView(onImage: false)
+                                        if appearance.timeInsideBubble == true{
+                                            dateAndStatusView(onImage: false)
+                                        }
                                     }
                                 }//:VStack
                                 .padding(.horizontal, str.isValidURL || str.contains("www.") == true ? 5 : 10)
@@ -201,6 +203,10 @@ struct ISMMessageSubView: View {
                                             .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                         ) : AnyView(EmptyView())
                                 )
+                                
+                                if appearance.timeInsideBubble == false{
+                                    dateAndStatusView(onImage: false)
+                                }
                             }
                             if message.reactions.count > 0{
                                 reactionsView()
@@ -234,7 +240,7 @@ struct ISMMessageSubView: View {
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
-                            VStack(alignment: .leading, spacing: 2){
+                            VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
                                  if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
@@ -266,7 +272,9 @@ struct ISMMessageSubView: View {
                                             }.padding(5)
                                             HStack{
                                                 Spacer()
-                                                dateAndStatusView(onImage: false)
+                                                if appearance.timeInsideBubble == true{
+                                                    dateAndStatusView(onImage: false)
+                                                }
                                             }
                                             Divider().background(Color.docBackground)
                                             HStack{
@@ -296,6 +304,9 @@ struct ISMMessageSubView: View {
                                         )
                                     }
                                 }
+                                if appearance.timeInsideBubble == false{
+                                    dateAndStatusView(onImage: false)
+                                }
                             }
                             if message.reactions.count > 0{
                                 reactionsView()
@@ -312,7 +323,7 @@ struct ISMMessageSubView: View {
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
-                            VStack(alignment: .leading, spacing: 2){
+                            VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
                                  if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
@@ -329,10 +340,11 @@ struct ISMMessageSubView: View {
                                             navigateToMediaSliderId = message.messageId
                                         } label: {
                                             ZStack(alignment: .bottomTrailing){
-                                                ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.mediaUrl ?? "")
-                                                    .scaledToFill()
-                                                    .frame(width: 250, height: 300)
-                                                    .cornerRadius(5)
+                                                ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
+//                                                ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.mediaUrl ?? "")
+//                                                    .scaledToFill()
+//                                                    .frame(width: 250, height: 300)
+//                                                    .cornerRadius(5)
                                                     .overlay(
                                                         LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                                                             .frame(width: 250, height: 300)
@@ -341,10 +353,12 @@ struct ISMMessageSubView: View {
                                                                     .fill(Color.white)
                                                             )
                                                     )
-                                                if message.metaData?.captionMessage == nil{
-                                                    dateAndStatusView(onImage: true)
-                                                        .padding(.bottom,5)
-                                                        .padding(.trailing,5)
+                                                if appearance.timeInsideBubble == true{
+                                                    if message.metaData?.captionMessage == nil{
+                                                        dateAndStatusView(onImage: true)
+                                                            .padding(.bottom,5)
+                                                            .padding(.trailing,5)
+                                                    }
                                                 }
                                             }
                                         }
@@ -355,9 +369,11 @@ struct ISMMessageSubView: View {
                                                 .font(appearance.fonts.messageListMessageText)
                                                 .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                             
-                                            dateAndStatusView(onImage: false)
-                                                .padding(.bottom,5)
-                                                .padding(.trailing,5)
+                                            if appearance.timeInsideBubble == true{
+                                                dateAndStatusView(onImage: false)
+                                                    .padding(.bottom,5)
+                                                    .padding(.trailing,5)
+                                            }
                                             
                                         }
                                     }//:ZStack
@@ -378,6 +394,11 @@ struct ISMMessageSubView: View {
                                             ) : AnyView(EmptyView())
                                     )
 //                                }
+                                if appearance.timeInsideBubble == false{
+                                    dateAndStatusView(onImage: false)
+                                        .padding(.bottom,5)
+                                        .padding(.trailing,5)
+                                }
                             }
                             
                             if message.reactions.count > 0{
@@ -394,7 +415,7 @@ struct ISMMessageSubView: View {
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
-                            VStack(alignment: .leading, spacing: 2){
+                            VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
                                  if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
@@ -421,10 +442,7 @@ struct ISMMessageSubView: View {
                                                     }else{
                                                         // Display the thumbnail image for non-videos
                                                         ZStack(alignment: .bottomTrailing){
-                                                            ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.thumbnailUrl ?? "")
-                                                                .scaledToFill()
-                                                                .frame(width: 250, height: 300)
-                                                                .cornerRadius(5)
+                                                            ISMImageViewer(url:  message.attachments.first?.thumbnailUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
                                                                 .overlay(
                                                                     LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                                                                         .frame(width: 250, height: 300)
@@ -443,10 +461,7 @@ struct ISMMessageSubView: View {
                                                 } else {
                                                     // Display the thumbnail image for non-videos
                                                     ZStack(alignment: .bottomTrailing){
-                                                        ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.thumbnailUrl ?? "")
-                                                            .scaledToFill()
-                                                            .frame(width: 250, height: 300)
-                                                            .cornerRadius(5)
+                                                        ISMImageViewer(url: message.attachments.first?.thumbnailUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
                                                             .overlay(
                                                                 LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                                                                     .frame(width: 250, height: 300)
@@ -455,10 +470,12 @@ struct ISMMessageSubView: View {
                                                                             .fill(Color.white)
                                                                     )
                                                             )
-                                                        if message.metaData?.captionMessage == nil{
-                                                            dateAndStatusView(onImage: true)
-                                                                .padding(.bottom,5)
-                                                                .padding(.trailing,5)
+                                                        if appearance.timeInsideBubble == true{
+                                                            if message.metaData?.captionMessage == nil{
+                                                                dateAndStatusView(onImage: true)
+                                                                    .padding(.bottom,5)
+                                                                    .padding(.trailing,5)
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -476,9 +493,11 @@ struct ISMMessageSubView: View {
                                                 .font(appearance.fonts.messageListMessageText)
                                                 .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                             
-                                            dateAndStatusView(onImage: false)
-                                                .padding(.bottom,5)
-                                                .padding(.trailing,5)
+                                            if appearance.timeInsideBubble == true{
+                                                dateAndStatusView(onImage: false)
+                                                    .padding(.bottom,5)
+                                                    .padding(.trailing,5)
+                                            }
                                         }
                                         
                                     }.padding(5)
@@ -499,6 +518,11 @@ struct ISMMessageSubView: View {
                                         )
 //                                }//:NavigationLink
                                 //                                }
+                                if appearance.timeInsideBubble == false{
+                                    dateAndStatusView(onImage: false)
+                                        .padding(.bottom,5)
+                                        .padding(.trailing,5)
+                                }
                             }
                             if message.reactions.count > 0{
                                 reactionsView()
@@ -514,7 +538,7 @@ struct ISMMessageSubView: View {
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
-                            VStack(alignment: .leading, spacing: 2){
+                            VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
                                  if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
@@ -532,10 +556,7 @@ struct ISMMessageSubView: View {
                                                 HStack(alignment: .center, spacing: 5){
                                                     if let urlExtension = urlExtension{
                                                         if urlExtension.contains(".jpg") ||  urlExtension.contains(".png"){
-                                                            ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.mediaUrl ?? "")
-                                                                .scaledToFill()
-                                                                .frame(width: 250, height: 300)
-                                                                .cornerRadius(5)
+                                                            ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
                                                             
                                                         }else{
                                                             if urlExtension == "pdf" {
@@ -554,9 +575,10 @@ struct ISMMessageSubView: View {
                                                         }
                                                     }
                                                 }
-                                                
-                                                dateAndStatusView(onImage: false)
-                                                    .padding(.bottom,(message.reactions.count > 0) ? 5 : 0)
+                                                if appearance.timeInsideBubble == true{
+                                                    dateAndStatusView(onImage: false)
+                                                        .padding(.bottom,(message.reactions.count > 0) ? 5 : 0)
+                                                }
                                             }//:VStack
                                             .frame(width: 250)
                                             .padding(5)
@@ -578,6 +600,9 @@ struct ISMMessageSubView: View {
                                         }//:ZStack
                                     }
                                 }
+                                if appearance.timeInsideBubble == false{
+                                    dateAndStatusView(onImage: false)
+                                }
                             }
                             if message.reactions.count > 0{
                                 reactionsView()
@@ -593,7 +618,7 @@ struct ISMMessageSubView: View {
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
-                            VStack(alignment: .leading, spacing: 2){
+                            VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
                                  if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
@@ -635,8 +660,10 @@ struct ISMMessageSubView: View {
                                             }
                                         }
                                        
-                                        dateAndStatusView(onImage: false)
-                                            .padding(.bottom,(message.reactions.count > 0) ? 5 : 0)
+                                        if appearance.timeInsideBubble == true{
+                                            dateAndStatusView(onImage: false)
+                                                .padding(.bottom,(message.reactions.count > 0) ? 5 : 0)
+                                        }
                                     }//:VStack
                                     .frame(width: 250)
                                     .padding(5)
@@ -656,6 +683,10 @@ struct ISMMessageSubView: View {
                                             ) : AnyView(EmptyView())
                                     )
                                 }//:ZStack
+                                if appearance.timeInsideBubble == false{
+                                    dateAndStatusView(onImage: false)
+                                        .padding(.bottom,(message.reactions.count > 0) ? 5 : 0)
+                                }
                             }
                             if message.reactions.count > 0{
                                 reactionsView()
@@ -672,7 +703,7 @@ struct ISMMessageSubView: View {
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
-                            VStack(alignment: .leading, spacing: 2){
+                            VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
                                  if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
@@ -702,6 +733,9 @@ struct ISMMessageSubView: View {
                                             ) : AnyView(EmptyView())
                                     )
                                 }//:ZStack
+                                if appearance.timeInsideBubble == false{
+                                    dateAndStatusView(onImage: false)
+                                }
                             }
                             if message.reactions.count > 0{
                                 reactionsView()
@@ -815,7 +849,7 @@ struct ISMMessageSubView: View {
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
-                            VStack(alignment: .leading, spacing: 2){
+                            VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
                                  if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
@@ -843,10 +877,12 @@ struct ISMMessageSubView: View {
                                                                     .fill(Color.white)
                                                             )
                                                     )
-                                                if message.metaData?.captionMessage == nil{
-                                                    dateAndStatusView(onImage: true)
-                                                        .padding(.bottom,5)
-                                                        .padding(.trailing,5)
+                                                if appearance.timeInsideBubble == true{
+                                                    if message.metaData?.captionMessage == nil{
+                                                        dateAndStatusView(onImage: true)
+                                                            .padding(.bottom,5)
+                                                            .padding(.trailing,5)
+                                                    }
                                                 }
                                             }
                                         }
@@ -857,9 +893,11 @@ struct ISMMessageSubView: View {
                                                 .font(appearance.fonts.messageListMessageText)
                                                 .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                             
-                                            dateAndStatusView(onImage: false)
-                                                .padding(.bottom,5)
-                                                .padding(.trailing,5)
+                                            if appearance.timeInsideBubble == true{
+                                                dateAndStatusView(onImage: false)
+                                                    .padding(.bottom,5)
+                                                    .padding(.trailing,5)
+                                            }
                                             
                                         }
                                     }//:ZStack
@@ -881,6 +919,11 @@ struct ISMMessageSubView: View {
                                             ) : AnyView(EmptyView())
                                     )
 //                                }
+                                if appearance.timeInsideBubble == false{
+                                    dateAndStatusView(onImage: false)
+                                        .padding(.bottom,5)
+                                        .padding(.trailing,5)
+                                }
                             }
                             if message.reactions.count > 0{
                                 reactionsView()
@@ -895,7 +938,7 @@ struct ISMMessageSubView: View {
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
-                            VStack(alignment: .leading, spacing: 2){
+                            VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
                                  if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
@@ -906,16 +949,17 @@ struct ISMMessageSubView: View {
                                         .frame(width: 100, height: 100)
                                         .cornerRadius(5)
                                     
-                                    HStack{
-                                        dateAndStatusView(onImage: false)
-                                            .padding(.bottom,5)
-                                            .padding(.trailing,5)
-                                    }.padding(.leading,5)
-                                        .padding(.top,5)
-                                        .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-                                        .overlay(
-                                            appearance.messageBubbleType == .BubbleWithOutTail ?
+                                    if appearance.timeInsideBubble == true{
+                                        HStack{
+                                            dateAndStatusView(onImage: false)
+                                                .padding(.bottom,5)
+                                                .padding(.trailing,5)
+                                        }.padding(.leading,5)
+                                            .padding(.top,5)
+                                            .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                            .overlay(
+                                                appearance.messageBubbleType == .BubbleWithOutTail ?
                                                 AnyView(
                                                     UnevenRoundedRectangle(
                                                         topLeadingRadius: 8,
@@ -926,7 +970,11 @@ struct ISMMessageSubView: View {
                                                     )
                                                     .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                                 ) : AnyView(EmptyView())
-                                        )
+                                            )
+                                    }else{
+                                        dateAndStatusView(onImage: false)
+                                            .padding(.bottom,5)
+                                    }
                                     
                                     
                                 }//:ZStack
@@ -946,7 +994,7 @@ struct ISMMessageSubView: View {
                             inGroupUserAvatarView()
                         }
                         ZStack(alignment: .bottomTrailing){
-                            VStack(alignment: .leading, spacing: 2){
+                            VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
                                  if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                     //when its group show member name in message
                                     inGroupUserName()
@@ -976,6 +1024,11 @@ struct ISMMessageSubView: View {
                                                 .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                             ) : AnyView(EmptyView())
                                     )
+                                if appearance.timeInsideBubble == true{
+                                    dateAndStatusView(onImage: false)
+                                        .padding(.bottom,5)
+                                        .padding(.trailing,5)
+                                }
                             }
                             
                             if message.reactions.count > 0{
@@ -1075,10 +1128,7 @@ struct ISMMessageSubView: View {
             }
             ZStack(alignment: .bottomTrailing){
                 ZStack(alignment: .topTrailing){
-                    ISMChatImageCahcingManger.viewImage(url: message.metaData?.post?.postUrl ?? "")
-                        .scaledToFill()
-                        .frame(width: 124, height: 249)
-                        .cornerRadius(5)
+                    ISMImageViewer(url: message.metaData?.post?.postUrl ?? "", size: CGSizeMake(124, 249), cornerRadius: 5)
                         .overlay(
                             LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                                 .frame(width: 250, height: 300)
@@ -1092,10 +1142,12 @@ struct ISMMessageSubView: View {
                         .scaledToFill()
                         .frame(width: 20, height: 20)
                 }
-                if message.metaData?.captionMessage == nil{
-                    dateAndStatusView(onImage: true)
-                        .padding(.bottom,5)
-                        .padding(.trailing,5)
+                if appearance.timeInsideBubble == true{
+                    if message.metaData?.captionMessage == nil{
+                        dateAndStatusView(onImage: true)
+                            .padding(.bottom,5)
+                            .padding(.trailing,5)
+                    }
                 }
             }
             if let caption = message.metaData?.captionMessage, !caption.isEmpty{
@@ -1103,10 +1155,11 @@ struct ISMMessageSubView: View {
                     .font(appearance.fonts.messageListMessageText)
                     .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                 
-                dateAndStatusView(onImage: false)
-                    .padding(.bottom,5)
-                    .padding(.trailing,5)
-                
+                if appearance.timeInsideBubble == true{
+                    dateAndStatusView(onImage: false)
+                        .padding(.bottom,5)
+                        .padding(.trailing,5)
+                }
             }
         }
     }
@@ -1238,13 +1291,15 @@ struct ISMMessageSubView: View {
             }
             .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 8))
             if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Image.value{
-                ISMChatImageCahcingManger.viewImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "")
-                    .scaledToFill()
-                    .frame(width: 45, height: 40)
+                ISMImageViewer(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "", size: CGSizeMake(45, 40), cornerRadius: 5)
+//                ISMChatImageCahcingManger.viewImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "")
+//                    .scaledToFill()
+//                    .frame(width: 45, height: 40)
             }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Video.value{
-                ISMChatImageCahcingManger.viewImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "")
-                    .scaledToFill()
-                    .frame(width: 45, height: 40)
+                ISMImageViewer(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "", size: CGSizeMake(45, 40), cornerRadius: 5)
+//                ISMChatImageCahcingManger.viewImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "")
+//                    .scaledToFill()
+//                    .frame(width: 45, height: 40)
             }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.File.value{
                 Image(uiImage: pdfthumbnailImage)
                     .resizable()
@@ -1486,7 +1541,7 @@ struct ISMMessageSubView: View {
                 .font(appearance.fonts.messageListMessageTime)
                 .foregroundColor(onImage ? Color.white : (isReceived ? appearance.colorPalette.messageListMessageTimeReceived :  appearance.colorPalette.messageListMessageTimeSend))
             if message.metaData?.isBroadCastMessage == true && fromBroadCastFlow != true && !isReceived && !message.deletedMessage{
-                Image("broadcastMessageIcon")
+                appearance.images.broadcastMessageStatus
                     .resizable()
                     .frame(width: 11, height: 10)
             }
