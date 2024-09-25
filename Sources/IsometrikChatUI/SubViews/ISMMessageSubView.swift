@@ -1024,7 +1024,7 @@ struct ISMMessageSubView: View {
                                                 .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                                             ) : AnyView(EmptyView())
                                     )
-                                if appearance.timeInsideBubble == true{
+                                if appearance.timeInsideBubble == false{
                                     dateAndStatusView(onImage: false)
                                         .padding(.bottom,5)
                                         .padding(.trailing,5)
