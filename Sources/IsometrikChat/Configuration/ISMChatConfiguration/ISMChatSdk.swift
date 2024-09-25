@@ -115,6 +115,7 @@ public class ISMChatSdk{
         //initializeCall
         initializeCallIsometrik(accountId: appConfig.accountId, projectId: appConfig.projectId, keysetId: appConfig.keySetId, licenseKey: appConfig.licensekey, appSecret: appConfig.appSecret, userSecret: appConfig.userSecret, isometricChatUserId: userConfig.userId, isometricUserToken: userConfig.userToken)
         self.chatInitialized = true
+        print("CHAT INITIALIZED")
     }
     
     public func onTerminate() {
@@ -134,7 +135,7 @@ public class ISMChatSdk{
         }
     }
     
-    public func onProfileSwitch(appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig,hostFrameworkType : FrameworkType,conversationListViewControllerName : UIViewController.Type?,messagesListViewControllerName : UIViewController.Type?){
+    public func onProfileSwitch(oldUserId : String,appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig,hostFrameworkType : FrameworkType,conversationListViewControllerName : UIViewController.Type?,messagesListViewControllerName : UIViewController.Type?){
         //1. unsubscribe fcm
         ISMChatHelper.unSubscribeFCM()
         //2. unsubscribe mqtt
@@ -142,7 +143,7 @@ public class ISMChatSdk{
             self.mqttSession?.unSubscribe()
         }
         //3. delete local data
-        RealmManager().switchProfile(oldUserId:  self.getChatClient().getConfigurations().userConfig.userId, newUserId: userConfig.userId)
+        RealmManager().switchProfile(oldUserId: oldUserId, newUserId: userConfig.userId)
         
         self.chatInitialized = nil
         
