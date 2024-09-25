@@ -56,11 +56,11 @@ struct ISMAddParticipantsView: View {
                     .navigationBarItems(leading: navBarLeadingBtn,trailing: navBarTrailingBtn)
                 }
             }//:VStack
-            .onChange(of: viewModel.debounceSearchedText, perform: { newValue in
+            .onChange(of: viewModel.debounceSearchedText){ 
                 print("~~SEARCHING WITH DEBOUNCING \(viewModel.searchedText)")
                 self.viewModel.resetEligibleUsersdata()
                 getUsers()
-            })
+            }
             .onDisappear {
                 viewModel.searchedText = ""
                 viewModel.debounceSearchedText = ""

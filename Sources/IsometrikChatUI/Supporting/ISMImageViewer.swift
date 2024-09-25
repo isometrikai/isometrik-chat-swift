@@ -21,7 +21,7 @@ struct ISMImageViewer: View {
     }
     //MARK:  - LIFECYCLE
     var body: some View {
-        ISMChatImageCahcingManger.viewImage(url: url ?? "")
+        ISMChatImageCahcingManger.viewImage(url: url)
             .scaledToFill()
             .frame(width: size.width,height: size.height)
             .cornerRadius(cornerRadius ?? 0)
