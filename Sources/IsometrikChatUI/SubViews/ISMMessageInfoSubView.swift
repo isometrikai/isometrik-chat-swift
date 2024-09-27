@@ -937,7 +937,7 @@ struct ISMMessageInfoSubView: View {
     }
     
     func postButtonView(isPost : Bool) -> some View{
-        VStack{
+        VStack(alignment: .trailing){
             if message.messageType == 1{
                 forwardedView()
             }
