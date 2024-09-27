@@ -260,6 +260,12 @@ extension RealmManager {
                     post.postUrl = value.lastMessageDetails?.metaData?.post?.postUrl ?? ""
                     messageMetaData.post = post
                     
+                    let product = ProductDB()
+                    product.productId = value.lastMessageDetails?.metaData?.product?.productId ?? ""
+                    product.productUrl = value.lastMessageDetails?.metaData?.product?.productUrl ?? ""
+                    product.productCategoryId = value.lastMessageDetails?.metaData?.product?.productCategoryId ?? ""
+                    messageMetaData.product = product
+                    
                     messageMetaData.isBroadCastMessage = value.lastMessageDetails?.metaData?.isBroadCastMessage ?? false
                     lastMessage.metaData = messageMetaData
                     

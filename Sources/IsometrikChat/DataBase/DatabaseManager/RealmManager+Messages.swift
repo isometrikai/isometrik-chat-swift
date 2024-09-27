@@ -235,6 +235,14 @@ extension RealmManager{
                         metaData.isBroadCastMessage = value.metaData?.isBroadCastMessage
                         
                         
+                        let productValue = ProductDB()
+                        productValue.productId = value.metaData?.product?.productId
+                        productValue.productUrl = value.metaData?.product?.productUrl
+                        productValue.productCategoryId = value.metaData?.product?.productCategoryId
+                        
+                        metaData.product = productValue
+                        
+                        
                         if let contacts = value.metaData?.contacts{
                             for x in contacts{
                                 let contact = ContactDB()

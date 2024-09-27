@@ -843,7 +843,7 @@ struct ISMMessageInfoSubView: View {
                                 }
                                 
                                 VStack(alignment: .trailing,spacing: 5){
-                                    postButtonView(showIcon: true)
+                                    postButtonView(isPost: true)
                                     
                                 }//:ZStack
                                 .padding(5)
@@ -884,7 +884,7 @@ struct ISMMessageInfoSubView: View {
                                 }
                                 
                                     VStack(alignment: .trailing,spacing: 5){
-                                        postButtonView(showIcon: false)
+                                        postButtonView(isPost: false)
 
                                     }//:ZStack
                                     .padding(5)
@@ -936,14 +936,14 @@ struct ISMMessageInfoSubView: View {
         }
     }
     
-    func postButtonView(showIcon: Bool) -> some View{
+    func postButtonView(isPost : Bool) -> some View{
         VStack{
             if message.messageType == 1{
                 forwardedView()
             }
             ZStack(alignment: .bottomTrailing){
                 ZStack(alignment: .topTrailing){
-                    ISMImageViewer(url: message.metaData?.post?.postUrl ?? "", size: CGSizeMake(124, 249), cornerRadius: 5)
+                    ISMImageViewer(url: isPost == true ? (message.metaData?.post?.postUrl ?? "") : (message.metaData?.product?.productUrl ?? ""), size: isPost == true ? CGSizeMake(124, 249) : CGSizeMake(250, 300), cornerRadius: 5)
                         .overlay(
                             LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                                 .frame(width: 250, height: 300)
@@ -952,13 +952,13 @@ struct ISMMessageInfoSubView: View {
                                         .fill(Color.white)
                                 )
                         )
-                    if showIcon == true{
+                    if isPost == true{
                         appearance.images.postIcon
                             .scaledToFill()
                             .frame(width: 20, height: 20)
                     }
                 }
-                if  appearance.timeInsideBubble == true{
+                if appearance.timeInsideBubble == true{
                     if message.metaData?.captionMessage == nil{
                         dateAndStatusView(onImage: true)
                             .padding(.bottom,5)
@@ -970,12 +970,12 @@ struct ISMMessageInfoSubView: View {
                 Text(caption)
                     .font(appearance.fonts.messageListMessageText)
                     .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                if  appearance.timeInsideBubble == true{
+                
+                if appearance.timeInsideBubble == true{
                     dateAndStatusView(onImage: false)
                         .padding(.bottom,5)
                         .padding(.trailing,5)
                 }
-                
             }
         }
     }

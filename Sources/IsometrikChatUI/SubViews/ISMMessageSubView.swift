@@ -75,7 +75,7 @@ struct ISMMessageSubView: View {
     @ObservedObject var viewModel = ChatsViewModel()
     @Environment(\.viewController) public var viewControllerHolder: UIViewController?
     @Binding var postIdToNavigate : String
-    @Binding var productIdToNavigate : String
+    @Binding var productIdToNavigate : ProductDB
     
     @Binding var navigateToSocialProfileId : String
     
@@ -1019,7 +1019,7 @@ struct ISMMessageSubView: View {
                                         Button {
                                             postIdToNavigate = message.metaData?.post?.postId ?? ""
                                         } label: {
-                                            postButtonView(showIcon: true)
+                                            postButtonView(isPost: true)
                                         }
 
                                     }//:ZStack
@@ -1066,9 +1066,9 @@ struct ISMMessageSubView: View {
                                 
                                     VStack(alignment: .trailing,spacing: 5){
                                         Button {
-                                            productIdToNavigate = message.metaData?.post?.postId ?? ""
+                                            productIdToNavigate = message.metaData?.product ?? ProductDB()
                                         } label: {
-                                            postButtonView(showIcon: false)
+                                            postButtonView(isPost: false)
                                         }
 
                                     }//:ZStack
@@ -1192,14 +1192,14 @@ struct ISMMessageSubView: View {
         }
     }
     
-    func postButtonView(showIcon : Bool) -> some View{
+    func postButtonView(isPost : Bool) -> some View{
         VStack{
             if message.messageType == 1{
                 forwardedView()
             }
             ZStack(alignment: .bottomTrailing){
                 ZStack(alignment: .topTrailing){
-                    ISMImageViewer(url: message.metaData?.post?.postUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
+                    ISMImageViewer(url: isPost == true ? (message.metaData?.post?.postUrl ?? "") : (message.metaData?.product?.productUrl ?? ""), size: isPost == true ? CGSizeMake(124, 249) : CGSizeMake(250, 300), cornerRadius: 5)
                         .overlay(
                             LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                                 .frame(width: 250, height: 300)
@@ -1208,7 +1208,7 @@ struct ISMMessageSubView: View {
                                         .fill(Color.white)
                                 )
                         )
-                    if showIcon == true{
+                    if isPost == true{
                         appearance.images.postIcon
                             .scaledToFill()
                             .frame(width: 20, height: 20)

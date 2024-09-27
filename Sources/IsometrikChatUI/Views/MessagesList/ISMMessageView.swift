@@ -19,7 +19,7 @@ import IsometrikChat
 public protocol ISMMessageViewDelegate{
     func navigateToAppProfile(userId : String,userType : Int)
     func navigateToPost(postId : String)
-    func navigateToProduct(productId : String)
+    func navigateToProduct(productId : String,productCategoryId : String)
     func navigateToUserListToForward(messages : [MessagesDB])
     func navigateToAppMemberInGroup(conversationId : String,groupMembers : [ISMChatGroupMember]?)
     func uploadOnExternalCDN(messageKind : ISMChatMessageType,mediaUrl : URL,completion:@escaping(String,Int)->())
@@ -151,7 +151,7 @@ public struct ISMMessageView: View {
     
     
     @State var postIdToNavigate : String = ""
-    @State var productIdToNavigate : String = ""
+    @State var productIdToNavigate = ProductDB()
     
     
     public var delegate : ISMMessageViewDelegate?
@@ -463,9 +463,9 @@ public struct ISMMessageView: View {
             }
         })
         .onChange(of: productIdToNavigate, { _, _ in
-            if !productIdToNavigate.isEmpty{
-                delegate?.navigateToProduct(productId: productIdToNavigate)
-                productIdToNavigate = ""
+            if let productId = productIdToNavigate.productId, !productId.isEmpty{
+                delegate?.navigateToProduct(productId: productId, productCategoryId: productIdToNavigate.productCategoryId ?? "")
+                productIdToNavigate = ProductDB()
             }
         })
         .onChange(of: stateViewModel.shareContact, { _, _ in

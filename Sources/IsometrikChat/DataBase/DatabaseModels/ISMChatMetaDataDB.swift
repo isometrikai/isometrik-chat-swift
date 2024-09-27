@@ -16,11 +16,18 @@ public class MetaDataDB : Object, ObjectKeyIdentifiable {
     @Persisted public var captionMessage : String?
     @Persisted public var isBroadCastMessage : Bool?
     @Persisted public var post : PostDB?
+    @Persisted public var product : ProductDB?
 }
 
 public class PostDB: Object, ObjectKeyIdentifiable {
     @Persisted public var postId : String?
     @Persisted public var postUrl : String?
+}
+
+public class ProductDB: Object, ObjectKeyIdentifiable {
+    @Persisted public var productId : String?
+    @Persisted public var productUrl : String?
+    @Persisted public var productCategoryId : String?
 }
 
 

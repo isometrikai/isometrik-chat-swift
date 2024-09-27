@@ -221,6 +221,7 @@ public struct ISMChatMetaData : Codable{
     public var captionMessage : String?
     public var isBroadCastMessage : Bool?
     public var post : ISMChatPostMetaData?
+    public var product : ISMChatProductMetaData?
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         replyMessage = try? container.decode(ISMChatReplyMessageMetaData.self, forKey: .replyMessage)
@@ -229,14 +230,16 @@ public struct ISMChatMetaData : Codable{
         captionMessage = try? container.decode(String.self, forKey: .captionMessage)
         isBroadCastMessage = try? container.decode(Bool.self, forKey: .isBroadCastMessage)
         post = try? container.decode(ISMChatPostMetaData.self, forKey: .post)
+        product = try? container.decode(ISMChatProductMetaData.self, forKey: .product)
     }
-    public init(replyMessage : ISMChatReplyMessageMetaData? = nil, locationAddress : String? = nil ,contacts : [ISMChatContactMetaData]? = nil,captionMessage : String? = nil,isBroadCastMessage : Bool? = nil,post : ISMChatPostMetaData? = nil){
+    public init(replyMessage : ISMChatReplyMessageMetaData? = nil, locationAddress : String? = nil ,contacts : [ISMChatContactMetaData]? = nil,captionMessage : String? = nil,isBroadCastMessage : Bool? = nil,post : ISMChatPostMetaData? = nil,product : ISMChatProductMetaData? = nil){
         self.replyMessage = replyMessage
         self.locationAddress = locationAddress
         self.contacts = contacts
         self.captionMessage = captionMessage
         self.isBroadCastMessage = isBroadCastMessage
         self.post = post
+        self.product = product
     }
 }
 
@@ -252,5 +255,23 @@ public struct ISMChatPostMetaData : Codable{
     public init(postId : String? = nil,postUrl : String? = nil){
         self.postId = postId
         self.postUrl = postUrl
+    }
+}
+
+public struct ISMChatProductMetaData : Codable{
+    public var productId : String?
+    public var productUrl : String?
+    public var productCategoryId : String?
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        productId = try? container.decode(String.self, forKey: .productId)
+        productUrl = try? container.decode(String.self, forKey: .productUrl)
+        productCategoryId = try? container.decode(String.self, forKey: .productCategoryId)
+    }
+    public init(productId : String? = nil,productUrl : String? = nil,productCategoryId : String? = nil){
+        self.productId = productId
+        self.productUrl = productUrl
+        self.productCategoryId = productCategoryId
     }
 }
