@@ -91,6 +91,18 @@ struct ISMMessageInfoSubView: View {
 //                                            ISMLinkPreview(urlString: str)
 //                                                .font(themeFonts.messageListMessageText)
 //                                                .foregroundColor(themeColor.messageListMessageText)
+                                            Text(str)
+                                                .font(appearance.fonts.messageListMessageText)
+                                                .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                .underline(true, color: isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                .onTapGesture {
+                                                    if str.contains("https"){
+                                                        openURLInSafari(urlString: str)
+                                                    }else{
+                                                        let fullURLString = "https://" + str.trimmingCharacters(in: .whitespaces)
+                                                        openURLInSafari(urlString: fullURLString)
+                                                    }
+                                                }
                                         }
                                         else{
                                             if str.contains("@") && isGroup == true{

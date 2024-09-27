@@ -202,7 +202,14 @@ extension ISMMessageView{
 //                         } label: {
 //                             
 //                         }
-                     } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
+                     } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.storeId ?? opponenDetail?.metaData?.userId{
+                         Button {
+                             delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
+                         } label: {
+                             customView()
+                         }
+                     }
+                     else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
                                 ?? opponenDetail?.metaData?.userId
                                 ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
                          Button {

@@ -164,12 +164,26 @@ struct ISMMessageSubView: View {
 //                                                ISMLinkPreview(urlString: str)
 //                                                    .font(themeFonts.messageListMessageText)
 //                                                    .foregroundColor(themeColor.messageListMessageText)
-                                                Link(destination: URL(string: str)!, label: {
-                                                    Text(str)
-                                                        .font(appearance.fonts.messageListMessageText)
-                                                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                                                        .underline(true, color: isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                                                })
+                                                
+                                                Text(str)
+                                                    .font(appearance.fonts.messageListMessageText)
+                                                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                    .underline(true, color: isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                    .onTapGesture {
+                                                        if str.contains("https"){
+                                                            openURLInSafari(urlString: str)
+                                                        }else{
+                                                            let fullURLString = "https://" + str.trimmingCharacters(in: .whitespaces)
+                                                            openURLInSafari(urlString: fullURLString)
+                                                        }
+                                                    }
+
+//                                                Link(destination: URL(string: str)!, label: {
+//                                                    Text(str)
+//                                                        .font(appearance.fonts.messageListMessageText)
+//                                                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+//                                                        .underline(true, color: isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+//                                                })
                                             }
                                             else{
                                                 if str.contains("@") && isGroup == true{
@@ -1121,6 +1135,12 @@ struct ISMMessageSubView: View {
             .foregroundColor(appearance.colorPalette.messageListMessageEdited)
     }
     
+    func openURLInSafari(urlString : String) {
+        if let url = URL(string: urlString) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
     func postButtonView() -> some View{
         VStack{
             if message.messageType == 1{
@@ -1292,14 +1312,8 @@ struct ISMMessageSubView: View {
             .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 8))
             if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Image.value{
                 ISMImageViewer(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "", size: CGSizeMake(45, 40), cornerRadius: 5)
-//                ISMChatImageCahcingManger.viewImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "")
-//                    .scaledToFill()
-//                    .frame(width: 45, height: 40)
             }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Video.value{
                 ISMImageViewer(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "", size: CGSizeMake(45, 40), cornerRadius: 5)
-//                ISMChatImageCahcingManger.viewImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "")
-//                    .scaledToFill()
-//                    .frame(width: 45, height: 40)
             }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.File.value{
                 Image(uiImage: pdfthumbnailImage)
                     .resizable()
@@ -1323,101 +1337,6 @@ struct ISMMessageSubView: View {
         .background(Color.docBackground)
         .cornerRadius(5, corners: .allCorners)
     }
-    
-//    func callView() -> some View{
-//        var imageString : String = ""
-//        var titleText : String = ""
-//        var durationText : String = ""
-//        
-//        
-//        if message.initiatorIdentifier == userSession.getEmailId(){
-//            if message.missedByMembers.count == 0{
-//                if let duration = message.callDurations.first(where: { $0.memberId == userSession.getUserId() }) {
-//                    // Duration found
-//                    if messageType == .AudioCall{
-//                        imageString = "audio_outgoing"
-//                        titleText = "Voice Call"
-//                        durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
-//                    }else{
-//                        imageString = "video_outgoing"
-//                        titleText = "Video Call"
-//                        durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
-//                    }
-//                } else {
-//                    imageString = ""
-//                    titleText = ""
-//                    durationText = ""
-//                }
-//            } else {
-//                //correct
-//                if messageType == .AudioCall{
-//                    imageString = "audio_outgoing"
-//                    titleText = "Voice Call"
-//                    durationText = "No answer"
-//                }else{
-//                    imageString = "video_outgoing"
-//                    titleText = "Video Call"
-//                    durationText = "No answer"
-//                }
-//            }
-//        }else{
-//            if message.missedByMembers.count == 0{
-//                if let duration = message.callDurations.first(where: { $0.memberId == userSession.getUserId() }) {
-//                    if messageType == .AudioCall{
-//                        imageString = "audio_incoming"
-//                        titleText = "Voice Call"
-//                        durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
-//                    }else{
-//                        imageString = "video_incoming"
-//                        titleText = "Video Call"
-//                        durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
-//                    }
-//                } else {
-//                    if messageType == .AudioCall{
-//                        imageString = "audio_missedCall"
-//                        titleText = "Missed voice call"
-//                        durationText = "Tap to call back"
-//                    }else{
-//                        imageString = "video_missedCall"
-//                        titleText = "Missed video call"
-//                        durationText = "Tap to call back"
-//                    }
-//                }
-//            }else{
-//                //correct
-//                if messageType == .AudioCall{
-//                    imageString = "audio_missedCall"
-//                    titleText = "Missed voice call"
-//                    durationText = "Tap to call back"
-//                }else{
-//                    imageString = "video_missedCall"
-//                    titleText = "Missed video call"
-//                    durationText = "Tap to call back"
-//                }
-//            }
-//        }
-//        
-//        
-//        return HStack(spacing: 10){
-//            Image(imageString)
-//                .resizable()
-//                .frame(width: 38, height: 38, alignment: .center)
-//            VStack(alignment : .leading,spacing : 5){
-//                Text(titleText)
-//                    .font(themeFonts.messageListcallingHeader)
-//                    .foregroundColor(themeColor.messageListcallingHeader)
-//                HStack{
-//                    Text(durationText)
-//                        .font(themeFonts.messageListcallingTime)
-//                        .foregroundColor(themeColor.messageListcallingTime)
-//                    Spacer()
-//                    Text(message.sentAt.datetotime())
-//                        .font(themeFonts.messageListMessageTime)
-//                        .foregroundColor(isReceived ? themeColor.messageListMessageTextReceived :  themeColor.messageListMessageTimeSend)
-//                }
-//            }
-//        }
-//    }
 
     func getImageAsset() -> ImageAsset {
         var imageAsset: ImageAsset
