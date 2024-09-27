@@ -843,7 +843,7 @@ struct ISMMessageInfoSubView: View {
                                 }
                                 
                                 VStack(alignment: .trailing,spacing: 5){
-                                    postButtonView()
+                                    postButtonView(showIcon: true)
                                     
                                 }//:ZStack
                                 .padding(5)
@@ -863,6 +863,47 @@ struct ISMMessageInfoSubView: View {
                                     ) : AnyView(EmptyView())
                                 )
                                 if  appearance.timeInsideBubble == false{
+                                    dateAndStatusView(onImage: false)
+                                        .padding(.bottom,5)
+                                        .padding(.trailing,5)
+                                }
+                            }
+                        }.padding(.vertical,2)
+                    }
+                case .Product:
+                    HStack(alignment: .bottom){
+                         if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                            //When its group show member avatar in message
+                            inGroupUserAvatarView()
+                        }
+                        ZStack(alignment: .bottomTrailing){
+                            VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                 if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                    //when its group show member name in message
+                                    inGroupUserName()
+                                }
+                                
+                                    VStack(alignment: .trailing,spacing: 5){
+                                        postButtonView(showIcon: false)
+
+                                    }//:ZStack
+                                    .padding(5)
+                                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                    .overlay(
+                                        appearance.messageBubbleType == .BubbleWithOutTail ?
+                                            AnyView(
+                                                UnevenRoundedRectangle(
+                                                    topLeadingRadius: 8,
+                                                    bottomLeadingRadius: isReceived ? 0 : 8,
+                                                    bottomTrailingRadius: isReceived ? 8 : 0,
+                                                    topTrailingRadius: 8,
+                                                    style: .circular
+                                                )
+                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                            ) : AnyView(EmptyView())
+                                    )
+                                if appearance.timeInsideBubble == false{
                                     dateAndStatusView(onImage: false)
                                         .padding(.bottom,5)
                                         .padding(.trailing,5)
@@ -895,7 +936,7 @@ struct ISMMessageInfoSubView: View {
         }
     }
     
-    func postButtonView() -> some View{
+    func postButtonView(showIcon: Bool) -> some View{
         VStack{
             if message.messageType == 1{
                 forwardedView()
@@ -911,9 +952,11 @@ struct ISMMessageInfoSubView: View {
                                         .fill(Color.white)
                                 )
                         )
-                    appearance.images.postIcon
-                        .scaledToFill()
-                        .frame(width: 20, height: 20)
+                    if showIcon == true{
+                        appearance.images.postIcon
+                            .scaledToFill()
+                            .frame(width: 20, height: 20)
+                    }
                 }
                 if  appearance.timeInsideBubble == true{
                     if message.metaData?.captionMessage == nil{

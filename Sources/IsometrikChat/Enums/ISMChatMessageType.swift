@@ -55,4 +55,5 @@ public enum ISMChatMessageType {
     case reaction
     
     case post
+    case Product
 }

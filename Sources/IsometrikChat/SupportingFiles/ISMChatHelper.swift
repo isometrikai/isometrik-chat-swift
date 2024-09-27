@@ -163,6 +163,8 @@ public class ISMChatHelper: NSObject {
             return .sticker
         }else if message.customType == ISMChatMediaType.Post.value{
             return .post
+        }else if message.customType == ISMChatMediaType.Product.value{
+            return .Product
         }
         else{
             if message.action == ISMChatActionType.userBlock.value || message.action == ISMChatActionType.userBlockConversation.value{
