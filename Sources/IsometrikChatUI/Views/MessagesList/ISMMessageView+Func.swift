@@ -256,7 +256,7 @@ extension ISMMessageView{
     }
     
     func createConversation(completion:@escaping(Bool)->()){
-        chatViewModel.createConversation(user: self.opponenDetail ?? UserDB(), chatStatus: ISMChatStatus.Reject.value) { data in
+        chatViewModel.createConversation(user: self.opponenDetail ?? UserDB(), chatStatus: ISMChatStatus.Reject.value) { data,error  in
             self.conversationID = data?.conversationId
             
             // Ensure that conversationID is not nil or empty before proceeding

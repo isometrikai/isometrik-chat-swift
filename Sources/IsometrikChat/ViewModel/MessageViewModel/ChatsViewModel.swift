@@ -96,7 +96,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
   
     
     //MARK: - create conversation
-    public func createConversation(user : UserDB,chatStatus : String? = nil,completion:@escaping(ISMChatCreateConversationResponse?)->()){
+    public func createConversation(user : UserDB,chatStatus : String? = nil,completion:@escaping(ISMChatCreateConversationResponse?,ISMChatNewAPIError?)->()){
         var body : [String : Any]
         let metaDataValue : [String : Any] = ["chatStatus" : chatStatus ?? ""]
         body = ["typingEvents" : true ,
@@ -114,8 +114,9 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
             case .success(let data,_) :
-                completion(data)
+                completion(data, nil)
             case .failure(let error) :
+                completion(nil, error)
                 ISMChatHelper.print("Create Conversation Api failed -----> \(String(describing: error))")
             }
         }

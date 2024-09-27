@@ -230,7 +230,7 @@ private extension ISMForwardToContactView{
                 metaDataValue.isStarUser = newUser.metaData?.isStarUser
                 user.metaData = metaDataValue
 
-                viewModel.createConversation(user: user) { data in
+                viewModel.createConversation(user: user) { data,_  in
                     guard let conversationId = data?.conversationId else {
                         conversationGroup.leave()
                         return

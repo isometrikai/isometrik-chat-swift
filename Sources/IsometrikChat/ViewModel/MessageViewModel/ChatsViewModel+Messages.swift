@@ -53,7 +53,7 @@ extension ChatsViewModel{
     
     //MARK: - send Reel
     public func sharePost(user: UserDB,postId : String,postURL : String,postCaption : String,completion:@escaping()->()){
-        self.createConversation(user: user,chatStatus: ISMChatStatus.Reject.value) { response in
+        self.createConversation(user: user,chatStatus: ISMChatStatus.Reject.value) { response,error  in
             NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
             self.sendMessage(messageKind: .post, customType: ISMChatMediaType.Post.value, conversationId: response?.conversationId ?? "", message: postURL, fileName: "", fileSize: nil, mediaId: nil,caption: postCaption,postId: postId) { _, _ in
                 completion()
@@ -61,11 +61,14 @@ extension ChatsViewModel{
         }
     }
     
-    public func shareProduct(user: UserDB,productId : String,productUrl : String,productCaption : String,productCategoryId : String,completion:@escaping()->()){
-        self.createConversation(user: user,chatStatus: ISMChatStatus.Reject.value) { response in
+    public func shareProduct(user: UserDB,productId : String,productUrl : String,productCaption : String,productCategoryId : String,completion:@escaping(Bool)->()){
+        self.createConversation(user: user,chatStatus: ISMChatStatus.Reject.value) { response,error  in
+            if let error = error{
+                completion(false)
+            }
             NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
             self.sendMessage(messageKind: .Product, customType: ISMChatMediaType.Product.value, conversationId: response?.conversationId ?? "", message: productUrl, fileName: "", fileSize: nil, mediaId: nil,caption: productCaption,productId: productId,productCategoryId: productCategoryId) { _, _ in
-                completion()
+                completion(true)
             }
         }
     }
@@ -334,7 +337,7 @@ extension ChatsViewModel{
             
             for newUser in users {
                 conversationGroup.enter()
-                self.createConversation(user: newUser,chatStatus: ISMChatStatus.Reject.value) { data in
+                self.createConversation(user: newUser,chatStatus: ISMChatStatus.Reject.value) { data,_  in
                     guard let conversationId = data?.conversationId else {
                         conversationGroup.leave()
                         return
