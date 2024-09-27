@@ -17,7 +17,7 @@ extension ISMConversationView{
             //check action == memberLeave or removeMEMBER and then remove that member from localdb
             realmManager.updateMemberCount(convId: messageInfo.conversationId ?? "", inc: false, dec: true, count: 1)
             if onScreen == true{
-                if myUserData.allowNotification == true{
+                if myUserData.allowNotification == true && messageInfo.meetingId == nil{
                     ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.conversationTitle ?? "")", body: "\(messageInfo.userName ?? "") left group", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? ""])
                 }
             }
