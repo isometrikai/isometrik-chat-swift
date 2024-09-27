@@ -16,7 +16,6 @@ public class MetaDataDB : Object, ObjectKeyIdentifiable {
     @Persisted public var captionMessage : String?
     @Persisted public var isBroadCastMessage : Bool?
     @Persisted public var post : PostDB?
-    @Persisted public var isBroadCastMessage : Bool?
 }
 
 public class PostDB: Object, ObjectKeyIdentifiable {
