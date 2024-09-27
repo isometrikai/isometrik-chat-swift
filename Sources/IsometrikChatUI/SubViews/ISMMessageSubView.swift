@@ -75,6 +75,7 @@ struct ISMMessageSubView: View {
     @ObservedObject var viewModel = ChatsViewModel()
     @Environment(\.viewController) public var viewControllerHolder: UIViewController?
     @Binding var postIdToNavigate : String
+    @Binding var productIdToNavigate : String
     
     @Binding var navigateToSocialProfileId : String
     
@@ -1065,7 +1066,7 @@ struct ISMMessageSubView: View {
                                 
                                     VStack(alignment: .trailing,spacing: 5){
                                         Button {
-                                            postIdToNavigate = message.metaData?.post?.postId ?? ""
+                                            productIdToNavigate = message.metaData?.post?.postId ?? ""
                                         } label: {
                                             postButtonView(showIcon: false)
                                         }

@@ -61,9 +61,18 @@ extension ChatsViewModel{
         }
     }
     
+    public func shareProduct(user: UserDB,productId : String,productUrl : String,productCaption : String,completion:@escaping()->()){
+        self.createConversation(user: user,chatStatus: ISMChatStatus.Reject.value) { response in
+            NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
+            self.sendMessage(messageKind: .Product, customType: ISMChatMediaType.Product.value, conversationId: response?.conversationId ?? "", message: productUrl, fileName: "", fileSize: nil, mediaId: nil,caption: productCaption,productId: productId) { _, _ in
+                completion()
+            }
+        }
+    }
+    
     
     //MARK: - send messages
-    public func sendMessage(messageKind : ISMChatMessageType,customType : String,conversationId :  String,message : String,fileName : String?,fileSize : Int?,mediaId : String?,objectId : String? = "",messageType:Int = 0,thumbnailUrl : String? = "",contactInfo: [ISMChatPhoneContact]? = [],latitude : Double? = nil,longitude : Double? = nil,placeName : String? = nil,placeAddress : String? = nil,isGroup : Bool? = false,groupMembers : [ISMChatGroupMember]? = [],caption : String? = nil,isBroadCastMessage : Bool? = false,groupcastId : String? = nil,postId : String? = nil,completion:@escaping(String, String)->()){
+    public func sendMessage(messageKind : ISMChatMessageType,customType : String,conversationId :  String,message : String,fileName : String?,fileSize : Int?,mediaId : String?,objectId : String? = "",messageType:Int = 0,thumbnailUrl : String? = "",contactInfo: [ISMChatPhoneContact]? = [],latitude : Double? = nil,longitude : Double? = nil,placeName : String? = nil,placeAddress : String? = nil,isGroup : Bool? = false,groupMembers : [ISMChatGroupMember]? = [],caption : String? = nil,isBroadCastMessage : Bool? = false,groupcastId : String? = nil,postId : String? = nil,productId : String? = nil,completion:@escaping(String, String)->()){
         var searchTags : [String] = []
         var body : [String : Any] = [:]
         var attachmentValue : [String : Any] = [:]
@@ -231,6 +240,18 @@ extension ChatsViewModel{
             }
             let post : [String: Any] = ["postId" : postId ?? "","postUrl" : message]
             metaData = ["post" : post]
+        case .Product:
+            notificationBody = "Product"
+            messageInBody = "Product"
+            //searchable tags
+            searchTags.append(ISMChatSearchTags.product.value)
+            searchTags.append(message)
+            
+            if let caption  = caption, !caption.isEmpty{
+                metaData = ["captionMessage" : caption]
+            }
+            let post : [String: Any] = ["postId" : productId ?? "","postUrl" : message]
+            metaData = ["post" : post]
         default:
             break
         }
@@ -263,7 +284,7 @@ extension ChatsViewModel{
             if !mentionedUsers.isEmpty {
                 body["mentionedUsers"] = mentionedUsers
             }
-        case .location, .contact,.post:
+        case .location, .contact,.post,.Product:
             body["metaData"] = metaData
         case .photo, .video,.audio:
             body["attachments"] = [attachmentValue]

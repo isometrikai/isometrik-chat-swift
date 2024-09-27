@@ -20,6 +20,7 @@ enum ISMChatSearchTags : CaseIterable{
     case whiteboard
     case forward
     case post
+    case product
     var value : String{
         switch self {
         case .text:
@@ -46,6 +47,8 @@ enum ISMChatSearchTags : CaseIterable{
             return "/@forward"
         case .post:
             return "/@post"
+        case .product:
+            return "/@product"
         }
     }
 }
