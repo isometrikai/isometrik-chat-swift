@@ -309,56 +309,39 @@ extension ISMMessageView{
     }
     
     func sendMessageDetail(){
-//        if selectedGIF != nil{
-//            if selectedGIF?.isSticker == true{
-//                //MARK: - STICKER
-//                
-//                if let url = selectedGIF?.url(rendition: .fixedWidth, fileType: .gif),let filename = selectedGIF?.description{
-//                    
-//                    //1. nill data if any
-//                    nilData()
-//                    
-//                    
-//                    //2. save message locally
-//                    var localIds = [String]()
-//                    let id = saveMessageToLocalDB(sentAt: Date().timeIntervalSince1970 * 1000, messageId: "", message: "Sticker", mentionUsers: [], fileName: filename, fileUrl: url, messageType: .sticker,customType: .sticker, messageKind: .normal)
-//                    localIds.append(id)
-//                    
-//                    //3. send message Api
-//                    viewModel.sendMessage(messageKind: .sticker, customType: ISMChatMediaType.sticker.value, conversationId: self.conversationID ?? "", message: url, fileName: filename, fileSize: nil, mediaId: nil) {messageId,_  in
-//                        
-//                        //4. update messageId locally
-//                        realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId)
-//                        localIds.removeFirst()
-//                        
-//                    }
-//                }
-//            }else{
-//                //MARK: - GIF
-//                if let url = selectedGIF?.url(rendition: .fixedWidth, fileType: .gif),let filename = selectedGIF?.description{
-//                    
-//                    //1. nill data if any
-//                    nilData()
-//                    
-//                    //2. save message locally
-//                    var localIds = [String]()
-//                    let sentAt = Date().timeIntervalSince1970 * 1000
-//                    
-//                    let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Gif", mentionUsers: [], fileName: filename, fileUrl: url, messageType: .gif,customType: .gif, messageKind: .normal)
-//                    localIds.append(id)
-//                    
-//                    //3. send message api
-//                    viewModel.sendMessage(messageKind: .gif, customType: ISMChatMediaType.gif.value, conversationId: self.conversationID ?? "", message: url, fileName: filename, fileSize: nil, mediaId: nil) {messageId,_  in
-//                        
-//                        //4. update messageId locally
-//                        realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId)
-//                        localIds.removeFirst()
-//                        
-//                    }
-//                }
-//            }
-//        }else 
-        if selectedMsgToReply.body != "" {
+        if selectedGIF != nil{
+            if selectedGIF?.isSticker == true{
+                //MARK: - STICKER
+                
+                if let url = selectedGIF?.url(rendition: .fixedWidth, fileType: .gif),let filename = selectedGIF?.description{
+                    let sentAt = Date().timeIntervalSince1970 * 1000
+                    let mediaId = "\(UUID())"
+                    //1. nill data if any
+                    nilData()
+                    //2. save message locally
+                    var localIds = [String]()
+                    let id = saveMessageToLocalDB(sentAt: Date().timeIntervalSince1970 * 1000, messageId: "", message: "Sticker", mentionUsers: [], fileName: filename, fileUrl: url, messageType: .sticker,customType: .sticker, messageKind: .normal)
+                    localIds.append(id)
+                    sendMediaMessage(messageKind: .sticker, customType: ISMChatMediaType.sticker.value, mediaId: mediaId, mediaName: filename, mediaUrl: url, mediaData: 1, thubnailUrl: url, sentAt: sentAt, objectId: localIds.first ?? "")
+                    localIds.removeFirst()
+                }
+            }else{
+                //MARK: - GIF
+                if let url = selectedGIF?.url(rendition: .fixedWidth, fileType: .gif),let filename = selectedGIF?.description{
+                    let sentAt = Date().timeIntervalSince1970 * 1000
+                    let mediaId = "\(UUID())"
+                    //1. nill data if any
+                    nilData()
+                    //2. save message locally
+                    var localIds = [String]()
+                    
+                    let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Gif", mentionUsers: [], fileName: filename, fileUrl: url, messageType: .gif,customType: .gif, messageKind: .normal)
+                    localIds.append(id)
+                    sendMediaMessage(messageKind: .gif, customType: ISMChatMediaType.gif.value, mediaId: mediaId, mediaName: filename, mediaUrl: url, mediaData: 1, thubnailUrl: url, sentAt: sentAt, objectId: localIds.first ?? "")
+                    localIds.removeFirst()
+                }
+            }
+        }else if selectedMsgToReply.body != "" {
             //MARK: - REPLY MESSAGE
             let text = self.text
             
@@ -465,19 +448,6 @@ extension ISMMessageView{
                             if let dataValue = data {
                                 sendMediaMessage(messageKind: messageKind, customType: customType, mediaId: dataValue.mediaId ?? "", mediaName: filename, mediaUrl: data?.mediaUrl ?? "", mediaData: size, thubnailUrl: thumbnailmedia?.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
                                 localIds.removeFirst()
-//                                viewModel.sendMessage(messageKind: messageKind, customType: customType, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,thumbnailUrl: thumbnailmedia?.mediaUrl) {messageId,_ in
-//                                    
-//                                    //4. update messageId locally
-//                                    realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",thumbnailUrl: thumbnailmedia?.mediaUrl,mediaSize: size,mediaId: data.mediaId)
-//                                    localIds.removeFirst()
-//                                    
-//                                    //5. we need to save media
-//                                    let attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Video.type, extensions: ISMChatExtensionType.Video.type, mediaUrl: data.mediaUrl ?? "", mimeType: ISMChatExtensionType.Video.type, name: filename, thumbnailUrl: thumbnailmedia?.mediaUrl)
-//                                    realmManager.saveMedia(arr: [attachment], conId: self.conversationID ?? "", customType: ISMChatMediaType.Video.value , sentAt: sentAt, messageId: messageId, userName: userSession.getUserName() ?? "", fromView: true)
-//                                    
-//                                    //6. if we add image or video, we need to save it to show in media
-//                                    realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
-//                                }
                             }
                         }
                     }
@@ -494,19 +464,6 @@ extension ISMMessageView{
                         if let data = data {
                             sendMediaMessage(messageKind: .photo, customType: ISMChatMediaType.Image.value, mediaId: data.mediaId ?? "", mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
                             localIds.removeFirst()
-                            //                        viewModel.sendMessage(messageKind: .photo, customType: ISMChatMediaType.Image.value, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId) {messageId,_  in
-                            //
-                            //                            //4. update messageId locally
-                            //                            realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId,mediaUrl: data.mediaUrl ?? "",mediaSize: size,mediaId: data.mediaId)
-                            //                            localIds.removeFirst()
-                            //
-                            //                            //5. we need to save media
-                            //                            let attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Image.type, extensions: ISMChatExtensionType.Image.type, mediaUrl: data.mediaUrl ?? "", mimeType: ISMChatExtensionType.Image.type, name: filename, thumbnailUrl: "")
-                            //                            realmManager.saveMedia(arr: [attachment], conId: self.conversationID ?? "", customType: ISMChatMediaType.Image.value , sentAt: sentAt, messageId: messageId, userName: userSession.getUserName() ?? "", fromView: true)
-                            //
-                            //                            //6. if we add image or video, we need to save it to show in media
-                            //                            realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
-                            //                        }
                         }
                     }
                 }
@@ -517,8 +474,6 @@ extension ISMMessageView{
             var imageUrl : URL? = nil
             var customType : ISMChatMediaType = .File
             var mediaName : String = ""
-//            var attachment : ISMChatAttachmentType = .Document
-//            var extensionType : ISMChatExtensionType = .Document
             let mediaId = "\(UUID())"
             
             if let urlextension = ISMChatHelper.getExtensionFromURL(url: documentSelected){
@@ -526,19 +481,13 @@ extension ISMMessageView{
                     messageKind = .photo
                     customType = .Image
                     mediaName = "\(UUID()).jpg"
-//                    attachment = .Image
-//                    extensionType = .Image
                 }else if urlextension.contains("mp4"){
                     messageKind = .video
                     customType = .Video
                     mediaName = "\(UUID()).mp4"
-//                    attachment = .Video
-//                    extensionType = .Video
                 }
                 else{
                     mediaName = documentSelected.lastPathComponent
-//                    attachment = .Document
-//                    extensionType = .Document
                 }
                 imageUrl = documentSelected
             }
@@ -976,7 +925,7 @@ extension ISMMessageView{
         self.placeAddress = nil
         self.text = ""
         self.chatViewModel.audioUrl = nil
-      //  self.selectedGIF = nil
+        self.selectedGIF = nil
         self.selectedMsgToReply = MessagesDB()
         self.selectedContactToShare.removeAll()
         self.cameraImageToUse = nil

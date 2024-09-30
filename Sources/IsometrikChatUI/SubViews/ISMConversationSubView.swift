@@ -99,9 +99,9 @@ struct ISMConversationSubView: View {
                         case ISMChatMediaType.Contact.value:
                             getLabel(text: "Contact", image: "person.crop.circle.fill")
                         case ISMChatMediaType.sticker.value:
-                            getLabel(text: "Sticker", image: "gif_sticker",imageNormal: true)
+                            getLabel(text: "Sticker", image: "",isSticker: true)
                         case ISMChatMediaType.gif.value:
-                            getLabel(text: "Gif", image: "gif_sticker",imageNormal: true)
+                            getLabel(text: "Gif", image: "",isSticker: true)
                         case ISMChatMediaType.AudioCall.value:
                             AudioCallUI()
                         case ISMChatMediaType.VideoCall.value:
@@ -299,7 +299,7 @@ struct ISMConversationSubView: View {
         }
     }
     
-    func getLabel(hideImage : Bool? = false, text : String, image : String,isReaction : Bool? = false,imageNormal : Bool? = false) -> some View{
+    func getLabel(hideImage : Bool? = false, text : String, image : String,isReaction : Bool? = false,isSticker : Bool? = false) -> some View{
         HStack(alignment: .center,spacing: 5){
             
             if chat.isGroup == false{
@@ -315,8 +315,8 @@ struct ISMConversationSubView: View {
             }
             
             if hideImage == false{
-                if imageNormal == true{
-                    Image(image)
+                if isSticker == true{
+                    appearance.images.stickerLogo
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 19, height: 11)

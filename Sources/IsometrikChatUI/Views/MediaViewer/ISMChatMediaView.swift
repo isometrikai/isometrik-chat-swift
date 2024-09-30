@@ -7,6 +7,7 @@
 
 import SwiftUI
 import IsometrikChat
+import SDWebImageSwiftUI
 
 struct ISMChatMediaView : View {
 
@@ -17,6 +18,8 @@ struct ISMChatMediaView : View {
     var body: some View {
         if ISMChatHelper.isVideoString(media: attachment.mediaUrl) {
             ISMChatVideoView(viewModel: ISMChatVideoViewModel(attachment: attachment))
+        }else if attachment.mediaUrl.contains("gif"){
+            AnimatedImage(url: URL(string: attachment.mediaUrl ?? ""))
         }else{
             ISMChatImageCahcingManger.viewImage(url: attachment.mediaUrl)
         }

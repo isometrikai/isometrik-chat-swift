@@ -12,7 +12,7 @@ import UIKit
 
 import AVFoundation
 
-//import GiphyUISDK
+import GiphyUISDK
 import ISMSwiftCall
 import IsometrikChat
 
@@ -54,6 +54,8 @@ public struct ISMMessageView: View {
     
     @State var mediaSelectedFromPicker : [ISMMediaUpload] = []
     @State var mediaCaption : String = ""
+    
+    @State var selectedGIF : GPHMedia? = nil
     
     
     
@@ -423,9 +425,9 @@ public struct ISMMessageView: View {
                 sendMessageTypingIndicator()
             }
         })
-        //        .onChange(of: selectedGIF, { _, _ in
-        //            sendMessageIfGif()
-        //        })
+        .onChange(of: selectedGIF, { _, _ in
+            sendMessageIfGif()
+        })
         .onChange(of: stateViewModel.sendMedia, { _, _ in
             if stateViewModel.sendMedia == true{
                 stateViewModel.sendMedia = false
@@ -475,12 +477,12 @@ public struct ISMMessageView: View {
             }
         })
         .sheet(isPresented: $stateViewModel.showGifPicker, content: {
-            //            GiphyPicker { media in
-            //                if let media = media{
-            //                    selectedGIF = media
-            //                    showGifPicker = false
-            //                }
-            //            }
+            ISMGiphyPicker { media in
+                if let media = media{
+                    selectedGIF = media
+                    stateViewModel.showGifPicker = false
+                }
+            }
         })
         .sheet(isPresented: $stateViewModel.showSheet){
             if selectedSheetIndex == 0 {
