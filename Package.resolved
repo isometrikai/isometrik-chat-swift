@@ -239,8 +239,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/realm/realm-swift",
       "state" : {
-        "branch" : "master",
-        "revision" : "02860d17d793e0d4f9c08ed937002d80e09fdffd"
+        "revision" : "863498d37a9f0e72caa65963da9641d8cdfc8228",
+        "version" : "10.54.0"
       }
     },
     {
