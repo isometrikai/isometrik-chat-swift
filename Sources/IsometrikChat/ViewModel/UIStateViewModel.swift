@@ -17,7 +17,7 @@ public class UIStateViewModel: ObservableObject {
     @Published public var showLocationSharing = false
     @Published public var showSheet = false
     @Published public var shareContact : Bool = false
-    @Published public var showScrollToBottomView = true
+    @Published public var showScrollToBottomView = false
     @Published public var audioLocked : Bool = false
     @Published public var isShowingRedTimerStart : Bool = false
     
