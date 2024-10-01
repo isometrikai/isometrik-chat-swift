@@ -58,6 +58,63 @@ struct ISMContactInfoView: View {
                 }else{
                     List {
                         //Bio
+                        
+                        Section {
+                            HStack(spacing: 8) {
+                                    
+                                    // Button 1 - Audio
+                                    VStack(spacing: 10) {
+                                        Image(systemName: "phone")
+                                            .font(.system(size: 18))
+                                            .foregroundColor(.green)
+                                        Text("Audio")
+                                            .font(appearance.fonts.messageListMessageText)
+                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+                                    }.padding(.vertical)
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.white)
+                                    .cornerRadius(8)
+                                    
+                                    
+                                    
+                                    // Button 2 - Video
+                                    VStack(spacing: 10) {
+                                        Image(systemName: "video")
+                                            .font(.system(size: 18))
+                                            .foregroundColor(.green)
+                                        Text("Video")
+                                            .font(appearance.fonts.messageListMessageText)
+                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+                                    }.padding(.vertical)
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.white)
+                                    .cornerRadius(8)
+                                    
+                                    
+                                    
+                                    // Button 4 - Search
+                                    VStack(spacing: 10) {
+                                        Image(systemName: "magnifyingglass")
+                                            .font(.system(size: 18))
+                                            .foregroundColor(.green)
+                                        Text("Search")
+                                            .font(appearance.fonts.messageListMessageText)
+                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+                                    }.padding(.vertical)
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.white)
+                                    .cornerRadius(8)
+                                }
+                        } header: {
+                            HStack(alignment: .center){
+                                Spacer()
+                                customHeaderView()
+                                    .listRowInsets(EdgeInsets())
+                                Spacer()
+                            }
+                        }.listRowSeparatorTint(Color.border)
+                            .listRowBackground(Color.clear)
+                        
                         if isGroup == false{
                             Section {
                                 if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
@@ -78,13 +135,6 @@ struct ISMContactInfoView: View {
                                             Spacer()
                                         }
                                     }
-                                }
-                            } header: {
-                                HStack(alignment: .center){
-                                    Spacer()
-                                    customHeaderView()
-                                        .listRowInsets(EdgeInsets())
-                                    Spacer()
                                 }
                             }.listRowSeparatorTint(Color.border)
                         }
@@ -109,14 +159,6 @@ struct ISMContactInfoView: View {
                                 }
                             }
                         } header: {
-                            if isGroup == true{
-                                HStack(alignment: .center){
-                                    Spacer()
-                                    customHeaderView()
-                                        .listRowInsets(EdgeInsets())
-                                    Spacer()
-                                }
-                            }
                         }.listRowSeparatorTint(Color.border)
                         
                         if isGroup == true{
@@ -159,16 +201,6 @@ struct ISMContactInfoView: View {
                                             .frame(width: 28, height: 28, alignment: .center)
                                             .padding(8)
                                     }
-                                    
-                                    //                                Button {
-                                    //                                    showSearch = true
-                                    //                                } label: {
-                                    //                                    themeImage.searchMagnifingGlass
-                                    //                                        .resizable()
-                                    //                                        .frame(width: 28, height: 28, alignment: .center)
-                                    //                                        .padding(8)
-                                    //                                }
-                                    
                                 }.listRowInsets(EdgeInsets())
                             } footer: {
                                 Text("")
