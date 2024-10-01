@@ -58,7 +58,6 @@ public struct ISMMessageView: View {
     @State var selectedGIF : GPHMedia? = nil
     
     
-    
     @State var text = ""
     @State var textFieldtxt = ""
     
@@ -199,7 +198,7 @@ public struct ISMMessageView: View {
                                 } else {
                                     //--------SLOW SCROLL---------//
                                 }
-                            })
+                            }).highPriorityGesture(DragGesture())
                         }.padding(.bottom,5)
                         //No Message View
                         if realmManager.allMessages?.count == 0 || realmManager.messages.count == 0{

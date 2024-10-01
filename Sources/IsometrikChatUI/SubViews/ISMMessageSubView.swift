@@ -356,10 +356,6 @@ struct ISMMessageSubView: View {
                                         } label: {
                                             ZStack(alignment: .bottomTrailing){
                                                 ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
-//                                                ISMChatImageCahcingManger.viewImage(url: message.attachments.first?.mediaUrl ?? "")
-//                                                    .scaledToFill()
-//                                                    .frame(width: 250, height: 300)
-//                                                    .cornerRadius(5)
                                                     .overlay(
                                                         LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                                                             .frame(width: 250, height: 300)
