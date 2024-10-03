@@ -195,13 +195,6 @@ extension ISMMessageView{
                          } label: {
                              customView()
                          }
-
-                         
-//                         NavigationLink {
-//                             ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
-//                         } label: {
-//                             
-//                         }
                      } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.storeId ?? opponenDetail?.metaData?.userId{
                          Button {
                              delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
@@ -225,12 +218,12 @@ extension ISMMessageView{
                      } label: {
                          customView()
                      }
-
-//                     NavigationLink {
-//                         
-//                     } label: {
-//                         customView()
-//                     }
+                 }
+             }else{
+                 Button {
+                     
+                 } label: {
+                     customView()
                  }
              }
          }
