@@ -220,11 +220,7 @@ extension ISMMessageView{
                      }
                  }
              }else{
-                 Button {
-                     
-                 } label: {
-                     customView()
-                 }
+                 customView()
              }
          }
     }
@@ -292,14 +288,14 @@ extension ISMMessageView{
         } else {
             if stateViewModel.otherUserTyping {
                 return "typing..."
+            } else if self.conversationDetail?.conversationDetails?.opponentDetails?.online == true{
+                return "online"
             } else if let lastSeen = self.conversationDetail?.conversationDetails?.opponentDetails?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
                 let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
                 return "last seen \(date)"
             } else if let lastSeen = self.opponenDetail?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
                 let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
                 return "last seen \(date)"
-            } else if self.conversationDetail?.conversationDetails?.opponentDetails?.online == true{
-                return "online"
             }else{
                 return "tap here for more info"
             }

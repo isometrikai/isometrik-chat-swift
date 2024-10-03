@@ -85,24 +85,33 @@ public class ISMChatHelper: NSObject {
     
     //MARK: - CHECK IMAGE OR Video
     
-    public class func checkMediaType(media : URL) -> ISMChatMessageType{
-        if media.lastPathComponent.contains(".mov") || media.lastPathComponent.contains(".mp4") || media.lastPathComponent.contains(".MP4"){
+    public class func checkMediaType(media: URL) -> ISMChatMessageType {
+        let videoExtensions: Set<String> = ["mov", "mp4"]
+        
+        // Extract the file extension and compare case-insensitively
+        let fileExtension = media.pathExtension.lowercased()
+        if videoExtensions.contains(fileExtension) {
             return .video
-        }else{
+        } else {
             return .photo
         }
     }
+
     
     public class func checkMediaCustomType(media : URL) -> String{
-        if media.lastPathComponent.contains(".mov") || media.lastPathComponent.contains(".mp4"){
+        let videoExtensions: Set<String> = ["mov", "mp4"]
+        
+        // Extract the file extension and compare case-insensitively
+        let fileExtension = media.pathExtension.lowercased()
+        if videoExtensions.contains(fileExtension) {
             return ISMChatMediaType.Video.value
-        }else{
+        } else {
             return ISMChatMediaType.Image.value
         }
     }
     
     public class func isVideoString(media : String) -> Bool{
-        if media.contains(".mov") || media.contains(".mp4"){
+        if media.lowercased().contains(".mov") || media.lowercased().contains(".mp4"){
             return true
         }else{
             return false
@@ -110,9 +119,13 @@ public class ISMChatHelper: NSObject {
     }
     
     public class func isVideo(media : URL) -> Bool{
-        if media.lastPathComponent.contains(".mov") || media.lastPathComponent.contains(".mp4"){
+        let videoExtensions: Set<String> = ["mov", "mp4"]
+        
+        // Extract the file extension and compare case-insensitively
+        let fileExtension = media.lastPathComponent.lowercased()
+        if videoExtensions.contains(fileExtension) {
             return true
-        }else{
+        } else {
             return false
         }
     }
@@ -519,37 +532,86 @@ public class ISMChatHelper: NSObject {
         return timeInSeconds
     }
     
-    public class func downloadImage(from url: String) {
-        guard let imageURL = URL(string: url) else { return }
+    public class func downloadMedia(from url: String) {
+        guard let mediaURL = URL(string: url) else {
+            ISMChatHelper.print("Invalid URL: \(url)")
+            return
+        }
         
-        // Fetch the image data from URL
-        URLSession.shared.dataTask(with: imageURL) { data, response, error in
+        // Fetch the media data from URL
+        URLSession.shared.dataTask(with: mediaURL) { data, response, error in
             if let error = error {
-                ISMChatHelper.print("Error downloading image: \(error)")
+                ISMChatHelper.print("Error downloading media: \(error)")
                 return
             }
             
-            guard let data = data, let image = UIImage(data: data) else {
-                ISMChatHelper.print("Invalid image data")
+            guard let httpResponse = response as? HTTPURLResponse else {
+                ISMChatHelper.print("Invalid response")
                 return
             }
             
-            // Save the image to the photo library
-            self.saveImageToGallery(image: image)
+            // Check MIME type to determine if it's an image or video
+            if let mimeType = httpResponse.mimeType {
+                if mimeType.hasPrefix("image") {
+                    // Handle image
+                    guard let data = data, let image = UIImage(data: data) else {
+                        ISMChatHelper.print("Invalid image data")
+                        return
+                    }
+                    self.saveImageToGallery(image: image)
+                    
+                } else if mimeType.hasPrefix("video") || mimeType == "binary/octet-stream" {
+                    // Handle video (even if MIME type is binary/octet-stream)
+                    guard let data = data else {
+                        ISMChatHelper.print("Invalid video data")
+                        return
+                    }
+                    
+                    // Check file extension to infer media type if MIME type is generic
+                    if mediaURL.pathExtension.lowercased() == "mp4" || mimeType == "video/mp4" {
+                        self.saveVideoToGallery(videoData: data, url: mediaURL)
+                    } else {
+                        ISMChatHelper.print("Unsupported binary content or unknown file type.")
+                    }
+                } else {
+                    ISMChatHelper.print("Unsupported MIME type: \(mimeType)")
+                }
+            }
+            
         }.resume()
     }
 
-    // Function to save the image to the gallery
-    public class func saveImageToGallery(image: UIImage) {
-        PHPhotoLibrary.requestAuthorization { status in
-            if status == .authorized {
-                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                ISMChatHelper.print("Image saved successfully")
-            } else {
-                ISMChatHelper.print("Permission to save photos denied")
+    // Helper function to save image to the photo library
+    private class func saveImageToGallery(image: UIImage) {
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        ISMChatHelper.print("Image saved to gallery")
+    }
+
+    // Helper function to save video to the photo library
+    private class func saveVideoToGallery(videoData: Data, url: URL) {
+        // Save video file to temporary location
+        let temporaryDirectory = NSTemporaryDirectory()
+        let temporaryFileURL = URL(fileURLWithPath: temporaryDirectory).appendingPathComponent(url.lastPathComponent)
+        
+        do {
+            try videoData.write(to: temporaryFileURL)
+            
+            // Save video to the photo library
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetCreationRequest.forAsset().addResource(with: .video, fileURL: temporaryFileURL, options: nil)
+            }) { success, error in
+                if let error = error {
+                    ISMChatHelper.print("Error saving video to gallery: \(error)")
+                } else {
+                    ISMChatHelper.print("Video saved to gallery")
+                }
             }
+            
+        } catch {
+            ISMChatHelper.print("Error writing video to temporary file: \(error)")
         }
     }
+
 }
 
 extension ISMChatHelper{

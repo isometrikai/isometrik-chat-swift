@@ -17,17 +17,7 @@ struct ISMChatAttachmentCell: View {
 
     var body: some View {
         Group {
-            if ISMChatHelper.isVideoString(media: attachment.mediaUrl){
-                content
-                    .overlay {
-                        appearance.images.playVideo
-                            .resizable()
-                            .foregroundColor(.white)
-                            .frame(width: 36, height: 36)
-                    }
-            }else{
-                content
-            }
+            content
         }
         .contentShape(Rectangle())
         .onTapGesture {
