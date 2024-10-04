@@ -348,9 +348,11 @@ public struct ISMConversationView : View {
             if !networkMonitor.isConnected {
                 showingNoInternetAlert = true
             }
-            getuserData{ userId in
-                self.chatViewModel.getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId: userId ?? "")
-            }
+//            if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
+//                getuserData{ userId in
+//                    self.chatViewModel.getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId: userId ?? "")
+//                }
+//            }
         }
     }//:Body
     
