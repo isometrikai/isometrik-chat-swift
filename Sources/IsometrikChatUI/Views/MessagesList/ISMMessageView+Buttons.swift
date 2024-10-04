@@ -184,45 +184,32 @@ extension ISMMessageView{
         }
     }
 
-     func profileButtonView() -> some View {
-         HStack{
-             if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true{
-                 if ISMChatSdkUI.getInstance().getChatProperties().navigateToAppProfileFromMessageList == true{
-                     if isGroup == true {
-                         
-                         Button {
-                             self.stateViewModel.navigateToUserProfile = true
-                         } label: {
-                             customView()
-                         }
-                     } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.storeId ?? opponenDetail?.metaData?.userId{
-                         Button {
-                             delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
-                         } label: {
-                             customView()
-                         }
-                     }
-                     else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
-                                ?? opponenDetail?.metaData?.userId
-                                ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
-                         Button {
-                             delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
-                         } label: {
-                             customView()
-                         }
-                     }
-                 }else{
-                     
-                     Button {
-                         self.stateViewModel.navigateToUserProfile = true
-                     } label: {
-                         customView()
-                     }
-                 }
-             }else{
-                 customView()
-             }
-         }
+    func profileButtonView() -> some View {
+        HStack {
+            if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true {
+                Button {
+                    // Action Logic for Button based on conditions
+                    if ISMChatSdkUI.getInstance().getChatProperties().navigateToAppProfileFromMessageList == true {
+                        if (isGroup ?? false) == true {
+                            self.stateViewModel.navigateToUserProfile = true
+                        } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.storeId
+                                   ?? opponenDetail?.metaData?.userId {
+                            delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
+                        } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
+                                   ?? opponenDetail?.metaData?.userId
+                                   ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
+                            delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
+                        }
+                    } else {
+                        self.stateViewModel.navigateToUserProfile = true
+                    }
+                } label: {
+                    customView() // Your custom view for the button
+                }
+            } else {
+                customView() // No button, just the view for groups
+            }
+        }
     }
     
     func customView() -> some View{
@@ -364,8 +351,7 @@ extension ISMMessageView{
                                 }
                             } label: {
                                 appearance.images.threeDots
-                                    .resizable()
-                                    .frame(width: 5, height: 20, alignment: .center)
+                                        .frame(width: 20, height: 20, alignment: .center)
                             }
                         }
 //                    }
