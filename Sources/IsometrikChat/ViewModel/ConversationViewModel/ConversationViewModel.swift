@@ -142,6 +142,19 @@ public class ConversationViewModel : NSObject ,ObservableObject{
         }
     }
     
+    public func unreadConversationsCount(completion:@escaping(Int?)->()){
+        let endPoint = ISMChatConversationEndpoint.unreadConversationCount
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatSendMsg, ISMChatNewAPIError>) in
+            switch result{
+            case .success(let data,_) :
+                completion(data.count)
+            case .failure(let error) :
+                ISMChatHelper.print("Get clear chat Api failed -----> \(String(describing: error))")
+            }
+        }
+    }
+    
     
     //MARK: - Update Profile Picture
     public func getPredefinedUrlToUpdateProfilePicture(image: UIImage,completion:@escaping(String?)->()){

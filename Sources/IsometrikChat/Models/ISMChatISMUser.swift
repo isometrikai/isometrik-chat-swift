@@ -11,10 +11,12 @@ import Foundation
 public struct ISMChatSendMsg :  Codable{
     public var messageId : String?
     public var msg : String?
+    public var count : Int?
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         messageId = try? container.decodeIfPresent(String.self, forKey: .messageId)
         msg = try? container.decodeIfPresent(String.self, forKey: .msg)
+        count = try? container.decodeIfPresent(Int.self, forKey: .count)
     }
 }
 
