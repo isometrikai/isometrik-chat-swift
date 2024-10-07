@@ -119,5 +119,6 @@ extension AppDelegate : PKPushRegistryDelegate{
 
 Add this code when u logout
 
-ISMChatSdk.getInstance().onTerminate()
+        ISMChatSdk.getInstance().onTerminate(userId: IsomertricChatid ?? "")
+        ISMChatSdk.sharedInstance = nil
 
