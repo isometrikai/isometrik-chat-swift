@@ -57,7 +57,7 @@ struct ISMCustomContextMenu: View {
             VStack(alignment: isReceived ? .leading : .trailing) {
                 Spacer()
                 
-                if showReactionsOption && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall{
+                if showReactionsOption && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall && message.deletedMessage == false{
                     LazyVGrid(
                         columns: [GridItem(.adaptive(minimum: 35))],
                         spacing: 10
@@ -83,7 +83,7 @@ struct ISMCustomContextMenu: View {
                     .padding(.horizontal,15)
                     .environmentObject(self.realmManager)
                 VStack {
-                    if showReplyOption && fromBroadCastFlow != true  && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall{
+                    if showReplyOption && fromBroadCastFlow != true  && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall && message.deletedMessage == false{
                         Button {
                             selectedMessageToReply = message
                             dismiss()
@@ -100,7 +100,7 @@ struct ISMCustomContextMenu: View {
                         }
                         Rectangle().fill(Color(hex: "#CBE3FF")).frame(height: 1).padding(.leading,15)
                     }
-                    if showForwardOption && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall{
+                    if showForwardOption && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall && message.deletedMessage == false{
                         Button {
                             showForward = true
                             dismiss()
@@ -118,7 +118,7 @@ struct ISMCustomContextMenu: View {
                         Rectangle().fill(Color(hex: "#CBE3FF")).frame(height: 1).padding(.leading,15)
                     }
                     
-                    if showEditOption && !isReceived && ISMChatHelper.getMessageType(message: message) == .text && fromBroadCastFlow != true{
+                    if showEditOption && !isReceived && ISMChatHelper.getMessageType(message: message) == .text && fromBroadCastFlow != true && message.deletedMessage == false{
                         Button {
                             updateMessage = message
                             dismiss()
@@ -135,7 +135,7 @@ struct ISMCustomContextMenu: View {
                         }
                         Rectangle().fill(Color(hex: "#CBE3FF")).frame(height: 1).padding(.leading,15)
                     }
-                    if ISMChatHelper.getMessageType(message: message) == .text{
+                    if ISMChatHelper.getMessageType(message: message) == .text && message.deletedMessage == false{
                         Button {
                             pasteboard.string = message.body
                             messageCopied = true
@@ -154,7 +154,7 @@ struct ISMCustomContextMenu: View {
                         Rectangle().fill(Color(hex: "#CBE3FF")).frame(height: 1).padding(.leading,15)
                     }
                     
-                    if !isReceived && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall{
+                    if !isReceived && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall && message.deletedMessage == false{
                         
                         NavigationLink {
                             ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow,onClose: {

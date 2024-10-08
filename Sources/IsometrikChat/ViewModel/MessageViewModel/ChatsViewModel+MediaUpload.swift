@@ -92,6 +92,13 @@ extension ChatsViewModel{
     
     //MARK: - upload conversation create image
     public func uploadConversationImage(image: UIImage,conversationType : Int,newConversation : Bool,conversationId : String,conversationTitle:String,completion:@escaping(String?)->()){
+        
+//        var mediaData : Data = Data()
+//        if let myImage = ISMChatHelper.compressImage(image: image){
+//            if let dataobj = myImage.jpegData(compressionQuality: 0.1){
+//                mediaData = dataobj
+//            }
+//        }
         //         conversationType
         //        "0" ->#Conversation
         //        "1" ->"BroadcastLists"

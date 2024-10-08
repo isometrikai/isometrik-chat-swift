@@ -34,14 +34,6 @@ struct ISMSearchParticipants: View {
                             ISMGroupMemberSubView(member: member, hideDisclosure: true, selectedMember: $selectedMember)
                         }
                     }
-                } header: {
-                    if let count = members?.membersCount{
-                        Text("\(count) Members")
-                            .font(appearance.fonts.chatListUserMessage)
-                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
-                    }
-                } footer: {
-                    Text("")
                 }
                 
             }.listRowSeparatorTint(appearance.colorPalette.chatListSeparatorColor)
@@ -95,9 +87,14 @@ struct ISMSearchParticipants: View {
         .toolbar {
             ToolbarItem(placement: .principal) {
                 VStack {
-                    Text("Search Participants")
+                    Text("Search members")
                         .font(appearance.fonts.navigationBarTitle)
                         .foregroundColor(appearance.colorPalette.navigationBarTitle)
+                    if let count = members?.membersCount{
+                        Text("\(count) people")
+                            .font(appearance.fonts.messageListHeaderDescription)
+                            .foregroundColor(appearance.colorPalette.messageListHeaderDescription)
+                    }
                 }
             }
         }

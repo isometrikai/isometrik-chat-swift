@@ -47,7 +47,7 @@ struct ISMAddParticipantsView: View {
                     .toolbar {
                         ToolbarItem(placement: .principal) {
                             VStack {
-                                Text("Add participants")
+                                Text("Add members")
                                     .font(appearance.fonts.navigationBarTitle)
                                     .foregroundColor(appearance.colorPalette.navigationBarTitle)
                             }
@@ -90,10 +90,12 @@ struct ISMAddParticipantsView: View {
                     Text(value.userName ?? "User")
                         .font(appearance.fonts.messageListMessageText)
                         .foregroundColor(appearance.colorPalette.messageListMessageTextSend)
-                    Text(value.userIdentifier ?? "")
-                        .font(appearance.fonts.chatListUserMessage)
-                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
-                        .lineLimit(2)
+                    if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
+                        Text(value.userIdentifier ?? "")
+                            .font(appearance.fonts.chatListUserMessage)
+                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                            .lineLimit(2)
+                    }
                     
                 })//:VStack
                 Spacer()

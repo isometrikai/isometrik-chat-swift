@@ -60,51 +60,51 @@ struct ISMContactInfoView: View {
                         //Bio
                         
                         Section {
-                            HStack(spacing: 8) {
-                                    
-                                    // Button 1 - Audio
-                                    VStack(spacing: 10) {
-                                        Image(systemName: "phone")
-                                            .font(.system(size: 18))
-                                            .foregroundColor(.green)
-                                        Text("Audio")
-                                            .font(appearance.fonts.messageListMessageText)
-                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
-                                    }.padding(.vertical)
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.white)
-                                    .cornerRadius(8)
-                                    
-                                    
-                                    
-                                    // Button 2 - Video
-                                    VStack(spacing: 10) {
-                                        Image(systemName: "video")
-                                            .font(.system(size: 18))
-                                            .foregroundColor(.green)
-                                        Text("Video")
-                                            .font(appearance.fonts.messageListMessageText)
-                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
-                                    }.padding(.vertical)
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.white)
-                                    .cornerRadius(8)
-                                    
-                                    
-                                    
-                                    // Button 4 - Search
-                                    VStack(spacing: 10) {
-                                        Image(systemName: "magnifyingglass")
-                                            .font(.system(size: 18))
-                                            .foregroundColor(.green)
-                                        Text("Search")
-                                            .font(appearance.fonts.messageListMessageText)
-                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
-                                    }.padding(.vertical)
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.white)
-                                    .cornerRadius(8)
-                                }
+//                            HStack(spacing: 8) {
+//                                    
+//                                    // Button 1 - Audio
+//                                    VStack(spacing: 10) {
+//                                        Image(systemName: "phone")
+//                                            .font(.system(size: 18))
+//                                            .foregroundColor(.green)
+//                                        Text("Audio")
+//                                            .font(appearance.fonts.messageListMessageText)
+//                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+//                                    }.padding(.vertical)
+//                                    .frame(maxWidth: .infinity)
+//                                    .background(Color.white)
+//                                    .cornerRadius(8)
+//                                    
+//                                    
+//                                    
+//                                    // Button 2 - Video
+//                                    VStack(spacing: 10) {
+//                                        Image(systemName: "video")
+//                                            .font(.system(size: 18))
+//                                            .foregroundColor(.green)
+//                                        Text("Video")
+//                                            .font(appearance.fonts.messageListMessageText)
+//                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+//                                    }.padding(.vertical)
+//                                    .frame(maxWidth: .infinity)
+//                                    .background(Color.white)
+//                                    .cornerRadius(8)
+//                                    
+//                                    
+//                                    
+//                                    // Button 4 - Search
+//                                    VStack(spacing: 10) {
+//                                        Image(systemName: "magnifyingglass")
+//                                            .font(.system(size: 18))
+//                                            .foregroundColor(.green)
+//                                        Text("Search")
+//                                            .font(appearance.fonts.messageListMessageText)
+//                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+//                                    }.padding(.vertical)
+//                                    .frame(maxWidth: .infinity)
+//                                    .background(Color.white)
+//                                    .cornerRadius(8)
+//                                }
                         } header: {
                             HStack(alignment: .center){
                                 Spacer()
@@ -390,9 +390,12 @@ struct ISMContactInfoView: View {
             if onlyInfo == true{
                 UserAvatarView(avatar: (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")), showOnlineIndicator: conversationDetail?.conversationDetails?.opponentDetails?.online ?? (selectedToShowInfo?.online ?? false),size: CGSize(width: 116, height: 116), userName: conversationDetail?.conversationDetails?.opponentDetails?.userName ?? (selectedToShowInfo?.userName ?? ""),font: .regular(size: 50))
                     .onTapGesture {
-                        fullScreenImageURL = conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")
-                        withAnimation {
-                            showFullScreenImage = true
+                        let image = conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")
+                        if !image.isEmpty{
+                            fullScreenImageURL = image
+                            withAnimation {
+                                showFullScreenImage = true
+                            }
                         }
                     }
                 
@@ -402,18 +405,24 @@ struct ISMContactInfoView: View {
                     .foregroundColor(appearance.colorPalette.chatListTitle)
                     .textCase(nil)
                 Spacer()
-                let text = NSDate().descriptiveStringLastSeen(time: conversationDetail?.conversationDetails?.opponentDetails?.lastSeen ?? 0)
-                Text("Last seen \(text)")
-                    .font(appearance.fonts.messageListMessageText)
-                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
-                    .padding(.bottom,15)
-                    .textCase(nil)
+                
+                let date = NSDate().descriptiveStringLastSeen(time: conversationDetail?.conversationDetails?.opponentDetails?.lastSeen ?? 0)
+                if let text = self.conversationDetail?.conversationDetails?.opponentDetails?.online == true ? "Online" : "Last seen \(date)"{
+                    Text(text)
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                        .padding(.bottom,15)
+                        .textCase(nil)
+                }
             }else{
                 UserAvatarView(avatar: isGroup == false ? (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? "") : (conversationDetail?.conversationDetails?.conversationImageUrl ?? ""), showOnlineIndicator: conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,size: CGSize(width: 116, height: 116), userName: isGroup == false ? (conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "") : (conversationDetail?.conversationDetails?.conversationTitle ?? ""),font: .regular(size: 50))
                     .onTapGesture {
-                        fullScreenImageURL = conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? ""
-                        withAnimation {
-                            showFullScreenImage = true
+                        let image = isGroup == true ? (conversationDetail?.conversationDetails?.conversationImageUrl ?? "") : (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? "")
+                        if !image.isEmpty{
+                            fullScreenImageURL = image
+                            withAnimation {
+                                showFullScreenImage = true
+                            }
                         }
                     }
                 
@@ -425,12 +434,14 @@ struct ISMContactInfoView: View {
                     .textCase(nil)
                 Spacer()
                 
-                let text = NSDate().descriptiveStringLastSeen(time: conversationDetail?.conversationDetails?.opponentDetails?.lastSeen ?? 0)
-                Text(isGroup == false ? ("Last seen \(text)") : ("Group  •  \(conversationDetail?.conversationDetails?.members?.count ?? 0) members"))
-                    .font(appearance.fonts.messageListMessageText)
-                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
-                    .padding(.bottom,15)
-                    .textCase(nil)
+                let date = NSDate().descriptiveStringLastSeen(time: conversationDetail?.conversationDetails?.opponentDetails?.lastSeen ?? 0)
+                if let text = self.conversationDetail?.conversationDetails?.opponentDetails?.online == true ? "Online" : "Last seen \(date)"{
+                    Text(isGroup == false ? text : ("Group  •  \(conversationDetail?.conversationDetails?.members?.count ?? 0) members"))
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                        .padding(.bottom,15)
+                        .textCase(nil)
+                }
             }
         }
     }
