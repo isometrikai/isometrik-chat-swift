@@ -565,21 +565,25 @@ public struct ISMMessageView: View {
     
     func bottomView() -> some View{
         HStack {
-            if isGroup == true {
-                if !networkMonitor.isConnected {
-                    toolBarView()
-                } else if let members = conversationDetail?.conversationDetails?.members,
-                          members.contains(where: { $0.userId == userData.userId }) {
-                    toolBarView()
+            if !networkMonitor.isConnected {
+                toolBarView()
+                //in some apps if booking is closed then we can't messsage
+            }else if conversationDetail?.conversationDetails?.customType == "CLOSED"{
+            }else{
+                if isGroup == true {
+                    if let members = conversationDetail?.conversationDetails?.members,
+                       members.contains(where: { $0.userId == userData.userId }) {
+                        toolBarView()
+                    } else {
+                        NoLongerMemberToolBar()
+                    }
                 } else {
-                    NoLongerMemberToolBar()
-                }
-            } else {
-                let chatProperties = ISMChatSdkUI.getInstance().getChatProperties()
-                if chatProperties.otherConversationList && showOptionToAllow() {
-                    acceptRejectView()
-                } else {
-                    toolBarView()
+                    let chatProperties = ISMChatSdkUI.getInstance().getChatProperties()
+                    if chatProperties.otherConversationList && showOptionToAllow() {
+                        acceptRejectView()
+                    } else {
+                        toolBarView()
+                    }
                 }
             }
         }
