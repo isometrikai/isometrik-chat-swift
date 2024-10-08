@@ -254,7 +254,8 @@ public struct ISMChatImages {
         fileFallback: Image? = nil,
         searchIcon : Image? = nil,
         influencerUserIcon : Image? = nil,
-        businessUserIcon : Image? = nil
+        businessUserIcon : Image? = nil,
+        calanderLogo : Image? = nil
     ) {
         if let addConversation = addConversation { self.addConversation = addConversation }
         if let conversationListPlaceholder = conversationListPlaceholder { self.conversationListPlaceholder = conversationListPlaceholder }
@@ -341,6 +342,7 @@ public struct ISMChatImages {
         if let searchIcon = searchIcon { self.searchIcon = searchIcon }
         if let influencerUserIcon = influencerUserIcon { self.influencerUserIcon = influencerUserIcon }
         if let businessUserIcon = businessUserIcon { self.businessUserIcon = businessUserIcon }
+        if let calanderLogo = calanderLogo { self.calanderLogo = calanderLogo }
     }
     
 }

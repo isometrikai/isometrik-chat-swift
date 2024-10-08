@@ -349,7 +349,7 @@ public struct ISMConversationView : View {
                 showingNoInternetAlert = true
             }
             getuserData{ userId in
-                self.chatViewModel.getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId: userId ?? "")
+                //self.chatViewModel.getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId: userId ?? "")
             }
         }
     }//:Body

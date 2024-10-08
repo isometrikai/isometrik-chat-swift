@@ -617,6 +617,7 @@ extension ISMMessageView{
                     }
                 }
             }
+            mediaSelectedFromPicker.removeAll()
         } else if let placeId = self.placeId, let longitude = self.longitude, let latitude = self.latitude, let name = self.placeName ,let placeAddress = placeAddress{
             //MARK: - LOCATION MESSAGE
             let msg = "https://www.google.com/maps/search/?api=1&map_action=map&query=\(latitude)%2C\(longitude)&query_place_id=\(placeId)"

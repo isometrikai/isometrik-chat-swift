@@ -215,31 +215,7 @@ public struct ISMMessageView: View {
                     }.onTapGesture {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     }
-                    if isGroup == true{
-                        if !networkMonitor.isConnected{
-                            toolBarView()
-                        }else{
-                            //here we are checking if your a member of group anymore
-                            if let conversation = conversationDetail?.conversationDetails{
-                                if let members = conversation.members,
-                                   members.contains(where: { member in
-                                       return member.userId == userData.userId
-                                   }) {
-                                    toolBarView()
-                                } else {
-                                    NoLongerMemberToolBar()
-                                }
-                            }else{
-                                toolBarView()
-                            }
-                        }
-                    }else{
-                        if ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true && showOptionToAllow() == true{
-                            acceptRejectView()
-                        }else{
-                            toolBarView()
-                        }
-                    }
+                    bottomView()
                 }//VStack
                 .onAppear {
                     setupOnAppear()
@@ -587,7 +563,31 @@ public struct ISMMessageView: View {
     }
     
     
-    
+    func bottomView() -> some View{
+        HStack {
+            if !networkMonitor.isConnected {
+                toolBarView()
+                //in some apps if booking is closed then we can't messsage
+            }else if conversationDetail?.conversationDetails?.customType == "CLOSED"{
+            }else{
+                if isGroup == true {
+                    if let members = conversationDetail?.conversationDetails?.members,
+                       members.contains(where: { $0.userId == userData.userId }) {
+                        toolBarView()
+                    } else {
+                        NoLongerMemberToolBar()
+                    }
+                } else {
+                    let chatProperties = ISMChatSdkUI.getInstance().getChatProperties()
+                    if chatProperties.otherConversationList && showOptionToAllow() {
+                        acceptRejectView()
+                    } else {
+                        toolBarView()
+                    }
+                }
+            }
+        }
+    }
     
     
     //MARK: - CONFIGURE

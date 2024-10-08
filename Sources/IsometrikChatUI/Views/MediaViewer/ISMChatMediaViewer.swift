@@ -14,6 +14,9 @@ struct ISMChatMediaViewer : View {
     @StateObject var viewModel: ISMChatMediaViewerViewModel
     var onClose: () -> Void
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    @State var isShareSheetPresented : Bool = false
+    @State var toggleVideo : Bool = false
+    @State var navigatetoMedia : Bool = false
 
     var body: some View {
         let closeGesture = DragGesture()
@@ -65,7 +68,7 @@ struct ISMChatMediaViewer : View {
                                                     viewModel.index = index
                                                 }
                                             }
-                                            .frame(width: 50, height: 50)
+                                            .frame(width: 25, height: 50)
                                             .cornerRadius(4)
                                             .clipped()
                                             .id(index)
@@ -96,6 +99,10 @@ struct ISMChatMediaViewer : View {
                 }
                 footerView().padding(.bottom,15).padding(.top,5)
             }
+            .sheet(isPresented: $isShareSheetPresented) {
+                ShareSheet(items: [viewModel.attachments[viewModel.index].mediaUrl])
+                    .presentationDetents([.fraction(0.5)])
+            }
         }
     }
     
@@ -108,13 +115,6 @@ struct ISMChatMediaViewer : View {
                         .frame(width: 18, height: 18)
                 }
                 Spacer()
-                Button(action: {
-//                        navigatetoMedia.toggle()
-                }) {
-                    Text("All media")
-                        .font(appearance.fonts.mediaSliderHeader)
-                        .foregroundColor(appearance.colorPalette.mediaSliderHeader)
-                }
             }
             VStack(spacing:2) {
                 let date = NSDate().doubletoDate(time: viewModel.attachments[viewModel.index].sentAt)
@@ -133,7 +133,7 @@ struct ISMChatMediaViewer : View {
     func footerView() -> some View{
         HStack {
             Button {
-//                isShareSheetPresented.toggle()
+                isShareSheetPresented.toggle()
             } label: {
                 Image(systemName: "square.and.arrow.up")
                     .resizable() // Makes the image resizable
@@ -141,17 +141,6 @@ struct ISMChatMediaViewer : View {
                     .frame(width: 25, height: 25) // Set the desired width and height
                     .foregroundColor(.black)
             }
-//                        Spacer()
-//                        Button {
-//
-//                        } label: {
-//                            Image(systemName: "arrowshape.turn.up.right")
-//                                .resizable() // Makes the image resizable
-//                                .aspectRatio(contentMode: .fit) // Maintains the aspect ratio of the image
-//                                .frame(width: 25, height: 25) // Set the desired width and height
-//                                .foregroundColor(.black)
-//                        }
-          
             if ISMChatHelper.isVideoString(media: viewModel.attachments[viewModel.index].mediaUrl){
                 Spacer()
                 Button {
@@ -169,7 +158,7 @@ struct ISMChatMediaViewer : View {
                 Button(action: { 
                     viewModel.toggleVideoMuted()
                 }, label: {
-                    Image(systemName: viewModel.videoMuted ? "speaker.wave.3.fill"  : "speaker.slash")
+                    Image(systemName: viewModel.videoMuted ?  "speaker.slash" : "speaker.wave.3.fill")
                         .resizable() // Makes the image resizable
                         .aspectRatio(contentMode: .fit) // Maintains the aspect ratio of the image
                         .frame(width: 20, height: 20) // Set the desired width and height
@@ -180,7 +169,7 @@ struct ISMChatMediaViewer : View {
             
             Spacer()
             Button {
-                ISMChatHelper.downloadImage(from: viewModel.attachments[viewModel.index].mediaUrl)
+                ISMChatHelper.downloadMedia(from: viewModel.attachments[viewModel.index].mediaUrl)
             } label: {
                 Image(systemName: "square.and.arrow.down")
                     .resizable() // Makes the image resizable
@@ -223,3 +212,19 @@ private extension ISMChatMediaViewer {
     }
 }
 
+
+
+struct ShareSheet: UIViewControllerRepresentable {
+    var items: [Any]
+    var activities: [UIActivity]? = nil
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: items, applicationActivities: activities)
+        controller.modalPresentationStyle = .pageSheet
+        return controller
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
+        // No update needed
+    }
+}

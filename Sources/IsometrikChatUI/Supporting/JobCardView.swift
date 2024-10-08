@@ -37,14 +37,9 @@ struct JobCardView: View {
                 
                 Spacer()
                 
-                Button(action: {
-                 
-                }, label: {
-                    // View Details Link
-                    Text("View details")
-                        .font(.regular(size: 14))
-                        .foregroundColor(Color(hex: "#0828D8"))
-                })
+                Text("View details")
+                    .font(.regular(size: 14))
+                    .foregroundColor(Color(hex: "#0828D8"))
             }
         }
         .padding(.horizontal, 15)

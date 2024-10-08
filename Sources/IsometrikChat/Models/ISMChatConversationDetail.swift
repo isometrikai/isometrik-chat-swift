@@ -25,6 +25,7 @@ public struct ISMChatConversationInDetail : Codable{
     public var messagingDisabled : Bool?
     public var usersOwnDetails : ISMChatUserOwnDetail?
     public var updatedAt : Double?
+    public var customType : String?
     public var privateOneToOne : Bool?
     public var membersCount : Int?
     public var members : [ISMChatGroupMember]? = []
@@ -45,6 +46,7 @@ public struct ISMChatConversationInDetail : Codable{
         messagingDisabled = try? container.decode(Bool.self, forKey: .messagingDisabled)
         usersOwnDetails = try? container.decode(ISMChatUserOwnDetail.self, forKey: .usersOwnDetails)
         updatedAt = try? container.decode(Double.self, forKey: .updatedAt)
+        customType = try? container.decode(String.self, forKey: .customType)
         privateOneToOne = try? container.decode(Bool.self, forKey: .privateOneToOne)
         membersCount = try? container.decode(Int.self, forKey: .membersCount)
         lastMessageSentAt = try? container.decode(Double.self, forKey: .lastMessageSentAt)

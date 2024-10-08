@@ -110,7 +110,7 @@ public struct ISMProfileView: View {
                                 Toggle("", isOn: $showLastSeen)
                             }
                             Button {
-                                ISMChatSdk.getInstance().onTerminate()
+                                ISMChatSdk.getInstance().onTerminate(userId: userData.userId)
                             } label: {
                                 HStack(spacing: 15){
                                     appearance.images.LogoutIcon

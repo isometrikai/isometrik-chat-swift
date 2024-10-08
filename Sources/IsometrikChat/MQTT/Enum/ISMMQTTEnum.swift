@@ -81,6 +81,8 @@ enum ISMChatMQTTData {
     case mqttAddReaction
     case mqttRemoveReaction
     
+    case mqttChatMessageSent
+    
     case none
     
     static func dataType(_ type: String) -> ISMChatMQTTData {
@@ -111,6 +113,7 @@ enum ISMChatMQTTData {
         case "messageDetailsUpdated" : return .mqttmessageDetailsUpdated
         case "reactionAdd" : return .mqttAddReaction
         case "reactionRemove" : return .mqttRemoveReaction
+        case "chatMessageSent" : return .mqttChatMessageSent
             
         default: return .none
         }

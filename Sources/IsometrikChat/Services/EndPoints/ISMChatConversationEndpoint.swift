@@ -18,6 +18,7 @@ enum ISMChatConversationEndpoint : ISMChatURLConvertible {
     case deleteConversationLocally(conversationId: String)
     case clearConversationMessages(conversationId: String)
     case updateConversationSetting
+    case unreadConversationCount
     
     
     var baseURL: URL {
@@ -42,6 +43,8 @@ enum ISMChatConversationEndpoint : ISMChatURLConvertible {
             return "/chat/conversation/clear"
         case .updateConversationSetting:
             return "/chat/conversation/settings"
+        case .unreadConversationCount:
+            return "/chat/conversations/unread/count"
         }
     }
     
@@ -63,6 +66,8 @@ enum ISMChatConversationEndpoint : ISMChatURLConvertible {
             return .delete
         case .updateConversationSetting:
             return .patch
+        case .unreadConversationCount:
+            return .get
         }
     }
     
@@ -116,12 +121,14 @@ enum ISMChatConversationEndpoint : ISMChatURLConvertible {
             return params
         case .updateConversationSetting:
             return [:]
+        case .unreadConversationCount:
+            return ["includeConversationStatusMessagesInUnreadMessagesCount" : "false", "hidden" : "false"]
         }
     }
     
     var headers: [String: String]? {
         switch self {
-        case .getconversationList,.getconversationListWithCustomType,.createConversation,.conversationDetail,.updateConversationDetail,.deleteConversationLocally,.clearConversationMessages,.updateConversationSetting:
+        case .getconversationList,.getconversationListWithCustomType,.createConversation,.conversationDetail,.updateConversationDetail,.deleteConversationLocally,.clearConversationMessages,.updateConversationSetting,.unreadConversationCount:
             return ["userToken": ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userToken,
                     "userSecret": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.userSecret,
                     "projectId": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.projectId,

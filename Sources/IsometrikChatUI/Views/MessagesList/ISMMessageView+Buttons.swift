@@ -184,56 +184,32 @@ extension ISMMessageView{
         }
     }
 
-     func profileButtonView() -> some View {
-         HStack{
-             if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true{
-                 if ISMChatSdkUI.getInstance().getChatProperties().navigateToAppProfileFromMessageList == true{
-                     if isGroup == true {
-                         
-                         Button {
-                             self.stateViewModel.navigateToUserProfile = true
-                         } label: {
-                             customView()
-                         }
-
-                         
-//                         NavigationLink {
-//                             ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
-//                         } label: {
-//                             
-//                         }
-                     } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.storeId ?? opponenDetail?.metaData?.userId{
-                         Button {
-                             delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
-                         } label: {
-                             customView()
-                         }
-                     }
-                     else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
-                                ?? opponenDetail?.metaData?.userId
-                                ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
-                         Button {
-                             delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
-                         } label: {
-                             customView()
-                         }
-                     }
-                 }else{
-                     
-                     Button {
-                         self.stateViewModel.navigateToUserProfile = true
-                     } label: {
-                         customView()
-                     }
-
-//                     NavigationLink {
-//                         
-//                     } label: {
-//                         customView()
-//                     }
-                 }
-             }
-         }
+    func profileButtonView() -> some View {
+        HStack {
+            if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true {
+                Button {
+                    // Action Logic for Button based on conditions
+                    if ISMChatSdkUI.getInstance().getChatProperties().navigateToAppProfileFromMessageList == true {
+                        if (isGroup ?? false) == true {
+                            self.stateViewModel.navigateToUserProfile = true
+                        } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.storeId
+                                   ?? opponenDetail?.metaData?.userId {
+                            delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
+                        } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
+                                   ?? opponenDetail?.metaData?.userId
+                                   ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
+                            delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
+                        }
+                    } else {
+                        self.stateViewModel.navigateToUserProfile = true
+                    }
+                } label: {
+                    customView() // Your custom view for the button
+                }
+            } else {
+                customView() // No button, just the view for groups
+            }
+        }
     }
     
     func customView() -> some View{
@@ -299,14 +275,14 @@ extension ISMMessageView{
         } else {
             if stateViewModel.otherUserTyping {
                 return "typing..."
+            } else if self.conversationDetail?.conversationDetails?.opponentDetails?.online == true{
+                return "online"
             } else if let lastSeen = self.conversationDetail?.conversationDetails?.opponentDetails?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
                 let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
                 return "last seen \(date)"
             } else if let lastSeen = self.opponenDetail?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
                 let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
                 return "last seen \(date)"
-            } else if self.conversationDetail?.conversationDetails?.opponentDetails?.online == true{
-                return "online"
             }else{
                 return "tap here for more info"
             }
@@ -375,8 +351,7 @@ extension ISMMessageView{
                                 }
                             } label: {
                                 appearance.images.threeDots
-                                    .resizable()
-                                    .frame(width: 5, height: 20, alignment: .center)
+                                        .frame(width: 20, height: 20, alignment: .center)
                             }
                         }
 //                    }

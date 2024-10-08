@@ -110,7 +110,6 @@ struct ISMMediaPicker: View {
     var footerView: some View {
         Button {
             navigateToEditor = true
-//            isPresented = false
         } label: {
             HStack(spacing: 5) {
                 Text("Next ( \(medias.count) )")

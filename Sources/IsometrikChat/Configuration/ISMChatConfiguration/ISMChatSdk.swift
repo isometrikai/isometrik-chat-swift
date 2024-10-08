@@ -116,12 +116,15 @@ public class ISMChatSdk{
         initializeCallIsometrik(accountId: appConfig.accountId, projectId: appConfig.projectId, keysetId: appConfig.keySetId, licenseKey: appConfig.licensekey, appSecret: appConfig.appSecret, userSecret: appConfig.userSecret, isometricChatUserId: userConfig.userId, isometricUserToken: userConfig.userToken)
         self.chatInitialized = true
         print("CHAT INITIALIZED")
+         
+        let viewmodel = ChatsViewModel()
+        viewmodel.getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId: userConfiguration.userId)
     }
     
-    public func onTerminate() {
+    public func onTerminate(userId : String) {
         //1. unsubscribe fcm
         if checkifChatInitialied() == true{
-            ISMChatHelper.unSubscribeFCM()
+            ISMChatHelper.unSubscribeFCM(userId: userId)
             //2. unsubscribe mqtt
             if mqttSession != nil {
                 self.mqttSession?.unSubscribe()
@@ -137,7 +140,7 @@ public class ISMChatSdk{
     
     public func onProfileSwitch(oldUserId : String,appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig,hostFrameworkType : FrameworkType,conversationListViewControllerName : UIViewController.Type?,messagesListViewControllerName : UIViewController.Type?){
         //1. unsubscribe fcm
-        ISMChatHelper.unSubscribeFCM()
+        ISMChatHelper.unSubscribeFCM(userId: oldUserId)
         //2. unsubscribe mqtt
         if mqttSession != nil {
             self.mqttSession?.unSubscribe()
