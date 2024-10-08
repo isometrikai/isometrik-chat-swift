@@ -54,7 +54,6 @@ extension ChatsViewModel{
     //MARK: - send Reel
     public func sharePost(user: UserDB,postId : String,postURL : String,postCaption : String,completion:@escaping()->()){
         self.createConversation(user: user,chatStatus: ISMChatStatus.Reject.value) { response,error  in
-            NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
             self.sendMessage(messageKind: .post, customType: ISMChatMediaType.Post.value, conversationId: response?.conversationId ?? "", message: postURL, fileName: "", fileSize: nil, mediaId: nil,caption: postCaption,postId: postId) { _, _ in
                 completion()
             }
