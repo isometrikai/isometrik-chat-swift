@@ -123,7 +123,7 @@ struct ISMContactInfoView: View {
                                         .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                 }else{
                                     Button {
-                                        navigateToSocialProfileId = conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? ""
+                                        navigateToSocialProfileId = conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? (self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier ?? "")
                                     } label: {
                                         HStack{
                                             appearance.images.mediaIcon
