@@ -124,6 +124,7 @@ struct ISMContactInfoView: View {
                                 }else{
                                     Button {
                                         navigateToSocialProfileId = conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? (self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier ?? "")
+                                        presentationMode.wrappedValue.dismiss()
                                     } label: {
                                         HStack{
                                             appearance.images.mediaIcon
