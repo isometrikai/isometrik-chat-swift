@@ -18,18 +18,44 @@ struct ISMMapDetailView: View {
     var data: ISMChatLocationData?
     @State var camera : MapCameraPosition = .automatic
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    @State private var region = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), // Replace with your default coordinate
+            span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05) // Adjust this for zoom level
+        )
     
     //MARK:  - LIFECYCLE
     var body: some View {
         ZStack{
             VStack {
-                Map(){
-                    Annotation("", coordinate: data?.coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)) {
-                        appearance.images.mapPinLogo
-                            .resizable()
-                            .frame(width: 30, height: 30, alignment: .center)
-                    }
-                }
+                HStack{
+                    navigationBarLeadingButtons()
+                    Spacer()
+                    Text(data?.title ?? "")
+                        .font(appearance.fonts.messageListMessageText)
+                    Spacer()
+                    navigationBarTrailingButtons()
+                }.padding(.horizontal,15).padding(.bottom,5)
+                Map(coordinateRegion: $region,interactionModes: [.all], showsUserLocation: true, annotationItems: [MapAnnotationItem(coordinate: region.center)]) { item in
+                            MapAnnotation(coordinate: item.coordinate) {
+                                appearance.images.mapPinLogo
+                                    .resizable()
+                                    .frame(width: 30, height: 30, alignment: .center)
+                            }
+                        }
+                        .onAppear {
+                            // Update the region to the desired zoom level if necessary
+                            region = MKCoordinateRegion(
+                                center: CLLocationCoordinate2D(latitude: data?.coordinate.latitude ?? 0, longitude: data?.coordinate.longitude ?? 0), // Replace with your default coordinate
+                                span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+                            updateRegion(for: data?.coordinate)
+                        }
+//                Map(){
+//                    Annotation("", coordinate: data?.coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)) {
+//                        appearance.images.mapPinLogo
+//                            .resizable()
+//                            .frame(width: 30, height: 30, alignment: .center)
+//                    }
+//                }
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -52,12 +78,24 @@ struct ISMMapDetailView: View {
         }
     }
     
+    func updateRegion(for coordinate: CLLocationCoordinate2D?) {
+           if let coordinate = coordinate {
+               region = MKCoordinateRegion(
+                   center: coordinate,
+                   span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02) // Set the desired zoom level
+               )
+           }
+       }
+    
     //MARK: - CONFIGURE
     func navigationBarTrailingButtons() -> some View{
         Button(action: {
             showBottomSheet = true
         }, label: {
             appearance.images.share
+                .resizable()
+                .frame(width: 18, height: 20)
+                .imageScale(.large)
                 .foregroundStyle(Color.blue)
         }).padding(.leading)
     }
@@ -69,7 +107,7 @@ struct ISMMapDetailView: View {
             }) {
                 appearance.images.backButton
                     .resizable()
-                    .frame(width: 29, height: 29)
+                    .frame(width: 18, height: 18)
                     .imageScale(.large)
             }
         }
@@ -125,4 +163,9 @@ struct ISMMapDetailView: View {
 struct CustomAnnotation1: Identifiable {
     var id: UUID
     var annotation: MKPointAnnotation
+}
+
+struct MapAnnotationItem: Identifiable {
+    let id = UUID()
+    let coordinate: CLLocationCoordinate2D
 }

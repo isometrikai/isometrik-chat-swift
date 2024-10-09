@@ -171,7 +171,7 @@ public struct ISMGroupCreate: View {
         Button(action: { dismiss() }) {
             appearance.images.backButton
                 .resizable()
-                .frame(width: 29, height: 29, alignment: .center)
+                .frame(width: 18, height: 18)
         }
     }
     

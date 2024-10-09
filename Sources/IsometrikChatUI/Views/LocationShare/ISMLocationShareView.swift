@@ -253,17 +253,37 @@ extension View {
 }
 
 
+
 final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
+    
+    @Published var authorizationStatus: CLAuthorizationStatus?
     
     override init() {
         super.init()
         locationManager.delegate = self
+        requestWhenInUseAuthorization()
     }
     
     func requestWhenInUseAuthorization() {
         locationManager.requestWhenInUseAuthorization()
     }
     
-    // CLLocationManagerDelegate methods can be implemented here
+    // Handle authorization status changes
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        authorizationStatus = status
+        switch status {
+        case .notDetermined:
+            requestWhenInUseAuthorization() // Ask for permission again
+        case .restricted, .denied:
+            print("Location permission denied")
+            // Handle denial (e.g., alert the user)
+        case .authorizedWhenInUse, .authorizedAlways:
+            print("Location permission granted")
+            // Proceed with using location
+        @unknown default:
+            break
+        }
+    }
 }
+
