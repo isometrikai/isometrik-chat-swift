@@ -396,6 +396,24 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlockConversation.name, object: nil,userInfo: ["data": "data","error" : error])
                         }
                     }
+                case .mqttAddMember:
+                    self.messageReceived(data) { result in
+                        switch result{
+                        case .success(let data):
+                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+                        case .failure(let error):
+                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+                        }
+                    }
+                case .mqttRemoveMember:
+                    self.messageReceived(data) { result in
+                        switch result{
+                        case .success(let data):
+                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+                        case .failure(let error):
+                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+                        }
+                    }
                 case .mqttUserUnblockConversation:
                     self.blockedUserAndUnBlocked(data) { result in
                         switch result{

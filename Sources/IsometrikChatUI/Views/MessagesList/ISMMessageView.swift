@@ -586,10 +586,10 @@ public struct ISMMessageView: View {
             }else{
                 if isGroup == true {
                     if let members = conversationDetail?.conversationDetails?.members,
-                       members.contains(where: { $0.userId == userData.userId }) {
-                        toolBarView()
-                    } else {
+                       !members.contains(where: { $0.userId == userData.userId }) {
                         NoLongerMemberToolBar()
+                    } else {
+                        toolBarView()
                     }
                 } else {
                     let chatProperties = ISMChatSdkUI.getInstance().getChatProperties()
