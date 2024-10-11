@@ -23,6 +23,8 @@ struct ISMUserMediaView: View {
     }
     @Environment(\.dismiss) var dismiss
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    @State var navigateToMediaSlider : Bool = false
+    @State var navigateToMediaSliderId : String = ""
     
     //MARK: - BODY
     public var body: some View {
@@ -71,6 +73,17 @@ struct ISMUserMediaView: View {
                         .pickerStyle(.segmented)
                         .frame(width: 250)
                     }
+                }
+            }
+            .fullScreenCover(isPresented: $navigateToMediaSlider) {
+                let attachments = self.realmManager.medias ?? []
+                let currentMediaId = navigateToMediaSliderId
+                //reset value
+                let index = attachments.firstIndex { $0.messageId == currentMediaId } ?? 0
+                ISMChatMediaViewer(viewModel: ISMChatMediaViewerViewModel(attachments: attachments, index: index)) {
+                    navigateToMediaSlider = false
+                }.onAppear {
+                    self.navigateToMediaSliderId = ""
                 }
             }
         }
@@ -269,20 +282,27 @@ struct ISMUserMediaView: View {
     
     func showVideoView(_ value: MediaDB) -> some View {
         Button(action: {
-            
+            self.navigateToMediaSliderId = value.messageId
+            self.navigateToMediaSlider = true
         }, label: {
             ISMChatImageCahcingManger.viewImage(url: value.thumbnailUrl)
                     .resizable()
                     .scaledToFill()
                     .frame(width: ((UIScreen.main.bounds.width / 3) - 1), height: ((UIScreen.main.bounds.width / 3) - 1))
                     .clipped()
-            
+                    .overlay {
+                        appearance.images.playVideo
+                            .resizable()
+                            .foregroundColor(.white)
+                            .frame(width: 36, height: 36)
+                    }
         })
     }
     
     func showGifView(_ value: MediaDB) -> some View {
         Button(action: {
-            
+            self.navigateToMediaSliderId = value.messageId
+            self.navigateToMediaSlider = true
         }, label: {
             let url = URL(string: (value.mediaUrl ))
             AnimatedImage(url: url)
@@ -296,19 +316,14 @@ struct ISMUserMediaView: View {
     func showImageView(_ value: MediaDB) -> some View {
         
         Button(action: {
-            
+            self.navigateToMediaSliderId = value.messageId
+            self.navigateToMediaSlider = true
         }, label: {
             ISMChatImageCahcingManger.viewImage(url: value.mediaUrl)
                 .resizable()
                 .scaledToFill()
                 .frame(width: ((UIScreen.main.bounds.width / 3) - 1), height: ((UIScreen.main.bounds.width / 3) - 1))
                 .clipped()
-                .overlay {
-                    appearance.images.playVideo
-                        .resizable()
-                        .foregroundColor(.white)
-                        .frame(width: 36, height: 36)
-                }
         })
     }
     
