@@ -322,7 +322,7 @@ extension ISMMessageView{
                     var localIds = [String]()
                     let id = saveMessageToLocalDB(sentAt: Date().timeIntervalSince1970 * 1000, messageId: "", message: "Sticker", mentionUsers: [], fileName: filename, fileUrl: url, messageType: .sticker,customType: .sticker, messageKind: .normal)
                     localIds.append(id)
-                    sendMediaMessage(messageKind: .sticker, customType: ISMChatMediaType.sticker.value, mediaId: mediaId, mediaName: filename, mediaUrl: url, mediaData: 1, thubnailUrl: url, sentAt: sentAt, objectId: localIds.first ?? "")
+                    sendMediaMessage(messageKind: .sticker, customType: ISMChatMediaType.sticker.value, mediaId: mediaId, mediaName: filename, mediaUrl: url, mediaData: 1, thubnailUrl: url, sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
                     localIds.removeFirst()
                 }
             }else{
@@ -337,7 +337,7 @@ extension ISMMessageView{
                     
                     let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Gif", mentionUsers: [], fileName: filename, fileUrl: url, messageType: .gif,customType: .gif, messageKind: .normal)
                     localIds.append(id)
-                    sendMediaMessage(messageKind: .gif, customType: ISMChatMediaType.gif.value, mediaId: mediaId, mediaName: filename, mediaUrl: url, mediaData: 1, thubnailUrl: url, sentAt: sentAt, objectId: localIds.first ?? "")
+                    sendMediaMessage(messageKind: .gif, customType: ISMChatMediaType.gif.value, mediaId: mediaId, mediaName: filename, mediaUrl: url, mediaData: 1, thubnailUrl: url, sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
                     localIds.removeFirst()
                 }
             }
@@ -437,7 +437,7 @@ extension ISMMessageView{
                     if ISMChatSdk.getInstance().checkuploadOnExternalCDN() == true{
                         self.delegate?.uploadOnExternalCDN(messageKind: .photo, mediaUrl: thumbnailUrl!, completion: { imageURL, _ in
                             self.delegate?.uploadOnExternalCDN(messageKind: .video, mediaUrl: videoUrl, completion: { videoUrl, mediaData in
-                                sendMediaMessage(messageKind: messageKind, customType: customType, mediaId: mediaId, mediaName: mediaName, mediaUrl: videoUrl, mediaData: mediaData, thubnailUrl: imageURL, sentAt: sentAt, objectId: localIds.first ?? "")
+                                sendMediaMessage(messageKind: messageKind, customType: customType, mediaId: mediaId, mediaName: mediaName, mediaUrl: videoUrl, mediaData: mediaData, thubnailUrl: imageURL, sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
                                 localIds.removeFirst()
                             })
                         })
@@ -446,7 +446,7 @@ extension ISMMessageView{
                         //upload video
                             chatViewModel.upload(messageKind: .video, conversationId: self.conversationID ?? "", image: nil, document: nil, video: videoUrl, audio: nil, mediaName: mediaName) {  data, filename, size in
                             if let dataValue = data {
-                                sendMediaMessage(messageKind: messageKind, customType: customType, mediaId: dataValue.mediaId ?? "", mediaName: filename, mediaUrl: data?.mediaUrl ?? "", mediaData: size, thubnailUrl: thumbnailmedia?.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
+                                sendMediaMessage(messageKind: messageKind, customType: customType, mediaId: dataValue.mediaId ?? "", mediaName: filename, mediaUrl: data?.mediaUrl ?? "", mediaData: size, thubnailUrl: thumbnailmedia?.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
                                 localIds.removeFirst()
                             }
                         }
@@ -456,13 +456,13 @@ extension ISMMessageView{
             }else{
                 if ISMChatSdk.getInstance().checkuploadOnExternalCDN() == true{
                     self.delegate?.uploadOnExternalCDN(messageKind: .photo, mediaUrl: cameraImage, completion: { imageURL, imageData in
-                        sendMediaMessage(messageKind: .photo, customType: ISMChatMediaType.Image.value, mediaId: mediaId, mediaName: mediaName, mediaUrl: imageURL, mediaData: imageData, thubnailUrl: imageURL, sentAt: sentAt, objectId: localIds.first ?? "")
+                        sendMediaMessage(messageKind: .photo, customType: ISMChatMediaType.Image.value, mediaId: mediaId, mediaName: mediaName, mediaUrl: imageURL, mediaData: imageData, thubnailUrl: imageURL, sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
                         localIds.removeFirst()
                     })
                 }else{
                     chatViewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", image: cameraImage, document: nil, video: nil, audio: nil, mediaName: mediaName) {  data, filename, size in
                         if let data = data {
-                            sendMediaMessage(messageKind: .photo, customType: ISMChatMediaType.Image.value, mediaId: data.mediaId ?? "", mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
+                            sendMediaMessage(messageKind: .photo, customType: ISMChatMediaType.Image.value, mediaId: data.mediaId ?? "", mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
                             localIds.removeFirst()
                         }
                     }
@@ -504,14 +504,14 @@ extension ISMMessageView{
             
             if ISMChatSdk.getInstance().checkuploadOnExternalCDN() == true{
                 self.delegate?.uploadOnExternalCDN(messageKind: messageKind, mediaUrl: documentSelected , completion: { docURL, docData in
-                    sendMediaMessage(messageKind: messageKind, customType: customType.value, mediaId: mediaId, mediaName: mediaName, mediaUrl: docURL, mediaData: docData, thubnailUrl: docURL, sentAt: sentAt, objectId: localIds.first ?? "")
+                    sendMediaMessage(messageKind: messageKind, customType: customType.value, mediaId: mediaId, mediaName: mediaName, mediaUrl: docURL, mediaData: docData, thubnailUrl: docURL, sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
                     localIds.removeFirst()
                 })
             }else{
                 chatViewModel.upload(messageKind: messageKind, conversationId: self.conversationID ?? "", image: nil, document: documentSelected, video: imageUrl, audio: nil, mediaName: mediaName ,isfromDocument: true) { data, filename, size in
                     if let data = data {
                         
-                        sendMediaMessage(messageKind: messageKind, customType: customType.value, mediaId: data.mediaId ?? "", mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
+                        sendMediaMessage(messageKind: messageKind, customType: customType.value, mediaId: data.mediaId ?? "", mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
                     }
                 }
             }
@@ -534,14 +534,14 @@ extension ISMMessageView{
             if ISMChatSdk.getInstance().checkuploadOnExternalCDN() == true{
                 self.delegate?.uploadOnExternalCDN(messageKind: .audio, mediaUrl: audioUrl , completion: { audioUrl, audioData in
                     
-                    sendMediaMessage(messageKind: .audio, customType: ISMChatMediaType.Voice.value, mediaId: mediaId, mediaName: mediaName, mediaUrl: audioUrl, mediaData: audioData, thubnailUrl: audioUrl, sentAt: sentAt, objectId: localIds.first ?? "")
+                    sendMediaMessage(messageKind: .audio, customType: ISMChatMediaType.Voice.value, mediaId: mediaId, mediaName: mediaName, mediaUrl: audioUrl, mediaData: audioData, thubnailUrl: audioUrl, sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
                     localIds.removeFirst()
                 })
             }else{
                 chatViewModel.upload(messageKind: .audio, conversationId: self.conversationID ?? "", image: nil, document: nil, video: nil, audio: audioUrl, mediaName: mediaName) { data, filename, size in
                     if let data = data {
                         
-                        sendMediaMessage(messageKind: .audio, customType: ISMChatMediaType.Voice.value, mediaId: mediaId, mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
+                        sendMediaMessage(messageKind: .audio, customType: ISMChatMediaType.Voice.value, mediaId: mediaId, mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
                         localIds.removeFirst()
                     }
                 }
@@ -571,14 +571,14 @@ extension ISMMessageView{
                         if ISMChatSdk.getInstance().checkuploadOnExternalCDN() == true{
                             self.delegate?.uploadOnExternalCDN(messageKind: .photo, mediaUrl: thumbnailUrl! , completion: { imageUrl, imageData in
                                 self.delegate?.uploadOnExternalCDN(messageKind: .video, mediaUrl: media.url, completion: { videoUrl, videoData in
-                                    sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: mediaName, mediaUrl: videoUrl, mediaData: videoData, thubnailUrl: imageUrl, sentAt: sentAt, objectId:  localIds.first ?? "")
+                                    sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: mediaName, mediaUrl: videoUrl, mediaData: videoData, thubnailUrl: imageUrl, sentAt: sentAt, objectId:  localIds.first ?? "", caption: media.caption)
                                     localIds.removeFirst()
                                 })
                             })
                         }else{
                             chatViewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", image: thumbnailUrl, document: nil, video: nil, audio: nil, mediaName: "\(UUID()).jpg") { thumbnailmedia, _, _ in
                                 chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: nil, document: nil, video: media.url, audio: nil, mediaName:  mediaName) {  data, filename, size in
-                                    sendMediaMessage(messageKind: .video, customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: filename, mediaUrl: data?.mediaUrl ?? "", mediaData: size, thubnailUrl: thumbnailmedia?.mediaUrl ?? "", sentAt: sentAt, objectId:  localIds.first ?? "")
+                                    sendMediaMessage(messageKind: .video, customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: filename, mediaUrl: data?.mediaUrl ?? "", mediaData: size, thubnailUrl: thumbnailmedia?.mediaUrl ?? "", sentAt: sentAt, objectId:  localIds.first ?? "", caption: media.caption)
                                     localIds.removeFirst()
                                 }
                             }
@@ -601,13 +601,13 @@ extension ISMMessageView{
                     
                     if ISMChatSdk.getInstance().checkuploadOnExternalCDN() == true{
                         self.delegate?.uploadOnExternalCDN(messageKind: .photo, mediaUrl: media.url , completion: { imageUrl, imageData in
-                            sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: mediaName, mediaUrl: imageUrl, mediaData: imageData, thubnailUrl: imageUrl, sentAt: sentAt, objectId: localIds.first ?? "")
+                            sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: mediaName, mediaUrl: imageUrl, mediaData: imageData, thubnailUrl: imageUrl, sentAt: sentAt, objectId: localIds.first ?? "", caption: media.caption)
                             localIds.removeFirst()
                         })
                     }else{
                         chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: nil, document: nil, video: media.url, audio: nil, mediaName: mediaName) {  data, filename, size in
                             if let data = data {
-                                sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.thumbnailUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "")
+                                sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.thumbnailUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "", caption: media.caption)
                                 localIds.removeFirst()
                                 if media == self.mediaSelectedFromPicker.last {
                                     self.mediaSelectedFromPicker.removeAll()
@@ -677,8 +677,8 @@ extension ISMMessageView{
     }
     
     
-    func sendMediaMessage(messageKind : ISMChatMessageType,customType : String,mediaId : String,mediaName: String,mediaUrl : String,mediaData: Int,thubnailUrl : String,sentAt : Double,objectId : String){
-        chatViewModel.sendMessage(messageKind: messageKind, customType: customType, conversationId: self.conversationID ?? "", message: mediaUrl, fileName: mediaName, fileSize: mediaData, mediaId: mediaId,thumbnailUrl: thubnailUrl) {messageId,_ in
+    func sendMediaMessage(messageKind : ISMChatMessageType,customType : String,mediaId : String,mediaName: String,mediaUrl : String,mediaData: Int,thubnailUrl : String,sentAt : Double,objectId : String,caption : String){
+        chatViewModel.sendMessage(messageKind: messageKind, customType: customType, conversationId: self.conversationID ?? "", message: mediaUrl, fileName: mediaName, fileSize: mediaData, mediaId: mediaId,thumbnailUrl: thubnailUrl,caption: caption) {messageId,_ in
             
             //4. update messageId locally
             realmManager.updateMsgId(objectId: objectId, msgId: messageId, conversationId: self.conversationID ?? "",mediaUrl: mediaUrl,thumbnailUrl: thubnailUrl,mediaSize: mediaData,mediaId: mediaId)

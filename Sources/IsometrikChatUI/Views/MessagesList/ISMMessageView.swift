@@ -647,7 +647,7 @@ public struct ISMMessageView: View {
                 if isGroup == true{
                     if let members = data?.conversationDetails?.members {
                         if members.count >= 2{
-                            self.memberString = members.prefix(2).map { $0.userName ?? "" }.joined(separator: ", ")
+                            self.memberString = members.prefix(1).map { $0.userName ?? "" }.joined(separator: ", ")
                             if members.count > 2 {
                                 self.memberString! += ", and others"
                             }
