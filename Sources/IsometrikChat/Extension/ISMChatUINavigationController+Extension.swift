@@ -34,4 +34,5 @@ extension NSNotification {
     public static let updateChatCount = Notification.Name.init("updateChatCount")
     public static let updateBroadCastCount = Notification.Name.init("updateBroadCastCount")
     public static let updateGroupInfo = Notification.Name.init("updateGroupInfo")
+    public static let updateChatBadgeCount = Notification.Name.init("updateChatBadgeCount")
 }

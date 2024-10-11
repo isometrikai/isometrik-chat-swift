@@ -421,6 +421,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                                             // Your code here
                                             if data.senderId != ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId{
                                                 self.whenInOtherScreen(messageInfo: data)
+                                                NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
                                             }
                                         }
                                     }
