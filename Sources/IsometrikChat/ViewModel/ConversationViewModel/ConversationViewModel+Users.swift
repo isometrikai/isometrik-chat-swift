@@ -143,18 +143,26 @@ extension ConversationViewModel{
     public func getEligibleUsers(search : String,conversationId: String,completion:@escaping(ISMChatUsers?)->()){
         let skip = self.eligibleUsers.count
         let endPoint = ISMChatGroupEndpoint.eligibleUsersToAddInGroup(conversationId: conversationId, sort: 1, skip: skip, limit: getUsersLimit, searchTag: search)
-        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
+        let request = ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
         
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatUsers, ISMChatNewAPIError>) in
-            switch result{
-            case .success(let data,_) :
-                if skip == 0 {
-                    self.eligibleUsers.removeAll()
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let data, _):
+                    if skip == 0 {
+                        // Clear only when it's a fresh load
+                        self.eligibleUsers.removeAll()
+                    }
+                    self.eligibleUsers.append(contentsOf: data.conversationEligibleMembers ?? [])
+                    self.elogibleUsersSectionDictionary = self.getSectionedDictionary(data: self.eligibleUsers)
+                    self.moreDataAvailableForGetUsers = true
+                    completion(data)
+                    
+                case .failure(_):
+                    ISMChatHelper.print("get users Failed")
+                    self.moreDataAvailableForGetUsers = false
+                    completion(nil)
                 }
-                completion(data)
-            case .failure(_) :
-                ISMChatHelper.print("get users Failed")
-                self.moreDataAvailableForGetUsers = false
             }
         }
     }

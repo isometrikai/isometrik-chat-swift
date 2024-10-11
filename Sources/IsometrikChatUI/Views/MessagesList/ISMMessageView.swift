@@ -48,6 +48,7 @@ public struct ISMMessageView: View {
     let columns = [GridItem(.flexible(minimum: 10))]
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     let onlinetimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
+    @State var OnScreen : Bool = false
     
     
     @State var navigateToMediaSliderId : String = ""
@@ -218,11 +219,13 @@ public struct ISMMessageView: View {
                     bottomView()
                 }//VStack
                 .onAppear {
+                    OnScreen = true
                     setupOnAppear()
                     stateViewModel.navigateToImageEditor = false
                     addNotificationObservers()
                 }
                 .onDisappear{
+                    OnScreen = false
                     stateViewModel.executeRepeatly = false
                     stateViewModel.executeRepeatlyForOfflineMessage = false
                     stateViewModel.onLoad = false
@@ -475,6 +478,9 @@ public struct ISMMessageView: View {
             stateViewModel.navigateToUserProfile = false
         }, content: {
             ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
+                .onAppear {
+                    OnScreen = false
+                }
         })
         .fullScreenCover(isPresented: $stateViewModel.navigateToMediaSlider) {
             let attachments = self.realmManager.medias ?? []
@@ -507,10 +513,12 @@ public struct ISMMessageView: View {
             }
         })
         .onReceive(onlinetimer, perform: { firedtime in
-            print("online timer fired")
-            timeElapsedForOnline = Int(firedtime.timeIntervalSince(startTimeForOnline))
-            if stateViewModel.executeRepeatlyForOfflineMessage == true{
-                sendLocalMsg()
+            if OnScreen == true{
+                print("online timer fired")
+                timeElapsedForOnline = Int(firedtime.timeIntervalSince(startTimeForOnline))
+                if stateViewModel.executeRepeatlyForOfflineMessage == true{
+                    sendLocalMsg()
+                }
             }
         })
         .alert("Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.", isPresented: $stateViewModel.showingNoInternetAlert) {

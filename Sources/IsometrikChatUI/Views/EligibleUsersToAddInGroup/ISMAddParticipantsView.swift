@@ -30,12 +30,19 @@ struct ISMAddParticipantsView: View {
                             HeaderView()
                         }
                         ForEach(viewModel.elogibleUsersSectionDictionary.keys.sorted(), id:\.self) { key in
-                            if let contacts = viewModel.elogibleUsersSectionDictionary[key]?.filter({ (contact) -> Bool in
-                                self.viewModel.searchedText.isEmpty ? true :
-                                "\(contact)".lowercased().contains(self.viewModel.searchedText.lowercased())}), !contacts.isEmpty{
+                            if let contacts = viewModel.elogibleUsersSectionDictionary[key]?.filter({ contact in
+                                self.viewModel.searchedText.isEmpty ? true : "\(contact)".lowercased().contains(self.viewModel.searchedText.lowercased())
+                            }), !contacts.isEmpty {
                                 Section(header: Text("\(key)")) {
                                     ForEach(contacts){ value in
                                         participantsSubView(value: value)
+                                            .onAppear {
+                                                if viewModel.moreDataAvailableForGetUsers && viewModel.apiCalling == false{
+                                                    if self.viewModel.eligibleUsers.last?.userId == value.userId {
+                                                        self.getUsers()
+                                                    }
+                                                }
+                                            }// For LoadMore
                                     }
                                 }
                             }
@@ -68,9 +75,6 @@ struct ISMAddParticipantsView: View {
             .onAppear {
                 self.viewModel.resetEligibleUsersdata()
                 getUsers()
-            }
-            .onLoad{
-                
             }
             if chatViewModel.isBusy{
                 //Custom Progress View
@@ -125,13 +129,6 @@ struct ISMAddParticipantsView: View {
             }
             
         }//:Zstack
-        .onAppear {
-//            if viewModel.moreDataAvailableForGetUsers && viewModel.apiCalling == false{
-                if self.viewModel.eligibleUsers.last?.userId == value.userId {
-                    self.getUsers()
-                }
-//            }
-        }// For LoadMore
     }
     
     
@@ -216,8 +213,7 @@ struct ISMAddParticipantsView: View {
     func getUsers(){
         viewModel.apiCalling = true
         viewModel.getEligibleUsers(search: viewModel.searchedText, conversationId: self.conversationId ?? "") {  data in
-            viewModel.eligibleUsers.append(contentsOf: data?.conversationEligibleMembers ?? [])
-            viewModel.elogibleUsersSectionDictionary = viewModel.getSectionedDictionary(data: viewModel.eligibleUsers)
+            viewModel.apiCalling = false
         }
     }
 }
