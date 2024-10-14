@@ -297,7 +297,7 @@ public struct ISMMessageView: View {
             }
             ISMChatHelper.print("MESSAGE RECEIVED----------------->\(messageInfo)")
             //save in local db
-            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+            if OnScreen && !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
                 messageReceived(messageInfo: messageInfo)
                 //local notification
                 sendLocalNotification(messageInfo: messageInfo)
