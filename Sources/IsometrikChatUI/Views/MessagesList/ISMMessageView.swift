@@ -343,6 +343,17 @@ public struct ISMMessageView: View {
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.updateGroupInfo)) { _ in
             self.getConversationDetail()
         }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.groupActions)) { notification in
+            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
+                return
+            }
+            ISMChatHelper.print("Group Actions----------------->\(messageInfo)")
+            groupAction(messageInfo: messageInfo)
+            //local notification
+            sendLocalNotification(messageInfo: messageInfo)
+            //action if required
+            actionOnMessageDelivered(messageInfo: messageInfo)
+        }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.memberAddAndRemove)) { _ in
             self.getConversationDetail()
         }

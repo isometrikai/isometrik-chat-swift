@@ -71,7 +71,7 @@ import IsometrikChat
                     }
                 }
                 
-                let message = ISMChatMessage(sentAt: messageInfo.sentAt,body: bodyUpdated, messageId: messageInfo.messageId,mentionedUsers: mentionedUser,metaData : metaData, customType: messageInfo.customType,action: messageInfo.action, attachment: messageInfo.attachments,conversationId: messageInfo.conversationId, userName: messageInfo.userName, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, memberName: messageInfo.memberName, memberId: messageInfo.memberId, memberIdentifier: messageInfo.memberIdentifier,senderInfo: senderInfo,members: membersArray,reactions: messageInfo.reactions)
+                let message = ISMChatMessage(sentAt: messageInfo.sentAt,body: bodyUpdated, messageId: messageInfo.messageId,mentionedUsers: mentionedUser,metaData : metaData, customType: messageInfo.customType,action: messageInfo.action, attachment: messageInfo.attachments,conversationId: messageInfo.conversationId, userId: messageInfo.userId, userName: messageInfo.userName, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, memberName: messageInfo.memberName, memberId: messageInfo.memberId, memberIdentifier: messageInfo.memberIdentifier,senderInfo: senderInfo,members: membersArray,reactions: messageInfo.reactions)
                 
                 realmManager.saveMessage(obj: [message])
                 
@@ -102,6 +102,98 @@ import IsometrikChat
             }
         }
     }
+     
+     func groupAction(messageInfo : ISMChatMessageDelivered){
+         if messageInfo.conversationId == self.conversationID{
+             
+             var contact : [ISMChatContactMetaData] = []
+             if let contacts = messageInfo.metaData?.contacts, contacts.count > 0{
+                 for x in contacts{
+                     var data = ISMChatContactMetaData()
+                     data.contactIdentifier = x.contactIdentifier
+                     data.contactImageData = x.contactImageData
+                     data.contactImageUrl = x.contactImageUrl
+                     data.contactName = x.contactName
+                     contact.append(data)
+                 }
+             }
+             
+             let replyMessageData = ISMChatReplyMessageMetaData(
+                parentMessageId: messageInfo.parentMessageId,
+                parentMessageBody: messageInfo.metaData?.replyMessage?.parentMessageBody,
+                parentMessageUserId: messageInfo.metaData?.replyMessage?.parentMessageUserId,
+                parentMessageUserName: messageInfo.metaData?.replyMessage?.parentMessageUserName,
+                parentMessageMessageType: messageInfo.metaData?.replyMessage?.parentMessageMessageType,
+                parentMessageAttachmentUrl: messageInfo.metaData?.replyMessage?.parentMessageAttachmentUrl,
+                parentMessageInitiator: messageInfo.metaData?.replyMessage?.parentMessageInitiator,
+                parentMessagecaptionMessage: messageInfo.metaData?.replyMessage?.parentMessagecaptionMessage)
+             
+             let postDetail = ISMChatPostMetaData(postId: messageInfo.metaData?.post?.postId, postUrl: messageInfo.metaData?.post?.postUrl)
+             let productDetail = ISMChatProductMetaData(productId: messageInfo.metaData?.product?.productId, productUrl: messageInfo.metaData?.product?.productUrl, productCategoryId: messageInfo.metaData?.product?.productCategoryId)
+             
+             let metaData = ISMChatMetaData(replyMessage: replyMessageData,
+                                            locationAddress: messageInfo.metaData?.locationAddress,
+                                            contacts: contact,captionMessage: messageInfo.metaData?.captionMessage,isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage,post: postDetail,product: productDetail)
+             
+             let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")
+             
+             //add members in Message
+             var membersArray : [ISMChatMemberAdded] = []
+             if let members = messageInfo.members{
+                 for x in members{
+                     var member = ISMChatMemberAdded()
+                     member.memberId = x.memberId
+                     member.memberIdentifier = x.memberIdentifier
+                     member.memberName = x.memberName
+                     member.memberProfileImageUrl = x.memberProfileImageUrl
+                     membersArray.append(member)
+                 }
+             }
+             
+             var bodyUpdated = messageInfo.body
+             if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value{
+                 bodyUpdated = messageInfo.details?.body
+             }
+             
+             var mentionedUser : [ISMChatMentionedUser] = []
+             if messageInfo.mentionedUsers != nil{
+                 for x in mentionedUser{
+                     let user = ISMChatMentionedUser(wordCount: x.wordCount, userId: x.userId, order: x.order)
+                     mentionedUser.append(user)
+                 }
+             }
+             
+             let message = ISMChatMessage(sentAt: messageInfo.sentAt,body: bodyUpdated, messageId: messageInfo.messageId,mentionedUsers: mentionedUser,metaData : metaData, customType: messageInfo.customType,action: messageInfo.action, attachment: messageInfo.attachments,conversationId: messageInfo.conversationId, userId: messageInfo.userId, userName: messageInfo.userName, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, memberName: messageInfo.memberName, memberId: messageInfo.memberId, memberIdentifier: messageInfo.memberIdentifier,senderInfo: senderInfo,members: membersArray,reactions: messageInfo.reactions)
+             
+             realmManager.saveMessage(obj: [message])
+             
+             //after saving message, just want to fetchor save all media in realmManager media,link and file
+             if messageInfo.customType == ISMChatMediaType.Image.value || messageInfo.customType == ISMChatMediaType.Video.value || messageInfo.customType == ISMChatMediaType.gif.value{
+                 realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
+             }else if  messageInfo.customType == ISMChatMediaType.File.value {
+                 realmManager.fetchFiles(conId: self.conversationID ?? "")
+             }else if let body = messageInfo.body, body.isValidURL && !body.contains("map"){
+                 realmManager.fetchLinks(conId: self.conversationID ?? "")
+             }
+             
+             self.getMessages()
+             
+             realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+             if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
+                 chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
+                     // update status of message to deleivered
+                     
+                 }
+                 chatViewModel.readMessageIndicator(conversationId: converId, messageId: messId) { _ in
+                     // update status of message to read
+                     
+                     //after message is read then only resent unread count
+                     realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
+                 }
+             }
+             
+         }
+     }
     
      func messageDelivered(messageInfo : ISMChatMessageDelivered){
          if messageInfo.conversationId == self.conversationID{
