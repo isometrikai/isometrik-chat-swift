@@ -141,320 +141,564 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
             if let userID = json["userId"] as? String, userID != userData?.userId{
                 ISMChatHelper.print("Event triggered with ACTION NAME Opposite USer :: \(actionName)")
                 ISMChatHelper.print("Response From MQTT Opposite USer :: \(json)")
-                switch ISMChatMQTTData.dataType(actionName) {
-                case .mqttTypingEvent:
-                    self.typingEventResponse(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttTypingEvent.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttTypingEvent.name, object: nil,userInfo: ["data": "data","error" : error])
-                        }
-                    }
-                case .mqttConversationCreated:
-                    self.conversationCreatedResponse(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttConversationCreated.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttConversationCreated.name, object: nil,userInfo: ["data": "data","error" : error])
-                        }
-                    }
-                case .mqttMessageDelivered:
-                    self.messageDelivered(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDelivered.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDelivered.name, object: nil,userInfo: ["data": "","error" : error])
-                        }
-                    }
-                case .mqttMessageRead:
-                    self.messageRead(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageRead.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageRead.name, object: nil,userInfo: ["data": "data","error" : error])
-                        }
-                    }
-                case .mqttMessageDeleteForAll:
-                    self.messageDeleteForAll(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDeleteForAll.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDeleteForAll.name, object: nil,userInfo: ["data": "data","error" : error])
-                        }
-                    }
-                case .mqttMultipleMessageRead:
-                    self.multipleMessageRead(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil,userInfo: ["data": "data","error" : error])
-                        }
-                    }
-                case .mqttUserBlock:
-                    break
-                case .mqttUserBlockConversation:
-                    break
-                case .mqttUserUnblock:
-                    break
-                case .mqttUserUnblockConversation:
-                    break
-                case .mqttClearConversation:
-                    break
-                case .mqttDeleteConversationLocally:
-                    break
-                case .mqttAddMember:
-                    self.messageReceived(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
-                        }
-                    }
-                case .mqttRemoveMember:
-                    self.messageReceived(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
-                        }
-                    }
-                case .mqttMemberLeave:
-                    self.messageReceived(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
-                        }
-                    }
-                case .mqttConversationTitleUpdated:
-                    self.messageReceived(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
-                        }
-                    }
-                case .mqttConversationImageUpdated:
-                    self.messageReceived(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
-                        }
-                    }
-                case .mqttmessageDetailsUpdated :
-                    print("updated Message")
-                    self.messageUpdated(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttmessageDetailsUpdated.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttmessageDetailsUpdated.name, object: nil,userInfo: ["data": "","error" : error])
-                        }
-                    }
-                case .mqttAddReaction:
-                    //other user
-                    print("Reaction added")
-                    self.reactions(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttAddReaction.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttAddReaction.name, object: nil,userInfo: ["data": "","error" : error])
-                        }
-                    }
-                case .mqttRemoveReaction:
-                    //other user
-                    print("Reaction removed")
-                    self.reactions(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttRemoveReaction.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttRemoveReaction.name, object: nil,userInfo: ["data": "","error" : error])
-                        }
-                    }
-                default:
-                    CallEventHandler.handleCallEvents(payload: message.payload)
-                    CallEventHandler.delegate = self
-                }
+//                switch ISMChatMQTTData.dataType(actionName) {
+//                case .mqttTypingEvent:
+//                    self.typingEventResponse(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttTypingEvent.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttTypingEvent.name, object: nil,userInfo: ["data": "data","error" : error])
+//                        }
+//                    }
+//                case .mqttConversationCreated:
+//                    self.conversationCreatedResponse(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttConversationCreated.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttConversationCreated.name, object: nil,userInfo: ["data": "data","error" : error])
+//                        }
+//                    }
+//                case .mqttMessageDelivered:
+//                    self.messageDelivered(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDelivered.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDelivered.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                case .mqttMessageRead:
+//                    self.messageRead(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageRead.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageRead.name, object: nil,userInfo: ["data": "data","error" : error])
+//                        }
+//                    }
+//                case .mqttMessageDeleteForAll:
+//                    self.messageDeleteForAll(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDeleteForAll.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDeleteForAll.name, object: nil,userInfo: ["data": "data","error" : error])
+//                        }
+//                    }
+//                case .mqttMultipleMessageRead:
+//                    self.multipleMessageRead(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil,userInfo: ["data": "data","error" : error])
+//                        }
+//                    }
+//                case .mqttUserBlock:
+//                    break
+//                case .mqttUserBlockConversation:
+//                    break
+//                case .mqttUserUnblock:
+//                    break
+//                case .mqttUserUnblockConversation:
+//                    break
+//                case .mqttClearConversation:
+//                    break
+//                case .mqttDeleteConversationLocally:
+//                    break
+//                case .mqttAddMember:
+//                    self.messageReceived(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                case .mqttRemoveMember:
+//                    self.messageReceived(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                case .mqttMemberLeave:
+//                    self.messageReceived(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                case .mqttConversationTitleUpdated:
+//                    self.messageReceived(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                case .mqttConversationImageUpdated:
+//                    self.messageReceived(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                case .mqttmessageDetailsUpdated :
+//                    print("updated Message")
+//                    self.messageUpdated(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttmessageDetailsUpdated.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttmessageDetailsUpdated.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                case .mqttAddReaction:
+//                    //other user
+//                    print("Reaction added")
+//                    self.reactions(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttAddReaction.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttAddReaction.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                case .mqttRemoveReaction:
+//                    //other user
+//                    print("Reaction removed")
+//                    self.reactions(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttRemoveReaction.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttRemoveReaction.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                default:
+//                    CallEventHandler.handleCallEvents(payload: message.payload)
+//                    CallEventHandler.delegate = self
+//                }
+                switchEvents(actionName: actionName, data: data, message: message)
             }else if let userID = json["opponentId"] as? String, userID == userData?.userId{
                 ISMChatHelper.print("Event triggered with ACTION NAME Same user:: \(actionName)")
                 ISMChatHelper.print("Response From MQTT Same USer :: \(json)")
-                switch ISMChatMQTTData.dataType(actionName) {
-                case .mqttUserBlockConversation:
-                    self.blockedUserAndUnBlocked(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlockConversation.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlockConversation.name, object: nil,userInfo: ["data": "data","error" : error])
-                        }
-                    }
-                case .mqttUserUnblockConversation:
-                    self.blockedUserAndUnBlocked(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name, object: nil,userInfo: ["data": "data","error" : error])
-                        }
-                    }
-                case .mqttMultipleMessageRead:
-                    self.multipleMessageRead(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil,userInfo: ["data": "data","error" : error])
-                        }
-                    }
-                default:
-                    CallEventHandler.handleCallEvents(payload: message.payload)
-                    CallEventHandler.delegate = self
-                }
+//                switch ISMChatMQTTData.dataType(actionName) {
+//                case .mqttUserBlockConversation:
+//                    self.blockedUserAndUnBlocked(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlockConversation.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlockConversation.name, object: nil,userInfo: ["data": "data","error" : error])
+//                        }
+//                    }
+//                case .mqttUserUnblockConversation:
+//                    self.blockedUserAndUnBlocked(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name, object: nil,userInfo: ["data": "data","error" : error])
+//                        }
+//                    }
+//                case .mqttMultipleMessageRead:
+//                    self.multipleMessageRead(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil,userInfo: ["data": "data","error" : error])
+//                        }
+//                    }
+//                default:
+//                    CallEventHandler.handleCallEvents(payload: message.payload)
+//                    CallEventHandler.delegate = self
+//                }
+                switchEvents(actionName: actionName, data: data, message: message)
             }else{
                 ISMChatHelper.print("Event triggered with ACTION NAME Same user:: \(actionName)")
-                switch ISMChatMQTTData.dataType(actionName) {
-                case .mqttAddAdmin:
-                    self.messageReceived(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
-                        }
-                    }
-                case .mqttRemoveAdmin:
-                    self.messageReceived(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
-                        }
-                    }
-                case .mqttUpdateUser:
-                    self.messageReceived(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUpdateUser.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUpdateUser.name, object: nil,userInfo: ["data": "","error" : error])
-                        }
-                    }
-                case .mqttforward:
-                    self.messageReceived(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
-                        }
-                    }
-                case .mqttAddReaction:
-                    //becoz i have manage it while api call only for myself
-                    break
-                case .mqttRemoveReaction:
-                    //becoz i have manage it while api call only for myself
-                    break
-                case .mqttUserBlock:
-                    self.blockedUserAndUnBlockedUser(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlock.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlock.name, object: nil,userInfo: ["data": "data","error" : error])
-                        }
-                    }
-                case .mqttUserUnblock:
-                    self.blockedUserAndUnBlockedUser(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblock.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblock.name, object: nil,userInfo: ["data": "data","error" : error])
-                        }
-                    }
-                case .mqttUserBlockConversation:
-                    self.blockedUserAndUnBlocked(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlockConversation.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlockConversation.name, object: nil,userInfo: ["data": "data","error" : error])
-                        }
-                    }
-                case .mqttAddMember:
-                    self.messageReceived(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
-                        }
-                    }
-                case .mqttRemoveMember:
-                    self.messageReceived(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
-                        }
-                    }
-                case .mqttUserUnblockConversation:
-                    self.blockedUserAndUnBlocked(data) { result in
-                        switch result{
-                        case .success(let data):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name, object: nil,userInfo: ["data": "data","error" : error])
-                        }
-                    }
-                case .mqttChatMessageSent:
-                    self.messageReceived(data) { result in
-                        switch result{
-                        case .success(let data):
-                            if self.framework == .UIKit {
-                                if let topViewController = UIApplication.topViewController() {
-                                    if let Chatvc = self.viewcontrollers?.conversationListViewController,
-                                       let Messagevc = self.viewcontrollers?.messagesListViewController {
-                                        
-                                        let isNotChatVC = !(topViewController.isKind(of: Chatvc))
-                                        let isNotMessageVC = !(topViewController.isKind(of: Messagevc))
-                                        
-                                        if isNotChatVC && isNotMessageVC {
-                                            // Your code here
-                                            if data.senderId != ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId{
-                                                self.whenInOtherScreen(messageInfo: data)
-                                                NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
-                                            }
-                                        }
+                switchEvents(actionName: actionName, data: data, message: message)
+//                switch ISMChatMQTTData.dataType(actionName) {
+//                case .mqttAddAdmin:
+//                    self.messageReceived(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                case .mqttRemoveAdmin:
+//                    self.messageReceived(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                case .mqttUpdateUser:
+//                    self.messageReceived(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUpdateUser.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUpdateUser.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                case .mqttforward:
+//                    self.messageReceived(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                case .mqttAddReaction:
+//                    //becoz i have manage it while api call only for myself
+//                    break
+//                case .mqttRemoveReaction:
+//                    //becoz i have manage it while api call only for myself
+//                    break
+//                case .mqttUserBlock:
+//                    self.blockedUserAndUnBlockedUser(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlock.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlock.name, object: nil,userInfo: ["data": "data","error" : error])
+//                        }
+//                    }
+//                case .mqttUserUnblock:
+//                    self.blockedUserAndUnBlockedUser(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblock.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblock.name, object: nil,userInfo: ["data": "data","error" : error])
+//                        }
+//                    }
+//                case .mqttUserBlockConversation:
+//                    self.blockedUserAndUnBlocked(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlockConversation.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlockConversation.name, object: nil,userInfo: ["data": "data","error" : error])
+//                        }
+//                    }
+//                case .mqttAddMember:
+//                    self.messageReceived(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                case .mqttRemoveMember:
+//                    self.messageReceived(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                case .mqttUserUnblockConversation:
+//                    self.blockedUserAndUnBlocked(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name, object: nil,userInfo: ["data": "data","error" : error])
+//                        }
+//                    }
+//                case .mqttChatMessageSent:
+//                    self.messageReceived(data) { result in
+//                        switch result{
+//                        case .success(let data):
+//                            if self.framework == .UIKit {
+//                                if let topViewController = UIApplication.topViewController() {
+//                                    if let Chatvc = self.viewcontrollers?.conversationListViewController,
+//                                       let Messagevc = self.viewcontrollers?.messagesListViewController {
+//                                        
+//                                        let isNotChatVC = !(topViewController.isKind(of: Chatvc))
+//                                        let isNotMessageVC = !(topViewController.isKind(of: Messagevc))
+//                                        
+//                                        if isNotChatVC && isNotMessageVC {
+//                                            // Your code here
+//                                            if data.senderId != ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId{
+//                                                self.whenInOtherScreen(messageInfo: data)
+//                                                NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+//                        case .failure(let error):
+//                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+//                        }
+//                    }
+//                default:
+//                    CallEventHandler.handleCallEvents(payload: message.payload)
+//                    CallEventHandler.delegate = self
+//                }
+            }
+        }
+    }
+    
+    func switchEvents(actionName : String,data : Data,message : CocoaMQTTMessage){
+        switch ISMChatMQTTData.dataType(actionName) {
+        case .mqttTypingEvent:
+            self.typingEventResponse(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttTypingEvent.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttTypingEvent.name, object: nil,userInfo: ["data": "data","error" : error])
+                }
+            }
+        case .mqttConversationCreated:
+            self.conversationCreatedResponse(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttConversationCreated.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttConversationCreated.name, object: nil,userInfo: ["data": "data","error" : error])
+                }
+            }
+        case .mqttMessageDelivered:
+            self.messageDelivered(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDelivered.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDelivered.name, object: nil,userInfo: ["data": "","error" : error])
+                }
+            }
+        case .mqttMessageRead:
+            self.messageRead(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageRead.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageRead.name, object: nil,userInfo: ["data": "data","error" : error])
+                }
+            }
+        case .mqttMessageDeleteForAll:
+            self.messageDeleteForAll(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDeleteForAll.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDeleteForAll.name, object: nil,userInfo: ["data": "data","error" : error])
+                }
+            }
+        case .mqttMultipleMessageRead:
+            self.multipleMessageRead(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil,userInfo: ["data": "data","error" : error])
+                }
+            }
+        case .mqttUserBlock:
+            self.blockedUserAndUnBlockedUser(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlock.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlock.name, object: nil,userInfo: ["data": "data","error" : error])
+                }
+            }
+        case .mqttUserBlockConversation:
+            self.blockedUserAndUnBlocked(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlockConversation.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserBlockConversation.name, object: nil,userInfo: ["data": "data","error" : error])
+                }
+            }
+        case .mqttUserUnblock:
+            self.blockedUserAndUnBlockedUser(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblock.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblock.name, object: nil,userInfo: ["data": "data","error" : error])
+                }
+            }
+        case .mqttUserUnblockConversation:
+            self.blockedUserAndUnBlocked(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name, object: nil,userInfo: ["data": "data","error" : error])
+                }
+            }
+        case .mqttClearConversation:
+            break
+        case .mqttDeleteConversationLocally:
+            break
+        case .mqttAddAdmin:
+            self.messageReceived(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+                }
+            }
+        case .mqttRemoveAdmin:
+            self.messageReceived(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+                }
+            }
+        case .mqttAddMember:
+            self.messageReceived(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+                }
+            }
+        case .mqttRemoveMember:
+            self.messageReceived(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+                }
+            }
+        case .mqttMemberLeave:
+            self.messageReceived(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+                }
+            }
+        case .mqttConversationTitleUpdated:
+            self.messageReceived(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+                }
+            }
+        case .mqttConversationImageUpdated:
+            self.messageReceived(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+                }
+            }
+        case .mqttUpdateUser:
+            self.messageReceived(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUpdateUser.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttUpdateUser.name, object: nil,userInfo: ["data": "","error" : error])
+                }
+            }
+        case .mqttforward:
+            self.messageReceived(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+                }
+            }
+        case .mqttmessageDetailsUpdated:
+            print("updated Message")
+            self.messageUpdated(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttmessageDetailsUpdated.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttmessageDetailsUpdated.name, object: nil,userInfo: ["data": "","error" : error])
+                }
+            }
+        case .mqttAddReaction:
+            //other user
+            print("Reaction added")
+            self.reactions(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttAddReaction.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttAddReaction.name, object: nil,userInfo: ["data": "","error" : error])
+                }
+            }
+        case .mqttRemoveReaction:
+            print("Reaction removed")
+            self.reactions(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttRemoveReaction.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttRemoveReaction.name, object: nil,userInfo: ["data": "","error" : error])
+                }
+            }
+        case .mqttChatMessageSent:
+            self.messageReceived(data) { result in
+                switch result{
+                case .success(let data):
+                    if self.framework == .UIKit {
+                        if let topViewController = UIApplication.topViewController() {
+                            if let Chatvc = self.viewcontrollers?.conversationListViewController,
+                               let Messagevc = self.viewcontrollers?.messagesListViewController {
+                                
+                                let isNotChatVC = !(topViewController.isKind(of: Chatvc))
+                                let isNotMessageVC = !(topViewController.isKind(of: Messagevc))
+                                
+                                if isNotChatVC && isNotMessageVC {
+                                    // Your code here
+                                    if data.senderId != ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId{
+                                        self.whenInOtherScreen(messageInfo: data)
+                                        NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
                                     }
                                 }
                             }
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
-                        case .failure(let error):
-                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
                         }
                     }
-                default:
-                    CallEventHandler.handleCallEvents(payload: message.payload)
-                    CallEventHandler.delegate = self
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
                 }
             }
+        case .none:
+            CallEventHandler.handleCallEvents(payload: message.payload)
+            CallEventHandler.delegate = self
         }
     }
     
