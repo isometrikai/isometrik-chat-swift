@@ -288,7 +288,7 @@ extension ChatsViewModel{
             }
         case .location, .contact,.post,.Product:
             body["metaData"] = metaData
-        case .photo, .video,.audio,.gif,.sticker:
+        case .photo, .video,.audio,.gif,.sticker,.document:
             body["attachments"] = [attachmentValue]
             if !metaData.isEmpty {
                 body["metaData"] = metaData
