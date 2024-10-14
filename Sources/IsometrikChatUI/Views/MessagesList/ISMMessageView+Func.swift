@@ -189,7 +189,9 @@ extension ISMMessageView{
         if self.fromBroadCastFlow == true{
             sendMessageInBroadcast()
         }else if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
-            sendMessageDetail()
+            if isMessagingEnabled() {
+                sendMessageDetail()
+            }
         }else{
             if isGroup == false{
                 if self.conversationID == nil || self.conversationID == "" {
@@ -250,7 +252,9 @@ extension ISMMessageView{
                     }
                 }
             }else{
-                sendMessageDetail()
+                if isMessagingEnabled() {
+                    sendMessageDetail()
+                }
             }
         }
     }
