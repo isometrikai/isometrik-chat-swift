@@ -89,7 +89,9 @@ public struct ISMConversationView : View {
                 appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
                     if shouldShowPlaceholder {
+                        Spacer()
                         showPlaceholderView
+                        Spacer()
                     } else {
                         if ISMChatSdk.getInstance().getFramework() == .UIKit{
                             CustomSearchBar(searchText: $query).padding(.horizontal,15)
