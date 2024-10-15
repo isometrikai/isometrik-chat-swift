@@ -167,7 +167,7 @@ struct ISMUserMediaView: View {
         }) {
             appearance.images.backButton
                 .resizable()
-                .frame(width: 18, height: 18)
+                .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
         }
     }
     

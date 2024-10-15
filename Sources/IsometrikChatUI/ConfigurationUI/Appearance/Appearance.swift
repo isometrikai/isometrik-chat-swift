@@ -24,13 +24,15 @@ public class ISMAppearance {
     public var messageBubbleType : ISMChatBubbleType
     public var placeholders : ISMChatPlaceholders
     public var timeInsideBubble : Bool
+    public var imagesSize : ISMChatImageSizes
     public init(
         colorPalette: ISMChatColorPalette = ISMChatColorPalette(),
         images: ISMChatImages = ISMChatImages(),
         fonts: ISMChatFonts = ISMChatFonts(),
         messageBubbleType : ISMChatBubbleType = .BubbleWithOutTail,
         placeholders: ISMChatPlaceholders = ISMChatPlaceholders(),
-        timeInsideBubble : Bool = true
+        timeInsideBubble : Bool = true,
+        imagesSize : ISMChatImageSizes = ISMChatImageSizes()
     ) {
         self.colorPalette = colorPalette
         self.images = images
@@ -38,6 +40,7 @@ public class ISMAppearance {
         self.messageBubbleType = messageBubbleType
         self.placeholders = placeholders
         self.timeInsideBubble = timeInsideBubble
+        self.imagesSize = imagesSize
     }
 }
 
@@ -74,5 +77,14 @@ public class ISMChatCustomFontNames{
         self.bold = bold
         self.medium = medium
         self.italic = italic
+    }
+}
+
+
+public class ISMChatImageSizes{
+    public var backButton : CGSize = CGSize(width: 18, height: 18)
+    public init(){}
+    public init(backButton: CGSize) {
+        self.backButton = backButton
     }
 }

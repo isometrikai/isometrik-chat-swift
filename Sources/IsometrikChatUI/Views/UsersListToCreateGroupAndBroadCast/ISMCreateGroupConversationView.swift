@@ -241,7 +241,7 @@ public struct ISMCreateGroupConversationView: View {
         Button(action: { dismiss() }) {
             appearance.images.backButton
                 .resizable()
-                .frame(width: 18, height: 18, alignment: .center)
+                .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
         }
     }
     
