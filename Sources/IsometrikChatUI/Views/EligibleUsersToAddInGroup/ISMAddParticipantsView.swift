@@ -93,7 +93,7 @@ struct ISMAddParticipantsView: View {
                 VStack(alignment: .leading, spacing: 5, content: {
                     Text(value.userName ?? "User")
                         .font(appearance.fonts.messageListMessageText)
-                        .foregroundColor(appearance.colorPalette.messageListMessageTextSend)
+                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                     if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
                         Text(value.userIdentifier ?? "")
                             .font(appearance.fonts.chatListUserMessage)
