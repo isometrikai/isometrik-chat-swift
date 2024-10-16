@@ -12,10 +12,17 @@ import IsometrikChat
 
 public struct ISMCameraView: UIViewControllerRepresentable {
     
+    public enum ISMCameraMediaType {
+        case image
+        case video
+        case both
+    }
+    
     public typealias UIViewControllerType = UIImagePickerController
     @Binding public var media: URL?
     @Binding public var isShown: Bool
     @Binding public var uploadMedia: Bool
+    public var mediaType: ISMCameraMediaType  // New property for media type
     
     public func makeUIViewController(context: Context) -> UIViewControllerType {
         let viewController = UIImagePickerController()
@@ -25,16 +32,17 @@ public struct ISMCameraView: UIViewControllerRepresentable {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             viewController.sourceType = .camera
             
-            // Check if the device supports portrait mode
-            if let availableCaptureModes = UIImagePickerController.availableCaptureModes(for: .rear) {
-                let captureModes = availableCaptureModes.compactMap { UIImagePickerController.CameraCaptureMode(rawValue: $0.intValue) }
-                if captureModes.contains(.photo) {
-                    viewController.cameraCaptureMode = .photo
-                } else {
-                    print("Photo mode not supported, falling back to auto mode")
-                    // Fallback to a supported mode if photo mode is not available
-                    viewController.cameraCaptureMode = .video
-                }
+            // Setup media types and capture mode based on the selected media type
+            switch mediaType {
+            case .image:
+                viewController.mediaTypes = ["public.image"]
+                viewController.cameraCaptureMode = .photo
+            case .video:
+                viewController.mediaTypes = ["public.movie"]
+                viewController.cameraCaptureMode = .video
+            case .both:
+                viewController.mediaTypes = ["public.image", "public.movie"]
+                viewController.cameraCaptureMode = .photo  // Set default as photo
             }
             
             // Check if the device supports specific camera devices
@@ -42,7 +50,6 @@ public struct ISMCameraView: UIViewControllerRepresentable {
                 viewController.cameraDevice = .rear
             } else {
                 print("Rear camera not available, falling back to front camera")
-                // Fallback to front camera if rear camera is not available
                 viewController.cameraDevice = .front
             }
         } else {
@@ -50,9 +57,8 @@ public struct ISMCameraView: UIViewControllerRepresentable {
             viewController.sourceType = .photoLibrary
         }
         
-        viewController.mediaTypes = ["public.image", "public.movie"]
         // Manage AVAudioSession
-                AudioSessionManager.shared.activateSession()
+        AudioSessionManager.shared.activateSession()
         return viewController
     }
     

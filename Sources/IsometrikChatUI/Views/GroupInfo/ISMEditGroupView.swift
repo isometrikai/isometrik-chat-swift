@@ -16,6 +16,10 @@ struct ISMEditGroupView: View {
     
     @State var imageUrl : String?
     @State private var showSheet = false
+    @State private var showCamera = false
+    @State private var showGallery = false
+    @State var cameraImageToUse : URL?
+    @State public var uploadMedia : Bool = false
     @State private var image : [UIImage] = []
     @State private var selectedMedia : [URL] = []
     @ObservedObject var viewModel = ChatsViewModel()
@@ -41,6 +45,11 @@ struct ISMEditGroupView: View {
                             .resizable()
                             .clipShape(Circle())
                             .frame(width: 120, height: 120)
+                            .onTapGesture {
+                                showSheet = true
+                            }
+                    }else if let url = cameraImageToUse{
+                        UserAvatarView(avatar: url.absoluteString, showOnlineIndicator: false,size: CGSize(width: 120, height: 120), userName: existingGroupName,font: .regular(size: 30))
                             .onTapGesture {
                                 showSheet = true
                             }
@@ -86,9 +95,26 @@ struct ISMEditGroupView: View {
                 }
                 .navigationBarBackButtonHidden(true)
                 .navigationBarItems(leading: navBarLeadingBtn, trailing: navBarTrailingBtn)
-                .sheet(isPresented: $showSheet) {
-                    //            ImagePicker(image: $image, isShown: self.$showSheet, sourceType: .photoLibrary)
+                .confirmationDialog("", isPresented: $showSheet, titleVisibility: .hidden) {
+                    VStack {
+                        Button(action: {
+                            showCamera.toggle()
+                        }, label: {
+                            Text("Camera")
+                        })
+                        
+                        Button(action: {
+                            showGallery.toggle()
+                        }, label: {
+                            Text("Gallery")
+                        })
+                    }
+                }
+                .sheet(isPresented: $showGallery) {
                     ISMMediaPickerView(selectedMedia: $selectedMedia, selectedProfilePicture: $image, isProfile: true)
+                }
+                .sheet(isPresented: $showCamera) {
+                    ISMCameraView(media : $cameraImageToUse, isShown: $showCamera, uploadMedia: $uploadMedia, mediaType: .image)
                 }
                 .onAppear{
                     groupName = existingGroupName
@@ -154,12 +180,23 @@ struct ISMEditGroupView: View {
             }else{
                 if let image = image.first{
                     updategroupImage(image: image)
+                }else if let imageUrl = cameraImageToUse{
+                    updategroupImageUrl(imageUrl: imageUrl)
                 }else{
                     presentationMode.wrappedValue.dismiss()
                 }
             }
         }else{
             NameAlert = true
+        }
+    }
+    
+    func updategroupImageUrl(imageUrl : URL){
+        viewModel.uploadConversationUrl(url:imageUrl , conversationType: 0, newConversation: false, conversationId: conversationId ?? "", conversationTitle: groupName) { value in
+            viewModel.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "") { _ in
+                NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
+                presentationMode.wrappedValue.dismiss()
+            }
         }
     }
     

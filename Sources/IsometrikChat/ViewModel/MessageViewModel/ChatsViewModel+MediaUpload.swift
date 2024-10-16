@@ -125,4 +125,33 @@ extension ChatsViewModel{
             }
         }
     }
+    
+    //MARK: - upload conversation create image from url
+    public func uploadConversationUrl(url: URL?,conversationType : Int,newConversation : Bool,conversationId : String,conversationTitle:String,completion:@escaping(String?)->()){
+        var mediaData : Data = Data()
+        if let image = url {
+            mediaData = try! Data(contentsOf: image)
+        }
+        
+        let endPoint = ISMChatMediaUploadEndpoint.conversationProfileUpload(mediaExtension: "png", conversationType: conversationType, newConversation: newConversation, conversationTitle: conversationTitle,conversationId: conversationId)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatPresignedUrlDetail, ISMChatNewAPIError>) in
+            switch result{
+            case .success(let data,_) :
+                if let url = data.presignedUrl{
+                    AF.upload(mediaData, to: url, method: .put, headers: [:]).responseData { response in
+                        ISMChatHelper.print(response)
+                        if response.response?.statusCode == 200{
+                            completion(data.mediaUrl)
+                        }else{
+                            ISMChatHelper.print("Error in Image upload")
+                        }
+                    }
+                }
+            case .failure(let error) :
+                ISMChatHelper.print("Error in Image upload Api failed -----> \(String(describing: error))")
+            }
+        }
+    }
 }
