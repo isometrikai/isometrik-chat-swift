@@ -470,6 +470,19 @@ public class ISMChatHelper: NSObject {
         Messaging.messaging().unsubscribe(fromTopic: "chat-\(userId)")
     }
     
+    public class func subscribeTopic(name : String){
+        Messaging.messaging().subscribe(toTopic: "\(name)") { (error) in
+            if error != nil {
+                print("errror subscribing topic ", error as Any)
+            }
+        }
+    }
+    
+//    unsubscribe all fcm topics
+    public class func unSubscribeTopic(name : String){
+        Messaging.messaging().unsubscribe(fromTopic: "\(name)")
+    }
+    
     public class func getVideoSize(_ url: URL) async -> CGSize {
         let videoAsset = AVURLAsset(url : url)
 
