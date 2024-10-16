@@ -54,7 +54,11 @@ extension ISMMessageView{
                     }
                     
                 }else if option == .location {
-                    NavigationLink(destination: ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId, placeName: $placeName, address: $placeAddress)) {
+                    Button(action: {
+                        DispatchQueue.main.async {
+                            stateViewModel.showLocationSharing = true
+                        }
+                    }) {
                         Text(option.name)
                     }
                 }

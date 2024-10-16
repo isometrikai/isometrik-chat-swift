@@ -392,7 +392,7 @@ struct ISMContactInfoView: View {
                 UserAvatarView(avatar: (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")), showOnlineIndicator: conversationDetail?.conversationDetails?.opponentDetails?.online ?? (selectedToShowInfo?.online ?? false),size: CGSize(width: 116, height: 116), userName: conversationDetail?.conversationDetails?.opponentDetails?.userName ?? (selectedToShowInfo?.userName ?? ""),font: .regular(size: 50))
                     .onTapGesture {
                         let image = conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")
-                        if !image.isEmpty{
+                        if shouldShowImage(avatar: image){
                             fullScreenImageURL = image
                             withAnimation {
                                 showFullScreenImage = true
@@ -419,7 +419,7 @@ struct ISMContactInfoView: View {
                 UserAvatarView(avatar: isGroup == false ? (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? "") : (conversationDetail?.conversationDetails?.conversationImageUrl ?? ""), showOnlineIndicator: conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,size: CGSize(width: 116, height: 116), userName: isGroup == false ? (conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "") : (conversationDetail?.conversationDetails?.conversationTitle ?? ""),font: .regular(size: 50))
                     .onTapGesture {
                         let image = isGroup == true ? (conversationDetail?.conversationDetails?.conversationImageUrl ?? "") : (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? "")
-                        if !image.isEmpty{
+                        if  shouldShowImage(avatar: image){
                             fullScreenImageURL = image
                             withAnimation {
                                 showFullScreenImage = true
@@ -445,6 +445,13 @@ struct ISMContactInfoView: View {
                 }
             }
         }
+    }
+    
+    private func shouldShowImage(avatar: String) -> Bool {
+        return avatar.isEmpty == false &&
+               avatar != "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg" &&
+               avatar != "https://admin-media.isometrik.io/profile/def_profile.png" &&
+               avatar.contains("svg") == false
     }
     
     func getConversationDetail(completion:@escaping()->()){

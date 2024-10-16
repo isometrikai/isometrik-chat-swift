@@ -32,6 +32,7 @@ struct ISMEditGroupView: View {
     @FocusState private var isFocused: Bool
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @State var showProgressView : Bool = false
+    @State var removeImage : Bool = false
     
     //MARK: - BODY
     var body: some View {
@@ -108,6 +109,12 @@ struct ISMEditGroupView: View {
                         }, label: {
                             Text("Gallery")
                         })
+                        
+                        Button(action: {
+                            removeImage = true
+                        }, label: {
+                            Text("Remove")
+                        })
                     }
                 }
                 .sheet(isPresented: $showGallery) {
@@ -120,6 +127,12 @@ struct ISMEditGroupView: View {
                     groupName = existingGroupName
                     imageUrl = existingImage
                     isFocused = true
+                }
+                .onChange(of: removeImage) { oldValue, newValue in
+                    if removeImage == true{
+                        removeImageInApi()
+                        removeImage = false
+                    }
                 }
             
             if showProgressView == true{
@@ -188,6 +201,14 @@ struct ISMEditGroupView: View {
             }
         }else{
             NameAlert = true
+        }
+    }
+    
+    func removeImageInApi(){
+        let defaultImage = "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg"
+        viewModel.updateGroupImage(image: defaultImage, conversationId: conversationId ?? "") { _ in
+            NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
+            presentationMode.wrappedValue.dismiss()
         }
     }
     

@@ -288,7 +288,9 @@ struct MediaCell: View {
     func imageView(image: UIImage, useFill: Bool) -> some View {
         Image(uiImage: image)
             .resizable()
-            .aspectRatio(contentMode: useFill ? .fill : .fit)
+            .aspectRatio(contentMode: .fit) // Use .fit to prevent zooming
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .clipped() // Optional: ensures the image does not exceed the view bounds
     }
 
     func videoView(player: AVPlayer, useFill: Bool) -> some View {

@@ -481,7 +481,11 @@ public struct ISMMessageView: View {
             } else{
                 ISMShareContactList(dissmiss: $stateViewModel.showSheet , selectedContact: self.$selectedContactToShare, shareContact: $stateViewModel.shareContact)
             }
-        }
+        }.fullScreenCover(isPresented: $stateViewModel.showLocationSharing, content: {
+            NavigationStack{
+                ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId, placeName: $placeName, address: $placeAddress)
+            }
+        })
         .sheet(isPresented: self.$stateViewModel.showVideoPicker) {
             ISMMediaPicker(isPresented: self.$stateViewModel.showVideoPicker, sendMedias: $mediaSelectedFromPicker,opponenetName: isGroup == true ? (self.conversationDetail?.conversationDetails?.conversationTitle ?? "" ) : (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""),mediaCaption: $mediaCaption,sendMediaToMessage: $stateViewModel.sendMedia)
         }
