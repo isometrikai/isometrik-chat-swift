@@ -810,12 +810,14 @@ extension ISMMessageView{
                 if let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered {
                     ISMChatHelper.print("USER BLOCKED ----------------->\(messageInfo)")
                     messageReceived(messageInfo: messageInfo)
+                    getConversationDetail()
                 }
                 
             case ISMChatMQTTNotificationType.mqttUserUnblockConversation.name:
                 if let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered {
                     ISMChatHelper.print("USER UNBLOCKED ----------------->\(messageInfo)")
                     messageReceived(messageInfo: messageInfo)
+                    getConversationDetail()
                 }
             default:
                 break
