@@ -129,7 +129,7 @@ extension ISMMessageView{
                               audioCallToUser: $stateViewModel.audioCallToUser,
                               videoCallToUser: $stateViewModel.videoCallToUser,
                               parentMsgToScroll: $parentMsgToScroll,
-                              navigateToMediaSliderId: $navigateToMediaSliderId,
+                              navigateToMediaSliderId: $navigateToMediaSliderId, navigateToDocumentUrl: $navigateToDocumentUrl,
                               message: message, 
                               postIdToNavigate: $postIdToNavigate,
                               productIdToNavigate: $productIdToNavigate, navigateToSocialProfileId: $navigateToSocialProfileId)

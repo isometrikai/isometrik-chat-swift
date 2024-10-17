@@ -48,6 +48,7 @@ struct ISMMessageSubView: View {
     @Binding var videoCallToUser : Bool
     @Binding var parentMsgToScroll : MessagesDB?
     @Binding var navigateToMediaSliderId : String
+    @Binding var navigateToDocumentUrl : String
     
     
     
@@ -558,7 +559,11 @@ struct ISMMessageSubView: View {
                                 if let documentUrl = URL(string: message.attachments.first?.mediaUrl ?? ""){
                                     let urlExtension = ISMChatHelper.getExtensionFromURL(url: documentUrl)
                                     let fileName = ISMChatHelper.getFileNameFromURL(url: documentUrl)
-                                    NavigationLink(destination: ISMDocumentViewer(url: documentUrl, title: fileName)){
+                                    Button(action: {
+                                        navigateToDocumentUrl = message.attachments.first?.mediaUrl ?? ""
+                                    }, label: {
+                                        
+//                                    NavigationLink(destination: ISMDocumentViewer(url: documentUrl, title: fileName)){
                                         ZStack{
                                             VStack(alignment: .trailing, spacing: 5){
                                                 if message.messageType == 1{
@@ -583,6 +588,8 @@ struct ISMMessageSubView: View {
                                                                     .font(appearance.fonts.messageListMessageText)
                                                                     .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                                                     .fixedSize(horizontal: false, vertical: true)
+                                                                
+                                                                Spacer()
                                                             }
                                                         }
                                                     }
@@ -610,7 +617,7 @@ struct ISMMessageSubView: View {
                                                 ) : AnyView(EmptyView())
                                             )
                                         }//:ZStack
-                                    }
+                                    })
                                 }
                                 if appearance.timeInsideBubble == false{
                                     dateAndStatusView(onImage: false)

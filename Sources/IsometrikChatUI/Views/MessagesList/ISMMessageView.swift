@@ -60,6 +60,8 @@ public struct ISMMessageView: View {
     
     @State  var audioPermissionCheck :Bool = false
     
+    @State var navigateToDocumentUrl : String = ""
+    
     
     @State var text = ""
     @State var textFieldtxt = ""
@@ -362,6 +364,11 @@ public struct ISMMessageView: View {
         .onChange(of: chatViewModel.documentSelectedFromPicker, { _, _ in
             sendMessageIfDocumentSelected()
         })
+        .onChange(of: navigateToDocumentUrl, { _, _ in
+            if navigateToDocumentUrl != ""{
+                stateViewModel.navigateToDocumentViewer = true
+            }
+        })
         .onChange(of: selectedReaction, { _, _ in
             if selectedReaction != nil{
                 sendReaction()
@@ -486,6 +493,15 @@ public struct ISMMessageView: View {
         }.fullScreenCover(isPresented: $stateViewModel.showLocationSharing, content: {
             NavigationStack{
                 ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId, placeName: $placeName, address: $placeAddress)
+            }
+        })
+        .fullScreenCover(isPresented: $stateViewModel.navigateToDocumentViewer, content: {
+            if let documentUrl = URL(string: navigateToDocumentUrl){
+                let urlExtension = ISMChatHelper.getExtensionFromURL(url: documentUrl)
+                let fileName = ISMChatHelper.getFileNameFromURL(url: documentUrl)
+                NavigationStack{
+                    ISMDocumentViewer(url: documentUrl, title: fileName)
+                }
             }
         })
         .sheet(isPresented: self.$stateViewModel.showVideoPicker) {

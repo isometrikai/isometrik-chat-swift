@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "PDF_file_icon (1) 1.png",
+      "filename" : "google-docs.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "PDF_file_icon (1) 2.png",
+      "filename" : "google-docs 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "PDF_file_icon (1) 3.png",
+      "filename" : "google-docs 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

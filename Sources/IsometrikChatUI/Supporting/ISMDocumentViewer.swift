@@ -29,8 +29,12 @@ struct ISMDocumentViewer: View {
             if let url = url{
                 VStack {
                     // Using the PDFKitView and passing the previously created pdfURL
-                    PDFKitView(url: url)
-                        .scaledToFill()
+                    if url.absoluteString.contains(".pdf"){
+                        PDFKitView(url: url).scaledToFill()
+                    }else{
+                        TextFileView(url: url)
+                    }
+                        
                 }.navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
@@ -86,16 +90,12 @@ struct ISMDocumentViewer: View {
     
     
     func navigationBarLeadingButtons()  -> some View {
-        Button(action : {}) {
-            HStack{
-                Button(action: {
-                    dismiss()
-                }) {
-                    appearance.images.backButton
-                        .resizable()
-                        .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
-                }
-            }
+        Button(action: {
+            dismiss()
+        }) {
+            appearance.images.CloseSheet
+                .resizable()
+                .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
         }
     }
     
@@ -182,6 +182,69 @@ struct PDFKitView: UIViewRepresentable {
     func updateUIView(_ uiView: PDFView, context: UIViewRepresentableContext<PDFKitView>) {
         // we will leave this empty as we don't need to update the PDF
     }
+}
+
+struct TextFileView: View {
+    let url: URL // The URL to the .txt file
+    @State private var fileContent: String = "" // To hold the file content
+    @State private var isLoading: Bool = true
+
+    var body: some View {
+        ZStack {
+            if isLoading {
+                // Show a loading indicator while the file is being fetched
+                ProgressView("Loading...")
+                    .progressViewStyle(CircularProgressViewStyle())
+            } else if !fileContent.isEmpty {
+                // Display the content of the .txt file
+               
+                    GeometryReader { geometry in
+                        ScrollView {
+                            Text(fileContent)
+                                .padding()
+                                .font(.system(.body, design: .monospaced)) // Monospaced font for code
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .frame(minHeight: geometry.size.height) // Ensure content adapts to available space
+                        }
+                        .frame(width: geometry.size.width, height: geometry.size.height) // Apply frame to ScrollView
+                    }
+                
+            } else {
+                Text("Unable to load content.")
+            }
+        }
+        .onAppear {
+            loadTextFile()
+        }
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    // Function to load the content of the .txt file
+    func loadTextFile() {
+            let request = URLRequest(url: url)
+            
+            // Perform the request asynchronously
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                DispatchQueue.main.async {
+                    // Hide the loading indicator
+                    isLoading = false
+
+                    // Handle any errors
+                    if let error = error {
+                        print("Error loading file: \(error.localizedDescription)")
+                        fileContent = "Error loading file."
+                        return
+                    }
+
+                    // Check if data is available
+                    if let data = data, let content = String(data: data, encoding: .utf8) {
+                        fileContent = content
+                    } else {
+                        fileContent = "Unable to load content."
+                    }
+                }
+            }.resume() // Start the request
+        }
 }
 
 struct ActivityView: UIViewControllerRepresentable {

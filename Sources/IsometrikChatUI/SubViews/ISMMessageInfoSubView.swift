@@ -460,7 +460,7 @@ struct ISMMessageInfoSubView: View {
                             if let documentUrl = URL(string: message.attachments.first?.mediaUrl ?? ""){
                                 let urlExtension = ISMChatHelper.getExtensionFromURL(url: documentUrl)
                                 let fileName = ISMChatHelper.getFileNameFromURL(url: documentUrl)
-                                NavigationLink(destination: ISMDocumentViewer(url: documentUrl, title: fileName)){
+//                                NavigationLink(destination: ISMDocumentViewer(url: documentUrl, title: fileName)){
                                     ZStack{
                                         VStack(alignment: .trailing, spacing: 5){
                                             if message.messageType == 1{
@@ -513,7 +513,7 @@ struct ISMMessageInfoSubView: View {
                                             ) : AnyView(EmptyView())
                                         )
                                     }//:ZStack
-                                }
+//                                }
                             }
                             if  appearance.timeInsideBubble == false{
                                 dateAndStatusView(onImage: false)

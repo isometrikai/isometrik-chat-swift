@@ -27,10 +27,10 @@ struct ISMPDFMessageView: View {
                     .frame(maxHeight: 120)
                     .clipped()
                 HStack(alignment: .top,spacing: 10, content: {
-                    Image("pdf_New")
+                    appearance.images.pdfLogo
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 13, height: 16)
+                        .frame(width: 20, height: 20)
                     Text("\(fileName)")
                         .font(appearance.fonts.messageListMessageText)
                         .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
