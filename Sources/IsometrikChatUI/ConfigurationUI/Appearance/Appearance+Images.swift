@@ -167,6 +167,9 @@ public struct ISMChatImages {
     public var mediaEditorEdit : Image = loadImageSafely(with: "edit_Image")
     public var mediaEditorCancel : Image = loadImageSafely(with: "close_black_background")
     
+    public var audioPlayIcon : Image = loadImageSafely(with: "Audio_play")
+    public var audioPauseIcon : Image = loadImageSafely(with: "Audio_pause")
+    
     public init(){}
     
     public init(

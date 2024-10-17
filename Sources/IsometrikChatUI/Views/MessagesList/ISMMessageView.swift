@@ -58,6 +58,8 @@ public struct ISMMessageView: View {
     
     @State var selectedGIF : GPHMedia? = nil
     
+    @State  var audioPermissionCheck :Bool = false
+    
     
     @State var text = ""
     @State var textFieldtxt = ""

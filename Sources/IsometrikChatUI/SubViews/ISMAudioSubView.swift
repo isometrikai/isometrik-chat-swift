@@ -77,9 +77,15 @@ struct ISMAudioSubView: View {
                             audioVM.playAudio()
                         }
                     } label: {
-                        Image(!(audioVM.isPlaying) ? "Audio_play" : "Audio_pause" )
-                            .resizable()
-                            .frame(width: 16, height: 16)
+                        if !(audioVM.isPlaying) {
+                            appearance.images.audioPlayIcon
+                                .resizable()
+                                .frame(width: 16, height: 16)
+                        }else{
+                            appearance.images.audioPauseIcon
+                                .resizable()
+                                .frame(width: 16, height: 16)
+                        }
                     }//:BUTTON
                 }
                     HStack(alignment: .center, spacing: 2) {

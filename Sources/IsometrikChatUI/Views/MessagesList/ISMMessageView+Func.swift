@@ -110,16 +110,18 @@ extension ISMMessageView{
         // Use AVAudioApplication.shared() for checking permission
         switch AVAudioApplication.shared.recordPermission {
         case .granted:
-            stateViewModel.audioPermissionCheck = true
+            audioPermissionCheck = true
         case .denied:
-            stateViewModel.audioPermissionCheck = false
+            audioPermissionCheck = false
+            showPermissionDeniedAlert()
         case .undetermined:
             AVAudioApplication.requestRecordPermission { granted in
                 DispatchQueue.main.async {
                     if granted {
-                        stateViewModel.audioPermissionCheck = true
+                        audioPermissionCheck = true
                     } else {
-                        stateViewModel.audioPermissionCheck = false
+                        audioPermissionCheck = false
+                        showPermissionDeniedAlert()
                     }
                 }
             }
@@ -530,7 +532,7 @@ extension ISMMessageView{
             //2. save message locally
             var localIds = [String]()
             let sentAt = Date().timeIntervalSince1970 * 1000
-            let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Audio", mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: .audio,customType: .Voice, messageKind: .normal)
+            let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Audio", mentionUsers: [], fileName: mediaName, fileUrl: audioUrl.absoluteString, messageType: .audio,customType: .Voice, messageKind: .normal)
             localIds.append(id)
             
             //3. send message api

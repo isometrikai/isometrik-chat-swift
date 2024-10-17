@@ -38,7 +38,7 @@ extension ISMMessageView{
                     .onEnded { value in
                         ISMChatHelper.print("Tap currently holded")
                         if isMessagingEnabled() == true && chatViewModel.isBusy == false{
-                            if stateViewModel.audioPermissionCheck == true{
+                            if audioPermissionCheck == true{
                                 stateViewModel.isClicked = true
                                 chatViewModel.isRecording = true
                                 chatViewModel.startRecording()
@@ -66,6 +66,32 @@ extension ISMMessageView{
                         }
                               )
             )
+        }
+    }
+    
+    func showPermissionDeniedAlert() {
+        let alertController = UIAlertController(
+            title: "Audio Permission Required",
+            message: "We need access to your microphone for recording audio. Please enable it in Settings.",
+            preferredStyle: .alert
+        )
+        
+        let settingsAction = UIAlertAction(title: "Open Settings", style: .default) { _ in
+            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                if UIApplication.shared.canOpenURL(appSettings) {
+                    UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+                }
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        alertController.addAction(settingsAction)
+        alertController.addAction(cancelAction)
+        
+        // Assuming this is within a UIViewController context:
+        DispatchQueue.main.async {
+            UIApplication.shared.windows.first?.rootViewController?.present(alertController, animated: true, completion: nil)
         }
     }
     

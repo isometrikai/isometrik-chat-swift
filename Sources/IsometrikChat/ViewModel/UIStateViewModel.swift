@@ -28,7 +28,7 @@ public class UIStateViewModel: ObservableObject {
     @Published public var isClicked : Bool = false
     @Published public var uploadMedia : Bool = false
     
-    @Published public var audioPermissionCheck :Bool = false
+    
     @Published public var executeRepeatly : Bool = false
     @Published public var otherUserTyping : Bool = false
     
