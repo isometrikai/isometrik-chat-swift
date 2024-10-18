@@ -272,8 +272,10 @@ public struct ISMConversationView : View {
                     guard let messageInfo = notification.userInfo?["data"] as? ISMChatReactions else {
                         return
                     }
-                    ISMChatHelper.print("Add Reaction ----------------->\(messageInfo)")
-                    addReaction(messageInfo: messageInfo)
+                    if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                        ISMChatHelper.print("Add Reaction ----------------->\(messageInfo)")
+                        addReaction(messageInfo: messageInfo)
+                    }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttRemoveReaction.name)){ notification in
                     guard let messageInfo = notification.userInfo?["data"] as? ISMChatReactions else {
