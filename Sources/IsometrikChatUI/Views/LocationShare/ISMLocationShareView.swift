@@ -30,6 +30,9 @@ struct ISMLocationShareView: View {
     @State private var selectedPlaceAfterSearch: GMSPlace?
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
+     var sessionToken: GMSAutocompleteSessionToken = GMSAutocompleteSessionToken()
+
+    
     // MARK: - LIFECYCLE
     var body: some View {
         ZStack {
@@ -213,37 +216,47 @@ struct ISMLocationShareView: View {
         mapViewModel.currentPlacesList()
     }
     private func fetchAutoCompletePredictions() {
-        let filter = GMSAutocompleteFilter()
-        let placesClient = GMSPlacesClient.shared()
-        placesClient.findAutocompletePredictions(fromQuery: searchText, filter: filter, sessionToken: nil) { predictions, error in
-            if let error = error {
-                ISMChatHelper.print("Error fetching autocomplete predictions: \(error.localizedDescription)")
-                return
-            }
+            let filter = GMSAutocompleteFilter()
+            let placesClient = GMSPlacesClient.shared()
             
-            if let predictions = predictions {
-                self.predictions = predictions
+            // Use the session token for consistency between searches
+            placesClient.findAutocompletePredictions(fromQuery: searchText, filter: filter, sessionToken: sessionToken) { predictions, error in
+                if let error = error {
+                    ISMChatHelper.print("Error fetching autocomplete predictions: \(error.localizedDescription)")
+                    return
+                }
+                
+                if let predictions = predictions {
+                    self.predictions = predictions
+                }
             }
         }
-    }
+
     private func selectPlace(_ prediction: GMSAutocompletePrediction) {
         let placesClient = GMSPlacesClient.shared()
-        placesClient.fetchPlace(with: GMSFetchPlaceRequest(placeID: prediction.placeID, placeProperties: [], sessionToken: nil)) { place, error in
+        
+        // Specify the place fields that you want to retrieve
+        let placeFields: GMSPlaceField = [.name, .coordinate, .placeID, .formattedAddress]
+        
+        // Use the correct fetchPlace method with placeID and placeFields
+        placesClient.fetchPlace(fromPlaceID: prediction.placeID, placeFields: placeFields, sessionToken: sessionToken) {  place, error in
             if let error = error {
                 ISMChatHelper.print("An error occurred: \(error.localizedDescription)")
                 return
             }
             
             if let place = place {
-                longitude = place.coordinate.longitude
-                latitude = place.coordinate.latitude
-                placeId = place.placeID
-                placeName = place.name
-                address = place.formattedAddress
+                // Use the fetched place data
+                self.longitude = place.coordinate.longitude
+                self.latitude = place.coordinate.latitude
+                self.placeId = place.placeID
+                self.placeName = place.name
+                self.address = place.formattedAddress
                 self.dismiss()
             }
         }
     }
+
 }
 extension View {
     func hideKeyboard() {
