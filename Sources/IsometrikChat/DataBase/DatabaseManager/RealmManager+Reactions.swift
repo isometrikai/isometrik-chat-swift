@@ -15,18 +15,22 @@ extension RealmManager{
     public func addReactionToMessage(conversationId: String, messageId: String, reaction: String, userId: String) {
         if let localRealm = localRealm {
             let messageToUpdate = localRealm.objects(MessagesDB.self).filter("conversationId == %@ AND isDelete == false AND messageId == %@", conversationId, messageId)
-            
+
             try! localRealm.write {
-                // Check if there's an existing reaction of the specified type
-                if let existingReaction = messageToUpdate.first?.reactions.first(where: { $0.reactionType == reaction }) {
-                    // Append userId to the existing reaction
-                    existingReaction.users.append(userId)
-                } else {
-                    // Create a new reaction and add it to the message
-                    let newReaction = ReactionDB()
-                    newReaction.reactionType = reaction
-                    newReaction.users.append(userId)
-                    messageToUpdate.first?.reactions.append(newReaction)
+                if let message = messageToUpdate.first {
+                    // Check if there's an existing reaction of the specified type
+                    if let existingReaction = message.reactions.first(where: { $0.reactionType == reaction }) {
+                        // Only append userId if it does not already exist
+                        if !existingReaction.users.contains(userId) {
+                            existingReaction.users.append(userId)
+                        }
+                    } else {
+                        // Create a new reaction and add it to the message
+                        let newReaction = ReactionDB()
+                        newReaction.reactionType = reaction
+                        newReaction.users.append(userId)
+                        message.reactions.append(newReaction)
+                    }
                 }
             }
         }
