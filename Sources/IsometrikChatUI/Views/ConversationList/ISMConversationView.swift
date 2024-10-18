@@ -97,9 +97,6 @@ public struct ISMConversationView : View {
                             CustomSearchBar(searchText: $query).padding(.horizontal,15)
                         }
                         conversationListView
-                            .onTapGesture {
-                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                            }
                     }
                 }
                 .onChange(of: query, {_ , newValue in
@@ -391,6 +388,7 @@ public struct ISMConversationView : View {
             ForEach(conversationData) { data in
                 if ISMChatSdk.getInstance().getFramework() == .UIKit {
                     Button {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                         navigateToMessageList(for: data)
                     } label: {
                         conversationSubView(for: data)
