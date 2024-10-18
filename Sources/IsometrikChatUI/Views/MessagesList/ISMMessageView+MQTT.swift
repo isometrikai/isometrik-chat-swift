@@ -86,7 +86,7 @@ import IsometrikChat
                 
                 self.getMessages()
                 
-                realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+                parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
                 if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
                     chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
                         // update status of message to deleivered
@@ -178,7 +178,7 @@ import IsometrikChat
              
              self.getMessages()
              
-             realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+             parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
              if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
                  chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
                      // update status of message to deleivered
@@ -205,7 +205,7 @@ import IsometrikChat
                  }
                  self.getMessages()
              }else{
-                 realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+                 parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
                  if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
                      chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
                          // update status of message to deleivered
@@ -255,7 +255,7 @@ import IsometrikChat
          let message = ISMChatMessage(sentAt: messageInfo.sentAt, messageId: messageInfo.messageId, customType: messageInfo.customType, initiatorIdentifier: messageInfo.initiatorIdentifier, action: messageInfo.action, conversationId: messageInfo.conversationId, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, members: members, missedByMembers: messageInfo.missedByMembers, meetingId: messageInfo.meetingId, callDurations: messageInfo.callDurations, audioOnly: messageInfo.audioOnly, autoTerminate: messageInfo.autoTerminate, config: messageInfo.config)
          realmManager.saveMessage(obj: [message])
          self.getMessages()
-         realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+         parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
          
          //update last message of conversationList item too
          let lastMessage = ISMChatLastMessage(sentAt: messageInfo.sentAt, conversationId: self.conversationID ?? "", body: "", messageId:  messageInfo.messageId, customType: messageInfo.customType, action: messageInfo.action, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, initiatorIdentifier: messageInfo.initiatorIdentifier)
@@ -267,7 +267,7 @@ import IsometrikChat
         let message = ISMChatMessage(sentAt: messageInfo.sentAt, messageId: messageInfo.messageId,initiatorIdentifier: messageInfo.initiatorIdentifier, action: messageInfo.action,conversationId: self.conversationID ?? "", initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName)
         realmManager.saveMessage(obj: [message])
         self.getMessages()
-        realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+        parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
         
         //update last message of conversationList item too
         let lastMessage = ISMChatLastMessage(sentAt: messageInfo.sentAt, conversationId: self.conversationID ?? "", body: "", messageId:  messageInfo.messageId, action: messageInfo.action, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, initiatorIdentifier: messageInfo.initiatorIdentifier)

@@ -20,7 +20,6 @@ public class RealmManager: ObservableObject {
     @Published public var medias : [MediaDB]? = []
     @Published public var linksMedia : [MessagesDB]? = []
     @Published public var filesMedia : [MediaDB]? = []
-    @Published public var parentMessageIdToScroll : String = ""
     @Published public var broadcasts : [BroadCastListDB] = []
     @Published public var storeBroadcasts: [BroadCastListDB] = []
     

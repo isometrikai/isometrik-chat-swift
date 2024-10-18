@@ -52,6 +52,7 @@ public struct ISMMessageView: View {
     
     
     @State var navigateToMediaSliderId : String = ""
+    @State var parentMessageIdToScroll : String = ""
     
     @State var mediaSelectedFromPicker : [ISMMediaUpload] = []
     @State var mediaCaption : String = ""
@@ -650,6 +651,7 @@ public struct ISMMessageView: View {
                     let action = realmManager.getConversationListLastMessageAction(conversationId: self.conversationID ?? "")
                     if action != ISMChatActionType.reactionAdd.value && action != ISMChatActionType.reactionRemove.value{
                         realmManager.updateLastMessageDetails(conId: self.conversationID ?? "", msgObj: msgObj)
+                        parentMessageIdToScroll = realmManager.messages.last?.last?.id.description ?? ""
                     }
                 }
             }
@@ -705,14 +707,14 @@ public struct ISMMessageView: View {
     func reloadBroadCastMessages(){
 //        
 //        self.realmManager.getMsgsThroughGroupCastId(groupcastId: self.groupCastId ?? "")
-//        realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+//       parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
 //        var lastSent = Int(self.realmManager.messages.last?.last?.sentAt ?? 0.0).description
 //        //GET ALL MESSAGES IN CONVERSTION API
 //        if self.realmManager.allMessages?.count == 0 {
 //            lastSent = ""
 //        }
         self.realmManager.getMsgsThroughConversationId(conversationId: self.conversationID ?? "")
-        realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+        parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
         var lastSent = Int(self.realmManager.messages.last?.last?.sentAt ?? 0.0).description
         //GET ALL MESSAGES IN CONVERSTION API
         if self.realmManager.allMessages?.count == 0 {
@@ -726,7 +728,7 @@ public struct ISMMessageView: View {
                         return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
                     }
                     self.realmManager.manageMessagesList(arr: self.chatViewModel.allMessages ?? [])
-                    realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+                    parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
                     self.getMessages()
                     realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
                     realmManager.fetchFiles(conId: self.conversationID ?? "")
@@ -743,7 +745,7 @@ public struct ISMMessageView: View {
     
     func reload(){
         self.realmManager.getMsgsThroughConversationId(conversationId: self.conversationID ?? "")
-        realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+        parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
         var lastSent = self.realmManager.getlastMessageSentForConversation(conversationId: self.conversationID ?? "")
         //GET ALL MESSAGES IN CONVERSTION API
         if self.realmManager.allMessages?.count == 0 {
@@ -763,7 +765,7 @@ public struct ISMMessageView: View {
                         }
                     }
                     self.realmManager.manageMessagesList(arr: self.chatViewModel.allMessages ?? [])
-                    realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+                    parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
                     self.getMessages()
                     realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
                     realmManager.fetchFiles(conId: self.conversationID ?? "")
@@ -787,7 +789,7 @@ public struct ISMMessageView: View {
     func scrollTo(messageId: String, anchor: UnitPoint? = nil, shouldAnimate: Bool, scrollReader: ScrollViewProxy) {
         DispatchQueue.main.async {
             ISMChatHelper.print("Scrolling to messageId: \(messageId)")
-            realmManager.parentMessageIdToScroll = ""
+            parentMessageIdToScroll = ""
             withAnimation(Animation.easeOut(duration: 0.2)) {
                 scrollReader.scrollTo(messageId, anchor: anchor)
             }

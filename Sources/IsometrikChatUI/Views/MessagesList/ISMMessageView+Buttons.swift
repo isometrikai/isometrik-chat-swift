@@ -128,7 +128,7 @@ extension ISMMessageView{
     //MARK: - SCROLL TO BOTTOM MESSAGE
     func scrollToBottomButton() -> some View {
         return Button(action: {
-            realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+            parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
         }, label: {
             appearance.images.scrollToBottomArrow
                 .resizable()

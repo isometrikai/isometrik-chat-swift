@@ -77,9 +77,9 @@ extension ISMMessageView{
                     }
                 }
             })
-            .onChange(of: realmManager.parentMessageIdToScroll, { _, _ in
-                if realmManager.parentMessageIdToScroll != ""{
-                    scrollTo(messageId: realmManager.parentMessageIdToScroll,  anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader)
+            .onChange(of: parentMessageIdToScroll, { _, _ in
+                if parentMessageIdToScroll != ""{
+                    scrollTo(messageId: parentMessageIdToScroll,  anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader)
                 }
             })
             .onChange(of: parentMsgToScroll, { _, _ in

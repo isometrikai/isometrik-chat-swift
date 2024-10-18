@@ -78,7 +78,7 @@ extension ISMMessageView{
         if stateViewModel.keyboardFocused {
             //when keyboard is open scroll to last message
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+                parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
             }
             // when typing send typing indicator
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
@@ -675,7 +675,7 @@ extension ISMMessageView{
                 }
             }else {
                 let id = realmManager.saveLocalMessage(sent: Date().timeIntervalSince1970 * 1000, txt: self.text, parentMessageId: "", initiatorIdentifier: "", conversationId: self.conversationID ?? "", customType: ISMChatMediaType.Text.value, msgSyncStatus: ISMChatSyncStatus.Local.txt)
-                realmManager.parentMessageIdToScroll = id ?? ""
+                parentMessageIdToScroll = id ?? ""
                 self.getMessages()
                 nilData()
             }
@@ -689,7 +689,7 @@ extension ISMMessageView{
             //4. update messageId locally
             realmManager.updateMsgId(objectId: objectId, msgId: messageId, conversationId: self.conversationID ?? "",mediaUrl: mediaUrl,thumbnailUrl: thubnailUrl,mediaSize: mediaData,mediaId: mediaId)
             
-            realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+            parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
             
             //5. we need to save media
             if messageKind != .audio{
@@ -917,7 +917,7 @@ extension ISMMessageView{
                 }
             }else {
 //                let id = realmManager.saveLocalMessage(sent: Date().timeIntervalSince1970 * 1000, txt: self.text, parentMessageId: "", initiatorIdentifier: "", conversationId: self.conversationID ?? "", userEmailId: self.userId ?? "", customType: ISMChatMediaType.Text.value, msgSyncStatus: ISMChatSyncStatus.Local.txt)
-//                realmManager.parentMessageIdToScroll = id ?? ""
+//                parentMessageIdToScroll = id ?? ""
 //                self.getMessages()
 //                nilData()
             }
@@ -1059,7 +1059,7 @@ extension ISMMessageView{
         //7. sort messages by sentTime
         self.getMessages()
         //8. scroll to last message
-        realmManager.parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+        parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
         //9. update last message of conversationList item too
         realmManager.updateLastmsg(conId: self.conversationID ?? "", msg: lastMessage)
         
