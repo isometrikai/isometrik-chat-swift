@@ -97,6 +97,9 @@ public struct ISMConversationView : View {
                             CustomSearchBar(searchText: $query).padding(.horizontal,15)
                         }
                         conversationListView
+                            .onTapGesture {
+                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                            }
                     }
                 }
                 .onChange(of: query, {_ , newValue in
