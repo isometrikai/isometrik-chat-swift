@@ -22,13 +22,18 @@ struct ISMAudioSubView: View {
         let level = max(0.2, CGFloat(level) + 70) / 2 // between 0.1 and 35
         return CGFloat(level * (40/35))
     }
-    private var message : MessagesDB
+    
     private var isReceived : Bool
+    private var sentAt : Double
+    private var senderName : String
+    private var senderImageUrl : String
     private var messageDeliveredType : ISMChatMessageStatus = .Clock
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     init(audio: String,
-         message : MessagesDB,
+         sentAt : Double,
+         senderName : String,
+         senderImageUrl : String,
          isReceived : Bool,
          messageDeliveredType : ISMChatMessageStatus,
          previousAudioRef: Binding<AudioPlayViewModel?>
@@ -38,7 +43,9 @@ struct ISMAudioSubView: View {
             sampels_count: 25,
             defaultAudioBarColor: ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette.audioBarDefault,
             audioBarColorWhilePlaying: ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette.audioBarWhilePlaying))
-        self.message = message
+        self.sentAt = sentAt
+        self.senderName = senderName
+        self.senderImageUrl = senderImageUrl
         self.isReceived = isReceived
         self.messageDeliveredType = messageDeliveredType
         _previousAudioRef = previousAudioRef
@@ -50,10 +57,10 @@ struct ISMAudioSubView: View {
             LazyHStack(alignment: .center, spacing: 10) {
                //image
                 ZStack(alignment: .bottomTrailing){
-                    UserAvatarView(avatar: message.senderInfo?.userProfileImageUrl ?? "",
+                    UserAvatarView(avatar: senderImageUrl,
                                    showOnlineIndicator: false,
                                    size: CGSize(width: 40, height: 40),
-                                   userName: message.senderInfo?.userName ?? "",
+                                   userName: senderName,
                                    font: .regular(size: 14))
                     Image("audio_mic")
                         .resizable()
@@ -134,10 +141,10 @@ struct ISMAudioSubView: View {
     
     func dateAndStatusView(onImage : Bool) -> some View{
         HStack(alignment: .center,spacing: 3){
-            Text(message.sentAt.datetotime())
+            Text(sentAt.datetotime())
                 .font(Font.regular(size: 12))
                 .foregroundColor(onImage ? Color.white : (isReceived ? appearance.colorPalette.messageListMessageTimeReceived :  appearance.colorPalette.messageListMessageTimeSend))
-            if !isReceived && !message.deletedMessage{
+            if !isReceived{
                 switch self.messageDeliveredType{
                 case .BlueTick:
                     appearance.images.messageRead

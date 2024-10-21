@@ -732,7 +732,7 @@ struct ISMMessageSubView: View {
                                         if message.messageType == 1{
                                             forwardedView()
                                         }
-                                        ISMAudioSubView(audio: message.attachments.first?.mediaUrl ?? "",message : self.message, isReceived: self.isReceived, messageDeliveredType: self.messageDeliveredType, previousAudioRef: $previousAudioRef)
+                                        ISMAudioSubView(audio: message.attachments.first?.mediaUrl ?? "", sentAt: message.sentAt, senderName: message.senderInfo?.userName ?? "", senderImageUrl: message.senderInfo?.userProfileImageUrl ?? "", isReceived: self.isReceived, messageDeliveredType: self.messageDeliveredType, previousAudioRef: $previousAudioRef)
                                             .padding(.bottom,(message.reactions.count > 0) ? 2 : 0)
                                     }//:VStack
                                     .padding(8)
