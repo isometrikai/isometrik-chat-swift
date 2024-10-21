@@ -376,6 +376,7 @@ public struct ISMConversationView : View {
                     if ISMChatSdk.getInstance().getFramework() == .SwiftUI {
                         createChat = true
                     }
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                 } label: {
                     appearance.images.conversationListPlaceholder
                         .resizable()

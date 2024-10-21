@@ -16,7 +16,7 @@ struct ISMGiphyPicker: UIViewControllerRepresentable {
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<ISMGiphyPicker>) -> GiphyViewController {
          
-        Giphy.configure(apiKey:"cDCLXNXoBVvNOVMHKEVcMSoz0xq7YUV0")
+        Giphy.configure(apiKey:"oXf5IF53KmB99uHRcNDOkwUpxyAAAk7Y")
         let giphy = GiphyViewController()
         giphy.delegate = context.coordinator
         giphy.mediaTypeConfig = [.stickers,.emoji,.gifs]
