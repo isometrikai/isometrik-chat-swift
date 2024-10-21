@@ -418,6 +418,11 @@ public struct ISMConversationView : View {
             .onDelete(perform: handleDelete)
             .listRowBackground(Color.clear)
         }
+        .gesture(
+            DragGesture().onChanged { _ in
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            }
+        )
         .listStyle(.plain)
         .listRowSeparatorTint(Color.border)
     //    .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
