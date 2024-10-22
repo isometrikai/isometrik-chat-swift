@@ -132,7 +132,7 @@ extension ISMMessageView{
                               navigateToMediaSliderId: $navigateToMediaSliderId, navigateToDocumentUrl: $navigateToDocumentUrl,
                               message: message, 
                               postIdToNavigate: $postIdToNavigate,
-                              productIdToNavigate: $productIdToNavigate, navigateToSocialProfileId: $navigateToSocialProfileId)
+                              productIdToNavigate: $productIdToNavigate, navigateToSocialProfileId: $navigateToSocialProfileId, navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate)
             .environmentObject(self.realmManager)
         }
     }

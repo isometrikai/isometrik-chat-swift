@@ -25,6 +25,8 @@ struct ISMContactInfoView: View {
     let isGroup : Bool?
     @State var navigatetoAddparticipant : Bool = false
     @State var navigatetoMedia : Bool = false
+    @State var navigatetoInfo : Bool = false
+    @State var navigatetoAddMember : Bool = false
     
     @State var showOptions : Bool = false
     @State var showInfo : Bool = false
@@ -46,9 +48,11 @@ struct ISMContactInfoView: View {
     
     @Binding var navigateToSocialProfileId : String
     
+    @Binding var navigateToExternalUserListToAddInGroup : Bool
+    
     //MARK:  - BODY
     var body: some View {
-        NavigationStack{
+//        NavigationStack{
             VStack{
                 if showFullScreenImage {
                     // To show profile Image on tap of user Image
@@ -123,8 +127,11 @@ struct ISMContactInfoView: View {
                                         .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                 }else{
                                     Button {
-                                        navigateToSocialProfileId = conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? (self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier ?? "")
-                                        presentationMode.wrappedValue.dismiss()
+                                        if onlyInfo == true{
+                                            navigateToSocialProfileId = selectedToShowInfo?.userIdentifier ?? ""
+                                        }else{
+                                            navigateToSocialProfileId = conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? (self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier ?? "")
+                                        }
                                     } label: {
                                         HStack{
                                             appearance.images.mediaIcon
@@ -166,8 +173,13 @@ struct ISMContactInfoView: View {
                             Section {
                                 
                                 if conversationDetail?.conversationDetails?.usersOwnDetails?.isAdmin == true{
-                                    NavigationLink {
-                                        ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager)
+                                    
+                                    Button {
+                                        if ISMChatSdkUI.getInstance().getChatProperties().externalMemberAddInGroup == true{
+                                            navigateToExternalUserListToAddInGroup = true
+                                        }else{
+                                            navigatetoAddMember = true
+                                        }
                                     } label: {
                                         HStack(spacing: 12){
                                             
@@ -246,12 +258,19 @@ struct ISMContactInfoView: View {
                     realmManager.updateImageAndNameOfGroup(name: conversationDetail?.conversationDetails?.conversationTitle ?? "", image: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", convID: self.conversationID ?? "")
                 }
             }
+            .background(NavigationLink("", destination: ISMContactInfoView(conversationID: realmManager.getConversationId(userId: selectedMember.userId ?? ""),viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : selectedMember,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $navigateToExternalUserListToAddInGroup).environmentObject(self.realmManager), isActive: $navigatetoInfo))
+            .background(NavigationLink("", destination: ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager), isActive: $navigatetoAddMember))
             .confirmationDialog("", isPresented: $showOptions) {
-                NavigationLink {
-                    ISMContactInfoView(conversationID: realmManager.getConversationId(userId: selectedMember.userId ?? ""),viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : selectedMember,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
+                Button {
+                    navigatetoInfo = true
                 } label: {
                     Text("Info")
                 }
+//                NavigationLink {
+//                    ISMContactInfoView(conversationID: realmManager.getConversationId(userId: selectedMember.userId ?? ""),viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : selectedMember,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
+//                } label: {
+//                    Text("Info")
+//                }
                 if checkIfAdmin() == true{
                     Button {
                         makeGroupAdmin()
@@ -268,7 +287,7 @@ struct ISMContactInfoView: View {
             } message: {
                 Text(selectedMember.userName ?? "")
             }
-        }
+//        }
     }
     
     //MARK:  - CONFIGURE
@@ -517,7 +536,7 @@ struct ISMContactInfoView: View {
                 Button {
                     presentationMode.wrappedValue.dismiss()
                 } label: {
-                    appearance.images.CloseSheet
+                    appearance.images.backButton
                         .resizable()
                         .tint(.black)
                         .foregroundColor(.black)

@@ -167,6 +167,8 @@ public struct ISMMessageView: View {
     @State private var cancellables = Set<AnyCancellable>()
     @State var navigateToJobId : String = ""
     
+//    @State var navigateToExternalUserListToAddInGroup : Bool = false
+    
     //MARK: - BODY
     public var body: some View {
         VStack{
@@ -361,6 +363,7 @@ public struct ISMMessageView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.memberAddAndRemove)) { _ in
             self.getConversationDetail()
+            self.reload()
         }
         .onChange(of: chatViewModel.documentSelectedFromPicker, { _, _ in
             sendMessageIfDocumentSelected()
@@ -508,14 +511,18 @@ public struct ISMMessageView: View {
         .sheet(isPresented: self.$stateViewModel.showVideoPicker) {
             ISMMediaPicker(isPresented: self.$stateViewModel.showVideoPicker, sendMedias: $mediaSelectedFromPicker,opponenetName: isGroup == true ? (self.conversationDetail?.conversationDetails?.conversationTitle ?? "" ) : (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""),mediaCaption: $mediaCaption,sendMediaToMessage: $stateViewModel.sendMedia)
         }
-        .fullScreenCover(isPresented: $stateViewModel.navigateToUserProfile, onDismiss: {
-            stateViewModel.navigateToUserProfile = false
-        }, content: {
-            ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
-                .onAppear {
-                    OnScreen = false
-                }
-        })
+        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate).environmentObject(self.realmManager)
+            .onAppear {
+                OnScreen = false
+            }, isActive: $stateViewModel.navigateToUserProfile))
+//        .fullScreenCover(isPresented: $stateViewModel.navigateToUserProfile, onDismiss: {
+//            stateViewModel.navigateToUserProfile = false
+//        }, content: {
+//            ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
+//                .onAppear {
+//                    OnScreen = false
+//                }
+//        })
         .fullScreenCover(isPresented: $stateViewModel.navigateToMediaSlider) {
             let attachments = self.realmManager.medias ?? []
             let currentMediaId = navigateToMediaSliderId

@@ -79,6 +79,7 @@ struct ISMMessageSubView: View {
     @Binding var productIdToNavigate : ProductDB
     
     @Binding var navigateToSocialProfileId : String
+    @Binding var navigateToExternalUserListToAddInGroup : Bool
     
     
     //MARK:  - BODY
@@ -1117,7 +1118,7 @@ struct ISMMessageSubView: View {
         }
         }
 //        .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
-        .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager), isActive: $navigateToInfo))
+        .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser,navigateToSocialProfileId: $navigateToSocialProfileId, navigateToExternalUserListToAddInGroup: $navigateToExternalUserListToAddInGroup).environmentObject(self.realmManager), isActive: $navigateToInfo))
         .padding(.bottom, (message.reactions.count > 0) ? 20 : 0)
         .frame(maxWidth: .infinity, alignment: isReceived ? .leading : .trailing)
         .multilineTextAlignment(.leading) // Aligning the text based on message type
@@ -1323,9 +1324,16 @@ struct ISMMessageSubView: View {
                         }
                     }
                 }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.sticker.value{
-                    AnimatedImage(url: URL(string: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? ""),isAnimating: $isAnimating)
-                        .resizable()
-                        .frame(width: 30, height: 30)
+                    Label {
+                        Text("Sticker")
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
+                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                    } icon: {
+                        appearance.images.stickerLogo
+                            .resizable()
+                            .frame(width: 15,height: 15)
+                    }
                 }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.gif.value{
                     Label {
                         Text("GIF")
@@ -1333,7 +1341,7 @@ struct ISMMessageSubView: View {
                             .font(appearance.fonts.messageListReplyToolbarDescription)
                             .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                     } icon: {
-                        Image("gif_logo")
+                        appearance.images.gifLogo
                             .resizable()
                             .frame(width: 20,height: 15)
                     }
@@ -1377,6 +1385,19 @@ struct ISMMessageSubView: View {
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 45, height: 40)
             }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.gif.value{
+                AnimatedImage(url: URL(string: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? ""),isAnimating: $isAnimating)
+                    .resizable()
+                    .frame(width: 45, height: 40)
+                    .cornerRadius(5)
+                    .overlay(
+                        LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                            .frame(width: 45, height: 40)
+                            .mask(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .fill(Color.white)
+                            )
+                    )
+            }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.sticker.value{
                 AnimatedImage(url: URL(string: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? ""),isAnimating: $isAnimating)
                     .resizable()
                     .frame(width: 45, height: 40)
