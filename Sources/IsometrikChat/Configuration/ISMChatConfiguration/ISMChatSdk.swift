@@ -24,6 +24,8 @@ public class ISMChatSdk{
     
     private var hostFrameworksType : FrameworkType = .UIKit
     
+    private var giphyApiKey : String = "oXf5IF53KmB99uHRcNDOkwUpxyAAAk7Y"
+    
     private var uploadOnExternalCDN : Bool?
     
     private var chatInitialized : Bool?
@@ -52,6 +54,10 @@ public class ISMChatSdk{
         return hostFrameworksType
     }
     
+    public func getGiphyApiKey() -> String{
+        return giphyApiKey
+    }
+    
     public func checkuploadOnExternalCDN() -> Bool{
         return uploadOnExternalCDN ?? false
     }
@@ -66,7 +72,7 @@ public class ISMChatSdk{
     
     
     
-    public func appConfiguration(appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig,hostFrameworkType : FrameworkType,conversationListViewControllerName : UIViewController.Type?,messagesListViewControllerName : UIViewController.Type?,uploadOnExternalCDN : Bool? = false) {
+    public func appConfiguration(appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig,hostFrameworkType : FrameworkType,conversationListViewControllerName : UIViewController.Type?,messagesListViewControllerName : UIViewController.Type?,uploadOnExternalCDN : Bool? = false,giphyApiKey : String? = nil) {
         
         if appConfig.accountId.isEmpty {
             fatalError("Pass a valid accountId for isometrik sdk initialization.")
@@ -100,6 +106,10 @@ public class ISMChatSdk{
         let communicationConfiguration = ISMChatCommunicationConfiguration(userConfig: userConfiguration, projectConfig: projectConfiguration, mqttConfig: mqttConfiguration)
         
         self.hostFrameworksType = hostFrameworkType
+        
+        if let giphyApiKey = giphyApiKey{
+            self.giphyApiKey = giphyApiKey
+        }
         
         self.uploadOnExternalCDN = uploadOnExternalCDN
         

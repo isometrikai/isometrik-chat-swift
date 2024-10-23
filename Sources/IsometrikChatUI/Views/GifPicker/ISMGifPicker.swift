@@ -9,14 +9,15 @@ import Foundation
 import SwiftUI
 import GiphyUISDK
 import WebKit
+import IsometrikChat
 
 struct ISMGiphyPicker: UIViewControllerRepresentable {
     let didSelectMedia: (GPHMedia?) -> Void
-
+    let giphyApiKey = ISMChatSdk.getInstance().getGiphyApiKey()
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<ISMGiphyPicker>) -> GiphyViewController {
          
-        Giphy.configure(apiKey:"oXf5IF53KmB99uHRcNDOkwUpxyAAAk7Y")
+        Giphy.configure(apiKey:giphyApiKey)
         let giphy = GiphyViewController()
         giphy.delegate = context.coordinator
         giphy.mediaTypeConfig = [.stickers,.emoji,.gifs]
