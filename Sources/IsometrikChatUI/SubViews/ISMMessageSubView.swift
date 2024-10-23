@@ -1025,7 +1025,7 @@ struct ISMMessageSubView: View {
                                         postIdToNavigate = message.metaData?.post?.postId ?? ""
                                     } label: {
                                         postButtonView(isPost: true)
-                                    }
+                                    }.padding(.trailing,5)
                                     
                                 }//:ZStack
                                 .padding(5)
@@ -1205,7 +1205,7 @@ struct ISMMessageSubView: View {
             }
             ZStack(alignment: .bottomTrailing){
                 ZStack(alignment: .topTrailing){
-                    ISMImageViewer(url: isPost == true ? (message.metaData?.post?.postUrl ?? "") : (message.metaData?.product?.productUrl ?? ""), size: isPost == true ? CGSizeMake(124, 249) : CGSizeMake(250, 300), cornerRadius: 5)
+                    ISMImageViewer(url: isPost == true ? (message.metaData?.post?.postUrl ?? "") : (message.metaData?.product?.productUrl ?? ""), size: isPost == true ? CGSizeMake(124, 249) : CGSizeMake(250, 300), cornerRadius: 8)
                         .overlay(
                             LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                                 .frame(width: 250, height: 300)
