@@ -554,75 +554,121 @@ extension ISMMessageView{
             }
         } else if !mediaSelectedFromPicker.isEmpty {
             // Messages as media
+//            for media in mediaSelectedFromPicker {
+//                if ISMChatHelper.checkMediaType(media: media.url) == .video{
+//                    
+//                    let mediaName = "\(UUID()).mp4"
+//                    let mediaId = "\(UUID())"
+//                    
+//                    //1. nill data if any
+//                    nilData()
+//                    
+//                    //2. save message locally
+//                    var localIds = [String]()
+//                    let sentAt = Date().timeIntervalSince1970 * 1000
+//                    
+//                    
+//                    ISMChatHelper.generateThumbnailImageURL(from: media.url) { thumbnailUrl in
+//                        
+//                        let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Video", mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: .video,customType: .Video, messageKind: .normal,mediaCaption: media.caption,localMediaUrl: media.url.absoluteString,localThumbnailUrl: thumbnailUrl?.absoluteString)
+//                        localIds.append(id)
+//                        
+//                        
+//                        if ISMChatSdk.getInstance().checkuploadOnExternalCDN() == true{
+//                            self.delegate?.uploadOnExternalCDN(messageKind: .photo, mediaUrl: thumbnailUrl! , completion: { imageUrl, imageData in
+//                                self.delegate?.uploadOnExternalCDN(messageKind: .video, mediaUrl: media.url, completion: { videoUrl, videoData in
+//                                    sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: mediaName, mediaUrl: videoUrl, mediaData: videoData, thubnailUrl: imageUrl, sentAt: sentAt, objectId:  localIds.first ?? "", caption: media.caption)
+//                                    localIds.removeFirst()
+//                                })
+//                            })
+//                        }else{
+//                            chatViewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", image: thumbnailUrl, document: nil, video: nil, audio: nil, mediaName: "\(UUID()).jpg") { thumbnailmedia, _, _ in
+//                                chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: nil, document: nil, video: media.url, audio: nil, mediaName:  mediaName) {  data, filename, size in
+//                                    sendMediaMessage(messageKind: .video, customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: filename, mediaUrl: data?.mediaUrl ?? "", mediaData: size, thubnailUrl: thumbnailmedia?.mediaUrl ?? "", sentAt: sentAt, objectId:  localIds.first ?? "", caption: media.caption)
+//                                    localIds.removeFirst()
+//                                }
+//                            }
+//                            
+//                        }
+//                    }
+//                }else{
+//                    
+//                    let mediaName = "\(UUID()).jpg"
+//                    let mediaId = "\(UUID())"
+//                    //1. nill data if any
+//                    nilData()
+//                    
+//                    //2. save message locally
+//                    var localIds = [String]()
+//                    let sentAt = Date().timeIntervalSince1970 * 1000
+//                    let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Image", mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: .photo,customType: .Image, messageKind: .normal,mediaCaption: media.caption,localMediaUrl: media.url.absoluteString)
+//                    localIds.append(id)
+//                    
+//                    
+//                    if ISMChatSdk.getInstance().checkuploadOnExternalCDN() == true{
+//                        self.delegate?.uploadOnExternalCDN(messageKind: .photo, mediaUrl: media.url , completion: { imageUrl, imageData in
+//                            sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: mediaName, mediaUrl: imageUrl, mediaData: imageData, thubnailUrl: imageUrl, sentAt: sentAt, objectId: localIds.first ?? "", caption: media.caption)
+//                            localIds.removeFirst()
+//                        })
+//                    }else{
+//                        chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: nil, document: nil, video: media.url, audio: nil, mediaName: mediaName) {  data, filename, size in
+//                            if let data = data {
+//                                sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.thumbnailUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "", caption: media.caption)
+//                                localIds.removeFirst()
+//                                if media == self.mediaSelectedFromPicker.last {
+//                                    self.mediaSelectedFromPicker.removeAll()
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+            var mediaUrl : [URL] = []
+            var thumbnailUrl : [URL] = []
+            var localIds = [String]()
+            let sentAt = Date().timeIntervalSince1970 * 1000
+            let thubnailUrls = mediaSelectedFromPicker.map { $0.url.absoluteString }
+            var gridMedias : [ISMChatAttachment] = []
+            for x in mediaSelectedFromPicker{
+                ISMChatHelper.generateThumbnailImageURL(from: x.url) { thumbnailUrl in
+                    let y = ISMChatAttachment(attachmentType: x.isVideo ? ISMChatAttachmentType.Video.type : ISMChatAttachmentType.Image.type, extensions: x.isVideo ? ISMChatExtensionType.Video.type : ISMChatExtensionType.Image.type, mediaId: "\(UUID())", mediaUrl: x.url.absoluteString, mimeType: x.isVideo ? ISMChatExtensionType.Video.type : ISMChatExtensionType.Image.type, name: "\(UUID()).mp4",thumbnailUrl: thumbnailUrl?.absoluteString)
+                    gridMedias.append(y)
+                }
+            }
+           
+            let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Grid", mentionUsers: [], fileName: "", fileUrl: "", messageType: .Grid,customType: .Grid, messageKind: .normal,mediaCaption: "",gridMedia: gridMedias)
+            localIds.append(id)
+            
+            
+            var attachment : [[String : Any]] = []
+            
+            
             for media in mediaSelectedFromPicker {
                 if ISMChatHelper.checkMediaType(media: media.url) == .video{
                     
                     let mediaName = "\(UUID()).mp4"
                     let mediaId = "\(UUID())"
                     
-                    //1. nill data if any
-                    nilData()
-                    
-                    //2. save message locally
-                    var localIds = [String]()
-                    let sentAt = Date().timeIntervalSince1970 * 1000
-                    
-                    
                     ISMChatHelper.generateThumbnailImageURL(from: media.url) { thumbnailUrl in
-                        
-                        let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Video", mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: .video,customType: .Video, messageKind: .normal,mediaCaption: media.caption,localMediaUrl: media.url.absoluteString,localThumbnailUrl: thumbnailUrl?.absoluteString)
-                        localIds.append(id)
-                        
-                        
-                        if ISMChatSdk.getInstance().checkuploadOnExternalCDN() == true{
-                            self.delegate?.uploadOnExternalCDN(messageKind: .photo, mediaUrl: thumbnailUrl! , completion: { imageUrl, imageData in
-                                self.delegate?.uploadOnExternalCDN(messageKind: .video, mediaUrl: media.url, completion: { videoUrl, videoData in
-                                    sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: mediaName, mediaUrl: videoUrl, mediaData: videoData, thubnailUrl: imageUrl, sentAt: sentAt, objectId:  localIds.first ?? "", caption: media.caption)
-                                    localIds.removeFirst()
-                                })
-                            })
-                        }else{
-                            chatViewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", image: thumbnailUrl, document: nil, video: nil, audio: nil, mediaName: "\(UUID()).jpg") { thumbnailmedia, _, _ in
-                                chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: nil, document: nil, video: media.url, audio: nil, mediaName:  mediaName) {  data, filename, size in
-                                    sendMediaMessage(messageKind: .video, customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: filename, mediaUrl: data?.mediaUrl ?? "", mediaData: size, thubnailUrl: thumbnailmedia?.mediaUrl ?? "", sentAt: sentAt, objectId:  localIds.first ?? "", caption: media.caption)
-                                    localIds.removeFirst()
-                                }
+                        chatViewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", image: thumbnailUrl, document: nil, video: nil, audio: nil, mediaName: "\(UUID()).jpg") { thumbnailmedia, _, _ in
+                            chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: nil, document: nil, video: media.url, audio: nil, mediaName:  mediaName) {  data, filename, size in
+                                attachment.append(["mediaUrl": data?.mediaUrl ?? "","thumbnailUrl": data?.thumbnailUrl ?? "","mediaSize": size,"mediaId": mediaId])
                             }
-                            
                         }
                     }
                 }else{
-                    
                     let mediaName = "\(UUID()).jpg"
                     let mediaId = "\(UUID())"
-                    //1. nill data if any
-                    nilData()
                     
-                    //2. save message locally
-                    var localIds = [String]()
-                    let sentAt = Date().timeIntervalSince1970 * 1000
-                    let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Image", mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: .photo,customType: .Image, messageKind: .normal,mediaCaption: media.caption,localMediaUrl: media.url.absoluteString)
-                    localIds.append(id)
-                    
-                    
-                    if ISMChatSdk.getInstance().checkuploadOnExternalCDN() == true{
-                        self.delegate?.uploadOnExternalCDN(messageKind: .photo, mediaUrl: media.url , completion: { imageUrl, imageData in
-                            sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: mediaName, mediaUrl: imageUrl, mediaData: imageData, thubnailUrl: imageUrl, sentAt: sentAt, objectId: localIds.first ?? "", caption: media.caption)
-                            localIds.removeFirst()
-                        })
-                    }else{
-                        chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: nil, document: nil, video: media.url, audio: nil, mediaName: mediaName) {  data, filename, size in
-                            if let data = data {
-                                sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.thumbnailUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "", caption: media.caption)
-                                localIds.removeFirst()
-                                if media == self.mediaSelectedFromPicker.last {
-                                    self.mediaSelectedFromPicker.removeAll()
-                                }
-                            }
-                        }
+                    chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: nil, document: nil, video: media.url, audio: nil, mediaName: mediaName) {  data, filename, size in
+                        attachment.append(["mediaUrl": data?.mediaUrl ?? "","thumbnailUrl": data?.thumbnailUrl ?? "","mediaSize": size,"mediaId": mediaId])
                     }
                 }
             }
+            
+            sendMediaMessage(messageKind: .Grid, customType: ISMChatMediaType.Grid.value, mediaId: "", mediaName: "", mediaUrl: "", mediaData: 0, thubnailUrl: "", sentAt: sentAt, objectId: localIds.first ?? "", caption: "",gridAttachments: attachment)
+            localIds.removeFirst()
+            
             mediaSelectedFromPicker.removeAll()
         } else if let placeId = self.placeId, let longitude = self.longitude, let latitude = self.latitude, let name = self.placeName ,let placeAddress = placeAddress{
             //MARK: - LOCATION MESSAGE
@@ -683,11 +729,11 @@ extension ISMMessageView{
     }
     
     
-    func sendMediaMessage(messageKind : ISMChatMessageType,customType : String,mediaId : String,mediaName: String,mediaUrl : String,mediaData: Int,thubnailUrl : String,sentAt : Double,objectId : String,caption : String){
-        chatViewModel.sendMessage(messageKind: messageKind, customType: customType, conversationId: self.conversationID ?? "", message: mediaUrl, fileName: mediaName, fileSize: mediaData, mediaId: mediaId,thumbnailUrl: thubnailUrl,caption: caption) {messageId,_ in
+    func sendMediaMessage(messageKind : ISMChatMessageType,customType : String,mediaId : String,mediaName: String,mediaUrl : String,mediaData: Int,thubnailUrl : String,sentAt : Double,objectId : String,caption : String,gridAttachments: [[String : Any]]? = nil){
+        chatViewModel.sendMessage(messageKind: messageKind, customType: customType, conversationId: self.conversationID ?? "", message: mediaUrl, fileName: mediaName, fileSize: mediaData, mediaId: mediaId,thumbnailUrl: thubnailUrl,caption: caption,gridAttachments: gridAttachments) {messageId,_ in
             
             //4. update messageId locally
-            realmManager.updateMsgId(objectId: objectId, msgId: messageId, conversationId: self.conversationID ?? "",mediaUrl: mediaUrl,thumbnailUrl: thubnailUrl,mediaSize: mediaData,mediaId: mediaId)
+            realmManager.updateMsgId(objectId: objectId, msgId: messageId, conversationId: self.conversationID ?? "",mediaUrl: mediaUrl,thumbnailUrl: thubnailUrl,mediaSize: mediaData,mediaId: mediaId,gridAttachments: gridAttachments)
             
             parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
             
@@ -944,7 +990,7 @@ extension ISMMessageView{
     
     //MARK: - SAVE TEXT MESSAGE LOCALLY WHEN SEND WITHOUT CALLING API
     
-    func saveMessageToLocalDB(sentAt: Double,messageId : String,message : String,mentionUsers : [ISMChatGroupMember],fileName : String? = nil,fileUrl : String? = nil,messageType : ISMChatMessageType,contactInfo: [ISMChatPhoneContact]? = [],customType : ISMChatMediaType,messageKind : ISMChatMessageKind,parentMessage : MessagesDB? = nil,longitude :Double? = nil,latitude : Double? = nil,placeName : String? = nil, placeAddress : String? = nil,mediaCaption : String? = nil,localMediaUrl : String? = nil,localThumbnailUrl : String? = nil) -> String{
+    func saveMessageToLocalDB(sentAt: Double,messageId : String,message : String,mentionUsers : [ISMChatGroupMember],fileName : String? = nil,fileUrl : String? = nil,messageType : ISMChatMessageType,contactInfo: [ISMChatPhoneContact]? = [],customType : ISMChatMediaType,messageKind : ISMChatMessageKind,parentMessage : MessagesDB? = nil,longitude :Double? = nil,latitude : Double? = nil,placeName : String? = nil, placeAddress : String? = nil,mediaCaption : String? = nil,localMediaUrl : String? = nil,localThumbnailUrl : String? = nil,gridMedia : [ISMChatAttachment]? = nil) -> String{
         
         //1. senderInfo
         let senderInfo = ISMChatUser(userId: userData.userId, userName: userData.userName, userIdentifier: userData.userEmail, userProfileImage: userData.userProfileImage)
@@ -1046,11 +1092,15 @@ extension ISMMessageView{
             }
         case .document:
             attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Document.type, extensions: ISMChatExtensionType.Document.type, mediaUrl: "", mimeType: ISMChatExtensionType.Document.type, name: fileName, thumbnailUrl: "")
+        case .Grid:
+            if let gridMedia = gridMedia{
+                
+            }
         default:
             return ""
         }
         
-        messageValue = ISMChatMessage(sentAt: sentAt, body: message, messageId: messageId, metaData: metaData, customType: customType.value, attachment: [attachment], conversationId: self.conversationID ?? "", senderInfo: senderInfo,messageType: messageKind.value)
+        messageValue = ISMChatMessage(sentAt: sentAt, body: message, messageId: messageId, metaData: metaData, customType: customType.value, attachment: messageType == .Grid ? gridMedia : [attachment], conversationId: self.conversationID ?? "", senderInfo: senderInfo,messageType: messageKind.value)
         
         lastMessage = ISMChatLastMessage(sentAt: sentAt, senderName: userData.userName, senderIdentifier: userData.userEmail, senderId: userData.userId, conversationId: self.conversationID ?? "", body: message, messageId: messageId, customType: customType.value)
         

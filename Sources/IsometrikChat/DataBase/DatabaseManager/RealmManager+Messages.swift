@@ -34,7 +34,7 @@ extension RealmManager{
     }
     
     //MARK: - update message Id for locally added message before api call, for best performance
-    public func updateMsgId(objectId: String, msgId: String,conversationId : String,mediaUrl : String? = nil,thumbnailUrl : String? = nil,mediaSize : Int? = nil,mediaId : String? = nil) {
+    public func updateMsgId(objectId: String, msgId: String,conversationId : String,mediaUrl : String? = nil,thumbnailUrl : String? = nil,mediaSize : Int? = nil,mediaId : String? = nil,gridAttachments: [[String : Any]]? = nil) {
         if let localRealm = localRealm {
             do {
                 let id = try ObjectId(string: objectId)
@@ -53,6 +53,25 @@ extension RealmManager{
                     }
                     if let mediaId = mediaId{
                         message?.attachments.first?.mediaId = mediaId
+                    }
+                    
+                    if let gridAttachments = gridAttachments, gridAttachments.count == message?.attachments.count {
+                        for (index, gridAttachment) in gridAttachments.enumerated() {
+                            if index < message?.attachments.count ?? 0 {
+                                if let mediaUrl = gridAttachment["mediaUrl"] as? String {
+                                    message?.attachments[index].mediaUrl = mediaUrl
+                                }
+                                if let thumbnailUrl = gridAttachment["thumbnailUrl"] as? String {
+                                    message?.attachments[index].thumbnailUrl = thumbnailUrl
+                                }
+                                if let mediaSize = gridAttachment["mediaSize"] as? Int {
+                                    message?.attachments[index].size = mediaSize
+                                }
+                                if let mediaId = gridAttachment["mediaId"] as? String {
+                                    message?.attachments[index].mediaId = mediaId
+                                }
+                            }
+                        }
                     }
                     
                     if let taskToUpdate = localRealm.objects(ConversationDB.self).where({ $0.conversationId == conversationId }).first {

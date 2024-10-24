@@ -1108,6 +1108,72 @@ struct ISMMessageSubView: View {
                         }.padding(.vertical,2)
                     }
                     
+                case .Grid :
+                    HStack(alignment: .bottom){
+                        if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                            //When its group show member avatar in message
+                            inGroupUserAvatarView()
+                        }
+                        ZStack(alignment: .bottomTrailing){
+                            VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                    //when its group show member name in message
+                                    inGroupUserName()
+                                }
+                                
+                                VStack(alignment: .trailing,spacing: 5){
+                                    ISMAttachmentsGrid(attachments: Array(message.attachments))
+                                    .overlay(alignment: .bottomTrailing) {
+                                        if message.metaData?.captionMessage == nil {
+                                            dateAndStatusView(onImage: false)
+                                                .padding(.bottom,5)
+                                                .padding(.trailing,5)
+                                        }
+                                    }
+                                    
+                                    if let caption = message.metaData?.captionMessage, !caption.isEmpty{
+                                        Text(caption)
+                                            .font(appearance.fonts.messageListMessageText)
+                                            .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                        
+                                        if appearance.timeInsideBubble == true{
+                                            dateAndStatusView(onImage: false)
+                                                .padding(.bottom,5)
+                                                .padding(.trailing,5)
+                                        }
+                                        
+                                    }
+                                    
+                                }//:ZStack
+                                .padding(5)
+                                .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                .overlay(
+                                    appearance.messageBubbleType == .BubbleWithOutTail ?
+                                    AnyView(
+                                        UnevenRoundedRectangle(
+                                            topLeadingRadius: 8,
+                                            bottomLeadingRadius: isReceived ? 0 : 8,
+                                            bottomTrailingRadius: isReceived ? 8 : 0,
+                                            topTrailingRadius: 8,
+                                            style: .circular
+                                        )
+                                        .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                    ) : AnyView(EmptyView())
+                                )
+                                if appearance.timeInsideBubble == false{
+                                    dateAndStatusView(onImage: false)
+                                        .padding(.bottom,5)
+                                        .padding(.trailing,5)
+                                }
+                            }
+                            
+                            if message.reactions.count > 0{
+                                reactionsView()
+                            }
+                        }.padding(.vertical,2)
+                    }
+                    
                 default:
                     EmptyView()
                 }

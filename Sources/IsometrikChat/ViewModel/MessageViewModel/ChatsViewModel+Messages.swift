@@ -74,16 +74,28 @@ extension ChatsViewModel{
     
     
     //MARK: - send messages
-    public func sendMessage(messageKind : ISMChatMessageType,customType : String,conversationId :  String,message : String,fileName : String?,fileSize : Int?,mediaId : String?,objectId : String? = "",messageType:Int = 0,thumbnailUrl : String? = "",contactInfo: [ISMChatPhoneContact]? = [],latitude : Double? = nil,longitude : Double? = nil,placeName : String? = nil,placeAddress : String? = nil,isGroup : Bool? = false,groupMembers : [ISMChatGroupMember]? = [],caption : String? = nil,isBroadCastMessage : Bool? = false,groupcastId : String? = nil,postId : String? = nil,productId : String? = nil,productCategoryId : String? = nil,completion:@escaping(String, String)->()){
+    public func sendMessage(messageKind : ISMChatMessageType,customType : String,conversationId :  String,message : String,fileName : String?,fileSize : Int?,mediaId : String?,objectId : String? = "",messageType:Int = 0,thumbnailUrl : String? = "",contactInfo: [ISMChatPhoneContact]? = [],latitude : Double? = nil,longitude : Double? = nil,placeName : String? = nil,placeAddress : String? = nil,isGroup : Bool? = false,groupMembers : [ISMChatGroupMember]? = [],caption : String? = nil,isBroadCastMessage : Bool? = false,groupcastId : String? = nil,postId : String? = nil,productId : String? = nil,productCategoryId : String? = nil,gridAttachments: [[String : Any]]? = nil,completion:@escaping(String, String)->()){
         var searchTags : [String] = []
         var body : [String : Any] = [:]
         var attachmentValue : [String : Any] = [:]
+        var newGridAttachments : [[String : Any]] = []
         var metaData : [String : Any] = [:]
         var notificationBody = ""
         var messageInBody = ""
         var mentionedUsers : [[String : Any]] = []
         let deviceId = UniqueIdentifierManager.shared.getUniqueIdentifier()
         switch messageKind {
+        case .Grid:
+            if let grid = gridAttachments{
+                for x in grid{
+                    let url = x["mediaUrl"]
+                    let extensionValue = ISMChatHelper.isVideoString(media: url as! String) ? ISMChatExtensionType.Image.type : ISMChatExtensionType.Image.type
+                    let mediaypeValue = ISMChatHelper.isVideoString(media: url as! String) ? ISMChatAttachmentType.Image.type : ISMChatAttachmentType.Image.type
+                    let m = ["thumbnailUrl": x["thumbnailUrl"], "size" : x["mediaSize"], "name" : fileName ?? "" , "mimeType" : extensionValue, "mediaUrl" : url, "mediaId" : x["mediaId"], "extension" : extensionValue, "attachmentType" : mediaypeValue] as [String : Any]
+                    newGridAttachments.append(m)
+                }
+                body["attachments"] = newGridAttachments
+            }
         case .photo:
             attachmentValue = ["thumbnailUrl": message, "size" : fileSize ?? 0, "name" : fileName ?? "" , "mimeType" : ISMChatExtensionType.Image.type, "mediaUrl" : message, "mediaId" : mediaId ?? "", "extension" : ISMChatExtensionType.Image.type, "attachmentType" : ISMChatAttachmentType.Image.type]
             body["attachments"] = attachmentValue
