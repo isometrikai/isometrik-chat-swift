@@ -303,13 +303,19 @@ import IsometrikChat
          //We have triggered "mqttMessageNewReceived" mqtt events for below actions too
          if messageInfo.action == ISMChatActionType.memberLeave.value{
              //check action == memberLeave or removeMEMBER and then remove that member from localdb
-             getConversationDetail()
+             if messageInfo.meetingId == nil{
+                 getConversationDetail()
+             }
          }else if  messageInfo.action == ISMChatActionType.membersRemove.value{
              //check action == memberLeave or removeMEMBER and then remove that member from localdb
-             getConversationDetail()
+             if messageInfo.meetingId == nil{
+                 getConversationDetail()
+             }
          }else if messageInfo.action == ISMChatActionType.membersAdd.value{
              //check action == membersAdd and then add that member to localdb
-             getConversationDetail()
+             if messageInfo.meetingId == nil{
+                 getConversationDetail()
+             }
          }else if messageInfo.action == ISMChatActionType.conversationTitleUpdated.value{
              //update conversationTilte in localdb
              realmManager.changeGroupName(conversationId: messageInfo.conversationId ?? "", conversationTitle: messageInfo.conversationTitle ?? "")
