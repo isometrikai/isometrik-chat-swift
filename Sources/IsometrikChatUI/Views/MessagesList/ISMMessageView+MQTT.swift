@@ -229,7 +229,12 @@ import IsometrikChat
      func messageRead(messageInfo : ISMChatMessageDelivered){
          if messageInfo.conversationId == self.conversationID{
              if isGroup == true {
-                 realmManager.addReadByUser(convId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
+                 if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
+                     realmManager.updateDeliveryStatusThroughMsgId(conId: messageInfo.conversationId ?? "", msgId: messageInfo.messageId ?? "")
+                     realmManager.updateReadStatusThroughMsgId(msgId: messageInfo.messageId ?? "")
+                 }else{
+                     realmManager.addReadByUser(convId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
+                 }
              }else {
                  realmManager.updateDeliveryStatusThroughMsgId(conId: messageInfo.conversationId ?? "", msgId: messageInfo.messageId ?? "")
                  realmManager.updateReadStatusThroughMsgId(msgId: messageInfo.messageId ?? "")
