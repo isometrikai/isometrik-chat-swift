@@ -58,18 +58,9 @@ public class ISMChatHelper: NSObject {
     }
     
     //MARK: - Check message delivery status
-    public class func checkMessageDeliveryType(message : MessagesDB,isGroup: Bool,memberCount:Int = 0) -> ISMChatMessageStatus{
-        if isGroup {
-            if (memberCount - 1) == message.readBy.count {
-                return .BlueTick
-            }else if (memberCount - 1) == message.deliveredTo.count {
-                return .DoubleTick
-            }
-            if message.msgSyncStatus == ISMChatSyncStatus.Local.txt {
-                return .Clock
-            }
-            return .SingleTick
-        }else {
+    public class func checkMessageDeliveryType(message : MessagesDB,isGroup: Bool,memberCount:Int = 0,isOneToOneGroup : Bool) -> ISMChatMessageStatus{
+        if isOneToOneGroup{
+            //one to one group is same as single chat
             if message.deliveredToAll == true && message.readByAll == true{
                 return .BlueTick
             }else if message.deliveredToAll == true && message.readByAll == false{
@@ -79,6 +70,29 @@ public class ISMChatHelper: NSObject {
                     return .Clock
                 }
                 return .SingleTick
+            }
+        }else{
+            if isGroup {
+                if (memberCount - 1) == message.readBy.count {
+                    return .BlueTick
+                }else if (memberCount - 1) == message.deliveredTo.count {
+                    return .DoubleTick
+                }
+                if message.msgSyncStatus == ISMChatSyncStatus.Local.txt {
+                    return .Clock
+                }
+                return .SingleTick
+            }else {
+                if message.deliveredToAll == true && message.readByAll == true{
+                    return .BlueTick
+                }else if message.deliveredToAll == true && message.readByAll == false{
+                    return .DoubleTick
+                }else{
+                    if message.msgSyncStatus == ISMChatSyncStatus.Local.txt {
+                        return .Clock
+                    }
+                    return .SingleTick
+                }
             }
         }
     }
