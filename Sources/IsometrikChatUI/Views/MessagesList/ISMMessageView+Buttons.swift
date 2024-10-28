@@ -281,7 +281,7 @@ extension ISMMessageView{
 
      func getProfileTitle() -> String {
         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
-            return self.conversationDetail?.conversationDetails?.conversationTitle ?? ""
+            return ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userName ?? ""
         } else {
             return (isGroup == true) ? self.conversationDetail?.conversationDetails?.conversationTitle ?? (self.groupConversationTitle ?? "") : opponenDetail?.userName ?? ""
         }
@@ -289,7 +289,7 @@ extension ISMMessageView{
 
      func getProfileSubtitle() -> String {
         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
-            return ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userName ?? ""
+            return self.conversationDetail?.conversationDetails?.conversationTitle ?? ""
         } else if (isGroup == true) {
             if stateViewModel.otherUserTyping {
                 return "\(typingUserName ?? "") is typing..."
