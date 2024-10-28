@@ -289,7 +289,8 @@ extension ISMMessageView{
 
      func getProfileSubtitle() -> String {
         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
-            return self.conversationDetail?.conversationDetails?.conversationTitle ?? ""
+            let title = self.conversationDetail?.conversationDetails?.conversationTitle ?? ""
+            return title.count > 40 ? String(title.prefix(40)) + "..." : title
         } else if (isGroup == true) {
             if stateViewModel.otherUserTyping {
                 return "\(typingUserName ?? "") is typing..."
