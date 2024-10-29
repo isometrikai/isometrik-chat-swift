@@ -34,7 +34,7 @@ public struct ISMMessageView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @ObservedObject public var chatViewModel = ChatsViewModel()
+    @State public var chatViewModel = ChatsViewModel()
     public var conversationViewModel: ConversationViewModel
     @ObservedObject public var stateViewModel = UIStateViewModel()
     
@@ -237,6 +237,16 @@ public struct ISMMessageView: View {
                     stateViewModel.executeRepeatlyForOfflineMessage = false
                     stateViewModel.onLoad = false
                     removeObservers()
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageDelivered.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageRead.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttTypingEvent.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMeetingEnded.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: NSNotification.refrestMessagesListLocally, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: NSNotification.updateGroupInfo, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: NSNotification.memberAddAndRemove, object: nil)
+                    NotificationCenter.default.removeObserver(self)
                 }
                 //zstack views
                 if chatViewModel.isBusy{

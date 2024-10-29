@@ -23,11 +23,19 @@ public struct ISMConversationView : View {
     
     @State public var navigateToMessages : Bool = false
     
+    
+//    private let messageQueue = MessageQueue()
+//    private var lastProcessedMessageId: String?
+//    private var lastProcessingTime: Date = .distantPast
+//    private let processingInterval: TimeInterval = 0.5
+    
     //search
     @State public var query = ""
     
     //alert
     @State public var showingNoInternetAlert = false
+    
+    @State private var hasAppeared = false
     
     //sheet
     @State public var showProfile : Bool = false
@@ -163,12 +171,26 @@ public struct ISMConversationView : View {
                 }
                 .onAppear {
                     onScreen = true
-                    self.viewModel.resetdata()
-                    self.viewModel.clearMessages()
-                    realmManager.getAllConversations()
                 }
-                .onDisappear{
+                .onDisappear {
                     onScreen = false
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttConversationCreated.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttUpdateUser.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttmessageDetailsUpdated.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttTypingEvent.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageDeleteForAll.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageDelivered.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttUserBlockConversation.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: NSNotification.refreshConvList, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: NSNotification.refrestConversationListLocally, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: NSNotification.localNotification, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttAddReaction.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttRemoveReaction.name, object: nil)
+                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMeetingEnded.name, object: nil)
+                    NotificationCenter.default.removeObserver(self)
                 }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttConversationCreated.name)){ notification in
                     guard let messageInfo = notification.userInfo?["data"] as? ISMChatCreateConversation else {
@@ -201,6 +223,35 @@ public struct ISMConversationView : View {
                         return
                     }
                     ISMChatHelper.print("MESSAGE New Received----------------->\(messageInfo)")
+                    
+                    
+//                    // Prevent duplicate message processing
+//                    Task {
+//                        await messageQueue.enqueue(messageInfo) { message in
+//                            await MainActor.run {
+//                                handleNewMessage(message)
+//                            }
+//                        }
+//                    }
+                    
+//                    realmManager.newMessageReceived(myuserId: myUserData.userId, messageInfo: messageInfo) {
+//                        self.getConversationList()
+//                    }
+                    
+                    
+//                    self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: viewModel.conversations, query: query))
+                    
+                    
+                    //DELIVERED MSG API
+//                    if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
+//                        deliveredIndicatorApi(conversationId: converId, messageId: messId)
+//                    }
+//                    if onScreen == true{
+//                        if myUserData.allowNotification == true{
+//                            
+//                            ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.senderName ?? "")", body: "\(messageInfo.notificationBody ?? (messageInfo.body ?? ""))", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? "","messageId" : messageInfo.messageId ?? ""])
+//                        }
+//                    }
                     self.msgReceived(messageInfo: messageInfo)
                     self.localNotificationForActions(messageInfo: messageInfo)
                 }
@@ -345,21 +396,91 @@ public struct ISMConversationView : View {
             Button("OK", role: .cancel) { }
         }
         .onLoad{
-            realmManager.hardDeleteAll()
-//            self.viewModel.userData = UserDefaults.standard.retrieveCodable(for: "userInfo")
-            self.getConversationList()
-            self.realmManager.hardDeleteMsgs()
-            if !networkMonitor.isConnected {
-                showingNoInternetAlert = true
-            }
-            getuserData{ userId in
-                //self.chatViewModel.getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId: userId ?? "")
+            if !hasAppeared {
+                hasAppeared = true
+                onload()
             }
         }
     }//:Body
     
     
     // MARK: - Helper Computed Properties
+    
+//    private mutating func handleNewMessage(_ messageInfo: ISMChatMessageDelivered) {
+//            let now = Date()
+//            guard now.timeIntervalSince(lastProcessingTime) >= processingInterval else { return }
+//            lastProcessingTime = now
+//            
+//            autoreleasepool {
+//                // Handle realm updates
+//                self.realmManager.newMessageReceived(myuserId: self.myUserData.userId, messageInfo: messageInfo) {
+//                    
+//                    self.getConversationList()
+//                    
+//                }
+//                
+//                // Update conversation list
+////                self.updateConversationObj(
+////                    conversations: self.getSortedFilteredChats(
+////                        conversation: self.conversations,
+////                        query: self.query
+////                    )
+////                )
+//                
+//                self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: viewModel.conversations, query: query))
+//                
+//                // Handle message delivery status
+//                if let converId = messageInfo.conversationId,
+//                   let messId = messageInfo.messageId {
+//                    DispatchQueue.global(qos: .utility).async {
+//                        self.chatViewModel.deliveredMessageIndicator(
+//                            conversationId: converId,
+//                            messageId: messId
+//                        ) { _ in }
+//                    }
+//                }
+//                
+//                // Handle notifications
+//                if onScreen && myUserData.allowNotification {
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                        ISMChatLocalNotificationManager.setNotification(
+//                            1,
+//                            of: .seconds,
+//                            repeats: false,
+//                            title: messageInfo.senderName ?? "",
+//                            body: messageInfo.notificationBody ?? (messageInfo.body ?? ""),
+//                            userInfo: [
+//                                "senderId": messageInfo.senderId ?? "",
+//                                "senderName": messageInfo.senderName ?? "",
+//                                "conversationId": messageInfo.conversationId ?? "",
+//                                "body": messageInfo.notificationBody ?? "",
+//                                "userIdentifier": messageInfo.senderIdentifier ?? "",
+//                                "messageId": messageInfo.messageId ?? ""
+//                            ]
+//                        )
+//                    }
+//                }
+//                
+//                self.localNotificationForActions(messageInfo: messageInfo)
+//            }
+//        }
+    
+    func onload(){
+        self.viewModel.resetdata()
+        self.viewModel.clearMessages()
+        realmManager.getAllConversations()
+        
+        realmManager.hardDeleteAll()
+//            self.viewModel.userData = UserDefaults.standard.retrieveCodable(for: "userInfo")
+        self.getConversationList()
+        self.realmManager.hardDeleteMsgs()
+        if !networkMonitor.isConnected {
+            showingNoInternetAlert = true
+        }
+        getuserData{ userId in
+            //self.chatViewModel.getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId: userId ?? "")
+        }
+    }
 
     private var shouldShowPlaceholder: Bool {
         let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
@@ -488,3 +609,48 @@ public struct ISMConversationView : View {
         }
     }
 }
+
+
+//actor MessageQueue {
+//    private var queue: [ISMChatMessageDelivered] = []
+//    private var isProcessing = false
+//    private var lastProcessedMessageId: String?
+//    private var lastProcessingTime: Date = .distantPast
+//    private let processingInterval: TimeInterval = 0.5
+//    
+//    func enqueue(_ message: ISMChatMessageDelivered, handler: @escaping (ISMChatMessageDelivered) -> Void) async {
+//        // Check for duplicate messages
+//        guard message.messageId != lastProcessedMessageId else { return }
+//        lastProcessedMessageId = message.messageId
+//        
+//        // Check processing interval
+//        let now = Date()
+//        guard now.timeIntervalSince(lastProcessingTime) >= processingInterval else { return }
+//        lastProcessingTime = now
+//        
+//        queue.append(message)
+//        if !isProcessing {
+//            await processQueue(handler: handler)
+//        }
+//    }
+//    
+//    private func processQueue(handler: @escaping (ISMChatMessageDelivered) -> Void) async {
+//        guard !isProcessing else { return }
+//        isProcessing = true
+//        
+//        while !queue.isEmpty {
+//            let messagesToProcess = Array(queue.prefix(10))
+//            queue.removeFirst(min(10, queue.count))
+//            
+//            await MainActor.run {
+//                messagesToProcess.forEach { message in
+//                    handler(message)
+//                }
+//            }
+//            
+//            try? await Task.sleep(nanoseconds: 100_000_000) // 100ms delay
+//        }
+//        
+//        isProcessing = false
+//    }
+//}

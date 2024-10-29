@@ -10,6 +10,60 @@ import RealmSwift
 
 
 extension RealmManager{
+    
+    
+    public func newMessageReceived(myuserId : String,messageInfo : ISMChatMessageDelivered,getConversationApi : () -> ()){
+        if myuserId != messageInfo.senderId{
+            //add members in Message
+            
+            var membersArray : [ISMChatMemberAdded] = []
+            if let members = messageInfo.members{
+                for x in members{
+                    var member = ISMChatMemberAdded()
+                    member.memberId = x.memberId
+                    member.memberIdentifier = x.memberIdentifier
+                    member.memberName = x.memberName
+                    member.memberProfileImageUrl = x.memberProfileImageUrl
+                    membersArray.append(member)
+                }
+            }
+            
+            let msg = ISMChatLastMessage(sentAt: messageInfo.sentAt,senderName: messageInfo.senderName,senderIdentifier: messageInfo.senderIdentifier,senderId: messageInfo.senderId,conversationId: messageInfo.conversationId,body: messageInfo.body ?? "",messageId: messageInfo.messageId,deliveredToUser: messageInfo.userId,timeStamp: messageInfo.sentAt,customType: messageInfo.customType,action: messageInfo.action, userId: messageInfo.userId, initiatorId: messageInfo.initiatorId, memberName: messageInfo.memberName, initiatorName: messageInfo.initiatorName, memberId: messageInfo.memberId, userName: messageInfo.userName,members: membersArray,userIdentifier: messageInfo.userIdentifier,userProfileImageUrl: messageInfo.userProfileImageUrl)
+            
+            self.updateLastmsg(conId: messageInfo.conversationId ?? "", msg: msg)
+            
+            if messageInfo.action == ISMChatActionType.conversationCreated.value{
+                self.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 0)
+            }else{
+                //update unread count
+                let obj = self.conversations.first(where: {$0.conversationId == messageInfo.conversationId ?? ""})
+                self.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 1)
+                //if message is deleted And msg comes from same user
+                if obj == nil{
+                    self.undodeleteConversation(convID: messageInfo.conversationId ?? "")
+//                    self.getConversationList()
+                    getConversationApi()
+                }
+            }
+            
+            self.getAllConversations()
+            //added code to take user at top
+//            self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: viewModel.conversations, query: query))
+            //DELIVERED MSG API
+//            if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
+//                chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
+//                    
+//                }
+//            }
+//            if onScreen == true{
+//                if myUserData.allowNotification == true{
+//                    ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.senderName ?? "")", body: "\(messageInfo.notificationBody ?? (messageInfo.body ?? ""))", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? "","messageId" : messageInfo.messageId ?? ""])
+//                }
+//            }
+        }
+    }
+    
+    
     //MARK: - check if this message already present
     public func doesMessageExistInMessagesDB(conversationId: String, messageId: String) -> Bool {
         if let localRealm = localRealm {

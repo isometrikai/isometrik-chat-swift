@@ -1114,10 +1114,10 @@ extension ISMMessageView{
             print("Success")
             self.realmManager.clearMessages()
             DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
-                self.realmManager.clearMessages(convID: conversationID ?? "")
-//                self.realmManager.deleteMessagesThroughConvId(convID:  conversationID ?? "")
-//                self.realmManager.deleteMediaThroughConversationId(convID: conversationID ?? "")
-//                self.realmManager.clearLastMessageFromConversationList(convID: conversationID ?? "")
+//                self.realmManager.clearMessages(convID: conversationID ?? "")
+                self.realmManager.deleteMessagesThroughConvId(convID:  conversationID ?? "")
+                self.realmManager.deleteMediaThroughConversationId(convID: conversationID ?? "")
+                self.realmManager.clearLastMessageFromConversationList(convID: conversationID ?? "")
             })
         }
     }
