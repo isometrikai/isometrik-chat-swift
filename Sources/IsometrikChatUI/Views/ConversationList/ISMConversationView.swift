@@ -301,7 +301,9 @@ public struct ISMConversationView : View {
                         return
                     }
                     ISMChatHelper.print("MESSAGE READ ALL ----------------->\(messageInfo)")
-                    messageRead(messageInfo: messageInfo)
+                    if myUserData.userId != messageInfo.userId{
+                        messageRead(messageInfo: messageInfo)
+                    }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: NSNotification.refreshConvList)) { _ in
                     self.viewModel.resetdata()

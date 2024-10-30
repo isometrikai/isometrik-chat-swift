@@ -650,7 +650,7 @@ extension ISMMessageView{
             if networkMonitor.isConnected {
                 
                 let text = self.text
-                
+                self.text = ""
                 //1. nil data if any
                 nilData()
                 
@@ -659,7 +659,7 @@ extension ISMMessageView{
                 let sentAt = Date().timeIntervalSince1970 * 1000
                 let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: text, mentionUsers: self.mentionUsers,fileName: "",fileUrl: "", messageType: .text,customType: .Text, messageKind: .normal)
                 localIds.append(id)
-                
+                parentMessageIdToScroll = id ?? ""
                 //3. send message api
                 chatViewModel.sendMessage(messageKind: .text, customType: ISMChatMediaType.Text.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,isGroup: self.isGroup,groupMembers: self.mentionUsers) { msgId,_ in
                     

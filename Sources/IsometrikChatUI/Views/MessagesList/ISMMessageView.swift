@@ -352,7 +352,9 @@ public struct ISMMessageView: View {
                 return
             }
             ISMChatHelper.print("MULTIPLE MESSAGE READ ----------------->\(messageInfo)")
-            multipleMessageRead(messageInfo: messageInfo)
+            if myUserId != messageInfo.userId{
+                multipleMessageRead(messageInfo: messageInfo)
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.refrestMessagesListLocally)) { _ in
             getMessages()
