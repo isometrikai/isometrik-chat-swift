@@ -112,9 +112,20 @@ extension RealmManager {
     }
     
     //MARK: - get conversation id if already there for specific user
-    public func getConversationId(userId : String) -> String{
+//    public func getConversationId(userId : String) -> String{
+//        let conversation = conversations.first { con in
+//            con.opponentDetails?.userId == userId
+//        }
+//        if conversation != nil{
+//            return conversation?.conversationId ?? ""
+//        }else{
+//            return ""
+//        }
+//    }
+    
+    public func getConversationId(opponentUserId : String,myUserId : String) -> String{
         let conversation = conversations.first { con in
-            con.opponentDetails?.userId == userId
+            con.opponentDetails?.userId == opponentUserId && (con.metaData?.membersIds.contains(myUserId) ?? false)
         }
         if conversation != nil{
             return conversation?.conversationId ?? ""
@@ -168,6 +179,9 @@ extension RealmManager {
                     
                     let metaData = ConversationMetaData()
                     metaData.chatStatus = value.metaData?.chatStatus
+                    if let membersIds = value.metaData?.membersIds {
+                        metaData.membersIds.append(objectsIn: membersIds)
+                    }
                     conversation.metaData = metaData
                     
                     let config = ConfigDB()

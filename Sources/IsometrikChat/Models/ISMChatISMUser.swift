@@ -71,6 +71,7 @@ public struct ISMChatUserMetaData: Codable, Hashable {
     public var userType : Int?
     public var isStarUser : Bool?
     public var chatStatus : String?
+    public var membersIds : [String]?
     public var users : [ISMChatCustomUsers]?
     
     // flexCrew
@@ -95,6 +96,7 @@ public struct ISMChatUserMetaData: Codable, Hashable {
         userType = try? container.decodeIfPresent(Int.self, forKey: .userType)
         isStarUser = try? container.decodeIfPresent(Bool.self, forKey: .isStarUser)
         chatStatus = try? container.decodeIfPresent(String.self, forKey: .chatStatus)
+        membersIds = try? container.decodeIfPresent([String].self, forKey: .membersIds)
         users = try? container.decodeIfPresent([ISMChatCustomUsers].self, forKey: .users)
         
         jobId = try? container.decodeIfPresent(String.self, forKey: .jobId)
@@ -102,7 +104,7 @@ public struct ISMChatUserMetaData: Codable, Hashable {
         startDate = try? container.decodeIfPresent(String.self, forKey: .startDate)
         endDate = try? container.decodeIfPresent(String.self, forKey: .endDate)
     }
-    public init(about : String? = nil,showlastSeen : Bool? = nil,profilePic : String? = nil, userId : String? = nil,storeId : String? = nil,userType : Int? = nil,isStarUser : Bool? = nil,chatStatus : String? = nil,users : [ISMChatCustomUsers]? = nil){
+    public init(about : String? = nil,showlastSeen : Bool? = nil,profilePic : String? = nil, userId : String? = nil,storeId : String? = nil,userType : Int? = nil,isStarUser : Bool? = nil,chatStatus : String? = nil,membersIds : [String]? = nil,users : [ISMChatCustomUsers]? = nil){
         self.about = about
         self.showlastSeen = showlastSeen
         self.profilePic = profilePic
@@ -111,6 +113,7 @@ public struct ISMChatUserMetaData: Codable, Hashable {
         self.userType = userType
         self.isStarUser = isStarUser
         self.chatStatus = chatStatus
+        self.membersIds = membersIds
         self.users = users
     }
 }

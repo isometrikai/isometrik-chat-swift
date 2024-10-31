@@ -41,7 +41,7 @@ public class RealmManager: ObservableObject {
         do {
             let config = Realm.Configuration(
                 fileURL: getRealmFileURL(for: userId),
-                schemaVersion: 30
+                schemaVersion: 31
             )
             Realm.Configuration.defaultConfiguration = config
             localRealm = try Realm()
@@ -54,11 +54,35 @@ public class RealmManager: ObservableObject {
     public func deleteRealm(for userId: String) {
             do {
                 if let realmURL = getRealmFileURL(for: userId) {
-                    // Delete the Realm file and related files
-                    try FileManager.default.removeItem(at: realmURL)
-                    try FileManager.default.removeItem(at: realmURL.appendingPathExtension("lock"))
-                    try FileManager.default.removeItem(at: realmURL.appendingPathExtension("note"))
-                    try FileManager.default.removeItem(at: realmURL.appendingPathExtension("management"))
+                    // Get all auxiliary file URLs
+                    let lockFileURL = realmURL.appendingPathExtension("lock")
+                    let noteFileURL = realmURL.appendingPathExtension("note")
+                    let managementFileURL = realmURL.appendingPathExtension("management")
+                    let logFileURL = realmURL.appendingPathComponent("log")
+                    
+                    // Delete main Realm file and auxiliary files
+                    let filesToDelete = [realmURL, lockFileURL, noteFileURL, managementFileURL, logFileURL]
+                    
+                    for fileURL in filesToDelete {
+                        if FileManager.default.fileExists(atPath: fileURL.path) {
+                            try FileManager.default.removeItem(at: fileURL)
+                        }
+                    }
+                    
+                    // Clear Realm from memory cache
+                    Realm.Configuration.defaultConfiguration = Realm.Configuration()
+                    localRealm = nil
+                    storeConv.removeAll()
+                    conversations.removeAll()
+                    allMessages = nil
+                    messages.removeAll()
+                    localMessages = nil
+                    medias = nil
+                    linksMedia = nil
+                    filesMedia = nil
+                    broadcasts.removeAll()
+                    storeBroadcasts.removeAll()
+                    
                     print("Realm deleted successfully.")
                 }
             } catch {

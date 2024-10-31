@@ -98,7 +98,11 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     //MARK: - create conversation
     public func createConversation(user : UserDB,chatStatus : String? = nil,completion:@escaping(ISMChatCreateConversationResponse?,ISMChatNewAPIError?)->()){
         var body : [String : Any]
-        let metaDataValue : [String : Any] = ["chatStatus" : chatStatus ?? ""]
+        var memberIds : [String] = []
+        memberIds.append(ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId)
+        memberIds.append(user.userId ?? "")
+        
+        let metaDataValue : [String : Any] = ["chatStatus" : chatStatus ?? "","membersIds" : memberIds]
         body = ["typingEvents" : true ,
                 "readEvents" : true,
                 "pushNotifications" : true,

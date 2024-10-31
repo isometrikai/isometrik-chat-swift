@@ -48,6 +48,7 @@ public class ConversationDB: Object, ObjectKeyIdentifiable {
 
 class ConversationMetaData : Object, ObjectKeyIdentifiable {
     @Persisted var chatStatus : String?
+    @Persisted var membersIds : RealmSwift.List<String>
 }
 
 
