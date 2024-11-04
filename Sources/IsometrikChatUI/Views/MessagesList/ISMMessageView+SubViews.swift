@@ -163,7 +163,7 @@ extension ISMMessageView{
             }else if action == .conversationCreated{
                 if isGroup == false{
                     let text = "Messages are end to end encrypted. No one \noutside of this chat can read to them."
-                    customText(text: text)
+                    customTextWithImage(text: text, image: appearance.images.messageLock)
                 }else{
                     let text = senderId == userId ? "You created group" : "\(userName) created group"
                     customText(text: text)
@@ -204,5 +204,22 @@ extension ISMMessageView{
                 .background(appearance.colorPalette.messageListActionBackground)
                 .cornerRadius(5)
         }
+    }
+    
+    func customTextWithImage(text : String, image : Image) -> some View{
+        HStack(alignment: .top,spacing: 5){
+            image
+                .resizable()
+                .frame(width: 10,height: 13)
+                .foregroundColor(appearance.colorPalette.messageListActionText)
+                .padding(.top,2)
+            Text(text)
+                .foregroundColor(appearance.colorPalette.messageListActionText)
+                .font(appearance.fonts.messageListActionText)
+                
+        }.frame(width: text.widthOfString(usingFont: UIFont.regular(size: 14)) + 30)
+            .padding(.vertical, 5)
+            .background(appearance.colorPalette.messageListActionBackground)
+            .cornerRadius(5)
     }
 }
