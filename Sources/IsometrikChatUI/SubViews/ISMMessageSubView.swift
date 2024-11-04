@@ -144,7 +144,7 @@ struct ISMMessageSubView: View {
                                     if message.messageType == 1{
                                         forwardedView()
                                     }
-                                    if message.messageUpdated == true{
+                                    if message.messageUpdated == true && !str.isValidURL{
                                         editedView()
                                     }
                                     VStack(alignment: .trailing, spacing: 5){
