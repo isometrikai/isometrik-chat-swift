@@ -104,7 +104,13 @@ public struct ISMConversationView : View {
                         if ISMChatSdk.getInstance().getFramework() == .UIKit{
                             CustomSearchBar(searchText: $query).padding(.horizontal,15)
                         }
-                        conversationListView
+                        if conversationData.count == 0{
+                            Spacer()
+                            showPlaceholderView
+                            Spacer()
+                        }else{
+                            conversationListView
+                        }
                     }
                 }
                 .onChange(of: query, {_ , newValue in
@@ -512,36 +518,41 @@ public struct ISMConversationView : View {
     private var conversationListView: some View {
         List {
             ForEach(conversationData) { data in
-                VStack{
                     if ISMChatSdk.getInstance().getFramework() == .UIKit {
-                        Button {
-                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                            navigateToMessageList(for: data)
-                        } label: {
-                            conversationSubView(for: data)
-                                .onAppear {
-                                    handlePagination(for: data)
-                                }
-                        }
-                    }
-                    else {
-                        ZStack {
-                            conversationSubView(for: data)
-                                .onAppear {
-                                    handlePagination(for: data)
-                                }
-                            NavigationLink(destination: messageView(for: data)) {
-                                EmptyView()
+                        VStack{
+                            Button {
+                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                navigateToMessageList(for: data)
+                            } label: {
+                                conversationSubView(for: data)
+                                    .onAppear {
+                                        handlePagination(for: data)
+                                    }
                             }
-                            .buttonStyle(PlainButtonStyle())
-                            .frame(width: 0)
-                            .opacity(0)
+                            
+                            Divider()
+                                .background(Color.border) // Customize color
+                                .frame(height: 0.5)
+                        }
+                    }else {
+                        VStack{
+                            ZStack {
+                                conversationSubView(for: data)
+                                    .onAppear {
+                                        handlePagination(for: data)
+                                    }
+                                NavigationLink(destination: messageView(for: data)) {
+                                    EmptyView()
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                .frame(width: 0)
+                                .opacity(0)
+                            }
+                            Divider()
+                                .background(Color.border) // Customize color
+                                .frame(height: 0.5)
                         }
                     }
-                    Divider()
-                        .background(Color.border) // Customize color
-                        .frame(height: 0.5)
-                }
             }
             .onDelete(perform: handleDelete)
             .listRowBackground(Color.clear)
