@@ -38,7 +38,7 @@ public struct ISMMessageInfoView: View {
             VStack{
                 VStack(alignment  :.trailing,spacing: 0){
                     //Header
-                    ISMChatHelper.sectionHeader(firstMessage: message, color: appearance.colorPalette.messageListSectionHeaderText, font: appearance.fonts.messageListSectionHeaderText)
+                    sectionHeader(firstMessage: message, color: appearance.colorPalette.messageListSectionHeaderText, font: appearance.fonts.messageListSectionHeaderText)
                     
                     ISMMessageInfoSubView(previousAudioRef: $previousAudioRef, messageType: ISMChatHelper.getMessageType(message: message), message: message, viewWidth: viewWidth, isReceived: false, messageDeliveredType: ISMChatHelper.checkMessageDeliveryType(message: message, isGroup: self.isGroup ,memberCount: realmManager.getMemberCount(convId: self.conversationId), isOneToOneGroup: ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup), conversationId: conversationId,isGroup: self.isGroup, groupconversationMember: groupMember, fromBroadCastFlow: self.fromBroadCastFlow)
                         .padding(.trailing,15)
@@ -236,6 +236,22 @@ public struct ISMMessageInfoView: View {
             }
         }
     }
+    
+    func sectionHeader(firstMessage message : MessagesDB,color : Color,font : Font) -> some View{
+       let sentAt = message.sentAt
+       let date = NSDate().descriptiveStringLastSeen(time: sentAt,isSectionHeader: true)
+        return ZStack{
+            Text(ISMChatSdkUI.getInstance().getChatProperties().captializeMessageListHeaders ? date.uppercased() :  date)
+               .foregroundColor(color)
+               .font(font)
+               .padding(.vertical,5)
+           
+       }//:ZStack
+       .frame(width: date.widthOfString(usingFont: UIFont.regular(size: 14)) + 20)
+       .padding(.vertical, 5)
+       .background(appearance.colorPalette.messageListActionBackground)
+       .cornerRadius(5)
+   }
     
     func updateDeliveredUsers(readUsers : [ISMChatUser]?) {
         if let readUserIds = readUsers?.map({ $0.userId }),

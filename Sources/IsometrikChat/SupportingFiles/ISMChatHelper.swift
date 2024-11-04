@@ -642,19 +642,7 @@ public class ISMChatHelper: NSObject {
 extension ISMChatHelper{
     //MARK: - SECTION HEADER
     
-    public class func sectionHeader(firstMessage message : MessagesDB,color : Color,font : Font) -> some View{
-        ZStack{
-            let sentAt = message.sentAt
-            let date = NSDate().descriptiveStringLastSeen(time: sentAt,isSectionHeader: true)
-            Text(date)
-                .foregroundColor(color)
-                .font(font)
-                .padding(.vertical,5)
-            
-        }//:ZStack
-        .padding(.vertical,5)
-        .frame(maxWidth : .infinity)
-    }
+    
     public class func getOpponentForOneToOneGroup(myUserId : String,members : [ISMChatGroupMember]) -> ISMChatGroupMember?{
         // Ensure there are exactly 2 members in the group
         guard members.count == 2 else {

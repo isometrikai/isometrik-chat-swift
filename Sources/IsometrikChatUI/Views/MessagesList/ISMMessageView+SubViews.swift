@@ -17,7 +17,7 @@ extension ISMMessageView{
             let sectionMessages = realmManager.messages
             ForEach(sectionMessages.indices, id: \.self){ index in
                 let messages = sectionMessages[index]
-                Section(header: ISMChatHelper.sectionHeader(firstMessage: messages.first ?? MessagesDB(), color: appearance.colorPalette.userProfileSectionHeader, font: appearance.fonts.messageListSectionHeaderText)){
+                Section(header: sectionHeader(firstMessage: messages.first ?? MessagesDB(), color: appearance.colorPalette.userProfileSectionHeader, font: appearance.fonts.messageListSectionHeaderText)){
                     ForEach(messages) { message in
                         VStack{
                             if ISMChatHelper.getMessageType(message: message) == .blockUser{
@@ -192,6 +192,21 @@ extension ISMMessageView{
         }
         .padding(.vertical, 5)
         .frame(maxWidth: .infinity)
+    }
+    
+     func sectionHeader(firstMessage message : MessagesDB,color : Color,font : Font) -> some View{
+        let sentAt = message.sentAt
+        let date = NSDate().descriptiveStringLastSeen(time: sentAt,isSectionHeader: true)
+         return ZStack{
+             Text(ISMChatSdkUI.getInstance().getChatProperties().captializeMessageListHeaders ? date.uppercased() :  date)
+                .foregroundColor(color)
+                .font(font)
+            
+        }//:ZStack
+        .frame(width: date.widthOfString(usingFont: UIFont.regular(size: 14)) + 20)
+        .padding(.vertical, 5)
+        .background(appearance.colorPalette.messageListActionBackground)
+        .cornerRadius(5)
     }
     
     func customText(text : String) -> some View{
