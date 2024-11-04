@@ -355,20 +355,20 @@ struct ISMConversationSubView: View {
             if (chat.lastMessageDetails?.deliveredTo.count == 1 && chat.lastMessageDetails?.deliveredTo.first?.userId != nil) && (chat.lastMessageDetails?.readBy.count == 1 && chat.lastMessageDetails?.readBy.first?.userId != nil) {
                 return AnyView(appearance.images.messageRead
                     .resizable()
-                    .frame(width: 15, height: 9))
+                    .frame(width: appearance.imagesSize.messageRead.width, height: appearance.imagesSize.messageRead.height))
             }else if (chat.lastMessageDetails?.deliveredTo.count == 1 && chat.lastMessageDetails?.deliveredTo.first?.userId != nil) && chat.lastMessageDetails?.readBy.count == 0{
                 return AnyView(appearance.images.messageDelivered
                     .resizable()
-                    .frame(width: 15, height: 9))
+                    .frame(width: appearance.imagesSize.messageDelivered.width, height: appearance.imagesSize.messageDelivered.height))
             }else{
                 if chat.lastMessageDetails?.msgSyncStatus == ISMChatSyncStatus.Local.txt {
                     return AnyView(appearance.images.messagePending
                         .resizable()
-                        .frame(width: 9, height: 9))
+                        .frame(width: appearance.imagesSize.messagePending.width, height: appearance.imagesSize.messagePending.height))
                 }
                 return AnyView(appearance.images.messageSent
                     .resizable()
-                    .frame(width: 11, height: 9))
+                    .frame(width: appearance.imagesSize.messageSend.width, height: appearance.imagesSize.messageSend.height))
             }
         }else{
             //write code for group after grp implementations
