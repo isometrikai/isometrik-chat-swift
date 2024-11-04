@@ -1573,19 +1573,19 @@ struct ISMMessageSubView: View {
                 case .BlueTick:
                     appearance.images.messageRead
                         .resizable()
-                        .frame(width: 15, height: 9)
+                        .frame(width: appearance.imagesSize.messageRead.width, height: appearance.imagesSize.messageRead.height)
                 case .DoubleTick:
                     appearance.images.messageDelivered
                         .resizable()
-                        .frame(width: 15, height: 9)
+                        .frame(width: appearance.imagesSize.messageDelivered.width, height: appearance.imagesSize.messageDelivered.height)
                 case .SingleTick:
                     appearance.images.messageSent
                         .resizable()
-                        .frame(width: 11, height: 9)
+                        .frame(width: appearance.imagesSize.messageSend.width, height: appearance.imagesSize.messageSend.height)
                 case .Clock:
                     appearance.images.messagePending
                         .resizable()
-                        .frame(width: 9, height: 9)
+                        .frame(width: appearance.imagesSize.messagePending.width, height: appearance.imagesSize.messagePending.height)
                 }
             }
         }//:HStack

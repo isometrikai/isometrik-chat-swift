@@ -83,8 +83,16 @@ public class ISMChatCustomFontNames{
 
 public class ISMChatImageSizes{
     public var backButton : CGSize = CGSize(width: 18, height: 18)
+    public var messageRead : CGSize = CGSize(width: 15, height: 9)
+    public var messageDelivered : CGSize = CGSize(width: 15, height: 9)
+    public var messageSend : CGSize = CGSize(width: 11, height: 9)
+    public var messagePending : CGSize = CGSize(width: 9, height: 9)
     public init(){}
-    public init(backButton: CGSize) {
+    public init(backButton: CGSize,messageRead: CGSize,messageDelivered : CGSize,messageSend : CGSize,messagePending : CGSize) {
         self.backButton = backButton
+        self.messageRead = messageRead
+        self.messageDelivered = messageDelivered
+        self.messageSend = messageSend
+        self.messagePending = messagePending
     }
 }
