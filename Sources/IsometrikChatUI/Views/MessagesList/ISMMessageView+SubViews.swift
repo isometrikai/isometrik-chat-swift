@@ -162,7 +162,7 @@ extension ISMMessageView{
                 customText(text: text)
             }else if action == .conversationCreated{
                 if isGroup == false{
-                    let text = "Messages are end to end encrypted. No one \noutside of this chat can read to them."
+                    let text = appearance.constantStrings.endToEndEncrypted
                     customTextWithImage(text: text, image: appearance.images.messageLock)
                 }else{
                     let text = senderId == userId ? "You created group" : "\(userName) created group"

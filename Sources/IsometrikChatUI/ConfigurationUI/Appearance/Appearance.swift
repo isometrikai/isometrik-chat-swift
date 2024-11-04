@@ -26,6 +26,7 @@ public class ISMAppearance {
     public var placeholders : ISMChatPlaceholders
     public var timeInsideBubble : Bool
     public var imagesSize : ISMChatImageSizes
+    public var constantStrings : ISMChatStrings
     public init(
         colorPalette: ISMChatColorPalette = ISMChatColorPalette(),
         images: ISMChatImages = ISMChatImages(),
@@ -34,7 +35,8 @@ public class ISMAppearance {
         messageBubbleTailPosition : ISMChatTailPosition = .bottom,
         placeholders: ISMChatPlaceholders = ISMChatPlaceholders(),
         timeInsideBubble : Bool = true,
-        imagesSize : ISMChatImageSizes = ISMChatImageSizes()
+        imagesSize : ISMChatImageSizes = ISMChatImageSizes(),
+        constantStrings : ISMChatStrings = ISMChatStrings()
     ) {
         self.colorPalette = colorPalette
         self.images = images
@@ -44,6 +46,16 @@ public class ISMAppearance {
         self.placeholders = placeholders
         self.timeInsideBubble = timeInsideBubble
         self.imagesSize = imagesSize
+        self.constantStrings = constantStrings
+    }
+}
+
+
+public class ISMChatStrings {
+    public var endToEndEncrypted : String = "Messages are end to end encrypted. No one \noutside of this chat can read to them."
+    public init(){}
+    public init(endToEndEncrypted: String) {
+        self.endToEndEncrypted = endToEndEncrypted
     }
 }
 
