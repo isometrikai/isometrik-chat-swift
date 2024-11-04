@@ -102,7 +102,7 @@ public struct AvatarView: View {
         return avatar == "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg" ||
         avatar.isEmpty ||
         avatar == "https://admin-media.isometrik.io/profile/def_profile.png" ||
-        avatar.contains("svg")
+        avatar.contains("svg") || avatar == "https://www.gravatar.com/avatar/?d=identicon"
     }
     
     func isValidImageURL(_ urlString: String, completion: @escaping (Bool) -> Void) {

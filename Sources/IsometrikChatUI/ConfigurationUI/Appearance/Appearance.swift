@@ -64,12 +64,14 @@ public class ISMChatPlaceholders {
     public var messageListPlaceholder : AnyView  = AnyView(VStack{})
     public var otherchatListPlaceholder : AnyView  = AnyView(VStack{})
     public var broadCastListPlaceholder : AnyView  = AnyView(VStack{})
+    public var groupInfo_groupMembers : AnyView = AnyView(VStack{})
     public init(){}
-    public init(chatListPlaceholder: AnyView, messageListPlaceholder: AnyView, otherchatListPlaceholder: AnyView, broadCastListPlaceholder: AnyView) {
+    public init(chatListPlaceholder: AnyView, messageListPlaceholder: AnyView, otherchatListPlaceholder: AnyView, broadCastListPlaceholder: AnyView,groupInfo_groupMembers: AnyView) {
         self.chatListPlaceholder = chatListPlaceholder
         self.messageListPlaceholder = messageListPlaceholder
         self.otherchatListPlaceholder = otherchatListPlaceholder
         self.broadCastListPlaceholder = broadCastListPlaceholder
+        self.groupInfo_groupMembers = groupInfo_groupMembers
     }
 }
 

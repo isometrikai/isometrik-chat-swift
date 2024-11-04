@@ -28,15 +28,30 @@ struct ISMSearchParticipants: View {
     var body: some View {
         VStack{
             List{
-                Section {
-                    if let members = members{
-                        ForEach(members.conversationMembers ?? [], id: \.self) { member in
-                            ISMGroupMemberSubView(member: member, hideDisclosure: true, selectedMember: $selectedMember)
+                if let member = members,(member.conversationMembers?.count ?? 0) > 0{
+                    Section {
+                        ForEach(member.conversationMembers ?? [], id: \.self) { mem in
+                            VStack{
+                                ISMGroupMemberSubView(member: mem, hideDisclosure: true, selectedMember: $selectedMember)
+                                Divider()
+                                    .background(Color.border) // Customize color
+                                    .frame(height: 0.5)
+                            }
                         }
+                    }.listRowSeparator(.hidden)
+                }else{
+                    VStack {
+                        Spacer()
+                        appearance.placeholders.groupInfo_groupMembers
+                        Spacer()
                     }
+                    .frame(maxWidth: .infinity)
+                    .listRowSeparator(.hidden)
                 }
                 
-            }.listRowSeparatorTint(appearance.colorPalette.chatListSeparatorColor)
+            }
+            
+            .listRowSeparatorTint(appearance.colorPalette.chatListSeparatorColor)
                 .listStyle(.plain)
                 .background(appearance.colorPalette.chatListBackground)
                 .scrollContentBackground(.hidden)
