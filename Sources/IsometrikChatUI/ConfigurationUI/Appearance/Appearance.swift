@@ -22,6 +22,7 @@ public class ISMAppearance {
     public var fonts : ISMChatFonts
     public var images :  ISMChatImages
     public var messageBubbleType : ISMChatBubbleType
+    public var messageBubbleTailPosition : ISMChatTailPosition
     public var placeholders : ISMChatPlaceholders
     public var timeInsideBubble : Bool
     public var imagesSize : ISMChatImageSizes
@@ -30,6 +31,7 @@ public class ISMAppearance {
         images: ISMChatImages = ISMChatImages(),
         fonts: ISMChatFonts = ISMChatFonts(),
         messageBubbleType : ISMChatBubbleType = .BubbleWithOutTail,
+        messageBubbleTailPosition : ISMChatTailPosition = .bottom,
         placeholders: ISMChatPlaceholders = ISMChatPlaceholders(),
         timeInsideBubble : Bool = true,
         imagesSize : ISMChatImageSizes = ISMChatImageSizes()
@@ -38,6 +40,7 @@ public class ISMAppearance {
         self.images = images
         self.fonts = fonts
         self.messageBubbleType = messageBubbleType
+        self.messageBubbleTailPosition = messageBubbleTailPosition
         self.placeholders = placeholders
         self.timeInsideBubble = timeInsideBubble
         self.imagesSize = imagesSize
@@ -58,7 +61,10 @@ public class ISMChatPlaceholders {
     }
 }
 
-
+public enum ISMChatTailPosition: Sendable {
+    case top
+    case bottom
+}
 public enum ISMChatBubbleType: Sendable{
     case BubbleWithTail
     case BubbleWithOutTail

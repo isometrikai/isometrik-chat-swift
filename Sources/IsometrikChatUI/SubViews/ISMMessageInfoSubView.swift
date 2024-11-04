@@ -64,19 +64,19 @@ struct ISMMessageInfoSubView: View {
                     }//:VStack
                     .padding(8)
                     .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                     .overlay(
                         appearance.messageBubbleType == .BubbleWithOutTail ?
-                            AnyView(
-                                UnevenRoundedRectangle(
-                                    topLeadingRadius: 8,
-                                    bottomLeadingRadius: isReceived ? 0 : 8,
-                                    bottomTrailingRadius: isReceived ? 8 : 0,
-                                    topTrailingRadius: 8,
-                                    style: .circular
-                                )
-                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-                            ) : AnyView(EmptyView())
+                        AnyView(
+                            UnevenRoundedRectangle(
+                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                style: .circular
+                            )
+                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                        ) : AnyView(EmptyView())
                     )
                 }//:ZStack
                 .padding(.vertical,2)
@@ -175,15 +175,15 @@ struct ISMMessageInfoSubView: View {
                                 .padding(.horizontal, str.isValidURL || str.contains("www.") == true ? 5 : 10)
                                 .padding(.vertical,str.isValidURL || str.contains("www.") == true ? 5 : 8)
                                 .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                 .overlay(
                                     appearance.messageBubbleType == .BubbleWithOutTail ?
                                     AnyView(
                                         UnevenRoundedRectangle(
-                                            topLeadingRadius: 8,
-                                            bottomLeadingRadius: isReceived ? 0 : 8,
-                                            bottomTrailingRadius: isReceived ? 8 : 0,
-                                            topTrailingRadius: 8,
+                                            topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                            bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                            bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                            topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
                                             style: .circular
                                         )
                                         .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
@@ -265,15 +265,15 @@ struct ISMMessageInfoSubView: View {
                                     .frame(width: 250)
                                     .padding(5)
                                     .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                     .overlay(
                                         appearance.messageBubbleType == .BubbleWithOutTail ?
                                         AnyView(
                                             UnevenRoundedRectangle(
-                                                topLeadingRadius: 8,
-                                                bottomLeadingRadius: isReceived ? 0 : 8,
-                                                bottomTrailingRadius: isReceived ? 8 : 0,
-                                                topTrailingRadius: 8,
+                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
                                                 style: .circular
                                             )
                                             .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
@@ -338,15 +338,15 @@ struct ISMMessageInfoSubView: View {
                             }//:ZStack
                             .padding(5)
                             .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                             .overlay(
                                 appearance.messageBubbleType == .BubbleWithOutTail ?
                                 AnyView(
                                     UnevenRoundedRectangle(
-                                        topLeadingRadius: 8,
-                                        bottomLeadingRadius: isReceived ? 0 : 8,
-                                        bottomTrailingRadius: isReceived ? 8 : 0,
-                                        topTrailingRadius: 8,
+                                        topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                        bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                        bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                        topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
                                         style: .circular
                                     )
                                     .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
@@ -445,15 +445,15 @@ struct ISMMessageInfoSubView: View {
                                 
                             }.padding(5)
                                 .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                 .overlay(
                                     appearance.messageBubbleType == .BubbleWithOutTail ?
                                     AnyView(
                                         UnevenRoundedRectangle(
-                                            topLeadingRadius: 8,
-                                            bottomLeadingRadius: isReceived ? 0 : 8,
-                                            bottomTrailingRadius: isReceived ? 8 : 0,
-                                            topTrailingRadius: 8,
+                                            topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                            bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                            bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                            topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
                                             style: .circular
                                         )
                                         .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
@@ -519,15 +519,15 @@ struct ISMMessageInfoSubView: View {
                                         .frame(width: 250)
                                         .padding(5)
                                         .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                         .overlay(
                                             appearance.messageBubbleType == .BubbleWithOutTail ?
                                             AnyView(
                                                 UnevenRoundedRectangle(
-                                                    topLeadingRadius: 8,
-                                                    bottomLeadingRadius: isReceived ? 0 : 8,
-                                                    bottomTrailingRadius: isReceived ? 8 : 0,
-                                                    topTrailingRadius: 8,
+                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
                                                     style: .circular
                                                 )
                                                 .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
@@ -585,15 +585,15 @@ struct ISMMessageInfoSubView: View {
                                 .frame(width: 250)
                                 .padding(5)
                                 .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                 .overlay(
                                     appearance.messageBubbleType == .BubbleWithOutTail ?
                                     AnyView(
                                         UnevenRoundedRectangle(
-                                            topLeadingRadius: 8,
-                                            bottomLeadingRadius: isReceived ? 0 : 8,
-                                            bottomTrailingRadius: isReceived ? 8 : 0,
-                                            topTrailingRadius: 8,
+                                            topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                            bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                            bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                            topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
                                             style: .circular
                                         )
                                         .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
@@ -629,15 +629,15 @@ struct ISMMessageInfoSubView: View {
                                 }//:VStack
                                 .padding(8)
                                 .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                 .overlay(
                                     appearance.messageBubbleType == .BubbleWithOutTail ?
                                     AnyView(
                                         UnevenRoundedRectangle(
-                                            topLeadingRadius: 8,
-                                            bottomLeadingRadius: isReceived ? 0 : 8,
-                                            bottomTrailingRadius: isReceived ? 8 : 0,
-                                            topTrailingRadius: 8,
+                                            topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                            bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                            bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                            topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
                                             style: .circular
                                         )
                                         .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
@@ -670,15 +670,15 @@ struct ISMMessageInfoSubView: View {
                                 .padding(8)
                                 .frame(width: 216, height: 59, alignment: .center)
                                 .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                 .overlay(
                                     appearance.messageBubbleType == .BubbleWithOutTail ?
                                     AnyView(
                                         UnevenRoundedRectangle(
-                                            topLeadingRadius: 8,
-                                            bottomLeadingRadius: isReceived ? 0 : 8,
-                                            bottomTrailingRadius: isReceived ? 8 : 0,
-                                            topTrailingRadius: 8,
+                                            topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                            bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                            bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                            topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
                                             style: .circular
                                         )
                                         .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
@@ -707,15 +707,15 @@ struct ISMMessageInfoSubView: View {
                                 .padding(8)
                                 .frame(width: 216, height: 59, alignment: .center)
                                 .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                 .overlay(
                                     appearance.messageBubbleType == .BubbleWithOutTail ?
                                     AnyView(
                                         UnevenRoundedRectangle(
-                                            topLeadingRadius: 8,
-                                            bottomLeadingRadius: isReceived ? 0 : 8,
-                                            bottomTrailingRadius: isReceived ? 8 : 0,
-                                            topTrailingRadius: 8,
+                                            topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                            bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                            bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                            topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
                                             style: .circular
                                         )
                                         .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
@@ -778,15 +778,15 @@ struct ISMMessageInfoSubView: View {
                             .padding(5)
                             .padding(.vertical,5)
                             .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                            .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                             .overlay(
                                 appearance.messageBubbleType == .BubbleWithOutTail ?
                                 AnyView(
                                     UnevenRoundedRectangle(
-                                        topLeadingRadius: 8,
-                                        bottomLeadingRadius: isReceived ? 0 : 8,
-                                        bottomTrailingRadius: isReceived ? 8 : 0,
-                                        topTrailingRadius: 8,
+                                        topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                        bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                        bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                        topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
                                         style: .circular
                                     )
                                     .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
@@ -823,15 +823,15 @@ struct ISMMessageInfoSubView: View {
                                     }.padding(.leading,5)
                                         .padding(.top,5)
                                         .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                         .overlay(
                                             appearance.messageBubbleType == .BubbleWithOutTail ?
                                             AnyView(
                                                 UnevenRoundedRectangle(
-                                                    topLeadingRadius: 8,
-                                                    bottomLeadingRadius: isReceived ? 0 : 8,
-                                                    bottomTrailingRadius: isReceived ? 8 : 0,
-                                                    topTrailingRadius: 8,
+                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
                                                     style: .circular
                                                 )
                                                 .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
@@ -869,15 +869,15 @@ struct ISMMessageInfoSubView: View {
                                 }//:ZStack
                                 .padding(5)
                                 .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                 .overlay(
                                     appearance.messageBubbleType == .BubbleWithOutTail ?
                                     AnyView(
                                         UnevenRoundedRectangle(
-                                            topLeadingRadius: 8,
-                                            bottomLeadingRadius: isReceived ? 0 : 8,
-                                            bottomTrailingRadius: isReceived ? 8 : 0,
-                                            topTrailingRadius: 8,
+                                            topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                            bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                            bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                            topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
                                             style: .circular
                                         )
                                         .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
@@ -910,19 +910,19 @@ struct ISMMessageInfoSubView: View {
                                     }//:ZStack
                                     .padding(5)
                                     .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? [.topLeft,.topRight,.bottomRight] : [.topLeft,.topRight,.bottomLeft], bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                     .overlay(
                                         appearance.messageBubbleType == .BubbleWithOutTail ?
-                                            AnyView(
-                                                UnevenRoundedRectangle(
-                                                    topLeadingRadius: 8,
-                                                    bottomLeadingRadius: isReceived ? 0 : 8,
-                                                    bottomTrailingRadius: isReceived ? 8 : 0,
-                                                    topTrailingRadius: 8,
-                                                    style: .circular
-                                                )
-                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-                                            ) : AnyView(EmptyView())
+                                        AnyView(
+                                            UnevenRoundedRectangle(
+                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                style: .circular
+                                            )
+                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                        ) : AnyView(EmptyView())
                                     )
                                 if appearance.timeInsideBubble == false{
                                     dateAndStatusView(onImage: false)
