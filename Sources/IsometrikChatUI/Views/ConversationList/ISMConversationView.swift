@@ -512,34 +512,40 @@ public struct ISMConversationView : View {
     private var conversationListView: some View {
         List {
             ForEach(conversationData) { data in
-                if ISMChatSdk.getInstance().getFramework() == .UIKit {
-                    Button {
-                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                        navigateToMessageList(for: data)
-                    } label: {
-                        conversationSubView(for: data)
-                            .onAppear {
-                                handlePagination(for: data)
-                            }
-                    }
-                } 
-                else {
-                    ZStack {
-                        conversationSubView(for: data)
-                            .onAppear {
-                                handlePagination(for: data)
-                            }
-                        NavigationLink(destination: messageView(for: data)) {
-                            EmptyView()
+                VStack{
+                    if ISMChatSdk.getInstance().getFramework() == .UIKit {
+                        Button {
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                            navigateToMessageList(for: data)
+                        } label: {
+                            conversationSubView(for: data)
+                                .onAppear {
+                                    handlePagination(for: data)
+                                }
                         }
-                        .buttonStyle(PlainButtonStyle())
-                        .frame(width: 0)
-                        .opacity(0)
                     }
+                    else {
+                        ZStack {
+                            conversationSubView(for: data)
+                                .onAppear {
+                                    handlePagination(for: data)
+                                }
+                            NavigationLink(destination: messageView(for: data)) {
+                                EmptyView()
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            .frame(width: 0)
+                            .opacity(0)
+                        }
+                    }
+                    Divider()
+                        .background(Color.border) // Customize color
+                        .frame(height: 0.5)
                 }
             }
             .onDelete(perform: handleDelete)
             .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
         }
         .gesture(
             DragGesture().onChanged { _ in
@@ -547,7 +553,7 @@ public struct ISMConversationView : View {
             }
         )
         .listStyle(.plain)
-        .listRowSeparatorTint(Color.border)
+        .listRowSeparator(.hidden)
     //    .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
         .keyboardType(.default)
         .textContentType(.oneTimeCode)
