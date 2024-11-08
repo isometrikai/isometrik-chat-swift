@@ -554,7 +554,14 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                 }
             }
         case .mqttClearConversation:
-            break
+            self.blockedUserAndUnBlocked(data) { result in
+                switch result{
+                case .success(let data):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttClearConversation.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttClearConversation.name, object: nil,userInfo: ["data": "data","error" : error])
+                }
+            }
         case .mqttDeleteConversationLocally:
             break
         case .mqttAddAdmin:

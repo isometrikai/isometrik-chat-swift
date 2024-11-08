@@ -279,6 +279,15 @@ public struct ISMConversationView : View {
                     messageDeleteForAll(messageInfo: messageInfo)
                     realmManager.getAllConversations()
                 }
+                .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttClearConversation.name)){
+                    notification in
+                    guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
+                        return
+                    }
+                    ISMChatHelper.print("clear conversation ----------------->\(messageInfo)")
+                    self.viewModel.resetdata()
+                    self.getConversationList()
+                }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMessageDelivered.name)){ notification in
                     guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
                         return
