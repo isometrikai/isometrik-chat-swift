@@ -121,6 +121,10 @@ struct ISMMediaEditor: View {
                                             dismiss()
                                         } else {
                                             self.media.remove(at: index)
+                                            // Adjust selectedIndex after deletion
+                                            if selectedIndex >= self.media.count {
+                                                selectedIndex = self.media.count - 1
+                                            }
                                         }
                                     } else {
                                         selectedIndex = index
