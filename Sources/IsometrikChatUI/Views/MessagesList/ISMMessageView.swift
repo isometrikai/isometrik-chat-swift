@@ -328,6 +328,8 @@ public struct ISMMessageView: View {
             }
             ISMChatHelper.print("MESSAGE READ ----------------->\(messageInfo)")
             messageRead(messageInfo: messageInfo)
+            //to update chat badge count
+            NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
         }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttTypingEvent.name)){ notification in
             guard let messageInfo = notification.userInfo?["data"] as? ISMChatTypingEvent else {
@@ -354,6 +356,8 @@ public struct ISMMessageView: View {
             ISMChatHelper.print("MULTIPLE MESSAGE READ ----------------->\(messageInfo)")
             if myUserId != messageInfo.userId{
                 multipleMessageRead(messageInfo: messageInfo)
+                //to update chat badge count
+                NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.refrestMessagesListLocally)) { _ in
