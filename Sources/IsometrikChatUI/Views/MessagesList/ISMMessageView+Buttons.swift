@@ -218,8 +218,9 @@ extension ISMMessageView{
                     if ISMChatSdkUI.getInstance().getChatProperties().navigateToAppProfileFromMessageList == true {
                         if (isGroup ?? false) == true {
                             self.stateViewModel.navigateToUserProfile = true
-                        } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.storeId
-                                   ?? opponenDetail?.metaData?.userId {
+                        } else if let userId = (self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.storeId ?? "") != "0"
+                                    ? self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.storeId
+                                    : opponenDetail?.metaData?.userId {
                             delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
                         } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
                                    ?? opponenDetail?.metaData?.userId
