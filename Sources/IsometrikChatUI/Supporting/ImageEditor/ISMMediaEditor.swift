@@ -156,6 +156,7 @@ struct ISMMediaEditor: View {
                         }
                         
                         TextField("", text: $caption,  axis: .vertical)
+                            .accentColor(.white)
                             .lineLimit(1...10)
                             .font(appearance.fonts.messageListTextViewText)
                             .foregroundColor(Color.white)

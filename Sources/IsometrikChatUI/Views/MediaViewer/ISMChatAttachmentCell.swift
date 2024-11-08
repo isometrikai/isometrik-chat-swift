@@ -17,25 +17,17 @@ struct ISMChatAttachmentCell: View {
 
     var body: some View {
         Group {
-            content
+            if ISMChatHelper.isVideoString(media: attachment.mediaUrl) {
+                ISMChatImageCahcingManger.viewImage(url: attachment.thumbnailUrl)
+            }else if attachment.mediaUrl.contains("gif"){
+                ISMChatImageCahcingManger.viewImage(url: attachment.mediaUrl)
+            }else{
+                ISMChatImageCahcingManger.viewImage(url: attachment.mediaUrl)
+            }
         }
         .contentShape(Rectangle())
         .onTapGesture {
             onTap(attachment)
         }
-    }
-
-    var content: some View {
-        AsyncImageView(url: attachment.thumbnailUrl)
-    }
-}
-
-struct AsyncImageView: View {
-
-  
-    let url: String
-
-    var body: some View {
-        ISMChatImageCahcingManger.viewImage(url: url)
     }
 }
