@@ -548,15 +548,11 @@ public struct ISMConversationView : View {
                                 .frame(width: 0)
                                 .opacity(0)
                             }
-                            Divider()
-                                .background(Color.border) // Customize color
-                                .frame(height: 0.5)
                         }
                     }
             }
             .onDelete(perform: handleDelete)
             .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
         }
         .gesture(
             DragGesture().onChanged { _ in
@@ -564,7 +560,7 @@ public struct ISMConversationView : View {
             }
         )
         .listStyle(.plain)
-        .listRowSeparator(.hidden)
+        .listRowSeparatorTint(Color.border)
     //    .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
         .keyboardType(.default)
         .textContentType(.oneTimeCode)
