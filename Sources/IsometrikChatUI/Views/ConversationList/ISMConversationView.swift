@@ -529,10 +529,6 @@ public struct ISMConversationView : View {
                                         handlePagination(for: data)
                                     }
                             }
-                            
-                            Divider()
-                                .background(Color.border) // Customize color
-                                .frame(height: 0.5)
                         }
                     }else {
                         VStack{

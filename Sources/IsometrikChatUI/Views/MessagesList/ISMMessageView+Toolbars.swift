@@ -304,15 +304,17 @@ extension ISMMessageView{
         VStack {
             HStack {
                 if !chatViewModel.isRecording {
-                    Button(action: {
-                        DispatchQueue.main.async {
-                            stateViewModel.showActionSheet = true
+                    if  !ISMChatSdkUI.getInstance().getChatProperties().attachments.isEmpty{
+                        Button(action: {
+                            DispatchQueue.main.async {
+                                stateViewModel.showActionSheet = true
+                            }
+                        }) {
+                            appearance.images.addAttcahment
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                                .padding(.horizontal, 5)
                         }
-                    }) {
-                        appearance.images.addAttcahment
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .padding(.horizontal, 5)
                     }
                     
                     HStack(spacing: 5) {
