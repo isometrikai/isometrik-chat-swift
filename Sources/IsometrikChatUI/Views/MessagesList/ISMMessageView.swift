@@ -371,11 +371,13 @@ public struct ISMMessageView: View {
                 return
             }
             ISMChatHelper.print("Group Actions----------------->\(messageInfo)")
-            groupAction(messageInfo: messageInfo)
-            //local notification
-            sendLocalNotification(messageInfo: messageInfo)
-            //action if required
-            actionOnMessageDelivered(messageInfo: messageInfo)
+            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                groupAction(messageInfo: messageInfo)
+                //local notification
+                sendLocalNotification(messageInfo: messageInfo)
+                //action if required
+                actionOnMessageDelivered(messageInfo: messageInfo)
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.memberAddAndRemove)) { _ in
             self.getConversationDetail()
