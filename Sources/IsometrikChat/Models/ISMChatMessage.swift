@@ -215,14 +215,70 @@ public struct ISMChatReplyMessageMetaData : Codable{
     }
 }
 
-public struct ISMChatMetaData : Codable{
-    public var replyMessage : ISMChatReplyMessageMetaData?
-    public var locationAddress : String?
-    public var contacts : [ISMChatContactMetaData]?
-    public var captionMessage : String?
-    public var isBroadCastMessage : Bool?
-    public var post : ISMChatPostMetaData?
-    public var product : ISMChatProductMetaData?
+public struct ISMChatMetaData: Codable {
+    public var replyMessage: ISMChatReplyMessageMetaData?
+    public var locationAddress: String?
+    public var contacts: [ISMChatContactMetaData]?
+    public var captionMessage: String?
+    public var isBroadCastMessage: Bool?
+    public var post: ISMChatPostMetaData?
+    public var product: ISMChatProductMetaData?
+    //productLink
+    public var brandName: String?
+    public var productTitle: String?
+    public var productName: String?
+    public var latestBestPrice: Double?
+    public var existingMemberPrice: Double?
+    public var msrpPrice: String?
+    public var completeURL: String?
+    public var decodedURL: String?
+    public var parentProductId: String?
+    public var childProductId: String?
+    public var entityType: String?
+    public var PDPImage: [PDPImageData]?
+    
+    public init(
+        replyMessage: ISMChatReplyMessageMetaData? = nil,
+        locationAddress: String? = nil,
+        contacts: [ISMChatContactMetaData]? = nil,
+        captionMessage: String? = nil,
+        isBroadCastMessage: Bool? = nil,
+        post: ISMChatPostMetaData? = nil,
+        product: ISMChatProductMetaData? = nil,
+        brandName: String? = nil,
+        productTitle: String? = nil,
+        productName: String? = nil,
+        latestBestPrice: Double? = nil,
+        existingMemberPrice: Double? = nil,
+        msrpPrice: String? = nil,
+        completeURL: String? = nil,
+        decodedURL: String? = nil,
+        parentProductId: String? = nil,
+        childProductId: String? = nil,
+        entityType: String? = nil,
+        PDPImage: [PDPImageData]? = nil
+    ) {
+        self.replyMessage = replyMessage
+        self.locationAddress = locationAddress
+        self.contacts = contacts
+        self.captionMessage = captionMessage
+        self.isBroadCastMessage = isBroadCastMessage
+        self.post = post
+        self.product = product
+        self.brandName = brandName
+        self.productTitle = productTitle
+        self.productName = productName
+        self.latestBestPrice = latestBestPrice
+        self.existingMemberPrice = existingMemberPrice
+        self.msrpPrice = msrpPrice
+        self.completeURL = completeURL
+        self.decodedURL = decodedURL
+        self.parentProductId = parentProductId
+        self.childProductId = childProductId
+        self.entityType = entityType
+        self.PDPImage = PDPImage
+    }
+    
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         replyMessage = try? container.decode(ISMChatReplyMessageMetaData.self, forKey: .replyMessage)
@@ -232,18 +288,47 @@ public struct ISMChatMetaData : Codable{
         isBroadCastMessage = try? container.decode(Bool.self, forKey: .isBroadCastMessage)
         post = try? container.decode(ISMChatPostMetaData.self, forKey: .post)
         product = try? container.decode(ISMChatProductMetaData.self, forKey: .product)
-    }
-    public init(replyMessage : ISMChatReplyMessageMetaData? = nil, locationAddress : String? = nil ,contacts : [ISMChatContactMetaData]? = nil,captionMessage : String? = nil,isBroadCastMessage : Bool? = nil,post : ISMChatPostMetaData? = nil,product : ISMChatProductMetaData? = nil){
-        self.replyMessage = replyMessage
-        self.locationAddress = locationAddress
-        self.contacts = contacts
-        self.captionMessage = captionMessage
-        self.isBroadCastMessage = isBroadCastMessage
-        self.post = post
-        self.product = product
+        brandName = try? container.decode(String.self, forKey: .brandName)
+        productTitle = try? container.decode(String.self, forKey: .productTitle)
+        productName = try? container.decode(String.self, forKey: .productName)
+        latestBestPrice = try? container.decode(Double.self, forKey: .latestBestPrice)
+        existingMemberPrice = try? container.decode(Double.self, forKey: .existingMemberPrice)
+        msrpPrice = try? container.decode(String.self, forKey: .msrpPrice)
+        completeURL = try? container.decode(String.self, forKey: .completeURL)
+        decodedURL = try? container.decode(String.self, forKey: .decodedURL)
+        parentProductId = try? container.decode(String.self, forKey: .parentProductId)
+        childProductId = try? container.decode(String.self, forKey: .childProductId)
+        entityType = try? container.decode(String.self, forKey: .entityType)
+        PDPImage = try? container.decode([PDPImageData].self, forKey: .PDPImage)
     }
 }
 
+
+public struct PDPImageData : Codable{
+    var small : String?
+    var medium : String?
+    var large : String?
+    var extraLarge : String?
+    var filePath : String?
+    var altText : String?
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        small = try? container.decode(String.self, forKey: .small)
+        medium = try? container.decode(String.self, forKey: .medium)
+        large = try? container.decode(String.self, forKey: .large)
+        extraLarge = try? container.decode(String.self, forKey: .extraLarge)
+        filePath = try? container.decode(String.self, forKey: .filePath)
+        altText = try? container.decode(String.self, forKey: .altText)
+    }
+    public init(small : String? = nil,medium : String? = nil,large : String? = nil,extraLarge : String? = nil,filePath : String? = nil,altText : String? = nil){
+        self.small  = small
+        self.medium = medium
+        self.large = large
+        self.extraLarge = extraLarge
+        self.filePath = filePath
+        self.altText = altText
+    }
+}
 
 public struct ISMChatPostMetaData : Codable{
     public var postId : String?

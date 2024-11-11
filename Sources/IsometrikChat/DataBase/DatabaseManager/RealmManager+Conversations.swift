@@ -281,6 +281,35 @@ extension RealmManager {
                     messageMetaData.product = product
                     
                     messageMetaData.isBroadCastMessage = value.lastMessageDetails?.metaData?.isBroadCastMessage ?? false
+                    
+                    messageMetaData.brandName = value.lastMessageDetails?.metaData?.brandName
+                    messageMetaData.productTitle = value.lastMessageDetails?.metaData?.productTitle
+                    messageMetaData.productName = value.lastMessageDetails?.metaData?.productName
+                    messageMetaData.latestBestPrice = value.lastMessageDetails?.metaData?.latestBestPrice
+                    messageMetaData.existingMemberPrice = value.lastMessageDetails?.metaData?.existingMemberPrice
+                    messageMetaData.msrpPrice = value.lastMessageDetails?.metaData?.msrpPrice
+                    messageMetaData.completeURL = value.lastMessageDetails?.metaData?.completeURL
+                    messageMetaData.decodedURL = value.lastMessageDetails?.metaData?.decodedURL
+                    messageMetaData.parentProductId = value.lastMessageDetails?.metaData?.parentProductId
+                    messageMetaData.childProductId = value.lastMessageDetails?.metaData?.childProductId
+                    messageMetaData.entityType = value.lastMessageDetails?.metaData?.entityType
+                    
+                    
+                    for x in value.lastMessageDetails?.metaData?.PDPImage ?? [] {
+                        let image = PDPImageDB()
+                        image.small = x.small
+                        image.medium = x.medium
+                        image.large = x.large
+                        image.extraLarge = x.extraLarge
+                        image.filePath = x.filePath
+                        image.altText = x.altText
+                        messageMetaData.PDPImage.append(image)
+                    }
+                    
+                    
+                    
+                    
+                    
                     lastMessage.metaData = messageMetaData
                     
                     for delivered in value.lastMessageDetails?.deliveredTo ?? [] {

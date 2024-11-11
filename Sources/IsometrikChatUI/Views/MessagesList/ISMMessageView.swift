@@ -26,7 +26,7 @@ public protocol ISMMessageViewDelegate{
     func externalBlockMechanism(appUserId : String,block: Bool)
     func navigateToBroadCastInfo(groupcastId : String,groupcastTitle : String,groupcastImage : String)
     func navigateToJobDetail(jobId : String)
-    func messageValidUrl(url : String,messageId : String,conversationId : String)
+    func messageValidUrl(url : String,messageId : String,conversationId : String,completion:@escaping(ISMChatMessage)->())
 }
 
 public struct ISMMessageView: View {
@@ -175,6 +175,10 @@ public struct ISMMessageView: View {
         VStack{
             ZStack{
                 appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
+//                appearance.images.messageListBackgroundImage
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fill)
+//                    .edgesIgnoringSafeArea(.all)
                 VStack(spacing: 0) {
                     if ISMChatSdkUI.getInstance().getChatProperties().customJobCardInMessageList == true {
                         if let conversation = self.conversationDetail?.conversationDetails,
@@ -225,6 +229,7 @@ public struct ISMMessageView: View {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     }
                     bottomView()
+                        .ignoresSafeArea(.keyboard)
                 }//VStack
                 .onAppear {
                     OnScreen = true
@@ -269,6 +274,7 @@ public struct ISMMessageView: View {
                 }
             }
         }//:vStack
+        .ignoresSafeArea(.keyboard, edges: .bottom)
         .padding(.top, 5)
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(leading: navigationBarLeadingButtons(), trailing: navigationBarTrailingButtons())

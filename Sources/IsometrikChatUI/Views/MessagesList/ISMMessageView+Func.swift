@@ -670,7 +670,9 @@ extension ISMMessageView{
                     //5. if we send url in text, we need to save it to show in media
                     if text.isValidURL{
                         realmManager.fetchLinks(conId: self.conversationID ?? "")
-                        delegate?.messageValidUrl(url: text, messageId: msgId, conversationId: self.conversationID ?? "")
+                        delegate?.messageValidUrl(url: text, messageId: msgId, conversationId: self.conversationID ?? ""){ data in
+                            realmManager.updateMessageBody(conversationId: self.conversationID ?? "", messageId: msgId, body: data.body ?? "", metaData: data.metaData)
+                        }
                     }
                     
                 }

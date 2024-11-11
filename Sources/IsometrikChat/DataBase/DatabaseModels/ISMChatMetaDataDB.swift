@@ -17,7 +17,32 @@ public class MetaDataDB : Object, ObjectKeyIdentifiable {
     @Persisted public var isBroadCastMessage : Bool?
     @Persisted public var post : PostDB?
     @Persisted public var product : ProductDB?
+    
+    
+    // Product Link
+    @Persisted public var brandName: String?
+    @Persisted public var productTitle: String?
+    @Persisted public var productName: String?
+    @Persisted public var latestBestPrice: Double?
+    @Persisted public var existingMemberPrice: Double?
+    @Persisted public var msrpPrice: String?
+    @Persisted public var completeURL: String?
+    @Persisted public var decodedURL: String?
+    @Persisted public var parentProductId: String?
+    @Persisted public var childProductId: String?
+    @Persisted public var entityType: String?
+    @Persisted public var PDPImage: RealmSwift.List<PDPImageDB>
 }
+
+public class PDPImageDB: Object, ObjectKeyIdentifiable {
+    @Persisted public var small: String?
+    @Persisted public var medium: String?
+    @Persisted public var large: String?
+    @Persisted public var extraLarge: String?
+    @Persisted public var filePath: String?
+    @Persisted public var altText: String?
+}
+
 
 public class PostDB: Object, ObjectKeyIdentifiable {
     @Persisted public var postId : String?

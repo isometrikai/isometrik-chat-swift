@@ -39,9 +39,28 @@ import IsometrikChat
                 let postDetail = ISMChatPostMetaData(postId: messageInfo.metaData?.post?.postId, postUrl: messageInfo.metaData?.post?.postUrl)
                 let productDetail = ISMChatProductMetaData(productId: messageInfo.metaData?.product?.productId, productUrl: messageInfo.metaData?.product?.productUrl, productCategoryId: messageInfo.metaData?.product?.productCategoryId)
                 
-                let metaData = ISMChatMetaData(replyMessage: replyMessageData,
-                                           locationAddress: messageInfo.metaData?.locationAddress,
-                                               contacts: contact,captionMessage: messageInfo.metaData?.captionMessage,isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage,post: postDetail,product: productDetail)
+                let metaData = ISMChatMetaData(
+                    replyMessage: replyMessageData,
+                    locationAddress: messageInfo.metaData?.locationAddress,
+                    contacts: contact,
+                    captionMessage: messageInfo.metaData?.captionMessage,
+                    isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage,
+                    post: postDetail,
+                    product: productDetail,
+                    brandName: messageInfo.metaData?.brandName,
+                    productTitle: messageInfo.metaData?.productTitle,
+                    productName: messageInfo.metaData?.productName,
+                    latestBestPrice: messageInfo.metaData?.latestBestPrice,
+                    existingMemberPrice: messageInfo.metaData?.existingMemberPrice,
+                    msrpPrice: messageInfo.metaData?.msrpPrice,
+                    completeURL: messageInfo.metaData?.completeURL,
+                    decodedURL: messageInfo.metaData?.decodedURL,
+                    parentProductId: messageInfo.metaData?.parentProductId,
+                    childProductId: messageInfo.metaData?.childProductId,
+                    entityType: messageInfo.metaData?.entityType,
+                    PDPImage: messageInfo.metaData?.PDPImage
+                )
+
                 
                 let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")
                 
@@ -131,9 +150,27 @@ import IsometrikChat
              let postDetail = ISMChatPostMetaData(postId: messageInfo.metaData?.post?.postId, postUrl: messageInfo.metaData?.post?.postUrl)
              let productDetail = ISMChatProductMetaData(productId: messageInfo.metaData?.product?.productId, productUrl: messageInfo.metaData?.product?.productUrl, productCategoryId: messageInfo.metaData?.product?.productCategoryId)
              
-             let metaData = ISMChatMetaData(replyMessage: replyMessageData,
-                                            locationAddress: messageInfo.metaData?.locationAddress,
-                                            contacts: contact,captionMessage: messageInfo.metaData?.captionMessage,isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage,post: postDetail,product: productDetail)
+             let metaData = ISMChatMetaData(
+                 replyMessage: replyMessageData,
+                 locationAddress: messageInfo.metaData?.locationAddress,
+                 contacts: contact,
+                 captionMessage: messageInfo.metaData?.captionMessage,
+                 isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage,
+                 post: postDetail,
+                 product: productDetail,
+                 brandName: messageInfo.metaData?.brandName,
+                 productTitle: messageInfo.metaData?.productTitle,
+                 productName: messageInfo.metaData?.productName,
+                 latestBestPrice: messageInfo.metaData?.latestBestPrice,
+                 existingMemberPrice: messageInfo.metaData?.existingMemberPrice,
+                 msrpPrice: messageInfo.metaData?.msrpPrice,
+                 completeURL: messageInfo.metaData?.completeURL,
+                 decodedURL: messageInfo.metaData?.decodedURL,
+                 parentProductId: messageInfo.metaData?.parentProductId,
+                 childProductId: messageInfo.metaData?.childProductId,
+                 entityType: messageInfo.metaData?.entityType,
+                 PDPImage: messageInfo.metaData?.PDPImage
+             )
              
              let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")
              
