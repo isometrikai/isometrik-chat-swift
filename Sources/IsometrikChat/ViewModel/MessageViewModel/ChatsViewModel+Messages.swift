@@ -50,6 +50,21 @@ extension ChatsViewModel{
     }
     
     
+    public func updateMessageMetaData(body : [String : Any],completion:@escaping(String)->()){
+        let endPoint = ISMChatMessagesEndpoint.editMessage
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatSendMsg, ISMChatNewAPIError>) in
+            switch result{
+            case .success(let data,_):
+                completion(data.messageId ?? "")
+            case .failure(let error):
+                ISMChatHelper.print("Update Message Api failed -----> \(String(describing: error))")
+            }
+        }
+    }
+    
+    
     
     //MARK: - send Reel
     public func sharePost(user: UserDB,postId : String,postURL : String,postCaption : String,completion:@escaping()->()){
