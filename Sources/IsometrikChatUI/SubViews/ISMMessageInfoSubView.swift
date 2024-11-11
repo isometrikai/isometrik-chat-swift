@@ -949,7 +949,7 @@ struct ISMMessageInfoSubView: View {
                                     Button {
                                        
                                     } label: {
-                                        appearance.messageCustomBubbleView.productLink
+                                        Text("Product Link")
                                     }.padding(.trailing,5)
                                     
                                 }//:ZStack
@@ -974,10 +974,6 @@ struct ISMMessageInfoSubView: View {
                                         .padding(.bottom,5)
                                         .padding(.trailing,5)
                                 }
-                            }
-                            
-                            if message.reactions.count > 0{
-                                reactionsView()
                             }
                         }.padding(.vertical,2)
                     }

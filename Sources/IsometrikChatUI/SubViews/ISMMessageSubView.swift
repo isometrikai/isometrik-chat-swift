@@ -1148,7 +1148,7 @@ struct ISMMessageSubView: View {
                                     Button {
                                        
                                     } label: {
-                                        appearance.messageCustomBubbleView.productLink
+                                        Text("Product Link")
                                     }.padding(.trailing,5)
                                     
                                 }//:ZStack
