@@ -1055,8 +1055,8 @@ struct ISMMessageInfoSubView: View {
         
         let discount = ((msrpPrice - latestBestPrice) / msrpPrice) * 100
         
-        // Round to two decimal places for accuracy
-        return Double(round(100 * discount) / 100)
+        // Round to two decimal places
+        return (discount * 100).rounded() / 100
     }
     
     
@@ -1097,6 +1097,7 @@ struct ISMMessageInfoSubView: View {
                         .padding(.top, 8)
                     }
                 }.frame(width: 248, height: 192)
+                    .padding(.bottom,10)
                 
                 
                 
@@ -1116,11 +1117,11 @@ struct ISMMessageInfoSubView: View {
                 // Pricing and Button
                 HStack() {
                     
-                    Text("$\(message.metaData?.latestBestPrice)")
+                    Text("$\(message.metaData?.latestBestPrice ?? 0)")
                         .font(Font.bold(size: 18))
                         .foregroundColor(Color(hex: "#0F1E91"))
                     
-                    Text("$\(message.metaData?.msrpPrice)")
+                    Text("$\(message.metaData?.msrpPrice ?? 0)")
                         .font(Font.medium(size: 14))
                         .strikethrough()
                         .foregroundColor(Color(hex: "#767676"))
