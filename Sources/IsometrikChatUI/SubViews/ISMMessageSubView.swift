@@ -80,6 +80,7 @@ struct ISMMessageSubView: View {
     
     @Binding var navigateToSocialProfileId : String
     @Binding var navigateToExternalUserListToAddInGroup : Bool
+    @Binding var navigateToProductLink : MessagesDB
     
     
     //MARK:  - BODY
@@ -1146,12 +1147,12 @@ struct ISMMessageSubView: View {
                                 
                                 VStack(alignment: .trailing,spacing: 5){
                                     Button {
-                                       
+                                        navigateToProductLink = message
                                     } label: {
-                                        Text("Product Link")
-                                    }.padding(.trailing,5)
-                                    
-                                }//:ZStack
+                                        productLinkView(message: message)
+                                    }
+                                }
+                                .frame(width: 258)
                                 .padding(5)
                                 .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
                                 .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
@@ -1318,6 +1319,128 @@ struct ISMMessageSubView: View {
     func openURLInSafari(urlString : String) {
         if let url = URL(string: urlString) {
             UIApplication.shared.open(url)
+        }
+    }
+    
+    func calculateDiscountPercentage(latestBestPrice: Double, msrpPrice: Double) -> Double {
+        guard msrpPrice > 0 else {
+            print("Error: msrpPrice must be greater than 0.")
+            return 0
+        }
+        
+        let discount = ((msrpPrice - latestBestPrice) / msrpPrice) * 100
+        
+        // Round to two decimal places for accuracy
+        return Double(round(100 * discount) / 100)
+    }
+    
+    
+    func productLinkView(message : MessagesDB) -> some View{
+        VStack {
+            VStack(alignment: .leading) {
+                
+                ZStack(alignment: .top){
+                    // Product Images
+                    
+                    ISMChatImageCahcingManger.viewImage(url: message.metaData?.PDPImage.first?.extraLarge ?? "")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 248, height: 192)
+                    
+                    if message.metaData?.latestBestPrice != message.metaData?.msrpPrice{
+                        HStack {
+                            let per = calculateDiscountPercentage(latestBestPrice: message.metaData?.latestBestPrice ?? 0, msrpPrice: message.metaData?.msrpPrice ?? 0)
+                            Text("\(per)% Off")
+                                .font(Font.medium(size: 12))
+                                .foregroundColor(Color(hex: "#8D1111"))
+                                .padding(4)
+                                .padding(.horizontal,5)
+                                .background(Color(hex: "#FDDDDD"))
+                                .cornerRadius(10)
+                            
+                            Spacer()
+                            
+                            //                    HStack(spacing: 2) {
+                            //                        Image(systemName: "heart")
+                            //                            .foregroundColor(.gray)
+                            //                        Text("16")
+                            //                            .font(.caption)
+                            //                            .foregroundColor(.gray)
+                            //                    }
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.top, 8)
+                    }
+                }.frame(width: 248, height: 192)
+                
+                
+                
+                
+                // Title and Description
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(message.metaData?.brandName?.capitalized ?? "")
+                        .font(Font.bold(size: 12))
+                        .foregroundColor(Color(hex: "#505050"))
+                    
+                    Text(message.metaData?.productName?.capitalizingFirstLetter() ?? "")
+                        .font(Font.medium(size: 14))
+                        .lineLimit(2)
+                }
+                .padding(.horizontal, 8)
+                
+                // Pricing and Button
+                HStack() {
+                    
+                    Text("$\(message.metaData?.latestBestPrice)")
+                        .font(Font.bold(size: 18))
+                        .foregroundColor(Color(hex: "#0F1E91"))
+                    
+                    Text("$\(message.metaData?.msrpPrice)")
+                        .font(Font.medium(size: 14))
+                        .strikethrough()
+                        .foregroundColor(Color(hex: "#767676"))
+                    
+                    
+                    Spacer()
+                    
+                    
+                }
+                .padding(.horizontal, 8)
+                .padding(.top, 4)
+                
+                Divider()
+                
+                HStack {
+                    Spacer()
+                    Text("View Offer")
+                        .font(Font.medium(size: 16))
+                        .foregroundColor(Color(hex: "#FC8B1A"))
+                    Image(systemName: "arrow.up.right.square")
+                        .foregroundColor(Color(hex: "#FC8B1A"))
+                    Spacer()
+                }
+                .padding(6)
+                .padding(.bottom,10)
+            }
+            .background(Color.white)
+            .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+            )
+            .frame(width: 248)
+            
+            
+            if appearance.timeInsideBubble == true{
+                HStack{
+                    Spacer()
+                    
+                    dateAndStatusView(onImage: false)
+                        .padding(.bottom,5)
+                        .padding(.trailing,5)
+                    
+                }
+            }
         }
     }
     

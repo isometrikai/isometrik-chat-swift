@@ -27,6 +27,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToBroadCastInfo(groupcastId : String,groupcastTitle : String,groupcastImage : String)
     func navigateToJobDetail(jobId : String)
     func messageValidUrl(url : String,messageId : String,conversationId : String,completion:@escaping(ISMChatMessage)->())
+    func navigateToProductLink(childProductId : String,parentProductId : String, productName : String)
 }
 
 public struct ISMMessageView: View {
@@ -169,6 +170,8 @@ public struct ISMMessageView: View {
     @State var navigateToJobId : String = ""
     
 //    @State var navigateToExternalUserListToAddInGroup : Bool = false
+    
+    @State var navigateToProductLink : MessagesDB = MessagesDB()
     
     //MARK: - BODY
     public var body: some View {
@@ -404,6 +407,12 @@ public struct ISMMessageView: View {
                 sendReaction()
             }
         })
+//        .onChange(of: navigateToProductLink, { _, _ in
+//            if navigateToProductLink.messageId != nil{
+//                self.delegate?.navigateToProductLink(childProductId: navigateToProductLink?.metaData?.childProductId, parentProductId: navigateToProductLink?.metaData?.parentProductId, productName: navigateToProductLink?.metaData?.productName)
+//                navigateToProductLink = MessagesDB()
+//            }
+//        })
         .onChange(of: navigateToMediaSliderId, { _, _ in
             if !navigateToMediaSliderId.isEmpty{
                 stateViewModel.navigateToMediaSlider = true
