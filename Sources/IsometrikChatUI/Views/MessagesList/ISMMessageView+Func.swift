@@ -671,7 +671,7 @@ extension ISMMessageView{
                     if text.isValidURL{
                         realmManager.fetchLinks(conId: self.conversationID ?? "")
                         delegate?.messageValidUrl(url: text, messageId: msgId, conversationId: self.conversationID ?? ""){ data in
-                            realmManager.updateMessageBody(conversationId: self.conversationID ?? "", messageId: msgId, body: data.body ?? "", metaData: data.metaData)
+                            realmManager.updateMessageBody(conversationId: self.conversationID ?? "", messageId: msgId, body: data.body ?? "", metaData: data.metaData,customType: data.customType)
                         }
                     }
                     

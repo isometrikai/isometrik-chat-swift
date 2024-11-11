@@ -77,7 +77,7 @@ extension RealmManager{
     }
     
     //MARK: - update body of message on edit
-    public func updateMessageBody(conversationId: String, messageId: String, body: String, metaData: ISMChatMetaData? = nil) {
+    public func updateMessageBody(conversationId: String, messageId: String, body: String, metaData: ISMChatMetaData? = nil,customType : String? = nil) {
         if let localRealm = localRealm {
             let messageToUpdate = localRealm.objects(MessagesDB.self).where {
                 $0.conversationId == conversationId && $0.isDelete == false && $0.messageId == messageId
@@ -85,6 +85,10 @@ extension RealmManager{
             try! localRealm.write {
                 messageToUpdate.first?.body = body
                 messageToUpdate.first?.messageUpdated = true
+                
+                if let customType = customType{
+                    messageToUpdate.first?.customType = customType
+                }
 
                 if let metaData = metaData {
                     let metadataValue = MetaDataDB()
