@@ -293,6 +293,10 @@ extension RealmManager {
                     messageMetaData.parentProductId = value.lastMessageDetails?.metaData?.parentProductId
                     messageMetaData.childProductId = value.lastMessageDetails?.metaData?.childProductId
                     messageMetaData.entityType = value.lastMessageDetails?.metaData?.entityType
+                    messageMetaData.thumbnailUrl = value.lastMessageDetails?.metaData?.thumbnailUrl
+                    messageMetaData.Description = value.lastMessageDetails?.metaData?.Description
+                    messageMetaData.isVideoPost = value.lastMessageDetails?.metaData?.isVideoPost
+                    messageMetaData.socialPostId = value.lastMessageDetails?.metaData?.socialPostId
                     
                     
                     for x in value.lastMessageDetails?.metaData?.PDPImage ?? [] {

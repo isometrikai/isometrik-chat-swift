@@ -229,13 +229,18 @@ public struct ISMChatMetaData: Codable {
     public var productName: String?
     public var latestBestPrice: Double?
     public var existingMemberPrice: Double?
-    public var msrpPrice: String?
+    public var msrpPrice: Double?
     public var completeURL: String?
     public var decodedURL: String?
     public var parentProductId: String?
     public var childProductId: String?
     public var entityType: String?
     public var PDPImage: [PDPImageData]?
+    //SOCIAL lINK
+    public var thumbnailUrl : String?
+    public var Description : String?
+    public var isVideoPost : Bool?
+    public var socialPostId : String?
     
     public init(
         replyMessage: ISMChatReplyMessageMetaData? = nil,
@@ -250,13 +255,17 @@ public struct ISMChatMetaData: Codable {
         productName: String? = nil,
         latestBestPrice: Double? = nil,
         existingMemberPrice: Double? = nil,
-        msrpPrice: String? = nil,
+        msrpPrice: Double? = nil,
         completeURL: String? = nil,
         decodedURL: String? = nil,
         parentProductId: String? = nil,
         childProductId: String? = nil,
         entityType: String? = nil,
-        PDPImage: [PDPImageData]? = nil
+        PDPImage: [PDPImageData]? = nil,
+        thumbnailUrl : String? = nil,
+        Description : String? = nil,
+        isVideoPost : Bool? = nil,
+        socialPostId : String? = nil
     ) {
         self.replyMessage = replyMessage
         self.locationAddress = locationAddress
@@ -277,6 +286,10 @@ public struct ISMChatMetaData: Codable {
         self.childProductId = childProductId
         self.entityType = entityType
         self.PDPImage = PDPImage
+        self.thumbnailUrl = thumbnailUrl
+        self.Description = Description
+        self.isVideoPost = isVideoPost
+        self.socialPostId = socialPostId
     }
     
     public init(from decoder: Decoder) throws {
@@ -293,13 +306,17 @@ public struct ISMChatMetaData: Codable {
         productName = try? container.decode(String.self, forKey: .productName)
         latestBestPrice = try? container.decode(Double.self, forKey: .latestBestPrice)
         existingMemberPrice = try? container.decode(Double.self, forKey: .existingMemberPrice)
-        msrpPrice = try? container.decode(String.self, forKey: .msrpPrice)
+        msrpPrice = try? container.decode(Double.self, forKey: .msrpPrice)
         completeURL = try? container.decode(String.self, forKey: .completeURL)
         decodedURL = try? container.decode(String.self, forKey: .decodedURL)
         parentProductId = try? container.decode(String.self, forKey: .parentProductId)
         childProductId = try? container.decode(String.self, forKey: .childProductId)
         entityType = try? container.decode(String.self, forKey: .entityType)
         PDPImage = try? container.decode([PDPImageData].self, forKey: .PDPImage)
+        thumbnailUrl = try? container.decode(String.self, forKey: .thumbnailUrl)
+        Description = try? container.decode(String.self, forKey: .Description)
+        isVideoPost = try? container.decode(Bool.self, forKey: .isVideoPost)
+        socialPostId = try? container.decode(String.self, forKey: .socialPostId)
     }
 }
 

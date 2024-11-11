@@ -58,7 +58,11 @@ import IsometrikChat
                     parentProductId: messageInfo.metaData?.parentProductId,
                     childProductId: messageInfo.metaData?.childProductId,
                     entityType: messageInfo.metaData?.entityType,
-                    PDPImage: messageInfo.metaData?.PDPImage
+                    PDPImage: messageInfo.metaData?.PDPImage,
+                    thumbnailUrl : messageInfo.metaData?.thumbnailUrl,
+                    Description : messageInfo.metaData?.Description,
+                    isVideoPost : messageInfo.metaData?.isVideoPost,
+                    socialPostId : messageInfo.metaData?.socialPostId
                 )
 
                 
@@ -169,7 +173,11 @@ import IsometrikChat
                  parentProductId: messageInfo.metaData?.parentProductId,
                  childProductId: messageInfo.metaData?.childProductId,
                  entityType: messageInfo.metaData?.entityType,
-                 PDPImage: messageInfo.metaData?.PDPImage
+                 PDPImage: messageInfo.metaData?.PDPImage,
+                 thumbnailUrl : messageInfo.metaData?.thumbnailUrl,
+                 Description : messageInfo.metaData?.Description,
+                 isVideoPost : messageInfo.metaData?.isVideoPost,
+                 socialPostId : messageInfo.metaData?.socialPostId
              )
              
              let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")

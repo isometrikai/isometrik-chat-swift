@@ -102,6 +102,10 @@ extension RealmManager{
                     metadataValue.parentProductId = metaData.parentProductId
                     metadataValue.childProductId = metaData.childProductId
                     metadataValue.entityType = metaData.entityType
+                    metadataValue.thumbnailUrl = metaData.thumbnailUrl
+                    metadataValue.Description = metaData.Description
+                    metadataValue.isVideoPost = metaData.isVideoPost
+                    metadataValue.socialPostId = metaData.socialPostId
 
                     
                     if let replyMessage = metaData.replyMessage {
@@ -398,6 +402,10 @@ extension RealmManager{
                         metaData.parentProductId = value.metaData?.parentProductId
                         metaData.childProductId = value.metaData?.childProductId
                         metaData.entityType = value.metaData?.entityType
+                        metaData.thumbnailUrl = value.metaData?.thumbnailUrl
+                        metaData.Description = value.metaData?.Description
+                        metaData.isVideoPost = value.metaData?.isVideoPost
+                        metaData.socialPostId = value.metaData?.socialPostId
                         
                         
                         for x in value.metaData?.PDPImage ?? [] {

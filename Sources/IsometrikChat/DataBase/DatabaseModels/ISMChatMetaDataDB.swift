@@ -25,13 +25,19 @@ public class MetaDataDB : Object, ObjectKeyIdentifiable {
     @Persisted public var productName: String?
     @Persisted public var latestBestPrice: Double?
     @Persisted public var existingMemberPrice: Double?
-    @Persisted public var msrpPrice: String?
+    @Persisted public var msrpPrice: Double?
     @Persisted public var completeURL: String?
     @Persisted public var decodedURL: String?
     @Persisted public var parentProductId: String?
     @Persisted public var childProductId: String?
     @Persisted public var entityType: String?
     @Persisted public var PDPImage: RealmSwift.List<PDPImageDB>
+    
+    //social link
+    @Persisted public var thumbnailUrl : String?
+    @Persisted public var Description : String?
+    @Persisted public var isVideoPost : Bool?
+    @Persisted public var socialPostId : String?
 }
 
 public class PDPImageDB: Object, ObjectKeyIdentifiable {
