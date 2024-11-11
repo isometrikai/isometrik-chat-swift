@@ -26,6 +26,7 @@ public protocol ISMMessageViewDelegate{
     func externalBlockMechanism(appUserId : String,block: Bool)
     func navigateToBroadCastInfo(groupcastId : String,groupcastTitle : String,groupcastImage : String)
     func navigateToJobDetail(jobId : String)
+    func messageValidUrl(url : String)
 }
 
 public struct ISMMessageView: View {

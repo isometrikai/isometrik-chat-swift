@@ -25,6 +25,7 @@ public enum ISMChatMediaType : CaseIterable{
     case GroupCall
     case Post
     case Product
+    case ProductLink
     public var value : String{
         switch self {
         case .Text:
@@ -61,6 +62,8 @@ public enum ISMChatMediaType : CaseIterable{
             return "AttachmentMessage:Post"
         case .Product:
             return "AttachmentMessage:Product"
+        case .ProductLink:
+            return "AttachmentMessage:ProductLink"
         }
     }
 }

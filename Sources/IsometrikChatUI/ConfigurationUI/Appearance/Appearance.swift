@@ -27,6 +27,7 @@ public class ISMAppearance {
     public var timeInsideBubble : Bool
     public var imagesSize : ISMChatImageSizes
     public var constantStrings : ISMChatStrings
+    public var messageCustomBubbleView : ISMChatMessageCustomBubble
     public init(
         colorPalette: ISMChatColorPalette = ISMChatColorPalette(),
         images: ISMChatImages = ISMChatImages(),
@@ -36,7 +37,8 @@ public class ISMAppearance {
         placeholders: ISMChatPlaceholders = ISMChatPlaceholders(),
         timeInsideBubble : Bool = true,
         imagesSize : ISMChatImageSizes = ISMChatImageSizes(),
-        constantStrings : ISMChatStrings = ISMChatStrings()
+        constantStrings : ISMChatStrings = ISMChatStrings(),
+        messageCustomBubbleView : ISMChatMessageCustomBubble = ISMChatMessageCustomBubble()
     ) {
         self.colorPalette = colorPalette
         self.images = images
@@ -47,6 +49,7 @@ public class ISMAppearance {
         self.timeInsideBubble = timeInsideBubble
         self.imagesSize = imagesSize
         self.constantStrings = constantStrings
+        self.messageCustomBubbleView = messageCustomBubbleView
     }
 }
 
