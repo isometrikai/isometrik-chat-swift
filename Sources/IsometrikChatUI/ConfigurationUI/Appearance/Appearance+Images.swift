@@ -170,7 +170,6 @@ public struct ISMChatImages {
     public var audioPlayIcon : Image = loadImageSafely(with: "Audio_play")
     public var audioPauseIcon : Image = loadImageSafely(with: "Audio_pause")
     public var messageLock : Image = loadSafely(systemName: "lock.fill", assetsFallback: "lock.fill")
-    public var messageListBackgroundImage : Image = loadImageSafely(with: "messageBackground")
     
     public init(){}
     
@@ -261,8 +260,7 @@ public struct ISMChatImages {
         influencerUserIcon : Image? = nil,
         businessUserIcon : Image? = nil,
         calanderLogo : Image? = nil,
-        messageLock : Image? = nil,
-        messageListBackgroundImage : Image? = nil
+        messageLock : Image? = nil
     ) {
         if let addConversation = addConversation { self.addConversation = addConversation }
         if let conversationListPlaceholder = conversationListPlaceholder { self.conversationListPlaceholder = conversationListPlaceholder }
@@ -351,7 +349,6 @@ public struct ISMChatImages {
         if let businessUserIcon = businessUserIcon { self.businessUserIcon = businessUserIcon }
         if let calanderLogo = calanderLogo { self.calanderLogo = calanderLogo }
         if let messageLock = messageLock { self.messageLock = messageLock }
-        if let messageListBackgroundImage = messageListBackgroundImage { self.messageListBackgroundImage = messageListBackgroundImage }
     }
     
 }

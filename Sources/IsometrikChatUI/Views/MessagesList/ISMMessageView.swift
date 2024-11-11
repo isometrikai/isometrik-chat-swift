@@ -175,10 +175,13 @@ public struct ISMMessageView: View {
         VStack{
             ZStack{
                 appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
-//                appearance.images.messageListBackgroundImage
-//                    .resizable()
-//                    .aspectRatio(contentMode: .fill)
-//                    .edgesIgnoringSafeArea(.all)
+//                if let image = appearance.images.messageListBackgroundImage{
+//                    VStack{
+//                        Image(image)
+//                            .resizable()
+//                            .aspectRatio(contentMode: .fill)
+//                    }
+//                }
                 VStack(spacing: 0) {
                     if ISMChatSdkUI.getInstance().getChatProperties().customJobCardInMessageList == true {
                         if let conversation = self.conversationDetail?.conversationDetails,
@@ -229,7 +232,6 @@ public struct ISMMessageView: View {
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     }
                     bottomView()
-                        .ignoresSafeArea(.keyboard)
                 }//VStack
                 .onAppear {
                     OnScreen = true
@@ -274,7 +276,6 @@ public struct ISMMessageView: View {
                 }
             }
         }//:vStack
-        .ignoresSafeArea(.keyboard, edges: .bottom)
         .padding(.top, 5)
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(leading: navigationBarLeadingButtons(), trailing: navigationBarTrailingButtons())
