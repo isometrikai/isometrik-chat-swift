@@ -1371,23 +1371,24 @@ struct ISMMessageSubView: View {
                     Text(message.metaData?.productName ?? "")
                         .font(Font.medium(size: 14))
                         .lineLimit(2)
-                }
-                .padding(.horizontal, 8)
+                }.padding(.horizontal,5)
                 
                 // Pricing and Button
                 HStack {
                     Text("$\(String(format: "%.2f", message.metaData?.bestPrice ?? 0))")
                         .font(Font.bold(size: 18))
                         .foregroundColor(Color(hex: "#0F1E91"))
-                    
-                    Text("$\(String(format: "%.2f", message.metaData?.scratchPrice ?? 0))")
-                        .font(Font.medium(size: 14))
-                        .strikethrough()
-                        .foregroundColor(Color(hex: "#767676"))
+                    if message.metaData?.bestPrice ?? 0 != message.metaData?.scratchPrice ?? 0{
+                        Text("$\(String(format: "%.2f", message.metaData?.scratchPrice ?? 0))")
+                            .font(Font.medium(size: 14))
+                            .strikethrough()
+                            .foregroundColor(Color(hex: "#767676"))
+                    }
                     
                     Spacer()
                 }
                 .padding(.top, 4)
+                .padding(.horizontal,5)
                 
                 Divider()
                 
@@ -1402,6 +1403,7 @@ struct ISMMessageSubView: View {
                     Spacer()
                 }
                 .padding(6)
+                .padding(.bottom,10)
             }
             .background(Color.white)
             .cornerRadius(10)
