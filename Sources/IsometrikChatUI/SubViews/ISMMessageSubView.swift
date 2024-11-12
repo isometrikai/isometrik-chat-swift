@@ -81,6 +81,7 @@ struct ISMMessageSubView: View {
     @Binding var navigateToSocialProfileId : String
     @Binding var navigateToExternalUserListToAddInGroup : Bool
     @Binding var navigateToProductLink : MessagesDB
+    @Binding var navigateToSocialLink : MessagesDB
     
     
     //MARK:  - BODY
@@ -1196,9 +1197,9 @@ struct ISMMessageSubView: View {
                                 
                                 VStack(alignment: .trailing,spacing: 5){
                                     Button {
-                                       
+                                        navigateToSocialLink = message
                                     } label: {
-                                        Text("Social Link")
+                                        socialLinkView(message: message)
                                     }.padding(.trailing,5)
                                     
                                 }//:ZStack
@@ -1414,7 +1415,7 @@ struct ISMMessageSubView: View {
                 
                 HStack {
                     Spacer()
-                    Text("View Offer")
+                    Text("View Product")
                         .font(Font.medium(size: 16))
                         .foregroundColor(Color(hex: "#FC8B1A"))
                     Image(systemName: "arrow.up.right.square")
@@ -1423,6 +1424,55 @@ struct ISMMessageSubView: View {
                 }
                 .padding(6)
                 .padding(.bottom,10)
+            }
+            .background(Color.white)
+            .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+            )
+            .frame(width: 248)
+            
+            
+            if appearance.timeInsideBubble == true{
+                HStack{
+                    Spacer()
+                    
+                    dateAndStatusView(onImage: false)
+                        .padding(.bottom,5)
+                        .padding(.trailing,5)
+                    
+                }
+            }
+        }
+    }
+    
+    
+    func socialLinkView(message : MessagesDB) -> some View{
+        VStack {
+            VStack(alignment: .leading) {
+               
+                    ISMChatImageCahcingManger.viewImage(url: message.metaData?.thumbnailUrl ?? "")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 248, height: 240)
+                        .clipped()
+                        .overlay {
+                            if message.metaData?.isVideoPost == true{
+                                appearance.images.playVideo
+                                    .resizable()
+                                    .foregroundColor(.white)
+                                    .frame(width: 36, height: 36)
+                            }
+                        }
+                    
+                    if let des = message.metaData?.Description{
+                        Text(des)
+                            .font(Font.medium(size: 12))
+                            .foregroundColor(Color.white)
+                            .lineLimit(2)
+                    }
+                
             }
             .background(Color.white)
             .cornerRadius(10)

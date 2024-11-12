@@ -28,6 +28,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToJobDetail(jobId : String)
     func messageValidUrl(url : String,messageId : String,conversationId : String,completion:@escaping(ISMChatMessage)->())
     func navigateToProductLink(childProductId : String,parentProductId : String, productName : String)
+    func navigateToSocialLink(socialLinkId : String)
 }
 
 public struct ISMMessageView: View {
@@ -172,6 +173,7 @@ public struct ISMMessageView: View {
 //    @State var navigateToExternalUserListToAddInGroup : Bool = false
     
     @State var navigateToProductLink : MessagesDB = MessagesDB()
+    @State var navigateToSocialLink : MessagesDB = MessagesDB()
     
     //MARK: - BODY
     public var body: some View {
@@ -418,6 +420,12 @@ public struct ISMMessageView: View {
                     productName: productName
                 )
                 navigateToProductLink = MessagesDB()
+            }
+        }
+        .onChange(of: navigateToSocialLink.messageId) { _, _ in
+            if !navigateToSocialLink.messageId.isEmpty{
+                self.delegate?.navigateToSocialLink(socialLinkId: navigateToSocialLink.metaData?.socialPostId ?? "")
+                navigateToSocialLink = MessagesDB()
             }
         }
         .onChange(of: navigateToMediaSliderId, { _, _ in
