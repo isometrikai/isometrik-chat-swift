@@ -998,6 +998,7 @@ struct ISMMessageInfoSubView: View {
                                     }.padding(.trailing,5)
                                     
                                 }//:ZStack
+                                .frame(width: 258)
                                 .padding(5)
                                 .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
                                 .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
@@ -1168,8 +1169,8 @@ struct ISMMessageInfoSubView: View {
                     if let des = message.metaData?.Description{
                         Text(des)
                             .font(Font.medium(size: 12))
-                            .foregroundColor(Color.white)
-                            .lineLimit(2)
+                            .foregroundColor(isReceived == true ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                            .lineLimit(2).padding(.vertical,10).padding(.horizontal,5)
                     }
                 
             }
