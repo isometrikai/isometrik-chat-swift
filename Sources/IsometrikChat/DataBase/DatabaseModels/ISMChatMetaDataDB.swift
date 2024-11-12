@@ -20,18 +20,15 @@ public class MetaDataDB : Object, ObjectKeyIdentifiable {
     
     
     // Product Link
-    @Persisted public var brandName: String?
-    @Persisted public var productTitle: String?
+    @Persisted public var storeName: String?
     @Persisted public var productName: String?
-    @Persisted public var latestBestPrice: Double?
-    @Persisted public var existingMemberPrice: Double?
-    @Persisted public var msrpPrice: Double?
-    @Persisted public var completeURL: String?
-    @Persisted public var decodedURL: String?
+    @Persisted public var bestPrice: Double?
+    @Persisted public var scratchPrice: Double?
+    @Persisted public var url: String?
     @Persisted public var parentProductId: String?
     @Persisted public var childProductId: String?
     @Persisted public var entityType: String?
-    @Persisted public var PDPImage: RealmSwift.List<PDPImageDB>
+    @Persisted public var productImage: String?
     
     //social link
     @Persisted public var thumbnailUrl : String?

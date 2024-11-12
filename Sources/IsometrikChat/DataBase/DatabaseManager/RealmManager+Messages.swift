@@ -95,21 +95,20 @@ extension RealmManager{
                     metadataValue.locationAddress = metaData.locationAddress
                     metadataValue.captionMessage = metaData.captionMessage
                     metadataValue.isBroadCastMessage = metaData.isBroadCastMessage
-                    metadataValue.brandName = metaData.brandName
-                    metadataValue.productTitle = metaData.productTitle
+                    metadataValue.storeName = metaData.storeName
                     metadataValue.productName = metaData.productName
-                    metadataValue.latestBestPrice = metaData.latestBestPrice
-                    metadataValue.existingMemberPrice = metaData.existingMemberPrice
-                    metadataValue.msrpPrice = metaData.msrpPrice
-                    metadataValue.completeURL = metaData.completeURL
-                    metadataValue.decodedURL = metaData.decodedURL
+                    metadataValue.bestPrice = metaData.bestPrice
+                    metadataValue.scratchPrice = metaData.scratchPrice
+                    metadataValue.url = metaData.url
                     metadataValue.parentProductId = metaData.parentProductId
                     metadataValue.childProductId = metaData.childProductId
                     metadataValue.entityType = metaData.entityType
+                    metadataValue.productImage = metaData.productImage
                     metadataValue.thumbnailUrl = metaData.thumbnailUrl
                     metadataValue.Description = metaData.Description
                     metadataValue.isVideoPost = metaData.isVideoPost
                     metadataValue.socialPostId = metaData.socialPostId
+                    metadataValue.productImage = metaData.productImage
 
                     
                     if let replyMessage = metaData.replyMessage {
@@ -152,20 +151,7 @@ extension RealmManager{
                         metadataValue.product = productDB
                     }
 
-                    if let pdpImages = metaData.PDPImage {
-                        let pdpImageDBList = RealmSwift.List<PDPImageDB>()
-                        pdpImages.forEach { pdpImage in
-                            let pdpImageDB = PDPImageDB()
-                            pdpImageDB.small = pdpImage.small
-                            pdpImageDB.medium = pdpImage.medium
-                            pdpImageDB.large = pdpImage.large
-                            pdpImageDB.extraLarge = pdpImage.extraLarge
-                            pdpImageDB.filePath = pdpImage.filePath
-                            pdpImageDB.altText = pdpImage.altText
-                            pdpImageDBList.append(pdpImageDB)
-                        }
-                        metadataValue.PDPImage = pdpImageDBList
-                    }
+                   
 
                     messageToUpdate.first?.metaData = metadataValue
                 }
@@ -395,33 +381,20 @@ extension RealmManager{
                         }
                         
                         
-                        metaData.brandName = value.metaData?.brandName
-                        metaData.productTitle = value.metaData?.productTitle
+                        metaData.storeName = value.metaData?.storeName
                         metaData.productName = value.metaData?.productName
-                        metaData.latestBestPrice = value.metaData?.latestBestPrice
-                        metaData.existingMemberPrice = value.metaData?.existingMemberPrice
-                        metaData.msrpPrice = value.metaData?.msrpPrice
-                        metaData.completeURL = value.metaData?.completeURL
-                        metaData.decodedURL = value.metaData?.decodedURL
+                        metaData.bestPrice = value.metaData?.bestPrice
+                        metaData.scratchPrice = value.metaData?.scratchPrice
+                        metaData.url = value.metaData?.url
                         metaData.parentProductId = value.metaData?.parentProductId
                         metaData.childProductId = value.metaData?.childProductId
                         metaData.entityType = value.metaData?.entityType
+                        metaData.productImage = value.metaData?.productImage
                         metaData.thumbnailUrl = value.metaData?.thumbnailUrl
                         metaData.Description = value.metaData?.Description
                         metaData.isVideoPost = value.metaData?.isVideoPost
                         metaData.socialPostId = value.metaData?.socialPostId
                         
-                        
-                        for x in value.metaData?.PDPImage ?? [] {
-                            let image = PDPImageDB()
-                            image.small = x.small
-                            image.medium = x.medium
-                            image.large = x.large
-                            image.extraLarge = x.extraLarge
-                            image.filePath = x.filePath
-                            image.altText = x.altText
-                            metaData.PDPImage.append(image)
-                        }
                         
                         
                         obj.metaData = metaData

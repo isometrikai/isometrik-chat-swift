@@ -1340,14 +1340,14 @@ struct ISMMessageSubView: View {
         VStack {
             // Product Image with Discount Label
             ZStack(alignment: .topLeading) {
-                ISMChatImageCahcingManger.viewImage(url: message.metaData?.PDPImage.first?.extraLarge ?? "")
+                ISMChatImageCahcingManger.viewImage(url: message.metaData?.productImage ?? "")
                     .resizable()
                     .scaledToFill()
                     .frame(width: 248, height: 192)
                     .clipped()
                 
-                if message.metaData?.latestBestPrice != message.metaData?.msrpPrice {
-                    let per = calculateDiscountPercentage(latestBestPrice: message.metaData?.latestBestPrice ?? 0, msrpPrice: message.metaData?.msrpPrice ?? 0)
+                if message.metaData?.bestPrice != message.metaData?.scratchPrice {
+                    let per = calculateDiscountPercentage(latestBestPrice: message.metaData?.bestPrice ?? 0, msrpPrice: message.metaData?.scratchPrice ?? 0)
                     Text("\(per)% Off")
                         .font(Font.medium(size: 12))
                         .foregroundColor(Color(hex: "#8D1111"))
@@ -1362,7 +1362,7 @@ struct ISMMessageSubView: View {
             
             // Brand and Product Name
             VStack(alignment: .leading, spacing: 4) {
-                Text(message.metaData?.brandName?.capitalized ?? "")
+                Text(message.metaData?.storeName?.capitalized ?? "")
                     .font(Font.bold(size: 12))
                     .foregroundColor(Color(hex: "#505050"))
                 
@@ -1374,11 +1374,11 @@ struct ISMMessageSubView: View {
             
             // Pricing and Button
             HStack {
-                Text("$\(String(format: "%.2f", message.metaData?.latestBestPrice ?? 0))")
+                Text("$\(String(format: "%.2f", message.metaData?.bestPrice ?? 0))")
                     .font(Font.bold(size: 18))
                     .foregroundColor(Color(hex: "#0F1E91"))
                 
-                Text("$\(String(format: "%.2f", message.metaData?.msrpPrice ?? 0))")
+                Text("$\(String(format: "%.2f", message.metaData?.scratchPrice ?? 0))")
                     .font(Font.medium(size: 14))
                     .strikethrough()
                     .foregroundColor(Color(hex: "#767676"))

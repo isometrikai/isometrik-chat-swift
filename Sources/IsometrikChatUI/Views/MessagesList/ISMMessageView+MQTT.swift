@@ -47,23 +47,19 @@ import IsometrikChat
                     isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage,
                     post: postDetail,
                     product: productDetail,
-                    brandName: messageInfo.metaData?.brandName,
-                    productTitle: messageInfo.metaData?.productTitle,
+                    storeName: messageInfo.metaData?.storeName,
                     productName: messageInfo.metaData?.productName,
-                    latestBestPrice: messageInfo.metaData?.latestBestPrice,
-                    existingMemberPrice: messageInfo.metaData?.existingMemberPrice,
-                    msrpPrice: messageInfo.metaData?.msrpPrice,
-                    completeURL: messageInfo.metaData?.completeURL,
-                    decodedURL: messageInfo.metaData?.decodedURL,
+                    bestPrice: messageInfo.metaData?.bestPrice,
+                    scratchPrice: messageInfo.metaData?.scratchPrice,
+                    url: messageInfo.metaData?.url,
                     parentProductId: messageInfo.metaData?.parentProductId,
                     childProductId: messageInfo.metaData?.childProductId,
                     entityType: messageInfo.metaData?.entityType,
-                    PDPImage: messageInfo.metaData?.PDPImage,
-                    thumbnailUrl : messageInfo.metaData?.thumbnailUrl,
-                    Description : messageInfo.metaData?.Description,
-                    isVideoPost : messageInfo.metaData?.isVideoPost,
-                    socialPostId : messageInfo.metaData?.socialPostId
-                )
+                    productImage: messageInfo.metaData?.productImage,
+                    thumbnailUrl: messageInfo.metaData?.thumbnailUrl,
+                    Description: messageInfo.metaData?.Description,
+                    isVideoPost: messageInfo.metaData?.isVideoPost,
+                    socialPostId: messageInfo.metaData?.socialPostId)
 
                 
                 let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")
@@ -162,23 +158,19 @@ import IsometrikChat
                  isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage,
                  post: postDetail,
                  product: productDetail,
-                 brandName: messageInfo.metaData?.brandName,
-                 productTitle: messageInfo.metaData?.productTitle,
+                 storeName: messageInfo.metaData?.storeName,
                  productName: messageInfo.metaData?.productName,
-                 latestBestPrice: messageInfo.metaData?.latestBestPrice,
-                 existingMemberPrice: messageInfo.metaData?.existingMemberPrice,
-                 msrpPrice: messageInfo.metaData?.msrpPrice,
-                 completeURL: messageInfo.metaData?.completeURL,
-                 decodedURL: messageInfo.metaData?.decodedURL,
+                 bestPrice: messageInfo.metaData?.bestPrice,
+                 scratchPrice: messageInfo.metaData?.scratchPrice,
+                 url: messageInfo.metaData?.url,
                  parentProductId: messageInfo.metaData?.parentProductId,
                  childProductId: messageInfo.metaData?.childProductId,
                  entityType: messageInfo.metaData?.entityType,
-                 PDPImage: messageInfo.metaData?.PDPImage,
-                 thumbnailUrl : messageInfo.metaData?.thumbnailUrl,
-                 Description : messageInfo.metaData?.Description,
-                 isVideoPost : messageInfo.metaData?.isVideoPost,
-                 socialPostId : messageInfo.metaData?.socialPostId
-             )
+                 productImage: messageInfo.metaData?.productImage,
+                 thumbnailUrl: messageInfo.metaData?.thumbnailUrl,
+                 Description: messageInfo.metaData?.Description,
+                 isVideoPost: messageInfo.metaData?.isVideoPost,
+                 socialPostId: messageInfo.metaData?.socialPostId)
              
              let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")
              
