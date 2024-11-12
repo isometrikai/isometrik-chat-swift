@@ -1336,115 +1336,90 @@ struct ISMMessageSubView: View {
     }
     
     
-    func productLinkView(message : MessagesDB) -> some View{
+    func productLinkView(message: MessagesDB) -> some View {
         VStack {
-            VStack(alignment: .leading) {
+            // Product Image with Discount Label
+            ZStack(alignment: .topLeading) {
+                ISMChatImageCahcingManger.viewImage(url: message.metaData?.PDPImage.first?.extraLarge ?? "")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 248, height: 192)
+                    .clipped()
                 
-                ZStack(alignment: .top){
-                    // Product Images
-                    
-                    ISMChatImageCahcingManger.viewImage(url: message.metaData?.PDPImage.first?.extraLarge ?? "")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 248, height: 192)
-                        .clipped() // Ensures image stays within the frame
-                    
-                    if message.metaData?.latestBestPrice != message.metaData?.msrpPrice{
-                        HStack {
-                            let per = calculateDiscountPercentage(latestBestPrice: message.metaData?.latestBestPrice ?? 0, msrpPrice: message.metaData?.msrpPrice ?? 0)
-                            Text("\(per)% Off")
-                                .font(Font.medium(size: 12))
-                                .foregroundColor(Color(hex: "#8D1111"))
-                                .padding(4)
-                                .padding(.horizontal,5)
-                                .background(Color(hex: "#FDDDDD"))
-                                .cornerRadius(10)
-                            
-                            Spacer()
-                            
-                            //                    HStack(spacing: 2) {
-                            //                        Image(systemName: "heart")
-                            //                            .foregroundColor(.gray)
-                            //                        Text("16")
-                            //                            .font(.caption)
-                            //                            .foregroundColor(.gray)
-                            //                    }
-                        }
-                        .padding(.horizontal, 8)
-                        .padding(.top, 8)
-                    }
-                }.frame(width: 248, height: 192)
-                    .padding(.bottom,10)
-                
-                
-                
-                
-                // Title and Description
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(message.metaData?.brandName?.capitalized ?? "")
-                        .font(Font.bold(size: 12))
-                        .foregroundColor(Color(hex: "#505050"))
-                    
-                    Text(message.metaData?.productName?.capitalizingFirstLetter() ?? "")
-                        .font(Font.medium(size: 14))
-                        .lineLimit(2)
+                if message.metaData?.latestBestPrice != message.metaData?.msrpPrice {
+                    let per = calculateDiscountPercentage(latestBestPrice: message.metaData?.latestBestPrice ?? 0, msrpPrice: message.metaData?.msrpPrice ?? 0)
+                    Text("\(per)% Off")
+                        .font(Font.medium(size: 12))
+                        .foregroundColor(Color(hex: "#8D1111"))
+                        .padding(4)
+                        .background(Color(hex: "#FDDDDD"))
+                        .cornerRadius(10)
+                        .padding([.top, .leading], 8)
                 }
-                .padding(.horizontal, 8)
+            }
+            .frame(width: 248, height: 192)
+            .padding(.bottom, 10)
+            
+            // Brand and Product Name
+            VStack(alignment: .leading, spacing: 4) {
+                Text(message.metaData?.brandName?.capitalized ?? "")
+                    .font(Font.bold(size: 12))
+                    .foregroundColor(Color(hex: "#505050"))
                 
-                // Pricing and Button
-                HStack() {
-                    
-                    Text("$\(String(format: "%.2f", message.metaData?.latestBestPrice ?? 0))")
-                        .font(Font.bold(size: 18))
-                        .foregroundColor(Color(hex: "#0F1E91"))
-                    
-                    Text("$\(String(format: "%.2f", message.metaData?.msrpPrice ?? 0))")
-                        .font(Font.medium(size: 14))
-                        .strikethrough()
-                        .foregroundColor(Color(hex: "#767676"))
-                    
-                    
-                    Spacer()
-                    
-                    
-                }
-                .padding(.horizontal, 8)
-                .padding(.top, 4)
+                Text(message.metaData?.productName?.capitalizingFirstLetter() ?? "")
+                    .font(Font.medium(size: 14))
+                    .lineLimit(2)
+            }
+            .padding(.horizontal, 8)
+            
+            // Pricing and Button
+            HStack {
+                Text("$\(String(format: "%.2f", message.metaData?.latestBestPrice ?? 0))")
+                    .font(Font.bold(size: 18))
+                    .foregroundColor(Color(hex: "#0F1E91"))
                 
-                Divider()
+                Text("$\(String(format: "%.2f", message.metaData?.msrpPrice ?? 0))")
+                    .font(Font.medium(size: 14))
+                    .strikethrough()
+                    .foregroundColor(Color(hex: "#767676"))
                 
+                Spacer()
+            }
+            .padding(.horizontal, 8)
+            .padding(.top, 4)
+            
+            Divider()
+            
+            // View Product Button
+            HStack {
+                Spacer()
+                Text("View Product")
+                    .font(Font.medium(size: 16))
+                    .foregroundColor(Color(hex: "#FC8B1A"))
+                Image(systemName: "arrow.up.right.square")
+                    .foregroundColor(Color(hex: "#FC8B1A"))
+                Spacer()
+            }
+            .padding(6)
+            .padding(.bottom, 10)
+            
+            // Time and Status (if needed)
+            if appearance.timeInsideBubble {
                 HStack {
                     Spacer()
-                    Text("View Product")
-                        .font(Font.medium(size: 16))
-                        .foregroundColor(Color(hex: "#FC8B1A"))
-                    Image(systemName: "arrow.up.right.square")
-                        .foregroundColor(Color(hex: "#FC8B1A"))
-                    Spacer()
-                }
-                .padding(6)
-                .padding(.bottom,10)
-            }
-            .background(Color.white)
-            .cornerRadius(10)
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-            )
-            .frame(width: 248)
-            
-            
-            if appearance.timeInsideBubble == true{
-                HStack{
-                    Spacer()
-                    
                     dateAndStatusView(onImage: false)
-                        .padding(.bottom,5)
-                        .padding(.trailing,5)
-                    
+                        .padding(.bottom, 5)
+                        .padding(.trailing, 5)
                 }
             }
         }
+        .background(Color.white)
+        .cornerRadius(10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+        )
+        .frame(width: 248)
     }
     
     
