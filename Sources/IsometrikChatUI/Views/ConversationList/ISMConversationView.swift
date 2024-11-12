@@ -293,7 +293,7 @@ public struct ISMConversationView : View {
                         return
                     }
                     ISMChatHelper.print("MESSAGE DELIVERED----------------->\(messageInfo)")
-                    self.msgDelivered(messageInfo: messageInfo)
+//                    self.msgDelivered(messageInfo: messageInfo)
                 }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttUserBlockConversation.name)){
                     notification in

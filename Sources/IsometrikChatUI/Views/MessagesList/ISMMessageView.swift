@@ -319,7 +319,9 @@ public struct ISMMessageView: View {
                 return
             }
             ISMChatHelper.print("MESSAGE DELIVERED----------------->\(messageInfo)")
-            messageDelivered(messageInfo: messageInfo)
+            if OnScreen{
+                messageDelivered(messageInfo: messageInfo)
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMessageNewReceived.name)){ notification in
             guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
