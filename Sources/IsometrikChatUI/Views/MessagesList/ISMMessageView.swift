@@ -407,12 +407,19 @@ public struct ISMMessageView: View {
                 sendReaction()
             }
         })
-//        .onChange(of: navigateToProductLink, { _, _ in
-//            if navigateToProductLink.messageId != nil{
-//                self.delegate?.navigateToProductLink(childProductId: navigateToProductLink?.metaData?.childProductId, parentProductId: navigateToProductLink?.metaData?.parentProductId, productName: navigateToProductLink?.metaData?.productName)
-//                navigateToProductLink = MessagesDB()
-//            }
-//        })
+        .onChange(of: navigateToProductLink.messageId) { _, _ in
+            if !navigateToProductLink.messageId.isEmpty,let metaData = navigateToProductLink.metaData{
+                let childProductId = metaData.childProductId ?? ""
+                let parentProductId = metaData.parentProductId ?? ""
+                let productName = metaData.productName ?? ""
+                self.delegate?.navigateToProductLink(
+                    childProductId: childProductId,
+                    parentProductId: parentProductId,
+                    productName: productName
+                )
+                navigateToProductLink = MessagesDB()
+            }
+        }
         .onChange(of: navigateToMediaSliderId, { _, _ in
             if !navigateToMediaSliderId.isEmpty{
                 stateViewModel.navigateToMediaSlider = true
