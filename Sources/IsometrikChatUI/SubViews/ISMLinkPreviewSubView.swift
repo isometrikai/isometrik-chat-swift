@@ -128,7 +128,7 @@ struct LinkPreviewToolBarView : View {
         }
         
         provider.startFetchingMetadata(for: url!) { metadata, error in
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                 self.metadata = metadata
                 self.isLoading = false
             }
