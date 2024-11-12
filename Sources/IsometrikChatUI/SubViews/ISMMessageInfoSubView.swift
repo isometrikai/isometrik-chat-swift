@@ -1047,16 +1047,16 @@ struct ISMMessageInfoSubView: View {
         }
     }
     
-    func calculateDiscountPercentage(latestBestPrice: Double, msrpPrice: Double) -> Double {
+    func calculateDiscountPercentage(latestBestPrice: Double, msrpPrice: Double) -> String {
         guard msrpPrice > 0 else {
             print("Error: msrpPrice must be greater than 0.")
-            return 0
+            return "0.00"
         }
         
         let discount = ((msrpPrice - latestBestPrice) / msrpPrice) * 100
         
-        // Round to two decimal places
-        return (discount * 100).rounded() / 100
+        // Round to two decimal places and format as a string
+        return String(format: "%.2f", discount)
     }
     
     
@@ -1117,11 +1117,11 @@ struct ISMMessageInfoSubView: View {
                 // Pricing and Button
                 HStack() {
                     
-                    Text("$\(message.metaData?.latestBestPrice ?? 0)")
+                    Text("$\(String(format: "%.2f", message.metaData?.latestBestPrice ?? 0))")
                         .font(Font.bold(size: 18))
                         .foregroundColor(Color(hex: "#0F1E91"))
                     
-                    Text("$\(message.metaData?.msrpPrice ?? 0)")
+                    Text("$\(String(format: "%.2f", message.metaData?.msrpPrice ?? 0))")
                         .font(Font.medium(size: 14))
                         .strikethrough()
                         .foregroundColor(Color(hex: "#767676"))
