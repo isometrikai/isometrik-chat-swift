@@ -1346,6 +1346,7 @@ struct ISMMessageSubView: View {
                         .resizable()
                         .scaledToFill()
                         .frame(width: 248, height: 192)
+                        .clipped() // Ensures image stays within the frame
                     
                     if message.metaData?.latestBestPrice != message.metaData?.msrpPrice{
                         HStack {
