@@ -50,7 +50,7 @@ struct ISMConversationSubView: View {
                     }
                     Spacer()
                     let dateVar = NSDate()
-                    let date = dateVar.descriptiveString(time: (chat.lastMessageDetails?.sentAt ?? 0))
+                    let date = dateVar.descriptiveString(time: (chat.lastMessageDetails?.sentAt ?? 0), dateFormat: appearance.dateFormats.conversationListLastMessageDate)
                     Text(date)
                         .foregroundColor(appearance.colorPalette.chatListLastMessageTime)
                         .font(appearance.fonts.chatListLastMessageTime)

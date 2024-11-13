@@ -545,7 +545,7 @@ extension ISMMessageView{
                 }
             })
             .placeholder(when: textFieldtxt.isEmpty) {
-                Text("Type a message")
+                Text(appearance.constantStrings.messageInputTextViewPlaceholder)
                     .foregroundColor(appearance.colorPalette.messageListTextViewPlaceholder)
             }
             .foregroundColor(appearance.colorPalette.messageListTextViewText)

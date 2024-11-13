@@ -29,6 +29,7 @@ public class ISMAppearance {
     public var constantStrings : ISMChatStrings
     public var messageCustomBubbleView : ISMChatMessageCustomBubble
     public var messageListBackgroundImage : String
+    public var dateFormats : ISMChatDateFormats
     public init(
         colorPalette: ISMChatColorPalette = ISMChatColorPalette(),
         images: ISMChatImages = ISMChatImages(),
@@ -40,7 +41,8 @@ public class ISMAppearance {
         imagesSize : ISMChatImageSizes = ISMChatImageSizes(),
         constantStrings : ISMChatStrings = ISMChatStrings(),
         messageCustomBubbleView : ISMChatMessageCustomBubble = ISMChatMessageCustomBubble(),
-        messageListBackgroundImage: String? = nil
+        messageListBackgroundImage: String? = nil,
+        dateFormats : ISMChatDateFormats = ISMChatDateFormats()
     ) {
         self.colorPalette = colorPalette
         self.images = images
@@ -53,15 +55,24 @@ public class ISMAppearance {
         self.constantStrings = constantStrings
         self.messageCustomBubbleView = messageCustomBubbleView
         self.messageListBackgroundImage = messageListBackgroundImage ??  ""
+        self.dateFormats = dateFormats
     }
 }
 
-
+public class ISMChatDateFormats{
+    public var conversationListLastMessageDate : String = "dd/MM/yyyy"
+    public init(){}
+    public init(conversationListLastMessageDate: String) {
+        self.conversationListLastMessageDate = conversationListLastMessageDate
+    }
+}
 public class ISMChatStrings {
     public var endToEndEncrypted : String = "Messages are end to end encrypted. No one \noutside of this chat can read to them."
+    public var messageInputTextViewPlaceholder : String = "Type a message"
     public init(){}
-    public init(endToEndEncrypted: String) {
+    public init(endToEndEncrypted: String,messageInputTextViewPlaceholder : String) {
         self.endToEndEncrypted = endToEndEncrypted
+        self.messageInputTextViewPlaceholder = messageInputTextViewPlaceholder
     }
 }
 

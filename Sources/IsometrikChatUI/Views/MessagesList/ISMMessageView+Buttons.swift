@@ -146,7 +146,7 @@ extension ISMMessageView{
         HStack {
             backButtonView()
             
-            Spacer().frame(width: 15)
+            Spacer().frame(width: 8)
             
             if self.fromBroadCastFlow  == true{
                 broadcastButtonView()

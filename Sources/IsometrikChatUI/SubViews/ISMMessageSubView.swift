@@ -93,11 +93,12 @@ struct ISMMessageSubView: View {
                     VStack(alignment: isReceived == true ? .leading : .trailing, spacing: 2){
                         HStack{
                             Image(systemName: "minus.circle")
+                                .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                             Text(isReceived == true ? "This message was deleted." :  "You deleted this message.")
                                 .font(appearance.fonts.messageListMessageDeleted)
                                 .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                         }
-                        .opacity(0.2)
+                        .opacity(0.7)
                         dateAndStatusView(onImage: false)
                     }//:VStack
                     .padding(8)
@@ -1647,6 +1648,7 @@ struct ISMMessageSubView: View {
                         .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                         .font(appearance.fonts.messageListReplyToolbarDescription)
                         .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(4)
                 }
             }
             .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 8))

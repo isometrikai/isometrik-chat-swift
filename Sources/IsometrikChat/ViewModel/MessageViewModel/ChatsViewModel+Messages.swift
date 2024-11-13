@@ -275,7 +275,7 @@ extension ChatsViewModel{
         let eventDetail : [String : Any] = ["sendPushNotification" : true,"updateUnreadCount" : true]
         body["showInConversation"] = true
         body["messageType"] = messageType
-        body["encrypted"] = false
+        body["encrypted"] = true
         body["deviceId"] = deviceId
         body["conversationId"] = conversationId
         body["body"] = messageInBody

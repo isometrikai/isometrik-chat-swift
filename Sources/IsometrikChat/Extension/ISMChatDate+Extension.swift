@@ -8,7 +8,7 @@
 import Foundation
 
 extension NSDate{
-    public func descriptiveString(time: Double,dateStyle : DateFormatter.Style = .short) -> String{
+    public func descriptiveString(time: Double,dateStyle : DateFormatter.Style = .short,dateFormat : String) -> String{
         let unixTimeStamp: Double = time / 1000.0
         let exactDate = NSDate.init(timeIntervalSince1970: unixTimeStamp)
         let daysBetween = self.daysBetween(date: exactDate)
@@ -26,7 +26,7 @@ extension NSDate{
 //        }
         else{
             let timeFormatter = DateFormatter()
-            timeFormatter.dateFormat = "dd/MM/yyyy"
+            timeFormatter.dateFormat = dateFormat
             return  timeFormatter.string(from: exactDate as Date)
         }
     }
