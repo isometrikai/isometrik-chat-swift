@@ -1393,7 +1393,7 @@ struct ISMMessageSubView: View {
                     ProgressView()
                 }
             }
-            .frame(width: 248,height: 377)
+            .frame(width: 248,height: 360)
             .background(Color.white)
             .cornerRadius(10)
             .overlay(
@@ -1457,13 +1457,14 @@ struct ISMMessageSubView: View {
                     }
                 
             }
+            .frame(width: 248)
             .background(Color.white.opacity(0.2))
             .cornerRadius(10)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
             )
-            .frame(width: 248)
+            .padding(.horizontal,5)
             
             if let url = message.metaData?.url{
                 Text(url)
