@@ -21,7 +21,8 @@ public struct ISMChatPageProperties {
     public var customJobCardInMessageList : Bool = false
     public var externalMemberAddInGroup : Bool = false
     public var captializeMessageListHeaders : Bool = false
-    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, navigateToAppProfileFromMessageList: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool,customJobCardInMessageList : Bool,externalMemberAddInGroup : Bool,captializeMessageListHeaders : Bool? = false) {
+    public var hideLinkPreview : Bool = false
+    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, navigateToAppProfileFromMessageList: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool,customJobCardInMessageList : Bool,externalMemberAddInGroup : Bool,captializeMessageListHeaders : Bool? = false,hideLinkPreview : Bool? = false) {
         self.attachments = attachments
         self.features = features
         self.conversationType = conversationType
@@ -34,5 +35,6 @@ public struct ISMChatPageProperties {
         self.customJobCardInMessageList = customJobCardInMessageList
         self.externalMemberAddInGroup = externalMemberAddInGroup
         self.captializeMessageListHeaders = captializeMessageListHeaders ?? false
+        self.hideLinkPreview = hideLinkPreview ?? false
     }
 }

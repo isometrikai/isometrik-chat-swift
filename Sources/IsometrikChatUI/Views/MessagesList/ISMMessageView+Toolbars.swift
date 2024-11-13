@@ -290,7 +290,7 @@ extension ISMMessageView{
             }
             
             // Link Preview
-            if textFieldtxt.isValidURL {
+            if textFieldtxt.isValidURL && ISMChatSdkUI.getInstance().getChatProperties().hideLinkPreview == false{
                 Divider()
                 LinkPreviewToolBarView(text: textFieldtxt)
             }

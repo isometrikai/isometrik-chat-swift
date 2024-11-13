@@ -168,53 +168,36 @@ struct ISMMessageSubView: View {
                                                 })
                                             }
                                             else if str.isValidURL{
-                                                if str.contains("https"){
-                                                    ISMLinkPreview(url: URL(string: "\(str)")!, isRecived: self.isReceived)
-                                                        .frame(width: 280)
-                                                        .onTapGesture {
-                                                            if str.contains("https"){
-                                                                openURLInSafari(urlString: str)
-                                                            }else{
-                                                                let fullURLString = "https://" + str.trimmingCharacters(in: .whitespaces)
-                                                                openURLInSafari(urlString: fullURLString)
+                                                if ISMChatSdkUI.getInstance().getChatProperties().hideLinkPreview == false{
+                                                    if str.contains("https"){
+                                                        ISMLinkPreview(url: URL(string: "\(str)")!, isRecived: self.isReceived)
+                                                            .frame(width: 280)
+                                                            .onTapGesture {
+                                                                if str.contains("https"){
+                                                                    openURLInSafari(urlString: str)
+                                                                }else{
+                                                                    let fullURLString = "https://" + str.trimmingCharacters(in: .whitespaces)
+                                                                    openURLInSafari(urlString: fullURLString)
+                                                                }
                                                             }
-                                                        }
+                                                    }else{
+                                                        let URLString = "https://" + str.trimmingCharacters(in: .whitespaces)
+                                                        ISMLinkPreview(url: URL(string: "\(URLString)")!, isRecived: self.isReceived)
+                                                            .frame(width: 280)
+                                                            .onTapGesture {
+                                                                if str.contains("https"){
+                                                                    openURLInSafari(urlString: str)
+                                                                }else{
+                                                                    let fullURLString = "https://" + str.trimmingCharacters(in: .whitespaces)
+                                                                    openURLInSafari(urlString: fullURLString)
+                                                                }
+                                                            }
+                                                    }
                                                 }else{
-                                                    let URLString = "https://" + str.trimmingCharacters(in: .whitespaces)
-                                                    ISMLinkPreview(url: URL(string: "\(URLString)")!, isRecived: self.isReceived)
-                                                        .frame(width: 280)
-                                                        .onTapGesture {
-                                                            if str.contains("https"){
-                                                                openURLInSafari(urlString: str)
-                                                            }else{
-                                                                let fullURLString = "https://" + str.trimmingCharacters(in: .whitespaces)
-                                                                openURLInSafari(urlString: fullURLString)
-                                                            }
-                                                        }
+                                                    Text(str)
+                                                        .font(appearance.fonts.messageListMessageText)
+                                                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                                 }
-                                                //                                                ISMLinkPreview(urlString: str)
-                                                //                                                    .font(themeFonts.messageListMessageText)
-                                                //                                                    .foregroundColor(themeColor.messageListMessageText)
-                                                
-//                                                Text(str)
-//                                                    .font(appearance.fonts.messageListMessageText)
-//                                                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-//                                                    .underline(true, color: isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-//                                                    .onTapGesture {
-//                                                        if str.contains("https"){
-//                                                            openURLInSafari(urlString: str)
-//                                                        }else{
-//                                                            let fullURLString = "https://" + str.trimmingCharacters(in: .whitespaces)
-//                                                            openURLInSafari(urlString: fullURLString)
-//                                                        }
-//                                                    }
-                                                
-                                                //                                                Link(destination: URL(string: str)!, label: {
-                                                //                                                    Text(str)
-                                                //                                                        .font(appearance.fonts.messageListMessageText)
-                                                //                                                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                                                //                                                        .underline(true, color: isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                                                //                                                })
                                             }
                                             else{
                                                 if str.contains("@") && isGroup == true{
@@ -1435,7 +1418,7 @@ struct ISMMessageSubView: View {
     
     
     func socialLinkView(message : MessagesDB) -> some View{
-        VStack {
+        VStack(alignment: .leading) {
             VStack(alignment: .leading) {
                
                     ISMChatImageCahcingManger.viewImage(url: message.metaData?.thumbnailUrl ?? "")
@@ -1456,17 +1439,25 @@ struct ISMMessageSubView: View {
                         Text(des)
                             .font(Font.medium(size: 12))
                             .foregroundColor(isReceived == true ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                            .lineLimit(2).padding(.vertical,10).padding(.horizontal,5)
+                            .lineLimit(2).padding(.horizontal,8).padding(.bottom,8).padding(.top,3)
                     }
                 
             }
-            .background(Color.white)
+            .background(Color.white.opacity(0.2))
             .cornerRadius(10)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
             )
             .frame(width: 248)
+            
+            if let url = message.metaData?.url{
+                Text(url)
+                    .font(appearance.fonts.messageListMessageText)
+                    .multilineTextAlignment(.leading)
+                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                    .padding(.horizontal,5)
+            }
             
             
             if appearance.timeInsideBubble == true{
