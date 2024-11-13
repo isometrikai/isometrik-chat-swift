@@ -95,12 +95,14 @@ public class ISMChatCustomFontNames{
     public var regular : String = "ProductSans-Regular"
     public var medium : String = "ProductSans-Medium"
     public var bold : String = "ProductSans-Bold"
+    public var semibold : String = "ProductSans-Bold"
     public var italic : String = "ProductSans-Italic"
     public init(){}
-    public init(light: String, regular: String, bold: String, medium: String, italic: String) {
+    public init(light: String, regular: String, bold: String,semiBold : String, medium: String, italic: String) {
         self.light = light
         self.regular = regular
         self.bold = bold
+        self.semibold = semiBold
         self.medium = medium
         self.italic = italic
     }

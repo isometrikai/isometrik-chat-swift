@@ -69,6 +69,7 @@ struct ISMMessageSubView: View {
     @State var reactionRemoved : String = ""
     @State var isAnimating = false
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    let customFontName = ISMChatSdkUI.getInstance().getCustomFontNames()
     @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
    
@@ -1351,7 +1352,7 @@ struct ISMMessageSubView: View {
                     if message.metaData?.bestPrice != message.metaData?.scratchPrice {
                         let per = calculateDiscountPercentage(latestBestPrice: message.metaData?.bestPrice ?? 0, msrpPrice: message.metaData?.scratchPrice ?? 0)
                         Text("\(per)% Off")
-                            .font(Font.medium(size: 12))
+                            .font(Font.custom(customFontName.medium, size: 12))
                             .foregroundColor(Color(hex: "#8D1111"))
                             .padding(4)
                             .background(Color(hex: "#FDDDDD"))
@@ -1365,41 +1366,40 @@ struct ISMMessageSubView: View {
                 // Brand and Product Name
                 VStack(alignment: .leading, spacing: 4) {
                     Text(message.metaData?.storeName?.uppercased() ?? "")
-                        .font(Font.bold(size: 12))
+                        .font(Font.custom(customFontName.bold, size: 12))
                         .foregroundColor(Color(hex: "#505050"))
                     
                     Text(message.metaData?.productName ?? "")
-                        .font(Font.medium(size: 14))
+                        .font(Font.custom(customFontName.medium, size: 14))
                         .lineLimit(2)
-                }.padding(.horizontal,5)
-                
-                // Pricing and Button
-                HStack {
-                    Text("$\(String(format: "%.2f", message.metaData?.bestPrice ?? 0))")
-                        .font(Font.bold(size: 18))
-                        .foregroundColor(Color(hex: "#0F1E91"))
-                    if message.metaData?.bestPrice ?? 0 != message.metaData?.scratchPrice ?? 0{
-                        Text("$\(String(format: "%.2f", message.metaData?.scratchPrice ?? 0))")
-                            .font(Font.medium(size: 14))
-                            .strikethrough()
-                            .foregroundColor(Color(hex: "#767676"))
+                    // Pricing and Button
+                    HStack {
+                        Text("$\(String(format: "%.2f", message.metaData?.bestPrice ?? 0))")
+                            .font(Font.custom(customFontName.bold, size: 18))
+                            .foregroundColor(Color(hex: "#0F1E91"))
+                        if message.metaData?.bestPrice ?? 0 != message.metaData?.scratchPrice ?? 0{
+                            Text("$\(String(format: "%.2f", message.metaData?.scratchPrice ?? 0))")
+                                .font(Font.custom(customFontName.medium, size: 14))
+                                .strikethrough()
+                                .foregroundColor(Color(hex: "#767676"))
+                        }
+                        
+                        Spacer()
                     }
-                    
-                    Spacer()
-                }
-                .padding(.top, 4)
-                .padding(.horizontal,5)
+                    .padding(.top, 4)
+                }.padding(.horizontal,5)
                 
                 Divider()
                 
                 // View Product Button
-                HStack {
+                HStack(spacing: 8) {
                     Spacer()
                     Text("View Product")
-                        .font(Font.medium(size: 16))
+                        .font(Font.custom(customFontName.semibold, size: 16))
                         .foregroundColor(Color(hex: "#FC8B1A"))
-                    Image(systemName: "arrow.up.right.square")
-                        .foregroundColor(Color(hex: "#FC8B1A"))
+                    appearance.images.productShareLogo
+                        .resizable()
+                        .frame(width: 24, height: 24, alignment: .center)
                     Spacer()
                 }
                 .padding(6)
@@ -1413,6 +1413,13 @@ struct ISMMessageSubView: View {
             )
             .frame(width: 248)
             .padding(.horizontal,5)
+            
+            if let url = message.metaData?.url{
+                Text(url)
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                    .padding(.horizontal,5)
+            }
             
             // Time and Status (if needed)
             if appearance.timeInsideBubble {
