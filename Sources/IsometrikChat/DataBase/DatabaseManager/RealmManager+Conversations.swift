@@ -291,7 +291,7 @@ extension RealmManager {
                     messageMetaData.childProductId = value.lastMessageDetails?.metaData?.childProductId
                     messageMetaData.entityType = value.lastMessageDetails?.metaData?.entityType
                     messageMetaData.thumbnailUrl = value.lastMessageDetails?.metaData?.thumbnailUrl
-                    messageMetaData.Description = value.lastMessageDetails?.metaData?.Description
+                    messageMetaData.Description = value.lastMessageDetails?.metaData?.description
                     messageMetaData.isVideoPost = value.lastMessageDetails?.metaData?.isVideoPost
                     messageMetaData.socialPostId = value.lastMessageDetails?.metaData?.socialPostId
                     messageMetaData.productImage = value.lastMessageDetails?.metaData?.productImage

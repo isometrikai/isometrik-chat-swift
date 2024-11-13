@@ -236,7 +236,7 @@ public struct ISMChatMetaData: Codable {
     
     //SOCIAL lINK
     public var thumbnailUrl : String?
-    public var Description : String?
+    public var description : String?
     public var isVideoPost : Bool?
     public var socialPostId : String?
     
@@ -258,7 +258,7 @@ public struct ISMChatMetaData: Codable {
         entityType: String? = nil,
         productImage: String? = nil,
         thumbnailUrl : String? = nil,
-        Description : String? = nil,
+        description : String? = nil,
         isVideoPost : Bool? = nil,
         socialPostId : String? = nil
     ) {
@@ -279,7 +279,7 @@ public struct ISMChatMetaData: Codable {
         self.entityType = entityType
         self.productImage = productImage
         self.thumbnailUrl = thumbnailUrl
-        self.Description = Description
+        self.description = description
         self.isVideoPost = isVideoPost
         self.socialPostId = socialPostId
     }
@@ -303,7 +303,7 @@ public struct ISMChatMetaData: Codable {
         entityType = try? container.decode(String.self, forKey: .entityType)
         productImage = try? container.decode(String.self, forKey: .productImage)
         thumbnailUrl = try? container.decode(String.self, forKey: .thumbnailUrl)
-        Description = try? container.decode(String.self, forKey: .Description)
+        description = try? container.decode(String.self, forKey: .description)
         isVideoPost = try? container.decode(Bool.self, forKey: .isVideoPost)
         socialPostId = try? container.decode(String.self, forKey: .socialPostId)
     }

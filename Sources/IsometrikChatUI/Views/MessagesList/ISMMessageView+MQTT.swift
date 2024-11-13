@@ -57,7 +57,7 @@ import IsometrikChat
                     entityType: messageInfo.metaData?.entityType,
                     productImage: messageInfo.metaData?.productImage,
                     thumbnailUrl: messageInfo.metaData?.thumbnailUrl,
-                    Description: messageInfo.metaData?.Description,
+                    description: messageInfo.metaData?.description,
                     isVideoPost: messageInfo.metaData?.isVideoPost,
                     socialPostId: messageInfo.metaData?.socialPostId)
 
@@ -168,7 +168,7 @@ import IsometrikChat
                  entityType: messageInfo.metaData?.entityType,
                  productImage: messageInfo.metaData?.productImage,
                  thumbnailUrl: messageInfo.metaData?.thumbnailUrl,
-                 Description: messageInfo.metaData?.Description,
+                 description: messageInfo.metaData?.description,
                  isVideoPost: messageInfo.metaData?.isVideoPost,
                  socialPostId: messageInfo.metaData?.socialPostId)
              

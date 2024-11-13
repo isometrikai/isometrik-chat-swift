@@ -105,7 +105,7 @@ extension RealmManager{
                     metadataValue.entityType = metaData.entityType
                     metadataValue.productImage = metaData.productImage
                     metadataValue.thumbnailUrl = metaData.thumbnailUrl
-                    metadataValue.Description = metaData.Description
+                    metadataValue.Description = metaData.description
                     metadataValue.isVideoPost = metaData.isVideoPost
                     metadataValue.socialPostId = metaData.socialPostId
                     metadataValue.productImage = metaData.productImage
@@ -391,7 +391,7 @@ extension RealmManager{
                         metaData.entityType = value.metaData?.entityType
                         metaData.productImage = value.metaData?.productImage
                         metaData.thumbnailUrl = value.metaData?.thumbnailUrl
-                        metaData.Description = value.metaData?.Description
+                        metaData.Description = value.metaData?.description
                         metaData.isVideoPost = value.metaData?.isVideoPost
                         metaData.socialPostId = value.metaData?.socialPostId
                         
