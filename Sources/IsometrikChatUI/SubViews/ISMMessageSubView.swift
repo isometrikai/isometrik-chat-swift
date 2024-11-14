@@ -154,19 +154,34 @@ struct ISMMessageSubView: View {
                                     VStack(alignment: .trailing, spacing: 5){
                                         HStack{
                                             if ISMChatHelper.isValidEmail(str) == true{
-                                                Link(destination: URL(string: "mailto:apple@me.com")!, label: {
-                                                    Text(str)
+                                                if ISMChatSdkUI.getInstance().getChatProperties().maskNumberAndEmail == true{
+                                                    let maskedEmail = String(repeating: "@", count: str.trimmingCharacters(in: .whitespacesAndNewlines).count)
+                                                    Text(maskedEmail)
                                                         .font(appearance.fonts.messageListMessageText)
                                                         .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                                                        .underline(true, color: isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                                                })
+                                                }else{
+                                                    Link(destination: URL(string: "mailto:apple@me.com")!, label: {
+                                                        Text(str)
+                                                            .font(appearance.fonts.messageListMessageText)
+                                                            .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                            .underline(true, color: isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                    })
+                                                }
                                             }else if  ISMChatHelper.isValidPhone(phone: str) == true{
-                                                Link(destination: URL(string: "tel:\(str)")!, label: {
-                                                    Text(str)
+                                                if ISMChatSdkUI.getInstance().getChatProperties().maskNumberAndEmail == true{
+                                                    let maskedPhoneNumber = String(repeating: "*", count: str.trimmingCharacters(in: .whitespacesAndNewlines).count)
+                                                    Text(maskedPhoneNumber)
                                                         .font(appearance.fonts.messageListMessageText)
                                                         .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                                                        .underline(true, color: isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                                                })
+                                                    
+                                                }else{
+                                                    Link(destination: URL(string: "tel:\(str)")!, label: {
+                                                        Text(str)
+                                                            .font(appearance.fonts.messageListMessageText)
+                                                            .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                            .underline(true, color: isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                    })
+                                                }
                                             }
                                             else if str.isValidURL{
                                                 if ISMChatSdkUI.getInstance().getChatProperties().hideLinkPreview == false{

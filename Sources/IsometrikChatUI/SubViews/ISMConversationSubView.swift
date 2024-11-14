@@ -329,11 +329,29 @@ struct ISMConversationSubView: View {
                         .foregroundColor(appearance.colorPalette.chatListUserMessage)
                 }
             }
-            Text(text)
-                .foregroundColor(appearance.colorPalette.chatListUserMessage)
-                .font(appearance.fonts.chatListUserMessage)
-                .padding(.trailing, 40)
-                .lineLimit(2)
+            
+            if  ISMChatHelper.isValidPhone(phone: text) == true && ISMChatSdkUI.getInstance().getChatProperties().maskNumberAndEmail == true{
+                let maskedPhoneNumber = String(repeating: "*", count: text.trimmingCharacters(in: .whitespacesAndNewlines).count)
+                Text(maskedPhoneNumber)
+                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                    .font(appearance.fonts.chatListUserMessage)
+                    .padding(.trailing, 40)
+                    .lineLimit(2)
+            }else if ISMChatHelper.isValidEmail(text) == true && ISMChatSdkUI.getInstance().getChatProperties().maskNumberAndEmail == true{
+                let maskedEmail = String(repeating: "@", count: text.trimmingCharacters(in: .whitespacesAndNewlines).count)
+                Text(maskedEmail)
+                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                    .font(appearance.fonts.chatListUserMessage)
+                    .padding(.trailing, 40)
+                    .lineLimit(2)
+            }else{
+                Text(text)
+                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                    .font(appearance.fonts.chatListUserMessage)
+                    .padding(.trailing, 40)
+                    .lineLimit(2)
+            }
+            
             
             
             //UNREAD MESSAGE COUNT

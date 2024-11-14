@@ -45,16 +45,18 @@ public class ISMChatHelper: NSObject {
     
     //MARK: - Check if String is valid email
     public class func isValidEmail(_ email: String) -> Bool {
+        let trimmedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
         let emailFormat = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailFormat)
-        return emailPredicate.evaluate(with: email)
+        return emailPredicate.evaluate(with: trimmedEmail)
     }
     
     //MARK: - Check if String is valid phone number
     public class func isValidPhone(phone: String) -> Bool {
+        let trimmedPhone = phone.trimmingCharacters(in: .whitespacesAndNewlines)
         let phoneRegex = "^[7-9][0-9]{9}$"
         let phoneTest = NSPredicate(format: "SELF MATCHES %@", phoneRegex)
-        return phoneTest.evaluate(with: phone)
+        return phoneTest.evaluate(with: trimmedPhone)
     }
     
     //MARK: - Check message delivery status
