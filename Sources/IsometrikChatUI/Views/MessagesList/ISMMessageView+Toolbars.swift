@@ -318,7 +318,7 @@ extension ISMMessageView{
                     }
                     
                     HStack(spacing: 5) {
-                        if chatFeatures.contains(.gif), textFieldtxt.isEmpty,ISMChatSdkUI.getInstance().getChatProperties().gifLogoOnTextViewLeft == true{
+                        if chatFeatures.contains(.gif),ISMChatSdkUI.getInstance().getChatProperties().gifLogoOnTextViewLeft == true{
                             Button {
                                 DispatchQueue.main.async {
                                     stateViewModel.showGifPicker = true
