@@ -303,7 +303,7 @@ struct ISMConversationSubView: View {
         HStack(alignment: .center,spacing: 5){
             
             if chat.isGroup == false{
-                if chat.lastMessageDetails?.senderId == userData.userId{
+                if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData.userId{
                     if isReaction == false{
                         messageDeliveryStatus()
                     }
