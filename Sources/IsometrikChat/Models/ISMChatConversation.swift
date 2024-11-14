@@ -247,9 +247,13 @@ public struct ISMChatCreateConversationResponse : Codable{
 
 public struct  ISMChatMessageUpdatedDetail : Codable{
     public var body : String?
+    public var customType : String?
+    public var metaData : ISMChatMetaData?
     public  init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         body = try? container.decode(String.self, forKey: .body)
+        customType = try? container.decode(String.self, forKey: .customType)
+        metaData = try? container.decode(ISMChatMetaData.self, forKey: .metaData)
     }
 }
 

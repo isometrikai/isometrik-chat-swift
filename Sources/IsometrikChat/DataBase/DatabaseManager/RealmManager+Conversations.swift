@@ -380,8 +380,13 @@ extension RealmManager {
                     listToUpdate.first?.lastMessageDetails?.initiatorId = obj.lastMessageDetails?.initiatorId
                     listToUpdate.first?.lastMessageDetails?.customType = obj.lastMessageDetails?.customType
                     listToUpdate.first?.lastMessageDetails?.action = obj.lastMessageDetails?.action
+                    
                     if listToUpdate.first?.lastMessageDetails?.action == ISMChatActionType.messageDetailsUpdated.value{
                         listToUpdate.first?.lastMessageDetails?.body = obj.lastMessageDetails?.details?.body
+                        listToUpdate.first?.lastMessageDetails?.customType = obj.lastMessageDetails?.details?.customType
+                        if obj.lastMessageDetails?.details?.customType == ISMChatMediaType.ProductLink.value || obj.lastMessageDetails?.details?.customType == ISMChatMediaType.SocialLink.value{
+                            listToUpdate.first?.lastMessageDetails?.body = obj.lastMessageDetails?.details?.metaData?.url ?? ""
+                        }
                     }
                     
                     listToUpdate.first?.lastMessageDetails?.deliveredTo.removeAll()
