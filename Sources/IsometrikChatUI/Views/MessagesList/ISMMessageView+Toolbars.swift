@@ -318,9 +318,22 @@ extension ISMMessageView{
                     }
                     
                     HStack(spacing: 5) {
+                        if chatFeatures.contains(.gif), textFieldtxt.isEmpty,ISMChatSdkUI.getInstance().getChatProperties().gifLogoOnTextViewLeft == true{
+                            Button {
+                                DispatchQueue.main.async {
+                                    stateViewModel.showGifPicker = true
+                                }
+                            } label: {
+                                appearance.images.addSticker
+                                    .resizable()
+                                    .frame(width: 20, height: 20)
+                                    .padding(.leading, 10)
+                            }
+                        }
+                        
                         textView()
                         
-                        if chatFeatures.contains(.gif), textFieldtxt.isEmpty {
+                        if chatFeatures.contains(.gif), textFieldtxt.isEmpty,ISMChatSdkUI.getInstance().getChatProperties().gifLogoOnTextViewLeft == false{
                             Button {
                                 DispatchQueue.main.async {
                                     stateViewModel.showGifPicker = true
@@ -333,6 +346,10 @@ extension ISMMessageView{
                             }
                         }
                     }
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(appearance.colorPalette.messageListTextViewBackground)
+                    )
                     .overlay(
                         RoundedRectangle(cornerRadius: 16)
                             .stroke(appearance.colorPalette.messageListTextViewBoarder, lineWidth: 1)
@@ -482,11 +499,22 @@ extension ISMMessageView{
     func sendMessageButton() -> some View {
         VStack{
             if !textFieldtxt.isEmpty || chatFeatures.contains(.audio) == false {
-                Button(action: { sendMessage(msgType: .text) }) {
-                    appearance.images.sendMessage
-                        .resizable()
-                        .frame(width: 32, height: 32)
-                        .padding(.horizontal, 5)
+                if ISMChatSdkUI.getInstance().getChatProperties().hideSendButtonUntilEmptyTextView == true{
+                    if !textFieldtxt.isEmpty{
+                        Button(action: { sendMessage(msgType: .text) }) {
+                            appearance.images.sendMessage
+                                .resizable()
+                                .frame(width: 32, height: 32)
+                                .padding(.horizontal, 5)
+                        }
+                    }
+                }else{
+                    Button(action: { sendMessage(msgType: .text) }) {
+                        appearance.images.sendMessage
+                            .resizable()
+                            .frame(width: 32, height: 32)
+                            .padding(.horizontal, 5)
+                    }
                 }
             } else {
                 ZStack {
