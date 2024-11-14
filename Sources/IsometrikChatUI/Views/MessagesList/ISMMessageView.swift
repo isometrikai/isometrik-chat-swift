@@ -849,9 +849,9 @@ public struct ISMMessageView: View {
         DispatchQueue.main.async {
             ISMChatHelper.print("Scrolling to messageId: \(messageId)")
             parentMessageIdToScroll = ""
-            withAnimation(Animation.easeOut(duration: 0.2)) {
+//            withAnimation(Animation.easeOut(duration: 0.2)) {
                 scrollReader.scrollTo(messageId, anchor: anchor)
-            }
+//            }
         }
     }
     
