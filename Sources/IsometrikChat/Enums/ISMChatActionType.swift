@@ -49,7 +49,7 @@ public enum ISMChatActionType : CaseIterable{
     case userBlockConversation
     case userUnblockConversation
 
-//      clearConversation,
+    case clearConversation
 //      removeMember,
 //      addMember,
 //      removeAdmin,
@@ -104,6 +104,8 @@ public enum ISMChatActionType : CaseIterable{
             return "userBlockConversation"
         case .userUnblockConversation:
             return "userUnblockConversation"
+        case .clearConversation:
+            return "clearConversation"
         }
     }
 }

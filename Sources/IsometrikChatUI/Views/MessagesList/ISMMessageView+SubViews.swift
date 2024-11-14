@@ -205,7 +205,10 @@ extension ISMMessageView{
         }//:ZStack
         .frame(width: date.widthOfString(usingFont: UIFont.regular(size: 14)) + 20)
         .padding(.vertical, 5)
-        .background(appearance.colorPalette.messageListActionBackground)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(appearance.colorPalette.messageListActionBackground)
+        )
         .cornerRadius(5)
     }
     

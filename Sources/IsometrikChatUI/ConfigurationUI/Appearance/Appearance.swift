@@ -28,7 +28,7 @@ public class ISMAppearance {
     public var imagesSize : ISMChatImageSizes
     public var constantStrings : ISMChatStrings
     public var messageCustomBubbleView : ISMChatMessageCustomBubble
-    public var messageListBackgroundImage : String
+    public var messageListBackgroundImage : String?
     public var dateFormats : ISMChatDateFormats
     public init(
         colorPalette: ISMChatColorPalette = ISMChatColorPalette(),

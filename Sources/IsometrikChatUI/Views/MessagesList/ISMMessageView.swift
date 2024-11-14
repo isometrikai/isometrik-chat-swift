@@ -180,7 +180,7 @@ public struct ISMMessageView: View {
         VStack{
             ZStack{
                 appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
-//                if let image = appearance.images.messageListBackgroundImage{
+//                if let image = appearance.messageListBackgroundImage{
 //                    VStack{
 //                        Image(image)
 //                            .resizable()

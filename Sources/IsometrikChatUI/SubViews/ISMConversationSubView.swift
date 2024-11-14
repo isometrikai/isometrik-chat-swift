@@ -238,6 +238,9 @@ struct ISMConversationSubView: View {
             }else if chat.lastMessageDetails?.action == ISMChatActionType.conversationTitleUpdated.value{
                 getLabel(hideImage: true,text: "Changed this group title", image: "",isReaction : true)
             }
+            else if chat.lastMessageDetails?.action == ISMChatActionType.clearConversation.value{
+                getLabel(hideImage: true,text: "", image: "",isReaction : true)
+            }
             else if chat.lastMessageDetails?.action == ISMChatActionType.conversationImageUpdated.value{
                 getLabel(hideImage: true,text: "Changed this group image", image: "",isReaction : true)
             }else if chat.lastMessageDetails?.action == ISMChatActionType.messageDetailsUpdated.value{

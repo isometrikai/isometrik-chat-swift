@@ -373,7 +373,7 @@ struct ISMContactInfoView: View {
                 self.realmManager.clearMessages()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                     self.realmManager.clearMessages(convID: conversationID ?? "")
-                    NavigationUtil.popToRootView()
+                    NavigationUtil.popToChatVC()
                 })
             }
         }else if selectedOption == .DeleteUser {
