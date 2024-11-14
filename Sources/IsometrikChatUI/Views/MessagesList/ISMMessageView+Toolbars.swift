@@ -535,7 +535,7 @@ extension ISMMessageView{
 
     
     func textView() -> some View{
-        TextField("", text: $textFieldtxt, axis: .vertical)
+        TextField(appearance.constantStrings.messageInputTextViewPlaceholder, text: $textFieldtxt, axis: .vertical)
             .onChange(of: textFieldtxt, { _, newValue in
                 // Update showMentionList based on conditions
                 if newValue.last == "@" {
@@ -544,10 +544,11 @@ extension ISMMessageView{
                     stateViewModel.showMentionList = false
                 }
             })
-            .placeholder(when: textFieldtxt.isEmpty) {
-                Text(appearance.constantStrings.messageInputTextViewPlaceholder)
-                    .foregroundColor(appearance.colorPalette.messageListTextViewPlaceholder)
-            }
+//            .placeholder(when: textFieldtxt.isEmpty) {
+//                Text(appearance.constantStrings.messageInputTextViewPlaceholder)
+//                    .foregroundColor(appearance.colorPalette.messageListTextViewPlaceholder)
+//            }
+            .font(appearance.fonts.messageListTextViewText)
             .foregroundColor(appearance.colorPalette.messageListTextViewText)
             .padding(.horizontal, 10)
             .padding(.vertical, 5)

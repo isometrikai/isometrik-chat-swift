@@ -175,10 +175,17 @@ extension ISMMessageView{
         }
     }
     
+    func clearTextField() {
+        textFieldtxt = " " // Temporarily set to a space
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            textFieldtxt = "" // Set back to empty string
+        }
+    }
+    
     //MARK: - SEND MESSAGE
     func sendMessage(msgType: ISMChatMessageType) {
         self.text = self.textFieldtxt
-        self.textFieldtxt = ""
+        clearTextField()
         if !networkMonitor.isConnected && isGroup == false {
             
             if msgType == .text {
