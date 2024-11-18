@@ -166,6 +166,8 @@ public struct ISMMessageView: View {
     
     public var delegate : ISMMessageViewDelegate?
     
+    let backgroundImage = ISMChatSdkUI.getInstance().getAppAppearance().appearance.messageListBackgroundImage
+    
     @State var navigateToSocialProfileId : String = ""
     @State private var cancellables = Set<AnyCancellable>()
     @State var navigateToJobId : String = ""
@@ -180,13 +182,6 @@ public struct ISMMessageView: View {
         VStack{
             ZStack{
                 appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
-//                if let image = appearance.messageListBackgroundImage{
-//                    VStack{
-//                        Image(image)
-//                            .resizable()
-//                            .aspectRatio(contentMode: .fill)
-//                    }
-//                }
                 VStack(spacing: 0) {
                     if ISMChatSdkUI.getInstance().getChatProperties().customJobCardInMessageList == true {
                         if let conversation = self.conversationDetail?.conversationDetails,
@@ -199,27 +194,51 @@ public struct ISMMessageView: View {
                     }
                     ZStack{
                         GeometryReader{ reader in
-                            ScrollView{
-                                ScrollViewReader{ scrollReader in
-                                    getMessagesView(scrollReader: scrollReader, viewWidth: reader.size.width)
-                                        .padding(.horizontal)
+                            if let image = ISMChatSdkUI.getInstance().getAppAppearance().appearance.messageListBackgroundImage ,!image.isEmpty{
+                                ScrollView{
+                                    ScrollViewReader{ scrollReader in
+                                        getMessagesView(scrollReader: scrollReader, viewWidth: reader.size.width)
+                                            .padding(.horizontal)
+                                    }
+                                }.modifier(BackgroundImage())
+                                    .coordinateSpace(name: "scroll")
+                                    .coordinateSpace(name: "pullToRefresh")
+                                    .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
+                                    .gesture(DragGesture().onChanged { value in
+                                        // Calculate the velocity
+                                        let velocity = value.predictedEndTranslation.height - value.translation.height
+                                        // Define a threshold value for fast scrolling
+                                        let fastScrollThreshold: CGFloat = 65
+                                        if velocity > fastScrollThreshold {
+                                            //--------FAST SCROLL---------//
+                                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                        } else {
+                                            //--------SLOW SCROLL---------//
+                                        }
+                                    }).highPriorityGesture(DragGesture())
+                            }else{
+                                ScrollView{
+                                    ScrollViewReader{ scrollReader in
+                                        getMessagesView(scrollReader: scrollReader, viewWidth: reader.size.width)
+                                            .padding(.horizontal)
+                                    }
                                 }
+                                .coordinateSpace(name: "scroll")
+                                .coordinateSpace(name: "pullToRefresh")
+                                .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
+                                .gesture(DragGesture().onChanged { value in
+                                    // Calculate the velocity
+                                    let velocity = value.predictedEndTranslation.height - value.translation.height
+                                    // Define a threshold value for fast scrolling
+                                    let fastScrollThreshold: CGFloat = 65
+                                    if velocity > fastScrollThreshold {
+                                        //--------FAST SCROLL---------//
+                                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                    } else {
+                                        //--------SLOW SCROLL---------//
+                                    }
+                                }).highPriorityGesture(DragGesture())
                             }
-                            .coordinateSpace(name: "scroll")
-                            .coordinateSpace(name: "pullToRefresh")
-                            .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
-                            .gesture(DragGesture().onChanged { value in
-                                // Calculate the velocity
-                                let velocity = value.predictedEndTranslation.height - value.translation.height
-                                // Define a threshold value for fast scrolling
-                                let fastScrollThreshold: CGFloat = 65
-                                if velocity > fastScrollThreshold {
-                                    //--------FAST SCROLL---------//
-                                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                                } else {
-                                    //--------SLOW SCROLL---------//
-                                }
-                            }).highPriorityGesture(DragGesture())
                         }.padding(.bottom,5)
                         //No Message View
                         if realmManager.allMessages?.count == 0 || realmManager.messages.count == 0{
@@ -906,4 +925,25 @@ extension ISMMessageView{
             cancellables.forEach { $0.cancel() }
             cancellables.removeAll()
         }
+}
+
+
+struct BackgroundImage: ViewModifier {
+    func body(content: Content) -> some View {
+        if let image = ISMChatSdkUI.getInstance().getAppAppearance().appearance.messageListBackgroundImage {
+            ZStack {
+                Image(image)
+                    .resizable()
+                    .scaledToFill()
+                    .ignoresSafeArea(.all, edges: [.horizontal, .bottom])
+                    .zIndex(0) // Ensure background is behind content
+                
+                content
+                    .zIndex(1) // Keep content on top
+            }
+        }else {
+            content
+                .frame(maxWidth: .infinity, maxHeight: .infinity) // Ensure it occupies full screen without layout issues
+        }
+    }
 }
