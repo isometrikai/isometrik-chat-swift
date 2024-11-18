@@ -35,6 +35,7 @@ import UIKit
         public var messageListHeaderDescription : Font = Font.regular(size: 12)
         public var messageListSectionHeaderText : Font = Font.regular(size: 14)
         public var messageListMessageText : Font = Font.regular(size: 16)
+        public var messageListMessageMoreAndLess : Font = Font.regular(size: 16)
         public var messageListMessageForwarded : Font = Font.italic(size: 12)
         public var messageListMessageDeleted : Font = Font.italic(size: 16)
         public var messageListMessageEdited : Font = Font.italic(size: 12)
@@ -62,7 +63,7 @@ import UIKit
         
         public init(){}
         
-        public init(navigationBarTitle: Font, alertText: Font, userProfileDescription: Font, userProfileeditText: Font, userProfilefields: Font, userProfilesectionHeader: Font, userProfileDoneButton: Font, chatListTitle: Font, chatListUserName: Font, chatListUserMessage: Font, chatListLastMessageTime: Font, chatListUnreadMessageCount: Font, messageListHeaderTitle: Font, messageListHeaderDescription: Font, messageListSectionHeaderText: Font, messageListMessageText: Font, messageListMessageForwarded: Font, messageListMessageDeleted: Font, messageListMessageEdited: Font, messageListMessageTime: Font, messageListTextViewText: Font, messageListActionText: Font, messageListReplyToolbarHeader: Font, messageListReplyToolbarDescription: Font, messageListtoolbarSelected: Font, messageListtoolbarAction: Font, messageListreactionCount: Font, messageListgroupMemberUserName: Font, messageListcallingHeader: Font, messageListcallingTime: Font, mediaSliderHeader: Font, mediaSliderDescription: Font, contactInfoHeader: Font,searchbarText :Font,avatarText : Font) {
+        public init(navigationBarTitle: Font, alertText: Font, userProfileDescription: Font, userProfileeditText: Font, userProfilefields: Font, userProfilesectionHeader: Font, userProfileDoneButton: Font, chatListTitle: Font, chatListUserName: Font, chatListUserMessage: Font, chatListLastMessageTime: Font, chatListUnreadMessageCount: Font, messageListHeaderTitle: Font, messageListHeaderDescription: Font, messageListSectionHeaderText: Font, messageListMessageText: Font,messageListMessageMoreAndLess: Font, messageListMessageForwarded: Font, messageListMessageDeleted: Font, messageListMessageEdited: Font, messageListMessageTime: Font, messageListTextViewText: Font, messageListActionText: Font, messageListReplyToolbarHeader: Font, messageListReplyToolbarDescription: Font, messageListtoolbarSelected: Font, messageListtoolbarAction: Font, messageListreactionCount: Font, messageListgroupMemberUserName: Font, messageListcallingHeader: Font, messageListcallingTime: Font, mediaSliderHeader: Font, mediaSliderDescription: Font, contactInfoHeader: Font,searchbarText :Font,avatarText : Font) {
             self.navigationBarTitle = navigationBarTitle
             self.alertText = alertText
             self.userProfileDescription = userProfileDescription
@@ -79,6 +80,7 @@ import UIKit
             self.messageListHeaderDescription = messageListHeaderDescription
             self.messageListSectionHeaderText = messageListSectionHeaderText
             self.messageListMessageText = messageListMessageText
+            self.messageListMessageMoreAndLess = messageListMessageMoreAndLess
             self.messageListMessageForwarded = messageListMessageForwarded
             self.messageListMessageDeleted = messageListMessageDeleted
             self.messageListMessageEdited = messageListMessageEdited

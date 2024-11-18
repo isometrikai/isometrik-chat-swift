@@ -164,9 +164,10 @@ struct ISMMessageInfoSubView: View {
                                                 if str.contains("@") && isGroup == true{
                                                     HighlightedTextView(originalText: str, mentionedUsers: groupconversationMember, isReceived: self.isReceived, navigateToInfo: $navigateToInfo, navigatetoUser: $navigatetoUser)
                                                 }else{
-                                                    Text(str)
-                                                        .font(appearance.fonts.messageListMessageText)
-                                                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                    ISMChatExpandableText(str, lineLimit: 5, isReceived: isReceived)
+//                                                    Text(str)
+//                                                        .font(appearance.fonts.messageListMessageText)
+//                                                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                                 }
                                             }
                                         }
