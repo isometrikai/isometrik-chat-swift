@@ -205,6 +205,10 @@ public struct ISMChatImages {
         addTextOnImageButton: Image? = nil,
         editImageButton: Image? = nil,
         deleteImageButton: Image? = nil,
+        chatList_messagePending : Image? = nil,
+        chatList_messageSent : Image? = nil,
+        chatList_messageDelivered : Image? = nil,
+        chatList_messageRead : Image? = nil,
         messagePending: Image? = nil,
         messageSent: Image? = nil,
         messageDelivered: Image? = nil,
@@ -294,6 +298,10 @@ public struct ISMChatImages {
         if let addTextOnImageButton = addTextOnImageButton { self.addTextOnImageButton = addTextOnImageButton }
         if let editImageButton = editImageButton { self.editImageButton = editImageButton }
         if let deleteImageButton = deleteImageButton { self.deleteImageButton = deleteImageButton }
+        if let chatList_messagePending = chatList_messagePending { self.chatList_messagePending = chatList_messagePending }
+        if let chatList_messageSent = chatList_messageSent { self.chatList_messageSent = chatList_messageSent }
+        if let chatList_messageDelivered = chatList_messageDelivered { self.chatList_messageDelivered = chatList_messageDelivered }
+        if let chatList_messageRead = chatList_messageRead { self.chatList_messageRead = chatList_messageRead }
         if let messagePending = messagePending { self.messagePending = messagePending }
         if let messageSent = messageSent { self.messageSent = messageSent }
         if let messageDelivered = messageDelivered { self.messageDelivered = messageDelivered }
