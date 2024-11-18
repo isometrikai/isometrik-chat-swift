@@ -27,7 +27,7 @@ struct ISMChatExpandableText: View {
         if !truncated {
             return ""
         } else {
-            return self.expanded ? "see less" : " see more"
+            return self.expanded ? "Read less" : " Read more"
         }
     }
     

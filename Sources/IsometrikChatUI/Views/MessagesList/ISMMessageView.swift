@@ -931,15 +931,21 @@ extension ISMMessageView{
 struct BackgroundImage: ViewModifier {
     func body(content: Content) -> some View {
         if let image = ISMChatSdkUI.getInstance().getAppAppearance().appearance.messageListBackgroundImage {
-            ZStack {
-                Image(image)
-                    .resizable()
-                    .scaledToFill()
-                    .ignoresSafeArea(.all, edges: [.horizontal, .bottom])
-                    .zIndex(0) // Ensure background is behind content
-                
-                content
-                    .zIndex(1) // Keep content on top
+            GeometryReader { geometry in
+                ZStack {
+                    Image(image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geometry.size.width, height: geometry.size.height - geometry.safeAreaInsets.top)
+                        .position(x: geometry.size.width/2,
+                                                        y: (geometry.size.height - geometry.safeAreaInsets.top)/2 + geometry.safeAreaInsets.top)
+                        .ignoresSafeArea(.all, edges: [.horizontal, .vertical])
+                        .zIndex(0) // Ensure background is behind content
+                    
+                    content
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .zIndex(1) // Keep content on top
+                }.clipped()
             }
         }else {
             content

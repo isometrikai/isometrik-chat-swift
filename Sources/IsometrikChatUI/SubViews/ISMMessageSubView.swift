@@ -151,7 +151,7 @@ struct ISMMessageSubView: View {
                                     if message.messageUpdated == true && !str.isValidURL{
                                         editedView()
                                     }
-                                    VStack(alignment: .trailing, spacing: 5){
+                                    VStack(alignment: .leading, spacing: 5){
                                         HStack{
                                             if ISMChatHelper.isValidEmail(str) == true{
                                                 if ISMChatSdkUI.getInstance().getChatProperties().maskNumberAndEmail == true{

@@ -107,7 +107,7 @@ struct ISMMessageInfoSubView: View {
                                     if message.messageUpdated == true{
                                         editedView()
                                     }
-                                    VStack(alignment: .trailing, spacing: 5){
+                                    VStack(alignment: .leading, spacing: 5){
                                         HStack{
                                             if ISMChatHelper.isValidEmail(str) == true{
                                                 Link(str, destination: URL(string: "mailto:apple@me.com")!)
