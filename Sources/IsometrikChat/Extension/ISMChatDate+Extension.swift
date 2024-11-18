@@ -8,6 +8,34 @@
 import Foundation
 
 extension NSDate{
+    
+    public func descriptiveStringMessageInfo(
+        time: Double,
+        dateFormat: String = "dd MMM, hh:mm a"
+    ) -> String {
+        let unixTimeStamp: Double = time / 1000.0
+        let exactDate = Date(timeIntervalSince1970: unixTimeStamp)
+        let currentDate = Date()
+        
+        let differenceInSeconds = Int(currentDate.timeIntervalSince(exactDate))
+        
+        if differenceInSeconds < 60 {
+            return "Just now"
+        } else if differenceInSeconds < 3600 {
+            let minutes = differenceInSeconds / 60
+            return "\(minutes) minute\(minutes > 1 ? "s" : "") ago"
+        } else if differenceInSeconds < 86400 {
+            let hours = differenceInSeconds / 3600
+            return "\(hours) hour\(hours > 1 ? "s" : "") ago"
+        } else if differenceInSeconds >= 1 * 86400 {
+            let formatter = DateFormatter()
+            formatter.dateFormat = dateFormat
+            return formatter.string(from: exactDate)
+        } else {
+            return "Yesterday"
+        }
+    }
+
     public func descriptiveString(time: Double,dateStyle : DateFormatter.Style = .short,dateFormat : String) -> String{
         let unixTimeStamp: Double = time / 1000.0
         let exactDate = NSDate.init(timeIntervalSince1970: unixTimeStamp)

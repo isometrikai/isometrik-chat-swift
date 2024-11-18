@@ -65,6 +65,11 @@ public struct ISMChatImages {
     
     //messageStatus
     
+    public var chatList_messagePending : Image = loadImageSafely(with: "clock")
+    public var chatList_messageSent : Image = loadImageSafely(with: "single_tick_sent")
+    public var chatList_messageDelivered : Image = loadImageSafely(with: "double_tick_sent")
+    public var chatList_messageRead : Image = loadImageSafely(with: "double_tick_received")
+    
     public var messagePending : Image = loadImageSafely(with: "clock")
     public var messageSent : Image = loadImageSafely(with: "single_tick_sent")
     public var messageDelivered : Image = loadImageSafely(with: "double_tick_sent")

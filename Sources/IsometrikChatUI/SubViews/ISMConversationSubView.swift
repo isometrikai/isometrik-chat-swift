@@ -374,20 +374,20 @@ struct ISMConversationSubView: View {
     func messageDeliveryStatus() -> some View {
         if chat.isGroup == false{
             if (chat.lastMessageDetails?.deliveredTo.count == 1 && chat.lastMessageDetails?.deliveredTo.first?.userId != nil) && (chat.lastMessageDetails?.readBy.count == 1 && chat.lastMessageDetails?.readBy.first?.userId != nil) {
-                return AnyView(appearance.images.messageRead
+                return AnyView(appearance.images.chatList_messageRead
                     .resizable()
                     .frame(width: appearance.imagesSize.messageRead.width, height: appearance.imagesSize.messageRead.height))
             }else if (chat.lastMessageDetails?.deliveredTo.count == 1 && chat.lastMessageDetails?.deliveredTo.first?.userId != nil) && chat.lastMessageDetails?.readBy.count == 0{
-                return AnyView(appearance.images.messageDelivered
+                return AnyView(appearance.images.chatList_messageDelivered
                     .resizable()
                     .frame(width: appearance.imagesSize.messageDelivered.width, height: appearance.imagesSize.messageDelivered.height))
             }else{
                 if chat.lastMessageDetails?.msgSyncStatus == ISMChatSyncStatus.Local.txt {
-                    return AnyView(appearance.images.messagePending
+                    return AnyView(appearance.images.chatList_messagePending
                         .resizable()
                         .frame(width: appearance.imagesSize.messagePending.width, height: appearance.imagesSize.messagePending.height))
                 }
-                return AnyView(appearance.images.messageSent
+                return AnyView(appearance.images.chatList_messageSent
                     .resizable()
                     .frame(width: appearance.imagesSize.messageSend.width, height: appearance.imagesSize.messageSend.height))
             }

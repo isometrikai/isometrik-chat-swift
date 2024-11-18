@@ -137,7 +137,7 @@ public struct ISMMessageInfoView: View {
                                     .font(appearance.fonts.messageListMessageText)
                                 Spacer()
                                 if let readAtTime = self.readAt{
-                                    let text = NSDate().descriptiveStringLastSeen(time: readAtTime)
+                                    let text = NSDate().descriptiveStringMessageInfo(time: readAtTime)
                                     Text(text)
                                         .foregroundColor(appearance.colorPalette.chatListUserMessage)
                                         .font(appearance.fonts.chatListUserMessage)
@@ -158,7 +158,7 @@ public struct ISMMessageInfoView: View {
                                     .font(appearance.fonts.messageListMessageText)
                                 Spacer()
                                 if let deliveredAtTime = self.deliveredAt{
-                                    let text = NSDate().descriptiveStringLastSeen(time: deliveredAtTime)
+                                    let text = NSDate().descriptiveStringMessageInfo(time: deliveredAtTime)
                                     Text(text)
                                         .foregroundColor(appearance.colorPalette.chatListUserMessage)
                                         .font(appearance.fonts.chatListUserMessage)
@@ -290,7 +290,7 @@ struct ISMMessageInfoDetailUserSubView : View {
             
             Spacer()
             
-            let text = NSDate().descriptiveStringLastSeen(time: user.timestamp ?? 0)
+            let text = NSDate().descriptiveStringMessageInfo(time: user.timestamp ?? 0)
             Text(text)
                 .foregroundColor(appearance.colorPalette.chatListUserMessage)
                 .font(appearance.fonts.chatListUserMessage)
