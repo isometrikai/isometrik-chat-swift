@@ -953,3 +953,20 @@ struct BackgroundImage: ViewModifier {
         }
     }
 }
+
+
+struct BackgroundImageMessageInfo: ViewModifier {
+    func body(content: Content) -> some View {
+        if let image = ISMChatSdkUI.getInstance().getAppAppearance().appearance.messageListBackgroundImage {
+            content
+                .background(
+                    Image(image)
+                        .resizable()
+                        .scaledToFill()
+                )
+                .clipped()
+        } else {
+            content
+        }
+    }
+}

@@ -36,15 +36,19 @@ public struct ISMMessageInfoView: View {
         ZStack{
             appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
             VStack{
-                VStack(alignment  :.trailing,spacing: 0){
+                VStack(alignment  : .trailing,spacing: 0){
                     //Header
-                    sectionHeader(firstMessage: message, color: appearance.colorPalette.messageListSectionHeaderText, font: appearance.fonts.messageListSectionHeaderText)
+                    HStack{
+                        Spacer()
+                        sectionHeader(firstMessage: message, color: appearance.colorPalette.messageListSectionHeaderText, font: appearance.fonts.messageListSectionHeaderText)
+                        Spacer()
+                    }.padding(.top,15)
                     
                     ISMMessageInfoSubView(previousAudioRef: $previousAudioRef, messageType: ISMChatHelper.getMessageType(message: message), message: message, viewWidth: viewWidth, isReceived: false, messageDeliveredType: ISMChatHelper.checkMessageDeliveryType(message: message, isGroup: self.isGroup ,memberCount: realmManager.getMemberCount(convId: self.conversationId), isOneToOneGroup: ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup), conversationId: conversationId,isGroup: self.isGroup, groupconversationMember: groupMember, fromBroadCastFlow: self.fromBroadCastFlow)
                         .padding(.trailing,15)
                         .environmentObject(self.realmManager)
                     
-                }
+                }.modifier(BackgroundImageMessageInfo())
                 List{
                     if isGroup == true || fromBroadCastFlow == true{
                         Section {

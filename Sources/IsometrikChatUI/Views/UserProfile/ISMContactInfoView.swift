@@ -16,6 +16,7 @@ struct ISMContactInfoView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var showingAlert = false
     @State private var alertStr = ""
+    @State private var buttonAlrtStr = ""
     var conversationViewModel = ConversationViewModel()
     let conversationID : String?
     @State var conversationDetail : ISMChatConversationDetail?
@@ -60,169 +61,173 @@ struct ISMContactInfoView: View {
                         .resizable()
                         .scaledToFit()
                 }else{
-                    List {
-                        //Bio
-                        
-                        Section {
-//                            HStack(spacing: 8) {
-//                                    
-//                                    // Button 1 - Audio
-//                                    VStack(spacing: 10) {
-//                                        Image(systemName: "phone")
-//                                            .font(.system(size: 18))
-//                                            .foregroundColor(.green)
-//                                        Text("Audio")
-//                                            .font(appearance.fonts.messageListMessageText)
-//                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
-//                                    }.padding(.vertical)
-//                                    .frame(maxWidth: .infinity)
-//                                    .background(Color.white)
-//                                    .cornerRadius(8)
-//                                    
-//                                    
-//                                    
-//                                    // Button 2 - Video
-//                                    VStack(spacing: 10) {
-//                                        Image(systemName: "video")
-//                                            .font(.system(size: 18))
-//                                            .foregroundColor(.green)
-//                                        Text("Video")
-//                                            .font(appearance.fonts.messageListMessageText)
-//                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
-//                                    }.padding(.vertical)
-//                                    .frame(maxWidth: .infinity)
-//                                    .background(Color.white)
-//                                    .cornerRadius(8)
-//                                    
-//                                    
-//                                    
-//                                    // Button 4 - Search
-//                                    VStack(spacing: 10) {
-//                                        Image(systemName: "magnifyingglass")
-//                                            .font(.system(size: 18))
-//                                            .foregroundColor(.green)
-//                                        Text("Search")
-//                                            .font(appearance.fonts.messageListMessageText)
-//                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
-//                                    }.padding(.vertical)
-//                                    .frame(maxWidth: .infinity)
-//                                    .background(Color.white)
-//                                    .cornerRadius(8)
-//                                }
-                        } header: {
-                            HStack(alignment: .center){
-                                Spacer()
-                                customHeaderView()
-                                    .listRowInsets(EdgeInsets())
-                                Spacer()
-                            }
-                        }.listRowSeparatorTint(Color.border)
-                            .listRowBackground(Color.clear)
-                        
-                        if isGroup == false{
+                    GeometryReader { geometry in
+                        List {
+                            //Bio
+                            
                             Section {
-                                if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
-                                    Text(conversationDetail?.conversationDetails?.opponentDetails?.metaData?.about ?? "Hey there!")
-                                        .font(appearance.fonts.messageListMessageText)
-                                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
-                                }else{
-                                    Button {
-                                        if onlyInfo == true{
-                                            navigateToSocialProfileId = selectedToShowInfo?.userIdentifier ?? ""
-                                        }else{
-                                            navigateToSocialProfileId = (self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier ?? "")
-                                        }
-                                    } label: {
-                                        HStack{
-                                            appearance.images.mediaIcon
-                                                .resizable()
-                                                .frame(width: 29,height: 29)
-                                            Text("View Social Profile")
-                                                .font(appearance.fonts.messageListMessageText)
-                                                .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
-                                            Spacer()
-                                        }
-                                    }
+//                                HStack(spacing: 8) {
+//                                        
+//                                        // Button 1 - Audio
+//                                        VStack(spacing: 10) {
+//                                            Image(systemName: "phone")
+//                                                .font(.system(size: 18))
+//                                                .foregroundColor(.green)
+//                                            Text("Audio")
+//                                                .font(appearance.fonts.messageListMessageText)
+//                                                .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+//                                        }.padding(.vertical)
+//                                        .frame(maxWidth: .infinity)
+//                                        .background(Color.white)
+//                                        .cornerRadius(8)
+//                                        
+//                                        
+//                                        
+//                                        // Button 2 - Video
+//                                        VStack(spacing: 10) {
+//                                            Image(systemName: "video")
+//                                                .font(.system(size: 18))
+//                                                .foregroundColor(.green)
+//                                            Text("Video")
+//                                                .font(appearance.fonts.messageListMessageText)
+//                                                .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+//                                        }.padding(.vertical)
+//                                        .frame(maxWidth: .infinity)
+//                                        .background(Color.white)
+//                                        .cornerRadius(8)
+//                                        
+//                                        
+//                                        
+//                                        // Button 4 - Search
+//                                        VStack(spacing: 10) {
+//                                            Image(systemName: "magnifyingglass")
+//                                                .font(.system(size: 18))
+//                                                .foregroundColor(.green)
+//                                            Text("Search")
+//                                                .font(appearance.fonts.messageListMessageText)
+//                                                .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+//                                        }.padding(.vertical)
+//                                        .frame(maxWidth: .infinity)
+//                                        .background(Color.white)
+//                                        .cornerRadius(8)
+//                                    }
+                            } header: {
+                                HStack(alignment: .center){
+                                    Spacer()
+                                    customHeaderView()
+                                        .listRowInsets(EdgeInsets())
+                                    Spacer()
                                 }
                             }.listRowSeparatorTint(Color.border)
-                        }
-                        //media, link and doc
-                        Section {
-                            NavigationLink {
-                                ISMUserMediaView(viewModel:viewModel)
-                                    .environmentObject(self.realmManager)
-                            } label: {
-                                HStack{
-                                    appearance.images.mediaIcon
-                                        .resizable()
-                                        .frame(width: 29,height: 29)
-                                    Text("Media, Links and Docs")
-                                        .font(appearance.fonts.messageListMessageText)
-                                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
-                                    Spacer()
-                                    let count = ((realmManager.medias?.count ?? 0) + (realmManager.filesMedia?.count ?? 0) + (realmManager.linksMedia?.count ?? 0))
-                                    Text(count.description)
-                                        .font(appearance.fonts.messageListMessageText)
-                                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
-                                }
-                            }
-                        } header: {
-                        }.listRowSeparatorTint(Color.border)
-                        
-                        if isGroup == true{
-                            Section {
-                                
-                                if conversationDetail?.conversationDetails?.usersOwnDetails?.isAdmin == true{
-                                    
-                                    Button {
-                                        if ISMChatSdkUI.getInstance().getChatProperties().externalMemberAddInGroup == true{
-                                            navigateToExternalUserListToAddInGroup = true
-                                        }else{
-                                            navigatetoAddMember = true
-                                        }
-                                    } label: {
-                                        HStack(spacing: 12){
-                                            
-                                            appearance.images.addMembers
-                                                .resizable()
-                                                .frame(width: 29, height: 29, alignment: .center)
-                                            
-                                            Text("Add Members")
-                                                .font(appearance.fonts.messageListMessageText)
-                                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarRectangle)
+                                .listRowBackground(Color.clear)
+                            
+                            if isGroup == false{
+                                Section {
+                                    if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
+                                        Text(conversationDetail?.conversationDetails?.opponentDetails?.metaData?.about ?? "Hey there!")
+                                            .font(appearance.fonts.messageListMessageText)
+                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+                                    }else{
+                                        Button {
+                                            if onlyInfo == true{
+                                                navigateToSocialProfileId = selectedToShowInfo?.userIdentifier ?? ""
+                                            }else{
+                                                navigateToSocialProfileId = (self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier ?? "")
+                                            }
+                                        } label: {
+                                            HStack{
+                                                appearance.images.mediaIcon
+                                                    .resizable()
+                                                    .frame(width: 29,height: 29)
+                                                Text("View Social Profile")
+                                                    .font(appearance.fonts.messageListMessageText)
+                                                    .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+                                                Spacer()
+                                            }
                                         }
                                     }
-                                }
-                                if let members = conversationDetail?.conversationDetails?.members{
-                                    ForEach(members, id: \.self) { member in
-                                        ISMGroupMemberSubView(member: member, selectedMember: $selectedMember)
+                                }.listRowSeparatorTint(Color.border)
+                            }
+                            //media, link and doc
+                            Section {
+                                NavigationLink {
+                                    ISMUserMediaView(viewModel:viewModel)
+                                        .environmentObject(self.realmManager)
+                                } label: {
+                                    HStack{
+                                        appearance.images.mediaIcon
+                                            .resizable()
+                                            .frame(width: 29,height: 29)
+                                        Text("Media, Links and Docs")
+                                            .font(appearance.fonts.messageListMessageText)
+                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+                                        Spacer()
+                                        let count = ((realmManager.medias?.count ?? 0) + (realmManager.filesMedia?.count ?? 0) + (realmManager.linksMedia?.count ?? 0))
+                                        Text(count.description)
+                                            .font(appearance.fonts.messageListMessageText)
+                                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
                                     }
                                 }
                             } header: {
-                                HStack{
-                                    Text("\(conversationDetail?.conversationDetails?.members?.count ?? 0) Members")
-                                        .font(appearance.fonts.contactInfoHeader)
-                                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
-                                        .textCase(nil)
-                                    Spacer()
-                                    
-                                    NavigationLink {
-                                        ISMSearchParticipants(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel ,conversationID: self.conversationID)
-                                    } label: {
-                                        appearance.images.searchMagnifingGlass
-                                            .resizable()
-                                            .frame(width: 28, height: 28, alignment: .center)
-                                            .padding(8)
-                                    }
-                                }.listRowInsets(EdgeInsets())
-                            } footer: {
-                                Text("")
                             }.listRowSeparatorTint(Color.border)
-                        }
-                        otherSection()
-                        
-                    }.background(Color.backgroundView)
-                        .scrollContentBackground(.hidden)
+                            
+                            if isGroup == true{
+                                Section {
+                                    
+                                    if conversationDetail?.conversationDetails?.usersOwnDetails?.isAdmin == true{
+                                        
+                                        Button {
+                                            if ISMChatSdkUI.getInstance().getChatProperties().externalMemberAddInGroup == true{
+                                                navigateToExternalUserListToAddInGroup = true
+                                            }else{
+                                                navigatetoAddMember = true
+                                            }
+                                        } label: {
+                                            HStack(spacing: 12){
+                                                
+                                                appearance.images.addMembers
+                                                    .resizable()
+                                                    .frame(width: 29, height: 29, alignment: .center)
+                                                
+                                                Text("Add Members")
+                                                    .font(appearance.fonts.messageListMessageText)
+                                                    .foregroundColor(appearance.colorPalette.messageListReplyToolbarRectangle)
+                                            }
+                                        }
+                                    }
+                                    if let members = conversationDetail?.conversationDetails?.members{
+                                        ForEach(members, id: \.self) { member in
+                                            ISMGroupMemberSubView(member: member, selectedMember: $selectedMember)
+                                        }
+                                    }
+                                } header: {
+                                    HStack{
+                                        Text("\(conversationDetail?.conversationDetails?.members?.count ?? 0) Members")
+                                            .font(appearance.fonts.contactInfoHeader)
+                                            .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+                                            .textCase(nil)
+                                        Spacer()
+                                        
+                                        NavigationLink {
+                                            ISMSearchParticipants(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel ,conversationID: self.conversationID)
+                                        } label: {
+                                            appearance.images.searchMagnifingGlass
+                                                .resizable()
+                                                .frame(width: 28, height: 28, alignment: .center)
+                                                .padding(8)
+                                        }
+                                    }.listRowInsets(EdgeInsets())
+                                } footer: {
+                                    Text("")
+                                }.listRowSeparatorTint(Color.border)
+                            }
+                            otherSection()
+                            
+                        }.background(Color.backgroundView)
+                            .scrollContentBackground(.hidden)
+                        // Disable scrolling if content fits in screen
+                        .scrollDisabled(geometry.size.height >= geometry.frame(in: .global).height)
+                    }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -310,33 +315,48 @@ struct ISMContactInfoView: View {
                         .font(appearance.fonts.messageListMessageText)
                         .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                     Button {
-                        showingAlert = true
+                        
                         if obj == .BlockUser {
                             self.alertStr = "Do you want to Block this User?"
+                            self.buttonAlrtStr = "Block"
                         }else if obj == .ClearChat {
-                            self.alertStr = "Clear All Messages?"
+                            self.alertStr = "Clear all messages from \(conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "this chat")? \n This chat will be empty but will remain in your chat list."
+                            self.buttonAlrtStr = "Delete"
                         }else if obj == .DeleteUser {
                             self.alertStr = "Delete Chat?"
+                            self.buttonAlrtStr = "Delete"
                         }else if obj == .UnBlockUser{
                             self.alertStr = "Do you want to UnBlock this User?"
+                            self.buttonAlrtStr = "UnBlock"
                         }else if obj == .ExitGroup{
                             self.alertStr = "Do you want to exit this group?"
+                            self.buttonAlrtStr = "Yes"
                         }else if obj == .MuteNotification{
                             self.alertStr = "Disable notifications?"
+                            self.buttonAlrtStr = "Yes"
                         }else if obj == .UnMuteNotification{
                             self.alertStr = "Enable notifications?"
+                            self.buttonAlrtStr = "Yes"
                         }
                         self.selectedOption = obj
+                        showingAlert = true
                     } label: {
                         
                     }
                 }
-                .alert(alertStr, isPresented: $showingAlert) {
-                    Button("No", role: .cancel) { }
-                    Button("Yes", role: .destructive) {
+                .confirmationDialog("", isPresented: $showingAlert) {
+                    Button(buttonAlrtStr, role: .destructive) {
                         manageFlow()
                     }
+                } message: {
+                    Text(alertStr)
                 }
+//                .alert(alertStr, isPresented: $showingAlert) {
+//                    Button("No", role: .cancel) { }
+//                    Button("Yes", role: .destructive) {
+//                        manageFlow()
+//                    }
+//                }
             }//.foregroundColor(Color(uiColor: colors.alert))
         } header: {
             Text("")

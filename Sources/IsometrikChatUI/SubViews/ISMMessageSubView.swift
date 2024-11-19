@@ -1097,7 +1097,7 @@ struct ISMMessageSubView: View {
                                 }
                                 
                                 VStack(alignment: .trailing,spacing: 5){
-                                    if let product = message.metaData?.product.productId{
+                                    if let product = message.metaData?.product?.productId{
                                         Button {
                                             productIdToNavigate = message.metaData?.product ?? ProductDB()
                                         } label: {

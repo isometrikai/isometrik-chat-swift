@@ -572,6 +572,11 @@ extension ISMMessageView{
                     stateViewModel.showMentionList = false
                 }
             })
+            .onTapGesture {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4){
+                    parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+                }
+            }
 //            .placeholder(when: textFieldtxt.isEmpty) {
 //                Text(appearance.constantStrings.messageInputTextViewPlaceholder)
 //                    .foregroundColor(appearance.colorPalette.messageListTextViewPlaceholder)
