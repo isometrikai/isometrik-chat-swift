@@ -1097,12 +1097,20 @@ struct ISMMessageSubView: View {
                                 }
                                 
                                 VStack(alignment: .trailing,spacing: 5){
-                                    Button {
-                                        productIdToNavigate = message.metaData?.product ?? ProductDB()
-                                    } label: {
-                                        postButtonView(isPost: false)
+                                    if let product = message.metaData?.product.productId{
+                                        Button {
+                                            productIdToNavigate = message.metaData?.product ?? ProductDB()
+                                        } label: {
+                                            postButtonView(isPost: false)
+                                        }
+                                    }else{
+                                        //it will act same as productLink
+                                        Button {
+                                            navigateToProductLink = message
+                                        } label: {
+                                            productLinkView(message: message)
+                                        }
                                     }
-                                    
                                 }//:ZStack
                                 .padding(5)
                                 .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)

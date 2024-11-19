@@ -909,7 +909,13 @@ struct ISMMessageInfoSubView: View {
                                 }
                                 
                                     VStack(alignment: .trailing,spacing: 5){
-                                        postButtonView(isPost: false)
+                                        
+                                        if let product = message.metaData?.product.productId{
+                                            postButtonView(isPost: false)
+                                        }else{
+                                            //it will act same as productLink
+                                            productLinkView(message: message)
+                                        }
 
                                     }//:ZStack
                                     .padding(5)
