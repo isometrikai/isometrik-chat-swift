@@ -527,34 +527,41 @@ public struct ISMConversationView : View {
     private var conversationListView: some View {
         List {
             ForEach(conversationData) { data in
+                VStack(spacing: 0) {
                     if ISMChatSdk.getInstance().getFramework() == .UIKit {
-                        VStack{
-                            Button {
-                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                                navigateToMessageList(for: data)
-                            } label: {
-                                conversationSubView(for: data)
-                                    .onAppear {
-                                        handlePagination(for: data)
-                                    }
-                            }
-                        }
-                    }else {
-                        VStack{
-                            ZStack {
-                                conversationSubView(for: data)
-                                    .onAppear {
-                                        handlePagination(for: data)
-                                    }
-                                NavigationLink(destination: messageView(for: data)) {
-                                    EmptyView()
+                        Button {
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                            navigateToMessageList(for: data)
+                        } label: {
+                            conversationSubView(for: data)
+                                .onAppear {
+                                    handlePagination(for: data)
                                 }
-                                .buttonStyle(PlainButtonStyle())
-                                .frame(width: 0)
-                                .opacity(0)
+                        }
+                    } else {
+                        ZStack {
+                            conversationSubView(for: data)
+                                .onAppear {
+                                    handlePagination(for: data)
+                                }
+                            NavigationLink(destination: messageView(for: data)) {
+                                EmptyView()
                             }
+                            .buttonStyle(PlainButtonStyle())
+                            .frame(width: 0)
+                            .opacity(0)
                         }
                     }
+                    
+                    
+                        Rectangle()
+                            .fill(Color.border)
+                            .frame(height: 1)
+                            .padding(.horizontal, 15)
+                    
+                }
+                .listRowInsets(EdgeInsets())
+                .listRowSeparator(.hidden)
             }
             .onDelete(perform: handleDelete)
             .listRowBackground(Color.clear)
@@ -565,8 +572,6 @@ public struct ISMConversationView : View {
             }
         )
         .listStyle(.plain)
-        .listRowSeparatorTint(Color.border)
-    //    .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
         .keyboardType(.default)
         .textContentType(.oneTimeCode)
         .autocorrectionDisabled(true)
@@ -595,6 +600,7 @@ public struct ISMConversationView : View {
 
     private func conversationSubView(for data: ConversationDB) -> some View {
         ISMConversationSubView(chat: data, hasUnreadCount: data.unreadMessagesCount > 0)
+            .padding(.horizontal,15).padding(.vertical,10)
     }
 
     private func handlePagination(for data: ConversationDB) {

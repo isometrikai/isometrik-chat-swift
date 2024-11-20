@@ -11,7 +11,7 @@ import IsometrikChat
 public struct ISMMessageInfoView: View {
     
     //MARK:  - PROPERTIES
-//    @Environment(\.dismiss) var dismiss
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @State var previousAudioRef: AudioPlayViewModel?
     
@@ -265,7 +265,10 @@ public struct ISMMessageInfoView: View {
     }
     
     func navigationBarLeadingButtons()  -> some View {
-        Button(action: {onClose()}) {
+        Button(action: {
+//            onClose()
+            presentationMode.wrappedValue.dismiss()
+        }) {
             appearance.images.CloseSheet
                 .resizable()
                 .tint(.black)

@@ -373,7 +373,9 @@ extension ISMMessageView{
                         }
                         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true{
                             Menu {
-                                clearChatButton()
+                                if realmManager.allMessages?.count != 0 || realmManager.messages.count != 0{
+                                    clearChatButton()
+                                }
                                 if isGroup == false{
                                     blockUserButton()
                                 }

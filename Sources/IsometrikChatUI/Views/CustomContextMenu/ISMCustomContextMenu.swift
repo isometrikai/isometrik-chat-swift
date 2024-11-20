@@ -33,6 +33,7 @@ struct ISMCustomContextMenu: View {
     @State private var showReactionsOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.reaction)
     
     @Binding var selectedMessageToReply : MessagesDB
+    @Binding var navigateToMessageInfo : Bool
     @Binding var showForward: Bool
     @Binding var updateMessage : MessagesDB
     @Binding var messageCopied : Bool
@@ -50,10 +51,16 @@ struct ISMCustomContextMenu: View {
     
     
     var body: some View {
-        NavigationStack{
-        ZStack{
-            BackdropBlurView(radius: 6)
+        ZStack {
+            // Semi-transparent overlay
+            Rectangle()
+                .fill(.black.opacity(0.2))
+                .background(.ultraThinMaterial)
                 .ignoresSafeArea()
+                .onTapGesture {
+                    dismiss()
+                }
+            
             VStack(alignment: isReceived ? .leading : .trailing) {
                 Spacer()
                 
@@ -156,10 +163,12 @@ struct ISMCustomContextMenu: View {
                     
                     if !isReceived && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall && message.deletedMessage == false{
                         
-                        NavigationLink {
-                            ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow,onClose: {
-                                dismiss()
-                            }).environmentObject(self.realmManager)
+                        Button {
+                            navigateToMessageInfo = true
+                            dismiss()
+//                            ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow,onClose: {
+//                                dismiss()
+//                            }).environmentObject(self.realmManager)
                         } label: {
                             HStack{
                                 Text("Info")
@@ -194,45 +203,7 @@ struct ISMCustomContextMenu: View {
                 .padding(.horizontal,15)
                 Spacer()
             }
-            .edgesIgnoringSafeArea(.all)
-            .background(Color.clear)
-            
         }
-        .edgesIgnoringSafeArea(.all)
         .background(Color.clear)
-        .onTapGesture {
-            dismiss()
-        }
     }
-    }
-}
-
-
-struct BackdropView: UIViewRepresentable {
-
-    func makeUIView(context: Context) -> UIVisualEffectView {
-        let view = UIVisualEffectView()
-        let blur = UIBlurEffect()
-        let animator = UIViewPropertyAnimator()
-        animator.addAnimations { view.effect = blur }
-        animator.fractionComplete = 0
-        animator.stopAnimation(false)
-        animator.finishAnimation(at: .current)
-        return view
-    }
-    
-    func updateUIView(_ uiView: UIVisualEffectView, context: Context) { }
-    
-}
-
-/// A transparent View that blurs its background
-struct BackdropBlurView: View {
-    
-    let radius: CGFloat
-    
-    @ViewBuilder
-    var body: some View {
-        BackdropView().blur(radius: radius)
-    }
-    
 }

@@ -151,7 +151,7 @@ struct ISMMessageSubView: View {
                                     if message.messageUpdated == true && !str.isValidURL{
                                         editedView()
                                     }
-                                    VStack(alignment: .leading, spacing: 5){
+                                    VStack(alignment: str.count < 7 ? .leading : .trailing, spacing: 5){
                                         HStack{
                                             if ISMChatHelper.isValidEmail(str) == true{
                                                 if ISMChatSdkUI.getInstance().getChatProperties().maskNumberAndEmail == true{
@@ -1243,14 +1243,44 @@ struct ISMMessageSubView: View {
                     EmptyView()
                 }
             }.simultaneousGesture(LongPressGesture(minimumDuration: 0.5).onEnded { _ in
-                self.viewControllerHolder?.present(style: .overCurrentContext, transitionStyle: .crossDissolve) {
-                    ISMCustomContextMenu(conversationId: self.conversationId, message: self.message, viewWidth: self.viewWidth, isGroup: self.isGroup ?? false, isReceived: self.isReceived, selectedMessageToReply: $selectedMessageToReply, showForward: $showForward, updateMessage: $updateMessage, messageCopied: $messageCopied, navigateToDeletePopUp: $navigateToDeletePopUp, selectedReaction: $selectedReaction,sentRecationToMessageId: $sentRecationToMessageId,fromBroadCastFlow: self.fromBroadCastFlow,groupconversationMember: self.groupconversationMember)
-                        .environmentObject(self.realmManager)
-                }
+                let contextMenuVC = ISMCustomContextMenuViewController()
+                contextMenuVC.modalPresentationStyle = .overFullScreen
+                contextMenuVC.view.backgroundColor = .clear
+                
+                let hostingController = UIHostingController(rootView:
+                    ISMCustomContextMenu(
+                        conversationId: self.conversationId,
+                        message: self.message,
+                        viewWidth: self.viewWidth,
+                        isGroup: self.isGroup ?? false,
+                        isReceived: self.isReceived,
+                        selectedMessageToReply: $selectedMessageToReply,
+                        navigateToMessageInfo: $navigatetoMessageInfo,
+                        showForward: $showForward,
+                        updateMessage: $updateMessage,
+                        messageCopied: $messageCopied,
+                        navigateToDeletePopUp: $navigateToDeletePopUp,
+                        selectedReaction: $selectedReaction,
+                        sentRecationToMessageId: $sentRecationToMessageId,
+                        fromBroadCastFlow: self.fromBroadCastFlow,
+                        groupconversationMember: self.groupconversationMember
+                    )
+                    .environmentObject(self.realmManager)
+                )
+                
+                hostingController.view.backgroundColor = .clear
+                contextMenuVC.addChild(hostingController)
+                contextMenuVC.view.addSubview(hostingController.view)
+                hostingController.view.frame = contextMenuVC.view.bounds
+                hostingController.didMove(toParent: contextMenuVC)
+                
+                self.viewControllerHolder?.present(contextMenuVC, animated: true)
             })
         }
         }
-//        .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
+        .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow, onClose: {
+            
+        }).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
         .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser,navigateToSocialProfileId: $navigateToSocialProfileId, navigateToExternalUserListToAddInGroup: $navigateToExternalUserListToAddInGroup).environmentObject(self.realmManager), isActive: $navigateToInfo))
         .padding(.bottom, (message.reactions.count > 0) ? 20 : 0)
         .frame(maxWidth: .infinity, alignment: isReceived ? .leading : .trailing)
@@ -2028,5 +2058,15 @@ struct PaymentRequestUI: View {
                 .background(Color.gray)
                 .cornerRadius(10, corners: [.topLeft, .topRight])
         }
+    }
+}
+
+
+class ISMCustomContextMenuViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .clear
+        modalPresentationStyle = .overFullScreen
+        modalTransitionStyle = .crossDissolve
     }
 }

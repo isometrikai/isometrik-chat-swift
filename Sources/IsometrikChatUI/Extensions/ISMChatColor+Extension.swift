@@ -64,7 +64,7 @@ extension Color {
     static public let onboardingPlaceholder = Color(hex: "#9EA4C3")
 //    static public let black = Color.black
     static public let forgotpassword = Color(hex: "#294566")
-    static public let border = Color(hex: "#CBE3FF")
+    static public let border = Color(hex: "#DBDBDB")
     
     static public let login1 = Color(hex: "#A399F7")
     static public let login2 = Color(hex: "#7062E9")
