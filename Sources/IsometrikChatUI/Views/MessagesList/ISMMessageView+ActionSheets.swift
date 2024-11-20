@@ -13,7 +13,7 @@ import IsometrikChat
 extension ISMMessageView{
     func attachmentActionSheetButtons() -> some View {
         VStack {
-            ForEach(ISMChatSdkUI.getInstance().getChatProperties().attachments, id: \.self) { option in
+            ForEach(chatProperties.attachments, id: \.self) { option in
                 if option == .camera {
                     Button(action: {
                         selectedSheetIndex = 0

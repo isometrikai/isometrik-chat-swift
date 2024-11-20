@@ -44,9 +44,10 @@ public struct ISMMessageView: View {
     @EnvironmentObject public var realmManager : RealmManager
     @EnvironmentObject public var networkMonitor: NetworkMonitor
     
-    let chatFeatures = ISMChatSdkUI.getInstance().getChatProperties().features
-    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    let userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    @State var chatFeatures = ISMChatSdkUI.getInstance().getChatProperties().features
+    @State var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    @State var chatProperties = ISMChatSdkUI.getInstance().getChatProperties()
     
     let columns = [GridItem(.flexible(minimum: 10))]
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
@@ -452,6 +453,19 @@ public struct ISMMessageView: View {
         .onChange(of: navigateToMediaSliderId, { _, _ in
             if !navigateToMediaSliderId.isEmpty{
                 stateViewModel.navigateToMediaSlider = true
+            }
+        })
+        .onChange(of: textFieldtxt, { _, newValue in
+            // Update showMentionList based on conditions
+            if newValue.last == "@" {
+                DispatchQueue.main.async {
+                    stateViewModel.showMentionList = true
+                }
+                
+            } else if !newValue.contains("@") || newValue.isEmpty {
+                DispatchQueue.main.async {
+                    stateViewModel.showMentionList = false
+                }
             }
         })
         .onChange(of: textFieldtxt, { _, _ in

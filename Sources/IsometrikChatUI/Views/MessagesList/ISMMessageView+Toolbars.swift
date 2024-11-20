@@ -281,85 +281,66 @@ extension ISMMessageView{
         .background(appearance.colorPalette.messageListReplyToolBarBackground)
         .frame(height: 50)
     }
+
     
-    func regularToolbarContent() -> some View {
-        VStack(spacing: 0) {
-            // Reply View
-            if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
-                replyMessageToolBarView()
-            }
-            
-            // Link Preview
-            if textFieldtxt.isValidURL && ISMChatSdkUI.getInstance().getChatProperties().hideLinkPreview == false{
-                Divider()
-                LinkPreviewToolBarView(text: textFieldtxt)
-            }
-            
-            // Main Toolbar
-            mainToolbarContent
-        }
-    }
-    
-    private var mainToolbarContent: some View {
-        VStack {
-            HStack {
-                if !chatViewModel.isRecording {
-                    if  !ISMChatSdkUI.getInstance().getChatProperties().attachments.isEmpty{
-                        Button(action: {
+    func mainToolbarContent() ->  some View {
+        HStack {
+            if !chatViewModel.isRecording {
+                if  !ISMChatSdkUI.getInstance().getChatProperties().attachments.isEmpty{
+                    Button(action: {
+                        DispatchQueue.main.async {
+                            stateViewModel.showActionSheet = true
+                        }
+                    }) {
+                        appearance.images.addAttcahment
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .padding(.horizontal, 5)
+                    }
+                }
+                
+                HStack(spacing: 5) {
+                    if chatFeatures.contains(.gif),ISMChatSdkUI.getInstance().getChatProperties().gifLogoOnTextViewLeft == true{
+                        Button {
                             DispatchQueue.main.async {
-                                stateViewModel.showActionSheet = true
+                                stateViewModel.showGifPicker = true
                             }
-                        }) {
-                            appearance.images.addAttcahment
+                        } label: {
+                            appearance.images.addSticker
                                 .resizable()
                                 .frame(width: 20, height: 20)
-                                .padding(.horizontal, 5)
+                                .padding(.leading, 10)
                         }
                     }
                     
-                    HStack(spacing: 5) {
-                        if chatFeatures.contains(.gif),ISMChatSdkUI.getInstance().getChatProperties().gifLogoOnTextViewLeft == true{
-                            Button {
-                                DispatchQueue.main.async {
-                                    stateViewModel.showGifPicker = true
-                                }
-                            } label: {
-                                appearance.images.addSticker
-                                    .resizable()
-                                    .frame(width: 20, height: 20)
-                                    .padding(.leading, 10)
+                    textView()
+                    
+                    if chatFeatures.contains(.gif), textFieldtxt.isEmpty,ISMChatSdkUI.getInstance().getChatProperties().gifLogoOnTextViewLeft == false{
+                        Button {
+                            DispatchQueue.main.async {
+                                stateViewModel.showGifPicker = true
                             }
-                        }
-                        
-                        textView()
-                        
-                        if chatFeatures.contains(.gif), textFieldtxt.isEmpty,ISMChatSdkUI.getInstance().getChatProperties().gifLogoOnTextViewLeft == false{
-                            Button {
-                                DispatchQueue.main.async {
-                                    stateViewModel.showGifPicker = true
-                                }
-                            } label: {
-                                appearance.images.addSticker
-                                    .resizable()
-                                    .frame(width: 15, height: 15)
-                                    .padding(.horizontal, 10)
-                            }
+                        } label: {
+                            appearance.images.addSticker
+                                .resizable()
+                                .frame(width: 15, height: 15)
+                                .padding(.horizontal, 10)
                         }
                     }
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(appearance.colorPalette.messageListTextViewBackground)
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(appearance.colorPalette.messageListTextViewBoarder, lineWidth: 1)
-                    )
-                } else {
-                    audioToolbarContent()
                 }
-                
-                sendMessageButton()
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(appearance.colorPalette.messageListTextViewBackground)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(appearance.colorPalette.messageListTextViewBoarder, lineWidth: 1)
+                )
+            } else {
+                audioToolbarContent()
             }
+            
+            sendMessageButton()
         }
         .padding(.top, 10)
         .padding(.bottom, 20)
@@ -378,70 +359,17 @@ extension ISMMessageView{
             } else if stateViewModel.showDeleteMultipleMessage {
                 deleteMessageToolBarView()
             } else {
-                regularToolbarContent()
+                
+                if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
+                    replyMessageToolBarView()
+                }
+                if textFieldtxt.isValidURL && ISMChatSdkUI.getInstance().getChatProperties().hideLinkPreview == false{
+                    Divider()
+                    LinkPreviewToolBarView(text: textFieldtxt)
+                }
+                mainToolbarContent()
+                
             }
-//            if stateViewModel.showMentionList, isGroup == true, !filteredUsers.isEmpty {
-//                mentionUserList()
-//            }
-//            if stateViewModel.showforwardMultipleMessage {
-//                forwardMessageToolBarView()
-//            } else if stateViewModel.showDeleteMultipleMessage {
-//                deleteMessageToolBarView()
-//            } else {
-//                if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
-//                    replyMessageToolBarView()
-//                }
-//                if textFieldtxt.isValidURL {
-//                     LinkPreviewToolBarView(text: textFieldtxt)
-//                }
-//                
-//                // Main Toolbar Content
-//                VStack {
-//                    HStack {
-//                        if !chatViewModel.isRecording {
-//                            Button(action: {
-//                                DispatchQueue.main.async {
-//                                    stateViewModel.showActionSheet = true
-//                                }
-//                            }) {
-//                                appearance.images.addAttcahment
-//                                    .resizable()
-//                                    .frame(width: 20, height: 20)
-//                                    .padding(.horizontal, 5)
-//                            }
-//                            
-//                            HStack(spacing: 5) {
-//                                textView()
-//                                
-//                                if chatFeatures.contains(.gif), textFieldtxt.isEmpty {
-//                                    Button {
-//                                        DispatchQueue.main.async {
-//                                            stateViewModel.showGifPicker = true
-//                                        }
-//                                    } label: {
-//                                        appearance.images.addSticker
-//                                            .resizable()
-//                                            .frame(width: 15, height: 15)
-//                                            .padding(.horizontal, 10)
-//                                    }
-//                                }
-//                            }
-//                            .overlay(
-//                                RoundedRectangle(cornerRadius: 16)
-//                                    .stroke(appearance.colorPalette.messageListTextViewBoarder, lineWidth: 1)
-//                            )
-//                        } else {
-//                            audioToolbarContent()
-//                        }
-//                        
-//                        sendMessageButton()
-//                    }
-//                }
-//                .padding(.top, 10)
-//                .padding(.bottom, 20)
-//                .padding(.horizontal, 10)
-//                .background(appearance.colorPalette.messageListToolBarBackground)
-//            }
         }
     }
 
@@ -562,29 +490,24 @@ extension ISMMessageView{
     }
 
     
-    func textView() -> some View{
-        TextField(appearance.constantStrings.messageInputTextViewPlaceholder, text: $textFieldtxt, axis: .vertical)
-            .onChange(of: textFieldtxt, { _, newValue in
-                // Update showMentionList based on conditions
-                if newValue.last == "@" {
-                    stateViewModel.showMentionList = true
-                } else if !newValue.contains("@") || newValue.isEmpty {
-                    stateViewModel.showMentionList = false
+    func textView() -> some View {
+        HStack {
+            TextField(appearance.constantStrings.messageInputTextViewPlaceholder, text: $textFieldtxt, axis: .vertical)
+                .onTapGesture {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                        // Ensure realmManager and messages are safe to access
+                        if let lastMessageId = self.realmManager.messages.last?.last?.id.description {
+                            parentMessageIdToScroll = lastMessageId
+                        } else {
+                            print("No last message found in Realm")
+                        }
+                    }
                 }
-            })
-            .onTapGesture {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4){
-                    parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
-                }
-            }
-//            .placeholder(when: textFieldtxt.isEmpty) {
-//                Text(appearance.constantStrings.messageInputTextViewPlaceholder)
-//                    .foregroundColor(appearance.colorPalette.messageListTextViewPlaceholder)
-//            }
-            .font(appearance.fonts.messageListTextViewText)
-            .foregroundColor(appearance.colorPalette.messageListTextViewText)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
+                .font(appearance.fonts.messageListTextViewText ?? .body) // Provide fallback font
+                .foregroundColor(appearance.colorPalette.messageListTextViewText ?? .black) // Provide fallback color
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+        }
     }
     
     private func styledText(for text: String) -> AttributedString {
