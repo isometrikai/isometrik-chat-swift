@@ -313,7 +313,21 @@ extension ISMMessageView{
                         }
                     }
                     
-                    textView()
+                    TextField(appearance.constantStrings.messageInputTextViewPlaceholder, text: $textFieldtxt, axis: .vertical)
+                        .onTapGesture {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                                // Ensure realmManager and messages are safe to access
+                                if let lastMessageId = self.realmManager.messages.last?.last?.id.description {
+                                    parentMessageIdToScroll = lastMessageId
+                                } else {
+                                    print("No last message found in Realm")
+                                }
+                            }
+                        }
+                        .font(appearance.fonts.messageListTextViewText ?? .body)
+                        .foregroundColor(appearance.colorPalette.messageListTextViewText ?? .black)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
                     
                     if chatFeatures.contains(.gif), textFieldtxt.isEmpty,ISMChatSdkUI.getInstance().getChatProperties().gifLogoOnTextViewLeft == false{
                         Button {
@@ -351,7 +365,7 @@ extension ISMMessageView{
     //MARK: - DEFAULT TOOLBAR VIEW
     
     func toolBarView() -> some View {
-        VStack(spacing: 0) {
+        Group{
             if stateViewModel.showMentionList && isGroup == true && !filteredUsers.isEmpty {
                 mentionUserList()
             } else if stateViewModel.showforwardMultipleMessage {
@@ -359,16 +373,16 @@ extension ISMMessageView{
             } else if stateViewModel.showDeleteMultipleMessage {
                 deleteMessageToolBarView()
             } else {
-                
-                if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
-                    replyMessageToolBarView()
+                VStack(spacing: 0) {
+                    if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
+                        replyMessageToolBarView()
+                    }
+                    if textFieldtxt.isValidURL && ISMChatSdkUI.getInstance().getChatProperties().hideLinkPreview == false{
+                        Divider()
+                        LinkPreviewToolBarView(text: textFieldtxt)
+                    }
+                    mainToolbarContent()
                 }
-                if textFieldtxt.isValidURL && ISMChatSdkUI.getInstance().getChatProperties().hideLinkPreview == false{
-                    Divider()
-                    LinkPreviewToolBarView(text: textFieldtxt)
-                }
-                mainToolbarContent()
-                
             }
         }
     }
@@ -425,7 +439,7 @@ extension ISMMessageView{
 
     // Separate sendMessage button for readability and isolation
     func sendMessageButton() -> some View {
-        VStack{
+        Group{
             if !textFieldtxt.isEmpty || chatFeatures.contains(.audio) == false {
                 if ISMChatSdkUI.getInstance().getChatProperties().hideSendButtonUntilEmptyTextView == true{
                     if !textFieldtxt.isEmpty{
@@ -486,27 +500,6 @@ extension ISMMessageView{
             chatViewModel.stopRecording { url in
                 chatViewModel.audioUrl = url
             }
-        }
-    }
-
-    
-    func textView() -> some View {
-        HStack {
-            TextField(appearance.constantStrings.messageInputTextViewPlaceholder, text: $textFieldtxt, axis: .vertical)
-                .onTapGesture {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                        // Ensure realmManager and messages are safe to access
-                        if let lastMessageId = self.realmManager.messages.last?.last?.id.description {
-                            parentMessageIdToScroll = lastMessageId
-                        } else {
-                            print("No last message found in Realm")
-                        }
-                    }
-                }
-                .font(appearance.fonts.messageListTextViewText ?? .body) // Provide fallback font
-                .foregroundColor(appearance.colorPalette.messageListTextViewText ?? .black) // Provide fallback color
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
         }
     }
     

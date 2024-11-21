@@ -15,58 +15,54 @@ extension ISMMessageView{
     
     //MARK: - AUDIO MESSAGE BUTTON
     func AudioMessageButton(height : CGFloat) -> some View{
-        HStack{
-            Button(action: {
-                ISMChatHelper.print("recording done")
-                if stateViewModel.isClicked == true{
-                    chatViewModel.isRecording = false
-                    stateViewModel.isClicked = false
-                    chatViewModel.stopRecording { url in
-                        chatViewModel.audioUrl = url
-                    }
-                }
-            }) {
-                ZStack {
-                    appearance.images.addAudio
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .padding(.horizontal,5)
+        Button(action: {
+            ISMChatHelper.print("recording done")
+            if stateViewModel.isClicked == true{
+                chatViewModel.isRecording = false
+                stateViewModel.isClicked = false
+                chatViewModel.stopRecording { url in
+                    chatViewModel.audioUrl = url
                 }
             }
-            .simultaneousGesture(
-                LongPressGesture(minimumDuration: 0.1)
-                    .onEnded { value in
-                        ISMChatHelper.print("Tap currently holded")
-                        if isMessagingEnabled() == true && chatViewModel.isBusy == false{
-                            if audioPermissionCheck == true{
-                                stateViewModel.isClicked = true
-                                chatViewModel.isRecording = true
-                                chatViewModel.startRecording()
-                            }else{
-                                ISMChatHelper.print("Access Denied for audio permission")
-                            }
+        }) {
+            appearance.images.addAudio
+                .resizable()
+                .frame(width: 24, height: 24)
+                .padding(.horizontal,5)
+        }
+        .simultaneousGesture(
+            LongPressGesture(minimumDuration: 0.1)
+                .onEnded { value in
+                    ISMChatHelper.print("Tap currently holded")
+                    if isMessagingEnabled() == true && chatViewModel.isBusy == false{
+                        if audioPermissionCheck == true{
+                            stateViewModel.isClicked = true
+                            chatViewModel.isRecording = true
+                            chatViewModel.startRecording()
+                        }else{
+                            ISMChatHelper.print("Access Denied for audio permission")
                         }
                     }
-                    .sequenced(before:
-                                DragGesture(minimumDistance: 2)
-                        .onEnded { value in
-                            if value.translation.width < -50 {
-                                UINotificationFeedbackGenerator().notificationOccurred(.warning)
-                                if stateViewModel.isClicked == true{
-                                    chatViewModel.isRecording = false
-                                    stateViewModel.isClicked = false
-                                    chatViewModel.stopRecording { url in
-                                    }
+                }
+                .sequenced(before:
+                            DragGesture(minimumDistance: 2)
+                    .onEnded { value in
+                        if value.translation.width < -50 {
+                            UINotificationFeedbackGenerator().notificationOccurred(.warning)
+                            if stateViewModel.isClicked == true{
+                                chatViewModel.isRecording = false
+                                stateViewModel.isClicked = false
+                                chatViewModel.stopRecording { url in
                                 }
-                            }else if chatViewModel.isRecording && value.translation.height < -50 {
-                                UINotificationFeedbackGenerator().notificationOccurred(.success)
-                                print("Dragged up")
-                                stateViewModel.audioLocked = true
                             }
+                        }else if chatViewModel.isRecording && value.translation.height < -50 {
+                            UINotificationFeedbackGenerator().notificationOccurred(.success)
+                            print("Dragged up")
+                            stateViewModel.audioLocked = true
                         }
-                              )
-            )
-        }
+                    }
+                          )
+        )
     }
     
     func showPermissionDeniedAlert() {
@@ -155,8 +151,8 @@ extension ISMMessageView{
             }
         }
     }
-
-     func backButtonView() -> some View {
+    
+    func backButtonView() -> some View {
         Button(action: {
             //just resetting unread count for this conversation while going back to conversation list
             realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
@@ -170,8 +166,8 @@ extension ISMMessageView{
                 .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
         }
     }
-
-     func broadcastButtonView() -> some View {
+    
+    func broadcastButtonView() -> some View {
         Button {
             if ISMChatSdk.getInstance().getFramework() == .UIKit {
                 delegate?.navigateToBroadCastInfo(groupcastId: self.groupCastId ?? "", groupcastTitle: self.groupConversationTitle ?? "", groupcastImage: self.groupImage ?? "")
@@ -201,15 +197,15 @@ extension ISMMessageView{
                 .font(appearance.fonts.messageListHeaderTitle)
         }
     }
-
-     func getBroadcastTitle() -> String {
+    
+    func getBroadcastTitle() -> String {
         if let groupConversationTitle = groupConversationTitle, !groupConversationTitle.isEmpty, groupConversationTitle != "Default" {
             return groupConversationTitle
         } else {
             return "Messages"
         }
     }
-
+    
     func profileButtonView() -> some View {
         HStack {
             if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true {
@@ -223,8 +219,8 @@ extension ISMMessageView{
                                     : opponenDetail?.metaData?.userId {
                             delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
                         } else if let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
-                                   ?? opponenDetail?.metaData?.userId
-                                   ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
+                                    ?? opponenDetail?.metaData?.userId
+                                    ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier {
                             delegate?.navigateToAppProfile(userId: userId, userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
                         }
                     } else {
@@ -263,32 +259,32 @@ extension ISMMessageView{
             }
         }
     }
-
-     func getAvatarUrl() -> String {
+    
+    func getAvatarUrl() -> String {
         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
             return ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userProfileImageUrl ?? ""
         } else {
             return (isGroup == true) ? self.conversationDetail?.conversationDetails?.conversationImageUrl ?? (self.groupImage ?? "") : opponenDetail?.userProfileImageUrl ?? ""
         }
     }
-
-     func getProfileName() -> String {
+    
+    func getProfileName() -> String {
         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
             return ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userName ?? ""
         } else {
             return (isGroup == true) ? self.conversationDetail?.conversationDetails?.conversationTitle ?? "" : opponenDetail?.userName ?? ""
         }
     }
-
-     func getProfileTitle() -> String {
+    
+    func getProfileTitle() -> String {
         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
             return ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userName ?? ""
         } else {
             return (isGroup == true) ? self.conversationDetail?.conversationDetails?.conversationTitle ?? (self.groupConversationTitle ?? "") : opponenDetail?.userName ?? ""
         }
     }
-
-     func getProfileSubtitle() -> String {
+    
+    func getProfileSubtitle() -> String {
         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
             let title = self.conversationDetail?.conversationDetails?.conversationTitle ?? ""
             return title.count > 40 ? String(title.prefix(40)) + "..." : title
@@ -316,7 +312,7 @@ extension ISMMessageView{
             }
         }
     }
-
+    
     
     //MARK: - NAVIGATION TRAILING BUTTONS
     
@@ -338,53 +334,50 @@ extension ISMMessageView{
                     //BroadCast Message
                     EmptyView()
                 }else{
-//                    if self.conversationDetail != nil{
-                        //calling Button
-                        if chatFeatures.contains(.videocall) == true{
-                            Button {
-                                if self.conversationDetail != nil{
+                    if chatFeatures.contains(.videocall) == true{
+                        Button {
+                            if self.conversationDetail != nil{
+                                calling(type: .VideoCall)
+                            }else{
+                                self.createConversation { _ in
                                     calling(type: .VideoCall)
-                                }else{
-                                    self.createConversation { _ in
-                                        calling(type: .VideoCall)
-                                    }
                                 }
-                            } label: {
-                                appearance.images.videoCall
-                                    .resizable()
-                                    .frame(width: 26, height: 26, alignment: .center)
                             }
+                        } label: {
+                            appearance.images.videoCall
+                                .resizable()
+                                .frame(width: 26, height: 26, alignment: .center)
                         }
-                        
-                        if chatFeatures.contains(.audiocall) == true{
-                            Button {
-                                if self.conversationDetail != nil{
+                    }
+                    
+                    if chatFeatures.contains(.audiocall) == true{
+                        Button {
+                            if self.conversationDetail != nil{
+                                calling(type: .AudioCall)
+                            }else{
+                                self.createConversation { _ in
                                     calling(type: .AudioCall)
-                                }else{
-                                    self.createConversation { _ in
-                                        calling(type: .AudioCall)
-                                    }
                                 }
-                            } label: {
-                                appearance.images.audioCall
-                                    .resizable()
-                                    .frame(width: 26, height: 26, alignment: .center)
                             }
+                        } label: {
+                            appearance.images.audioCall
+                                .resizable()
+                                .frame(width: 26, height: 26, alignment: .center)
                         }
-                        if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true{
-                            Menu {
-                                if realmManager.allMessages?.count != 0 || realmManager.messages.count != 0{
-                                    clearChatButton()
-                                }
-                                if isGroup == false{
-                                    blockUserButton()
-                                }
-                            } label: {
-                                appearance.images.threeDots
-                                        .frame(width: 20, height: 20, alignment: .center)
+                    }
+                    if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true{
+                        Menu {
+                            if realmManager.allMessages?.count != 0 || realmManager.messages.count != 0{
+                                clearChatButton()
                             }
+                            if isGroup == false{
+                                blockUserButton()
+                            }
+                        } label: {
+                            appearance.images.threeDots
+                                .frame(width: 20, height: 20, alignment: .center)
                         }
-//                    }
+                    }
                 }
             }
         }
@@ -405,8 +398,8 @@ extension ISMMessageView{
                     )
                 }
                 let callsdk = IsometrikCall()
-       
-              callsdk.startGroupCall(with: callMembers, conversationId: self.conversationID, callType: .GroupCall,groupName: self.conversationDetail?.conversationDetails?.conversationTitle ?? (self.groupConversationTitle ?? ""))
+                
+                callsdk.startGroupCall(with: callMembers, conversationId: self.conversationID, callType: .GroupCall,groupName: self.conversationDetail?.conversationDetails?.conversationTitle ?? (self.groupConversationTitle ?? ""))
             }
         }else{
             let callsdk = IsometrikCall()
