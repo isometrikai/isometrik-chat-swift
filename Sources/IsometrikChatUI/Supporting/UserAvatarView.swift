@@ -81,9 +81,12 @@ public struct AvatarView: View {
     private var placeholderView: some View {
         ZStack {
             Circle()
-                .stroke(.gray.opacity(0.3), lineWidth: 1)
+                .fill(appearance.colorPalette.avatarBackground) // Fill the circle with the desired color
+                .overlay(
+                    Circle()
+                        .stroke(.gray.opacity(0.3), lineWidth: 1) // Add a stroke on top
+                )
                 .frame(width: size.width, height: size.height)
-                .foregroundColor(appearance.colorPalette.avatarBackground)
             Text(userName.uppercased())
                 .font(appearance.fonts.avatarText)
                 .foregroundColor(appearance.colorPalette.avatarText)
