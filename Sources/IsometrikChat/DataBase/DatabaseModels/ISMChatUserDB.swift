@@ -26,4 +26,5 @@ public class UserMetaDataDB : Object, ObjectKeyIdentifiable {
     @Persisted public var userId : String?
     @Persisted public var userType : Int? //1 - normal user, 9 -  business user
     @Persisted public var isStarUser : Bool? //check if usertype == 1 if for both normal user and influencer
+    @Persisted public var userTypeString : String?
 }

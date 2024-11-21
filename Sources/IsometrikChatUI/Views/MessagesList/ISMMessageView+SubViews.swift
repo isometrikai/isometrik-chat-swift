@@ -235,7 +235,7 @@ extension ISMMessageView{
                 .foregroundColor(appearance.colorPalette.messageListActionText)
                 .font(appearance.fonts.messageListActionText)
                 
-        }.frame(width: text.widthOfString(usingFont: UIFont.regular(size: 14)) + 30)
+        }.frame(width: text.widthOfString(usingFont: UIFont.regular(size: 13)))
             .padding(.vertical, 5)
             .background(appearance.colorPalette.messageListActionBackground)
             .cornerRadius(5)

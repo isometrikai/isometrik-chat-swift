@@ -25,7 +25,8 @@ public struct ISMChatPageProperties {
     public var maskNumberAndEmail : Bool = false
     public var hideSendButtonUntilEmptyTextView = false
     public var gifLogoOnTextViewLeft = false
-    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, navigateToAppProfileFromMessageList: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool,customJobCardInMessageList : Bool,externalMemberAddInGroup : Bool,captializeMessageListHeaders : Bool? = false,hideLinkPreview : Bool? = false,maskNumberAndEmail : Bool? = false,hideSendButtonUntilEmptyTextView: Bool? = false,gifLogoOnTextViewLeft : Bool? = false) {
+    public var showUserTypeInConversationListAfterName : Bool = false
+    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, navigateToAppProfileFromMessageList: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool,customJobCardInMessageList : Bool,externalMemberAddInGroup : Bool,captializeMessageListHeaders : Bool? = false,hideLinkPreview : Bool? = false,maskNumberAndEmail : Bool? = false,hideSendButtonUntilEmptyTextView: Bool? = false,gifLogoOnTextViewLeft : Bool? = false,showUserTypeInConversationListAfterName : Bool? = false) {
         self.attachments = attachments
         self.features = features
         self.conversationType = conversationType
@@ -42,5 +43,6 @@ public struct ISMChatPageProperties {
         self.maskNumberAndEmail = maskNumberAndEmail ?? false
         self.hideSendButtonUntilEmptyTextView = hideSendButtonUntilEmptyTextView ?? false
         self.gifLogoOnTextViewLeft = gifLogoOnTextViewLeft ?? false
+        self.showUserTypeInConversationListAfterName = showUserTypeInConversationListAfterName ?? false
     }
 }

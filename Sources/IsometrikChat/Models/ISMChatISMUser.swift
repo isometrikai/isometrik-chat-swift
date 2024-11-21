@@ -69,6 +69,7 @@ public struct ISMChatUserMetaData: Codable, Hashable {
     public var userId : String?
     public var storeId : String?
     public var userType : Int?
+    public var userTypeString : String?
     public var isStarUser : Bool?
     public var chatStatus : String?
     public var membersIds : [String]?
@@ -94,6 +95,7 @@ public struct ISMChatUserMetaData: Codable, Hashable {
         userId = try? container.decodeIfPresent(String.self, forKey: .userId)
         storeId = try? container.decodeIfPresent(String.self, forKey: .storeId)
         userType = try? container.decodeIfPresent(Int.self, forKey: .userType)
+        userTypeString = try? container.decodeIfPresent(String.self, forKey: .userType)
         isStarUser = try? container.decodeIfPresent(Bool.self, forKey: .isStarUser)
         chatStatus = try? container.decodeIfPresent(String.self, forKey: .chatStatus)
         membersIds = try? container.decodeIfPresent([String].self, forKey: .membersIds)
@@ -104,13 +106,14 @@ public struct ISMChatUserMetaData: Codable, Hashable {
         startDate = try? container.decodeIfPresent(String.self, forKey: .startDate)
         endDate = try? container.decodeIfPresent(String.self, forKey: .endDate)
     }
-    public init(about : String? = nil,showlastSeen : Bool? = nil,profilePic : String? = nil, userId : String? = nil,storeId : String? = nil,userType : Int? = nil,isStarUser : Bool? = nil,chatStatus : String? = nil,membersIds : [String]? = nil,users : [ISMChatCustomUsers]? = nil){
+    public init(about : String? = nil,showlastSeen : Bool? = nil,profilePic : String? = nil, userId : String? = nil,storeId : String? = nil,userType : Int? = nil,userTypeString : String? = nil,isStarUser : Bool? = nil,chatStatus : String? = nil,membersIds : [String]? = nil,users : [ISMChatCustomUsers]? = nil){
         self.about = about
         self.showlastSeen = showlastSeen
         self.profilePic = profilePic
         self.userId = userId
         self.storeId = storeId
         self.userType = userType
+        self.userTypeString = userTypeString
         self.isStarUser = isStarUser
         self.chatStatus = chatStatus
         self.membersIds = membersIds

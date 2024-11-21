@@ -201,6 +201,7 @@ extension RealmManager {
                     let opponentMetaData = UserMetaDataDB()
                     opponentMetaData.userId = value.opponentDetails?.metaData?.userId ?? ""
                     opponentMetaData.userType = value.opponentDetails?.metaData?.userType ?? 0
+                    opponentMetaData.userTypeString = value.opponentDetails?.metaData?.userTypeString ?? ""
                     opponentMetaData.isStarUser = value.opponentDetails?.metaData?.isStarUser ?? false
                     
                     user.metaData = opponentMetaData
@@ -363,6 +364,7 @@ extension RealmManager {
                     listToUpdate.first?.opponentDetails?.userProfileImageUrl = obj.opponentDetails?.userProfileImageUrl
                     listToUpdate.first?.opponentDetails?.metaData?.userId = obj.opponentDetails?.metaData?.userId
                     listToUpdate.first?.opponentDetails?.metaData?.userType = obj.opponentDetails?.metaData?.userType
+                    listToUpdate.first?.opponentDetails?.metaData?.userTypeString = obj.opponentDetails?.metaData?.userTypeString
                     listToUpdate.first?.opponentDetails?.metaData?.isStarUser = obj.opponentDetails?.metaData?.isStarUser
                     
                     listToUpdate.first?.lastMessageDetails?.sentAt = obj.lastMessageDetails?.sentAt

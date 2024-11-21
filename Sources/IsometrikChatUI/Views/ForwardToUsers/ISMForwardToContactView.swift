@@ -227,6 +227,7 @@ private extension ISMForwardToContactView{
                 let metaDataValue = UserMetaDataDB()
                 metaDataValue.userId = newUser.metaData?.userId
                 metaDataValue.userType = newUser.metaData?.userType
+                metaDataValue.userTypeString = newUser.metaData?.userTypeString
                 metaDataValue.isStarUser = newUser.metaData?.isStarUser
                 user.metaData = metaDataValue
 

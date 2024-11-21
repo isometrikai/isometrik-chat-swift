@@ -44,9 +44,18 @@ struct ISMConversationSubView: View {
                             .foregroundColor(appearance.colorPalette.chatListUserName)
                             .font(appearance.fonts.chatListUserName)
                     }else{
-                        Text(chat.isGroup == true ? (chat.conversationTitle ) : (chat.opponentDetails?.userName?.capitalizingFirstLetter() ?? ""))
-                            .foregroundColor(appearance.colorPalette.chatListUserName)
-                            .font(appearance.fonts.chatListUserName)
+                        HStack(spacing: 5){
+                            Text(chat.isGroup == true ? (chat.conversationTitle ) : (chat.opponentDetails?.userName?.capitalizingFirstLetter() ?? ""))
+                                .foregroundColor(appearance.colorPalette.chatListUserName)
+                                .font(appearance.fonts.chatListUserName)
+                            if ISMChatSdkUI.getInstance().getChatProperties().showUserTypeInConversationListAfterName{
+                                if chat.opponentDetails?.metaData?.userTypeString == "Owner"{
+                                    Text("🛒")
+                                        .foregroundColor(appearance.colorPalette.chatListUserName)
+                                        .font(appearance.fonts.chatListUserName)
+                                }
+                            }
+                        }
                     }
                     Spacer()
                     let dateVar = NSDate()
@@ -303,12 +312,13 @@ struct ISMConversationSubView: View {
     }
     
     func getLabel(hideImage : Bool? = false, text : String, image : String,isReaction : Bool? = false,isSticker : Bool? = false) -> some View{
-        HStack(alignment: .center,spacing: 5){
+        HStack(alignment: .top,spacing: 5){
             
             if chat.isGroup == false{
                 if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData.userId{
                     if isReaction == false{
                         messageDeliveryStatus()
+                            .padding(.top,3)
                     }
                 }
             }
