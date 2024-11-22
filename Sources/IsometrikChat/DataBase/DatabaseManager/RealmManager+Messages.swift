@@ -266,7 +266,7 @@ extension RealmManager{
                         
                         obj.deliveredToAll = value.deliveredToAll ?? false
                         obj.readByAll = value.readByAll ?? false
-                        obj.customType = value.customType ?? ""
+                        obj.customType = value.customType ?? (value.details?.customType ?? "")
                         obj.action = value.action ?? ""
                         obj.messageType = value.messageType ?? 0
                         obj.parentMessageId = value.parentMessageId ?? ""
@@ -381,19 +381,19 @@ extension RealmManager{
                         }
                         
                         
-                        metaData.storeName = value.metaData?.storeName
-                        metaData.productName = value.metaData?.productName
-                        metaData.bestPrice = value.metaData?.bestPrice
-                        metaData.scratchPrice = value.metaData?.scratchPrice
-                        metaData.url = value.metaData?.url
-                        metaData.parentProductId = value.metaData?.parentProductId
-                        metaData.childProductId = value.metaData?.childProductId
-                        metaData.entityType = value.metaData?.entityType
-                        metaData.productImage = value.metaData?.productImage
-                        metaData.thumbnailUrl = value.metaData?.thumbnailUrl
-                        metaData.Description = value.metaData?.description
-                        metaData.isVideoPost = value.metaData?.isVideoPost
-                        metaData.socialPostId = value.metaData?.socialPostId
+                        metaData.storeName = value.metaData?.storeName ?? value.details?.metaData?.storeName
+                        metaData.productName = value.metaData?.productName ?? value.details?.metaData?.productName
+                        metaData.bestPrice = value.metaData?.bestPrice ?? value.details?.metaData?.bestPrice
+                        metaData.scratchPrice = value.metaData?.scratchPrice ?? value.details?.metaData?.scratchPrice
+                        metaData.url = value.metaData?.url ?? value.details?.metaData?.url
+                        metaData.parentProductId = value.metaData?.parentProductId ?? value.details?.metaData?.parentProductId
+                        metaData.childProductId = value.metaData?.childProductId ?? value.details?.metaData?.childProductId
+                        metaData.entityType = value.metaData?.entityType ?? value.details?.metaData?.entityType
+                        metaData.productImage = value.metaData?.productImage ?? value.details?.metaData?.productImage
+                        metaData.thumbnailUrl = value.metaData?.thumbnailUrl ?? value.details?.metaData?.thumbnailUrl
+                        metaData.Description = value.metaData?.description ?? value.details?.metaData?.description
+                        metaData.isVideoPost = value.metaData?.isVideoPost ?? value.details?.metaData?.isVideoPost
+                        metaData.socialPostId = value.metaData?.socialPostId ?? value.details?.metaData?.socialPostId
                         
                         
                         

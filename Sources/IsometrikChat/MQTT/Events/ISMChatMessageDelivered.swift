@@ -54,8 +54,10 @@ public struct ISMChatSenderInfo : Codable{
 }
 
 public struct ISMChatUpdateMessageDetail : Codable{
-    public let body : String?
-    public let searchableTags : [String]?
+    public var body : String?
+    public var searchableTags : [String]?
+    public var customType : String?
+    public var metaData : ISMChatMetaData?
 }
 
 public struct ISMChatMembers : Codable{

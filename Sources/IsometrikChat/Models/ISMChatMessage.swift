@@ -57,6 +57,7 @@ public struct ISMChatMessage : Codable,Identifiable{
     public var audioOnly : Bool?
     public var autoTerminate : Bool?
     public var config : ISMCallConfig?
+    public var details : ISMChatUpdateMessageDetail?
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         senderInfo = try? container.decode(ISMChatUser.self, forKey: .senderInfo)
@@ -95,9 +96,9 @@ public struct ISMChatMessage : Codable,Identifiable{
         audioOnly  = try? container.decode(Bool.self, forKey: .audioOnly)
         autoTerminate  = try? container.decode(Bool.self, forKey: .autoTerminate)
         config  = try? container.decode(ISMCallConfig.self, forKey: .config)
-       
+        details  = try? container.decode(ISMChatUpdateMessageDetail.self, forKey: .details)
     }
-    public init(sentAt : Double? = nil, body : String? = nil,messageId : String? = nil,mentionedUsers : [ISMChatMentionedUser]? = nil,metaData : ISMChatMetaData? = nil,customType : String? = nil,initiatorIdentifier : String? = nil,action : String? = nil,attachment : [ISMChatAttachment]? = nil,conversationId : String? = nil,userId : String? = nil,userName : String? = nil,initiatorId : String? = nil,initiatorName : String? = nil,memberName : String? = nil,memberId : String? = nil, memberIdentifier : String? = nil,senderInfo : ISMChatUser? = nil,members : [ISMChatMemberAdded]? = nil,messageUpdated : Bool? = nil,reactions : [String: [String]]? = nil,missedByMembers : [String]? = nil,meetingId : String? = nil,callDurations : [ISMCallMeetingDuration]? = nil,audioOnly : Bool? = false,autoTerminate : Bool? = nil,config : ISMCallConfig? = nil,messageType : Int? = nil){
+    public init(sentAt : Double? = nil, body : String? = nil,messageId : String? = nil,mentionedUsers : [ISMChatMentionedUser]? = nil,metaData : ISMChatMetaData? = nil,customType : String? = nil,initiatorIdentifier : String? = nil,action : String? = nil,attachment : [ISMChatAttachment]? = nil,conversationId : String? = nil,userId : String? = nil,userName : String? = nil,initiatorId : String? = nil,initiatorName : String? = nil,memberName : String? = nil,memberId : String? = nil, memberIdentifier : String? = nil,senderInfo : ISMChatUser? = nil,members : [ISMChatMemberAdded]? = nil,messageUpdated : Bool? = nil,reactions : [String: [String]]? = nil,missedByMembers : [String]? = nil,meetingId : String? = nil,callDurations : [ISMCallMeetingDuration]? = nil,audioOnly : Bool? = false,autoTerminate : Bool? = nil,config : ISMCallConfig? = nil,messageType : Int? = nil,details : ISMChatUpdateMessageDetail? = nil){
         self.sentAt = sentAt
         self.body = body
         self.messageId = messageId
@@ -126,6 +127,7 @@ public struct ISMChatMessage : Codable,Identifiable{
         self.autoTerminate  = autoTerminate
         self.config  = config
         self.messageType = messageType
+        self.details = details
     }
     public init(){
         

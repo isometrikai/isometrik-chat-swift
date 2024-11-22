@@ -243,6 +243,10 @@ extension RealmManager {
                     
                     if lastMessage.action == ISMChatActionType.messageDetailsUpdated.value {
                         lastMessage.body = value.lastMessageDetails?.details?.body ?? ""
+                        lastMessage.customType = value.lastMessageDetails?.details?.customType
+                        if value.lastMessageDetails?.details?.customType == ISMChatMediaType.ProductLink.value || value.lastMessageDetails?.details?.customType == ISMChatMediaType.SocialLink.value{
+                            lastMessage.body = value.lastMessageDetails?.details?.metaData?.url ?? ""
+                        }
                     }
                     
                     for member in value.lastMessageDetails?.members ?? [] {

@@ -39,7 +39,27 @@ import IsometrikChat
                 let postDetail = ISMChatPostMetaData(postId: messageInfo.metaData?.post?.postId, postUrl: messageInfo.metaData?.post?.postUrl)
                 let productDetail = ISMChatProductMetaData(productId: messageInfo.metaData?.product?.productId, productUrl: messageInfo.metaData?.product?.productUrl, productCategoryId: messageInfo.metaData?.product?.productCategoryId)
                 
-                let metaData = ISMChatMetaData(
+                
+
+                
+                let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")
+                
+                //add members in Message
+                var membersArray : [ISMChatMemberAdded] = []
+                if let members = messageInfo.members{
+                    for x in members{
+                        var member = ISMChatMemberAdded()
+                        member.memberId = x.memberId
+                        member.memberIdentifier = x.memberIdentifier
+                        member.memberName = x.memberName
+                        member.memberProfileImageUrl = x.memberProfileImageUrl
+                        membersArray.append(member)
+                    }
+                }
+                
+                var bodyUpdated = messageInfo.body
+                var customType = messageInfo.customType
+                var metaData = ISMChatMetaData(
                     replyMessage: replyMessageData,
                     locationAddress: messageInfo.metaData?.locationAddress,
                     contacts: contact,
@@ -60,26 +80,24 @@ import IsometrikChat
                     description: messageInfo.metaData?.description,
                     isVideoPost: messageInfo.metaData?.isVideoPost,
                     socialPostId: messageInfo.metaData?.socialPostId)
-
                 
-                let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")
-                
-                //add members in Message
-                var membersArray : [ISMChatMemberAdded] = []
-                if let members = messageInfo.members{
-                    for x in members{
-                        var member = ISMChatMemberAdded()
-                        member.memberId = x.memberId
-                        member.memberIdentifier = x.memberIdentifier
-                        member.memberName = x.memberName
-                        member.memberProfileImageUrl = x.memberProfileImageUrl
-                        membersArray.append(member)
-                    }
-                }
-                
-                var bodyUpdated = messageInfo.body
-                if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value{
+                if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
                     bodyUpdated = messageInfo.details?.body
+                    customType = messageInfo.details?.customType
+                    metaData = ISMChatMetaData(
+                        storeName: messageInfo.details?.metaData?.storeName,
+                        productName: messageInfo.details?.metaData?.productName,
+                        bestPrice: messageInfo.details?.metaData?.bestPrice,
+                        scratchPrice: messageInfo.details?.metaData?.scratchPrice,
+                        url: messageInfo.details?.metaData?.url,
+                        parentProductId: messageInfo.details?.metaData?.parentProductId,
+                        childProductId: messageInfo.details?.metaData?.childProductId,
+                        entityType: messageInfo.details?.metaData?.entityType,
+                        productImage: messageInfo.details?.metaData?.productImage,
+                        thumbnailUrl: messageInfo.details?.metaData?.thumbnailUrl,
+                        description: messageInfo.details?.metaData?.description,
+                        isVideoPost: messageInfo.details?.metaData?.isVideoPost,
+                        socialPostId: messageInfo.details?.metaData?.socialPostId)
                 }
                 
                 var mentionedUser : [ISMChatMentionedUser] = []
@@ -90,7 +108,7 @@ import IsometrikChat
                     }
                 }
                 
-                let message = ISMChatMessage(sentAt: messageInfo.sentAt,body: bodyUpdated, messageId: messageInfo.messageId,mentionedUsers: mentionedUser,metaData : metaData, customType: messageInfo.customType,action: messageInfo.action, attachment: messageInfo.attachments,conversationId: messageInfo.conversationId, userId: messageInfo.userId, userName: messageInfo.userName, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, memberName: messageInfo.memberName, memberId: messageInfo.memberId, memberIdentifier: messageInfo.memberIdentifier,senderInfo: senderInfo,members: membersArray,reactions: messageInfo.reactions)
+                let message = ISMChatMessage(sentAt: messageInfo.sentAt,body: bodyUpdated, messageId: messageInfo.messageId,mentionedUsers: mentionedUser,metaData : metaData, customType: customType,action: messageInfo.action, attachment: messageInfo.attachments,conversationId: messageInfo.conversationId, userId: messageInfo.userId, userName: messageInfo.userName, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, memberName: messageInfo.memberName, memberId: messageInfo.memberId, memberIdentifier: messageInfo.memberIdentifier,senderInfo: senderInfo,members: membersArray,reactions: messageInfo.reactions)
                 
                 realmManager.saveMessage(obj: [message])
                 

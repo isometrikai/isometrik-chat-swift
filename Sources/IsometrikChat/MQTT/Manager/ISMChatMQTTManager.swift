@@ -49,22 +49,6 @@ open class ISMChatMQTTManager: NSObject{
         mqtt?.logLevel = .debug
         _ = mqtt?.connect()
         mqtt?.delegate = self
-        mqtt?.didConnectAck = { [weak self] mqtt, ack in
-            guard let self = self else { return }
-            if ack == .accept {
-                self.reconnectAttempts = 0
-                self.stopReconnectTimer()
-                let client = clientId
-                let messageTopic =
-                "/\(self.projectConfiguration?.accountId ?? "")/\(self.projectConfiguration?.projectId ?? "")/Message/\(client)"
-                let statusTopic =
-                "/\(self.projectConfiguration?.accountId ?? "")/\(self.projectConfiguration?.projectId ?? "")/Status/\(client)"
-                mqtt.subscribe([(messageTopic,.qos0),(statusTopic,qos: .qos0)])
-                self.hasConnected = true
-            } else {
-                self.handleConnectionFailure()
-            }
-        }
     }
     
     func unSubscribe(){
@@ -116,17 +100,20 @@ open class ISMChatMQTTManager: NSObject{
     public func mqttDidDisconnect(_ mqtt: CocoaMQTT, withError err: Error?) {
         ISMChatHelper.print("\(err?.localizedDescription ?? "")")
         hasConnected = false
-        if mqtt.autoReconnect {
-            handleConnectionFailure()
+        DispatchQueue.main.async { [weak self] in
+            if err != nil {
+                mqtt.disconnect()
+                self?.handleConnectionFailure()
+            }
         }
     }
     
-    func cleanup() {
-        stopReconnectTimer()
-        mqtt?.disconnect()
-        mqtt = nil
-        reconnectAttempts = 0
-    }
+//    func cleanup() {
+//        stopReconnectTimer()
+//        mqtt?.disconnect()
+//        mqtt = nil
+//        reconnectAttempts = 0
+//    }
 }
 
 extension ISMChatMQTTManager: CallEventHandlerDelegate{
@@ -169,6 +156,20 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
     
     public func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck) {
         ISMChatHelper.print("ack: \(ack)")
+        if ack == .accept {
+            self.reconnectAttempts = 0
+            self.stopReconnectTimer()
+            let client = clientId
+            let messageTopic =
+            "/\(self.projectConfiguration?.accountId ?? "")/\(self.projectConfiguration?.projectId ?? "")/Message/\(client)"
+            let statusTopic =
+            "/\(self.projectConfiguration?.accountId ?? "")/\(self.projectConfiguration?.projectId ?? "")/Status/\(client)"
+            mqtt.subscribe([(messageTopic,.qos0),(statusTopic,qos: .qos0)])
+            self.hasConnected = true
+        } else {
+            mqtt.disconnect()
+            self.handleConnectionFailure()
+        }
     }
     
     public func mqtt(_ mqtt: CocoaMQTT, didStateChangeTo state: CocoaMQTTConnState) {
