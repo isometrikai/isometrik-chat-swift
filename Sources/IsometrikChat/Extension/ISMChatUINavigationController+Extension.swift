@@ -37,4 +37,6 @@ extension NSNotification {
     public static let updateChatBadgeCount = Notification.Name.init("updateChatBadgeCount")
     public static let groupActions = Notification.Name.init("groupActions")
     public static let mqttConnectionStatusChanged = Notification.Name("mqttConnectionStatusChanged")
+    public static let mqttUpdateReadStatus = Notification.Name("mqttUpdateReadStatus")
+    public static let mqttUnreadCountReset = Notification.Name("mqttUnreadCountReset")
 }

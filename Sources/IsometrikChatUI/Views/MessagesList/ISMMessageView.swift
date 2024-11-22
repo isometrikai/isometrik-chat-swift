@@ -263,6 +263,7 @@ public struct ISMMessageView: View {
                     setupOnAppear()
                     stateViewModel.navigateToImageEditor = false
                     addNotificationObservers()
+                    
                 }
                 .onDisappear{
                     OnScreen = false
@@ -363,6 +364,14 @@ public struct ISMMessageView: View {
             }
             ISMChatHelper.print("MESSAGE READ ----------------->\(messageInfo)")
             messageRead(messageInfo: messageInfo)
+            //to update read status in conversationList
+            let data: [String: Any] = [
+                "messageId": messageInfo.messageId ?? "",
+                "conversationId": messageInfo.conversationId ?? "",
+                "userId": messageInfo.userId ?? "",
+                "updatedAt": messageInfo.updatedAt ?? 0
+            ]
+            NotificationCenter.default.post(name: NSNotification.mqttUpdateReadStatus, object: nil, userInfo: data)
             //to update chat badge count
             NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
         }
@@ -691,6 +700,10 @@ public struct ISMMessageView: View {
             realmManager.fetchLinks(conId: self.conversationID ?? "")
             
             realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
+            NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
+            let data : [String: Any] = ["conversationId" : self.conversationID ?? ""]
+            NotificationCenter.default.post(name: NSNotification.mqttUnreadCountReset, object: nil, userInfo: data)
+            
             if !networkMonitor.isConnected {
                 stateViewModel.showingNoInternetAlert = true
             }

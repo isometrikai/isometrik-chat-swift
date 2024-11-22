@@ -19,4 +19,5 @@ public struct ISMChatMultipleMessageRead : Codable{
     public let conversationId : String?
     public let action : String?
     public let messageId : String?
+    public let updatedAt : Double?
 }
