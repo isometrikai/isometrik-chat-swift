@@ -309,7 +309,7 @@ public struct ISMConversationView : View {
                 }
                 .onReceive(NotificationCenter.default.publisher(for: NSNotification.mqttUpdateReadStatus)) { data in
                     if let conversationId = data.userInfo?["conversationId"] as? String, let messageId = data.userInfo?["messageId"] as? String, let userId = data.userInfo?["userId"] as? String{
-                        realmManager.updateLastmsgDeliver(conId: conversationId?? "", messageId: messageId ?? "", userId: userId ?? "", updatedAt: 0)
+                        realmManager.updateLastmsgDeliver(conId: conversationId ?? "", messageId: messageId ?? "", userId: userId ?? "", updatedAt: 0)
                         realmManager.updateLastmsgRead(conId: conversationId ?? "",messageId: messageId ?? "", userId: userId ?? "", updatedAt: 0)
                     }
                 }
