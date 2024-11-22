@@ -297,20 +297,19 @@ public struct ISMConversationView : View {
                         return
                     }
                     ISMChatHelper.print("MESSAGE DELIVERED IN CONVERSATION LIST----------------->\(messageInfo)")
-                    realmManager.updateLastmsgDeliver(conId: messageInfo.conversationId ?? "", msg: messageInfo)
+                    realmManager.updateLastmsgDeliver(conId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? "")
                 }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMessageRead.name)){ notification in
                     guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
                         return
                     }
                     ISMChatHelper.print("MESSAGE READ IN CONVERSATION LIST----------------->\(messageInfo)")
-                    realmManager.updateLastmsgDeliver(conId: messageInfo.conversationId ?? "", msg: messageInfo)
+                    realmManager.updateLastmsgDeliver(conId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? "")
                     realmManager.updateLastmsgRead(conId: messageInfo.conversationId ?? "",messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
                 }
                 .onReceive(NotificationCenter.default.publisher(for: NSNotification.mqttUpdateReadStatus)) { data in
                     if let conversationId = data.userInfo?["conversationId"] as? String, let messageId = data.userInfo?["messageId"] as? String, let userId = data.userInfo?["userId"] as? String{
-                        let x = ISMChatMessageDelivered(messageId: messageId ?? "", updatedAt: 0,userId:userId)
-                        realmManager.updateLastmsgDeliver(conId: conversationId ?? "", msg: x)
+                        realmManager.updateLastmsgDeliver(conId: conversationId?? "", messageId: messageId ?? "", userId: userId ?? "", updatedAt: 0)
                         realmManager.updateLastmsgRead(conId: conversationId ?? "",messageId: messageId ?? "", userId: userId ?? "", updatedAt: 0)
                     }
                 }

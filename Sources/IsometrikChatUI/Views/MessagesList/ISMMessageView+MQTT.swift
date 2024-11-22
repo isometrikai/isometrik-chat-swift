@@ -294,7 +294,7 @@ import IsometrikChat
                  realmManager.updateDeliveryStatusThroughMsgId(conId: messageInfo.conversationId ?? "", msgId: messageInfo.messageId ?? "")
                  realmManager.updateReadStatusThroughMsgId(msgId: messageInfo.messageId ?? "")
              }
-             realmManager.updateLastmsgDeliver(conId: self.conversationID ?? "", msg: messageInfo)
+             realmManager.updateLastmsgDeliver(conId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
              realmManager.updateLastmsgRead(conId: self.conversationID ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
              self.getMessages()
          }else{

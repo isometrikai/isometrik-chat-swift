@@ -681,14 +681,14 @@ extension RealmManager {
     }
     
     //MARK: - update last message delivered
-    public func updateLastmsgDeliver(conId:String,msg: ISMChatMessageDelivered) {
+    public func updateLastmsgDeliver(conId:String,messageId : String,userId : String,updatedAt : Double) {
         if let localRealm = localRealm {
-            let taskToUpdate = localRealm.objects(LastMessageDB.self).filter(NSPredicate(format: "conversationId == %@ AND messageId == %@", (conId ), (msg.messageId ?? "")))
+            let taskToUpdate = localRealm.objects(LastMessageDB.self).filter(NSPredicate(format: "conversationId == %@ AND messageId == %@", (conId ), (messageId ?? "")))
             if !taskToUpdate.isEmpty {
                 try! localRealm.write {
                     
-                    taskToUpdate.first?.deliveredTo.first?.userId = msg.userId
-                    taskToUpdate.first?.deliveredTo.first?.timestamp = msg.updatedAt
+                    taskToUpdate.first?.deliveredTo.first?.userId = userId
+                    taskToUpdate.first?.deliveredTo.first?.timestamp = updatedAt
                     
                     
                 }
