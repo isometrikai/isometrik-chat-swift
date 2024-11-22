@@ -743,7 +743,7 @@ public struct ISMMessageView: View {
                     let action = realmManager.getConversationListLastMessageAction(conversationId: self.conversationID ?? "")
                     if action != ISMChatActionType.reactionAdd.value && action != ISMChatActionType.reactionRemove.value{
                         realmManager.updateLastMessageDetails(conId: self.conversationID ?? "", msgObj: msgObj)
-                        parentMessageIdToScroll = realmManager.messages.last?.last?.id.description ?? ""
+//                        parentMessageIdToScroll = realmManager.messages.last?.last?.id.description ?? ""
                     }
                 }
             }

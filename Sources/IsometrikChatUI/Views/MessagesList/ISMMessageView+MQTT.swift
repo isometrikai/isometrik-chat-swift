@@ -260,7 +260,7 @@ import IsometrikChat
                  }
                  self.getMessages()
              }else{
-                 parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+//                 parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
                  if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
                      chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
                          // update status of message to deleivered
