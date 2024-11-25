@@ -314,6 +314,7 @@ extension ISMMessageView{
                     }
                     
                     TextField(appearance.constantStrings.messageInputTextViewPlaceholder, text: $textFieldtxt, axis: .vertical)
+                        .lineLimit(5)
                         .onTapGesture {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                                 // Ensure realmManager and messages are safe to access

@@ -17,7 +17,7 @@ import ISMSwiftCall
 import IsometrikChat
 
 public protocol ISMMessageViewDelegate{
-    func navigateToAppProfile(userId : String,userType : Int)
+    func navigateToAppProfile(userId : String,storeId : String,userType : Int)
     func navigateToPost(postId : String)
     func navigateToProduct(productId : String,productCategoryId : String)
     func navigateToUserListToForward(messages : [MessagesDB])
@@ -558,7 +558,7 @@ public struct ISMMessageView: View {
         })
         .onChange(of: navigateToSocialProfileId, { _, _ in
             if !navigateToSocialProfileId.isEmpty {
-                delegate?.navigateToAppProfile(userId: navigateToSocialProfileId, userType: 0)
+                delegate?.navigateToAppProfile(userId: navigateToSocialProfileId, storeId: "", userType: 0)
                 navigateToSocialProfileId = ""
             }
         })

@@ -132,7 +132,7 @@ struct ISMContactInfoView: View {
                                             if onlyInfo == true{
                                                 navigateToSocialProfileId = selectedToShowInfo?.userIdentifier ?? ""
                                             }else{
-                                                navigateToSocialProfileId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? (self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier ?? "")
+                                                navigateToSocialProfileId = self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier ?? ""
                                             }
                                         } label: {
                                             HStack{
