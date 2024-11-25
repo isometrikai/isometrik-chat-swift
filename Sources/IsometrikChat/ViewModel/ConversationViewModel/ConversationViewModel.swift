@@ -150,7 +150,7 @@ public class ConversationViewModel : NSObject ,ObservableObject{
             case .success(let data,_) :
                 completion(data.count)
             case .failure(let error) :
-                ISMChatHelper.print("Get clear chat Api failed -----> \(String(describing: error))")
+                completion(0)
             }
         }
     }

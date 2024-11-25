@@ -155,9 +155,10 @@ extension ISMMessageView{
     func backButtonView() -> some View {
         Button(action: {
             //just resetting unread count for this conversation while going back to conversation list
-            realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
+//            realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
             //sometimes keyboard doesn't get dismissed
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
             //dismiss
             presentationMode.wrappedValue.dismiss()
         }) {

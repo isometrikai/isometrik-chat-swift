@@ -700,7 +700,6 @@ public struct ISMMessageView: View {
             realmManager.fetchLinks(conId: self.conversationID ?? "")
             
             realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
-            NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
             let data : [String: Any] = ["conversationId" : self.conversationID ?? ""]
             NotificationCenter.default.post(name: NSNotification.mqttUnreadCountReset, object: nil, userInfo: data)
             
