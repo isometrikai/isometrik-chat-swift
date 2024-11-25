@@ -79,7 +79,13 @@ import IsometrikChat
                     thumbnailUrl: messageInfo.metaData?.thumbnailUrl,
                     description: messageInfo.metaData?.description,
                     isVideoPost: messageInfo.metaData?.isVideoPost,
-                    socialPostId: messageInfo.metaData?.socialPostId)
+                    socialPostId: messageInfo.metaData?.socialPostId,
+                    collectionTitle : messageInfo.metaData?.collectionTitle,
+                    collectionDescription : messageInfo.metaData?.collectionDescription,
+                    productCount : messageInfo.metaData?.productCount,
+                    collectionImage : messageInfo.metaData?.collectionImage,
+                    collectionId : messageInfo.metaData?.collectionId
+                )
                 
                 if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
                     bodyUpdated = messageInfo.details?.body
@@ -97,7 +103,13 @@ import IsometrikChat
                         thumbnailUrl: messageInfo.details?.metaData?.thumbnailUrl,
                         description: messageInfo.details?.metaData?.description,
                         isVideoPost: messageInfo.details?.metaData?.isVideoPost,
-                        socialPostId: messageInfo.details?.metaData?.socialPostId)
+                        socialPostId: messageInfo.details?.metaData?.socialPostId,
+                        collectionTitle : messageInfo.details?.metaData?.collectionTitle,
+                        collectionDescription : messageInfo.details?.metaData?.collectionDescription,
+                        productCount : messageInfo.details?.metaData?.productCount,
+                        collectionImage : messageInfo.details?.metaData?.collectionImage,
+                        collectionId : messageInfo.details?.metaData?.collectionId
+                    )
                 }
                 
                 var mentionedUser : [ISMChatMentionedUser] = []
@@ -188,7 +200,13 @@ import IsometrikChat
                  thumbnailUrl: messageInfo.metaData?.thumbnailUrl,
                  description: messageInfo.metaData?.description,
                  isVideoPost: messageInfo.metaData?.isVideoPost,
-                 socialPostId: messageInfo.metaData?.socialPostId)
+                 socialPostId: messageInfo.metaData?.socialPostId,
+                 collectionTitle : messageInfo.metaData?.collectionTitle,
+                 collectionDescription : messageInfo.metaData?.collectionDescription,
+                 productCount : messageInfo.metaData?.productCount,
+                 collectionImage : messageInfo.metaData?.collectionImage,
+                 collectionId : messageInfo.metaData?.collectionId
+             )
              
              let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")
              

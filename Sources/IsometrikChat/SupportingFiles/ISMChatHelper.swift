@@ -198,6 +198,8 @@ public class ISMChatHelper: NSObject {
             return .ProductLink
         }else if message.customType == ISMChatMediaType.SocialLink.value{
             return .SocialLink
+        }else if message.customType == ISMChatMediaType.CollectionLink.value{
+            return .CollectionLink
         }
         else{
             if message.action == ISMChatActionType.userBlock.value || message.action == ISMChatActionType.userBlockConversation.value{

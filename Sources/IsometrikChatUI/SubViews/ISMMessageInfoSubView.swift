@@ -1033,6 +1033,52 @@ struct ISMMessageInfoSubView: View {
                             }
                         }.padding(.vertical,2)
                     }
+                case .CollectionLink:
+                    HStack(alignment: .bottom){
+                        if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                            //When its group show member avatar in message
+                            inGroupUserAvatarView()
+                        }
+                        ZStack(alignment: .bottomTrailing){
+                            VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                    //when its group show member name in message
+                                    inGroupUserName()
+                                }
+                                
+                                VStack(alignment: .trailing,spacing: 5){
+                                    Button {
+                                        
+                                    } label: {
+                                        collectionLinkView(message: message)
+                                    }.padding(.trailing,5)
+                                    
+                                }//:ZStack
+                                .frame(width: 258)
+                                .padding(5)
+                                .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                .overlay(
+                                    appearance.messageBubbleType == .BubbleWithOutTail ?
+                                    AnyView(
+                                        UnevenRoundedRectangle(
+                                            topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                            bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                            bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                            topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                            style: .circular
+                                        )
+                                        .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                    ) : AnyView(EmptyView())
+                                )
+                                if appearance.timeInsideBubble == false{
+                                    dateAndStatusView(onImage: false)
+                                        .padding(.bottom,5)
+                                        .padding(.trailing,5)
+                                }
+                            }
+                        }.padding(.vertical,2)
+                    }
                 default:
                     EmptyView()
                 }
@@ -1068,6 +1114,69 @@ struct ISMMessageInfoSubView: View {
         
         // Round to two decimal places and format as a string
         return String(format: "%.2f", discount)
+    }
+    
+    
+    func collectionLinkView(message : MessagesDB) -> some View{
+        VStack(alignment: .leading) {
+            HStack() {
+                    ISMChatImageCahcingManger.viewImage(url: message.metaData?.collectionImage ?? "")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 78)
+                        .clipped()
+                
+                VStack(alignment: .leading,spacing: 5){
+                    if let des = message.metaData?.collectionTitle{
+                        Text(des)
+                            .font(Font.medium(size: 12))
+                            .foregroundColor(isReceived == true ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                            .lineLimit(2).padding(.horizontal,8).padding(.bottom,8).padding(.top,3)
+                    }
+                    if let des = message.metaData?.collectionDescription{
+                        Text(des)
+                            .font(Font.regular(size: 10))
+                            .foregroundColor(isReceived == true ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                            .lineLimit(2).padding(.horizontal,8).padding(.bottom,8).padding(.top,3)
+                    }
+                    if let des = message.metaData?.productCount{
+                        let text = des > 1 ? "\(des) Products" : "\(des) Product"
+                        Text(text)
+                            .font(Font.medium(size: 12))
+                            .foregroundColor(isReceived == true ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                            .lineLimit(1).padding(.horizontal,8).padding(.bottom,8).padding(.top,3)
+                    }
+                }
+            }
+            .frame(width: 248)
+            .background(Color.white.opacity(0.2))
+            .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+            )
+            .padding(.horizontal,5)
+            
+            if let url = message.metaData?.url{
+                Text(url)
+                    .font(appearance.fonts.messageListMessageText)
+                    .multilineTextAlignment(.leading)
+                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                    .padding(.horizontal,5)
+            }
+            
+            
+            if appearance.timeInsideBubble == true{
+                HStack{
+                    Spacer()
+                    
+                    dateAndStatusView(onImage: false)
+                        .padding(.bottom,5)
+                        .padding(.trailing,5)
+                    
+                }
+            }
+        }
     }
     
     

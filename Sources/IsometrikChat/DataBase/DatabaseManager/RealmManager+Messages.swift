@@ -109,6 +109,12 @@ extension RealmManager{
                     metadataValue.isVideoPost = metaData.isVideoPost
                     metadataValue.socialPostId = metaData.socialPostId
                     metadataValue.productImage = metaData.productImage
+                    metadataValue.collectionTitle = metaData.collectionTitle
+                    metadataValue.collectionDescription = metaData.collectionDescription
+                    metadataValue.productCount = metaData.productCount
+                    metadataValue.collectionImage = metaData.collectionImage
+                    metadataValue.collectionId = metaData.collectionId
+                    
 
                     
                     if let replyMessage = metaData.replyMessage {
@@ -394,7 +400,11 @@ extension RealmManager{
                         metaData.Description = value.metaData?.description ?? value.details?.metaData?.description
                         metaData.isVideoPost = value.metaData?.isVideoPost ?? value.details?.metaData?.isVideoPost
                         metaData.socialPostId = value.metaData?.socialPostId ?? value.details?.metaData?.socialPostId
-                        
+                        metaData.collectionTitle = value.metaData?.collectionTitle ?? value.details?.metaData?.collectionTitle
+                        metaData.collectionDescription = value.metaData?.collectionDescription ?? value.details?.metaData?.collectionDescription
+                        metaData.productCount = value.metaData?.productCount ?? value.details?.metaData?.productCount
+                        metaData.collectionImage = value.metaData?.collectionImage ?? value.details?.metaData?.collectionImage
+                        metaData.collectionId = value.metaData?.collectionId ?? value.details?.metaData?.collectionId
                         
                         
                         obj.metaData = metaData

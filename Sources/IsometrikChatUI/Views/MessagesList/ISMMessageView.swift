@@ -29,6 +29,7 @@ public protocol ISMMessageViewDelegate{
     func messageValidUrl(url : String,messageId : String,conversationId : String,completion:@escaping(ISMChatMessage)->())
     func navigateToProductLink(childProductId : String,parentProductId : String, productName : String)
     func navigateToSocialLink(socialLinkId : String)
+    func navigateToCollectionLink(collectionId : String)
 }
 
 public struct ISMMessageView: View {
@@ -50,7 +51,7 @@ public struct ISMMessageView: View {
     @State var chatProperties = ISMChatSdkUI.getInstance().getChatProperties()
     
     let columns = [GridItem(.flexible(minimum: 10))]
-    let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
     let onlinetimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     @State var OnScreen : Bool = false
     
@@ -177,6 +178,7 @@ public struct ISMMessageView: View {
     
     @State var navigateToProductLink : MessagesDB = MessagesDB()
     @State var navigateToSocialLink : MessagesDB = MessagesDB()
+    @State var navigateToCollectionLink : MessagesDB = MessagesDB()
     
     //MARK: - BODY
     public var body: some View {
@@ -457,6 +459,12 @@ public struct ISMMessageView: View {
             if !navigateToSocialLink.messageId.isEmpty{
                 self.delegate?.navigateToSocialLink(socialLinkId: navigateToSocialLink.metaData?.socialPostId ?? "")
                 navigateToSocialLink = MessagesDB()
+            }
+        }
+        .onChange(of: navigateToCollectionLink.messageId) { _, _ in
+            if !navigateToCollectionLink.messageId.isEmpty{
+                self.delegate?.navigateToCollectionLink(collectionId: navigateToCollectionLink.metaData?.collectionId ?? "")
+                navigateToCollectionLink = MessagesDB()
             }
         }
         .onChange(of: navigateToMediaSliderId, { _, _ in

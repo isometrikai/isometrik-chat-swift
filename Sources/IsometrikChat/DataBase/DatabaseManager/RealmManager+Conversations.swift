@@ -300,6 +300,11 @@ extension RealmManager {
                     messageMetaData.isVideoPost = value.lastMessageDetails?.metaData?.isVideoPost
                     messageMetaData.socialPostId = value.lastMessageDetails?.metaData?.socialPostId
                     messageMetaData.productImage = value.lastMessageDetails?.metaData?.productImage
+                    messageMetaData.collectionTitle = value.lastMessageDetails?.metaData?.collectionTitle
+                    messageMetaData.collectionDescription = value.lastMessageDetails?.metaData?.collectionDescription
+                    messageMetaData.productCount = value.lastMessageDetails?.metaData?.productCount
+                    messageMetaData.collectionImage = value.lastMessageDetails?.metaData?.collectionImage
+                    messageMetaData.collectionId = value.lastMessageDetails?.metaData?.collectionId
                     
                     
                     

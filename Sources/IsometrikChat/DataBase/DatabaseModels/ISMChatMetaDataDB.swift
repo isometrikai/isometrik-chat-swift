@@ -35,6 +35,13 @@ public class MetaDataDB : Object, ObjectKeyIdentifiable {
     @Persisted public var Description : String?
     @Persisted public var isVideoPost : Bool?
     @Persisted public var socialPostId : String?
+    
+    //collection link
+    @Persisted public var collectionTitle : String?
+    @Persisted public var collectionDescription : String?
+    @Persisted public var productCount : Int?
+    @Persisted public var collectionImage : String?
+    @Persisted public var collectionId : String?
 }
 
 public class PDPImageDB: Object, ObjectKeyIdentifiable {

@@ -242,6 +242,12 @@ public struct ISMChatMetaData: Codable {
     public var isVideoPost : Bool?
     public var socialPostId : String?
     
+    public var collectionTitle : String?
+    public var collectionDescription : String?
+    public var productCount : Int?
+    public var collectionImage : String?
+    public var collectionId : String?
+    
     public init(
         replyMessage: ISMChatReplyMessageMetaData? = nil,
         locationAddress: String? = nil,
@@ -262,7 +268,12 @@ public struct ISMChatMetaData: Codable {
         thumbnailUrl : String? = nil,
         description : String? = nil,
         isVideoPost : Bool? = nil,
-        socialPostId : String? = nil
+        socialPostId : String? = nil,
+        collectionTitle : String? = nil,
+        collectionDescription : String? = nil,
+        productCount : Int? = nil,
+        collectionImage : String? = nil,
+        collectionId : String? = nil
     ) {
         self.replyMessage = replyMessage
         self.locationAddress = locationAddress
@@ -284,6 +295,11 @@ public struct ISMChatMetaData: Codable {
         self.description = description
         self.isVideoPost = isVideoPost
         self.socialPostId = socialPostId
+        self.collectionTitle = collectionTitle
+        self.collectionDescription = collectionDescription
+        self.productCount = productCount
+        self.collectionImage = collectionImage
+        self.collectionId = collectionId
     }
     
     public init(from decoder: Decoder) throws {
@@ -308,6 +324,11 @@ public struct ISMChatMetaData: Codable {
         description = try? container.decode(String.self, forKey: .description)
         isVideoPost = try? container.decode(Bool.self, forKey: .isVideoPost)
         socialPostId = try? container.decode(String.self, forKey: .socialPostId)
+        collectionTitle = try? container.decode(String.self, forKey: .collectionTitle)
+        collectionDescription = try? container.decode(String.self, forKey: .collectionDescription)
+        productCount = try? container.decode(Int.self, forKey: .productCount)
+        collectionImage = try? container.decode(String.self, forKey: .collectionImage)
+        collectionId = try? container.decode(String.self, forKey: .collectionId)
     }
 }
 
