@@ -22,7 +22,7 @@ public struct ISMConversationView : View {
 //    @AppStorage("isDarkMode") public var isDarkMode = false
     
     @State public var navigateToMessages : Bool = false
-    
+    @State private var conversationData: [ConversationDB] = []
     
 //    private let messageQueue = MessageQueue()
 //    private var lastProcessedMessageId: String?
@@ -262,8 +262,10 @@ public struct ISMConversationView : View {
 //                            ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.senderName ?? "")", body: "\(messageInfo.notificationBody ?? (messageInfo.body ?? ""))", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? "","messageId" : messageInfo.messageId ?? ""])
 //                        }
 //                    }
-                    self.msgReceived(messageInfo: messageInfo)
-                    self.localNotificationForActions(messageInfo: messageInfo)
+                    if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                        self.msgReceived(messageInfo: messageInfo)
+                        self.localNotificationForActions(messageInfo: messageInfo)
+                    }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttTypingEvent.name)){ notification in
                     guard let messageInfo = notification.userInfo?["data"] as? ISMChatTypingEvent else {
@@ -304,18 +306,19 @@ public struct ISMConversationView : View {
                         return
                     }
                     ISMChatHelper.print("MESSAGE READ IN CONVERSATION LIST----------------->\(messageInfo)")
-                    realmManager.updateLastmsgDeliver(conId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
                     realmManager.updateLastmsgRead(conId: messageInfo.conversationId ?? "",messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
                 }
                 .onReceive(NotificationCenter.default.publisher(for: NSNotification.mqttUpdateReadStatus)) { data in
                     if let conversationId = data.userInfo?["conversationId"] as? String, let messageId = data.userInfo?["messageId"] as? String, let userId = data.userInfo?["userId"] as? String{
-                        realmManager.updateLastmsgDeliver(conId: conversationId ?? "", messageId: messageId ?? "", userId: userId ?? "", updatedAt: 0)
                         realmManager.updateLastmsgRead(conId: conversationId ?? "",messageId: messageId ?? "", userId: userId ?? "", updatedAt: 0)
                     }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: NSNotification.mqttUnreadCountReset)) { data in
                     if let conversationId = data.userInfo?["conversationId"] as? String{
                         realmManager.updateUnreadCountThroughConId(conId: conversationId,count: 0,reset:true)
+                        self.viewModel.resetdata()
+                        self.viewModel.clearMessages()
+                        realmManager.getAllConversations()
                     }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttUserBlockConversation.name)){
@@ -520,6 +523,7 @@ public struct ISMConversationView : View {
         getuserData{ userId in
             //self.chatViewModel.getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId: userId ?? "")
         }
+        fetchConversationData()
     }
 
     private var shouldShowPlaceholder: Bool {
@@ -606,9 +610,9 @@ public struct ISMConversationView : View {
 
     // MARK: - Helper Methods
 
-    private var conversationData: [ConversationDB] {
+    private func fetchConversationData() {
         let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
-        return isOtherConversationList ? realmManager.getPrimaryConversation() : realmManager.getConversation()
+        conversationData = isOtherConversationList ? realmManager.getPrimaryConversation() : realmManager.getConversation()
     }
 
     private func navigateToMessageList(for data: ConversationDB) {

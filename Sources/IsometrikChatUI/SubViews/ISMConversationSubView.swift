@@ -371,13 +371,18 @@ struct ISMConversationSubView: View {
             let count = chat.unreadMessagesCount
             if count > 0{
                 Spacer()
+                let textWidth = "\(chat.unreadMessagesCount)".widthOfString(usingFont: UIFont.regular(size: 12))
+                let circleSize = max(20, textWidth + 14)
+
                 Text("\(count)")
                     .foregroundColor(appearance.colorPalette.chatListUnreadMessageCount)
                     .font(appearance.fonts.chatListUnreadMessageCount)
                     .padding(7)
-                    .background(appearance.colorPalette.chatListUnreadMessageCountBackground)
-                    .frame(height: 20)
-                    .cornerRadius(10)
+                    .frame(width: circleSize, height: circleSize)
+                    .background(
+                        Circle()
+                            .fill(appearance.colorPalette.chatListUnreadMessageCountBackground)
+                    )
             }
         }
     }

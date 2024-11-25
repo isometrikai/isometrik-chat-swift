@@ -745,6 +745,8 @@ extension RealmManager {
                     
                     taskToUpdate.first?.deliveredTo.first?.userId = userId
                     taskToUpdate.first?.deliveredTo.first?.timestamp = updatedAt
+                    taskToUpdate.first?.readBy.first?.userId = userId
+                    taskToUpdate.first?.readBy.first?.timestamp = updatedAt
                 }
             }
         }
