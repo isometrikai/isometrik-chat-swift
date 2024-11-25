@@ -1541,7 +1541,8 @@ struct ISMMessageSubView: View {
                     ISMChatImageCahcingManger.viewImage(url: message.metaData?.collectionImage ?? "")
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 78)
+                        .background(Color.white)
+                        .frame(width: 78,height: 78)
                         .clipped()
                 
                 VStack(alignment: .leading,spacing: 5){
@@ -1565,9 +1566,10 @@ struct ISMMessageSubView: View {
                             .lineLimit(1).padding(.horizontal,8).padding(.bottom,8).padding(.top,3)
                     }
                 }
+                Spacer()
             }
             .frame(width: 248)
-            .background(Color.white.opacity(0.2))
+            .background(isReceived == true ? Color.black.opacity(0.2) :  Color.white.opacity(0.2))
             .cornerRadius(10)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
