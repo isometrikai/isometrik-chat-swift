@@ -223,13 +223,17 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                                     // Your code here
                                     if data.senderId != ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId{
                                         self.whenInOtherScreen(messageInfo: data)
-                                        NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
                                     }
                                 }
+                            }
+                        }else{
+                            if UIApplication.shared.applicationState == .background {
+                                self.whenInOtherScreen(messageInfo: data)
                             }
                         }
                     }
                     NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+                    NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
                 case .failure(let error):
                     NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
                 }
@@ -468,13 +472,17 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                                     // Your code here
                                     if data.senderId != ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId{
                                         self.whenInOtherScreen(messageInfo: data)
-                                        NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
                                     }
                                 }
+                            }
+                        }else{
+                            if UIApplication.shared.applicationState == .background {
+                                self.whenInOtherScreen(messageInfo: data)
                             }
                         }
                     }
                     NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+                    NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
                 case .failure(let error):
                     NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
                 }
