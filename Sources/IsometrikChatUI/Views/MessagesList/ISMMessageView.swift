@@ -29,7 +29,7 @@ public protocol ISMMessageViewDelegate{
     func messageValidUrl(url : String,messageId : String,conversationId : String,completion:@escaping(ISMChatMessage)->())
     func navigateToProductLink(childProductId : String,parentProductId : String, productName : String)
     func navigateToSocialLink(socialLinkId : String)
-    func navigateToCollectionLink(collectionId : String)
+    func navigateToCollectionLink(collectionId : String,completeUrl: String)
 }
 
 public struct ISMMessageView: View {
@@ -463,7 +463,7 @@ public struct ISMMessageView: View {
         }
         .onChange(of: navigateToCollectionLink.messageId) { _, _ in
             if !navigateToCollectionLink.messageId.isEmpty{
-                self.delegate?.navigateToCollectionLink(collectionId: navigateToCollectionLink.metaData?.collectionId ?? "")
+                self.delegate?.navigateToCollectionLink(collectionId: navigateToCollectionLink.metaData?.collectionId ?? "", completeUrl: navigateToCollectionLink.metaData?.url ?? "")
                 navigateToCollectionLink = MessagesDB()
             }
         }
