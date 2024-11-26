@@ -76,6 +76,17 @@ extension RealmManager{
         return false
     }
     
+    public func doesMessageExistInLastMessagesDB(conversationId: String, messageId: String) -> Bool {
+        if let localRealm = localRealm {
+            // Assuming your MessagesDB model has properties like 'conversationId', 'messageId', and 'isDelete'
+            let predicate = NSPredicate(format: "conversationId == %@ AND messageId == %@", conversationId, messageId)
+            
+            let msgsExists = localRealm.objects(LastMessageDB.self).filter(predicate)
+            return msgsExists.count > 0
+        }
+        return false
+    }
+    
     //MARK: - update body of message on edit
     public func updateMessageBody(conversationId: String, messageId: String, body: String, metaData: ISMChatMetaData? = nil,customType : String? = nil) {
         if let localRealm = localRealm {

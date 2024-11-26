@@ -22,7 +22,7 @@ public struct ISMConversationView : View {
 //    @AppStorage("isDarkMode") public var isDarkMode = false
     
     @State public var navigateToMessages : Bool = false
-    @State private var conversationData: [ConversationDB] = []
+//    @State private var conversationData: [ConversationDB] = []
     
 //    private let messageQueue = MessageQueue()
 //    private var lastProcessedMessageId: String?
@@ -232,7 +232,7 @@ public struct ISMConversationView : View {
                     guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
                         return
                     }
-                    ISMChatHelper.print("MESSAGE New Received----------------->\(messageInfo)")
+                    ISMChatHelper.print("MESSAGE RECEIVED IN CONVERSATION LIST----------------->\(messageInfo)")
                     
                     
 //                    // Prevent duplicate message processing
@@ -262,10 +262,8 @@ public struct ISMConversationView : View {
 //                            ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.senderName ?? "")", body: "\(messageInfo.notificationBody ?? (messageInfo.body ?? ""))", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? "","messageId" : messageInfo.messageId ?? ""])
 //                        }
 //                    }
-                    if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
                         self.msgReceived(messageInfo: messageInfo)
                         self.localNotificationForActions(messageInfo: messageInfo)
-                    }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttTypingEvent.name)){ notification in
                     guard let messageInfo = notification.userInfo?["data"] as? ISMChatTypingEvent else {
@@ -523,7 +521,6 @@ public struct ISMConversationView : View {
         getuserData{ userId in
             //self.chatViewModel.getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId: userId ?? "")
         }
-        fetchConversationData()
     }
 
     private var shouldShowPlaceholder: Bool {
@@ -610,9 +607,9 @@ public struct ISMConversationView : View {
 
     // MARK: - Helper Methods
 
-    private func fetchConversationData() {
+    private var conversationData: [ConversationDB] {
         let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
-        conversationData = isOtherConversationList ? realmManager.getPrimaryConversation() : realmManager.getConversation()
+        return isOtherConversationList ? realmManager.getPrimaryConversation() : realmManager.getConversation()
     }
 
     private func navigateToMessageList(for data: ConversationDB) {
