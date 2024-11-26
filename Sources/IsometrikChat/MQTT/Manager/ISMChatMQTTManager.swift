@@ -206,6 +206,34 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                 ISMChatHelper.print("Event triggered with ACTION NAME Same user:: \(actionName)")
                 switchEvents(actionName: actionName, data: data, message: message)
             }
+        }else{
+            //some times for broadcast messages action doesn't comes
+            self.messageReceived(data) { result in
+                switch result{
+                case .success(let data):
+                    if self.framework == .UIKit {
+                        if let topViewController = UIApplication.topViewController() {
+                            if let Chatvc = self.viewcontrollers?.conversationListViewController,
+                               let Messagevc = self.viewcontrollers?.messagesListViewController {
+                                
+                                let isNotChatVC = !(topViewController.isKind(of: Chatvc))
+                                let isNotMessageVC = !(topViewController.isKind(of: Messagevc))
+                                
+                                if isNotChatVC && isNotMessageVC {
+                                    // Your code here
+                                    if data.senderId != ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId{
+                                        self.whenInOtherScreen(messageInfo: data)
+                                        NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .failure(let error):
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+                }
+            }
         }
     }
     
