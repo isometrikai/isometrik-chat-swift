@@ -127,11 +127,11 @@ public class ISMChatImageSizes{
     public var messageSend : CGSize = CGSize(width: 11, height: 9)
     public var messagePending : CGSize = CGSize(width: 9, height: 9)
     public init(){}
-    public init(backButton: CGSize,messageRead: CGSize,messageDelivered : CGSize,messageSend : CGSize,messagePending : CGSize) {
-        self.backButton = backButton
-        self.messageRead = messageRead
-        self.messageDelivered = messageDelivered
-        self.messageSend = messageSend
-        self.messagePending = messagePending
+    public init(backButton: CGSize? = nil,messageRead: CGSize? = nil,messageDelivered : CGSize? = nil,messageSend : CGSize? = nil,messagePending : CGSize? = nil) {
+        self.backButton = backButton ?? CGSize(width: 18, height: 18)
+        self.messageRead = messageRead ?? CGSize(width: 15, height: 9)
+        self.messageDelivered = messageDelivered ?? CGSize(width: 15, height: 9)
+        self.messageSend = messageSend ?? CGSize(width: 11, height: 9)
+        self.messagePending = messagePending ?? CGSize(width: 11, height: 9)
     }
 }
