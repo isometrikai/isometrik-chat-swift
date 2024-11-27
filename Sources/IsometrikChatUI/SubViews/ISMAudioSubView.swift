@@ -70,18 +70,20 @@ struct ISMAudioSubView: View {
                 // button and timer
                 VStack(alignment: .center,spacing: 14){
                     Button {
-                        if audioVM.isPlaying {
-                            audioVM.pauseAudio()
-                        } else {
-                            
-                            if let previousAudioRef {
-                                previousAudioRef.pauseAudio()
-                                previousAudioRef.removeAudio()
+                        DispatchQueue.main.async {
+                            if audioVM.isPlaying {
+                                audioVM.pauseAudio()
+                            } else {
+                                
+                                if let previousAudioRef {
+                                    previousAudioRef.pauseAudio()
+                                    previousAudioRef.removeAudio()
+                                }
+                                
+                                previousAudioRef = audioVM
+                                
+                                audioVM.playAudio()
                             }
-                            
-                            previousAudioRef = audioVM
-                            
-                            audioVM.playAudio()
                         }
                     } label: {
                         if !(audioVM.isPlaying) {
