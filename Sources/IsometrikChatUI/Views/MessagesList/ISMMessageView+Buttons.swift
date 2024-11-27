@@ -14,56 +14,7 @@ import IsometrikChat
 extension ISMMessageView{
     
     //MARK: - AUDIO MESSAGE BUTTON
-    func AudioMessageButton(height : CGFloat) -> some View{
-        Button(action: {
-            ISMChatHelper.print("recording done")
-            if stateViewModel.isClicked == true{
-                chatViewModel.isRecording = false
-                stateViewModel.isClicked = false
-                chatViewModel.stopRecording { url in
-                    chatViewModel.audioUrl = url
-                }
-            }
-        }) {
-            appearance.images.addAudio
-                .resizable()
-                .frame(width: 24, height: 24)
-                .padding(.horizontal,5)
-        }
-        .simultaneousGesture(
-            LongPressGesture(minimumDuration: 0.1)
-                .onEnded { value in
-                    ISMChatHelper.print("Tap currently holded")
-                    if isMessagingEnabled() == true && chatViewModel.isBusy == false{
-                        if audioPermissionCheck == true{
-                            stateViewModel.isClicked = true
-                            chatViewModel.isRecording = true
-                            chatViewModel.startRecording()
-                        }else{
-                            ISMChatHelper.print("Access Denied for audio permission")
-                        }
-                    }
-                }
-                .sequenced(before:
-                            DragGesture(minimumDistance: 2)
-                    .onEnded { value in
-                        if value.translation.width < -50 {
-                            UINotificationFeedbackGenerator().notificationOccurred(.warning)
-                            if stateViewModel.isClicked == true{
-                                chatViewModel.isRecording = false
-                                stateViewModel.isClicked = false
-                                chatViewModel.stopRecording { url in
-                                }
-                            }
-                        }else if chatViewModel.isRecording && value.translation.height < -50 {
-                            UINotificationFeedbackGenerator().notificationOccurred(.success)
-                            print("Dragged up")
-                            stateViewModel.audioLocked = true
-                        }
-                    }
-                          )
-        )
-    }
+    
     
     func showPermissionDeniedAlert() {
         let alertController = UIAlertController(
