@@ -160,6 +160,7 @@ extension ISMMessageView{
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
             //dismiss
+            delegate?.backButtonAction()
             presentationMode.wrappedValue.dismiss()
         }) {
             appearance.images.backButton

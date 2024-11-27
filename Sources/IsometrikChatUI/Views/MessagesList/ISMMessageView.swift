@@ -30,6 +30,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToProductLink(childProductId : String,parentProductId : String, productName : String)
     func navigateToSocialLink(socialLinkId : String)
     func navigateToCollectionLink(collectionId : String,completeUrl: String)
+    func backButtonAction()
 }
 
 public struct ISMMessageView: View {
