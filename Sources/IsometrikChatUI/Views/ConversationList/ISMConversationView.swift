@@ -578,10 +578,10 @@ public struct ISMConversationView : View {
                     }
                     
                     
-                        Rectangle()
-                            .fill(Color.border)
-                            .frame(height: 1)
-                            .padding(.horizontal, 15)
+                    Rectangle()
+                        .fill(appearance.colorPalette.chatListSeparatorColor)
+                        .frame(height: 1)
+                        .padding(.horizontal, ISMChatSdkUI.getInstance().getChatProperties().chatListSeperatorShouldMeetEnds ? 0 : 15)
                     
                 }
                 .listRowInsets(EdgeInsets())
