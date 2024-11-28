@@ -104,8 +104,8 @@ struct ISMCustomContextMenu: View {
                                     .resizable()
                                     .frame(width: appearance.imagesSize.messageInfo_replyIcon.width, height: appearance.imagesSize.messageInfo_replyIcon.height, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
-                        }
-                        Rectangle().fill(Color(hex: "#CBE3FF")).frame(height: 1).padding(.leading,15)
+                        }.padding(.top,5)
+                        Rectangle().fill(Color(hex: "#111111").opacity(0.25)).frame(height: 0.5)
                     }
                     if showForwardOption && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall && message.deletedMessage == false{
                         Button {
@@ -122,7 +122,7 @@ struct ISMCustomContextMenu: View {
                                     .frame(width: appearance.imagesSize.messageInfo_forwardIcon.width, height: appearance.imagesSize.messageInfo_forwardIcon.height, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
                         }
-                        Rectangle().fill(Color(hex: "#CBE3FF")).frame(height: 1).padding(.leading,15)
+                        Rectangle().fill(Color(hex: "#111111")).frame(height: 0.5)
                     }
                     
                     if showEditOption && !isReceived && ISMChatHelper.getMessageType(message: message) == .text && fromBroadCastFlow != true && message.deletedMessage == false{
@@ -140,7 +140,7 @@ struct ISMCustomContextMenu: View {
                                     .frame(width: appearance.imagesSize.messageInfo_editIcon.width, height: appearance.imagesSize.messageInfo_editIcon.height, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
                         }
-                        Rectangle().fill(Color(hex: "#CBE3FF")).frame(height: 1).padding(.leading,15)
+                        Rectangle().fill(Color(hex: "#111111")).frame(height: 0.5)
                     }
                     if ISMChatHelper.getMessageType(message: message) == .text && message.deletedMessage == false{
                         Button {
@@ -158,7 +158,7 @@ struct ISMCustomContextMenu: View {
                                     .frame(width: appearance.imagesSize.messageInfo_copyIcon.width, height: appearance.imagesSize.messageInfo_copyIcon.height, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
                         }
-                        Rectangle().fill(Color(hex: "#CBE3FF")).frame(height: 1).padding(.leading,15)
+                        Rectangle().fill(Color(hex: "#111111")).frame(height: 0.5)
                     }
                     
                     if !isReceived && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall && message.deletedMessage == false{
@@ -177,7 +177,7 @@ struct ISMCustomContextMenu: View {
                                     .frame(width: appearance.imagesSize.messageInfo_infoIcon.width, height: appearance.imagesSize.messageInfo_infoIcon.height, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
                         }
-                        Rectangle().fill(Color(hex: "#CBE3FF")).frame(height: 1).padding(.leading,15)
+                        Rectangle().fill(Color(hex: "#111111")).frame(height: 0.5)
                     }
                     Button(role: .destructive) {
                         navigateToDeletePopUp = true
@@ -192,7 +192,7 @@ struct ISMCustomContextMenu: View {
                                 .resizable()
                                 .frame(width: appearance.imagesSize.messageInfo_deleteIcon.width, height: appearance.imagesSize.messageInfo_deleteIcon.height, alignment: .center)
                         }.padding(.horizontal,15).padding(.vertical,10)
-                    }
+                    }.padding(.bottom,5)
                 }
                 .background(Color.white)
                 .cornerRadius(8)
