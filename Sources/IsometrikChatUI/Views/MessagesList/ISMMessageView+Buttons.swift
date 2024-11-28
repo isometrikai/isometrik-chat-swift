@@ -258,7 +258,7 @@ extension ISMMessageView{
             }else if let lastSeen = self.conversationDetail?.conversationDetails?.opponentDetails?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
                 let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
                 return "Last seen \(date)"
-            } else if let lastSeen = self.opponenDetail?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
+            } else if let lastSeen = self.opponenDetail?.lastSeen, lastSeen != -1 {
                 let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
                 return "Last seen \(date)"
             }else{
