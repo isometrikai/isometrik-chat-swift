@@ -253,12 +253,14 @@ extension ISMMessageView{
                 return "typing..."
             } else if self.conversationDetail?.conversationDetails?.opponentDetails?.online == true{
                 return "online"
-            } else if let lastSeen = self.conversationDetail?.conversationDetails?.opponentDetails?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
+            }else if self.opponenDetail?.online == true{
+                return "online"
+            }else if let lastSeen = self.conversationDetail?.conversationDetails?.opponentDetails?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
                 let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
-                return "last seen \(date)"
+                return "Last seen \(date)"
             } else if let lastSeen = self.opponenDetail?.lastSeen, lastSeen != -1, self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.showlastSeen == true {
                 let date = NSDate().descriptiveStringLastSeen(time: lastSeen)
-                return "last seen \(date)"
+                return "Last seen \(date)"
             }else{
                 return "tap here for more info"
             }
