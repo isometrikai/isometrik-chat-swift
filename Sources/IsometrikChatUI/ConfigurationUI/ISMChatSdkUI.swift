@@ -17,6 +17,8 @@ public class ISMChatSdkUI{
     
     private var fontNames : ISMChatCustomFontNames?
     
+    private var customSearch : ISMChatCustomSearchBar?
+    
     public static var sharedInstance : ISMChatSdkUI!
     
     public static func getInstance()-> ISMChatSdkUI{
@@ -47,13 +49,22 @@ public class ISMChatSdkUI{
         return fontNames!
     }
     
+    public func getCustomSearchBar() -> ISMChatCustomSearchBar{
+        if customSearch == nil{
+            print("Create configuration before trying to access font names object.")
+        }
+        return customSearch!
+    }
     
     
-    public func appConfiguration(chatProperties : ISMChatPageProperties,appearance : ISMAppearance,fontNames : ISMChatCustomFontNames? = nil) {
+    
+    public func appConfiguration(chatProperties : ISMChatPageProperties,appearance : ISMAppearance,fontNames : ISMChatCustomFontNames? = nil,customSearchBar: ISMChatCustomSearchBar) {
         self.fontNames = fontNames
         
         //UI Properties
         chatUIProperties = chatProperties
+        
+        customSearch = customSearchBar
         
        //Appearance
         appAppearance = ISMChatAppearance(appearance: appearance)

@@ -119,6 +119,37 @@ public class ISMChatCustomFontNames{
     }
 }
 
+public class ISMChatCustomSearchBar{
+    public var height : Int
+    public var cornerRadius : Int
+    public var borderWidth : Double
+    public var searchBarBackgroundColor : Color
+    public var searchBarBorderColor : Color
+    public var showCrossButton : Bool
+    public var searchBarSearchIcon : Image
+    public var searchCrossIcon : Image
+    public var sizeOfSearchIcon : CGSize
+    public var sizeofCrossIcon : CGSize
+    public var searchPlaceholderText : String
+    public var searchPlaceholderTextColor : Color
+    public var searchTextFont : Font
+    public init(height: Int,cornerRadius: Int,borderWidth: Double,searchBarBackgroundColor : Color,searchBarBorderColor: Color,showCrossButton: Bool,searchBarSearchIcon: Image,searchCrossIcon: Image,sizeOfSearchIcon: CGSize,sizeofCrossIcon: CGSize,searchPlaceholderText: String,searchPlaceholderTextColor: Color,searchTextFont: Font){
+        self.height = height
+        self.cornerRadius = cornerRadius
+        self.borderWidth = borderWidth
+        self.searchBarBackgroundColor = searchBarBackgroundColor
+        self.searchBarBorderColor = searchBarBorderColor
+        self.showCrossButton = showCrossButton
+        self.searchBarSearchIcon = searchBarSearchIcon
+        self.searchCrossIcon = searchCrossIcon
+        self.sizeOfSearchIcon = sizeOfSearchIcon
+        self.sizeofCrossIcon = sizeofCrossIcon
+        self.searchPlaceholderText = searchPlaceholderText
+        self.searchPlaceholderTextColor = searchPlaceholderTextColor
+        self.searchTextFont = searchTextFont
+    }
+}
+
 
 public class ISMChatImageSizes{
     public var backButton : CGSize = CGSize(width: 18, height: 18)
