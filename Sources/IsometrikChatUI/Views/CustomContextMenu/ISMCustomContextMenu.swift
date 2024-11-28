@@ -97,7 +97,7 @@ struct ISMCustomContextMenu: View {
                         } label: {
                             HStack{
                                 Text("Reply")
-                                    .font(Font.regular(size: 16))
+                                    .font(appearance.fonts.contextMenuOptions)
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
                                 appearance.images.contextMenureply
@@ -114,7 +114,7 @@ struct ISMCustomContextMenu: View {
                         } label: {
                             HStack{
                                 Text("Forward")
-                                    .font(Font.regular(size: 16))
+                                    .font(appearance.fonts.contextMenuOptions)
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
                                 appearance.images.contextMenuforward
@@ -122,7 +122,7 @@ struct ISMCustomContextMenu: View {
                                     .frame(width: appearance.imagesSize.messageInfo_forwardIcon.width, height: appearance.imagesSize.messageInfo_forwardIcon.height, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
                         }
-                        Rectangle().fill(Color(hex: "#111111")).frame(height: 0.5)
+                        Rectangle().fill(Color(hex: "#111111").opacity(0.25)).frame(height: 0.5)
                     }
                     
                     if showEditOption && !isReceived && ISMChatHelper.getMessageType(message: message) == .text && fromBroadCastFlow != true && message.deletedMessage == false{
@@ -132,7 +132,7 @@ struct ISMCustomContextMenu: View {
                         } label: {
                             HStack{
                                 Text("Edit")
-                                    .font(Font.regular(size: 16))
+                                    .font(appearance.fonts.contextMenuOptions)
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
                                 appearance.images.contextMenuedit
@@ -140,7 +140,7 @@ struct ISMCustomContextMenu: View {
                                     .frame(width: appearance.imagesSize.messageInfo_editIcon.width, height: appearance.imagesSize.messageInfo_editIcon.height, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
                         }
-                        Rectangle().fill(Color(hex: "#111111")).frame(height: 0.5)
+                        Rectangle().fill(Color(hex: "#111111").opacity(0.25)).frame(height: 0.5)
                     }
                     if ISMChatHelper.getMessageType(message: message) == .text && message.deletedMessage == false{
                         Button {
@@ -150,7 +150,7 @@ struct ISMCustomContextMenu: View {
                         } label: {
                             HStack{
                                 Text("Copy")
-                                    .font(Font.regular(size: 16))
+                                    .font(appearance.fonts.contextMenuOptions)
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
                                 appearance.images.contextMenucopy
@@ -158,7 +158,7 @@ struct ISMCustomContextMenu: View {
                                     .frame(width: appearance.imagesSize.messageInfo_copyIcon.width, height: appearance.imagesSize.messageInfo_copyIcon.height, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
                         }
-                        Rectangle().fill(Color(hex: "#111111")).frame(height: 0.5)
+                        Rectangle().fill(Color(hex: "#111111").opacity(0.25)).frame(height: 0.5)
                     }
                     
                     if !isReceived && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall && message.deletedMessage == false{
@@ -169,7 +169,7 @@ struct ISMCustomContextMenu: View {
                         } label: {
                             HStack{
                                 Text("Info")
-                                    .font(Font.regular(size: 16))
+                                    .font(appearance.fonts.contextMenuOptions)
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
                                 appearance.images.contextMenuinfo
@@ -177,7 +177,7 @@ struct ISMCustomContextMenu: View {
                                     .frame(width: appearance.imagesSize.messageInfo_infoIcon.width, height: appearance.imagesSize.messageInfo_infoIcon.height, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
                         }
-                        Rectangle().fill(Color(hex: "#111111")).frame(height: 0.5)
+                        Rectangle().fill(Color(hex: "#111111").opacity(0.25)).frame(height: 0.5)
                     }
                     Button(role: .destructive) {
                         navigateToDeletePopUp = true
@@ -185,7 +185,7 @@ struct ISMCustomContextMenu: View {
                     } label: {
                         HStack{
                             Text("Delete")
-                                .font(Font.regular(size: 16))
+                                .font(appearance.fonts.contextMenuOptions)
                                 .foregroundColor(Color(hex: "#DD3719"))
                             Spacer()
                             appearance.images.contextMenudelete
