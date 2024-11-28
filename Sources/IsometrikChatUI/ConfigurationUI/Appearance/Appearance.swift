@@ -157,12 +157,24 @@ public class ISMChatImageSizes{
     public var messageDelivered : CGSize = CGSize(width: 15, height: 9)
     public var messageSend : CGSize = CGSize(width: 11, height: 9)
     public var messagePending : CGSize = CGSize(width: 9, height: 9)
+    public var messageInfo_replyIcon : CGSize = CGSize(width: 18, height: 18)
+    public var messageInfo_forwardIcon : CGSize = CGSize(width: 18, height: 18)
+    public var messageInfo_editIcon : CGSize = CGSize(width: 18, height: 18)
+    public var messageInfo_copyIcon : CGSize = CGSize(width: 18, height: 18)
+    public var messageInfo_infoIcon : CGSize = CGSize(width: 18, height: 18)
+    public var messageInfo_deleteIcon : CGSize = CGSize(width: 18, height: 18)
     public init(){}
-    public init(backButton: CGSize? = nil,messageRead: CGSize? = nil,messageDelivered : CGSize? = nil,messageSend : CGSize? = nil,messagePending : CGSize? = nil) {
+    public init(backButton: CGSize? = nil,messageRead: CGSize? = nil,messageDelivered : CGSize? = nil,messageSend : CGSize? = nil,messagePending : CGSize? = nil,messageInfo_replyIcon: CGSize? = nil,messageInfo_forwardIcon: CGSize? = nil,messageInfo_editIcon: CGSize? = nil,messageInfo_copyIcon: CGSize? = nil,messageInfo_infoIcon: CGSize? = nil,messageInfo_deleteIcon: CGSize? = nil) {
         self.backButton = backButton ?? CGSize(width: 18, height: 18)
         self.messageRead = messageRead ?? CGSize(width: 15, height: 9)
         self.messageDelivered = messageDelivered ?? CGSize(width: 15, height: 9)
         self.messageSend = messageSend ?? CGSize(width: 11, height: 9)
         self.messagePending = messagePending ?? CGSize(width: 11, height: 9)
+        self.messageInfo_replyIcon = messageInfo_replyIcon ?? CGSize(width: 18, height: 18)
+        self.messageInfo_forwardIcon = messageInfo_forwardIcon ?? CGSize(width: 18, height: 18)
+        self.messageInfo_editIcon = messageInfo_editIcon ?? CGSize(width: 18, height: 18)
+        self.messageInfo_copyIcon = messageInfo_copyIcon ?? CGSize(width: 18, height: 18)
+        self.messageInfo_infoIcon = messageInfo_infoIcon ?? CGSize(width: 18, height: 18)
+        self.messageInfo_deleteIcon = messageInfo_deleteIcon ?? CGSize(width: 18, height: 18)
     }
 }

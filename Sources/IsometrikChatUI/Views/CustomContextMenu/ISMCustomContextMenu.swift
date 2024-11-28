@@ -102,7 +102,7 @@ struct ISMCustomContextMenu: View {
                                 Spacer()
                                 appearance.images.contextMenureply
                                     .resizable()
-                                    .frame(width: 18, height: 18, alignment: .center)
+                                    .frame(width: appearance.imagesSize.messageInfo_replyIcon.width, height: appearance.imagesSize.messageInfo_replyIcon.height, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
                         }
                         Rectangle().fill(Color(hex: "#CBE3FF")).frame(height: 1).padding(.leading,15)
@@ -119,7 +119,7 @@ struct ISMCustomContextMenu: View {
                                 Spacer()
                                 appearance.images.contextMenuforward
                                     .resizable()
-                                    .frame(width: 18, height: 18, alignment: .center)
+                                    .frame(width: appearance.imagesSize.messageInfo_forwardIcon.width, height: appearance.imagesSize.messageInfo_forwardIcon.height, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
                         }
                         Rectangle().fill(Color(hex: "#CBE3FF")).frame(height: 1).padding(.leading,15)
@@ -137,7 +137,7 @@ struct ISMCustomContextMenu: View {
                                 Spacer()
                                 appearance.images.contextMenuedit
                                     .resizable()
-                                    .frame(width: 18, height: 18, alignment: .center)
+                                    .frame(width: appearance.imagesSize.messageInfo_editIcon.width, height: appearance.imagesSize.messageInfo_editIcon.height, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
                         }
                         Rectangle().fill(Color(hex: "#CBE3FF")).frame(height: 1).padding(.leading,15)
@@ -155,7 +155,7 @@ struct ISMCustomContextMenu: View {
                                 Spacer()
                                 appearance.images.contextMenucopy
                                     .resizable()
-                                    .frame(width: 18, height: 18, alignment: .center)
+                                    .frame(width: appearance.imagesSize.messageInfo_copyIcon.width, height: appearance.imagesSize.messageInfo_copyIcon.height, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
                         }
                         Rectangle().fill(Color(hex: "#CBE3FF")).frame(height: 1).padding(.leading,15)
@@ -166,9 +166,6 @@ struct ISMCustomContextMenu: View {
                         Button {
                             navigateToMessageInfo = true
                             dismiss()
-//                            ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow,onClose: {
-//                                dismiss()
-//                            }).environmentObject(self.realmManager)
                         } label: {
                             HStack{
                                 Text("Info")
@@ -177,7 +174,7 @@ struct ISMCustomContextMenu: View {
                                 Spacer()
                                 appearance.images.contextMenuinfo
                                     .resizable()
-                                    .frame(width: 18, height: 18, alignment: .center)
+                                    .frame(width: appearance.imagesSize.messageInfo_infoIcon.width, height: appearance.imagesSize.messageInfo_infoIcon.height, alignment: .center)
                             }.padding(.horizontal,15).padding(.vertical,10)
                         }
                         Rectangle().fill(Color(hex: "#CBE3FF")).frame(height: 1).padding(.leading,15)
@@ -193,7 +190,7 @@ struct ISMCustomContextMenu: View {
                             Spacer()
                             appearance.images.contextMenudelete
                                 .resizable()
-                                .frame(width: 18, height: 18, alignment: .center)
+                                .frame(width: appearance.imagesSize.messageInfo_deleteIcon.width, height: appearance.imagesSize.messageInfo_deleteIcon.height, alignment: .center)
                         }.padding(.horizontal,15).padding(.vertical,10)
                     }
                 }
