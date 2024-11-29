@@ -99,7 +99,7 @@ struct ISMMessageInfoSubView: View {
                                 VStack(alignment: .trailing, spacing: 0){
                                     if message.customType == ISMChatMediaType.ReplyText.value && message.messageType != 1{
                                         repliedMessageView()
-                                            .padding(EdgeInsets(top: 5, leading: 5, bottom: 0, trailing: 5))
+                                            .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
                                     }
                                     if message.messageType == 1{
                                         forwardedView()
@@ -1510,10 +1510,13 @@ struct ISMMessageInfoSubView: View {
             Rectangle()
                 .fill(appearance.colorPalette.messageListReplyToolbarRectangle)
                 .frame(width: 4)
-            VStack(alignment: .leading, spacing: 2){
+                .cornerRadius(ISMChatSdkUI.getInstance().getChatProperties().messageListReplyBarMeetEnds ? 2 : 0)
+                .padding(.vertical , ISMChatSdkUI.getInstance().getChatProperties().messageListReplyBarMeetEnds ? 8 : 0)
+                .padding(.leading , ISMChatSdkUI.getInstance().getChatProperties().messageListReplyBarMeetEnds ? 8 : 0)
+            VStack(alignment: .leading, spacing: 5){
                 let parentUserName = message.metaData?.replyMessage?.parentMessageUserName ?? "User"
-                let parentUserID = message.metaData?.replyMessage?.parentMessageUserId
-                let name = parentUserID == userData.userId ? ConstantStrings.you : parentUserName
+                let parentUserId = message.metaData?.replyMessage?.parentMessageUserId
+                let name = parentUserId == userData.userId ? ConstantStrings.you : parentUserName
                 Text(name)
                     .foregroundColor(appearance.colorPalette.messageListReplyToolbarHeader)
                     .font(appearance.fonts.messageListReplyToolbarHeader)
@@ -1587,9 +1590,16 @@ struct ISMMessageInfoSubView: View {
                         }
                     }
                 }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.sticker.value{
-                    AnimatedImage(url: URL(string: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? ""))
-                        .resizable()
-                        .frame(width: 30, height: 30)
+                    Label {
+                        Text("Sticker")
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
+                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                    } icon: {
+                        appearance.images.stickerLogo
+                            .resizable()
+                            .frame(width: 15,height: 15)
+                    }
                 }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.gif.value{
                     Label {
                         Text("GIF")
@@ -1597,7 +1607,29 @@ struct ISMMessageInfoSubView: View {
                             .font(appearance.fonts.messageListReplyToolbarDescription)
                             .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                     } icon: {
-                        Image("gif_logo")
+                        appearance.images.gifLogo
+                            .resizable()
+                            .frame(width: 20,height: 15)
+                    }
+                }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.AudioCall.value{
+                    Label {
+                        Text("Audio Call")
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
+                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                    } icon: {
+                        appearance.images.audioCall
+                            .resizable()
+                            .frame(width: 20,height: 15)
+                    }
+                }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.VideoCall.value{
+                    Label {
+                        Text("Video Call")
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
+                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                    } icon: {
+                        appearance.images.videoCall
                             .resizable()
                             .frame(width: 20,height: 15)
                     }
@@ -1606,26 +1638,37 @@ struct ISMMessageInfoSubView: View {
                         .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                         .font(appearance.fonts.messageListReplyToolbarDescription)
                         .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(4)
                 }
             }
-            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 8))
+            .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 8))
+            
+            Spacer()
+            
             if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Image.value{
-                ISMImageViewer(url:  message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "", size: CGSizeMake(45, 40), cornerRadius: 0)
-//                ISMChatImageCahcingManger.viewImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "")
-//                    .scaledToFill()
-//                    .frame(width: 45, height: 40)
+                ISMImageViewer(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "", size: CGSizeMake(45, 40), cornerRadius: 5)
             }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Video.value{
-                ISMImageViewer(url:  message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "", size: CGSizeMake(45, 40), cornerRadius: 0)
-//                ISMChatImageCahcingManger.viewImage(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "")
-//                    .scaledToFill()
-//                    .frame(width: 45, height: 40)
+                ISMImageViewer(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "", size: CGSizeMake(45, 40), cornerRadius: 5)
             }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.File.value{
                 Image(uiImage: pdfthumbnailImage)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 45, height: 40)
             }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.gif.value{
-                AnimatedImage(url: URL(string: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? ""))
+                AnimatedImage(url: URL(string: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? ""),isAnimating: $isAnimating)
+                    .resizable()
+                    .frame(width: 45, height: 40)
+                    .cornerRadius(5)
+                    .overlay(
+                        LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                            .frame(width: 45, height: 40)
+                            .mask(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .fill(Color.white)
+                            )
+                    )
+            }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.sticker.value{
+                AnimatedImage(url: URL(string: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? ""),isAnimating: $isAnimating)
                     .resizable()
                     .frame(width: 45, height: 40)
                     .cornerRadius(5)
@@ -1638,9 +1681,9 @@ struct ISMMessageInfoSubView: View {
                             )
                     )
             }
-        }.fixedSize(horizontal: false, vertical: true)
-        .background(Color.docBackground)
-        .cornerRadius(5, corners: .allCorners)
+        }
+        .background(isReceived ? appearance.colorPalette.messageListReceivedReplyMessageBackgroundColor : appearance.colorPalette.messageListSendReplyMessageBackgroundColor)
+        .cornerRadius(8, corners: .allCorners)
     }
     
     func editedView() -> some View{

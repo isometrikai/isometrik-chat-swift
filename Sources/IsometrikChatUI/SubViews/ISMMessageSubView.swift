@@ -141,7 +141,7 @@ struct ISMMessageSubView: View {
                                 VStack(alignment: .trailing, spacing: 0){
                                     if message.customType == ISMChatMediaType.ReplyText.value && message.messageType != 1{
                                         repliedMessageView()
-                                            .padding(EdgeInsets(top: 5, leading: 5, bottom: 0, trailing: 5))
+                                            .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
                                             .onTapGesture {
                                                 parentMsgToScroll = message
                                             }
@@ -1706,7 +1706,10 @@ struct ISMMessageSubView: View {
             Rectangle()
                 .fill(appearance.colorPalette.messageListReplyToolbarRectangle)
                 .frame(width: 4)
-            VStack(alignment: .leading, spacing: 2){
+                .cornerRadius(ISMChatSdkUI.getInstance().getChatProperties().messageListReplyBarMeetEnds ? 2 : 0)
+                .padding(.vertical , ISMChatSdkUI.getInstance().getChatProperties().messageListReplyBarMeetEnds ? 8 : 0)
+                .padding(.leading , ISMChatSdkUI.getInstance().getChatProperties().messageListReplyBarMeetEnds ? 8 : 0)
+            VStack(alignment: .leading, spacing: 5){
                 let parentUserName = message.metaData?.replyMessage?.parentMessageUserName ?? "User"
                 let parentUserId = message.metaData?.replyMessage?.parentMessageUserId
                 let name = parentUserId == userData.userId ? ConstantStrings.you : parentUserName
@@ -1834,7 +1837,10 @@ struct ISMMessageSubView: View {
                         .lineLimit(4)
                 }
             }
-            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 8))
+            .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 8))
+            
+            Spacer()
+            
             if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Image.value{
                 ISMImageViewer(url: message.metaData?.replyMessage?.parentMessageAttachmentUrl ?? "", size: CGSizeMake(45, 40), cornerRadius: 5)
             }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.Video.value{
@@ -1872,8 +1878,8 @@ struct ISMMessageSubView: View {
                     )
             }
         }
-        .background(Color.docBackground)
-        .cornerRadius(5, corners: .allCorners)
+        .background(isReceived ? appearance.colorPalette.messageListReceivedReplyMessageBackgroundColor : appearance.colorPalette.messageListSendReplyMessageBackgroundColor)
+        .cornerRadius(8, corners: .allCorners)
     }
 
     func getImageAsset() -> ImageAsset {

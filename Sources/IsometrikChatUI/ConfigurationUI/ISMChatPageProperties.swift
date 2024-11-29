@@ -28,7 +28,8 @@ public struct ISMChatPageProperties {
     public var showUserTypeInConversationListAfterName : Bool = false
     public var showSearchCrossButton : Bool = false
     public var chatListSeperatorShouldMeetEnds : Bool = false
-    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, navigateToAppProfileFromMessageList: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool,customJobCardInMessageList : Bool,externalMemberAddInGroup : Bool,captializeMessageListHeaders : Bool? = false,hideLinkPreview : Bool? = false,maskNumberAndEmail : Bool? = false,hideSendButtonUntilEmptyTextView: Bool? = false,gifLogoOnTextViewLeft : Bool? = false,showUserTypeInConversationListAfterName : Bool? = false,showSearchCrossButton:  Bool? = false,chatListSeperatorShouldMeetEnds : Bool? = false) {
+    public var messageListReplyBarMeetEnds : Bool = false
+    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, navigateToAppProfileFromMessageList: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool,customJobCardInMessageList : Bool,externalMemberAddInGroup : Bool,captializeMessageListHeaders : Bool? = false,hideLinkPreview : Bool? = false,maskNumberAndEmail : Bool? = false,hideSendButtonUntilEmptyTextView: Bool? = false,gifLogoOnTextViewLeft : Bool? = false,showUserTypeInConversationListAfterName : Bool? = false,showSearchCrossButton:  Bool? = false,chatListSeperatorShouldMeetEnds : Bool? = false,messageListReplyBarMeetEnds : Bool? = false) {
         self.attachments = attachments
         self.features = features
         self.conversationType = conversationType
@@ -48,5 +49,6 @@ public struct ISMChatPageProperties {
         self.showUserTypeInConversationListAfterName = showUserTypeInConversationListAfterName ?? false
         self.showSearchCrossButton = showSearchCrossButton ?? false
         self.chatListSeperatorShouldMeetEnds = chatListSeperatorShouldMeetEnds ?? false
+        self.messageListReplyBarMeetEnds = messageListReplyBarMeetEnds ?? false
     }
 }
