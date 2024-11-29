@@ -272,7 +272,9 @@ public struct ISMChatImages {
         businessUserIcon : Image? = nil,
         calanderLogo : Image? = nil,
         messageLock : Image? = nil,
-        productShareLogo : Image? = nil
+        productShareLogo : Image? = nil,
+        audioPlayIcon: Image? = nil,
+        audioPauseIcon : Image? = nil
     ) {
         if let addConversation = addConversation { self.addConversation = addConversation }
         if let conversationListPlaceholder = conversationListPlaceholder { self.conversationListPlaceholder = conversationListPlaceholder }
@@ -366,6 +368,8 @@ public struct ISMChatImages {
         if let calanderLogo = calanderLogo { self.calanderLogo = calanderLogo }
         if let messageLock = messageLock { self.messageLock = messageLock }
         if let productShareLogo = productShareLogo { self.productShareLogo = productShareLogo }
+        if let audioPlayIcon = audioPlayIcon { self.audioPlayIcon = audioPlayIcon}
+        if let audioPauseIcon = audioPauseIcon { self.audioPauseIcon = audioPauseIcon}
     }
     
 }

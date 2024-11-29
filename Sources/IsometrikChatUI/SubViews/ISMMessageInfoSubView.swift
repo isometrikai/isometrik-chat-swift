@@ -32,6 +32,7 @@ struct ISMMessageInfoSubView: View {
     @State var metaData : LPLinkMetadata? = nil
     let pasteboard = UIPasteboard.general
     @State private var completeAddress : String = ""
+    @State var isAnimating = false
     @EnvironmentObject var realmManager : RealmManager
     var isGroup : Bool?
     
@@ -654,7 +655,7 @@ struct ISMMessageInfoSubView: View {
                             }
                         }
                         .padding(.vertical,2)
-                    }
+                    }.frame(height: 80)
                 case .VideoCall:
                     HStack(alignment: .bottom){
                         VStack(alignment: .leading, spacing: 2){
