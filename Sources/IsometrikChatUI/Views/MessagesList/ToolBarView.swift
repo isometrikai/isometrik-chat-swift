@@ -8,6 +8,7 @@
 import SwiftUI
 import IsometrikChat
 import SDWebImageSwiftUI
+import AVKit
 
 enum ToolbarState {
     case mention
@@ -297,7 +298,7 @@ struct MainToolBarView : View {
         }) {
             appearance.images.addAudio
                 .resizable()
-                .frame(width: 24, height: 24)
+                .frame(width: appearance.imagesSize.messageAudioButton.width, height: appearance.imagesSize.messageAudioButton.height)
                 .padding(.horizontal,5)
         }
         .simultaneousGesture(
@@ -310,6 +311,7 @@ struct MainToolBarView : View {
                             chatViewModel.isRecording = true
                             chatViewModel.startRecording()
                         }else{
+                            checkAudioPermission()
                             ISMChatHelper.print("Access Denied for audio permission")
                         }
                     }
@@ -335,6 +337,28 @@ struct MainToolBarView : View {
                     }
                           )
         )
+    }
+    
+    
+    func checkAudioPermission() {
+        switch AVAudioApplication.shared.recordPermission {
+        case .granted:
+            audioPermissionCheck = true
+        case .denied:
+            audioPermissionCheck = false
+        case .undetermined:
+            AVAudioApplication.requestRecordPermission { granted in
+                DispatchQueue.main.async {
+                    if granted {
+                        audioPermissionCheck = true
+                    } else {
+                        audioPermissionCheck = false
+                    }
+                }
+            }
+        default:
+            break
+        }
     }
 
     // MARK: - Action Handlers
@@ -411,7 +435,7 @@ struct MainToolBarView : View {
             if audioLocked == false {
                 appearance.images.addAudio
                     .resizable()
-                    .frame(width: 24, height: 24)
+                    .frame(width: appearance.imagesSize.messageAudioButton.width, height: appearance.imagesSize.messageAudioButton.height)
                     .foregroundColor(isShowingRedTimerStart ? .red : .clear)
                     .padding(.leading)
                 
@@ -506,7 +530,7 @@ struct MainToolBarView : View {
                         .frame(width: 15, height: 15)
                         .padding(.horizontal, 10)
                 }
-            }
+            }.padding(.vertical,5)
             .background(
                 RoundedRectangle(cornerRadius: 16)
                     .fill(appearance.colorPalette.messageListTextViewBackground)
@@ -527,7 +551,7 @@ struct MainToolBarView : View {
         }) {
             appearance.images.addAttcahment
                 .resizable()
-                .frame(width: 20, height: 20)
+                .frame(width: appearance.imagesSize.addAttachmentIcon.width, height: appearance.imagesSize.addAttachmentIcon.height)
                 .padding(.horizontal, 5)
         }
     }

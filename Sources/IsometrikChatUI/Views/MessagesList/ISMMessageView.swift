@@ -443,6 +443,11 @@ public struct ISMMessageView: View {
                 sendReaction()
             }
         })
+        .onChange(of: audioPermissionCheck, { _, _ in
+            if audioPermissionCheck == false{
+                showPermissionDeniedAlert()
+            }
+        })
         .onChange(of: navigateToProductLink.messageId) { _, _ in
             if !navigateToProductLink.messageId.isEmpty,let metaData = navigateToProductLink.metaData{
                 let childProductId = metaData.childProductId ?? ""
@@ -701,7 +706,7 @@ public struct ISMMessageView: View {
                 getConversationDetail()
                 reload()
             }
-            if chatFeatures.contains(.audio) == true{
+            if chatFeatures.contains(.audiocall) == true || chatFeatures.contains(.videocall) == true{
                 checkAudioPermission()
             }
             realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")

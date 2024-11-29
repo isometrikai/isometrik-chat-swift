@@ -113,7 +113,6 @@ extension ISMMessageView{
             audioPermissionCheck = true
         case .denied:
             audioPermissionCheck = false
-            showPermissionDeniedAlert()
         case .undetermined:
             AVAudioApplication.requestRecordPermission { granted in
                 DispatchQueue.main.async {
@@ -121,7 +120,6 @@ extension ISMMessageView{
                         audioPermissionCheck = true
                     } else {
                         audioPermissionCheck = false
-                        showPermissionDeniedAlert()
                     }
                 }
             }

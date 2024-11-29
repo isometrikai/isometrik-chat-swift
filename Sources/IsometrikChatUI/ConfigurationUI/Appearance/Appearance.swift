@@ -70,9 +70,9 @@ public class ISMChatStrings {
     public var endToEndEncrypted : String = "Messages are end to end encrypted. No one \noutside of this chat can read to them."
     public var messageInputTextViewPlaceholder : String = "Type a message"
     public init(){}
-    public init(endToEndEncrypted: String,messageInputTextViewPlaceholder : String) {
-        self.endToEndEncrypted = endToEndEncrypted
-        self.messageInputTextViewPlaceholder = messageInputTextViewPlaceholder
+    public init(endToEndEncrypted: String? = nil,messageInputTextViewPlaceholder : String? = nil) {
+        self.endToEndEncrypted = endToEndEncrypted ?? ""
+        self.messageInputTextViewPlaceholder = messageInputTextViewPlaceholder ?? ""
     }
 }
 
@@ -163,8 +163,10 @@ public class ISMChatImageSizes{
     public var messageInfo_copyIcon : CGSize = CGSize(width: 18, height: 18)
     public var messageInfo_infoIcon : CGSize = CGSize(width: 18, height: 18)
     public var messageInfo_deleteIcon : CGSize = CGSize(width: 18, height: 18)
+    public var messageAudioButton : CGSize = CGSize(width: 24, height: 24)
+    public var addAttachmentIcon : CGSize = CGSize(width: 20, height: 20)
     public init(){}
-    public init(backButton: CGSize? = nil,messageRead: CGSize? = nil,messageDelivered : CGSize? = nil,messageSend : CGSize? = nil,messagePending : CGSize? = nil,messageInfo_replyIcon: CGSize? = nil,messageInfo_forwardIcon: CGSize? = nil,messageInfo_editIcon: CGSize? = nil,messageInfo_copyIcon: CGSize? = nil,messageInfo_infoIcon: CGSize? = nil,messageInfo_deleteIcon: CGSize? = nil) {
+    public init(backButton: CGSize? = nil,messageRead: CGSize? = nil,messageDelivered : CGSize? = nil,messageSend : CGSize? = nil,messagePending : CGSize? = nil,messageInfo_replyIcon: CGSize? = nil,messageInfo_forwardIcon: CGSize? = nil,messageInfo_editIcon: CGSize? = nil,messageInfo_copyIcon: CGSize? = nil,messageInfo_infoIcon: CGSize? = nil,messageInfo_deleteIcon: CGSize? = nil,messageAudioButton : CGSize? = nil,addAttachmentIcon : CGSize? = nil) {
         self.backButton = backButton ?? CGSize(width: 18, height: 18)
         self.messageRead = messageRead ?? CGSize(width: 15, height: 9)
         self.messageDelivered = messageDelivered ?? CGSize(width: 15, height: 9)
@@ -176,5 +178,7 @@ public class ISMChatImageSizes{
         self.messageInfo_copyIcon = messageInfo_copyIcon ?? CGSize(width: 18, height: 18)
         self.messageInfo_infoIcon = messageInfo_infoIcon ?? CGSize(width: 18, height: 18)
         self.messageInfo_deleteIcon = messageInfo_deleteIcon ?? CGSize(width: 18, height: 18)
+        self.messageAudioButton = messageAudioButton ?? CGSize(width: 24, height: 24)
+        self.addAttachmentIcon = addAttachmentIcon ?? CGSize(width: 20, height: 20)
     }
 }
