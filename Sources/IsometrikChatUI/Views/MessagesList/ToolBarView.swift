@@ -321,6 +321,8 @@ struct MainToolBarView : View {
                             UINotificationFeedbackGenerator().notificationOccurred(.warning)
                             if isClicked == true{
                                 chatViewModel.isRecording = false
+                                self.chatViewModel.countSec = 0
+                                self.chatViewModel.timerValue = "0:00"
                                 isClicked = false
                                 chatViewModel.stopRecording { url in
                                 }
@@ -334,22 +336,6 @@ struct MainToolBarView : View {
                           )
         )
     }
-    
-//    func AudioMessageButton(height: CGFloat) -> some View {
-//        Button(action: stopRecordingAction) {
-//            appearance.images.addAudio
-//                .resizable()
-//                .frame(width: 24, height: 24)
-//                .padding(.horizontal, 5)
-//        }
-//        .simultaneousGesture(
-//            LongPressGesture(minimumDuration: 0.1)
-//                .onEnded { _ in handleLongPressGesture() }
-//                .sequenced(before: DragGesture(minimumDistance: 2)
-//                    .onEnded { value in handleDragGesture(value) }
-//                )
-//        )
-//    }
 
     // MARK: - Action Handlers
 
@@ -471,6 +457,8 @@ struct MainToolBarView : View {
     
     func cancelRecording() {
         if isClicked {
+            self.chatViewModel.countSec = 0
+            self.chatViewModel.timerValue = "0:00"
             chatViewModel.isRecording = false
             isClicked = false
             audioLocked = false
@@ -482,6 +470,8 @@ struct MainToolBarView : View {
     func stopRecording() {
         if isClicked {
             chatViewModel.isRecording = false
+            self.chatViewModel.countSec = 0
+            self.chatViewModel.timerValue = "0:00"
             isClicked = false
             audioLocked = false
             chatViewModel.stopRecording { url in

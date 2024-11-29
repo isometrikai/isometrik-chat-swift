@@ -947,6 +947,8 @@ extension ISMMessageView{
         self.selectedContactToShare.removeAll()
         self.cameraImageToUse = nil
         self.chatViewModel.isBusy = false
+        self.chatViewModel.countSec = 0
+        self.chatViewModel.timerValue = "0:00"
         self.chatViewModel.documentSelectedFromPicker = nil
     }
     

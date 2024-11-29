@@ -56,19 +56,20 @@ struct ISMAudioSubView: View {
         VStack( alignment: .leading ) {
             LazyHStack(alignment: .center, spacing: 10) {
                //image
-                ZStack(alignment: .bottomTrailing){
-                    UserAvatarView(avatar: senderImageUrl,
-                                   showOnlineIndicator: false,
-                                   size: CGSize(width: 40, height: 40),
-                                   userName: senderName,
-                                   font: .regular(size: 14))
-                    Image("audio_mic")
-                        .resizable()
-                        .frame(width: 14, height: 14)
+                if ISMChatSdkUI.getInstance().getChatProperties().hideUserProfileImageFromAudioMessage == false{
+                    ZStack(alignment: .bottomTrailing){
+                        UserAvatarView(avatar: senderImageUrl,
+                                       showOnlineIndicator: false,
+                                       size: CGSize(width: 40, height: 40),
+                                       userName: senderName,
+                                       font: .regular(size: 14))
+                        Image("audio_mic")
+                            .resizable()
+                            .frame(width: 14, height: 14)
+                    }
                 }
                 
-                // button and timer
-                VStack(alignment: .center,spacing: 14){
+               
                     Button {
                         DispatchQueue.main.async {
                             if audioVM.isPlaying {
@@ -96,7 +97,8 @@ struct ISMAudioSubView: View {
                                 .frame(width: 16, height: 16)
                         }
                     }//:BUTTON
-                }
+                    .padding(.leading,ISMChatSdkUI.getInstance().getChatProperties().hideUserProfileImageFromAudioMessage == true ? 10 : 0)
+                
                     HStack(alignment: .center, spacing: 2) {
                         if audioVM.soundSamples.isEmpty {
                             ProgressView()
@@ -109,6 +111,7 @@ struct ISMAudioSubView: View {
                     }
                 
             }//:HSTACK
+            .padding(.vertical,ISMChatSdkUI.getInstance().getChatProperties().hideUserProfileImageFromAudioMessage == true ? 15 : 0)
             
             
             HStack{
@@ -125,14 +128,13 @@ struct ISMAudioSubView: View {
                         audioVM.isPlaying = false
                     })
                 
-                Spacer().frame(width: 100)
+                Spacer()
                 if appearance.timeInsideBubble == true{
                     dateAndStatusView(onImage: false)
                 }
             }
-            
         }//:VSTACK
-//        .frame(minHeight: 0, maxHeight: 50)
+        .frame(width:  ISMChatSdkUI.getInstance().getChatProperties().hideUserProfileImageFromAudioMessage == false ? 240 : 200)
     }
     
     func formatTime(_ time: TimeInterval) -> String {
@@ -178,7 +180,7 @@ struct ISMAudioSubView: View {
                 Rectangle()
                     .fill(color)
                     .cornerRadius(10)
-                    .frame(width: 2, height: value/2)
+                    .frame(width: 2, height: value)
             }
         }
     }
