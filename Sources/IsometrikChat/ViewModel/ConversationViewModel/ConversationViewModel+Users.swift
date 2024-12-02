@@ -196,6 +196,7 @@ extension ConversationViewModel{
                 completion(data)
             case .failure(_) :
                 ISMChatHelper.print("get users Failed")
+                completion(nil)
             }
         }
     }
