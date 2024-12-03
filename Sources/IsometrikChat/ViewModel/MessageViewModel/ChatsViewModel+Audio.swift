@@ -17,7 +17,7 @@ extension ChatsViewModel{
         let recordingSession = AVAudioSession.sharedInstance()
         do {
             // Configure audio session for recording
-            try recordingSession.setCategory(.record, mode: .default, options: .defaultToSpeaker)
+            try recordingSession.setCategory(.playAndRecord, mode: .default)
             try recordingSession.setActive(true)
         } catch {
             ISMChatHelper.print("Cannot setup the Recording Session")

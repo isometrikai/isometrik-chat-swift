@@ -264,7 +264,9 @@ public struct ISMConversationView : View {
                     if  !(self.realmManager.doesMessageExistInLastMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
                         ISMChatHelper.print("MESSAGE RECEIVED IN CONVERSATION LIST----------------->\(messageInfo)")
                         self.msgReceived(messageInfo: messageInfo)
-                        self.localNotificationForActions(messageInfo: messageInfo)
+                        if myUserData.userId != messageInfo.senderId{
+                            self.localNotificationForActions(messageInfo: messageInfo)
+                        }
                     }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttTypingEvent.name)){ notification in

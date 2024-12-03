@@ -134,18 +134,20 @@ import IsometrikChat
                 }
                 
                 self.getMessages()
-                
-                parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
-                if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
-                    chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
-                        // update status of message to deleivered
-                        
-                    }
-                    chatViewModel.readMessageIndicator(conversationId: converId, messageId: messId) { _ in
-                        // update status of message to read
-                        
-                        //after message is read then only resent unread count
-                        realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
+                if OnScreen{
+                    parentMessageIdToScroll = ""
+                    parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+                    if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
+                        chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
+                            // update status of message to deleivered
+                            
+                        }
+                        chatViewModel.readMessageIndicator(conversationId: converId, messageId: messId) { _ in
+                            // update status of message to read
+                            
+                            //after message is read then only resent unread count
+                            realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
+                        }
                     }
                 }
             }

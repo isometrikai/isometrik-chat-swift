@@ -353,10 +353,10 @@ public struct ISMMessageView: View {
             }
             ISMChatHelper.print("MESSAGE RECEIVED----------------->\(messageInfo)")
             //save in local db
-            if OnScreen && !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
                 messageReceived(messageInfo: messageInfo)
                 //local notification
-                sendLocalNotification(messageInfo: messageInfo)
+//                sendLocalNotification(messageInfo: messageInfo)
                 //action if required
                 actionOnMessageDelivered(messageInfo: messageInfo)
             }
@@ -706,7 +706,7 @@ public struct ISMMessageView: View {
                 getConversationDetail()
                 reload()
             }
-            if chatFeatures.contains(.audiocall) == true || chatFeatures.contains(.videocall) == true{
+            if chatFeatures.contains(.audiocall) == true || chatFeatures.contains(.videocall) == true || chatFeatures.contains(.audio) == true{
                 checkAudioPermission()
             }
             realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
