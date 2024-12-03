@@ -232,7 +232,6 @@ public struct ISMConversationView : View {
                     guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
                         return
                     }
-                    ISMChatHelper.print("MESSAGE RECEIVED IN CONVERSATION LIST----------------->\(messageInfo)")
                     
                     
 //                    // Prevent duplicate message processing
@@ -262,8 +261,11 @@ public struct ISMConversationView : View {
 //                            ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.senderName ?? "")", body: "\(messageInfo.notificationBody ?? (messageInfo.body ?? ""))", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? "","messageId" : messageInfo.messageId ?? ""])
 //                        }
 //                    }
+                    if  !(self.realmManager.doesMessageExistInLastMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                        ISMChatHelper.print("MESSAGE RECEIVED IN CONVERSATION LIST----------------->\(messageInfo)")
                         self.msgReceived(messageInfo: messageInfo)
                         self.localNotificationForActions(messageInfo: messageInfo)
+                    }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttTypingEvent.name)){ notification in
                     guard let messageInfo = notification.userInfo?["data"] as? ISMChatTypingEvent else {
@@ -376,7 +378,7 @@ public struct ISMConversationView : View {
                     ISMChatHelper.print("Remove Reaction ----------------->\(messageInfo)")
                     removeReaction(messageInfo: messageInfo)
                 }
-                .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMeetingCreated.name)){ notification in
+//                .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMeetingCreated.name)){ notification in
 //                    guard let messageInfo = notification.userInfo?["data"] as? ISMCall_Meeting else {
 //                        return
 //                    }
@@ -385,7 +387,7 @@ public struct ISMConversationView : View {
 //                        self.viewModel.resetdata()
 //                        self.getConversationList()
 //                    }
-                }
+//                }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMeetingEnded.name)){ notification in
                     guard let messageInfo = notification.userInfo?["data"] as? ISMMeeting else {
                         return
