@@ -706,7 +706,7 @@ public struct ISMMessageView: View {
                 getConversationDetail()
                 reload()
             }
-            if chatFeatures.contains(.audiocall) == true || chatFeatures.contains(.videocall) == true || chatFeatures.contains(.audio) == true{
+            if chatFeatures.contains(.audiocall) == true || chatFeatures.contains(.videocall) == true{
                 checkAudioPermission()
             }
             realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
