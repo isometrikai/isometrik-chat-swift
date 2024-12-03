@@ -16,19 +16,25 @@ extension ChatsViewModel{
     public func startRecording() {
         let recordingSession = AVAudioSession.sharedInstance()
         do {
-            try recordingSession.setCategory(.playAndRecord, mode: .default)
+            // Configure audio session for recording
+            try recordingSession.setCategory(.record, mode: .default, options: .defaultToSpeaker)
             try recordingSession.setActive(true)
         } catch {
-            ISMChatHelper.print("Cannot setup the Recording")
+            ISMChatHelper.print("Cannot setup the Recording Session")
+            return
         }
+        
         let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let fileName = path.appendingPathComponent("\(Date()).m4a")
-        let settings = [
+        let fileName = path.appendingPathComponent("Recording_\(Date().timeIntervalSince1970).m4a")
+        
+        let settings: [String: Any] = [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-            AVSampleRateKey: 12000,
-            AVNumberOfChannelsKey: 1,
-            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+            AVSampleRateKey: 44100, // Higher sample rate
+            AVNumberOfChannelsKey: 2, // Stereo recording
+            AVEncoderBitRateKey: 128000, // High bitrate
+            AVEncoderAudioQualityKey: AVAudioQuality.max.rawValue
         ]
+        
         do {
             audioRecorder = try AVAudioRecorder(url: fileName, settings: settings)
             audioRecorder.prepareToRecord()
