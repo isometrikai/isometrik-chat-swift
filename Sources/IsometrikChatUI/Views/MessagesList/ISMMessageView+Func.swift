@@ -187,7 +187,7 @@ extension ISMMessageView{
         if !networkMonitor.isConnected && isGroup == false {
             
             if msgType == .text {
-                _ = realmManager.saveLocalMessage(sent: Date().timeIntervalSince1970 * 1000, txt: self.text, parentMessageId: "", initiatorIdentifier: "", conversationId: self.conversationID ?? "", customType: ISMChatMediaType.Text.value, msgSyncStatus: ISMChatSyncStatus.Local.txt)
+                _ = realmManager.saveLocalMessage(sent: Date().timeIntervalSince1970 * 1000, txt: self.text.trimmingCharacters(in: .whitespacesAndNewlines), parentMessageId: "", initiatorIdentifier: "", conversationId: self.conversationID ?? "", customType: ISMChatMediaType.Text.value, msgSyncStatus: ISMChatSyncStatus.Local.txt)
             }
             self.getMessages()
             self.text = ""
@@ -354,7 +354,7 @@ extension ISMMessageView{
             }
         }else if selectedMsgToReply.body != "" {
             //MARK: - REPLY MESSAGE
-            let text = self.text
+            let text = self.text.trimmingCharacters(in: .whitespacesAndNewlines)
             
             let selectedMsgToReply = self.selectedMsgToReply
             
@@ -380,7 +380,7 @@ extension ISMMessageView{
             }
         }else if updateMessage.body != ""{
             //MARK: - UPDATE MESSAGE
-            let text = self.text
+            let text = self.text.trimmingCharacters(in: .whitespacesAndNewlines)
             chatViewModel.updateMessage(messageId: updateMessage.messageId , conversationId: updateMessage.conversationId , message: text ) { messageID in
                 //update message locally
                 realmManager.updateMessageBody(conversationId: updateMessage.conversationId, messageId: updateMessage.messageId, body: text)
@@ -650,11 +650,11 @@ extension ISMMessageView{
                 localIds.removeFirst()
                 
             }
-        } else if self.text.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
+        } else {
             // MARK: - TEXT MESSAGE
             if networkMonitor.isConnected {
                 
-                let text = self.text
+                let text = self.text.trimmingCharacters(in: .whitespacesAndNewlines)
                 self.text = ""
                 //1. nil data if any
                 nilData()
@@ -682,7 +682,7 @@ extension ISMMessageView{
                     
                 }
             }else {
-                let id = realmManager.saveLocalMessage(sent: Date().timeIntervalSince1970 * 1000, txt: self.text, parentMessageId: "", initiatorIdentifier: "", conversationId: self.conversationID ?? "", customType: ISMChatMediaType.Text.value, msgSyncStatus: ISMChatSyncStatus.Local.txt)
+                let id = realmManager.saveLocalMessage(sent: Date().timeIntervalSince1970 * 1000, txt: self.text.trimmingCharacters(in: .whitespacesAndNewlines), parentMessageId: "", initiatorIdentifier: "", conversationId: self.conversationID ?? "", customType: ISMChatMediaType.Text.value, msgSyncStatus: ISMChatSyncStatus.Local.txt)
                 parentMessageIdToScroll = id ?? ""
                 self.getMessages()
                 nilData()
@@ -907,11 +907,11 @@ extension ISMMessageView{
                 NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
                 
             }
-        } else if self.text.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
+        } else {
             // MARK: - TEXT MESSAGE
             if networkMonitor.isConnected {
                 
-                let text = self.text
+                let text = self.text.trimmingCharacters(in: .whitespacesAndNewlines)
                 
                 //1. nil data if any
                 nilData()
