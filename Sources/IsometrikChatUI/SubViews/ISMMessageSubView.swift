@@ -318,7 +318,7 @@ struct ISMMessageSubView: View {
                                             HStack{
                                                 Spacer()
                                                 if appearance.timeInsideBubble == true{
-                                                    dateAndStatusView(onImage: false)
+                                                    dateAndStatusView(onImage: false).padding(.trailing,3)
                                                 }
                                             }
                                             Divider().background(Color.docBackground)
@@ -590,41 +590,55 @@ struct ISMMessageSubView: View {
                                     Button(action: {
                                         navigateToDocumentUrl = message.attachments.first?.mediaUrl ?? ""
                                     }, label: {
-                                        
-//                                    NavigationLink(destination: ISMDocumentViewer(url: documentUrl, title: fileName)){
                                         ZStack{
                                             VStack(alignment: .trailing, spacing: 5){
                                                 if message.messageType == 1{
                                                     forwardedView()
                                                 }
                                                 
-                                                HStack(alignment: .center, spacing: 5){
-                                                    if let urlExtension = urlExtension{
-                                                        if urlExtension.contains(".jpg") ||  urlExtension.contains(".png"){
-                                                            ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
-                                                            
-                                                        }else{
-                                                            if urlExtension == "pdf" {
-                                                                ISMPDFMessageView(pdfURL: documentUrl, fileName: fileName)
-                                                            } else {
-                                                                appearance.images.pdfLogo
-                                                                    .resizable()
-                                                                    .aspectRatio(contentMode: .fit)
-                                                                    .frame(width: 30, height: 30)
+                                                if ISMChatSdkUI.getInstance().getChatProperties().hideDocumentPreview == true{
+                                                    HStack{
+                                                        appearance.images.pdfLogo
+                                                            .resizable()
+                                                            .aspectRatio(contentMode: .fit)
+                                                            .frame(width: appearance.imagesSize.documentIcon.width, height: appearance.imagesSize.documentIcon.height)
+                                                        
+                                                        Text(fileName)
+                                                            .font(appearance.fonts.messageListMessageText)
+                                                            .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                            .fixedSize(horizontal: false, vertical: true)
+                                                        
+                                                        Spacer()
+                                                    }.padding(.leading,5).padding(.top,5)
+                                                }else{
+                                                    HStack(alignment: .center, spacing: 5){
+                                                        if let urlExtension = urlExtension{
+                                                            if urlExtension.contains(".jpg") ||  urlExtension.contains(".png"){
+                                                                ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
                                                                 
-                                                                Text(fileName)
-                                                                    .font(appearance.fonts.messageListMessageText)
-                                                                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                                                                    .fixedSize(horizontal: false, vertical: true)
-                                                                
-                                                                Spacer()
+                                                            }else{
+                                                                if urlExtension == "pdf" {
+                                                                    ISMPDFMessageView(pdfURL: documentUrl, fileName: fileName)
+                                                                } else {
+                                                                    appearance.images.pdfLogo
+                                                                        .resizable()
+                                                                        .aspectRatio(contentMode: .fit)
+                                                                        .frame(width: appearance.imagesSize.documentIcon.width, height: appearance.imagesSize.documentIcon.height)
+                                                                    
+                                                                    Text(fileName)
+                                                                        .font(appearance.fonts.messageListMessageText)
+                                                                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                                        .fixedSize(horizontal: false, vertical: true)
+                                                                    
+                                                                    Spacer()
+                                                                }
                                                             }
                                                         }
                                                     }
                                                 }
                                                 if appearance.timeInsideBubble == true{
                                                     dateAndStatusView(onImage: false)
-                                                        .padding(.bottom,(message.reactions.count > 0) ? 5 : 0)
+                                                        .padding(.bottom,(message.reactions.count > 0) ? 5 : 0).padding(.trailing,3)
                                                 }
                                             }//:VStack
                                             .frame(width: 250)

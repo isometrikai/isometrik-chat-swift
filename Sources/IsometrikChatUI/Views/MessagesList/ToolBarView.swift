@@ -570,6 +570,8 @@ struct MainToolBarView : View {
 
     private var messageTextField: some View {
         TextField(appearance.constantStrings.messageInputTextViewPlaceholder, text: $textFieldtxt, axis: .vertical)
+            .textInputAutocapitalization(.never) // Prevents autocapitalization
+            .disableAutocorrection(true) 
             .lineLimit(5)
             .onTapGesture {
                 scrollToLastMessage()

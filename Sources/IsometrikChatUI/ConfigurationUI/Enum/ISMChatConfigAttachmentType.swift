@@ -14,6 +14,7 @@ public enum ISMChatConfigAttachmentType{
     case document
     case location
     case contact
+    case sticker
     
     public var name: String {
         switch self {
@@ -27,6 +28,8 @@ public enum ISMChatConfigAttachmentType{
             return "Location"
         case .contact:
             return "Contact"
+        case .sticker:
+            return "Sticker"
         }
     }
 }

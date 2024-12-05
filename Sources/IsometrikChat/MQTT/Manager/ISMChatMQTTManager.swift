@@ -59,6 +59,7 @@ open class ISMChatMQTTManager: NSObject{
         "/\(self.projectConfiguration?.accountId ?? "")/\(self.projectConfiguration?.projectId ?? "")/Status/\(client)"
         mqtt?.unsubscribe(messageTopic)
         mqtt?.unsubscribe(statusTopic)
+        mqtt?.disconnect()
     }
     
     open func addObserverForMQTT(_ observer: Any, selector aSelector: Selector, name aName: NSNotification.Name?, object anObject: Any?) {

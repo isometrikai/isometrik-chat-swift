@@ -61,6 +61,14 @@ extension ISMMessageView{
                     }) {
                         Text(option.name)
                     }
+                }else if option == .sticker {
+                    Button(action: {
+                        DispatchQueue.main.async {
+                            stateViewModel.showGifPicker = true
+                        }
+                    }) {
+                        Text(option.name)
+                    }
                 }
             }
             Button("Cancel", role: .cancel) {

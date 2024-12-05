@@ -55,13 +55,14 @@ struct ISMMessageInfoSubView: View {
                 ZStack{
                     VStack(alignment: isReceived == true ? .leading : .trailing, spacing: 2){
                         HStack{
-                            Image(systemName: "minus.circle")
+                            appearance.images.deletedMessageLogo
                                 .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                            Text(isReceived == true ? "This message was deleted." :  "You deleted this message.")
+                                .frame(width: appearance.imagesSize.deletedMessageLogo.width, height: appearance.imagesSize.deletedMessageLogo.height, alignment: .center)
+                            Text(isReceived == true ? "This message was deleted.    " :  "You deleted this message.    ")
                                 .font(appearance.fonts.messageListMessageDeleted)
                                 .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                         }
-                        .opacity(0.2)
+                        .opacity(0.7)
                         dateAndStatusView(onImage: false)
                     }//:VStack
                     .padding(8)
