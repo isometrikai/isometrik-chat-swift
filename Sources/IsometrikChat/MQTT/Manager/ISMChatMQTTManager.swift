@@ -20,7 +20,7 @@ open class ISMChatMQTTManager: NSObject{
     var projectConfiguration : ISMChatProjectConfig?
     var viewcontrollers : ISMChatViewController?
     var framework : FrameworkType
-    var hasConnected : Bool = false
+    public var hasConnected : Bool = false
     var userData : ISMChatUserConfig?
     private var reconnectTimer: Timer?
     private let maxReconnectAttempts = 5
@@ -168,6 +168,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
             mqtt.subscribe([(messageTopic,.qos0),(statusTopic,qos: .qos0)])
             self.hasConnected = true
         } else {
+            self.hasConnected = false
             mqtt.disconnect()
             self.handleConnectionFailure()
         }
