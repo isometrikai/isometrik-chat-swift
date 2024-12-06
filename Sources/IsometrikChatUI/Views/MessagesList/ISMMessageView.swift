@@ -208,18 +208,25 @@ public struct ISMMessageView: View {
                                     .coordinateSpace(name: "scroll")
                                     .coordinateSpace(name: "pullToRefresh")
                                     .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
-                                    .gesture(DragGesture().onChanged { value in
-                                        // Calculate the velocity
-                                        let velocity = value.predictedEndTranslation.height - value.translation.height
-                                        // Define a threshold value for fast scrolling
-                                        let fastScrollThreshold: CGFloat = 65
-                                        if velocity > fastScrollThreshold {
-                                            //--------FAST SCROLL---------//
-                                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                                        } else {
-                                            //--------SLOW SCROLL---------//
-                                        }
-                                    }).highPriorityGesture(DragGesture())
+                                    .gesture(
+                                        DragGesture()
+                                            .onChanged { value in
+                                                // Only handle vertical gestures above threshold
+                                                let verticalTranslation = abs(value.translation.height)
+                                                let horizontalTranslation = abs(value.translation.width)
+                                                
+                                                // Only process if primarily vertical movement
+                                                if verticalTranslation > horizontalTranslation {
+                                                    let velocity = value.predictedEndTranslation.height - value.translation.height
+                                                    let fastScrollThreshold: CGFloat = 65
+                                                    
+                                                    if velocity > fastScrollThreshold {
+                                                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                                    }
+                                                }
+                                            }
+                                    )
+//                                    .highPriorityGesture(DragGesture())
                             }else{
                                 ScrollView{
                                     ScrollViewReader{ scrollReader in

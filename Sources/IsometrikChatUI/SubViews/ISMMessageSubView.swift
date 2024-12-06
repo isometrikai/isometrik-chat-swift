@@ -1121,11 +1121,10 @@ struct ISMMessageSubView: View {
                                         }
                                     }else{
                                         //it will act same as productLink
-                                        Button {
-                                            navigateToProductLink = message
-                                        } label: {
-                                            productLinkView(message: message)
-                                        }
+                                        productLinkView(message: message)
+                                            .onTapGesture {
+                                                navigateToProductLink = message
+                                            }
                                     }
                                 }//:ZStack
                                 .padding(5)
@@ -1170,11 +1169,11 @@ struct ISMMessageSubView: View {
                                 }
                                 
                                 VStack(alignment: .trailing,spacing: 5){
-                                    Button {
-                                        navigateToProductLink = message
-                                    } label: {
-                                        productLinkView(message: message)
-                                    }
+                                    
+                                    productLinkView(message: message)
+                                        .onTapGesture {
+                                            navigateToProductLink = message
+                                        }
                                 }
                                 .frame(width: 258)
                                 .padding(5)
@@ -1219,11 +1218,11 @@ struct ISMMessageSubView: View {
                                 }
                                 
                                 VStack(alignment: .trailing,spacing: 5){
-                                    Button {
-                                        navigateToSocialLink = message
-                                    } label: {
-                                        socialLinkView(message: message)
-                                    }.padding(.trailing,5)
+                                    
+                                    socialLinkView(message: message)
+                                        .onTapGesture {
+                                            navigateToSocialLink = message
+                                        }.padding(.trailing,5)
                                     
                                 }//:ZStack
                                 .frame(width: 258)
@@ -1269,11 +1268,10 @@ struct ISMMessageSubView: View {
                                 }
                                 
                                 VStack(alignment: .trailing,spacing: 5){
-                                    Button {
-                                        navigateToCollectionLink = message
-                                    } label: {
-                                        collectionLinkView(message: message)
-                                    }.padding(.trailing,5)
+                                    collectionLinkView(message: message)
+                                        .onTapGesture {
+                                            navigateToCollectionLink = message
+                                        }.padding(.trailing,5)
                                     
                                 }//:ZStack
                                 .frame(width: 258)
@@ -1308,40 +1306,44 @@ struct ISMMessageSubView: View {
                 default:
                     EmptyView()
                 }
-            }.simultaneousGesture(LongPressGesture(minimumDuration: 0.5).onEnded { _ in
-                let contextMenuVC = ISMCustomContextMenuViewController()
-                contextMenuVC.modalPresentationStyle = .overFullScreen
-                contextMenuVC.view.backgroundColor = .clear
-                
-                let hostingController = UIHostingController(rootView:
-                    ISMCustomContextMenu(
-                        conversationId: self.conversationId,
-                        message: self.message,
-                        viewWidth: self.viewWidth,
-                        isGroup: self.isGroup ?? false,
-                        isReceived: self.isReceived,
-                        selectedMessageToReply: $selectedMessageToReply,
-                        navigateToMessageInfo: $navigatetoMessageInfo,
-                        showForward: $showForward,
-                        updateMessage: $updateMessage,
-                        messageCopied: $messageCopied,
-                        navigateToDeletePopUp: $navigateToDeletePopUp,
-                        selectedReaction: $selectedReaction,
-                        sentRecationToMessageId: $sentRecationToMessageId,
-                        fromBroadCastFlow: self.fromBroadCastFlow,
-                        groupconversationMember: self.groupconversationMember
+            }.simultaneousGesture(
+                LongPressGesture(minimumDuration: 0.5).onEnded { _ in
+                    let contextMenuVC = ISMCustomContextMenuViewController()
+                    contextMenuVC.modalPresentationStyle = .overFullScreen
+                    contextMenuVC.view.backgroundColor = .clear
+                    
+                    let hostingController = UIHostingController(rootView:
+                        ISMCustomContextMenu(
+                            conversationId: self.conversationId,
+                            message: self.message,
+                            viewWidth: self.viewWidth,
+                            isGroup: self.isGroup ?? false,
+                            isReceived: self.isReceived,
+                            selectedMessageToReply: $selectedMessageToReply,
+                            navigateToMessageInfo: $navigatetoMessageInfo,
+                            showForward: $showForward,
+                            updateMessage: $updateMessage,
+                            messageCopied: $messageCopied,
+                            navigateToDeletePopUp: $navigateToDeletePopUp,
+                            selectedReaction: $selectedReaction,
+                            sentRecationToMessageId: $sentRecationToMessageId,
+                            fromBroadCastFlow: self.fromBroadCastFlow,
+                            groupconversationMember: self.groupconversationMember
+                        )
+                        .environmentObject(self.realmManager)
                     )
-                    .environmentObject(self.realmManager)
-                )
-                
-                hostingController.view.backgroundColor = .clear
-                contextMenuVC.addChild(hostingController)
-                contextMenuVC.view.addSubview(hostingController.view)
-                hostingController.view.frame = contextMenuVC.view.bounds
-                hostingController.didMove(toParent: contextMenuVC)
-                
-                self.viewControllerHolder?.present(contextMenuVC, animated: true)
-            })
+                    
+                    hostingController.view.backgroundColor = .clear
+                    contextMenuVC.addChild(hostingController)
+                    contextMenuVC.view.addSubview(hostingController.view)
+                    hostingController.view.frame = contextMenuVC.view.bounds
+                    hostingController.didMove(toParent: contextMenuVC)
+                    
+                    self.viewControllerHolder?.present(contextMenuVC, animated: true)
+                }
+            )
+            .allowsHitTesting(true)
+            .contentShape(Rectangle())
         }
         }
         .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow, onClose: {
