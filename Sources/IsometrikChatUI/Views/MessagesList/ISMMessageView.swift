@@ -705,6 +705,7 @@ public struct ISMMessageView: View {
             }
         }
         .onLoad {
+            OnScreen = true
             self.realmManager.clearMessages()
             self.getMessages()
             //added this from on appear
