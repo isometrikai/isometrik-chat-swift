@@ -248,6 +248,8 @@ public struct ISMChatMetaData: Codable {
     public var collectionImage : String?
     public var collectionId : String?
     
+    public var isSharedFromApp : Bool?
+    
     public init(
         replyMessage: ISMChatReplyMessageMetaData? = nil,
         locationAddress: String? = nil,
@@ -273,7 +275,8 @@ public struct ISMChatMetaData: Codable {
         collectionDescription : String? = nil,
         productCount : Int? = nil,
         collectionImage : String? = nil,
-        collectionId : String? = nil
+        collectionId : String? = nil,
+        isSharedFromApp : Bool? = nil
     ) {
         self.replyMessage = replyMessage
         self.locationAddress = locationAddress
@@ -300,6 +303,7 @@ public struct ISMChatMetaData: Codable {
         self.productCount = productCount
         self.collectionImage = collectionImage
         self.collectionId = collectionId
+        self.isSharedFromApp = isSharedFromApp
     }
     
     public init(from decoder: Decoder) throws {
@@ -329,6 +333,7 @@ public struct ISMChatMetaData: Codable {
         productCount = try? container.decode(Int.self, forKey: .productCount)
         collectionImage = try? container.decode(String.self, forKey: .collectionImage)
         collectionId = try? container.decode(String.self, forKey: .collectionId)
+        isSharedFromApp = try? container.decode(Bool.self, forKey: .isSharedFromApp)
     }
 }
 
