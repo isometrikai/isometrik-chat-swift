@@ -1523,12 +1523,12 @@ struct ISMMessageSubView: View {
             .padding(.horizontal,5)
             
             if message.customType == ISMChatMediaType.ProductLink.value{
-                if let url = message.metaData?.url{
-                    Text(url)
-                        .font(appearance.fonts.messageListMessageText)
-                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                        .padding(.horizontal,5)
-                }
+//                if let url = message.metaData?.url{
+//                    Text(url)
+//                        .font(appearance.fonts.messageListMessageText)
+//                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+//                        .padding(.horizontal,5)
+//                }
             }else{
                 Text(message.body ?? "")
                     .font(appearance.fonts.messageListMessageText)
@@ -1563,7 +1563,7 @@ struct ISMMessageSubView: View {
                 VStack(alignment: .leading,spacing: 5){
                     if let des = message.metaData?.collectionTitle{
                         Text(des)
-                            .font(Font.medium(size: 12))
+                            .font(Font.bold(size: 12))
                             .foregroundColor(isReceived == true ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                             .lineLimit(2).padding(.horizontal,8).padding(.bottom,8).padding(.top,3)
                     }
@@ -1576,7 +1576,7 @@ struct ISMMessageSubView: View {
                     if let des = message.metaData?.productCount{
                         let text = des > 1 ? "\(des) Products" : "\(des) Product"
                         Text(text)
-                            .font(Font.medium(size: 12))
+                            .font(Font.bold(size: 12))
                             .foregroundColor(isReceived == true ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                             .lineLimit(1).padding(.horizontal,8).padding(.bottom,8).padding(.top,3)
                     }
@@ -1592,13 +1592,13 @@ struct ISMMessageSubView: View {
             )
             .padding(.horizontal,5)
             
-            if let url = message.metaData?.url{
-                Text(url)
-                    .font(appearance.fonts.messageListMessageText)
-                    .multilineTextAlignment(.leading)
-                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                    .padding(.horizontal,5)
-            }
+//            if let url = message.metaData?.url{
+//                Text(url)
+//                    .font(appearance.fonts.messageListMessageText)
+//                    .multilineTextAlignment(.leading)
+//                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+//                    .padding(.horizontal,5)
+//            }
             
             
             if appearance.timeInsideBubble == true{
@@ -1650,13 +1650,13 @@ struct ISMMessageSubView: View {
             )
             .padding(.horizontal,5)
             
-            if let url = message.metaData?.url{
-                Text(url)
-                    .font(appearance.fonts.messageListMessageText)
-                    .multilineTextAlignment(.leading)
-                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                    .padding(.horizontal,5)
-            }
+//            if let url = message.metaData?.url{
+//                Text(url)
+//                    .font(appearance.fonts.messageListMessageText)
+//                    .multilineTextAlignment(.leading)
+//                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+//                    .padding(.horizontal,5)
+//            }
             
             
             if appearance.timeInsideBubble == true{

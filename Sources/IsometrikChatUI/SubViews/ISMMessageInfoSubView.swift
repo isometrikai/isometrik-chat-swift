@@ -958,11 +958,7 @@ struct ISMMessageInfoSubView: View {
                                 }
                                 
                                 VStack(alignment: .trailing,spacing: 5){
-                                    Button {
-                                        
-                                    } label: {
-                                        productLinkView(message: message)
-                                    }
+                                    productLinkView(message: message)
                                 }
                                 .frame(width: 258)
                                 .padding(5)
@@ -1003,11 +999,7 @@ struct ISMMessageInfoSubView: View {
                                 }
                                 
                                 VStack(alignment: .trailing,spacing: 5){
-                                    Button {
-                                       
-                                    } label: {
-                                        socialLinkView(message: message)
-                                    }.padding(.trailing,5)
+                                    socialLinkView(message: message).padding(.trailing,5)
                                     
                                 }//:ZStack
                                 .frame(width: 258)
@@ -1049,11 +1041,7 @@ struct ISMMessageInfoSubView: View {
                                 }
                                 
                                 VStack(alignment: .trailing,spacing: 5){
-                                    Button {
-                                        
-                                    } label: {
-                                        collectionLinkView(message: message)
-                                    }.padding(.trailing,5)
+                                    collectionLinkView(message: message).padding(.trailing,5)
                                     
                                 }//:ZStack
                                 .frame(width: 258)
@@ -1161,13 +1149,13 @@ struct ISMMessageInfoSubView: View {
             )
             .padding(.horizontal,5)
             
-            if let url = message.metaData?.url{
-                Text(url)
-                    .font(appearance.fonts.messageListMessageText)
-                    .multilineTextAlignment(.leading)
-                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                    .padding(.horizontal,5)
-            }
+//            if let url = message.metaData?.url{
+//                Text(url)
+//                    .font(appearance.fonts.messageListMessageText)
+//                    .multilineTextAlignment(.leading)
+//                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+//                    .padding(.horizontal,5)
+//            }
             
             
             if appearance.timeInsideBubble == true{
@@ -1260,12 +1248,12 @@ struct ISMMessageInfoSubView: View {
             .frame(width: 248)
             .padding(.horizontal,5)
             
-            if let url = message.metaData?.url{
-                Text(url)
-                    .font(appearance.fonts.messageListMessageText)
-                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                    .padding(.horizontal,5)
-            }
+//            if let url = message.metaData?.url{
+//                Text(url)
+//                    .font(appearance.fonts.messageListMessageText)
+//                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+//                    .padding(.horizontal,5)
+//            }
             
             // Time and Status (if needed)
             if appearance.timeInsideBubble {
@@ -1313,13 +1301,13 @@ struct ISMMessageInfoSubView: View {
             )
             .frame(width: 248)
             
-            if let url = message.metaData?.url{
-                Text(url)
-                    .font(appearance.fonts.messageListMessageText)
-                    .multilineTextAlignment(.leading)
-                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                    .padding(.horizontal,5)
-            }
+//            if let url = message.metaData?.url{
+//                Text(url)
+//                    .font(appearance.fonts.messageListMessageText)
+//                    .multilineTextAlignment(.leading)
+//                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+//                    .padding(.horizontal,5)
+//            }
             
             
             if appearance.timeInsideBubble == true{
