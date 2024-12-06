@@ -444,6 +444,7 @@ public struct ISMConversationView : View {
             if !hasAppeared {
                 hasAppeared = true
                 onload()
+                onScreen = true
             }
         }
     }//:Body

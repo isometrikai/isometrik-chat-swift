@@ -107,7 +107,6 @@ struct ForwardMessageToolBar : View {
                 Spacer()
                 Button {
                     if ISMChatSdk.getInstance().getFramework() == .UIKit{
-//                        self.delegate?.navigateToUserListToForward(messages: forwardMessageSelected)
                         navigateToForwardList()
                     }else{
                         DispatchQueue.main.async {
@@ -170,6 +169,7 @@ struct BasicToolBarView : View {
     @Binding var showActionSheet : Bool
     @Binding var showGifPicker : Bool
     @Binding var audioPermissionCheck :Bool
+    @Binding var keyboardFocused : Bool
     @EnvironmentObject var realmManager : RealmManager
     @EnvironmentObject var chatViewModel : ChatsViewModel
     var onSendMessage : () -> ()
@@ -184,7 +184,7 @@ struct BasicToolBarView : View {
                 LinkPreviewToolBarView(text: textFieldtxt)
             }
             
-            MainToolBarView(textFieldtxt: $textFieldtxt, parentMessageIdToScroll: $parentMessageIdToScroll, audioLocked: $audioLocked, isClicked: $isClicked,uAreBlock: $uAreBlock,showUnblockPopUp: $showUnblockPopUp,isShowingRedTimerStart: $isShowingRedTimerStart,showActionSheet: $showActionSheet,showGifPicker: $showGifPicker,audioPermissionCheck: $audioPermissionCheck, onSendMessage: {
+            MainToolBarView(textFieldtxt: $textFieldtxt, parentMessageIdToScroll: $parentMessageIdToScroll, audioLocked: $audioLocked, isClicked: $isClicked,uAreBlock: $uAreBlock,showUnblockPopUp: $showUnblockPopUp,isShowingRedTimerStart: $isShowingRedTimerStart,showActionSheet: $showActionSheet,showGifPicker: $showGifPicker,audioPermissionCheck: $audioPermissionCheck, keyboardFocused: $keyboardFocused, onSendMessage: {
                 onSendMessage()
             })
                 .environmentObject(self.realmManager)
@@ -207,6 +207,7 @@ struct MainToolBarView : View {
     @Binding var showActionSheet : Bool
     @Binding var showGifPicker : Bool
     @Binding var audioPermissionCheck :Bool
+    @Binding var keyboardFocused : Bool
     @EnvironmentObject var realmManager : RealmManager
     var conversationDetail : ISMChatConversationDetail?
     var onSendMessage : () -> ()
@@ -580,6 +581,12 @@ struct MainToolBarView : View {
             .foregroundColor(appearance.colorPalette.messageListTextViewText ?? .black)
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
+            .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+                keyboardFocused = true
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+                keyboardFocused = false
+            }
     }
     
     private func scrollToLastMessage() {

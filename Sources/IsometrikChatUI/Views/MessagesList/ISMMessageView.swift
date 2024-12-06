@@ -538,8 +538,10 @@ public struct ISMMessageView: View {
             sendMessageIfAudioUrl()
         })
         .onChange(of: stateViewModel.keyboardFocused, { _, _ in
-            if conversationDetail != nil{
-                sendMessageTypingIndicator()
+            if stateViewModel.keyboardFocused == true{
+                if conversationDetail != nil{
+                    sendMessageTypingIndicator()
+                }
             }
         })
         .onChange(of: selectedGIF, { _, _ in

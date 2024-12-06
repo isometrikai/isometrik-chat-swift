@@ -77,6 +77,19 @@ struct ISMConversationSubView: View {
                 Text("Typing...")
                     .foregroundColor(appearance.colorPalette.chatListUserMessage)
                     .font(appearance.fonts.chatListUserMessage)
+                
+                let count = chat.unreadMessagesCount
+                if count > 0{
+                    Spacer()
+                    Text("\(count)")
+                        .foregroundColor(appearance.colorPalette.chatListUnreadMessageCount)
+                        .font(appearance.fonts.chatListUnreadMessageCount)
+                        .padding(7)
+                        .background(appearance.colorPalette.chatListUnreadMessageCountBackground)
+                        .frame(height: 20)
+                        .cornerRadius(10)
+                }
+                
             }else{
                 if chat.lastMessageDetails?.deletedMessage == true{
                     HStack{

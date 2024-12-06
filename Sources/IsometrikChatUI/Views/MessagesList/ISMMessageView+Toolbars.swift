@@ -39,7 +39,7 @@ extension ISMMessageView{
             case .delete:
                 DelegateMessageToolBar(deleteMessage: $deleteMessage,showDeleteActionSheet: $stateViewModel.showDeleteActionSheet)
             case .normal:
-                BasicToolBarView(textFieldtxt: $textFieldtxt, selectedMsgToReply: $selectedMsgToReply, parentMessageIdToScroll: $parentMessageIdToScroll, audioLocked: $stateViewModel.audioLocked, isClicked: $stateViewModel.isClicked, uAreBlock: $stateViewModel.uAreBlock, showUnblockPopUp: $stateViewModel.showUnblockPopUp, isShowingRedTimerStart: $stateViewModel.isShowingRedTimerStart, showActionSheet: $stateViewModel.showActionSheet, showGifPicker: $stateViewModel.showGifPicker,audioPermissionCheck: $audioPermissionCheck) {
+                BasicToolBarView(textFieldtxt: $textFieldtxt, selectedMsgToReply: $selectedMsgToReply, parentMessageIdToScroll: $parentMessageIdToScroll, audioLocked: $stateViewModel.audioLocked, isClicked: $stateViewModel.isClicked, uAreBlock: $stateViewModel.uAreBlock, showUnblockPopUp: $stateViewModel.showUnblockPopUp, isShowingRedTimerStart: $stateViewModel.isShowingRedTimerStart, showActionSheet: $stateViewModel.showActionSheet, showGifPicker: $stateViewModel.showGifPicker,audioPermissionCheck: $audioPermissionCheck,keyboardFocused: $stateViewModel.keyboardFocused) {
                     sendMessage(msgType: .text)
                 }.environmentObject(self.realmManager)
                     .environmentObject(self.chatViewModel)
