@@ -258,7 +258,7 @@ import IsometrikChat
                 }
                 
                 self.getMessages()
-                if OnScreen{
+//                if OnScreen{
                     parentMessageIdToScroll = ""
                     parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
                     if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
@@ -272,7 +272,7 @@ import IsometrikChat
                             //after message is read then only resent unread count
                             realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
                         }
-                    }
+//                    }
                 }
             }
         }
