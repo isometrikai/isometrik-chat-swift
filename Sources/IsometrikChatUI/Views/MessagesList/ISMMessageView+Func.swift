@@ -300,9 +300,16 @@ extension ISMMessageView{
                         metaData: self.conversationDetail?.conversationDetails?.metaData
                     )
                     realmManager.addConversation(obj: [conv])
+                    // added this message locally for end to end encryption 
+                    let sentAt = Date().timeIntervalSince1970 * 1000
+                    let message = ISMChatMessage(sentAt: sentAt,body: "", messageId: "", customType: "",action: ISMChatActionType.conversationCreated.value,conversationId: conversationID)
+                    realmManager.saveMessage(obj: [message])
                     NotificationCenter.default.post(name: NSNotification.refrestConversationListLocally, object: nil)
+                    completion(true)
+                }else{
+                    completion(true)
                 }
-                completion(true)
+                
             }
         }
     }

@@ -161,12 +161,17 @@ extension ISMMessageView{
                 let text = senderId == userId ? "You changed this group image" : "\(userName) changed this group image"
                 customText(text: text)
             }else if action == .conversationCreated{
-                if isGroup == false{
+                if let isGroup = isGroup{
+                    if isGroup == false{
+                        let text = appearance.constantStrings.endToEndEncrypted
+                        customTextWithImage(text: text, image: appearance.images.messageLock)
+                    }else{
+                        let text = senderId == userId ? "You created group" : "\(userName) created group"
+                        customText(text: text)
+                    }
+                }else{
                     let text = appearance.constantStrings.endToEndEncrypted
                     customTextWithImage(text: text, image: appearance.images.messageLock)
-                }else{
-                    let text = senderId == userId ? "You created group" : "\(userName) created group"
-                    customText(text: text)
                 }
             }else if action == .membersAdd{
                 let memberName = memberId == userId ? ConstantStrings.you.lowercased() : "\(member ?? "")"
