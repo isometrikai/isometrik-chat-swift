@@ -153,7 +153,7 @@ struct ISMMessageSubView: View {
                                     if message.messageUpdated == true && !str.isValidURL{
                                         editedView()
                                     }
-                                    VStack(alignment: str.count < 7 ? .leading : .trailing, spacing: 5){
+                                    VStack(alignment: (str.count < 7 && message.customType != ISMChatMediaType.ReplyText.value)  ? .leading : .trailing, spacing: 5){
                                         HStack{
                                             if ISMChatHelper.isValidEmail(str) == true{
                                                 if ISMChatSdkUI.getInstance().getChatProperties().maskNumberAndEmail == true{
@@ -219,7 +219,12 @@ struct ISMMessageSubView: View {
                                                 if str.contains("@") && isGroup == true{
                                                     HighlightedTextView(originalText: str, mentionedUsers: groupconversationMember, isReceived: self.isReceived, navigateToInfo: $navigateToInfo, navigatetoUser: $navigatetoUser)
                                                 }else{
-                                                    ISMChatExpandableText(str, lineLimit: 5, isReceived: isReceived)
+                                                    HStack{
+                                                        ISMChatExpandableText(str, lineLimit: 5, isReceived: isReceived)
+                                                        if message.customType == ISMChatMediaType.ReplyText.value && message.messageType != 1{
+                                                            Spacer()
+                                                        }
+                                                    }
 //                                                    Text(str)
 //                                                        .font(appearance.fonts.messageListMessageText)
 //                                                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
@@ -1354,31 +1359,31 @@ struct ISMMessageSubView: View {
         .frame(maxWidth: .infinity, alignment: isReceived ? .leading : .trailing)
         .multilineTextAlignment(.leading) // Aligning the text based on message type
         
-        .gesture(
-            DragGesture()
-                .onChanged { gesture in
-                    if !message.deletedMessage{
-                        offset = gesture.translation
-                    }
-                }
-                .onEnded { value in
-                    if !message.deletedMessage{
-                        offset = .zero
-                        ISMChatHelper.print("value ",value.translation.width)
-                        let direction = self.detectDirection(value: value)
-                        if direction == .left {
-                            if showReplyOption{
-                                selectedMessageToReply = message
-                                UINotificationFeedbackGenerator().notificationOccurred(.warning)
-                            }
-                        }else if direction == .right{
-                            if !isReceived{
-                                navigatetoMessageInfo = true
-                            }
-                        }
-                    }
-                }
-        )
+//        .gesture(
+//            DragGesture()
+//                .onChanged { gesture in
+//                    if !message.deletedMessage{
+//                        offset = gesture.translation
+//                    }
+//                }
+//                .onEnded { value in
+//                    if !message.deletedMessage{
+//                        offset = .zero
+//                        ISMChatHelper.print("value ",value.translation.width)
+//                        let direction = self.detectDirection(value: value)
+//                        if direction == .left {
+//                            if showReplyOption{
+//                                selectedMessageToReply = message
+//                                UINotificationFeedbackGenerator().notificationOccurred(.warning)
+//                            }
+//                        }else if direction == .right{
+//                            if !isReceived{
+//                                navigatetoMessageInfo = true
+//                            }
+//                        }
+//                    }
+//                }
+//        )
         .onAppear( perform: {
             self.navigateToInfo = false
             if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.File.value && message.customType == ISMChatMediaType.ReplyText.value{
