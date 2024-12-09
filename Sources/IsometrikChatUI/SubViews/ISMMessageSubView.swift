@@ -1531,10 +1531,13 @@ struct ISMMessageSubView: View {
             
             if message.customType == ISMChatMediaType.ProductLink.value{
                 if let caption = message.metaData?.captionMessage, !caption.isEmpty{
-                    Text(caption)
-                        .font(appearance.fonts.messageListMessageText)
-                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                        .padding(.horizontal,5)
+                    HStack{
+                        Text(caption)
+                            .font(appearance.fonts.messageListMessageText)
+                            .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                            .padding(.horizontal,5)
+                        Spacer()
+                    }
                 }
             }else{
                 Text(message.body ?? "")
