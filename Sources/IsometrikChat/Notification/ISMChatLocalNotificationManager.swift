@@ -31,7 +31,7 @@ public struct ISMChatLocalNotificationManager {
     static public func requestPermission() -> Void {
         UNUserNotificationCenter
             .current()
-            .requestAuthorization(options: [.alert, .badge, .alert]) { granted, error in
+            .requestAuthorization(options: [.alert, .alert]) { granted, error in
                 if granted == true && error == nil {
                     // We have permission!
                 }
@@ -46,14 +46,14 @@ public struct ISMChatLocalNotificationManager {
 
     static public func scheduleNotifications(_ durationInSeconds: Int, repeats: Bool, userInfo: [AnyHashable : Any]) {
            // Reset badge count to 0
-           UNUserNotificationCenter.current().setBadgeCount(0) { error in
-               if let error = error {
-                   print("Error resetting badge count: \(error)")
-               }
-           }
+//           UNUserNotificationCenter.current().setBadgeCount(0) { error in
+//               if let error = error {
+//                   print("Error resetting badge count: \(error)")
+//               }
+//           }
 
            // Retrieve current badge count from UserDefaults (default is 0 if not set)
-           let currentBadgeCount = UserDefaults.standard.integer(forKey: badgeCountKey)
+//           let currentBadgeCount = UserDefaults.standard.integer(forKey: badgeCountKey)
 
            for notification in notifications {
                let content = UNMutableNotificationContent()
@@ -62,17 +62,17 @@ public struct ISMChatLocalNotificationManager {
                content.sound = UNNotificationSound.default
                
                // Increment the badge count
-               let newBadgeCount = currentBadgeCount + 1
-               UNUserNotificationCenter.current().setBadgeCount(newBadgeCount) { error in
-                   if let error = error {
-                       print("Error setting badge count: \(error)")
-                   }
-               }
-               content.badge = NSNumber(value: newBadgeCount)
+//               let newBadgeCount = currentBadgeCount + 1
+//               UNUserNotificationCenter.current().setBadgeCount(newBadgeCount) { error in
+//                   if let error = error {
+//                       print("Error setting badge count: \(error)")
+//                   }
+//               }
+//               content.badge = NSNumber(value: newBadgeCount)
                content.userInfo = userInfo
 
                // Save the new badge count in UserDefaults
-               UserDefaults.standard.set(newBadgeCount, forKey: badgeCountKey)
+//               UserDefaults.standard.set(newBadgeCount, forKey: badgeCountKey)
                
                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(durationInSeconds), repeats: repeats)
                let request = UNNotificationRequest(identifier: notification.id, content: content, trigger: trigger)
