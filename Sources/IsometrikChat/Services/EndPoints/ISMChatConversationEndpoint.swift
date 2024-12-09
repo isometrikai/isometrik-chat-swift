@@ -122,7 +122,7 @@ enum ISMChatConversationEndpoint : ISMChatURLConvertible {
         case .updateConversationSetting:
             return [:]
         case .unreadConversationCount:
-            return ["includeConversationStatusMessagesInUnreadMessagesCount" : "false", "hidden" : "false"]
+            return ["includeConversationStatusMessagesInUnreadMessagesCount" : "false"]
         }
     }
     
