@@ -247,7 +247,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                         self.realmManager.updateAllDeliveryStatus(conId: messageInfo.conversationId ?? "")
                     }
                 case .failure(let error):
-                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDelivered.name, object: nil,userInfo: ["data": "","error" : error])
+                    print("Error: \(error)")
                 }
             }
         case .mqttMessageRead:
@@ -587,6 +587,13 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                         viewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
                             ISMChatHelper.print("Message marked delivered")
                         }
+                    }
+                    
+                    //add unread count
+                    if messageInfo.action == ISMChatActionType.conversationCreated.value{
+                        self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 0)
+                    }else{
+                        self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 1)
                     }
                 }else{
                     //this is when you share social link, productlink and collectionlink from app, and then when u go to chat this will scroll to last message --> only saving my own message here for custom type, productLink,sociallink,collectionlink

@@ -149,21 +149,21 @@ extension ISMConversationView{
     
     func msgReceived(messageInfo: ISMChatMessageDelivered) {
         if myUserData.userId != messageInfo.senderId{
-            if messageInfo.action == ISMChatActionType.conversationCreated.value{
-                self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 0)
-            }else{
+            if messageInfo.action != ISMChatActionType.conversationCreated.value{
                 //update unread count
                 let obj = self.realmManager.conversations.first(where: {$0.conversationId == messageInfo.conversationId ?? ""})
-                self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 1)
-                //if message is deleted And msg comes from same user
                 if obj == nil{
                     self.realmManager.undodeleteConversation(convID: messageInfo.conversationId ?? "")
                     self.getConversationList()
                 }
             }
+            
             self.realmManager.getAllConversations()
-            //added code to take user at top
-            self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: viewModel.conversations, query: query))
+            if conversationData.first?.conversationId != messageInfo.conversationId{
+                //added code to take user at top
+                self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: viewModel.conversations, query: query))
+            }
+            
             if myUserData.allowNotification == true && onConversationList == true{
                 self.localNotificationForActions(messageInfo: messageInfo)
                 ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.senderName ?? "")", body: "\(messageInfo.notificationBody ?? (messageInfo.body ?? ""))", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? "","messageId" : messageInfo.messageId ?? ""])

@@ -27,7 +27,7 @@ public struct ISMProfileView: View {
     @State public var emailAlert : Bool = false
     @State public var selectedMedia : [URL] = []
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-     var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     //MARK: - BODY
     public var body: some View {
@@ -199,12 +199,12 @@ public struct ISMProfileView: View {
         viewModel.getUserData { data in
             if let user = data {
                 self.viewModel.userData = user
-                userData.userProfileImage = user.userProfileImageUrl ?? ""
-                userData.userName =  user.userName ?? ""
-                userData.userEmail =  user.userIdentifier ?? ""
-                userData.userBio =  user.metaData?.about ?? ""
-                userData.allowNotification = user.notification ?? true
-                userData.showLastSeen = user.metaData?.showlastSeen ?? true
+//                userData.userProfileImage = user.userProfileImageUrl ?? ""
+//                userData.userName =  user.userName ?? ""
+//                userData.userEmail =  user.userIdentifier ?? ""
+//                userData.userBio =  user.metaData?.about ?? ""
+//                userData.allowNotification = user.notification ?? true
+//                userData.showLastSeen = user.metaData?.showlastSeen ?? true
                 completion()
             }
         }

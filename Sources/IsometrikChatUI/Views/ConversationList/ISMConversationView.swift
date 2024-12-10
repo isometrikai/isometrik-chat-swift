@@ -537,7 +537,7 @@ public struct ISMConversationView : View {
 
     // MARK: - Helper Methods
 
-    private var conversationData: [ConversationDB] {
+    var conversationData: [ConversationDB] {
         let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
         return isOtherConversationList ? realmManager.getPrimaryConversation() : realmManager.getConversation()
     }
