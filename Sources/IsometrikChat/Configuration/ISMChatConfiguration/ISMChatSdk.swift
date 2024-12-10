@@ -39,7 +39,7 @@ public class ISMChatSdk{
     
     public func getMqttSession() -> ISMChatMQTTManager {
         if mqttSession == nil {
-            fatalError("Create configuration before trying to access mqtt session object.")
+            print("Create configuration before trying to access mqtt session object.")
         }
         return mqttSession!
     }

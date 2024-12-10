@@ -96,9 +96,12 @@ struct ISMMessageSubView: View {
                             appearance.images.deletedMessageLogo
                                 .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                 .frame(width: appearance.imagesSize.deletedMessageLogo.width, height: appearance.imagesSize.deletedMessageLogo.height, alignment: .center)
-                            Text(isReceived == true ? "This message was deleted.    " :  "You deleted this message.    ")
+                            Text(isReceived == true ? appearance.constantStrings.messageDeletedByOther :  appearance.constantStrings.messageDeletedByMe)
+                                .lineSpacing(8)
+                                .tracking(-0.5 / 1000)
                                 .font(appearance.fonts.messageListMessageDeleted)
-                                .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                .italic()
+                                .foregroundColor(appearance.colorPalette.messageListMessageDeleted)
                         }
                         .opacity(0.7)
                         dateAndStatusView(onImage: false)
@@ -142,7 +145,7 @@ struct ISMMessageSubView: View {
                                 VStack(alignment: .trailing, spacing: 0){
                                     if message.customType == ISMChatMediaType.ReplyText.value && message.messageType != 1{
                                         repliedMessageView()
-                                            .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
+                                            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 5))
                                             .onTapGesture {
                                                 parentMsgToScroll = message
                                             }

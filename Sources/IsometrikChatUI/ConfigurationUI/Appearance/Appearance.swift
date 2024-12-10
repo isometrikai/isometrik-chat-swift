@@ -69,10 +69,14 @@ public class ISMChatDateFormats{
 public class ISMChatStrings {
     public var endToEndEncrypted : String = "Messages are end to end encrypted. No one \noutside of this chat can read to them."
     public var messageInputTextViewPlaceholder : String = "Type a message"
+    public var messageDeletedByMe : String = "You deleted this message."
+    public var messageDeletedByOther : String = "This message was deleted."
     public init(){}
-    public init(endToEndEncrypted: String? = nil,messageInputTextViewPlaceholder : String? = nil) {
+    public init(endToEndEncrypted: String? = nil,messageInputTextViewPlaceholder : String? = nil,messageDeletedByMe : String? = nil,messageDeletedByOther : String? = nil) {
         self.endToEndEncrypted = endToEndEncrypted ?? ""
         self.messageInputTextViewPlaceholder = messageInputTextViewPlaceholder ?? ""
+        self.messageDeletedByMe = messageDeletedByMe ?? ""
+        self.messageDeletedByOther = messageDeletedByOther ?? ""
     }
 }
 

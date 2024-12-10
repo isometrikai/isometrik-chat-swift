@@ -21,7 +21,7 @@ struct ISMChatMediaView : View {
         }else if attachment.mediaUrl.contains("gif"){
             AnimatedImage(url: URL(string: attachment.mediaUrl ?? ""))
         }else{
-            ISMChatImageCahcingManger.viewImage(url: attachment.mediaUrl)
+            ISMChatImageCahcingManger.viewImage(url: attachment.mediaUrl).aspectRatio(contentMode: .fit)
         }
     }
 }

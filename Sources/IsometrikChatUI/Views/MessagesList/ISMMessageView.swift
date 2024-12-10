@@ -504,7 +504,9 @@ public struct ISMMessageView: View {
             }
         })
         .onChange(of: selectedGIF, { _, _ in
-            sendMessageIfGif()
+            if let selectedGIF = selectedGIF{
+                sendMessageIfGif()
+            }
         })
         .onChange(of: stateViewModel.sendMedia, { _, _ in
             if stateViewModel.sendMedia == true{

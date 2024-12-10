@@ -707,7 +707,7 @@ extension ISMMessageView{
             parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
             
             //5. we need to save media
-            if messageKind != .audio{
+            if messageKind != .audio && messageKind != .sticker && messageKind != .gif{
                 let attachment = ISMChatAttachment(attachmentType: ISMChatAttachmentType.Video.type, extensions: ISMChatExtensionType.Video.type, mediaUrl: mediaUrl, mimeType: ISMChatExtensionType.Video.type, name: mediaName, thumbnailUrl: thubnailUrl)
                 realmManager.saveMedia(arr: [attachment], conId: self.conversationID ?? "", customType: customType , sentAt: sentAt, messageId: messageId, userName: userData.userName, fromView: true)
                 
