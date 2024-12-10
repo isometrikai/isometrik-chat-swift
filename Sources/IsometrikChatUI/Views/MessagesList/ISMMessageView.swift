@@ -54,7 +54,7 @@ public struct ISMMessageView: View {
     let columns = [GridItem(.flexible(minimum: 10))]
     let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
     let onlinetimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
-    @State var OnScreen : Bool = false
+    @State var OnMessageList : Bool = false
     
     
     @State var navigateToMediaSliderId : String = ""
@@ -269,14 +269,14 @@ public struct ISMMessageView: View {
                     bottomView()
                 }//VStack
                 .onAppear {
-                    OnScreen = true
+                    OnMessageList = true
                     setupOnAppear()
                     stateViewModel.navigateToImageEditor = false
                     addNotificationObservers()
                     
                 }
                 .onDisappear{
-                    OnScreen = false
+                    OnMessageList = false
                     stateViewModel.executeRepeatly = false
                     stateViewModel.executeRepeatlyForOfflineMessage = false
                     stateViewModel.onLoad = false
@@ -291,6 +291,9 @@ public struct ISMMessageView: View {
                     NotificationCenter.default.removeObserver(self, name: NSNotification.updateGroupInfo, object: nil)
                     NotificationCenter.default.removeObserver(self, name: NSNotification.memberAddAndRemove, object: nil)
                     NotificationCenter.default.removeObserver(self)
+                    self.conversationID = nil
+                    nilData()
+                    OnMessageList = false
                 }
                 //zstack views
                 if chatViewModel.isBusy{
@@ -350,7 +353,7 @@ public struct ISMMessageView: View {
                 return
             }
             ISMChatHelper.print("MESSAGE DELIVERED----------------->\(messageInfo)")
-            if OnScreen{
+            if OnMessageList{
                 messageDelivered(messageInfo: messageInfo)
             }
         }
@@ -360,13 +363,13 @@ public struct ISMMessageView: View {
             }
             ISMChatHelper.print("MESSAGE RECEIVED----------------->\(messageInfo)")
             //save in local db
-            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+//            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
                 messageReceived(messageInfo: messageInfo)
                 //local notification
 //                sendLocalNotification(messageInfo: messageInfo)
                 //action if required
                 actionOnMessageDelivered(messageInfo: messageInfo)
-            }
+//            }
         }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMessageRead.name)){ notification in
             guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
@@ -628,14 +631,14 @@ public struct ISMMessageView: View {
         .sheet(isPresented: self.$stateViewModel.showVideoPicker) {
             ISMMediaPicker(isPresented: self.$stateViewModel.showVideoPicker, sendMedias: $mediaSelectedFromPicker,opponenetName: isGroup == true ? (self.conversationDetail?.conversationDetails?.conversationTitle ?? "" ) : (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""),mediaCaption: $mediaCaption,sendMediaToMessage: $stateViewModel.sendMedia)
         }
-        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate).environmentObject(self.realmManager)
+        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate).environmentObject(RealmManager.shared)
             .onAppear {
-                OnScreen = false
+                OnMessageList = false
             }, isActive: $stateViewModel.navigateToUserProfile))
 //        .fullScreenCover(isPresented: $stateViewModel.navigateToUserProfile, onDismiss: {
 //            stateViewModel.navigateToUserProfile = false
 //        }, content: {
-//            ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager)
+//            ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager.shared)
 //                .onAppear {
 //                    OnScreen = false
 //                }
@@ -671,7 +674,7 @@ public struct ISMMessageView: View {
             }
         })
         .onReceive(onlinetimer, perform: { firedtime in
-            if OnScreen == true{
+            if OnMessageList == true{
                 print("online timer fired")
                 timeElapsedForOnline = Int(firedtime.timeIntervalSince(startTimeForOnline))
                 if stateViewModel.executeRepeatlyForOfflineMessage == true{
@@ -705,7 +708,7 @@ public struct ISMMessageView: View {
             }
         }
         .onLoad {
-            OnScreen = true
+            OnMessageList = true
             self.realmManager.clearMessages()
             self.getMessages()
             //added this from on appear
@@ -772,18 +775,20 @@ public struct ISMMessageView: View {
     func getMessages() {
         realmManager.getMsgsThroughConversationId(conversationId: self.conversationID ?? "")
         self.realmManager.messages = chatViewModel.getSectionMessage(for: self.realmManager.allMessages ?? [])
-        if self.realmManager.messages.count > 0 {
-            if (self.realmManager.messages.last?.count ?? 0) > 0 {
-                if let msgObj = self.realmManager.messages.last?.last {
-                    //don't update last message if it action id reaction Add or Remove, as we filter those in message List
-                    let action = realmManager.getConversationListLastMessageAction(conversationId: self.conversationID ?? "")
-                    if action != ISMChatActionType.reactionAdd.value && action != ISMChatActionType.reactionRemove.value{
-                        realmManager.updateLastMessageDetails(conId: self.conversationID ?? "", msgObj: msgObj)
-//                        parentMessageIdToScroll = realmManager.messages.last?.last?.id.description ?? ""
-                    }
-                }
-            }
-        }
+        parentMessageIdToScroll = ""
+        parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+//        if self.realmManager.messages.count > 0 {
+//            if (self.realmManager.messages.last?.count ?? 0) > 0 {
+//                if let msgObj = self.realmManager.messages.last?.last {
+//                    //don't update last message if it action id reaction Add or Remove, as we filter those in message List
+//                    let action = realmManager.getConversationListLastMessageAction(conversationId: self.conversationID ?? "")
+//                    if action != ISMChatActionType.reactionAdd.value && action != ISMChatActionType.reactionRemove.value{
+//                        realmManager.updateLastMessageDetails(conId: self.conversationID ?? "", msgObj: msgObj)
+////                        parentMessageIdToScroll = realmManager.messages.last?.last?.id.description ?? ""
+//                    }
+//                }
+//            }
+//        }
     }
     
     

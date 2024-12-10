@@ -55,13 +55,13 @@ public struct ISMConversationView : View {
     @State public var navigatetoSelectedUser : Bool = false
     
     @ObservedObject public var viewModel = ConversationViewModel()
-    @StateObject public var realmManager = RealmManager()
+    @StateObject public var realmManager = RealmManager.shared
     @StateObject public var networkMonitor = NetworkMonitor()
     @ObservedObject public var chatViewModel = ChatsViewModel()
     @State public var showBroadCastOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.BroadCastConversation)
     
     public let NC = NotificationCenter.default
-    @State public var onScreen = false
+    @State public var onConversationList = false
     
     //local notification
     @State public var navigateToMessageViewFromLocalNotification : Bool = false
@@ -170,16 +170,16 @@ public struct ISMConversationView : View {
                         .environmentObject(realmManager)
                 }
                 .navigationDestination(isPresented: $navigateToMessageViewFromLocalNotification) {
-                    ISMMessageView(conversationViewModel : self.viewModel,conversationID: conversationIdForNotification ,opponenDetail : opponentDetailforNotification, myUserId: myUserData.userId, isGroup: isGroupFromNotification,fromBroadCastFlow: false,groupCastId: "", groupConversationTitle: groupTitleFromNotification ?? "", groupImage: groupImageFromNotification ?? "").environmentObject(realmManager).onAppear{onScreen = false}
+                    ISMMessageView(conversationViewModel : self.viewModel,conversationID: conversationIdForNotification ,opponenDetail : opponentDetailforNotification, myUserId: myUserData.userId, isGroup: isGroupFromNotification,fromBroadCastFlow: false,groupCastId: "", groupConversationTitle: groupTitleFromNotification ?? "", groupImage: groupImageFromNotification ?? "").environmentObject(realmManager).onAppear{onConversationList = false}
                 }
                 .navigationDestination(isPresented: $navigateToBroadCastMessages) {
-                    ISMMessageView(conversationViewModel : self.viewModel,conversationID: "",opponenDetail: nil,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: true,groupCastId: self.groupCastIdToNavigate, groupConversationTitle: nil, groupImage: nil).environmentObject(realmManager).onAppear{onScreen = false}
+                    ISMMessageView(conversationViewModel : self.viewModel,conversationID: "",opponenDetail: nil,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: true,groupCastId: self.groupCastIdToNavigate, groupConversationTitle: nil, groupImage: nil).environmentObject(realmManager).onAppear{onConversationList = false}
                 }
                 .onAppear {
-                    onScreen = true
+                    onConversationList = true
                 }
                 .onDisappear {
-                    onScreen = false
+                    onConversationList = false
                     NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttConversationCreated.name, object: nil)
                     NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttUpdateUser.name, object: nil)
                     NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttmessageDetailsUpdated.name, object: nil)
@@ -261,20 +261,20 @@ public struct ISMConversationView : View {
 //                            ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.senderName ?? "")", body: "\(messageInfo.notificationBody ?? (messageInfo.body ?? ""))", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? "","messageId" : messageInfo.messageId ?? ""])
 //                        }
 //                    }
-                    if  !(self.realmManager.doesMessageExistInLastMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+//                    if  !(self.realmManager.doesMessageExistInLastMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
                         ISMChatHelper.print("MESSAGE RECEIVED IN CONVERSATION LIST----------------->\(messageInfo)")
                         self.msgReceived(messageInfo: messageInfo)
-                        if myUserData.userId != messageInfo.senderId{
-                            self.localNotificationForActions(messageInfo: messageInfo)
-                        }
-                    }
+//                        if myUserData.userId != messageInfo.senderId{
+//
+//                        }
+//                    }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttTypingEvent.name)){ notification in
                     guard let messageInfo = notification.userInfo?["data"] as? ISMChatTypingEvent else {
                         return
                     }
                     ISMChatHelper.print("TYPING EVENT----------------->\(messageInfo)")
-                    if onScreen == true{
+                    if onConversationList == true{
                         self.typingStatus(obj: messageInfo)
                     }
                 }
@@ -395,7 +395,7 @@ public struct ISMConversationView : View {
                         return
                     }
                     ISMChatHelper.print("Meeting ended----------------->\(messageInfo)")
-                    if onScreen == true{
+                    if onConversationList == true{
                         self.viewModel.resetdata()
                         self.getConversationList()
                     }
@@ -444,7 +444,7 @@ public struct ISMConversationView : View {
             if !hasAppeared {
                 hasAppeared = true
                 onload()
-                onScreen = true
+                onConversationList = true
             }
         }
     }//:Body
@@ -659,7 +659,7 @@ public struct ISMConversationView : View {
         )
         .environmentObject(realmManager)
         .onAppear {
-            onScreen = false
+            onConversationList = false
             query = ""
         }
     }

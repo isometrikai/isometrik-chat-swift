@@ -26,6 +26,7 @@ open class ISMChatMQTTManager: NSObject{
     private let maxReconnectAttempts = 5
     private var reconnectAttempts = 0
     private let reconnectInterval: TimeInterval = 5.0
+    var realmManager = RealmManager.shared
     init(mqttConfiguration : ISMChatMqttConfig,projectConfiguration : ISMChatProjectConfig,userdata : ISMChatUserConfig,viewcontrollers : ISMChatViewController,framework : FrameworkType) {
         self.mqttConfiguration = mqttConfiguration
         self.projectConfiguration = projectConfiguration
@@ -187,58 +188,31 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
     }
     
     public func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: UInt16 ) {
-        TRACE("message topic: \(message.topic)")
-        TRACE("message: \(message.string?.description ?? ""), id: \(id)")
-        
-        let messageString = "\(message.string?.description ?? "")"
-        let data = Data(messageString.utf8)
-        guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-            return
-        }
-        if let actionName = json["action"] as? String {
-            if let userID = json["userId"] as? String, userID != userData?.userId{
-                ISMChatHelper.print("Event triggered with ACTION NAME Opposite USer :: \(actionName)")
-                ISMChatHelper.print("Response From MQTT Opposite USer :: \(json)")
-                switchEvents(actionName: actionName, data: data, message: message)
-            }else if let userID = json["opponentId"] as? String, userID == userData?.userId{
-                ISMChatHelper.print("Event triggered with ACTION NAME Same user:: \(actionName)")
-                ISMChatHelper.print("Response From MQTT Same USer :: \(json)")
-                switchEvents(actionName: actionName, data: data, message: message)
-            }else{
-                ISMChatHelper.print("Event triggered with ACTION NAME Same user:: \(actionName)")
-                switchEvents(actionName: actionName, data: data, message: message)
+        if ISMChatSdk.getInstance().checkifChatInitialied() == true{
+            TRACE("message topic: \(message.topic)")
+            TRACE("message: \(message.string?.description ?? ""), id: \(id)")
+            
+            let messageString = "\(message.string?.description ?? "")"
+            let data = Data(messageString.utf8)
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                return
             }
-        }else{
-            //some times for broadcast messages action doesn't comes
-            self.messageReceived(data) { result in
-                switch result{
-                case .success(let data):
-                    if self.framework == .UIKit {
-                        if let topViewController = UIApplication.topViewController() {
-                            if let Chatvc = self.viewcontrollers?.conversationListViewController,
-                               let Messagevc = self.viewcontrollers?.messagesListViewController {
-                                
-                                let isNotChatVC = !(topViewController.isKind(of: Chatvc))
-                                let isNotMessageVC = !(topViewController.isKind(of: Messagevc))
-                                
-                                if isNotChatVC && isNotMessageVC {
-                                    // Your code here
-                                    if data.senderId != ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId{
-                                        self.whenInOtherScreen(messageInfo: data)
-                                    }
-                                }
-                            }
-                        }else{
-                            if UIApplication.shared.applicationState == .background {
-                                self.whenInOtherScreen(messageInfo: data)
-                            }
-                        }
-                    }
-                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
-                    NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
-                case .failure(let error):
-                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+            if let actionName = json["action"] as? String {
+                if let userID = json["userId"] as? String, userID != userData?.userId{
+                    ISMChatHelper.print("Event triggered with ACTION NAME Opposite USer :: \(actionName)")
+                    ISMChatHelper.print("Response From MQTT Opposite USer :: \(json)")
+                    switchEvents(actionName: actionName, data: data, message: message)
+                }else if let userID = json["opponentId"] as? String, userID == userData?.userId{
+                    ISMChatHelper.print("Event triggered with ACTION NAME Same user:: \(actionName)")
+                    ISMChatHelper.print("Response From MQTT Same USer :: \(json)")
+                    switchEvents(actionName: actionName, data: data, message: message)
+                }else{
+                    ISMChatHelper.print("Event triggered with ACTION NAME Same user:: \(actionName)")
+                    switchEvents(actionName: actionName, data: data, message: message)
                 }
+            }else{
+                //some times for broadcast messages action doesn't comes
+                messageReceivedEvent(data: data)
             }
         }
     }
@@ -459,39 +433,292 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                 }
             }
         case .mqttChatMessageSent:
-            self.messageReceived(data) { result in
-                switch result{
-                case .success(let data):
-                    if self.framework == .UIKit {
-                        if let topViewController = UIApplication.topViewController() {
-                            if let Chatvc = self.viewcontrollers?.conversationListViewController,
-                               let Messagevc = self.viewcontrollers?.messagesListViewController {
-                                
-                                let isNotChatVC = !(topViewController.isKind(of: Chatvc))
-                                let isNotMessageVC = !(topViewController.isKind(of: Messagevc))
-                                
-                                if isNotChatVC && isNotMessageVC {
-                                    // Your code here
-                                    if data.senderId != ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId{
-                                        self.whenInOtherScreen(messageInfo: data)
-                                    }
-                                }
-                            }
-                        }else{
-                            if UIApplication.shared.applicationState == .background {
-                                self.whenInOtherScreen(messageInfo: data)
-                            }
-                        }
-                    }
-                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
-                    NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
-                case .failure(let error):
-                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
-                }
-            }
+            messageReceivedEvent(data: data)
         case .none:
             CallEventHandler.handleCallEvents(payload: message.payload)
             CallEventHandler.delegate = self
+        }
+    }
+    
+    public func messageReceivedEvent(data : Data){
+        self.messageReceived(data) { result in
+            switch result{
+            case .success(let messageInfo):
+                
+                if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId != messageInfo.senderId{
+                    // added last message in realm
+                    let membersArray = messageInfo.members?.map { member -> ISMChatMemberAdded in
+                        var chatMember = ISMChatMemberAdded()
+                        chatMember.memberId = member.memberId
+                        chatMember.memberIdentifier = member.memberIdentifier
+                        chatMember.memberName = member.memberName
+                        chatMember.memberProfileImageUrl = member.memberProfileImageUrl
+                        return chatMember
+                    } ?? []
+                    
+                    let msg = ISMChatLastMessage(sentAt: messageInfo.sentAt,senderName: messageInfo.senderName,senderIdentifier: messageInfo.senderIdentifier,senderId: messageInfo.senderId,conversationId: messageInfo.conversationId,body: messageInfo.body ?? "",messageId: messageInfo.messageId,deliveredToUser: messageInfo.userId,timeStamp: messageInfo.sentAt,customType: messageInfo.customType,action: messageInfo.action, userId: messageInfo.userId, initiatorId: messageInfo.initiatorId, memberName: messageInfo.memberName, initiatorName: messageInfo.initiatorName, memberId: messageInfo.memberId, userName: messageInfo.userName,members: membersArray,userIdentifier: messageInfo.userIdentifier,userProfileImageUrl: messageInfo.userProfileImageUrl)
+                    
+                    
+                    DispatchQueue.main.async {
+                        self.realmManager.updateLastmsg(conId: messageInfo.conversationId ?? "", msg: msg)
+                    }
+                    
+                    
+                    
+                    // added message in messagesdb
+                    var contact : [ISMChatContactMetaData] = []
+                    if let contacts = messageInfo.metaData?.contacts, contacts.count > 0{
+                        for x in contacts{
+                            var data = ISMChatContactMetaData()
+                            data.contactIdentifier = x.contactIdentifier
+                            data.contactImageData = x.contactImageData
+                            data.contactImageUrl = x.contactImageUrl
+                            data.contactName = x.contactName
+                            contact.append(data)
+                        }
+                    }
+                    
+                    let replyMessageData = ISMChatReplyMessageMetaData(
+                        parentMessageId: messageInfo.parentMessageId,
+                        parentMessageBody: messageInfo.metaData?.replyMessage?.parentMessageBody,
+                        parentMessageUserId: messageInfo.metaData?.replyMessage?.parentMessageUserId,
+                        parentMessageUserName: messageInfo.metaData?.replyMessage?.parentMessageUserName,
+                        parentMessageMessageType: messageInfo.metaData?.replyMessage?.parentMessageMessageType,
+                        parentMessageAttachmentUrl: messageInfo.metaData?.replyMessage?.parentMessageAttachmentUrl,
+                        parentMessageInitiator: messageInfo.metaData?.replyMessage?.parentMessageInitiator,
+                        parentMessagecaptionMessage: messageInfo.metaData?.replyMessage?.parentMessagecaptionMessage)
+                    
+                    let postDetail = ISMChatPostMetaData(postId: messageInfo.metaData?.post?.postId, postUrl: messageInfo.metaData?.post?.postUrl)
+                    let productDetail = ISMChatProductMetaData(productId: messageInfo.metaData?.product?.productId, productUrl: messageInfo.metaData?.product?.productUrl, productCategoryId: messageInfo.metaData?.product?.productCategoryId)
+                    
+                    
+                    
+                    
+                    let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")
+                    
+                    var bodyUpdated = messageInfo.body
+                    var customType = messageInfo.customType
+                    var metaData = ISMChatMetaData(
+                        replyMessage: replyMessageData,
+                        locationAddress: messageInfo.metaData?.locationAddress,
+                        contacts: contact,
+                        captionMessage: messageInfo.metaData?.captionMessage,
+                        isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage,
+                        post: postDetail,
+                        product: productDetail,
+                        storeName: messageInfo.metaData?.storeName,
+                        productName: messageInfo.metaData?.productName,
+                        bestPrice: messageInfo.metaData?.bestPrice,
+                        scratchPrice: messageInfo.metaData?.scratchPrice,
+                        url: messageInfo.metaData?.url,
+                        parentProductId: messageInfo.metaData?.parentProductId,
+                        childProductId: messageInfo.metaData?.childProductId,
+                        entityType: messageInfo.metaData?.entityType,
+                        productImage: messageInfo.metaData?.productImage,
+                        thumbnailUrl: messageInfo.metaData?.thumbnailUrl,
+                        description: messageInfo.metaData?.description,
+                        isVideoPost: messageInfo.metaData?.isVideoPost,
+                        socialPostId: messageInfo.metaData?.socialPostId,
+                        collectionTitle : messageInfo.metaData?.collectionTitle,
+                        collectionDescription : messageInfo.metaData?.collectionDescription,
+                        productCount : messageInfo.metaData?.productCount,
+                        collectionImage : messageInfo.metaData?.collectionImage,
+                        collectionId : messageInfo.metaData?.collectionId
+                    )
+                    
+                    if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
+                        bodyUpdated = messageInfo.details?.body
+                        customType = messageInfo.details?.customType
+                        metaData = ISMChatMetaData(
+                            storeName: messageInfo.details?.metaData?.storeName,
+                            productName: messageInfo.details?.metaData?.productName,
+                            bestPrice: messageInfo.details?.metaData?.bestPrice,
+                            scratchPrice: messageInfo.details?.metaData?.scratchPrice,
+                            url: messageInfo.details?.metaData?.url,
+                            parentProductId: messageInfo.details?.metaData?.parentProductId,
+                            childProductId: messageInfo.details?.metaData?.childProductId,
+                            entityType: messageInfo.details?.metaData?.entityType,
+                            productImage: messageInfo.details?.metaData?.productImage,
+                            thumbnailUrl: messageInfo.details?.metaData?.thumbnailUrl,
+                            description: messageInfo.details?.metaData?.description,
+                            isVideoPost: messageInfo.details?.metaData?.isVideoPost,
+                            socialPostId: messageInfo.details?.metaData?.socialPostId,
+                            collectionTitle : messageInfo.details?.metaData?.collectionTitle,
+                            collectionDescription : messageInfo.details?.metaData?.collectionDescription,
+                            productCount : messageInfo.details?.metaData?.productCount,
+                            collectionImage : messageInfo.details?.metaData?.collectionImage,
+                            collectionId : messageInfo.details?.metaData?.collectionId
+                        )
+                    }
+                    
+                    var mentionedUser: [ISMChatMentionedUser] = []
+                    if let mentionedUsers = messageInfo.mentionedUsers {
+                        for x in mentionedUsers {
+                            let user = ISMChatMentionedUser(wordCount: x.wordCount, userId: x.userId, order: x.order)
+                            mentionedUser.append(user)
+                        }
+                    }
+                    
+                    let message = ISMChatMessage(sentAt: messageInfo.sentAt,body: bodyUpdated, messageId: messageInfo.messageId,mentionedUsers: mentionedUser,metaData : metaData, customType: customType,action: messageInfo.action, attachment: messageInfo.attachments,conversationId: messageInfo.conversationId, userId: messageInfo.userId, userName: messageInfo.userName, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, memberName: messageInfo.memberName, memberId: messageInfo.memberId, memberIdentifier: messageInfo.memberIdentifier,senderInfo: senderInfo,members: membersArray,reactions: messageInfo.reactions)
+                    
+                    DispatchQueue.main.async {
+                        self.realmManager.saveMessage(obj: [message])
+                    }
+                    
+                    let viewModel = ChatsViewModel()
+                    if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
+                        viewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
+                            ISMChatHelper.print("Message marked delivered")
+                        }
+                    }
+                }else{
+                    //this is when you share social link, productlink and collectionlink from app, and then when u go to chat this will scroll to last message --> only saving my own message here for custom type, productLink,sociallink,collectionlink
+                    if (messageInfo.customType == ISMChatMediaType.ProductLink.value || messageInfo.customType == ISMChatMediaType.SocialLink.value || messageInfo.customType == ISMChatMediaType.CollectionLink.value) && messageInfo.metaData?.isSharedFromApp == true{
+                        var contact : [ISMChatContactMetaData] = []
+                        if let contacts = messageInfo.metaData?.contacts, contacts.count > 0{
+                            for x in contacts{
+                                var data = ISMChatContactMetaData()
+                                data.contactIdentifier = x.contactIdentifier
+                                data.contactImageData = x.contactImageData
+                                data.contactImageUrl = x.contactImageUrl
+                                data.contactName = x.contactName
+                                contact.append(data)
+                            }
+                        }
+                        
+                        let replyMessageData = ISMChatReplyMessageMetaData(
+                            parentMessageId: messageInfo.parentMessageId,
+                            parentMessageBody: messageInfo.metaData?.replyMessage?.parentMessageBody,
+                            parentMessageUserId: messageInfo.metaData?.replyMessage?.parentMessageUserId,
+                            parentMessageUserName: messageInfo.metaData?.replyMessage?.parentMessageUserName,
+                            parentMessageMessageType: messageInfo.metaData?.replyMessage?.parentMessageMessageType,
+                            parentMessageAttachmentUrl: messageInfo.metaData?.replyMessage?.parentMessageAttachmentUrl,
+                            parentMessageInitiator: messageInfo.metaData?.replyMessage?.parentMessageInitiator,
+                            parentMessagecaptionMessage: messageInfo.metaData?.replyMessage?.parentMessagecaptionMessage)
+                        
+                        let postDetail = ISMChatPostMetaData(postId: messageInfo.metaData?.post?.postId, postUrl: messageInfo.metaData?.post?.postUrl)
+                        let productDetail = ISMChatProductMetaData(productId: messageInfo.metaData?.product?.productId, productUrl: messageInfo.metaData?.product?.productUrl, productCategoryId: messageInfo.metaData?.product?.productCategoryId)
+                        
+                        
+                        
+                        
+                        let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")
+                        
+                        //add members in Message
+                        var membersArray : [ISMChatMemberAdded] = []
+                        if let members = messageInfo.members{
+                            for x in members{
+                                var member = ISMChatMemberAdded()
+                                member.memberId = x.memberId
+                                member.memberIdentifier = x.memberIdentifier
+                                member.memberName = x.memberName
+                                member.memberProfileImageUrl = x.memberProfileImageUrl
+                                membersArray.append(member)
+                            }
+                        }
+                        
+                        var bodyUpdated = messageInfo.body
+                        var customType = messageInfo.customType
+                        var metaData = ISMChatMetaData(
+                            replyMessage: replyMessageData,
+                            locationAddress: messageInfo.metaData?.locationAddress,
+                            contacts: contact,
+                            captionMessage: messageInfo.metaData?.captionMessage,
+                            isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage,
+                            post: postDetail,
+                            product: productDetail,
+                            storeName: messageInfo.metaData?.storeName,
+                            productName: messageInfo.metaData?.productName,
+                            bestPrice: messageInfo.metaData?.bestPrice,
+                            scratchPrice: messageInfo.metaData?.scratchPrice,
+                            url: messageInfo.metaData?.url,
+                            parentProductId: messageInfo.metaData?.parentProductId,
+                            childProductId: messageInfo.metaData?.childProductId,
+                            entityType: messageInfo.metaData?.entityType,
+                            productImage: messageInfo.metaData?.productImage,
+                            thumbnailUrl: messageInfo.metaData?.thumbnailUrl,
+                            description: messageInfo.metaData?.description,
+                            isVideoPost: messageInfo.metaData?.isVideoPost,
+                            socialPostId: messageInfo.metaData?.socialPostId,
+                            collectionTitle : messageInfo.metaData?.collectionTitle,
+                            collectionDescription : messageInfo.metaData?.collectionDescription,
+                            productCount : messageInfo.metaData?.productCount,
+                            collectionImage : messageInfo.metaData?.collectionImage,
+                            collectionId : messageInfo.metaData?.collectionId
+                        )
+                        
+                        if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
+                            bodyUpdated = messageInfo.details?.body
+                            customType = messageInfo.details?.customType
+                            metaData = ISMChatMetaData(
+                                storeName: messageInfo.details?.metaData?.storeName,
+                                productName: messageInfo.details?.metaData?.productName,
+                                bestPrice: messageInfo.details?.metaData?.bestPrice,
+                                scratchPrice: messageInfo.details?.metaData?.scratchPrice,
+                                url: messageInfo.details?.metaData?.url,
+                                parentProductId: messageInfo.details?.metaData?.parentProductId,
+                                childProductId: messageInfo.details?.metaData?.childProductId,
+                                entityType: messageInfo.details?.metaData?.entityType,
+                                productImage: messageInfo.details?.metaData?.productImage,
+                                thumbnailUrl: messageInfo.details?.metaData?.thumbnailUrl,
+                                description: messageInfo.details?.metaData?.description,
+                                isVideoPost: messageInfo.details?.metaData?.isVideoPost,
+                                socialPostId: messageInfo.details?.metaData?.socialPostId,
+                                collectionTitle : messageInfo.details?.metaData?.collectionTitle,
+                                collectionDescription : messageInfo.details?.metaData?.collectionDescription,
+                                productCount : messageInfo.details?.metaData?.productCount,
+                                collectionImage : messageInfo.details?.metaData?.collectionImage,
+                                collectionId : messageInfo.details?.metaData?.collectionId
+                            )
+                        }
+                        
+                        var mentionedUser : [ISMChatMentionedUser] = []
+                        if messageInfo.mentionedUsers != nil{
+                            for x in mentionedUser{
+                                let user = ISMChatMentionedUser(wordCount: x.wordCount, userId: x.userId, order: x.order)
+                                mentionedUser.append(user)
+                            }
+                        }
+                        
+                        let message = ISMChatMessage(sentAt: messageInfo.sentAt,body: bodyUpdated, messageId: messageInfo.messageId,mentionedUsers: mentionedUser,metaData : metaData, customType: customType,action: messageInfo.action, attachment: messageInfo.attachments,conversationId: messageInfo.conversationId, userId: messageInfo.userId, userName: messageInfo.userName, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, memberName: messageInfo.memberName, memberId: messageInfo.memberId, memberIdentifier: messageInfo.memberIdentifier,senderInfo: senderInfo,members: membersArray,reactions: messageInfo.reactions)
+                        
+                        DispatchQueue.main.async {
+                            self.realmManager.saveMessage(obj: [message])
+                        }
+                    }
+                }
+            
+                
+                if self.framework == .UIKit {
+                    if let topViewController = UIApplication.topViewController() {
+                        if let Chatvc = self.viewcontrollers?.conversationListViewController,
+                           let Messagevc = self.viewcontrollers?.messagesListViewController {
+                            
+                            let isNotChatVC = !(topViewController.isKind(of: Chatvc))
+                            let isNotMessageVC = !(topViewController.isKind(of: Messagevc))
+                            
+                            if isNotChatVC && isNotMessageVC {
+                                // Your code here
+                                if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId{
+                                    self.whenInOtherScreen(messageInfo: messageInfo)
+                                }
+                            }
+                        }
+                    }else{
+                        if UIApplication.shared.applicationState == .background {
+                            if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId{
+                                self.whenInOtherScreen(messageInfo: messageInfo)
+                            }
+                        }
+                    }
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": messageInfo,"error" : ""])
+                    NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
+                }
+            case .failure(let error):
+                NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+            }
         }
     }
     
