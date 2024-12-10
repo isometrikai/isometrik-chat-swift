@@ -171,54 +171,6 @@ extension ISMConversationView{
         }
     }
     
-    
-    func msgDelivered(messageInfo: ISMChatMessageDelivered) {
-        if myUserData.userId != messageInfo.senderId {
-            let msg = ISMChatLastMessage(sentAt: messageInfo.sentAt,senderName: messageInfo.senderName,senderIdentifier: messageInfo.senderIdentifier,senderId: messageInfo.senderId,conversationId: messageInfo.conversationId,body: messageInfo.body ?? "",messageId: messageInfo.messageId,deliveredToUser: messageInfo.userId,timeStamp: messageInfo.sentAt,customType: messageInfo.customType,action: messageInfo.action, userId: messageInfo.userId, initiatorId: messageInfo.initiatorId, memberName: messageInfo.memberName, initiatorName: messageInfo.initiatorName, memberId: messageInfo.memberId, userName: messageInfo.userName,userIdentifier: messageInfo.userIdentifier,userProfileImageUrl: messageInfo.userProfileImageUrl)
-            
-            self.realmManager.updateLastmsg(conId: messageInfo.conversationId ?? "", msg: msg)
-            
-            if messageInfo.action == ISMChatActionType.conversationCreated.value{
-                self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 0)
-            }else{
-                //update unread count, for 1 to 1 only
-                let obj = self.realmManager.conversations.first(where: {$0.conversationId == messageInfo.conversationId ?? ""})
-                if obj?.isGroup == false {
-                    self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 1)
-                }
-            }
-            
-            realmManager.updateDeliveredToInAllmsgs(convId: messageInfo.conversationId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
-            
-            
-            self.realmManager.getAllConversations()
-            //added code to take user at top
-            self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: viewModel.conversations, query: query))
-            //DELIVERED MSG API
-            if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
-                chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
-                    
-                }
-            }
-        }else{
-            realmManager.updateDeliveryStatusThroughMsgId(conId: messageInfo.conversationId ?? "", msgId: messageInfo.messageId ?? "")
-        }
-    }
-    
-    func messageRead(messageInfo : ISMChatMultipleMessageRead){
-        // update deliverey and read status
-        realmManager.updateLastmsgReadInfo(conId: messageInfo.conversationId ?? "", msgId: messageInfo.messageId ?? "",userId:messageInfo.userId ?? "",updatedAt:messageInfo.sentAt ?? 00)
-        realmManager.updateLastmsgDeliverInfo(conId: messageInfo.conversationId ?? "", msgId: messageInfo.messageId ?? "",userId:messageInfo.userId ?? "",updatedAt:messageInfo.sentAt ?? 00)
-        
-        realmManager.updateAllDeliveryStatus(conId: messageInfo.conversationId ?? "")
-        realmManager.updateAllReadStatus(conId: messageInfo.conversationId ?? "")
-        
-        realmManager.updateReadbyInAllmsgs(convId: messageInfo.conversationId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.lastReadAt ?? 0)
-        if onConversationList == true {
-            self.realmManager.getAllConversations()
-        }
-    }
-    
     func typingStatus(obj: ISMChatTypingEvent) {
         self.realmManager.changeTypingStatus(convId: obj.conversationId ?? "", status: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {

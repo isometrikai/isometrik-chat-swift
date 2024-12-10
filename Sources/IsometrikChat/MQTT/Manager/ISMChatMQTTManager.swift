@@ -240,8 +240,12 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
         case .mqttMessageDelivered:
             self.messageDelivered(data) { result in
                 switch result{
-                case .success(let data):
-                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDelivered.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .success(let messageInfo):
+                    if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId != messageInfo.userId{
+                        self.realmManager.updateLastmsgDeliver(conId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
+                        self.realmManager.addDeliveredToUser(convId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? -1)
+                        self.realmManager.updateAllDeliveryStatus(conId: messageInfo.conversationId ?? "")
+                    }
                 case .failure(let error):
                     NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDelivered.name, object: nil,userInfo: ["data": "","error" : error])
                 }
@@ -249,10 +253,16 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
         case .mqttMessageRead:
             self.messageRead(data) { result in
                 switch result{
-                case .success(let data):
-                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageRead.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .success(let messageInfo):
+                    self.realmManager.addReadByUser(convId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
+                    self.realmManager.updateDeliveryStatusThroughMsgId(conId: messageInfo.conversationId ?? "", msgId: messageInfo.messageId ?? "")
+                    self.realmManager.updateReadStatusThroughMsgId(msgId: messageInfo.messageId ?? "")
+                    
+                    self.realmManager.updateLastmsgRead(conId: messageInfo.conversationId ?? "",messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
+                    NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
+//                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageRead.name, object: nil,userInfo: ["data": data,"error" : ""])
                 case .failure(let error):
-                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageRead.name, object: nil,userInfo: ["data": "data","error" : error])
+                    print("Error: \(error)")
                 }
             }
         case .mqttMessageDeleteForAll:
@@ -267,10 +277,24 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
         case .mqttMultipleMessageRead:
             self.multipleMessageRead(data) { result in
                 switch result{
-                case .success(let data):
-                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil,userInfo: ["data": data,"error" : ""])
+                case .success(let messageInfo):
+                    if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId != messageInfo.userId{
+                        self.realmManager.updateLastmsgRead(conId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.sentAt ?? 00)
+                        self.realmManager.updateAllReadStatus(conId: messageInfo.conversationId ?? "")
+                        self.realmManager.updateDeliveredToInAllmsgs(convId: messageInfo.conversationId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.lastReadAt ?? 0)
+                        self.realmManager.updateReadbyInAllmsgs(convId: messageInfo.conversationId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.lastReadAt ?? 0)
+                        NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
+                        let dataNew: [String: Any] = [
+                                       "messageId": messageInfo.messageId ?? "",
+                                       "conversationId": messageInfo.conversationId ?? "",
+                                       "userId": messageInfo.userId ?? "",
+                                       "updatedAt": messageInfo.updatedAt ?? 0
+                                   ]
+                        NotificationCenter.default.post(name: NSNotification.mqttUpdateReadStatus, object: nil, userInfo: dataNew)
+                    }
+                    
                 case .failure(let error):
-                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil,userInfo: ["data": "data","error" : error])
+                    print("Error: \(error)")
                 }
             }
         case .mqttUserBlock:
@@ -393,14 +417,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                 }
             }
         case .mqttforward:
-            self.messageReceived(data) { result in
-                switch result{
-                case .success(let data):
-                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": data,"error" : ""])
-                case .failure(let error):
-                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
-                }
-            }
+            messageReceivedEvent(data: data)
         case .mqttmessageDetailsUpdated:
             print("updated Message")
             self.messageUpdated(data) { result in

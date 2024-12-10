@@ -600,6 +600,7 @@ extension RealmManager{
         if let localRealm = localRealm {
             let taskToUpdate = localRealm.objects(MessagesDB.self).where{$0.readByAll == false && $0.conversationId == conId && $0.isDelete == false}
             try! localRealm.write {
+                taskToUpdate.forEach{$0.deliveredToAll = true}
                 taskToUpdate.forEach{$0.readByAll = true}
             }
         }

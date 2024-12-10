@@ -152,59 +152,6 @@ import IsometrikChat
          }
      }
     
-     func messageDelivered(messageInfo : ISMChatMessageDelivered){
-         if messageInfo.conversationId == self.conversationID{
-             if userData.userId == messageInfo.senderId || messageInfo.senderId == nil{
-                 if isGroup == true {
-                     realmManager.addDeliveredToUser(convId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? -1)
-                 }else {
-                     realmManager.updateAllDeliveryStatus(conId: messageInfo.conversationId ?? "")
-                 }
-                 self.getMessages()
-             }else{
-//                 parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
-                 if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
-                     chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
-                         // update status of message to deleivered
-                         chatViewModel.readMessageIndicator(conversationId: converId, messageId: messId) { _ in
-                             // update status of message to read
-                         }
-                     }
-                 }
-             }
-             realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
-         }else{
-             if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
-                 chatViewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
-                     // update status of message to deleivered
-                     
-                 }
-             }
-         }
-     }
-     
-     func messageRead(messageInfo : ISMChatMessageDelivered){
-         if messageInfo.conversationId == self.conversationID{
-             if isGroup == true {
-                 if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
-                     realmManager.updateDeliveryStatusThroughMsgId(conId: messageInfo.conversationId ?? "", msgId: messageInfo.messageId ?? "")
-                     realmManager.updateReadStatusThroughMsgId(msgId: messageInfo.messageId ?? "")
-                 }else{
-                     realmManager.addReadByUser(convId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
-                 }
-             }else {
-                 realmManager.updateDeliveryStatusThroughMsgId(conId: messageInfo.conversationId ?? "", msgId: messageInfo.messageId ?? "")
-                 realmManager.updateReadStatusThroughMsgId(msgId: messageInfo.messageId ?? "")
-             }
-             //deliver and read is in same function
-             realmManager.updateLastmsgRead(conId: self.conversationID ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
-             self.getMessages()
-         }else{
-             //update for any conversation
-             
-         }
-     }
-     
      
      func addMeeting(messageInfo : ISMMeeting){
          var members : [ISMChatMemberAdded] = []
@@ -247,19 +194,6 @@ import IsometrikChat
         }
     }
     
-     func multipleMessageRead(messageInfo : ISMChatMultipleMessageRead){
-         if messageInfo.conversationId == self.conversationID{
-             if self.isGroup == true {
-                 realmManager.updateDeliveredToInAllmsgs(convId: messageInfo.conversationId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.lastReadAt ?? 0)
-                 realmManager.updateReadbyInAllmsgs(convId: messageInfo.conversationId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.lastReadAt ?? 0)
-
-             }else {
-                 realmManager.updateAllDeliveryStatus(conId: messageInfo.conversationId ?? "")
-                 realmManager.updateAllReadStatus(conId: messageInfo.conversationId ?? "")
-             }
-             self.getMessages()
-         }
-     }
      
      func actionOnMessageDelivered(messageInfo : ISMChatMessageDelivered){
          //We have triggered "mqttMessageNewReceived" mqtt events for below actions too

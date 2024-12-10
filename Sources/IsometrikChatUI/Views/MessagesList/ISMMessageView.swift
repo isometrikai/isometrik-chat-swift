@@ -281,12 +281,9 @@ public struct ISMMessageView: View {
                     stateViewModel.executeRepeatlyForOfflineMessage = false
                     stateViewModel.onLoad = false
                     removeObservers()
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageDelivered.name, object: nil)
                     NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageRead.name, object: nil)
                     NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttTypingEvent.name, object: nil)
                     NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMeetingEnded.name, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil)
                     NotificationCenter.default.removeObserver(self, name: NSNotification.refrestMessagesListLocally, object: nil)
                     NotificationCenter.default.removeObserver(self, name: NSNotification.updateGroupInfo, object: nil)
                     NotificationCenter.default.removeObserver(self, name: NSNotification.memberAddAndRemove, object: nil)
@@ -348,52 +345,22 @@ public struct ISMMessageView: View {
         } message: {
             Text("Block \(conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")? \n Blocked user will be no longer be able to send you messages.")
         }
-        .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMessageDelivered.name)){ notification in
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
-                return
-            }
-            ISMChatHelper.print("MESSAGE DELIVERED----------------->\(messageInfo)")
-            if OnMessageList{
-                messageDelivered(messageInfo: messageInfo)
-            }
-        }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMessageNewReceived.name)){ notification in
             guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
                 return
             }
             ISMChatHelper.print("MESSAGE RECEIVED----------------->\(messageInfo)")
-            //save in local db
-//            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
                 messageReceived(messageInfo: messageInfo)
-                //local notification
-//                sendLocalNotification(messageInfo: messageInfo)
-                //action if required
                 actionOnMessageDelivered(messageInfo: messageInfo)
-//            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMessageRead.name)){ notification in
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
-                return
-            }
-            ISMChatHelper.print("MESSAGE READ ----------------->\(messageInfo)")
-            messageRead(messageInfo: messageInfo)
-            //to update read status in conversationList
-            let data: [String: Any] = [
-                "messageId": messageInfo.messageId ?? "",
-                "conversationId": messageInfo.conversationId ?? "",
-                "userId": messageInfo.userId ?? "",
-                "updatedAt": messageInfo.updatedAt ?? 0
-            ]
-            NotificationCenter.default.post(name: NSNotification.mqttUpdateReadStatus, object: nil, userInfo: data)
-            //to update chat badge count
-            NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
         }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttTypingEvent.name)){ notification in
             guard let messageInfo = notification.userInfo?["data"] as? ISMChatTypingEvent else {
                 return
             }
             ISMChatHelper.print("TYPING EVENT----------------->\(messageInfo)")
-            userTyping(messageInfo: messageInfo)
+            if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId != messageInfo.userId && OnMessageList == true{
+                userTyping(messageInfo: messageInfo)
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMeetingEnded.name)){ notification in
             guard let messageInfo = notification.userInfo?["data"] as? ISMMeeting else {
@@ -404,17 +371,6 @@ public struct ISMMessageView: View {
                 if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
                     addMeeting(messageInfo: messageInfo)
                 }
-            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name)){ notification in
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMultipleMessageRead else {
-                return
-            }
-            ISMChatHelper.print("MULTIPLE MESSAGE READ ----------------->\(messageInfo)")
-            if myUserId != messageInfo.userId{
-                multipleMessageRead(messageInfo: messageInfo)
-                //to update chat badge count
-                NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.refrestMessagesListLocally)) { _ in

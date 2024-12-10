@@ -563,6 +563,8 @@ extension RealmManager {
                     taskToUpdate.first?.lastMessageDetails?.userIdentifier = msg.userIdentifier
                     taskToUpdate.first?.lastMessageDetails?.userProfileImageUrl = msg.userProfileImageUrl
                     taskToUpdate.first?.lastMessageDetails?.reactionType = msg.reactionType ?? ""
+                    taskToUpdate.first?.lastMessageDetails?.readBy.removeAll()
+                    taskToUpdate.first?.lastMessageDetails?.deliveredTo.removeAll()
                     
                     taskToUpdate.first?.lastMessageDetails?.meetingId = msg.meetingId ?? ""
                     if let duration = msg.callDurations{
@@ -691,11 +693,14 @@ extension RealmManager {
             let taskToUpdate = localRealm.objects(LastMessageDB.self).filter(NSPredicate(format: "conversationId == %@ AND messageId == %@", (conId ), (messageId ?? "")))
             if !taskToUpdate.isEmpty {
                 try! localRealm.write {
+                    taskToUpdate.first?.readBy.removeAll()
+                    taskToUpdate.first?.deliveredTo.removeAll()
                     
-                    taskToUpdate.first?.deliveredTo.first?.userId = userId
-                    taskToUpdate.first?.deliveredTo.first?.timestamp = updatedAt
+                    let deliverObj = MessageDeliveryStatusDB()
+                    deliverObj.userId = userId
+                    deliverObj.timestamp = updatedAt
                     
-                    
+                    taskToUpdate.first?.deliveredTo.append(deliverObj)
                 }
             }
         }
@@ -707,7 +712,7 @@ extension RealmManager {
             let taskToUpdate = localRealm.objects(LastMessageDB.self).filter(NSPredicate(format: "conversationId == %@", (conId )))
             if !taskToUpdate.isEmpty {
                 try! localRealm.write {
-                    
+                    taskToUpdate.first?.readBy.removeAll()
                     taskToUpdate.first?.deliveredTo.removeAll()
                     
                     let deliverObj = MessageDeliveryStatusDB()
@@ -729,11 +734,13 @@ extension RealmManager {
                 try! localRealm.write {
                     
                     taskToUpdate.first?.readBy.removeAll()
+                    taskToUpdate.first?.deliveredTo.removeAll()
                     
                     let deliverObj = MessageDeliveryStatusDB()
                     deliverObj.userId = userId
                     deliverObj.timestamp = updatedAt
                     
+                    taskToUpdate.first?.deliveredTo.append(deliverObj)
                     taskToUpdate.first?.readBy.append(deliverObj)
                     
                 }
@@ -744,14 +751,14 @@ extension RealmManager {
     //MARK: -  update last message read
     public func updateLastmsgRead(conId:String,messageId : String,userId : String,updatedAt : Double) {
         if let localRealm = localRealm {
-            let taskToUpdate = localRealm.objects(LastMessageDB.self).filter(NSPredicate(format: "conversationId == %@  AND messageId == %@", (conId ), (messageId)))
+            let taskToUpdate = localRealm.objects(LastMessageDB.self).filter(NSPredicate(format: "conversationId == %@", (conId )))
             if !taskToUpdate.isEmpty {
                 try! localRealm.write {
                     
-                    taskToUpdate.first?.deliveredTo.first?.userId = userId
-                    taskToUpdate.first?.deliveredTo.first?.timestamp = updatedAt
-                    taskToUpdate.first?.readBy.first?.userId = userId
-                    taskToUpdate.first?.readBy.first?.timestamp = updatedAt
+                    let deliverObj = MessageDeliveryStatusDB()
+                    deliverObj.userId = userId
+                    deliverObj.timestamp = updatedAt
+                    taskToUpdate.first?.readBy.append(deliverObj)
                 }
             }
         }
