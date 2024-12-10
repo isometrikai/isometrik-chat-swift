@@ -45,7 +45,7 @@ struct ISMContactInfoView: View {
     @State private var fullScreenImageURL: String?
     
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     @Binding var navigateToSocialProfileId : String
     
@@ -263,7 +263,7 @@ struct ISMContactInfoView: View {
                     realmManager.updateImageAndNameOfGroup(name: conversationDetail?.conversationDetails?.conversationTitle ?? "", image: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", convID: self.conversationID ?? "")
                 }
             }
-            .background(NavigationLink("", destination: ISMContactInfoView(conversationID: realmManager.getConversationId(opponentUserId: selectedMember.userId ?? "", myUserId: ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId),viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : selectedMember,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $navigateToExternalUserListToAddInGroup).environmentObject(self.realmManager), isActive: $navigatetoInfo))
+            .background(NavigationLink("", destination: ISMContactInfoView(conversationID: realmManager.getConversationId(opponentUserId: selectedMember.userId ?? "", myUserId: userData.userId),viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : selectedMember,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $navigateToExternalUserListToAddInGroup).environmentObject(self.realmManager), isActive: $navigatetoInfo))
             .background(NavigationLink("", destination: ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager), isActive: $navigatetoAddMember))
             .confirmationDialog("", isPresented: $showOptions) {
                 Button {

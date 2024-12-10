@@ -44,7 +44,7 @@ struct ISMMessageInfoSubView: View {
     
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     let customFontName = ISMChatSdkUI.getInstance().getCustomFontNames()
-    @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     let fromBroadCastFlow : Bool?
     

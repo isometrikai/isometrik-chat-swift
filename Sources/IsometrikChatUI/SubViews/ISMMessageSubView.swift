@@ -70,7 +70,7 @@ struct ISMMessageSubView: View {
     @State var isAnimating = false
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     let customFontName = ISMChatSdkUI.getInstance().getCustomFontNames()
-    @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
    
     @EnvironmentObject var realmManager : RealmManager

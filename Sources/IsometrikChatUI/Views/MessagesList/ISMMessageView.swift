@@ -46,10 +46,10 @@ public struct ISMMessageView: View {
     @EnvironmentObject public var realmManager : RealmManager
     @EnvironmentObject public var networkMonitor: NetworkMonitor
     
-    @State var chatFeatures = ISMChatSdkUI.getInstance().getChatProperties().features
-    @State var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
-    @State var chatProperties = ISMChatSdkUI.getInstance().getChatProperties()
+     var chatFeatures = ISMChatSdkUI.getInstance().getChatProperties().features
+     var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+     var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+     var chatProperties = ISMChatSdkUI.getInstance().getChatProperties()
     
     let columns = [GridItem(.flexible(minimum: 10))]
     let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
@@ -594,9 +594,9 @@ public struct ISMMessageView: View {
 //        .fullScreenCover(isPresented: $stateViewModel.navigateToUserProfile, onDismiss: {
 //            stateViewModel.navigateToUserProfile = false
 //        }, content: {
-//            ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager.shared)
+//            ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate).environmentObject(RealmManager.shared)
 //                .onAppear {
-//                    OnScreen = false
+//                    OnMessageList = false
 //                }
 //        })
         .fullScreenCover(isPresented: $stateViewModel.navigateToMediaSlider) {

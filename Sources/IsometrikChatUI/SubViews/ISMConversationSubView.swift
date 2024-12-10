@@ -15,7 +15,7 @@ struct ISMConversationSubView: View {
     let chat : ConversationDB
     let hasUnreadCount : Bool
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     //MARK:  - BODY
     var body: some View {

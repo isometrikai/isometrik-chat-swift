@@ -25,7 +25,7 @@ public struct ISMGroupCreate: View {
     @State public var hasCreatedGroup = false
     public let profileImage = "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg"
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+     var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     
     

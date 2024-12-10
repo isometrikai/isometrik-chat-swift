@@ -22,7 +22,7 @@ struct ISMReactionDetailView: View {
     @Binding var showReactionDetail : Bool
     @Binding var reactionRemoved : String
     @EnvironmentObject var realmManager : RealmManager
-    @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+     var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     //MARK:  - LIFECYCLE
     var body: some View {

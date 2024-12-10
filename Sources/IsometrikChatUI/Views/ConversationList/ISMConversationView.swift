@@ -66,8 +66,8 @@ public struct ISMConversationView : View {
     @State public var navigateToBroadCastMessages : Bool = false
     
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    @State public var myUserData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
-    @State public var hideNavigationBar = ISMChatSdkUI.getInstance().getChatProperties().hideNavigationBarForConversationList
+     var myUserData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+     var hideNavigationBar = ISMChatSdkUI.getInstance().getChatProperties().hideNavigationBarForConversationList
     
     public var delegate : ISMConversationViewDelegate? = nil
     @State public var showMenuForConversationType : Bool = false

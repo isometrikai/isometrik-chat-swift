@@ -15,7 +15,7 @@ struct ISMGroupMemberSubView: View {
     var hideDisclosure : Bool? = false
     @Binding var selectedMember : ISMChatGroupMember
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    @State var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     //MARK: - BODY
     var body: some View {
         Button {

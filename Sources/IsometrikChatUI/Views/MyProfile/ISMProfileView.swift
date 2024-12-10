@@ -27,7 +27,7 @@ public struct ISMProfileView: View {
     @State public var emailAlert : Bool = false
     @State public var selectedMedia : [URL] = []
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    @State public var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+     var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
     
     //MARK: - BODY
     public var body: some View {
