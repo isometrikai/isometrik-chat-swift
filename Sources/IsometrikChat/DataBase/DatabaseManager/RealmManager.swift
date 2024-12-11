@@ -28,13 +28,11 @@ public class RealmManager: ObservableObject {
     public static let shared = RealmManager()
     
     public init() {
-        if localRealm != nil {
-            getAllConversations()
-        }else{
+        if localRealm == nil {
             openRealm(for: userData?.userId ?? "")
-            getAllConversations()
         }
-        print("localUrl" , getRealmFileURL(for: userData?.userId ?? "") ?? "")
+        getAllConversations()
+        print("localUrl", getRealmFileURL(for: userData?.userId ?? "") ?? "")
     }
     
     public func openRealm(for userId: String) {
@@ -45,50 +43,52 @@ public class RealmManager: ObservableObject {
             )
             Realm.Configuration.defaultConfiguration = config
             localRealm = try Realm()
+            print("Realm opened successfully for user \(userId).")
         } catch {
-            print("Error opening Realm", error)
+            print("Error opening Realm for user \(userId):", error.localizedDescription)
         }
     }
+
     
     
-    public func deleteRealm(for userId: String) {
-            do {
-                if let realmURL = getRealmFileURL(for: userId) {
-                    // Get all auxiliary file URLs
-                    let lockFileURL = realmURL.appendingPathExtension("lock")
-                    let noteFileURL = realmURL.appendingPathExtension("note")
-                    let managementFileURL = realmURL.appendingPathExtension("management")
-                    let logFileURL = realmURL.appendingPathComponent("log")
-                    
-                    // Delete main Realm file and auxiliary files
-                    let filesToDelete = [realmURL, lockFileURL, noteFileURL, managementFileURL, logFileURL]
-                    
-                    for fileURL in filesToDelete {
-                        if FileManager.default.fileExists(atPath: fileURL.path) {
-                            try FileManager.default.removeItem(at: fileURL)
-                        }
-                    }
-                    
-                    // Clear Realm from memory cache
-                    Realm.Configuration.defaultConfiguration = Realm.Configuration()
-                    localRealm = nil
-                    storeConv.removeAll()
-                    conversations.removeAll()
-                    allMessages = nil
-                    messages.removeAll()
-                    localMessages = nil
-                    medias = nil
-                    linksMedia = nil
-                    filesMedia = nil
-                    broadcasts.removeAll()
-                    storeBroadcasts.removeAll()
-                    
-                    print("Realm deleted successfully.")
+     public func deleteRealm(for userId: String) {
+        do {
+            if let realmURL = getRealmFileURL(for: userId) {
+                let auxiliaryFiles = [
+                    realmURL,
+                    realmURL.appendingPathExtension("lock"),
+                    realmURL.appendingPathExtension("note"),
+                    realmURL.appendingPathExtension("management")
+                ]
+                
+                for file in auxiliaryFiles where FileManager.default.fileExists(atPath: file.path) {
+                    try FileManager.default.removeItem(at: file)
                 }
-            } catch {
-                print("Error deleting Realm file:", error)
+                
+                Realm.Configuration.defaultConfiguration = Realm.Configuration()
+                localRealm = nil
+                clearData()
+                
+                print("Realm and auxiliary files deleted successfully for user \(userId).")
             }
+        } catch {
+            print("Failed to delete Realm for user \(userId):", error.localizedDescription)
         }
+    }
+
+    private func clearData() {
+        storeConv.removeAll()
+        conversations.removeAll()
+        allMessages = nil
+        messages = [[]]
+        localMessages = nil
+        medias = nil
+        linksMedia = nil
+        filesMedia = nil
+        broadcasts.removeAll()
+        storeBroadcasts.removeAll()
+    }
+
     
     public func switchProfile(oldUserId : String,newUserId : String){
         deleteRealm(for: oldUserId)

@@ -118,6 +118,8 @@ public class ISMChatSdk{
         //mqttSession
         let viewcontrollers = ISMChatViewController(conversationListViewController: conversationListViewControllerName, messagesListViewController: messagesListViewControllerName)
         
+        let realmManager = RealmManager.shared.openRealm(for: userConfig.userId)
+        
         let mqttSession = ISMChatMQTTManager(mqttConfiguration: mqttConfiguration, projectConfiguration: projectConfiguration, userdata: userConfig,viewcontrollers: viewcontrollers,framework: self.hostFrameworksType)
         mqttSession.connect(clientId: userConfig.userId)
         self.mqttSession = mqttSession
@@ -126,6 +128,7 @@ public class ISMChatSdk{
         initializeCallIsometrik(accountId: appConfig.accountId, projectId: appConfig.projectId, keysetId: appConfig.keySetId, licenseKey: appConfig.licensekey, appSecret: appConfig.appSecret, userSecret: appConfig.userSecret, isometricChatUserId: userConfig.userId, isometricUserToken: userConfig.userToken)
         self.chatInitialized = true
         print("CHAT INITIALIZED")
+        
          
         let viewmodel = ChatsViewModel()
         viewmodel.getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId: userConfiguration.userId)
@@ -140,11 +143,12 @@ public class ISMChatSdk{
                 self.mqttSession?.unSubscribe()
             }
             //3. delete local data
-            RealmManager().deleteRealm(for: userId)
+            RealmManager.shared.deleteRealm(for: userId)
             //4. For call
             IsometrikCall().clearSession()
             ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
             self.chatInitialized = nil
+            self.chatInitialized = false
         }
     }
     
@@ -156,7 +160,7 @@ public class ISMChatSdk{
             self.mqttSession?.unSubscribe()
         }
         //3. delete local data
-        RealmManager().switchProfile(oldUserId: oldUserId, newUserId: userConfig.userId)
+        RealmManager.shared.switchProfile(oldUserId: oldUserId, newUserId: userConfig.userId)
         
         self.chatInitialized = nil
         

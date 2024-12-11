@@ -13,7 +13,7 @@ public protocol OtherConversationListViewDelegate{
 }
 
 public struct OtherConversationListView : View {
-    @StateObject public var realmManager = RealmManager()
+    @StateObject public var realmManager = RealmManager.shared
     public var delegate: OtherConversationListViewDelegate?
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     public var body: some View {
