@@ -837,7 +837,7 @@ public struct ISMMessageView: View {
     func reload(){
         self.realmManager.getMsgsThroughConversationId(conversationId: self.conversationID ?? "")
         parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
-        var lastSent = self.realmManager.getlastMessageSentForConversation(conversationId: self.conversationID ?? "")
+        var lastSent = String(Int(self.realmManager.messages.last?.last?.sentAt ?? 0)) //self.realmManager.getlastMessageSentForConversation(conversationId: self.conversationID ?? "")
         //GET ALL MESSAGES IN CONVERSTION API
         if self.realmManager.allMessages?.count == 0 {
             lastSent = ""
