@@ -140,7 +140,7 @@ public class ISMChatSdk{
                 self.mqttSession?.unSubscribe()
             }
             //3. delete local data
-            RealmManager().deleteRealm(for: self.getChatClient()?.getConfigurations().userConfig.userId ?? "")
+            RealmManager().deleteRealm(for: userId)
             //4. For call
             IsometrikCall().clearSession()
             ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
