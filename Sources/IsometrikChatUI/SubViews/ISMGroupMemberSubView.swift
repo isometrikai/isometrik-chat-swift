@@ -15,17 +15,17 @@ struct ISMGroupMemberSubView: View {
     var hideDisclosure : Bool? = false
     @Binding var selectedMember : ISMChatGroupMember
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
     //MARK: - BODY
     var body: some View {
         Button {
             selectedMember = member
         } label: {
             HStack(spacing: 12){
-                UserAvatarView(avatar: member.userProfileImageUrl ?? "", showOnlineIndicator: false,size: CGSize(width: 29, height: 29), userName: member.userId != userData.userId ? (member.userName ?? "") : "You",font: appearance.fonts.chatListUserMessage)
+                UserAvatarView(avatar: member.userProfileImageUrl ?? "", showOnlineIndicator: false,size: CGSize(width: 29, height: 29), userName: member.userId != userData?.userId ? (member.userName ?? "") : "You",font: appearance.fonts.chatListUserMessage)
                 
                 VStack(alignment: .leading,spacing: 5){
-                    if member.userId != userData.userId{
+                    if member.userId != userData?.userId{
                         Text(member.userName?.capitalizingFirstLetter() ?? "")
                             .font(appearance.fonts.messageListMessageText)
                             .foregroundColor(appearance.colorPalette.messageListHeaderTitle)

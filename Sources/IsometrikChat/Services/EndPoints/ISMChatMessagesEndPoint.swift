@@ -21,7 +21,7 @@ enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
     case markMessageStatusRead
     
     var baseURL: URL {
-        return URL(string:ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.origin)!
+        return URL(string:ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.origin ?? "")!
     }
     
     var path: String {
@@ -123,11 +123,11 @@ enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
     var headers: [String: String]? {
         switch self {
         case .getMessages, .editMessage,.sendMessage,.deleteMessageForMe,.deleteMessageForEveryone,.forwardMessage,.messageDeliveredInfo,.messageReadInfo,.allUnreadMessagesFromAllConversation,.markMessageStatusRead:
-            return ["userToken": ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userToken,
-                    "userSecret": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.userSecret,
-                    "projectId": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.projectId,
-                    "licenseKey": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.licenseKey,
-                    "appSecret": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.appSecret,
+            return ["userToken": ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userToken ?? "",
+                    "userSecret": ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.userSecret ?? "",
+                    "projectId": ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.projectId ?? "",
+                    "licenseKey": ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.licenseKey ?? "",
+                    "appSecret": ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.appSecret ?? "",
                     "accept" : "application/json",
                     "Content-Type" : "application/json"]
         }

@@ -27,7 +27,7 @@ public struct ISMProfileView: View {
     @State public var emailAlert : Bool = false
     @State public var selectedMedia : [URL] = []
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
     
     //MARK: - BODY
     public var body: some View {
@@ -110,7 +110,7 @@ public struct ISMProfileView: View {
                                 Toggle("", isOn: $showLastSeen)
                             }
                             Button {
-                                ISMChatSdk.getInstance().onTerminate(userId: userData.userId)
+                                ISMChatSdk.getInstance().onTerminate(userId: userData?.userId ?? "")
                             } label: {
                                 HStack(spacing: 15){
                                     appearance.images.LogoutIcon
@@ -126,16 +126,16 @@ public struct ISMProfileView: View {
                     }
                     .listStyle(DefaultListStyle())
                     .onAppear(perform: {
-                        self.userName = userData.userName
-                        self.email = userData.userEmail
-                        self.userProfileImageUrl = userData.userProfileImage
-                        self.isSwitchOn = userData.allowNotification
-                        if userData.userBio != ""{
-                            self.about = userData.userBio
+                        self.userName = userData?.userName ?? ""
+                        self.email = userData?.userEmail ?? ""
+                        self.userProfileImageUrl = userData?.userProfileImage ?? ""
+                        self.isSwitchOn = userData?.allowNotification ?? true
+                        if userData?.userBio != ""{
+                            self.about = userData?.userBio ?? ""
                         }else{
 //                            self.about = "Hey there! I m using Wetalk."
                         }
-                        self.showLastSeen = userData.showLastSeen
+                        self.showLastSeen = userData?.showLastSeen ?? true
                     })
                     .sheet(isPresented: $showSheet){
                         ISMMediaPickerView(selectedMedia: $selectedMedia, selectedProfilePicture: $image, isProfile: true)

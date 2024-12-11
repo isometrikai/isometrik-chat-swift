@@ -104,7 +104,7 @@ public struct ISMUsersView: View {
                                                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                                                     Button {
                                                         
-                                                        self.selectedUserconversationId = realmManager.getConversationId(opponentUserId: value.userId ?? "", myUserId: ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId)
+                                                        self.selectedUserconversationId = realmManager.getConversationId(opponentUserId: value.userId ?? "", myUserId: ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId ?? "")
                                                         let data = UserDB()
                                                         data.userId = value.userId
                                                         data.online = value.online

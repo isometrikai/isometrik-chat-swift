@@ -280,7 +280,7 @@ extension ChatsViewModel{
         body["conversationId"] = conversationId
         body["body"] = messageInBody
         body["customType"] = customType
-        body["notificationTitle"] = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userName
+        body["notificationTitle"] = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userName ?? ""
         body["notificationBody"] = notificationBody
         body["searchableTags"] = searchTags
         body["events"] = eventDetail
@@ -399,7 +399,7 @@ extension ChatsViewModel{
         var body : [String : Any]
         var metaDataValue : [String : Any] = [:]
         let deviceId = UniqueIdentifierManager.shared.getUniqueIdentifier()
-        body = ["showInConversation" : true , "messageType" : 1 ,"encrypted" : false, "conversationIds" : conversationIds,"body" : message,"deviceId" : deviceId,"notificationTitle": ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userName,"customType" : customType] as [String : Any]
+        body = ["showInConversation" : true , "messageType" : 1 ,"encrypted" : false, "conversationIds" : conversationIds,"body" : message,"deviceId" : deviceId,"notificationTitle": ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userName ?? "","customType" : customType] as [String : Any]
         
         if let obj = attachments{
             if attachments?.attachmentType == 3  {
@@ -496,14 +496,14 @@ extension ChatsViewModel{
         }
         let replyMessageData : [String : Any] = ["parentMessageBody" : parentMessage.body,
                                                  "parentMessageUserId" : parentMessage.senderInfo?.userId ?? "",
-                                                 "parentMessageInitiator" : ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId == parentMessage.senderInfo?.userId,
+                                                 "parentMessageInitiator" : ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId == parentMessage.senderInfo?.userId,
                                                  "parentMessageUserName" : parentMessage.senderInfo?.userName ?? "",
                                                  "parentMessageMessageType" : parentMessage.customType,
                                                  "parentMessageAttachmentUrl" : thumbnailUrl,
                                                  "parentMessagecaptionMessage" : parentMessage.metaData?.captionMessage ?? ""]
         let metaData : [String : Any] = ["replyMessage" : replyMessageData]
         let eventDetail : [String : Any] = ["sendPushNotification" : true,"updateUnreadCount" : true]
-        body = ["showInConversation" : true , "messageType" : 2 , "encrypted" : false ,"deviceId" : deviceId,"conversationId" : conversationId, "body" : message,"customType" : customType,"parentMessageId" : parentMessage.messageId,"metaData" : metaData,"notificationTitle": ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userName,"notificationBody": message, "events" : eventDetail] as [String : Any]
+        body = ["showInConversation" : true , "messageType" : 2 , "encrypted" : false ,"deviceId" : deviceId,"conversationId" : conversationId, "body" : message,"customType" : customType,"parentMessageId" : parentMessage.messageId,"metaData" : metaData,"notificationTitle": ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userName ?? "","notificationBody": message, "events" : eventDetail] as [String : Any]
         
         let endPoint : ISMChatURLConvertible = ISMChatMessagesEndpoint.sendMessage
         let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)

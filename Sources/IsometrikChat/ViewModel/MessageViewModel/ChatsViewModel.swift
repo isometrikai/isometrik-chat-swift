@@ -99,7 +99,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     public func createConversation(user : UserDB,chatStatus : String? = nil,completion:@escaping(ISMChatCreateConversationResponse?,ISMChatNewAPIError?)->()){
         var body : [String : Any]
         var memberIds : [String] = []
-        memberIds.append(ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId)
+        memberIds.append(ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId ?? "")
         memberIds.append(user.userId ?? "")
         
         let metaDataValue : [String : Any] = ["chatStatus" : chatStatus ?? "","membersIds" : memberIds]
@@ -187,7 +187,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
                             continue // Skip this message if conversationId or messageId is nil
                         }
                         
-                        let myUserId = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId
+                        let myUserId = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId ?? ""
                         
                         // Check if your userId is contained in the deliveredTo array
                         let containsUserId = message.deliveredTo?.contains(where: { $0.userId == myUserId }) ?? false

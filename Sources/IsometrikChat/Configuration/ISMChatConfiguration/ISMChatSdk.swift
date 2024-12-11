@@ -37,18 +37,18 @@ public class ISMChatSdk{
         return sharedInstance
     }
     
-    public func getMqttSession() -> ISMChatMQTTManager {
+    public func getMqttSession() -> ISMChatMQTTManager? {
         if mqttSession == nil {
             print("Create configuration before trying to access mqtt session object.")
         }
-        return mqttSession!
+        return mqttSession
     }
     
-    public func getChatClient() -> ISMChatClient {
+    public func getChatClient() -> ISMChatClient? {
         if chatClient == nil {
             print("Create configuration before trying to access isometrik session object.")
         }
-        return chatClient!
+        return chatClient
     }
     public func getFramework() -> FrameworkType{
         return hostFrameworksType
@@ -140,7 +140,7 @@ public class ISMChatSdk{
                 self.mqttSession?.unSubscribe()
             }
             //3. delete local data
-            RealmManager().deleteRealm(for: self.getChatClient().getConfigurations().userConfig.userId)
+            RealmManager().deleteRealm(for: self.getChatClient()?.getConfigurations().userConfig.userId ?? "")
             //4. For call
             IsometrikCall().clearSession()
             ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)

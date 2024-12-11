@@ -25,7 +25,7 @@ enum ISMChatBroadCastEndpoint : ISMChatURLConvertible {
     case getBroadcastMessageReadInfo(groupcastId: String,groupcastMessageId: String)
     
     var baseURL: URL {
-        return URL(string:ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.origin)!
+        return URL(string:ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.origin ?? "")!
     }
     
     var path: String {
@@ -174,11 +174,12 @@ enum ISMChatBroadCastEndpoint : ISMChatURLConvertible {
     var headers: [String: String]? {
         switch self {
         case .createBroadCast , .getBroadCastList, .getBroadCastMembers, .sendBroadcastMessage, .getBroadCastMessages, .deleteBroadCastMessageForMe, .deleteBroadCastMessageForEveryone, .addMembersToBroadCast, .getEligibleUsersListtoAddInBroadcast, .getBroadcastMessageDeliveredInfo, .getBroadcastMessageReadInfo,.deleteBroadCast,.updateBroadCast,.removeMembersInBroadcast:
-            return ["userToken": ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userToken,
-                    "userSecret": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.userSecret,
-                    "projectId": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.projectId,
-                    "licenseKey": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.licenseKey,
-                    "appSecret": ISMChatSdk.getInstance().getChatClient().getConfigurations().projectConfig.appSecret,
+            
+            return ["userToken": ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userToken ?? "",
+                    "userSecret": ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.userSecret ?? "",
+                    "projectId": ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.projectId ?? "",
+                    "licenseKey": ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.licenseKey ?? "",
+                    "appSecret": ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.appSecret ?? "",
                     "accept" : "application/json",
                     "Content-Type" : "application/json"]
         }

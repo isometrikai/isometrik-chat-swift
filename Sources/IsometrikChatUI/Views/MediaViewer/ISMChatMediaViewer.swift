@@ -119,7 +119,7 @@ struct ISMChatMediaViewer : View {
             VStack(spacing:2) {
                 let date = NSDate().doubletoDate(time: viewModel.attachments[viewModel.index].sentAt)
                 let time = NSDate().doubletoTime(time: viewModel.attachments[viewModel.index].sentAt)
-                let name = viewModel.attachments[viewModel.index].userName == ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userName ? ConstantStrings.you : viewModel.attachments[viewModel.index].userName
+                let name = viewModel.attachments[viewModel.index].userName == ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userName ? ConstantStrings.you : viewModel.attachments[viewModel.index].userName
                 Text(name)
                     .font(appearance.fonts.mediaSliderHeader)
                     .foregroundColor(appearance.colorPalette.mediaSliderHeader)

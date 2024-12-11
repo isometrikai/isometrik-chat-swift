@@ -48,7 +48,7 @@ public struct ISMMessageView: View {
     
      var chatFeatures = ISMChatSdkUI.getInstance().getChatProperties().features
      var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-     var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
      var chatProperties = ISMChatSdkUI.getInstance().getChatProperties()
     
     let columns = [GridItem(.flexible(minimum: 10))]
@@ -358,7 +358,7 @@ public struct ISMMessageView: View {
                 return
             }
             ISMChatHelper.print("TYPING EVENT----------------->\(messageInfo)")
-            if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId != messageInfo.userId && OnMessageList == true{
+            if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId != messageInfo.userId && OnMessageList == true{
                 userTyping(messageInfo: messageInfo)
             }
         }
@@ -709,7 +709,7 @@ public struct ISMMessageView: View {
             }else{
                 if isGroup == true {
                     if let members = conversationDetail?.conversationDetails?.members,
-                       !members.contains(where: { $0.userId == userData.userId }) {
+                       !members.contains(where: { $0.userId == userData?.userId }) {
                         NoLongerMemberToolBar()
                     } else {
                         toolBarView()
@@ -753,7 +753,7 @@ public struct ISMMessageView: View {
     //checking if we are allowed to send message or not
     func isMessagingEnabled() -> Bool{
         if self.conversationDetail?.conversationDetails?.messagingDisabled == true{
-            if realmManager.messages.last?.last?.initiatorId != userData.userId{
+            if realmManager.messages.last?.last?.initiatorId != userData?.userId{
                 stateViewModel.uAreBlock = true
             }else{
                 stateViewModel.showUnblockPopUp = true
@@ -783,7 +783,7 @@ public struct ISMMessageView: View {
                         //mentionUser Flow
                         mentionUsers.removeAll()
                         filteredUsers.removeAll()
-                        let filteredMembers = members.filter { $0.userId != userData.userId }
+                        let filteredMembers = members.filter { $0.userId != userData?.userId }
                         mentionUsers.append(contentsOf: filteredMembers)
                     }
                     if self.isGroup == true{

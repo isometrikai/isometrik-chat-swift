@@ -14,8 +14,8 @@ extension RealmManager {
     public func getOtherConversationCount() -> Int {
         let filteredOutConversations = conversations.filter { conversation in
             // Check if the user is a business user
-            if conversation.createdBy != userData.userId{
-                if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Bussiness.value {
+            if conversation.createdBy != userData?.userId{
+                if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Bussiness.value {
                     // If user is a business user
                     if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
                         // Check if opponent's profileType is not "user" or "influencer" or allowToMessage is true
@@ -26,7 +26,7 @@ extension RealmManager {
                         }
                     }
                     return false // Reject conversations with opponents other than "user" or "influencer"
-                } else  if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Influencer.value {
+                } else  if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Influencer.value {
                     if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
                         // Check if opponent's profileType is not "user" or allowToMessage is true
                         if metaData.userType == 1 && metaData.isStarUser != true && ConversationMetaData.chatStatus == ISMChatStatus.Reject.value{
@@ -51,8 +51,8 @@ extension RealmManager {
     public func getOtherConversation() -> [ConversationDB] {
         let filteredOutConversations = conversations.filter { conversation in
             // Check if the user is a business user
-            if conversation.createdBy != userData.userId{
-                if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Bussiness.value {
+            if conversation.createdBy != userData?.userId{
+                if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Bussiness.value {
                     // If user is a business user
                     if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
                         // Check if opponent's profileType is not "user" or "influencer" or allowToMessage is true
@@ -63,7 +63,7 @@ extension RealmManager {
                         }
                     }
                     return false // Reject conversations with opponents other than "user" or "influencer"
-                } else  if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Influencer.value {
+                } else  if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userProfileType == ISMChatUserProfileType.Influencer.value {
                     if let metaData = conversation.opponentDetails?.metaData ,let ConversationMetaData = conversation.metaData{
                         // Check if opponent's profileType is not "user" or allowToMessage is true
                         if metaData.userType == 1 && metaData.isStarUser != true && ConversationMetaData.chatStatus == ISMChatStatus.Reject.value{

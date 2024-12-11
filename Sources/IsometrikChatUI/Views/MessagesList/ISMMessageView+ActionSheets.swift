@@ -112,7 +112,7 @@ extension ISMMessageView{
     
     func otherUserMessageDeleteForMe() -> Bool {
         deleteMessage.contains(where: { msg in
-            msg.senderInfo?.userId != userData.userId
+            msg.senderInfo?.userId != userData?.userId
         })
     }
     

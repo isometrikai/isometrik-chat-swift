@@ -29,8 +29,8 @@ import IsometrikChat
                  }
              }
          }
-         if  userData.userId != messageInfo.senderId{
-             if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.allowNotification == true && OnMessageList == true && messageInfo.conversationId != self.conversationID{
+         if  userData?.userId != messageInfo.senderId{
+             if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.allowNotification == true && OnMessageList == true && messageInfo.conversationId != self.conversationID{
                  ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.senderName ?? "")", body: "\(messageInfo.notificationBody ?? (messageInfo.body ?? ""))", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? "","messageId" : messageInfo.messageId ?? ""])
              }
          }
@@ -222,20 +222,20 @@ import IsometrikChat
      }
      
      func sendLocalNotification(messageInfo : ISMChatMessageDelivered){
-         if messageInfo.senderId != userData.userId{
+         if messageInfo.senderId != userData?.userId{
              if messageInfo.conversationId !=  self.conversationID{
-                 if userData.allowNotification == true{
+                 if userData?.allowNotification == true{
                      if messageInfo.action == ISMChatActionType.memberLeave.value{
                          if messageInfo.meetingId == nil{
                              ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.conversationTitle ?? "")", body: "\(messageInfo.userName ?? "") left group", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? ""])
                          }
                      }else if  messageInfo.action == ISMChatActionType.membersRemove.value{
-                         let memberName = messageInfo.members?.first?.memberId == userData.userId ? ConstantStrings.you.lowercased() : messageInfo.members?.first?.memberName
+                         let memberName = messageInfo.members?.first?.memberId == userData?.userId ? ConstantStrings.you.lowercased() : messageInfo.members?.first?.memberName
                          
                              ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.conversationTitle ?? "")", body: "\(messageInfo.userName ?? "") removed \(memberName ?? "")", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? ""])
                          
                      }else if messageInfo.action == ISMChatActionType.membersAdd.value{
-                         let memberName = messageInfo.members?.first?.memberId == userData.userId ? ConstantStrings.you.lowercased() : messageInfo.members?.first?.memberName
+                         let memberName = messageInfo.members?.first?.memberId == userData?.userId ? ConstantStrings.you.lowercased() : messageInfo.members?.first?.memberName
                         
                              ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.conversationTitle ?? "")", body: "\(messageInfo.userName ?? "") added \(memberName ?? "")", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? ""])
                          

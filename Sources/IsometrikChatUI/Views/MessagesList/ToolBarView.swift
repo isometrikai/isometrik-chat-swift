@@ -390,7 +390,7 @@ struct MainToolBarView : View {
     
     func isMessagingEnabled() -> Bool{
         if self.conversationDetail?.conversationDetails?.messagingDisabled == true{
-            if realmManager.messages.last?.last?.initiatorId != ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId{
+            if realmManager.messages.last?.last?.initiatorId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId{
                 uAreBlock = true
             }else{
                 showUnblockPopUp = true
@@ -613,7 +613,7 @@ struct ReplyToolBarView : View {
             Spacer()
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 2) {
-                    let myUserId = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId
+                    let myUserId = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId
                     Text((selectedMsgToReply.senderInfo?.userId ?? selectedMsgToReply.initiatorId) != myUserId ? "\(selectedMsgToReply.senderInfo?.userName ?? selectedMsgToReply.initiatorName)" : ConstantStrings.you)
                         .font(appearance.fonts.messageListReplyToolbarHeader)
                         .foregroundColor(appearance.colorPalette.messageListReplyToolbarHeader)

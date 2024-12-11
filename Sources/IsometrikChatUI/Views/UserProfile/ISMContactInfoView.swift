@@ -45,7 +45,7 @@ struct ISMContactInfoView: View {
     @State private var fullScreenImageURL: String?
     
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
     
     @Binding var navigateToSocialProfileId : String
     
@@ -251,7 +251,7 @@ struct ISMContactInfoView: View {
             //        .background(NavigationLink("", destination:  ISMSearchParticipants(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel ,conversationID: self.conversationID), isActive: $showSearch))
             //        .background(NavigationLink("", destination:  , isActive: $showEdit))
             .onChange(of: selectedMember, { _, _ in
-                if selectedMember.userId != userData.userId{
+                if selectedMember.userId != userData?.userId{
                     showOptions = true
                 }
             })
@@ -263,7 +263,7 @@ struct ISMContactInfoView: View {
                     realmManager.updateImageAndNameOfGroup(name: conversationDetail?.conversationDetails?.conversationTitle ?? "", image: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", convID: self.conversationID ?? "")
                 }
             }
-            .background(NavigationLink("", destination: ISMContactInfoView(conversationID: realmManager.getConversationId(opponentUserId: selectedMember.userId ?? "", myUserId: userData.userId),viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : selectedMember,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $navigateToExternalUserListToAddInGroup).environmentObject(self.realmManager), isActive: $navigatetoInfo))
+            .background(NavigationLink("", destination: ISMContactInfoView(conversationID: realmManager.getConversationId(opponentUserId: selectedMember.userId ?? "", myUserId: userData?.userId ?? ""),viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : selectedMember,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $navigateToExternalUserListToAddInGroup).environmentObject(self.realmManager), isActive: $navigatetoInfo))
             .background(NavigationLink("", destination: ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager), isActive: $navigatetoAddMember))
             .confirmationDialog("", isPresented: $showOptions) {
                 Button {
@@ -365,7 +365,7 @@ struct ISMContactInfoView: View {
                 let dateVar = NSDate()
                 let date = dateVar.doubletoDate(time: conversationDetail?.conversationDetails?.createdAt ?? 0)
                 VStack(alignment: .leading){
-                    let user = userData.userName == (conversationDetail?.conversationDetails?.createdByUserName ?? "") ? ConstantStrings.you.lowercased() : (conversationDetail?.conversationDetails?.createdByUserName ?? "")
+                    let user = userData?.userName == (conversationDetail?.conversationDetails?.createdByUserName ?? "") ? ConstantStrings.you.lowercased() : (conversationDetail?.conversationDetails?.createdByUserName ?? "")
                     Text("Group created by \(user)")
                         .font(appearance.fonts.chatListUserMessage)
                         .foregroundColor(appearance.colorPalette.chatListUserMessage)

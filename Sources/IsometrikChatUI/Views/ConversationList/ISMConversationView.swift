@@ -66,7 +66,7 @@ public struct ISMConversationView : View {
     @State public var navigateToBroadCastMessages : Bool = false
     
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-     var myUserData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    var myUserData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
      var hideNavigationBar = ISMChatSdkUI.getInstance().getChatProperties().hideNavigationBarForConversationList
     
     public var delegate : ISMConversationViewDelegate? = nil
@@ -161,7 +161,7 @@ public struct ISMConversationView : View {
                         .environmentObject(realmManager)
                 }
                 .navigationDestination(isPresented: $navigateToMessageViewFromLocalNotification) {
-                    ISMMessageView(conversationViewModel : self.viewModel,conversationID: conversationIdForNotification ,opponenDetail : opponentDetailforNotification, myUserId: myUserData.userId, isGroup: isGroupFromNotification,fromBroadCastFlow: false,groupCastId: "", groupConversationTitle: groupTitleFromNotification ?? "", groupImage: groupImageFromNotification ?? "").environmentObject(realmManager).onAppear{onConversationList = false}
+                    ISMMessageView(conversationViewModel : self.viewModel,conversationID: conversationIdForNotification ,opponenDetail : opponentDetailforNotification, myUserId: myUserData?.userId, isGroup: isGroupFromNotification,fromBroadCastFlow: false,groupCastId: "", groupConversationTitle: groupTitleFromNotification ?? "", groupImage: groupImageFromNotification ?? "").environmentObject(realmManager).onAppear{onConversationList = false}
                 }
                 .navigationDestination(isPresented: $navigateToBroadCastMessages) {
                     ISMMessageView(conversationViewModel : self.viewModel,conversationID: "",opponenDetail: nil,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: true,groupCastId: self.groupCastIdToNavigate, groupConversationTitle: nil, groupImage: nil).environmentObject(realmManager).onAppear{onConversationList = false}
@@ -232,7 +232,7 @@ public struct ISMConversationView : View {
                         return
                     }
                     ISMChatHelper.print("TYPING EVENT----------------->\(messageInfo)")
-                    if onConversationList == true && myUserData.userId != messageInfo.userId{
+                    if onConversationList == true && myUserData?.userId != messageInfo.userId{
                         self.typingStatus(obj: messageInfo)
                     }
                 }

@@ -241,7 +241,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
             self.messageDelivered(data) { result in
                 switch result{
                 case .success(let messageInfo):
-                    if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId != messageInfo.userId{
+                    if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId != messageInfo.userId{
                         self.realmManager.updateLastmsgDeliver(conId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
                         self.realmManager.addDeliveredToUser(convId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? -1)
                         self.realmManager.updateAllDeliveryStatus(conId: messageInfo.conversationId ?? "")
@@ -278,7 +278,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
             self.multipleMessageRead(data) { result in
                 switch result{
                 case .success(let messageInfo):
-                    if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId != messageInfo.userId{
+                    if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId != messageInfo.userId{
                         self.realmManager.updateLastmsgRead(conId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.sentAt ?? 00)
                         self.realmManager.updateAllReadStatus(conId: messageInfo.conversationId ?? "")
                         self.realmManager.updateDeliveredToInAllmsgs(convId: messageInfo.conversationId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.lastReadAt ?? 0)
@@ -462,7 +462,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
             switch result{
             case .success(let messageInfo):
                 
-                if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId != messageInfo.senderId{
+                if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId != messageInfo.senderId{
                     // added last message in realm
                     let membersArray = messageInfo.members?.map { member -> ISMChatMemberAdded in
                         var chatMember = ISMChatMemberAdded()
@@ -723,14 +723,14 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             
                             if isNotChatVC && isNotMessageVC {
                                 // Your code here
-                                if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId{
+                                if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId{
                                     self.whenInOtherScreen(messageInfo: messageInfo)
                                 }
                             }
                         }
                     }else{
                         if UIApplication.shared.applicationState == .background {
-                            if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId{
+                            if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId{
                                 self.whenInOtherScreen(messageInfo: messageInfo)
                             }
                         }
@@ -747,7 +747,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
     }
     
     public func whenInOtherScreen(messageInfo : ISMChatMessageDelivered){
-        if ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig.userId != messageInfo.senderId{
+        if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId != messageInfo.senderId{
             let viewModel = ChatsViewModel()
             if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
                 if messageInfo.action != ISMChatActionType.conversationCreated.value{

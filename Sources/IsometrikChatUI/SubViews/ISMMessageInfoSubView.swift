@@ -44,7 +44,7 @@ struct ISMMessageInfoSubView: View {
     
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     let customFontName = ISMChatSdkUI.getInstance().getCustomFontNames()
-    var userData = ISMChatSdk.getInstance().getChatClient().getConfigurations().userConfig
+    var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
     
     let fromBroadCastFlow : Bool?
     
@@ -1509,7 +1509,7 @@ struct ISMMessageInfoSubView: View {
             VStack(alignment: .leading, spacing: 5){
                 let parentUserName = message.metaData?.replyMessage?.parentMessageUserName ?? "User"
                 let parentUserId = message.metaData?.replyMessage?.parentMessageUserId
-                let name = parentUserId == userData.userId ? ConstantStrings.you : parentUserName
+                let name = parentUserId == userData?.userId ? ConstantStrings.you : parentUserName
                 Text(name)
                     .foregroundColor(appearance.colorPalette.messageListReplyToolbarHeader)
                     .font(appearance.fonts.messageListReplyToolbarHeader)
@@ -1688,9 +1688,9 @@ struct ISMMessageInfoSubView: View {
     func getImageAsset() -> ImageAsset {
         var imageAsset: ImageAsset
 
-        if message.initiatorId == userData.userId {
+        if message.initiatorId == userData?.userId {
             if message.missedByMembers.count == 0 {
-                if let duration = message.callDurations.first(where: { $0.memberId == userData.userId }) {
+                if let duration = message.callDurations.first(where: { $0.memberId == userData?.userId }) {
                     let durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
                     if messageType == .AudioCall {
                         imageAsset = ImageAsset(image: appearance.images.audioOutgoing, title: "Voice Call", durationText: durationText)
@@ -1709,7 +1709,7 @@ struct ISMMessageInfoSubView: View {
             }
         } else {
             if message.missedByMembers.count == 0 {
-                if let duration = message.callDurations.first(where: { $0.memberId == userData.userId }) {
+                if let duration = message.callDurations.first(where: { $0.memberId == userData?.userId }) {
                     let durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
                     if messageType == .AudioCall {
                         imageAsset = ImageAsset(image: appearance.images.audioIncoming, title: "Voice Call", durationText: durationText)

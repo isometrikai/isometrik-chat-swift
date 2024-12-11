@@ -570,9 +570,9 @@ extension RealmManager{
                 obj.msgSyncStatus = msgSyncStatus
                 
                 let user = UserDB()
-                user.userId = userData.userId
-                user.userIdentifier = userData.userEmail
-                user.userName = userData.userName
+                user.userId = userData?.userId
+                user.userIdentifier = userData?.userEmail
+                user.userName = userData?.userName
                 
                 obj.senderInfo = user
                 
