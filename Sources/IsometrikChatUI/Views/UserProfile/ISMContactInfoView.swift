@@ -50,6 +50,7 @@ struct ISMContactInfoView: View {
     @Binding var navigateToSocialProfileId : String
     
     @Binding var navigateToExternalUserListToAddInGroup : Bool
+    @Binding var navigateToChatList : Bool
     
     //MARK:  - BODY
     var body: some View {
@@ -139,7 +140,7 @@ struct ISMContactInfoView: View {
                                                 appearance.images.mediaIcon
                                                     .resizable()
                                                     .frame(width: 29,height: 29)
-                                                Text("View Social Profile")
+                                                Text("View Profile")
                                                     .font(appearance.fonts.messageListMessageText)
                                                     .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                                 Spacer()
@@ -263,7 +264,7 @@ struct ISMContactInfoView: View {
                     realmManager.updateImageAndNameOfGroup(name: conversationDetail?.conversationDetails?.conversationTitle ?? "", image: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", convID: self.conversationID ?? "")
                 }
             }
-            .background(NavigationLink("", destination: ISMContactInfoView(conversationID: realmManager.getConversationId(opponentUserId: selectedMember.userId ?? "", myUserId: userData?.userId ?? ""),viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : selectedMember,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $navigateToExternalUserListToAddInGroup).environmentObject(self.realmManager), isActive: $navigatetoInfo))
+            .background(NavigationLink("", destination: ISMContactInfoView(conversationID: realmManager.getConversationId(opponentUserId: selectedMember.userId ?? "", myUserId: userData?.userId ?? ""),viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : selectedMember,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $navigateToExternalUserListToAddInGroup,navigateToChatList: $navigateToChatList).environmentObject(self.realmManager), isActive: $navigatetoInfo))
             .background(NavigationLink("", destination: ISMAddParticipantsView(viewModel: self.conversationViewModel,conversationId: self.conversationID).environmentObject(realmManager), isActive: $navigatetoAddMember))
             .confirmationDialog("", isPresented: $showOptions) {
                 Button {
@@ -393,14 +394,16 @@ struct ISMContactInfoView: View {
                 self.realmManager.clearMessages()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                     self.realmManager.clearMessages(convID: conversationID ?? "")
-                    NavigationUtil.popToChatVC()
+//                    NavigationUtil.popToChatVC()
+                    navigateToChatList = true
                 })
             }
         }else if selectedOption == .DeleteUser {
             conversationViewModel.deleteConversation(conversationId: conversationID ?? "") {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                     realmManager.deleteConversation(convID: conversationID ?? "")
-                    NavigationUtil.popToRootView()
+//                    NavigationUtil.popToRootView()
+                    navigateToChatList = true
                 })
             }
         }else if selectedOption == .ExitGroup{
@@ -558,9 +561,7 @@ struct ISMContactInfoView: View {
                 } label: {
                     appearance.images.backButton
                         .resizable()
-                        .tint(.black)
-                        .foregroundColor(.black)
-                        .frame(width: 17,height: 17)
+                        .frame(width: appearance.imagesSize.backButton.width,height: appearance.imagesSize.backButton.height)
                 }
             }
         }

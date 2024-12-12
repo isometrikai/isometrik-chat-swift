@@ -180,6 +180,7 @@ public struct ISMMessageView: View {
     @State var navigateToProductLink : MessagesDB = MessagesDB()
     @State var navigateToSocialLink : MessagesDB = MessagesDB()
     @State var navigateToCollectionLink : MessagesDB = MessagesDB()
+    @State var navigateToChatList : Bool = false
     
     //MARK: - BODY
     public var body: some View {
@@ -280,17 +281,6 @@ public struct ISMMessageView: View {
                     stateViewModel.executeRepeatly = false
                     stateViewModel.executeRepeatlyForOfflineMessage = false
                     stateViewModel.onLoad = false
-                    removeObservers()
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttTypingEvent.name, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMeetingEnded.name, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: NSNotification.refrestMessagesListLocally, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: NSNotification.updateGroupInfo, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: NSNotification.memberAddAndRemove, object: nil)
-                    NotificationCenter.default.removeObserver(self)
-                    self.conversationID = nil
-                    nilData()
-                    OnMessageList = false
                 }
                 //zstack views
                 if chatViewModel.isBusy{
@@ -402,6 +392,14 @@ public struct ISMMessageView: View {
         .onChange(of: navigateToDocumentUrl, { _, _ in
             if navigateToDocumentUrl != ""{
                 stateViewModel.navigateToDocumentViewer = true
+            }
+        })
+        .onChange(of: navigateToChatList, { _, _ in
+            if navigateToChatList == true{
+                OndisappearOnBack()
+                //dismiss
+                delegate?.backButtonAction()
+                presentationMode.wrappedValue.dismiss()
             }
         })
         .onChange(of: selectedReaction, { _, _ in
@@ -589,7 +587,7 @@ public struct ISMMessageView: View {
         .sheet(isPresented: self.$stateViewModel.showVideoPicker) {
             ISMMediaPicker(isPresented: self.$stateViewModel.showVideoPicker, sendMedias: $mediaSelectedFromPicker,opponenetName: isGroup == true ? (self.conversationDetail?.conversationDetails?.conversationTitle ?? "" ) : (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""),mediaCaption: $mediaCaption,sendMediaToMessage: $stateViewModel.sendMedia)
         }
-        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate).environmentObject(RealmManager.shared)
+        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToChatList: $navigateToChatList).environmentObject(RealmManager.shared)
             .onAppear {
                 OnMessageList = false
             }, isActive: $stateViewModel.navigateToUserProfile))
@@ -699,6 +697,20 @@ public struct ISMMessageView: View {
         }
     }
     
+    
+    func OndisappearOnBack(){
+        removeObservers()
+        NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil)
+        NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttTypingEvent.name, object: nil)
+        NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMeetingEnded.name, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.refrestMessagesListLocally, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.updateGroupInfo, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.memberAddAndRemove, object: nil)
+        NotificationCenter.default.removeObserver(self)
+        self.conversationID = nil
+        nilData()
+        OnMessageList = false
+    }
     
     func bottomView() -> some View{
         HStack {

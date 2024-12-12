@@ -517,7 +517,7 @@ public struct ISMConversationView : View {
                 .listRowInsets(EdgeInsets())
                 .listRowSeparator(.hidden)
             }
-            .onDelete(perform: handleDelete)
+//            .onDelete(perform: handleDelete)
             .listRowBackground(Color.clear)
         }
         .gesture(

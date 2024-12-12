@@ -108,6 +108,7 @@ extension ISMMessageView{
             //just resetting unread count for this conversation while going back to conversation list
 //            realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
             //sometimes keyboard doesn't get dismissed
+            OndisappearOnBack()
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
             //dismiss
