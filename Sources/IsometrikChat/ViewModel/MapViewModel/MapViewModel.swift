@@ -15,18 +15,18 @@ import Alamofire
 public class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate{
     
     //MARK:  - PROPERTIES
-    @Published public var permissionDenied = false
-    @Published public var searchedText = ""
-    public var mapView: GMSMapView!
-    @Published public var location: CLLocation? {
-        willSet { objectWillChange.send() }
-    }
-    public var latitude: CLLocationDegrees {
-        return location?.coordinate.latitude ?? 0
-    }
-    public var longitude: CLLocationDegrees {
-        return location?.coordinate.longitude ?? 0
-    }
+//    @Published public var permissionDenied = false
+//    @Published public var searchedText = ""
+//    public var mapView: GMSMapView!
+//    @Published public var location: CLLocation? {
+//        willSet { objectWillChange.send() }
+//    }
+//    public var latitude: CLLocationDegrees {
+//        return location?.coordinate.latitude ?? 0
+//    }
+//    public var longitude: CLLocationDegrees {
+//        return location?.coordinate.longitude ?? 0
+//    }
     
     public var placesClient = GMSPlacesClient.shared()
     // 2
@@ -34,45 +34,45 @@ public class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegat
     
     
     //searching places
-    func searchQuery(){
-        
-    }
+//    func searchQuery(){
+//        
+//    }
     
-    public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        //checking permissions
-        switch manager.authorizationStatus{
-        case .denied:
-            //alert
-            permissionDenied.toggle()
-        case .notDetermined:
-            //requesting
-            manager.requestWhenInUseAuthorization()
-        case .authorizedWhenInUse:
-            manager.requestLocation()
-            manager.startUpdatingLocation()
-            currentPlacesList()
-        case .authorizedAlways:
-            manager.requestLocation()
-            manager.startUpdatingLocation()
-            currentPlacesList()
-        default:
-            ()
-        }
-    }
+//    public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+//        //checking permissions
+//        switch manager.authorizationStatus{
+//        case .denied:
+//            //alert
+//            permissionDenied.toggle()
+//        case .notDetermined:
+//            //requesting
+//            manager.requestWhenInUseAuthorization()
+//        case .authorizedWhenInUse:
+//            manager.requestLocation()
+//            manager.startUpdatingLocation()
+//            currentPlacesList()
+//        case .authorizedAlways:
+//            manager.requestLocation()
+//            manager.startUpdatingLocation()
+//            currentPlacesList()
+//        default:
+//            ()
+//        }
+//    }
     
-    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        ISMChatHelper.print(error.localizedDescription)
-    }
+//    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+//        ISMChatHelper.print(error.localizedDescription)
+//    }
     
     //getting user region
     
-    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else{
-            return
-        }
-        self.location = location
-        manager.stopUpdatingLocation()
-    }
+//    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+//        guard let location = locations.last else{
+//            return
+//        }
+//        self.location = location
+//        manager.stopUpdatingLocation()
+//    }
     
     public func currentPlacesList(){
         // 3
@@ -87,10 +87,10 @@ public class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegat
     }
 }
 
-public struct PlacesAutoCompleteResponse: Decodable {
-    public let predictions: [Prediction]
-    
-    public struct Prediction: Decodable {
-        let description: String
-    }
-}
+//public struct PlacesAutoCompleteResponse: Decodable {
+//    public let predictions: [Prediction]
+//    
+//    public struct Prediction: Decodable {
+//        let description: String
+//    }
+//}

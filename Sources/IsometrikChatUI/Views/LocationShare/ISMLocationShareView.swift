@@ -17,7 +17,7 @@ struct ISMLocationShareView: View {
     @Environment(\.dismiss) var dismiss
     
     @StateObject private var mapViewModel = MapViewModel()
-    @StateObject private var locationManager = LocationManager() // Custom wrapper for CLLocationManager
+    @StateObject private var locationManager = LocationManager()
     @State private var showSheet = true
     @Binding var longitude: Double?
     @Binding var latitude: Double?
@@ -61,7 +61,7 @@ struct ISMLocationShareView: View {
                 } // HSTACK
                 .padding()
                 if !isTextFieldFocused {
-                    mapView(coordinate: CLLocationCoordinate2D(latitude: mapViewModel.latitude, longitude: mapViewModel.longitude))
+                    mapView(coordinate: CLLocationCoordinate2D(latitude: locationManager.location?.coordinate.latitude ?? 0.0, longitude: locationManager.location?.coordinate.longitude ?? 0.0))
                         .frame(height: 300)
                     nearByPlacesListView()
                 } else {
@@ -90,7 +90,7 @@ struct ISMLocationShareView: View {
                 getPlaces()
             }
             // Permission denied alert
-            .alert(isPresented: $mapViewModel.permissionDenied) {
+            .alert(isPresented: $locationManager.permissionDenied) {
                 Alert(
                     title: Text("Permission Denied"),
                     message: Text("Please Enable Permission in App Settings"),
@@ -270,6 +270,8 @@ extension View {
 final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
     
+    @Published public var location: CLLocation?
+    @Published public var permissionDenied = false
     @Published var authorizationStatus: CLAuthorizationStatus?
     
     override init() {
@@ -290,13 +292,27 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             requestWhenInUseAuthorization() // Ask for permission again
         case .restricted, .denied:
             print("Location permission denied")
-            // Handle denial (e.g., alert the user)
+            permissionDenied.toggle()
         case .authorizedWhenInUse, .authorizedAlways:
             print("Location permission granted")
-            // Proceed with using location
+            locationManager.requestLocation()
+            locationManager.startUpdatingLocation()
         @unknown default:
             break
         }
     }
+    
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else{
+            return
+        }
+        self.location = location
+        manager.stopUpdatingLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Failed to get location: \(error.localizedDescription)")
+    }
+
 }
 

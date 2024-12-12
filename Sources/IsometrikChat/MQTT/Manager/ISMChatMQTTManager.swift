@@ -714,24 +714,26 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
             
                 
                 if self.framework == .UIKit {
-                    if let topViewController = UIApplication.topViewController() {
-                        if let Chatvc = self.viewcontrollers?.conversationListViewController,
-                           let Messagevc = self.viewcontrollers?.messagesListViewController {
-                            
-                            let isNotChatVC = !(topViewController.isKind(of: Chatvc))
-                            let isNotMessageVC = !(topViewController.isKind(of: Messagevc))
-                            
-                            if isNotChatVC && isNotMessageVC {
-                                // Your code here
-                                if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId{
-                                    self.whenInOtherScreen(messageInfo: messageInfo)
-                                }
+                    if UIApplication.shared.applicationState == .background {
+                        if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId{
+                            DispatchQueue.main.async {
+                                self.whenInOtherScreen(messageInfo: messageInfo)
                             }
                         }
                     }else{
-                        if UIApplication.shared.applicationState == .background {
-                            if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId{
-                                self.whenInOtherScreen(messageInfo: messageInfo)
+                        if let topViewController = UIApplication.topViewController() {
+                            if let Chatvc = self.viewcontrollers?.conversationListViewController,
+                               let Messagevc = self.viewcontrollers?.messagesListViewController {
+                                
+                                let isNotChatVC = !(topViewController.isKind(of: Chatvc))
+                                let isNotMessageVC = !(topViewController.isKind(of: Messagevc))
+                                
+                                if isNotChatVC && isNotMessageVC {
+                                    // Your code here
+                                    if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId{
+                                        self.whenInOtherScreen(messageInfo: messageInfo)
+                                    }
+                                }
                             }
                         }
                     }

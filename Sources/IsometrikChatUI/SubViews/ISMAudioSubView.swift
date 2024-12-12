@@ -105,7 +105,6 @@ struct ISMAudioSubView: View {
                         } else {
                             ForEach(audioVM.soundSamples, id: \.self) { model in
                                 BarView(value: self.normalizeSoundLevel(level: model.magnitude), color: model.color)
-                                    .padding(.horizontal,1)
                             }
                         }
                     }
@@ -117,7 +116,7 @@ struct ISMAudioSubView: View {
             HStack{
                 Spacer().frame(width: 45)
                 Text(formatTime(audioVM.isPlaying ? audioVM.currentTime : audioVM.totalDuration))
-                    .font(Font.regular(size: 12))
+                    .font(appearance.fonts.messageListMessageTime)
                     .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTimeReceived :  appearance.colorPalette.messageListMessageTimeSend)
                     .onAppear(perform: {
                         audioVM.count_duration { _ in
@@ -134,7 +133,7 @@ struct ISMAudioSubView: View {
                 }
             }
         }//:VSTACK
-        .frame(width:  ISMChatSdkUI.getInstance().getChatProperties().hideUserProfileImageFromAudioMessage == false ? 240 : 200)
+        .frame(width:  ISMChatSdkUI.getInstance().getChatProperties().hideUserProfileImageFromAudioMessage == false ? 190 : 150)
     }
     
     func formatTime(_ time: TimeInterval) -> String {
@@ -146,26 +145,26 @@ struct ISMAudioSubView: View {
     func dateAndStatusView(onImage : Bool) -> some View{
         HStack(alignment: .center,spacing: 3){
             Text(sentAt.datetotime())
-                .font(Font.regular(size: 12))
-                .foregroundColor(onImage ? Color.white : (isReceived ? appearance.colorPalette.messageListMessageTimeReceived :  appearance.colorPalette.messageListMessageTimeSend))
+                .font(appearance.fonts.messageListMessageTime)
+                .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTimeReceived :  appearance.colorPalette.messageListMessageTimeSend)
             if !isReceived{
                 switch self.messageDeliveredType{
                 case .BlueTick:
                     appearance.images.messageRead
                         .resizable()
-                        .frame(width: 15, height: 9)
+                        .frame(width: appearance.imagesSize.messageRead.width, height: appearance.imagesSize.messageRead.height)
                 case .DoubleTick:
                     appearance.images.messageDelivered
                         .resizable()
-                        .frame(width: 15, height: 9)
+                        .frame(width: appearance.imagesSize.messageDelivered.width, height: appearance.imagesSize.messageDelivered.height)
                 case .SingleTick:
                     appearance.images.messageSent
                         .resizable()
-                        .frame(width: 11, height: 9)
+                        .frame(width: appearance.imagesSize.messageSend.width, height: appearance.imagesSize.messageSend.height)
                 case .Clock:
                     appearance.images.messagePending
                         .resizable()
-                        .frame(width: 9, height: 9)
+                        .frame(width: appearance.imagesSize.messagePending.width, height: appearance.imagesSize.messagePending.height)
                 }
             }
         }//:HStack

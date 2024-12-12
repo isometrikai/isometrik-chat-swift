@@ -202,50 +202,6 @@ extension ISMMessageView{
         }else{
             if isGroup == false{
                 if self.conversationID == nil || self.conversationID == "" {
-//                    chatViewModel.createConversation(user: self.opponenDetail ?? UserDB(), chatStatus: ISMChatStatus.Reject.value) { data in
-//                        self.conversationID = data?.conversationId
-//                        
-//                        // Ensure that conversationID is not nil or empty before proceeding
-//                        guard let conversationID = self.conversationID, !conversationID.isEmpty else { return }
-//                        
-//                        chatViewModel.getConversationDetail(conversationId: conversationID, isGroup: self.isGroup ?? false) { data in
-//                            // First check if conversation is deleted locally
-//                            realmManager.undodeleteConversation(convID: conversationID)
-//                            
-//                            self.conversationDetail = data
-//                            
-//                            // Check if conversation already exists in Realm to avoid duplicate primary key error
-//                            if !realmManager.isConversationExists(conversationID: conversationID) {
-//                                // Save conversation locally, no need to call API again
-//                                let conv = ISMChatConversationsDetail(
-//                                    opponentDetails: self.conversationDetail?.conversationDetails?.opponentDetails,
-//                                    lastMessageDetails: nil,
-//                                    unreadMessagesCount: 0,
-//                                    isGroup: self.conversationDetail?.conversationDetails?.isGroup,
-//                                    membersCount: self.conversationDetail?.conversationDetails?.membersCount,
-//                                    createdAt: self.conversationDetail?.conversationDetails?.createdAt,
-//                                    conversationTitle: self.conversationDetail?.conversationDetails?.conversationTitle,
-//                                    conversationImageUrl: self.conversationDetail?.conversationDetails?.conversationImageUrl,
-//                                    createdBy: self.conversationDetail?.conversationDetails?.createdBy,
-//                                    createdByUserName: self.conversationDetail?.conversationDetails?.createdByUserName,
-//                                    privateOneToOne: self.conversationDetail?.conversationDetails?.privateOneToOne,
-//                                    conversationId: conversationID,
-//                                    members: self.conversationDetail?.conversationDetails?.members,
-//                                    config: self.conversationDetail?.conversationDetails?.config,
-//                                    metaData: self.conversationDetail?.conversationDetails?.metaData
-//                                )
-//                                realmManager.addConversation(obj: [conv])
-//                                NotificationCenter.default.post(name: NSNotification.refrestConversationListLocally, object: nil)
-//                            }
-//                            
-//                            
-//                            
-//                            // Check if user is not blocked or you're blocked
-//                            if isMessagingEnabled() {
-//                                sendMessageDetail()
-//                            }
-//                        }
-//                    }
                     self.createConversation { _ in
                         //Check if user is not blocked or you're blocked
                         if isMessagingEnabled() {
@@ -662,31 +618,33 @@ extension ISMMessageView{
             if networkMonitor.isConnected {
                 
                 let text = self.text.trimmingCharacters(in: .whitespacesAndNewlines)
-                self.text = ""
-                //1. nil data if any
-                nilData()
-                
-                //2. save message locally
-                var localIds = [String]()
-                let sentAt = Date().timeIntervalSince1970 * 1000
-                let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: text, mentionUsers: self.mentionUsers,fileName: "",fileUrl: "", messageType: .text,customType: .Text, messageKind: .normal)
-                localIds.append(id)
-                parentMessageIdToScroll = id ?? ""
-                //3. send message api
-                chatViewModel.sendMessage(messageKind: .text, customType: ISMChatMediaType.Text.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,isGroup: self.isGroup,groupMembers: self.mentionUsers) { msgId,_ in
+                if !text.isEmpty{
+                    self.text = ""
+                    //1. nil data if any
+                    nilData()
                     
-                    //4. update messageId locally
-                    realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: msgId, conversationId: self.conversationID ?? "")
-                    localIds.removeFirst()
-                    
-                    //5. if we send url in text, we need to save it to show in media
-                    if text.isValidURL{
-                        realmManager.fetchLinks(conId: self.conversationID ?? "")
-                        delegate?.messageValidUrl(url: text, messageId: msgId, conversationId: self.conversationID ?? ""){ data in
-                            realmManager.updateMessageBody(conversationId: self.conversationID ?? "", messageId: msgId, body: data.body ?? "", metaData: data.metaData,customType: data.customType)
+                    //2. save message locally
+                    var localIds = [String]()
+                    let sentAt = Date().timeIntervalSince1970 * 1000
+                    let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: text, mentionUsers: self.mentionUsers,fileName: "",fileUrl: "", messageType: .text,customType: .Text, messageKind: .normal)
+                    localIds.append(id)
+                    parentMessageIdToScroll = id ?? ""
+                    //3. send message api
+                    chatViewModel.sendMessage(messageKind: .text, customType: ISMChatMediaType.Text.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,isGroup: self.isGroup,groupMembers: self.mentionUsers) { msgId,_ in
+                        
+                        //4. update messageId locally
+                        realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: msgId, conversationId: self.conversationID ?? "")
+                        localIds.removeFirst()
+                        
+                        //5. if we send url in text, we need to save it to show in media
+                        if text.isValidURL{
+                            realmManager.fetchLinks(conId: self.conversationID ?? "")
+                            delegate?.messageValidUrl(url: text, messageId: msgId, conversationId: self.conversationID ?? ""){ data in
+                                realmManager.updateMessageBody(conversationId: self.conversationID ?? "", messageId: msgId, body: data.body ?? "", metaData: data.metaData,customType: data.customType)
+                            }
                         }
+                        
                     }
-                    
                 }
             }else {
                 let id = realmManager.saveLocalMessage(sent: Date().timeIntervalSince1970 * 1000, txt: self.text.trimmingCharacters(in: .whitespacesAndNewlines), parentMessageId: "", initiatorIdentifier: "", conversationId: self.conversationID ?? "", customType: ISMChatMediaType.Text.value, msgSyncStatus: ISMChatSyncStatus.Local.txt)
@@ -944,6 +902,7 @@ extension ISMMessageView{
         self.longitude = nil
         self.latitude = nil
         self.placeId = nil
+        self.placeName = nil
         self.placeAddress = nil
         self.text = ""
         self.chatViewModel.audioUrl = nil
