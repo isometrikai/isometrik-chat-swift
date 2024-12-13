@@ -46,8 +46,12 @@ extension ISMMessageView{
                 }else if option == .contact{
                     Button(action: {
                         selectedSheetIndex = 2
-                        DispatchQueue.main.async {
-                            stateViewModel.showSheet = true
+                        if chatProperties.customShareContactFlow == true{
+                            self.delegate?.navigateToShareContact(conversationId: self.conversationID ?? "")
+                        }else{
+                            DispatchQueue.main.async {
+                                stateViewModel.showSheet = true
+                            }
                         }
                     }) {
                         Text(option.name)

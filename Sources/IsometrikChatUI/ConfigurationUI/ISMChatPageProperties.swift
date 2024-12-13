@@ -31,7 +31,8 @@ public struct ISMChatPageProperties {
     public var messageListReplyBarMeetEnds : Bool = false
     public var hideUserProfileImageFromAudioMessage : Bool = false
     public var hideDocumentPreview : Bool = false
-    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, navigateToAppProfileFromMessageList: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool,customJobCardInMessageList : Bool,externalMemberAddInGroup : Bool,captializeMessageListHeaders : Bool? = false,hideLinkPreview : Bool? = false,maskNumberAndEmail : Bool? = false,hideSendButtonUntilEmptyTextView: Bool? = false,gifLogoOnTextViewLeft : Bool? = false,showUserTypeInConversationListAfterName : Bool? = false,showSearchCrossButton:  Bool? = false,chatListSeperatorShouldMeetEnds : Bool? = false,messageListReplyBarMeetEnds : Bool? = false,hideUserProfileImageFromAudioMessage : Bool? = false,hideDocumentPreview : Bool? = false) {
+    public var customShareContactFlow : Bool = false
+    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, navigateToAppProfileFromMessageList: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool,customJobCardInMessageList : Bool,externalMemberAddInGroup : Bool,captializeMessageListHeaders : Bool? = false,hideLinkPreview : Bool? = false,maskNumberAndEmail : Bool? = false,hideSendButtonUntilEmptyTextView: Bool? = false,gifLogoOnTextViewLeft : Bool? = false,showUserTypeInConversationListAfterName : Bool? = false,showSearchCrossButton:  Bool? = false,chatListSeperatorShouldMeetEnds : Bool? = false,messageListReplyBarMeetEnds : Bool? = false,hideUserProfileImageFromAudioMessage : Bool? = false,hideDocumentPreview : Bool? = false,customShareContactFlow : Bool? = false) {
         self.attachments = attachments
         self.features = features
         self.conversationType = conversationType
@@ -54,5 +55,6 @@ public struct ISMChatPageProperties {
         self.messageListReplyBarMeetEnds = messageListReplyBarMeetEnds ?? false
         self.hideUserProfileImageFromAudioMessage = hideUserProfileImageFromAudioMessage ?? false
         self.hideDocumentPreview = hideDocumentPreview ?? false
+        self.customShareContactFlow = customShareContactFlow ?? false
     }
 }

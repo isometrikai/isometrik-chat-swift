@@ -31,6 +31,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToSocialLink(socialLinkId : String)
     func navigateToCollectionLink(collectionId : String,completeUrl: String)
     func backButtonAction()
+    func navigateToShareContact(conversationId : String)
 }
 
 public struct ISMMessageView: View {
