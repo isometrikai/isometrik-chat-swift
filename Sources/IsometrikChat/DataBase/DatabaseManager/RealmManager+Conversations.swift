@@ -125,7 +125,7 @@ extension RealmManager {
     
     public func getConversationId(opponentUserId : String,myUserId : String) -> String{
         let conversation = conversations.first { con in
-            con.opponentDetails?.userId == opponentUserId && (con.metaData?.membersIds.contains(myUserId) ?? false)
+            con.opponentDetails?.userId == opponentUserId //&& (con.metaData?.membersIds.contains(myUserId) ?? false)
         }
         if conversation != nil{
             return conversation?.conversationId ?? ""
