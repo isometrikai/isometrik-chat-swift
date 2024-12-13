@@ -266,7 +266,11 @@ public struct ISMMessageView: View {
                             
                         }
                     }.onTapGesture {
+                        stateViewModel.showActionSheet = false
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
+                    if stateViewModel.showActionSheet == true{
+                        attachmentsView().padding(.horizontal,10)
                     }
                     bottomView()
                 }//VStack
@@ -307,9 +311,9 @@ public struct ISMMessageView: View {
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(leading: navigationBarLeadingButtons(), trailing: navigationBarTrailingButtons())
         .navigationBarBackButtonHidden(true)
-        .confirmationDialog("", isPresented: $stateViewModel.showActionSheet, titleVisibility: .hidden) {
-            attachmentActionSheetButtons()
-        }
+//        .confirmationDialog("", isPresented: $stateViewModel.showActionSheet, titleVisibility: .hidden) {
+//            attachmentActionSheetButtons()
+//        }
         .confirmationDialog("", isPresented: $stateViewModel.showDeleteActionSheet, titleVisibility: .hidden) {
             deleteActionSheetButtons()
         }

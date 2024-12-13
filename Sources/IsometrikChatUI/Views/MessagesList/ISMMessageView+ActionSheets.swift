@@ -11,6 +11,96 @@ import IsometrikChat
 
 //MARK: - ACTION SHEETS
 extension ISMMessageView{
+    
+    func attachmentsView() -> some View {
+        let columns = [
+            GridItem(.flexible()),
+            GridItem(.flexible()),
+            GridItem(.flexible()),
+            GridItem(.flexible())
+        ]
+        return LazyVGrid(columns: columns, spacing: 20) {
+            ForEach(chatProperties.attachments, id: \.self) { item in
+                
+                    Button {
+                        if item.name == ISMChatConfigAttachmentType.camera.name{
+                            selectedSheetIndex = 0
+                            DispatchQueue.main.async {
+                                stateViewModel.showSheet = true
+                                stateViewModel.showActionSheet = false
+                            }
+                        }else if item.name == ISMChatConfigAttachmentType.gallery.name{
+                            DispatchQueue.main.async {
+                                stateViewModel.showVideoPicker = true
+                                stateViewModel.showActionSheet = false
+                            }
+                        }else if item.name == ISMChatConfigAttachmentType.document.name{
+                            selectedSheetIndex = 1
+                            DispatchQueue.main.async {
+                                stateViewModel.showSheet = true
+                                stateViewModel.showActionSheet = false
+                            }
+                            
+                        }else if item.name == ISMChatConfigAttachmentType.location.name{
+                            DispatchQueue.main.async {
+                                stateViewModel.showLocationSharing = true
+                                stateViewModel.showActionSheet = false
+                            }
+                        }else if item.name == ISMChatConfigAttachmentType.contact.name{
+                            if chatProperties.customShareContactFlow == true{
+                                self.delegate?.navigateToShareContact(conversationId: self.conversationID ?? "")
+                                stateViewModel.showActionSheet = false
+                            }else{
+                                selectedSheetIndex = 2
+                                DispatchQueue.main.async {
+                                    stateViewModel.showSheet = true
+                                    stateViewModel.showActionSheet = false
+                                }
+                            }
+                        }else if item.name == ISMChatConfigAttachmentType.sticker.name{
+                            DispatchQueue.main.async {
+                                stateViewModel.showGifPicker = true
+                                stateViewModel.showActionSheet = false
+                            }
+                        }
+                    } label: {
+                        VStack(spacing: 8){
+                            if item.name == ISMChatConfigAttachmentType.camera.name{
+                                appearance.images.attachment_Camera
+                                    .resizable()
+                                    .frame(width: 48, height: 48, alignment: .center)
+                            }else if item.name == ISMChatConfigAttachmentType.gallery.name{
+                                appearance.images.attachment_Gallery
+                                    .resizable()
+                                    .frame(width: 48, height: 48, alignment: .center)
+                            }else if item.name == ISMChatConfigAttachmentType.document.name{
+                                appearance.images.attachment_Document
+                                    .resizable()
+                                    .frame(width: 48, height: 48, alignment: .center)
+                            }else if item.name == ISMChatConfigAttachmentType.location.name{
+                                appearance.images.attachment_Location
+                                    .resizable()
+                                    .frame(width: 48, height: 48, alignment: .center)
+                            }else if item.name == ISMChatConfigAttachmentType.contact.name{
+                                appearance.images.attachment_Contact
+                                    .resizable()
+                                    .frame(width: 48, height: 48, alignment: .center)
+                            }else if item.name == ISMChatConfigAttachmentType.sticker.name{
+                                appearance.images.attachment_Sticker
+                                    .resizable()
+                                    .frame(width: 48, height: 48, alignment: .center)
+                            }
+                            Text(item.name)
+                                .font(appearance.fonts.attachmentsText)
+                                .foregroundColor(appearance.colorPalette.attachmentsText)
+                        }
+                    }
+            }
+        }
+        .padding()
+        .background(appearance.colorPalette.attachmentsBackground)
+        .cornerRadius(22)
+    }
     func attachmentActionSheetButtons() -> some View {
         VStack {
             ForEach(chatProperties.attachments, id: \.self) { option in
@@ -45,10 +135,11 @@ extension ISMMessageView{
                     
                 }else if option == .contact{
                     Button(action: {
-                        selectedSheetIndex = 2
+                        
                         if chatProperties.customShareContactFlow == true{
                             self.delegate?.navigateToShareContact(conversationId: self.conversationID ?? "")
                         }else{
+                            selectedSheetIndex = 2
                             DispatchQueue.main.async {
                                 stateViewModel.showSheet = true
                             }

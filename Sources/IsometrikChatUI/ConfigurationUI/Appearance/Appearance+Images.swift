@@ -179,6 +179,13 @@ public struct ISMChatImages {
     public var productShareLogo : Image = loadSafely(systemName: "arrow.up.right.square", assetsFallback: "arrow.up.right.square")
     public var deletedMessageLogo : Image = loadSafely(systemName: "minus.circle", assetsFallback: "minus.circle")
     
+    public var attachment_Camera : Image = loadImageSafely(with: "attachment_camera")
+    public var attachment_Gallery : Image = loadImageSafely(with: "attachment_gallery")
+    public var attachment_Document : Image = loadImageSafely(with: "attachment_document")
+    public var attachment_Location : Image = loadImageSafely(with: "attachment_location")
+    public var attachment_Contact : Image = loadImageSafely(with: "attachment_contact")
+    public var attachment_Sticker : Image = loadImageSafely(with: "attachment_sticker")
+    
     public init(){}
     
     public init(
