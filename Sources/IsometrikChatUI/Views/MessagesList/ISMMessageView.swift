@@ -576,7 +576,7 @@ public struct ISMMessageView: View {
                 ISMShareContactList(dissmiss: $stateViewModel.showSheet , selectedContact: self.$selectedContactToShare, shareContact: $stateViewModel.shareContact)
             }
         }.fullScreenCover(isPresented: $stateViewModel.showLocationSharing, content: {
-            NavigationStack{
+        NavigationStack{
                 ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId, placeName: $placeName, address: $placeAddress)
             }
         })

@@ -741,20 +741,21 @@ struct ISMMessageSubView: View {
                                         } label: {
                                             VStack(alignment: .trailing, spacing: 5){
                                                 ISMLocationSubView(message: message)
-                                                    .cornerRadius(5)
+                                                    .cornerRadius(8)
                                                     .contentShape(Rectangle())
                                                     .allowsHitTesting(true)
                                                 
                                                 HStack{
                                                     Text(message.attachments.first?.title ?? "")
-                                                        .font(appearance.fonts.messageListMessageText)
+                                                        .font(appearance.fonts.locationMessageTitle)
                                                         .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                                     Spacer()
                                                     
                                                 }
                                                 HStack{
                                                     Text(message.attachments.first?.address ?? "")
-                                                        .font(appearance.fonts.messageListReplyToolbarDescription)
+                                                        .multilineTextAlignment(.leading)
+                                                        .font(appearance.fonts.locationMessageDescription)
                                                         .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                                     Spacer()
                                                 }
@@ -768,6 +769,7 @@ struct ISMMessageSubView: View {
                                     }//:VStack
                                     .frame(width: 250)
                                     .padding(5)
+                                    .padding(.trailing,appearance.messageBubbleType == .BubbleWithTail ? 5 : 0)
                                     .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
                                     .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                     .overlay(

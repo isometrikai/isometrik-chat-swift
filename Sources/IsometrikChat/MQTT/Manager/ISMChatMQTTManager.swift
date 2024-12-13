@@ -715,8 +715,8 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                 
                 if self.framework == .UIKit {
                     if UIApplication.shared.applicationState == .background {
-                        if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId{
-                            DispatchQueue.main.async {
+                        DispatchQueue.global(qos: .background).async {
+                            if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId {
                                 self.whenInOtherScreen(messageInfo: messageInfo)
                             }
                         }

@@ -64,7 +64,8 @@ struct ISMLocationSubView: View {
                 
                 appearance.images.mapPinLogo
                     .resizable()
-                    .frame(width: 30,height: 30)
+                    .frame(width: appearance.imagesSize.mapPinLogo.width,height: appearance.imagesSize.mapPinLogo.height)
+                    .scaledToFit()
             }
         }
         .onAppear {

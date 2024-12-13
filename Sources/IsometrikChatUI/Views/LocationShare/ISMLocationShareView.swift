@@ -68,8 +68,9 @@ struct ISMLocationShareView: View {
                     searchPlacesView()
                 }
             } // VSTACK
+            .navigationBarTitle("", displayMode: .inline)
+            .navigationBarItems(leading: !isTextFieldFocused ? navBarLeadingBtn : nil, trailing: !isTextFieldFocused ? navBarTrailingBtn : nil)
             .navigationBarBackButtonHidden(true)
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     VStack {
@@ -79,7 +80,6 @@ struct ISMLocationShareView: View {
                     }
                 }
             }
-            .navigationBarItems(leading: !isTextFieldFocused ? navBarLeadingBtn : nil, trailing: !isTextFieldFocused ? navBarTrailingBtn : nil)
             .onAppear {
                 // Settings
                 locationManager.requestWhenInUseAuthorization()
@@ -170,7 +170,8 @@ struct ISMLocationShareView: View {
             Annotation("", coordinate: coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)) {
                 appearance.images.mapPinLogo
                     .resizable()
-                    .frame(width: 30, height: 30, alignment: .center)
+                    .frame(width: appearance.imagesSize.mapPinLogo.width,height: appearance.imagesSize.mapPinLogo.height)
+                    .scaledToFit()
             }
         }
     }

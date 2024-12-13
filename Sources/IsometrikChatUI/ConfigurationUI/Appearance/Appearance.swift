@@ -171,8 +171,9 @@ public class ISMChatImageSizes{
     public var addAttachmentIcon : CGSize = CGSize(width: 20, height: 20)
     public var deletedMessageLogo : CGSize = CGSize(width: 18, height: 18)
     public var documentIcon : CGSize = CGSize(width: 30, height: 30)
+    public var mapPinLogo : CGSize = CGSize(width: 30, height: 30)
     public init(){}
-    public init(backButton: CGSize? = nil,messageRead: CGSize? = nil,messageDelivered : CGSize? = nil,messageSend : CGSize? = nil,messagePending : CGSize? = nil,messageInfo_replyIcon: CGSize? = nil,messageInfo_forwardIcon: CGSize? = nil,messageInfo_editIcon: CGSize? = nil,messageInfo_copyIcon: CGSize? = nil,messageInfo_infoIcon: CGSize? = nil,messageInfo_deleteIcon: CGSize? = nil,messageAudioButton : CGSize? = nil,addAttachmentIcon : CGSize? = nil,deletedMessageLogo : CGSize? = nil,documentIcon : CGSize? = nil) {
+    public init(backButton: CGSize? = nil,messageRead: CGSize? = nil,messageDelivered : CGSize? = nil,messageSend : CGSize? = nil,messagePending : CGSize? = nil,messageInfo_replyIcon: CGSize? = nil,messageInfo_forwardIcon: CGSize? = nil,messageInfo_editIcon: CGSize? = nil,messageInfo_copyIcon: CGSize? = nil,messageInfo_infoIcon: CGSize? = nil,messageInfo_deleteIcon: CGSize? = nil,messageAudioButton : CGSize? = nil,addAttachmentIcon : CGSize? = nil,deletedMessageLogo : CGSize? = nil,documentIcon : CGSize? = nil,mapPinLogo: CGSize? = nil) {
         self.backButton = backButton ?? CGSize(width: 18, height: 18)
         self.messageRead = messageRead ?? CGSize(width: 15, height: 9)
         self.messageDelivered = messageDelivered ?? CGSize(width: 15, height: 9)
@@ -188,5 +189,6 @@ public class ISMChatImageSizes{
         self.addAttachmentIcon = addAttachmentIcon ?? CGSize(width: 20, height: 20)
         self.deletedMessageLogo = deletedMessageLogo ?? CGSize(width: 18, height: 18)
         self.documentIcon = documentIcon ?? CGSize(width: 30, height: 30)
+        self.mapPinLogo = mapPinLogo ?? CGSize(width: 30, height: 30)
     }
 }
