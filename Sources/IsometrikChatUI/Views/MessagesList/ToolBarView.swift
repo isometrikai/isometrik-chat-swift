@@ -123,7 +123,19 @@ struct ForwardMessageToolBar : View {
                 Spacer()
                 
                 Button {
-                    
+                    if let url = forwardMessageSelected.last?.body {
+                        let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+
+                        // Get the active window from the foreground scene
+                        if let keyWindow = UIApplication.shared.connectedScenes
+                            .filter({ $0.activationState == .foregroundActive })
+                            .compactMap({ $0 as? UIWindowScene })
+                            .flatMap({ $0.windows })
+                            .first(where: { $0.isKeyWindow }) {
+
+                            keyWindow.rootViewController?.present(activityVC, animated: true, completion: nil)
+                        }
+                    }
                 } label: {
                     appearance.images.shareSendButton
                         .resizable()
