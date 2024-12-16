@@ -111,6 +111,7 @@ public struct ISMChatImages {
     public var sendMessage : Image = loadImageSafely(with: "sendMessage")
     public var sendMedia : Image = loadImageSafely(with: "send_Media")
     public var mapTarget : Image = loadImageSafely(with: "target")
+    public var mapDirection : Image = loadImageSafely(with: "")
     public var noMessagePlaceholder : Image = loadImageSafely(with: "NoMessages")
     
     public var postIcon : Image = loadImageSafely(with: "postIcon")
@@ -246,6 +247,7 @@ public struct ISMChatImages {
         deselected: Image? = nil,
         sendMessage: Image? = nil,
         mapTarget: Image? = nil,
+        mapDirection:  Image? = nil,
         noMessagePlaceholder: Image? = nil,
         postIcon: Image? = nil,
         chevronright: Image? = nil,
@@ -283,7 +285,8 @@ public struct ISMChatImages {
         productShareLogo : Image? = nil,
         audioPlayIcon: Image? = nil,
         audioPauseIcon : Image? = nil,
-        deletedMessageLogo : Image? = nil
+        deletedMessageLogo : Image? = nil,
+        locationLogo : Image? = nil
     ) {
         if let addConversation = addConversation { self.addConversation = addConversation }
         if let conversationListPlaceholder = conversationListPlaceholder { self.conversationListPlaceholder = conversationListPlaceholder }
@@ -342,6 +345,7 @@ public struct ISMChatImages {
         if let deselected = deselected { self.deselected = deselected }
         if let sendMessage = sendMessage { self.sendMessage = sendMessage }
         if let mapTarget = mapTarget { self.mapTarget = mapTarget }
+        if let mapDirection = mapDirection { self.mapDirection = mapDirection}
         if let noMessagePlaceholder = noMessagePlaceholder { self.noMessagePlaceholder = noMessagePlaceholder }
         if let postIcon = postIcon { self.postIcon = postIcon }
         if let chevronright = chevronright { self.chevronright = chevronright }
@@ -380,6 +384,7 @@ public struct ISMChatImages {
         if let audioPlayIcon = audioPlayIcon { self.audioPlayIcon = audioPlayIcon}
         if let audioPauseIcon = audioPauseIcon { self.audioPauseIcon = audioPauseIcon}
         if let deletedMessageLogo = deletedMessageLogo { self.deletedMessageLogo = deletedMessageLogo}
+        if let locationLogo = locationLogo { self.locationLogo = locationLogo}
     }
     
 }

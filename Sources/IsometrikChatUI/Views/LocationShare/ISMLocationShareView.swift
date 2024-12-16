@@ -24,46 +24,110 @@ struct ISMLocationShareView: View {
     @Binding var placeId: String?
     @Binding var placeName: String?
     @Binding var address: String?
-    @FocusState private var isTextFieldFocused: Bool
+    @State private var isTextFieldFocused: Bool = false
     @State private var searchText = ""
     @State private var predictions: [GMSAutocompletePrediction] = []
     @State private var selectedPlaceAfterSearch: GMSPlace?
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    
+    let chatproperties = ISMChatSdkUI.getInstance().getChatProperties()
      var sessionToken: GMSAutocompleteSessionToken = GMSAutocompleteSessionToken()
 
     
     // MARK: - LIFECYCLE
     var body: some View {
         ZStack {
-            VStack(spacing: 0) {
-                HStack {
-                    HStack {
-                        appearance.images.searchMagnifingGlass
-                            .foregroundStyle(.gray.opacity(0.5))
-                        TextField("Search or enter an address", text: $searchText)
-                            .focused($isTextFieldFocused)
-                            .font(appearance.fonts.messageListMessageText)
-                    } // HSTACK
-                    .padding(5)
-                    .background(Color(.systemFill).opacity(0.5))
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    if isTextFieldFocused {
-                        Button("Cancel", action: {
-                            hideKeyboard()
-                            searchText = ""
-                            withAnimation {
-                                isTextFieldFocused = false
-                            }
-                        }) // BUTTON
-                        .transition(.move(edge: .trailing))
+           
+            VStack(alignment: .leading, spacing: 15) {
+                
+                HStack{
+                    if isTextFieldFocused == false{
+                        navBarLeadingBtn
+                    }else{
+                        Image("")
+                            .resizable()
+                            .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
                     }
-                } // HSTACK
-                .padding()
-                if !isTextFieldFocused {
+                    Spacer()
+                    
+                    Text("Share Location")
+                        .font(appearance.fonts.navigationBarTitle)
+                        .foregroundColor(appearance.colorPalette.navigationBarTitle)
+                    
+                    Spacer()
+                    
+                    if chatproperties.shareOnlyCurrentLocation == true{
+                        Button(action: {  }) {
+                            Image("")
+                                .resizable()
+                                .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
+                        }
+                    }else{
+                        if isTextFieldFocused == false{
+                            navBarTrailingBtn
+                        } else{
+                            Button(action: {  }) {
+                                Image("")
+                                    .resizable()
+                                    .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
+                            }
+                        }
+                    }
+                    
+                }.padding(.horizontal,15)
+                
+                if chatproperties.shareOnlyCurrentLocation == false{
+                    CustomSearchBar(searchText: $searchText).padding(.horizontal,15)
+                }
+                
+                if isTextFieldFocused == false{
                     mapView(coordinate: CLLocationCoordinate2D(latitude: locationManager.location?.coordinate.latitude ?? 0.0, longitude: locationManager.location?.coordinate.longitude ?? 0.0))
                         .frame(height: 300)
-                    nearByPlacesListView()
+                    if chatproperties.shareOnlyCurrentLocation == false{
+                        nearByPlacesListView()
+                    }else{
+                            Button {
+                                self.longitude = mapViewModel.places.first?.place.coordinate.longitude
+                                self.latitude = mapViewModel.places.first?.place.coordinate.latitude
+                                self.placeId = mapViewModel.places.first?.place.placeID
+                                self.placeName = mapViewModel.places.first?.place.name
+                                self.address = mapViewModel.places.first?.place.formattedAddress
+                                self.dismiss()
+                            } label: {
+                                HStack(spacing:17){
+                                    appearance.images.mapTarget
+                                        .resizable()
+                                        .frame(width: 40,height: 40)
+                                    Text("Use my current location")
+                                        .foregroundColor(Color(hex: "#0E0F0C"))
+                                        .font(appearance.fonts.locationMessageTitle)
+                                }
+                            }.padding(.horizontal,15)
+                            
+                            Button {
+                                self.longitude = self.mapViewModel.places.first?.place.coordinate.longitude
+                                self.latitude = self.mapViewModel.places.first?.place.coordinate.latitude
+                                self.placeId = self.mapViewModel.places.first?.place.placeID
+                                self.placeName = self.mapViewModel.places.first?.place.name
+                                self.address = self.mapViewModel.places.first?.place.formattedAddress
+                                self.dismiss()
+                            } label: {
+                                HStack(spacing:17){
+                                    appearance.images.locationLogo
+                                        .resizable()
+                                        .frame(width: 40, height: 40, alignment: .center)
+                                    VStack(alignment: .leading){
+                                        Text("Use this location")
+                                            .foregroundColor(Color(hex: "#0E0F0C"))
+                                            .font(appearance.fonts.locationMessageTitle)
+                                        Text(self.mapViewModel.places.first?.place.name ?? "")
+                                            .foregroundColor(Color(hex: "#0E0F0C"))
+                                            .font(appearance.fonts.locationMessageDescription)
+                                    }
+                                    
+                                }
+                            }.padding(.horizontal,15)
+                        Spacer()
+                    }
                 } else {
                     searchPlacesView()
                 }
@@ -101,6 +165,13 @@ struct ISMLocationShareView: View {
             }
             .onChange(of: searchText, { _, newValue in
                 //searching places
+                if searchText.count > 0{
+                    if isTextFieldFocused  == false{
+                        isTextFieldFocused = true
+                    }
+                }else{
+                    isTextFieldFocused = false
+                }
                 let delay = 0.3
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                     if newValue == searchText {
@@ -109,7 +180,7 @@ struct ISMLocationShareView: View {
                     }
                 }
             })
-        } // ZSTACK
+        }
     }
     
     
@@ -165,14 +236,26 @@ struct ISMLocationShareView: View {
     }
     
     func mapView(coordinate : CLLocationCoordinate2D?) -> some View{
-        @State var camera : MapCameraPosition = .automatic
-        return Map(position: $camera){
-            Annotation("", coordinate: coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)) {
-                appearance.images.mapPinLogo
-                    .resizable()
-                    .frame(width: appearance.imagesSize.mapPinLogo.width,height: appearance.imagesSize.mapPinLogo.height)
-                    .scaledToFit()
+        @State var camera: MapCameraPosition = .region(
+            MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: coordinate?.latitude ?? 0.0, longitude: coordinate?.longitude ?? 0.0),
+                span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
+            )
+        )
+        return ZStack(alignment: .bottomTrailing){
+            Map(position: $camera){
+                Annotation("", coordinate: coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)) {
+                    appearance.images.mapPinLogo
+                        .resizable()
+                        .frame(width: appearance.imagesSize.mapPinLogo.width,height: appearance.imagesSize.mapPinLogo.height)
+                        .scaledToFit()
+                }
             }
+            appearance.images.mapDirection
+                .resizable()
+                .frame(width: 40, height: 40, alignment: .center)
+                .padding(.trailing,15)
+                .padding(.bottom,15)
         }
     }
     
@@ -191,25 +274,19 @@ struct ISMLocationShareView: View {
     }
     //MARK: - CONFIGURE
     var navBarLeadingBtn : some View{
-        Button(action : {}) {
-            HStack{
-                Button(action: { dismiss() }) {
-                    appearance.images.backButton
-                        .resizable()
-                        .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
-                }
-            }
+        Button(action: { dismiss() }) {
+            appearance.images.backButton
+                .resizable()
+                .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
         }
     }
     
     var navBarTrailingBtn : some View{
-        HStack{
-            Button(action: { getPlaces() }) {
-                appearance.images.refreshLocationLogo
-                    .resizable()
-                    .frame(width: 20, height: 20, alignment: .center)
-                .imageScale(.large) }
-        }
+        Button(action: { getPlaces() }) {
+            appearance.images.refreshLocationLogo
+                .resizable()
+                .frame(width: 20, height: 20, alignment: .center)
+            .imageScale(.large) }
     }
     
     //MARK: - APIS
