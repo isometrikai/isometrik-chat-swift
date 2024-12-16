@@ -21,39 +21,44 @@ struct ISMContactDetailView: View {
     
     //MARK: - BODY
     var body: some View {
-        List{
-            ForEach(data.contacts, id: \.self) { index in
-                ContactDetailCell(presentContact: $presentContact, index: index)
-            }.listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
-        }
-        .listStyle(.plain)
-        .background(Color.listBackground)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden()
-        .navigationBarItems(leading:
-                                Button(action: {
-            presentationMode.wrappedValue.dismiss()
-        }, label: {
-            appearance.images.CloseSheet
-                .resizable()
-                .tint(.black)
-                .foregroundColor(.black)
-                .frame(width: 17,height: 17)
-        })
-        )
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                VStack {
-                    Text("Contacts")
-                        .font(appearance.fonts.navigationBarTitle)
-                        .foregroundColor(appearance.colorPalette.navigationBarTitle)
+        VStack{
+            HStack{
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }, label: {
+                    appearance.images.backButton
+                        .resizable()
+                        .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
+                })
+                Spacer()
+                
+                Text("View Contacts")
+                    .font(appearance.fonts.navigationBarTitle)
+                    .foregroundColor(appearance.colorPalette.navigationBarTitle)
+                
+                Spacer()
+                
+                Button(action: {  }) {
+                    Image("")
+                        .resizable()
+                        .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
                 }
+                
+            }.padding(.horizontal,15)
+            
+            List{
+                ForEach(data.contacts, id: \.self) { index in
+                    ContactDetailCell(presentContact: $presentContact, index: index)
+                }.listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
             }
-        }
-        .sheet(isPresented: $presentContact) {
-            ContactSavingView()
-        }
+            .listStyle(.plain)
+            .background(Color.white)
+            .sheet(isPresented: $presentContact) {
+                ContactSavingView()
+            }
+        }.navigationBarBackButtonHidden(true)
+            .navigationBarHidden(true)
     }
 }
 
@@ -137,6 +142,7 @@ struct ContactDetailCell : View {
     let index : ContactDB
     var body: some View {
         VStack(spacing:0){
+            Spacer()
             HStack(spacing: 10){
                 if let name = index.contactName{
                     UserAvatarView(avatar: "", showOnlineIndicator: false, userName: name)
@@ -145,55 +151,52 @@ struct ContactDetailCell : View {
                 }
                 VStack(alignment: .leading, spacing: 5, content: {
                     Text(index.contactName ?? "")
-                        .font(appearance.fonts.messageListMessageText)
+                        .font(appearance.fonts.contactDetailsTitle)
                         .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                     
                     if let phones = index.contactIdentifier {
                         Text(phones)
-                            .font(appearance.fonts.chatListUserMessage)
+                            .font(appearance.fonts.contactDetailsNumber)
                             .foregroundColor(appearance.colorPalette.chatListUserMessage)
                     }
                 })
                 Spacer()
-            }.padding(5)
-            
-            
-            Rectangle()
-                .fill(appearance.colorPalette.userProfileSeparator)
-                .frame(height: 1)
-            
-            
-            HStack(spacing:0){
-                Spacer()
-                Button {
-                    UIApplication.shared.open(URL(string: "sms:\(index.contactIdentifier ?? "")")!, options: [:], completionHandler: nil)
-                } label: {
-                    Text("Message")
-                        .padding(.vertical,5)
-                        .font(appearance.fonts.messageListMessageText)
-                        .foregroundColor(appearance.colorPalette.userProfileEditText)
-                    
-                }
-                .buttonStyle(PlainButtonStyle())
-                Spacer()
-                Rectangle()
-                    .fill(appearance.colorPalette.userProfileSeparator)
-                    .frame(width: 1)
-                Spacer()
+                
                 Button {
                     presentContact = true
                 } label: {
-                    Text("Save Contact")
-                        .padding(.vertical,5)
-                        .font(appearance.fonts.messageListMessageText)
+                    Text("Add")
+                        .font(appearance.fonts.contactDetailsTitle)
                         .foregroundColor(appearance.colorPalette.userProfileEditText)
                     
                 }
-                .buttonStyle(PlainButtonStyle())
-                Spacer()
+                .frame(width: 60, height: 32, alignment: .center)
+                .background(appearance.colorPalette.chatListUnreadMessageCountBackground)
+                .cornerRadius(32/2)
+                .padding(.trailing,5)
+            }.padding(5)
+            
+            Spacer()
+            Rectangle()
+                .fill(Color("#0E0F0C"))
+                .frame(height: 1)
+            
+            Button {
+                UIApplication.shared.open(URL(string: "sms:\(index.contactIdentifier ?? "")")!, options: [:], completionHandler: nil)
+            } label: {
+                Text("Message")
+                    .padding(.vertical,5)
+                    .font(appearance.fonts.contactDetailButtons)
+                    .foregroundColor(appearance.colorPalette.userProfileEditText)
+                
             }
+            .buttonStyle(PlainButtonStyle())
+            .padding(.vertical,10)
+            
+           
         }
-        .background(Color.white)
-        .cornerRadius(8)
+        .frame(height: 131)
+        .background(Color(hex: "#F5F5F2"))
+        .cornerRadius(16)
     }
 }

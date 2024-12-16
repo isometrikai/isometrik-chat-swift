@@ -226,72 +226,111 @@ struct ISMMessageInfoSubView: View {
                     //MARK: - Contact Message View
                 case .contact:
                     HStack(alignment: .bottom){
-                        if isGroup == true && isReceived == true{
+                        if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                            //When its group show member avatar in message
                             inGroupUserAvatarView()
                         }
-                        VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
-                            if isGroup == true && isReceived == true{
-                                //when its group show member name in message
-                                inGroupUserName()
-                            }
-                            if let metaData = message.metaData{
-                                NavigationLink(destination:  ISMContactDetailView(data : metaData)){
-                                    VStack(alignment: .trailing,spacing: 2){
-                                        if message.messageType == 1{
-                                            forwardedView()
-                                        }
-                                        HStack(spacing: 10){
-                                            
-                                            ISMImageViewer(url: metaData.contacts.first?.contactImageUrl ?? "", size: CGSizeMake(40, 40), cornerRadius: 20)
-                                            
-                                            let name = metaData.contacts.first?.contactName ?? ""
-                                            if metaData.contacts.count == 1{
-                                                Text(name)
-                                                    .font(appearance.fonts.messageListMessageText)
-                                                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                                            }else{
-                                                Text("\(name) and \((metaData.contacts.count) - 1) other contact")
-                                                    .font(appearance.fonts.messageListMessageText)
-                                                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                                            }
-                                            Spacer()
-                                        }.padding(5)
-                                        HStack{
-                                            Spacer()
-                                            if appearance.timeInsideBubble == true{
-                                                dateAndStatusView(onImage: false)
-                                            }
-                                        }
-                                        Divider().background(Color.docBackground)
-                                        HStack{
-                                            Spacer()
-                                            Text(metaData.contacts.count == 1 ? "View" : "View All")
-                                                .font(appearance.fonts.messageListMessageText)
-                                                .foregroundColor(appearance.colorPalette.userProfileEditText)
-                                            Spacer()
-                                        }.padding(.vertical,5)
-                                    }
-                                    .frame(width: 250)
-                                    .padding(5)
-                                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-                                    .overlay(
-                                        appearance.messageBubbleType == .BubbleWithOutTail ?
-                                        AnyView(
-                                            UnevenRoundedRectangle(
-                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-                                                style: .circular
-                                            )
-                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-                                        ) : AnyView(EmptyView())
-                                    )
+                        ZStack(alignment: .bottomTrailing){
+                            VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                    //when its group show member name in message
+                                    inGroupUserName()
                                 }
-                            }
-                            if appearance.timeInsideBubble == false{
-                                dateAndStatusView(onImage: false)
+                                if let metaData = message.metaData{
+                                    NavigationLink(destination:  ISMContactDetailView(data : metaData)){
+                                        VStack(alignment: .trailing,spacing: 2){
+                                            if message.messageType == 1{
+                                                forwardedView()
+                                            }
+                                            HStack(spacing: 10){
+                                                if metaData.contacts.count == 1{
+                                                    UserAvatarView(avatar: metaData.contacts.first?.contactImageUrl ?? "", showOnlineIndicator: false, userName: metaData.contacts.first?.contactName ?? "")
+                                                        .scaledToFill()
+                                                        .frame(width: 40, height: 40)
+                                                        .cornerRadius(20)
+                                                }else if metaData.contacts.count == 2{
+                                                    HStack(spacing: -25) { // Negative spacing for overlap
+                                                        UserAvatarView(avatar: metaData.contacts.first?.contactImageUrl ?? "", showOnlineIndicator: false, userName: metaData.contacts.first?.contactName ?? "")
+                                                            .scaledToFill()
+                                                            .frame(width: 40, height: 40)
+                                                            .cornerRadius(20)
+                                                        
+                                                        UserAvatarView(avatar: metaData.contacts.last?.contactImageUrl ?? "", showOnlineIndicator: false, userName: metaData.contacts.last?.contactName ?? "")
+                                                            .scaledToFill()
+                                                            .frame(width: 40, height: 40)
+                                                            .cornerRadius(20)
+                                                    }
+                                                }else if metaData.contacts.count > 2{
+                                                    HStack(spacing: -25) { // Negative spacing for overlap
+                                                        UserAvatarView(avatar: metaData.contacts.first?.contactImageUrl ?? "", showOnlineIndicator: false, userName: metaData.contacts.first?.contactName ?? "")
+                                                            .scaledToFill()
+                                                            .frame(width: 40, height: 40)
+                                                            .cornerRadius(20)
+                                                        
+                                                        UserAvatarView(avatar: metaData.contacts.last?.contactImageUrl ?? "", showOnlineIndicator: false, userName: metaData.contacts.last?.contactName ?? "")
+                                                            .scaledToFill()
+                                                            .frame(width: 40, height: 40)
+                                                            .cornerRadius(20)
+                                                        
+                                                        UserAvatarView(avatar: metaData.contacts.last?.contactImageUrl ?? "", showOnlineIndicator: false, userName: metaData.contacts.last?.contactName ?? "")
+                                                            .scaledToFill()
+                                                            .frame(width: 40, height: 40)
+                                                            .cornerRadius(20)
+                                                    }
+                                                }
+                                                
+                                                
+                                                let name = metaData.contacts.first?.contactName ?? ""
+                                                if metaData.contacts.count == 1{
+                                                    Text(name)
+                                                        .multilineTextAlignment(.leading)
+                                                        .font(appearance.fonts.contactMessageTitle)
+                                                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                }else{
+                                                    Text("\(name) and \((metaData.contacts.count) - 1) other contact")
+                                                        .multilineTextAlignment(.leading)
+                                                        .font(appearance.fonts.contactMessageTitle)
+                                                        .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                }
+                                                Spacer()
+                                            }.padding(5)
+                                            HStack{
+                                                Spacer()
+                                                if appearance.timeInsideBubble == true{
+                                                    dateAndStatusView(onImage: false).padding(.trailing,3)
+                                                }
+                                            }
+                                            Divider().background(Color.docBackground)
+                                            HStack{
+                                                Spacer()
+                                                Text(metaData.contacts.count == 1 ? "View" : "View All")
+                                                    .font(appearance.fonts.contactMessageButton)
+                                                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                Spacer()
+                                            }.padding(.vertical,5)
+                                        }
+                                        .frame(width: 250)
+                                        .padding(5)
+                                        .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                        .overlay(
+                                            appearance.messageBubbleType == .BubbleWithOutTail ?
+                                            AnyView(
+                                                UnevenRoundedRectangle(
+                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                    style: .circular
+                                                )
+                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                            ) : AnyView(EmptyView())
+                                        )
+                                    }
+                                }
+                                if appearance.timeInsideBubble == false{
+                                    dateAndStatusView(onImage: false)
+                                }
                             }
                         }
                         .padding(.vertical, 2)

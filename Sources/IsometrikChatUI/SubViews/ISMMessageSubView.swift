@@ -305,20 +305,53 @@ struct ISMMessageSubView: View {
                                                 forwardedView()
                                             }
                                             HStack(spacing: 10){
+                                                if metaData.contacts.count == 1{
+                                                    UserAvatarView(avatar: metaData.contacts.first?.contactImageUrl ?? "", showOnlineIndicator: false, userName: metaData.contacts.first?.contactName ?? "")
+                                                        .scaledToFill()
+                                                        .frame(width: 40, height: 40)
+                                                        .cornerRadius(20)
+                                                }else if metaData.contacts.count == 2{
+                                                    HStack(spacing: -25) { // Negative spacing for overlap
+                                                        UserAvatarView(avatar: metaData.contacts.first?.contactImageUrl ?? "", showOnlineIndicator: false, userName: metaData.contacts.first?.contactName ?? "")
+                                                            .scaledToFill()
+                                                            .frame(width: 40, height: 40)
+                                                            .cornerRadius(20)
+                                                        
+                                                        UserAvatarView(avatar: metaData.contacts.last?.contactImageUrl ?? "", showOnlineIndicator: false, userName: metaData.contacts.last?.contactName ?? "")
+                                                            .scaledToFill()
+                                                            .frame(width: 40, height: 40)
+                                                            .cornerRadius(20)
+                                                    }
+                                                }else if metaData.contacts.count > 2{
+                                                    HStack(spacing: -25) { // Negative spacing for overlap
+                                                        UserAvatarView(avatar: metaData.contacts.first?.contactImageUrl ?? "", showOnlineIndicator: false, userName: metaData.contacts.first?.contactName ?? "")
+                                                            .scaledToFill()
+                                                            .frame(width: 40, height: 40)
+                                                            .cornerRadius(20)
+                                                        
+                                                        UserAvatarView(avatar: metaData.contacts.last?.contactImageUrl ?? "", showOnlineIndicator: false, userName: metaData.contacts.last?.contactName ?? "")
+                                                            .scaledToFill()
+                                                            .frame(width: 40, height: 40)
+                                                            .cornerRadius(20)
+                                                        
+                                                        UserAvatarView(avatar: metaData.contacts.last?.contactImageUrl ?? "", showOnlineIndicator: false, userName: metaData.contacts.last?.contactName ?? "")
+                                                            .scaledToFill()
+                                                            .frame(width: 40, height: 40)
+                                                            .cornerRadius(20)
+                                                    }
+                                                }
                                                 
-                                                UserAvatarView(avatar: metaData.contacts.first?.contactImageUrl ?? "", showOnlineIndicator: false, userName: metaData.contacts.first?.contactName ?? "")
-                                                    .scaledToFill()
-                                                    .frame(width: 40, height: 40)
-                                                    .cornerRadius(20)
                                                 
                                                 let name = metaData.contacts.first?.contactName ?? ""
                                                 if metaData.contacts.count == 1{
                                                     Text(name)
-                                                        .font(appearance.fonts.messageListMessageText)
+                                                        .multilineTextAlignment(.leading)
+                                                        .font(appearance.fonts.contactMessageTitle)
                                                         .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                                 }else{
                                                     Text("\(name) and \((metaData.contacts.count) - 1) other contact")
-                                                        .font(appearance.fonts.messageListMessageText)
+                                                        .multilineTextAlignment(.leading)
+                                                        .font(appearance.fonts.contactMessageTitle)
                                                         .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                                 }
                                                 Spacer()
@@ -333,8 +366,8 @@ struct ISMMessageSubView: View {
                                             HStack{
                                                 Spacer()
                                                 Text(metaData.contacts.count == 1 ? "View" : "View All")
-                                                    .font(appearance.fonts.messageListMessageText)
-                                                    .foregroundColor(appearance.colorPalette.userProfileEditText)
+                                                    .font(appearance.fonts.contactMessageButton)
+                                                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
                                                 Spacer()
                                             }.padding(.vertical,5)
                                         }
