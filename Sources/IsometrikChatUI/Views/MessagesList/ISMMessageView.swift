@@ -279,7 +279,12 @@ public struct ISMMessageView: View {
                     setupOnAppear()
                     stateViewModel.navigateToImageEditor = false
                     addNotificationObservers()
-                    
+                    if fromBroadCastFlow == true{
+                        reloadBroadCastMessages()
+                    }else{
+                        getConversationDetail()
+                        reload()
+                    }
                 }
                 .onDisappear{
                     OnMessageList = false
@@ -674,12 +679,7 @@ public struct ISMMessageView: View {
             self.getMessages()
             //added this from on appear
             
-            if fromBroadCastFlow == true{
-                reloadBroadCastMessages()
-            }else{
-                getConversationDetail()
-                reload()
-            }
+            
             if chatFeatures.contains(.audiocall) == true || chatFeatures.contains(.videocall) == true{
                 checkAudioPermission()
             }

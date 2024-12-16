@@ -101,10 +101,6 @@ struct ForwardMessageToolBar : View {
         VStack{
             Divider()
             HStack{
-                Text("\(forwardMessageSelected.count) Selected")
-                    .font(appearance.fonts.messageListtoolbarSelected)
-                    .foregroundColor(appearance.colorPalette.messageListtoolbarSelected)
-                Spacer()
                 Button {
                     if ISMChatSdk.getInstance().getFramework() == .UIKit{
                         navigateToForwardList()
@@ -114,9 +110,24 @@ struct ForwardMessageToolBar : View {
                         }
                     }
                 } label: {
-                    Text("Forward")
-                        .foregroundColor(forwardMessageSelected.count == 0 ? appearance.colorPalette.messageListTextViewPlaceholder : appearance.colorPalette.messageListtoolbarAction)
-                        .font(appearance.fonts.messageListtoolbarAction)
+                    appearance.images.forwardSendButton
+                        .resizable()
+                        .frame(width: 24, height: 24, alignment: .center)
+                }
+                .disabled(forwardMessageSelected.count == 0)
+                
+                Spacer()
+                Text("\(forwardMessageSelected.count) Selected")
+                    .font(appearance.fonts.messageListMessageText)
+                    .foregroundColor(appearance.colorPalette.messageListtoolbarSelected)
+                Spacer()
+                
+                Button {
+                    
+                } label: {
+                    appearance.images.shareSendButton
+                        .resizable()
+                        .frame(width: 24, height: 24, alignment: .center)
                 }
                 .disabled(forwardMessageSelected.count == 0)
             }

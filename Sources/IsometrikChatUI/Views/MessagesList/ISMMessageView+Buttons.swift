@@ -104,20 +104,35 @@ extension ISMMessageView{
     }
     
     func backButtonView() -> some View {
-        Button(action: {
-            //just resetting unread count for this conversation while going back to conversation list
-//            realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
-            //sometimes keyboard doesn't get dismissed
-            OndisappearOnBack()
-            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-            NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
-            //dismiss
-            delegate?.backButtonAction()
-            presentationMode.wrappedValue.dismiss()
-        }) {
-            appearance.images.backButton
-                .resizable()
-                .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
+        HStack{
+            if stateViewModel.showforwardMultipleMessage || stateViewModel.showDeleteMultipleMessage {
+                Button {
+                    stateViewModel.showforwardMultipleMessage = false
+                    forwardMessageSelected.removeAll()
+                    stateViewModel.showDeleteMultipleMessage = false
+                    deleteMessage.removeAll()
+                } label: {
+                    appearance.images.dismissButton
+                        .resizable()
+                        .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
+                }
+            }else {
+                Button(action: {
+                    //just resetting unread count for this conversation while going back to conversation list
+                    //            realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
+                    //sometimes keyboard doesn't get dismissed
+                    OndisappearOnBack()
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
+                    //dismiss
+                    delegate?.backButtonAction()
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    appearance.images.backButton
+                        .resizable()
+                        .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
+                }
+            }
         }
     }
     
@@ -275,14 +290,7 @@ extension ISMMessageView{
     func navigationBarTrailingButtons() -> some View {
         HStack {
             if stateViewModel.showforwardMultipleMessage || stateViewModel.showDeleteMultipleMessage {
-                Button {
-                    stateViewModel.showforwardMultipleMessage = false
-                    forwardMessageSelected.removeAll()
-                    stateViewModel.showDeleteMultipleMessage = false
-                    deleteMessage.removeAll()
-                } label: {
-                    Text("Cancel")
-                }
+               
             }else {
                 
                 if isGroup == false && opponenDetail?.userId == nil && opponenDetail?.userName == nil{

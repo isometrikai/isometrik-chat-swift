@@ -33,6 +33,7 @@ public struct ISMChatImages {
     
     //messageList
     public var backButton : Image = loadImageSafely(with: "Back")
+    public var dismissButton : Image = loadImageSafely(with: "CloseScreen")
     public var backButtonGrey : Image = loadImageSafely(with: "back_Button")
     public var videoCall : Image = loadImageSafely(with: "video_Calling")
     public var audioCall : Image = loadImageSafely(with: "audio_Calling")
@@ -186,13 +187,15 @@ public struct ISMChatImages {
     public var attachment_Location : Image = loadImageSafely(with: "attachment_location")
     public var attachment_Contact : Image = loadImageSafely(with: "attachment_contact")
     public var attachment_Sticker : Image = loadImageSafely(with: "attachment_sticker")
-    
+    public var forwardSendButton : Image = loadImageSafely(with: "forward_send")
+    public var shareSendButton : Image = loadImageSafely(with: "share_send")
     public init(){}
     
     public init(
         addConversation: Image? = nil,
         conversationListPlaceholder: Image? = nil,
         backButton: Image? = nil,
+        dismissButton: Image? = nil,
         backButtonGrey: Image? = nil,
         videoCall: Image? = nil,
         audioCall: Image? = nil,
@@ -291,6 +294,7 @@ public struct ISMChatImages {
         if let addConversation = addConversation { self.addConversation = addConversation }
         if let conversationListPlaceholder = conversationListPlaceholder { self.conversationListPlaceholder = conversationListPlaceholder }
         if let backButton = backButton { self.backButton = backButton }
+        if let dismissButton = dismissButton { self.dismissButton = dismissButton}
         if let backButtonGrey = backButtonGrey { self.backButtonGrey = backButtonGrey }
         if let videoCall = videoCall { self.videoCall = videoCall }
         if let audioCall = audioCall { self.audioCall = audioCall }
