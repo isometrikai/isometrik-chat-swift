@@ -198,8 +198,10 @@ struct BasicToolBarView : View {
     var onSendMessage : () -> ()
     var body: some View {
         VStack(spacing: 0) {
-            if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
-                ReplyToolBarView(selectedMsgToReply: $selectedMsgToReply)
+            if ISMChatSdkUI.getInstance().getChatProperties().replyMessageInsideInputView == false{
+                if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
+                    ReplyToolBarView(selectedMsgToReply: $selectedMsgToReply)
+                }
             }
             
             if textFieldtxt.isValidURL && !ISMChatSdkUI.getInstance().getChatProperties().hideLinkPreview {
@@ -207,7 +209,7 @@ struct BasicToolBarView : View {
                 LinkPreviewToolBarView(text: textFieldtxt)
             }
             
-            MainToolBarView(textFieldtxt: $textFieldtxt, parentMessageIdToScroll: $parentMessageIdToScroll, audioLocked: $audioLocked, isClicked: $isClicked,uAreBlock: $uAreBlock,showUnblockPopUp: $showUnblockPopUp,isShowingRedTimerStart: $isShowingRedTimerStart,showActionSheet: $showActionSheet,showGifPicker: $showGifPicker,audioPermissionCheck: $audioPermissionCheck, keyboardFocused: $keyboardFocused, onSendMessage: {
+            MainToolBarView(textFieldtxt: $textFieldtxt, parentMessageIdToScroll: $parentMessageIdToScroll, audioLocked: $audioLocked, isClicked: $isClicked,uAreBlock: $uAreBlock,showUnblockPopUp: $showUnblockPopUp,isShowingRedTimerStart: $isShowingRedTimerStart,showActionSheet: $showActionSheet,showGifPicker: $showGifPicker,audioPermissionCheck: $audioPermissionCheck, keyboardFocused: $keyboardFocused, selectedMsgToReply: $selectedMsgToReply, onSendMessage: {
                 onSendMessage()
             })
                 .environmentObject(self.realmManager)
@@ -231,6 +233,7 @@ struct MainToolBarView : View {
     @Binding var showGifPicker : Bool
     @Binding var audioPermissionCheck :Bool
     @Binding var keyboardFocused : Bool
+    @Binding var selectedMsgToReply : MessagesDB
     @EnvironmentObject var realmManager : RealmManager
     var conversationDetail : ISMChatConversationDetail?
     var onSendMessage : () -> ()
@@ -535,24 +538,32 @@ struct MainToolBarView : View {
                 attachmentButton
             }
             
-            HStack(spacing: 5) {
-                // GIF Button (on left)
-                if chatFeatures.contains(.gif),
-                   ISMChatSdkUI.getInstance().getChatProperties().gifLogoOnTextViewLeft == true {
-                    gifButton
-                        .padding(.leading, 10)
+            VStack{
+                
+                if ISMChatSdkUI.getInstance().getChatProperties().replyMessageInsideInputView == true{
+                    if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
+                        ReplyToolBarView(selectedMsgToReply: $selectedMsgToReply).cornerRadius(16).padding(.horizontal,5)
+                    }
                 }
-                
-                // Text Field
-                messageTextField
-                
-                // GIF Button (on right, when TextField is empty)
-                if chatFeatures.contains(.gif),
-                   textFieldtxt.isEmpty,
-                   ISMChatSdkUI.getInstance().getChatProperties().gifLogoOnTextViewLeft == false {
-                    gifButton
-                        .frame(width: 15, height: 15)
-                        .padding(.horizontal, 10)
+                HStack(spacing: 5) {
+                    // GIF Button (on left)
+                    if chatFeatures.contains(.gif),
+                       ISMChatSdkUI.getInstance().getChatProperties().gifLogoOnTextViewLeft == true {
+                        gifButton
+                            .padding(.leading, 10)
+                    }
+                    
+                    // Text Field
+                    messageTextField
+                    
+                    // GIF Button (on right, when TextField is empty)
+                    if chatFeatures.contains(.gif),
+                       textFieldtxt.isEmpty,
+                       ISMChatSdkUI.getInstance().getChatProperties().gifLogoOnTextViewLeft == false {
+                        gifButton
+                            .frame(width: 15, height: 15)
+                            .padding(.horizontal, 10)
+                    }
                 }
             }.padding(.vertical,5)
             .background(
@@ -629,196 +640,193 @@ struct ReplyToolBarView : View {
     @State var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @ObservedObject public var stateViewModel = UIStateViewModel()
     var body: some View {
-        HStack {
-            Rectangle()
-                .frame(width: 5, height: 50)
+        HStack(alignment: .center) {
+            RoundedRectangle(cornerRadius: 2.5)
+                .frame(width: 5, height: 35)
                 .foregroundColor(appearance.colorPalette.messageListReplyToolbarRectangle)
-            Spacer()
-            HStack(alignment: .center) {
-                VStack(alignment: .leading, spacing: 2) {
-                    let myUserId = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId
-                    Text((selectedMsgToReply.senderInfo?.userId ?? selectedMsgToReply.initiatorId) != myUserId ? "\(selectedMsgToReply.senderInfo?.userName ?? selectedMsgToReply.initiatorName)" : ConstantStrings.you)
-                        .font(appearance.fonts.messageListReplyToolbarHeader)
-                        .foregroundColor(appearance.colorPalette.messageListReplyToolbarHeader)
-                    
-                    let msg = selectedMsgToReply.body
-                    switch ISMChatHelper.getMessageType(message: selectedMsgToReply) {
-                    case .video:
-                        Label {
-                            Text(selectedMsgToReply.metaData?.captionMessage != nil ? (selectedMsgToReply.metaData?.captionMessage ?? "Video") : "Video")
-                                .font(appearance.fonts.messageListReplyToolbarDescription)
-                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
-                                .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                        } icon: {
-                            appearance.images.replyVideoIcon
-                                .resizable()
-                                .frame(width: 14,height: 12)
-                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
-                        }
-                    case .photo:
-                        Label {
-                            Text(selectedMsgToReply.metaData?.captionMessage != nil ? (selectedMsgToReply.metaData?.captionMessage ?? "Photo") : "Photo")
-                                .font(appearance.fonts.messageListReplyToolbarDescription)
-                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
-                                .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                        } icon: {
-                            appearance.images.replyCameraIcon
-                                .resizable()
-                                .frame(width: 14,height: 12)
-                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
-                        }
-                    case .audio:
-                        Label {
-                            Text("Audio")
-                                .font(appearance.fonts.messageListReplyToolbarDescription)
-                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
-                                .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                        } icon: {
-                            appearance.images.replyAudioIcon
-                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
-                        }
-                    case .document:
-                        Label {
-                            let str = URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? "")?.lastPathComponent.components(separatedBy: "_").last
-                            Text(str ?? "Document")
-                                .font(appearance.fonts.messageListReplyToolbarDescription)
-                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
-                                .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                        } icon: {
-                            appearance.images.replyDocumentIcon
-                                .resizable()
-                                .frame(width: 14,height: 12)
-                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
-                        }
-                    case .location:
-                        Label {
-                            let location = "\(selectedMsgToReply.attachments.first?.title ?? "Location") \(selectedMsgToReply.attachments.first?.address ?? "")"
-                            Text(location)
-                                .font(appearance.fonts.messageListReplyToolbarDescription)
-                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
-                                .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                        } icon: {
-                            appearance.images.replyLocationIcon
-                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
-                        }
-                    case .contact:
-                        Label {
-                            if let count = selectedMsgToReply.metaData?.contacts.count{
-                                if count == 1{
-                                    let contactText = "\(selectedMsgToReply.metaData?.contacts.first?.contactName ?? "")"
-                                    Text(contactText)
-                                        .font(appearance.fonts.messageListReplyToolbarDescription)
-                                        .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
-                                        .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                                }else{
-                                    let contactText = "\(selectedMsgToReply.metaData?.contacts.first?.contactName ?? "") and \(count - 1) other contacts"
-                                    Text(contactText)
-                                        .font(appearance.fonts.messageListReplyToolbarDescription)
-                                        .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
-                                        .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                                }
+            VStack(alignment: .leading, spacing: 2) {
+                let myUserId = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId
+                Text((selectedMsgToReply.senderInfo?.userId ?? selectedMsgToReply.initiatorId) != myUserId ? "\(selectedMsgToReply.senderInfo?.userName ?? selectedMsgToReply.initiatorName)" : ConstantStrings.you)
+                    .font(appearance.fonts.messageListReplyToolbarHeader)
+                    .foregroundColor(appearance.colorPalette.messageListReplyToolbarHeader)
+                
+                let msg = selectedMsgToReply.body
+                switch ISMChatHelper.getMessageType(message: selectedMsgToReply) {
+                case .video:
+                    Label {
+                        Text(selectedMsgToReply.metaData?.captionMessage != nil ? (selectedMsgToReply.metaData?.captionMessage ?? "Video") : "Video")
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                    } icon: {
+                        appearance.images.replyVideoIcon
+                            .resizable()
+                            .frame(width: 14,height: 12)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                    }
+                case .photo:
+                    Label {
+                        Text(selectedMsgToReply.metaData?.captionMessage != nil ? (selectedMsgToReply.metaData?.captionMessage ?? "Photo") : "Photo")
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                    } icon: {
+                        appearance.images.replyCameraIcon
+                            .resizable()
+                            .frame(width: 14,height: 12)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                    }
+                case .audio:
+                    Label {
+                        Text("Audio")
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                    } icon: {
+                        appearance.images.replyAudioIcon
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                    }
+                case .document:
+                    Label {
+                        let str = URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? "")?.lastPathComponent.components(separatedBy: "_").last
+                        Text(str ?? "Document")
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                    } icon: {
+                        appearance.images.replyDocumentIcon
+                            .resizable()
+                            .frame(width: 14,height: 12)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                    }
+                case .location:
+                    Label {
+                        let location = "\(selectedMsgToReply.attachments.first?.title ?? "Location") \(selectedMsgToReply.attachments.first?.address ?? "")"
+                        Text(location)
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                    } icon: {
+                        appearance.images.replyLocationIcon
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                    }
+                case .contact:
+                    Label {
+                        if let count = selectedMsgToReply.metaData?.contacts.count{
+                            if count == 1{
+                                let contactText = "\(selectedMsgToReply.metaData?.contacts.first?.contactName ?? "")"
+                                Text(contactText)
+                                    .font(appearance.fonts.messageListReplyToolbarDescription)
+                                    .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                                    .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                             }else{
-                                let contactText = "Contacts"
+                                let contactText = "\(selectedMsgToReply.metaData?.contacts.first?.contactName ?? "") and \(count - 1) other contacts"
                                 Text(contactText)
                                     .font(appearance.fonts.messageListReplyToolbarDescription)
                                     .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                                     .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                             }
-                        } icon: {
-                            appearance.images.replyContactIcon
-                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
-                        }
-                    case .sticker:
-                        AnimatedImage(url: URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? ""))
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                    case .gif:
-                        Label {
-                            Text("GIF")
+                        }else{
+                            let contactText = "Contacts"
+                            Text(contactText)
                                 .font(appearance.fonts.messageListReplyToolbarDescription)
                                 .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                                 .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                        } icon: {
-                            appearance.images.replyGifIcon
-                                .resizable()
-                                .frame(width: 20, height: 15)
                         }
-                    case .AudioCall:
-                        Label {
-                            Text("Audio Call")
-                                .font(appearance.fonts.messageListReplyToolbarDescription)
-                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
-                                .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                        } icon: {
-                            appearance.images.audioCall
-                                .resizable()
-                                .frame(width: 20, height: 15)
-                        }
-                    case .VideoCall:
-                        Label {
-                            Text("Video Call")
-                                .font(appearance.fonts.messageListReplyToolbarDescription)
-                                .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
-                                .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                        } icon: {
-                            appearance.images.videoCall
-                                .resizable()
-                                .frame(width: 20, height: 15)
-                        }
-                    default:
-                        Text(msg)
+                    } icon: {
+                        appearance.images.replyContactIcon
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                    }
+                case .sticker:
+                    AnimatedImage(url: URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? ""))
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                case .gif:
+                    Label {
+                        Text("GIF")
                             .font(appearance.fonts.messageListReplyToolbarDescription)
                             .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                             .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
-                            .overlay(
-                                GeometryReader { proxy in
-                                    Color
-                                        .clear
-                                        .preference(key: ContentLengthPreference.self,
-                                                    value: proxy.size.height)
-                                }
-                            )
-                    }
-                }
-                Spacer()
-                if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .photo{
-                    ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply.attachments.first?.mediaUrl ?? "")
-                        .frame(width: 40, height: 40, alignment: .center)
-                        .cornerRadius(5)
-                }else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .video{
-                    ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply.attachments.first?.thumbnailUrl ?? "")
-                        .frame(width: 40, height: 40, alignment: .center)
-                        .cornerRadius(5)
-                }else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .document{
-                        appearance.images.pdfLogo
+                    } icon: {
+                        appearance.images.replyGifIcon
                             .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 40, height: 40, alignment: .center)
-                }
-                else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .gif{
-                    AnimatedImage(url: URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? ""),isAnimating: $stateViewModel.isAnimating)
-                        .resizable()
-                        .frame(width: 45, height: 40)
-                        .cornerRadius(5)
+                            .frame(width: 20, height: 15)
+                    }
+                case .AudioCall:
+                    Label {
+                        Text("Audio Call")
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                    } icon: {
+                        appearance.images.audioCall
+                            .resizable()
+                            .frame(width: 20, height: 15)
+                    }
+                case .VideoCall:
+                    Label {
+                        Text("Video Call")
+                            .font(appearance.fonts.messageListReplyToolbarDescription)
+                            .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                            .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
+                    } icon: {
+                        appearance.images.videoCall
+                            .resizable()
+                            .frame(width: 20, height: 15)
+                    }
+                default:
+                    Text(msg)
+                        .font(appearance.fonts.messageListReplyToolbarDescription)
+                        .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
+                        .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                         .overlay(
-                            LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                                .frame(width: 45, height: 40)
-                                .mask(
-                                    RoundedRectangle(cornerRadius: 5)
-                                        .fill(Color.white)
-                                )
+                            GeometryReader { proxy in
+                                Color
+                                    .clear
+                                    .preference(key: ContentLengthPreference.self,
+                                                value: proxy.size.height)
+                            }
                         )
                 }
-                Button {
-                    selectedMsgToReply = MessagesDB()
-                } label: {
-                    appearance.images.cancelReplyMessageSelected
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                }
-                .padding()
             }
-        }
+            Spacer()
+            if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .photo{
+                ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply.attachments.first?.mediaUrl ?? "")
+                    .frame(width: 40, height: 40, alignment: .center)
+                    .cornerRadius(5)
+            }else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .video{
+                ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply.attachments.first?.thumbnailUrl ?? "")
+                    .frame(width: 40, height: 40, alignment: .center)
+                    .cornerRadius(5)
+            }else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .document{
+                appearance.images.pdfLogo
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 40, height: 40, alignment: .center)
+            }
+            else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .gif{
+                AnimatedImage(url: URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? ""),isAnimating: $stateViewModel.isAnimating)
+                    .resizable()
+                    .frame(width: 45, height: 40)
+                    .cornerRadius(5)
+                    .overlay(
+                        LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                            .frame(width: 45, height: 40)
+                            .mask(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .fill(Color.white)
+                            )
+                    )
+            }
+            Button {
+                selectedMsgToReply = MessagesDB()
+            } label: {
+                appearance.images.cancelReplyMessageSelected
+                    .resizable()
+                    .frame(width: appearance.imagesSize.cancelReplyMessage.width, height: appearance.imagesSize.cancelReplyMessage.height)
+            }
+            .padding()
+        }.padding(.leading,10)
         .background(appearance.colorPalette.messageListReplyToolBarBackground)
         .frame(height: 50)
     }
