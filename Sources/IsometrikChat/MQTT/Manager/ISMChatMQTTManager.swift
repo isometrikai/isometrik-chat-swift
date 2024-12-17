@@ -713,8 +713,9 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                 }
             
                 
-                if self.framework == .UIKit {
+//                if self.framework == .UIKit {
                     if UIApplication.shared.applicationState == .background {
+                        UserDefaults.standard.setValue("app is in background and i got mqtt event", forKey: "Chatsdk_1")
                         DispatchQueue.global(qos: .background).async {
                             if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId {
                                 self.whenInOtherScreen(messageInfo: messageInfo)
@@ -737,7 +738,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             }
                         }
                     }
-                }
+//                }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": messageInfo,"error" : ""])
                     NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
@@ -753,6 +754,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
             let viewModel = ChatsViewModel()
             if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
                 if messageInfo.action != ISMChatActionType.conversationCreated.value{
+                    UserDefaults.standard.setValue("triggered local notification in background", forKey: "Chatsdk_2")
                     ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.senderName ?? "")", body: "\(messageInfo.notificationBody ?? (messageInfo.body ?? ""))", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? "","senderProfileImageUrl" : messageInfo.senderProfileImageUrl ?? ""])
                 }
                 viewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
