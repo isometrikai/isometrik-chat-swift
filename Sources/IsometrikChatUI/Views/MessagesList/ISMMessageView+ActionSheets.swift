@@ -73,20 +73,20 @@ extension ISMMessageView{
                                 appearance.images.attachment_Gallery
                                     .resizable()
                                     .frame(width: 48, height: 48, alignment: .center)
-                            }else if item.name == ISMChatConfigAttachmentType.document.name{
-                                appearance.images.attachment_Document
-                                    .resizable()
-                                    .frame(width: 48, height: 48, alignment: .center)
-                            }else if item.name == ISMChatConfigAttachmentType.location.name{
-                                appearance.images.attachment_Location
-                                    .resizable()
-                                    .frame(width: 48, height: 48, alignment: .center)
                             }else if item.name == ISMChatConfigAttachmentType.contact.name{
                                 appearance.images.attachment_Contact
                                     .resizable()
                                     .frame(width: 48, height: 48, alignment: .center)
                             }else if item.name == ISMChatConfigAttachmentType.sticker.name{
                                 appearance.images.attachment_Sticker
+                                    .resizable()
+                                    .frame(width: 48, height: 48, alignment: .center)
+                            }else if item.name == ISMChatConfigAttachmentType.document.name{
+                                appearance.images.attachment_Document
+                                    .resizable()
+                                    .frame(width: 48, height: 48, alignment: .center)
+                            }else if item.name == ISMChatConfigAttachmentType.location.name{
+                                appearance.images.attachment_Location
                                     .resizable()
                                     .frame(width: 48, height: 48, alignment: .center)
                             }

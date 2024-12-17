@@ -356,12 +356,12 @@ struct ISMMessageInfoSubView: View {
                                         }
                                         
                                         ZStack(alignment: .bottomTrailing){
-                                            ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
+                                            ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 16)
                                                 .overlay(
                                                     LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                                                         .frame(width: 250, height: 300)
                                                         .mask(
-                                                            RoundedRectangle(cornerRadius: 5)
+                                                            RoundedRectangle(cornerRadius: 16)
                                                                 .fill(Color.white)
                                                         )
                                                 )
@@ -1444,7 +1444,7 @@ struct ISMMessageInfoSubView: View {
     }
     
     func dateAndStatusView(onImage : Bool) -> some View{
-        HStack(alignment: .center,spacing: 3){
+        HStack(alignment: .center,spacing: 10){
             Text(message.sentAt.datetotime())
                 .font(Font.regular(size: 12))
                 .foregroundColor(onImage ? Color.white : (isReceived ? appearance.colorPalette.messageListMessageTimeReceived :  appearance.colorPalette.messageListMessageTimeSend))

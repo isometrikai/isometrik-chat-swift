@@ -295,18 +295,18 @@ struct MainToolBarView : View {
     private var audioButton: some View {
         ZStack {
             if !audioLocked {
-                if chatViewModel.isRecording {
-                    VStack {
-                        appearance.images.audioLock
-                            .padding()
-                        Spacer()
-                    }
-                    .background(appearance.colorPalette.messageListToolBarBackground)
-                    .cornerRadius(20, corners: .topLeft)
-                    .cornerRadius(20, corners: .topRight)
-                    .frame(width: 30, height: 50)
-                    .offset(y: -50)
-                }
+//                if chatViewModel.isRecording {
+//                    VStack {
+//                        appearance.images.audioLock
+//                            .padding()
+//                        Spacer()
+//                    }
+//                    .background(appearance.colorPalette.messageListToolBarBackground)
+//                    .cornerRadius(20, corners: .topLeft)
+//                    .cornerRadius(20, corners: .topRight)
+//                    .frame(width: 30, height: 50)
+//                    .offset(y: -50)
+//                }
                 AudioMessageButton(height: 20)
             }
         }
@@ -460,24 +460,25 @@ struct MainToolBarView : View {
     func audioToolbarContent() -> some View {
         HStack{
             if audioLocked == false {
-                appearance.images.addAudio
-                    .resizable()
-                    .frame(width: appearance.imagesSize.messageAudioButton.width, height: appearance.imagesSize.messageAudioButton.height)
-                    .foregroundColor(isShowingRedTimerStart ? .red : .clear)
+                Circle()
+                    .frame(width: 24,height: 24)
+                    .foregroundColor(Color(hex: "#FF3B30"))
                     .padding(.leading)
                 
                 Text(chatViewModel.timerValue)
-                    .font(appearance.fonts.messageListMessageText)
-                    .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+                    .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().light, size: 22))
+                    .foregroundColor(Color(hex: "#454745"))
                 
                 Spacer()
                 
                 Text("Slide to cancel")
-                    .foregroundStyle(Color.gray)
+                    .foregroundColor(Color(hex: "#6A6C6A"))
                     .font(appearance.fonts.messageListMessageText)
                 
                 appearance.images.chevranbackward
                     .tint(.gray)
+                
+                Spacer()
             } else {
                 VStack(alignment: .leading) {
                     Text(chatViewModel.timerValue)

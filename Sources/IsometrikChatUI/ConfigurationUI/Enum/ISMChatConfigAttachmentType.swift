@@ -11,10 +11,10 @@ import Foundation
 public enum ISMChatConfigAttachmentType{
     case camera
     case gallery
-    case document
-    case location
     case contact
     case sticker
+    case document
+    case location
     
     public var name: String {
         switch self {
