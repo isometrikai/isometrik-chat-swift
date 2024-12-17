@@ -55,6 +55,7 @@ struct ISMMessageSubView: View {
     @State var navigateToInfo : Bool = false
     @State var navigatetoUser : ISMChatGroupMember = ISMChatGroupMember()
     @State var navigatetoMessageInfo =  false
+    @State var showMessageInfoInsideMessage : Bool = false
     @State var navigateToForwardList = false
     @State var navigateToAddMember = false
     @State var offset = CGSize.zero
@@ -88,7 +89,7 @@ struct ISMMessageSubView: View {
     
     //MARK:  - BODY
     var body: some View {
-        HStack{
+        VStack(alignment: isReceived == true ? .leading : .trailing, spacing: 2){
             if message.deletedMessage == true{
                 ZStack{
                     VStack(alignment: isReceived == true ? .leading : .trailing, spacing: 2){
@@ -1396,6 +1397,7 @@ struct ISMMessageSubView: View {
                             isReceived: self.isReceived,
                             selectedMessageToReply: $selectedMessageToReply,
                             navigateToMessageInfo: $navigatetoMessageInfo,
+                            showMessageInfoInsideMessage: $showMessageInfoInsideMessage,
                             showForward: $showForward,
                             updateMessage: $updateMessage,
                             messageCopied: $messageCopied,
@@ -1420,6 +1422,14 @@ struct ISMMessageSubView: View {
             .allowsHitTesting(true)
             .contentShape(Rectangle())
         }
+            if ISMChatSdkUI.getInstance().getChatProperties().messageInfoBelowMessage == true && showMessageInfoInsideMessage == true{
+                HStack{
+                    
+                    messageInfo(msg: message, isReceived: self.isReceived)
+                    
+                }
+                
+            }
         }
         .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow, onClose: {
             
@@ -2091,6 +2101,21 @@ struct ISMMessageSubView: View {
         Text(message.senderInfo?.userName ?? "")
             .font(appearance.fonts.messageListgroupMemberUserName)
             .foregroundColor(appearance.colorPalette.messageListgroupMemberUserName)
+    }
+    
+    func messageInfo(msg : MessagesDB,isReceived : Bool) -> some View{
+        VStack(alignment: isReceived ? .leading : .trailing){
+            if let readAt = msg.readBy.first?.timestamp{
+                Text("Read \(NSDate().descriptiveStringMessageInfo(time: readAt))")
+                    .font(appearance.fonts.messageListMessageTime)
+                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTimeReceived :  appearance.colorPalette.messageListMessageTimeSend)
+            }
+            if let deliveredAt = msg.deliveredTo.first?.timestamp{
+                Text("Delivered \(NSDate().descriptiveStringMessageInfo(time: deliveredAt))")
+                    .font(appearance.fonts.messageListMessageTime)
+                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTimeReceived :  appearance.colorPalette.messageListMessageTimeSend)
+            }
+        }
     }
     
     func dateAndStatusView(onImage : Bool) -> some View{

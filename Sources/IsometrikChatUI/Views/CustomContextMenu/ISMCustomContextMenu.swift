@@ -34,6 +34,7 @@ struct ISMCustomContextMenu: View {
     
     @Binding var selectedMessageToReply : MessagesDB
     @Binding var navigateToMessageInfo : Bool
+    @Binding var showMessageInfoInsideMessage : Bool
     @Binding var showForward: Bool
     @Binding var updateMessage : MessagesDB
     @Binding var messageCopied : Bool
@@ -164,7 +165,11 @@ struct ISMCustomContextMenu: View {
                     if !isReceived && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall && message.deletedMessage == false{
                         
                         Button {
-                            navigateToMessageInfo = true
+                            if ISMChatSdkUI.getInstance().getChatProperties().messageInfoBelowMessage == false{
+                                navigateToMessageInfo = true
+                            }else{
+                                showMessageInfoInsideMessage = true
+                            }
                             dismiss()
                         } label: {
                             HStack{
