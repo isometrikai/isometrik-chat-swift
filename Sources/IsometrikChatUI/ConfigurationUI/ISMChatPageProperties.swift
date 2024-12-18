@@ -35,6 +35,7 @@ public struct ISMChatPageProperties {
     public var shareOnlyCurrentLocation : Bool = false
     public var replyMessageInsideInputView : Bool = false
     public var messageInfoBelowMessage : Bool = false
+    public var customMenu: Bool = false
     public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, navigateToAppProfileFromMessageList: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool,customJobCardInMessageList : Bool,externalMemberAddInGroup : Bool,captializeMessageListHeaders : Bool? = false,hideLinkPreview : Bool? = false,maskNumberAndEmail : Bool? = false,hideSendButtonUntilEmptyTextView: Bool? = false,gifLogoOnTextViewLeft : Bool? = false,showUserTypeInConversationListAfterName : Bool? = false,showSearchCrossButton:  Bool? = false,chatListSeperatorShouldMeetEnds : Bool? = false,messageListReplyBarMeetEnds : Bool? = false,hideUserProfileImageFromAudioMessage : Bool? = false,hideDocumentPreview : Bool? = false,customShareContactFlow : Bool? = false,shareOnlyCurrentLocation : Bool? = false,replyMessageInsideInputView : Bool? = false,messageInfoBelowMessage : Bool? = false) {
         self.attachments = attachments
         self.features = features
@@ -62,5 +63,6 @@ public struct ISMChatPageProperties {
         self.shareOnlyCurrentLocation = shareOnlyCurrentLocation ?? false
         self.replyMessageInsideInputView = replyMessageInsideInputView ?? false
         self.messageInfoBelowMessage = messageInfoBelowMessage ?? false
+        self.customMenu = customMenu ?? false
     }
 }

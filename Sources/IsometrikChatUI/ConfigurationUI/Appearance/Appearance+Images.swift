@@ -84,6 +84,9 @@ public struct ISMChatImages {
     public var contextMenucopy : Image = loadImageSafely(with: "copy_CM")
     public var contextMenuinfo : Image = loadImageSafely(with: "info_CM")
     public var contextMenudelete : Image = loadImageSafely(with: "delete_CM")
+    public var contextBlockUser : Image = loadImageSafely(with: "block_User")
+    public var contextClearChat : Image = loadImageSafely(with: "clear_chat")
+    
     
     
     //calling
@@ -232,6 +235,8 @@ public struct ISMChatImages {
         contextMenucopy: Image? = nil,
         contextMenuinfo: Image? = nil,
         contextMenudelete: Image? = nil,
+        contextBlockUser: Image? = nil,
+        contextClearChat:Image? = nil,
         audioIncoming: Image? = nil,
         audioOutgoing: Image? = nil,
         audioMissedCall: Image? = nil,
@@ -331,6 +336,8 @@ public struct ISMChatImages {
         if let contextMenucopy = contextMenucopy { self.contextMenucopy = contextMenucopy }
         if let contextMenuinfo = contextMenuinfo { self.contextMenuinfo = contextMenuinfo }
         if let contextMenudelete = contextMenudelete { self.contextMenudelete = contextMenudelete }
+        if let contextBlockUser = contextBlockUser { self.contextBlockUser = contextBlockUser }
+        if let contextClearChat = contextClearChat { self.contextClearChat = contextClearChat }
         if let audioIncoming = audioIncoming { self.audioIncoming = audioIncoming }
         if let audioOutgoing = audioOutgoing { self.audioOutgoing = audioOutgoing }
         if let audioMissedCall = audioMissedCall { self.audioMissedCall = audioMissedCall }

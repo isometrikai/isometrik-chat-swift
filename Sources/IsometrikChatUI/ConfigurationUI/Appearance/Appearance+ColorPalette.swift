@@ -15,6 +15,8 @@ public struct ISMChatColorPalette {
     //alerts
     public var alertText : Color = .ismChatSdkWhite
     public var alertBackground : Color = Color.black.opacity(0.4)
+    public var cancelButton : Color = .ismChatCancelButton
+    public var confirmButton : Color = .ismchatConfirmButton
     //userownProfile
     public var userProfileDescription : Color = .ismChatSdkGray
     public var userProfileEditText : Color = .ismChatSdkToolBarAction
@@ -182,6 +184,9 @@ private extension Color {
     static let ismChatSdkActionBackground = mode(0xE3EEFF, 0xE3EEFF)
     static let ismChatSdkToolBarAction = mode(0x00A2F3, 0x00A2F3)
     static let ismChatSdkAttachmentBackground = mode(0xE8EFF9, 0xE3EEFF)
+    static let ismChatCancelButton = mode(0x163300, 0x163300)
+    static let ismchatConfirmButton = mode(0xFF3B30, 0xFF3B30)
+    
     
     
     static func mode(_ light: Int, lightAlpha: CGFloat = 1.0, _ dark: Int, darkAlpha: CGFloat = 1.0) -> Color {

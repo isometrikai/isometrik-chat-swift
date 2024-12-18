@@ -15,6 +15,7 @@ import UIKit
         public var navigationBarTitle : Font = Font.bold(size: 14)
         //alerts
         public var alertText : Font = Font.regular(size: 14)
+        public var cancelButton : Font = Font.bold(size: 14)
         //userownProfile
         public var userProfileDescription : Font = Font.regular(size: 14)
         public var userProfileeditText : Font = Font.regular(size: 14)

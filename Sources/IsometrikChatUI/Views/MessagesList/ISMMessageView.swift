@@ -572,6 +572,70 @@ public struct ISMMessageView: View {
                 }
             }
         })
+        .sheet(isPresented: $stateViewModel.showCustomMenu, content: {
+            ISMCustomMenu(
+                clearChatAction: {
+                    stateViewModel.showCustomMenu = false
+                    stateViewModel.showClearChatPopup = true
+                },
+                blockUserAction: {
+                    stateViewModel.showCustomMenu = false
+                    stateViewModel.showBlockUserPopup = true
+                }
+            )
+            .presentationDetents([.fraction(0.25)])
+            .presentationDragIndicator(.visible)
+        })
+        
+        .sheet(isPresented: $stateViewModel.showClearChatPopup, content: {
+            ConfirmationPopup(
+                title: "Clear chat?",
+                message: "Are you sure you want to clear chat? This action is undoable.",
+                confirmButtonTitle: "Yes, clear",
+                cancelButtonTitle: "Cancel",
+                confirmAction: {
+                    stateViewModel.showClearChatPopup = false
+                },
+                cancelAction: {
+                    stateViewModel.showClearChatPopup = false
+                }
+            )
+            .presentationDetents([.fraction(0.3)])
+            .presentationDragIndicator(.visible)
+        })
+        
+        .sheet(isPresented: $stateViewModel.showBlockUserPopup, content: {
+            ConfirmationPopup(
+                title: "Block User?",
+                message: "Are you sure you want to Block Jackie Chan?",
+                confirmButtonTitle: "Block",
+                cancelButtonTitle: "Cancel",
+                confirmAction: {
+                    stateViewModel.showBlockUserPopup = false
+                },
+                cancelAction: {
+                    stateViewModel.showBlockUserPopup = false
+                }
+            )
+            .presentationDetents([.fraction(0.3)])
+            .presentationDragIndicator(.visible)
+        })
+        .sheet(isPresented: $stateViewModel.showDeleteMultipleMessage, content:{
+            ConfirmationPopup(
+                title: "Delete Message",
+                message: "Are you sure you want to permanently delete this message?",
+                confirmButtonTitle: "For everyone",
+                cancelButtonTitle: "For me",
+                confirmAction: {
+                    stateViewModel.showBlockUserPopup = false
+                },
+                cancelAction: {
+                    stateViewModel.showBlockUserPopup = false
+                }
+            )
+            .presentationDetents([.fraction(0.3)])
+            .presentationDragIndicator(.visible)
+        })
         .sheet(isPresented: $stateViewModel.showSheet){
             if selectedSheetIndex == 0 {
                 ISMCameraView(media : $cameraImageToUse, isShown: $stateViewModel.showSheet, uploadMedia: $stateViewModel.uploadMedia,mediaType: .both)

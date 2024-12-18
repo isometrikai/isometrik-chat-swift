@@ -62,6 +62,8 @@ public class UIStateViewModel: ObservableObject {
     @Published public var navigateToMediaSlider : Bool = false
     @Published public var navigateToUserProfile : Bool = false
     @Published public var navigateToDocumentViewer : Bool = false
-    
+    @Published public var showCustomMenu : Bool = false
+    @Published public var showClearChatPopup : Bool = false
+    @Published public var showBlockUserPopup : Bool = false
     public init() {}
 }
