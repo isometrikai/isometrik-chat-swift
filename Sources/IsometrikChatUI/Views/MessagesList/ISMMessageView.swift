@@ -594,6 +594,7 @@ public struct ISMMessageView: View {
                 confirmButtonTitle: "Yes, clear",
                 cancelButtonTitle: "Cancel",
                 confirmAction: {
+                    clearChat()
                     stateViewModel.showClearChatPopup = false
                 },
                 cancelAction: {
@@ -611,6 +612,7 @@ public struct ISMMessageView: View {
                 confirmButtonTitle: "Block",
                 cancelButtonTitle: "Cancel",
                 confirmAction: {
+                    blockChatFromUser()
                     stateViewModel.showBlockUserPopup = false
                 },
                 cancelAction: {
@@ -620,22 +622,22 @@ public struct ISMMessageView: View {
             .presentationDetents([.fraction(0.3)])
             .presentationDragIndicator(.visible)
         })
-        .sheet(isPresented: $stateViewModel.showDeleteMultipleMessage, content:{
-            ConfirmationPopup(
-                title: "Delete Message",
-                message: "Are you sure you want to permanently delete this message?",
-                confirmButtonTitle: "For everyone",
-                cancelButtonTitle: "For me",
-                confirmAction: {
-                    stateViewModel.showBlockUserPopup = false
-                },
-                cancelAction: {
-                    stateViewModel.showBlockUserPopup = false
-                }
-            )
-            .presentationDetents([.fraction(0.3)])
-            .presentationDragIndicator(.visible)
-        })
+//        .sheet(isPresented: $stateViewModel.showDeleteMultipleMessage, content:{
+//            ConfirmationPopup(
+//                title: "Delete Message",
+//                message: "Are you sure you want to permanently delete this message?",
+//                confirmButtonTitle: "For everyone",
+//                cancelButtonTitle: "For me",
+//                confirmAction: {
+//                    stateViewModel.showBlockUserPopup = false
+//                },
+//                cancelAction: {
+//                    stateViewModel.showBlockUserPopup = false
+//                }
+//            )
+//            .presentationDetents([.fraction(0.3)])
+//            .presentationDragIndicator(.visible)
+//        })
         .sheet(isPresented: $stateViewModel.showSheet){
             if selectedSheetIndex == 0 {
                 ISMCameraView(media : $cameraImageToUse, isShown: $stateViewModel.showSheet, uploadMedia: $stateViewModel.uploadMedia,mediaType: .both)
