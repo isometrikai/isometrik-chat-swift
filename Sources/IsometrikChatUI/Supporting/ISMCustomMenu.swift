@@ -19,10 +19,11 @@ struct ISMCustomMenu: View {
             Button(action: clearChatAction) {
                 HStack(spacing: 12) {
                     appearance.images.contextClearChat
-                        .foregroundColor(.red)
+                        .resizable()
+                        .frame(width: 48, height: 48, alignment: .center)
                     Text("Clear chat")
-                        .foregroundColor(.black)
-                        .fontWeight(.medium)
+                        .foregroundColor(appearance.colorPalette.messageListMessageTextReceived)
+                        .font(appearance.fonts.messageListMessageText)
                     Spacer()
                 }
                 .padding()
@@ -31,16 +32,16 @@ struct ISMCustomMenu: View {
             Button(action: blockUserAction) {
                 HStack(spacing: 12) {
                     appearance.images.contextBlockUser
-                        .foregroundColor(.gray)
+                        .resizable()
+                        .frame(width: 48, height: 48, alignment: .center)
                     Text("Block user")
-                        .foregroundColor(.black)
-                        .fontWeight(.medium)
+                        .foregroundColor(appearance.colorPalette.messageListMessageTextReceived)
+                        .font(appearance.fonts.messageListMessageText)
                     Spacer()
                 }
                 .padding()
             }
         }
-
         .frame(maxWidth: .infinity)
         .background(Color.white)
     }
@@ -48,43 +49,43 @@ struct ISMCustomMenu: View {
 
 struct ConfirmationPopup: View {
     var title: String
-    var message: String
+    var message: AttributedString
     var confirmButtonTitle: String
     var cancelButtonTitle: String
     var confirmAction: () -> Void
     var cancelAction: () -> Void
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 32) {
             Text(title)
-                .font(.headline)
-                .fontWeight(.bold)
-                .foregroundColor(.black)
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
+                .foregroundColor(appearance.colorPalette.messageListMessageTextReceived)
+            
             Text(message)
-                .font(.subheadline)
-                .foregroundColor(.gray)
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 14))
+                .foregroundColor(Color(hex: "#454745"))
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             HStack {
                 Button(action: cancelAction) {
                     Text(cancelButtonTitle)
-                        .font(appearance.fonts.alertText)
-                        .foregroundColor(appearance.colorPalette.cancelButton)
+                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
+                        .foregroundColor(Color(hex: "#163300"))
                         .frame(maxWidth: .infinity, minHeight: 48)
                         .background(Color.white)
                         .cornerRadius(24)
                         .overlay(
                             RoundedRectangle(cornerRadius: 24)
-                                .stroke(appearance.colorPalette.cancelButton, lineWidth: 1)
+                                .stroke(Color(hex: "#163300"), lineWidth: 1)
                         )
                 }
                 Button(action: confirmAction) {
                     Text(confirmButtonTitle)
-                        .fontWeight(.bold)
+                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity, minHeight: 48)
-                        .background(appearance.colorPalette.confirmButton)
+                        .background(Color(hex: "#FF3B30"))
                         .cornerRadius(24)
                 }
             }

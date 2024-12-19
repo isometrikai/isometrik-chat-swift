@@ -588,9 +588,20 @@ public struct ISMMessageView: View {
         })
         
         .sheet(isPresented: $stateViewModel.showClearChatPopup, content: {
+            var attributedText: AttributedString {
+                var attributedString = AttributedString("Are you sure you want to clear chat? This action is undoable.")
+                
+                // Style "clear chat"
+                if let range = attributedString.range(of: "clear chat") {
+                    attributedString[range].foregroundColor = Color(hex: "#454745")
+                    attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
+                }
+                
+                return attributedString
+            }
             ConfirmationPopup(
                 title: "Clear chat?",
-                message: "Are you sure you want to clear chat? This action is undoable.",
+                message: attributedText,
                 confirmButtonTitle: "Yes, clear",
                 cancelButtonTitle: "Cancel",
                 confirmAction: {
@@ -606,9 +617,20 @@ public struct ISMMessageView: View {
         })
         
         .sheet(isPresented: $stateViewModel.showBlockUserPopup, content: {
+            var attributedText: AttributedString {
+                var attributedString = AttributedString("Are you sure you want to Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?")
+                
+                // Style "clear chat"
+                if let range = attributedString.range(of: "Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")") {
+                    attributedString[range].foregroundColor = Color(hex: "#454745")
+                    attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
+                }
+                
+                return attributedString
+            }
             ConfirmationPopup(
                 title: "Block User?",
-                message: "Are you sure you want to Block Jackie Chan?",
+                message: attributedText,
                 confirmButtonTitle: "Block",
                 cancelButtonTitle: "Cancel",
                 confirmAction: {
