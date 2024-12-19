@@ -44,6 +44,7 @@ struct ISMCustomContextMenu: View {
     @State var emojiOptions: [ISMChatEmojiReaction] = ISMChatEmojiReaction.allCases
     @Binding var selectedReaction : String?
     @Binding var sentRecationToMessageId : String
+    @Binding var deleteMessage : [MessagesDB]
     
     let fromBroadCastFlow : Bool?
     
@@ -55,8 +56,9 @@ struct ISMCustomContextMenu: View {
         ZStack {
             // Semi-transparent overlay
             Rectangle()
-                .fill(.black.opacity(0.2))
-                .background(.ultraThinMaterial)
+                .fill(.black.opacity(0.5))
+//                .background(.ultraThinMaterial)
+                .blur(radius: 0.7, opaque: false)
                 .ignoresSafeArea()
                 .onTapGesture {
                     dismiss()
@@ -164,27 +166,54 @@ struct ISMCustomContextMenu: View {
                     
                     if !isReceived && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall && message.deletedMessage == false{
                         
-                        Button {
-                            if ISMChatSdkUI.getInstance().getChatProperties().messageInfoBelowMessage == false{
-                                navigateToMessageInfo = true
+                        if ISMChatSdkUI.getInstance().getChatProperties().editMessageForOnly15Mins == true{
+                            if isSentTimeLessThan15MinutesAgo(sentTime: message.sentAt){
+                                Button {
+                                    if ISMChatSdkUI.getInstance().getChatProperties().messageInfoBelowMessage == false{
+                                        navigateToMessageInfo = true
+                                    }else{
+                                        showMessageInfoInsideMessage = true
+                                    }
+                                    dismiss()
+                                } label: {
+                                    HStack{
+                                        Text("Info")
+                                            .font(appearance.fonts.contextMenuOptions)
+                                            .foregroundColor(Color(hex: "#294566"))
+                                        Spacer()
+                                        appearance.images.contextMenuinfo
+                                            .resizable()
+                                            .frame(width: appearance.imagesSize.messageInfo_infoIcon.width, height: appearance.imagesSize.messageInfo_infoIcon.height, alignment: .center)
+                                    }.padding(.horizontal,15).padding(.vertical,10)
+                                }
+                                Rectangle().fill(Color(hex: "#111111").opacity(0.25)).frame(height: 0.5)
                             }else{
-                                showMessageInfoInsideMessage = true
+                                
                             }
-                            dismiss()
-                        } label: {
-                            HStack{
-                                Text("Info")
-                                    .font(appearance.fonts.contextMenuOptions)
-                                    .foregroundColor(Color(hex: "#294566"))
-                                Spacer()
-                                appearance.images.contextMenuinfo
-                                    .resizable()
-                                    .frame(width: appearance.imagesSize.messageInfo_infoIcon.width, height: appearance.imagesSize.messageInfo_infoIcon.height, alignment: .center)
-                            }.padding(.horizontal,15).padding(.vertical,10)
+                        }else{
+                            Button {
+                                if ISMChatSdkUI.getInstance().getChatProperties().messageInfoBelowMessage == false{
+                                    navigateToMessageInfo = true
+                                }else{
+                                    showMessageInfoInsideMessage = true
+                                }
+                                dismiss()
+                            } label: {
+                                HStack{
+                                    Text("Info")
+                                        .font(appearance.fonts.contextMenuOptions)
+                                        .foregroundColor(Color(hex: "#294566"))
+                                    Spacer()
+                                    appearance.images.contextMenuinfo
+                                        .resizable()
+                                        .frame(width: appearance.imagesSize.messageInfo_infoIcon.width, height: appearance.imagesSize.messageInfo_infoIcon.height, alignment: .center)
+                                }.padding(.horizontal,15).padding(.vertical,10)
+                            }
+                            Rectangle().fill(Color(hex: "#111111").opacity(0.25)).frame(height: 0.5)
                         }
-                        Rectangle().fill(Color(hex: "#111111").opacity(0.25)).frame(height: 0.5)
                     }
                     Button(role: .destructive) {
+                        deleteMessage.append(message)
                         navigateToDeletePopUp = true
                         dismiss()
                     } label: {
@@ -207,5 +236,19 @@ struct ISMCustomContextMenu: View {
             }
         }
         .background(Color.clear)
+    }
+    
+    func isSentTimeLessThan15MinutesAgo(sentTime: Double) -> Bool {
+        // Convert the sent time (Double) into a Date object
+        let sentDate = Date(timeIntervalSince1970: sentTime)
+        
+        // Get the current date and time
+        let currentDate = Date()
+        
+        // Calculate the time difference in seconds
+        let timeDifference = currentDate.timeIntervalSince(sentDate)
+        
+        // Check if the time difference is less than 15 minutes (15 * 60 seconds)
+        return timeDifference <= 15 * 60
     }
 }

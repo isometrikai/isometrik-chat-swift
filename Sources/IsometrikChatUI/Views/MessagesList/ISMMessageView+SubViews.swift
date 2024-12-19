@@ -105,11 +105,11 @@ extension ISMMessageView{
             if stateViewModel.showforwardMultipleMessage == true && (ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall){
                 multipleForwardMessageButtonView(message: message)
             }
-//            if ISMChatSdkUI.getInstance().getChatProperties().customMenu == false{
+            if ISMChatSdkUI.getInstance().getChatProperties().customMenu == false{
                 if stateViewModel.showDeleteMultipleMessage == true{
                     multipleDeleteMessageButtonView(message: message)
                 }
-//            }
+            }
             ISMMessageSubView(messageType: ISMChatHelper.getMessageType(message: message),
                               viewWidth: viewWidth,
                               isReceived: getIsReceived(message: message),
@@ -131,7 +131,7 @@ extension ISMMessageView{
                               audioCallToUser: $stateViewModel.audioCallToUser,
                               videoCallToUser: $stateViewModel.videoCallToUser,
                               parentMsgToScroll: $parentMsgToScroll,
-                              navigateToMediaSliderId: $navigateToMediaSliderId, navigateToDocumentUrl: $navigateToDocumentUrl,
+                              navigateToMediaSliderId: $navigateToMediaSliderId, navigateToDocumentUrl: $navigateToDocumentUrl, deleteMessage: $deleteMessage,
                               message: message, 
                               postIdToNavigate: $postIdToNavigate,
                               productIdToNavigate: $productIdToNavigate, navigateToSocialProfileId: $navigateToSocialProfileId, navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate, navigateToProductLink: $navigateToProductLink, navigateToSocialLink: $navigateToSocialLink, navigateToCollectionLink: $navigateToCollectionLink)

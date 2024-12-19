@@ -610,7 +610,9 @@ public struct ISMMessageView: View {
                 },
                 cancelAction: {
                     stateViewModel.showClearChatPopup = false
-                }
+                },
+                popUpType: .Menu,
+                isPresented: $stateViewModel.showClearChatPopup
             )
             .presentationDetents([.fraction(0.3)])
             .presentationDragIndicator(.visible)
@@ -639,27 +641,56 @@ public struct ISMMessageView: View {
                 },
                 cancelAction: {
                     stateViewModel.showBlockUserPopup = false
-                }
+                },
+                popUpType: .Menu,
+                isPresented: $stateViewModel.showBlockUserPopup
             )
             .presentationDetents([.fraction(0.3)])
             .presentationDragIndicator(.visible)
         })
-//        .sheet(isPresented: $stateViewModel.showDeleteMultipleMessage, content:{
-//            ConfirmationPopup(
-//                title: "Delete Message",
-//                message: "Are you sure you want to permanently delete this message?",
-//                confirmButtonTitle: "For everyone",
-//                cancelButtonTitle: "For me",
-//                confirmAction: {
-//                    stateViewModel.showBlockUserPopup = false
-//                },
-//                cancelAction: {
-//                    stateViewModel.showBlockUserPopup = false
-//                }
-//            )
-//            .presentationDetents([.fraction(0.3)])
-//            .presentationDragIndicator(.visible)
-//        })
+        .sheet(isPresented: $stateViewModel.showDeleteMultipleMessage, content:{
+            var attributedText: AttributedString {
+                var attributedString = AttributedString("Are you sure you want to permanently delete this message?")
+                
+                // Style "clear chat"
+                if let range = attributedString.range(of: "permanently delete") {
+                    attributedString[range].foregroundColor = Color(hex: "#454745")
+                    attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
+                }
+                
+                return attributedString
+            }
+            ConfirmationPopup(
+                title: "Delete Message",
+                message: attributedText,
+                confirmButtonTitle: "For everyone",
+                cancelButtonTitle: "For me",
+                confirmAction: {
+                    stateViewModel.showBlockUserPopup = false
+                    if let message = deleteMessage.first{
+                        if getIsReceived(message: message) == true{
+                            deleteMultipleMessages(otherUserMessage: true, type: .DeleteForYou)
+                        }else{
+                            deleteMultipleMessages(otherUserMessage: false, type: .DeleteForEveryone)
+                        }
+                    }
+                },
+                cancelAction: {
+                    stateViewModel.showBlockUserPopup = false
+                    if let message = deleteMessage.first{
+                        if getIsReceived(message: message) == true{
+                            deleteMultipleMessages(otherUserMessage: true, type: .DeleteForYou)
+                        }else{
+                            deleteMultipleMessages(otherUserMessage: false, type: .DeleteForYou)
+                        }
+                    }
+                },
+                popUpType: .Delete,
+                isPresented: $stateViewModel.showDeleteMultipleMessage
+            )
+            .presentationDetents([.fraction(0.3)])
+            .presentationDragIndicator(.visible)
+        })
         .sheet(isPresented: $stateViewModel.showSheet){
             if selectedSheetIndex == 0 {
                 ISMCameraView(media : $cameraImageToUse, isShown: $stateViewModel.showSheet, uploadMedia: $stateViewModel.uploadMedia,mediaType: .both)

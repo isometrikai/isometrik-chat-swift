@@ -47,6 +47,11 @@ struct ISMCustomMenu: View {
     }
 }
 
+enum PopUpType : CaseIterable{
+    case Menu
+    case Delete
+}
+
 struct ConfirmationPopup: View {
     var title: String
     var message: AttributedString
@@ -54,12 +59,38 @@ struct ConfirmationPopup: View {
     var cancelButtonTitle: String
     var confirmAction: () -> Void
     var cancelAction: () -> Void
+    var popUpType : PopUpType
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    @Binding var isPresented : Bool
     var body: some View {
         VStack(spacing: 32) {
-            Text(title)
-                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
-                .foregroundColor(appearance.colorPalette.messageListMessageTextReceived)
+            HStack{
+                if popUpType == .Delete{
+                    Button {
+                        isPresented = false
+                    } label: {
+                        appearance.images.dismissButton
+                            .resizable()
+                            .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
+                    }
+                }else{
+                    Image("")
+                        .resizable()
+                        .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
+                }
+                
+                Spacer()
+                
+                Text(title)
+                    .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
+                    .foregroundColor(appearance.colorPalette.messageListMessageTextReceived)
+                
+                Spacer()
+                
+                Image("")
+                    .resizable()
+                    .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
+            }
             
             Text(message)
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 14))
@@ -83,10 +114,14 @@ struct ConfirmationPopup: View {
                 Button(action: confirmAction) {
                     Text(confirmButtonTitle)
                         .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
-                        .foregroundColor(.white)
+                        .foregroundColor(popUpType == .Delete ? Color(hex: "#163300") : Color.white)
                         .frame(maxWidth: .infinity, minHeight: 48)
-                        .background(Color(hex: "#FF3B30"))
+                        .background(popUpType == .Delete ? Color.white : Color(hex: "#FF3B30"))
                         .cornerRadius(24)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 24)
+                                .stroke(popUpType == .Delete ? Color(hex: "#163300") : Color(hex: "#FF3B30"), lineWidth: 1)
+                        )
                 }
             }
         }

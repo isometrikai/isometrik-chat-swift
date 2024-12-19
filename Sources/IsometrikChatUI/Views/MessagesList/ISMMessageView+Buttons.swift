@@ -105,7 +105,7 @@ extension ISMMessageView{
     
     func backButtonView() -> some View {
         HStack{
-            if stateViewModel.showforwardMultipleMessage || stateViewModel.showDeleteMultipleMessage {
+            if stateViewModel.showforwardMultipleMessage || (stateViewModel.showDeleteMultipleMessage && chatProperties.customMenu == false) {
                 Button {
                     stateViewModel.showforwardMultipleMessage = false
                     forwardMessageSelected.removeAll()
@@ -289,7 +289,7 @@ extension ISMMessageView{
     
     func navigationBarTrailingButtons() -> some View {
         HStack {
-            if stateViewModel.showforwardMultipleMessage || stateViewModel.showDeleteMultipleMessage {
+            if stateViewModel.showforwardMultipleMessage || (stateViewModel.showDeleteMultipleMessage && chatProperties.customMenu == false){
                
             }else {
                 

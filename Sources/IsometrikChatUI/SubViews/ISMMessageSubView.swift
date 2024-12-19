@@ -49,6 +49,7 @@ struct ISMMessageSubView: View {
     @Binding var parentMsgToScroll : MessagesDB?
     @Binding var navigateToMediaSliderId : String
     @Binding var navigateToDocumentUrl : String
+    @Binding var deleteMessage : [MessagesDB]
     
     
     
@@ -146,7 +147,7 @@ struct ISMMessageSubView: View {
                                 VStack(alignment: .trailing, spacing: 0){
                                     if message.customType == ISMChatMediaType.ReplyText.value && message.messageType != 1{
                                         repliedMessageView()
-                                            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 5))
+                                            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: isReceived ? 0 : 5))
                                             .onTapGesture {
                                                 parentMsgToScroll = message
                                             }
@@ -1404,6 +1405,7 @@ struct ISMMessageSubView: View {
                             navigateToDeletePopUp: $navigateToDeletePopUp,
                             selectedReaction: $selectedReaction,
                             sentRecationToMessageId: $sentRecationToMessageId,
+                            deleteMessage: $deleteMessage,
                             fromBroadCastFlow: self.fromBroadCastFlow,
                             groupconversationMember: self.groupconversationMember
                         )

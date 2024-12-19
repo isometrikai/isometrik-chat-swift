@@ -49,7 +49,7 @@ extension ISMMessageView{
     var toolbarState: ToolbarState {
         if stateViewModel.showMentionList && isGroup == true && !filteredUsers.isEmpty { return .mention }
         if stateViewModel.showforwardMultipleMessage { return .forward }
-        if stateViewModel.showDeleteMultipleMessage { return .delete }
+        if stateViewModel.showDeleteMultipleMessage && chatProperties.customMenu == false { return .delete }
         return .normal
     }
 
