@@ -81,6 +81,8 @@ public struct ISMChatUserMetaData: Codable, Hashable {
     public var startDate : String?
     public var endDate : String?
     
+    public var appUserName : String?
+    
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         about = try? container.decodeIfPresent(String.self, forKey: .about)
@@ -105,6 +107,7 @@ public struct ISMChatUserMetaData: Codable, Hashable {
         jobTitle = try? container.decodeIfPresent(String.self, forKey: .jobTitle)
         startDate = try? container.decodeIfPresent(String.self, forKey: .startDate)
         endDate = try? container.decodeIfPresent(String.self, forKey: .endDate)
+        appUserName = try? container.decodeIfPresent(String.self, forKey: .appUserName)
     }
     public init(about : String? = nil,showlastSeen : Bool? = nil,profilePic : String? = nil, userId : String? = nil,storeId : String? = nil,userType : Int? = nil,userTypeString : String? = nil,isStarUser : Bool? = nil,chatStatus : String? = nil,membersIds : [String]? = nil,users : [ISMChatCustomUsers]? = nil){
         self.about = about
