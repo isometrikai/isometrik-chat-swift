@@ -105,9 +105,11 @@ extension ISMMessageView{
             if stateViewModel.showforwardMultipleMessage == true && (ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall){
                 multipleForwardMessageButtonView(message: message)
             }
-            if stateViewModel.showDeleteMultipleMessage == true{
-                multipleDeleteMessageButtonView(message: message)
-            }
+//            if ISMChatSdkUI.getInstance().getChatProperties().customMenu == false{
+                if stateViewModel.showDeleteMultipleMessage == true{
+                    multipleDeleteMessageButtonView(message: message)
+                }
+//            }
             ISMMessageSubView(messageType: ISMChatHelper.getMessageType(message: message),
                               viewWidth: viewWidth,
                               isReceived: getIsReceived(message: message),

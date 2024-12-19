@@ -329,17 +329,28 @@ extension ISMMessageView{
                         }
                     }
                     if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true{
-                        Menu {
-                            if realmManager.allMessages?.count != 0 || realmManager.messages.count != 0{
-                                clearChatButton()
+                        if  ISMChatSdkUI.getInstance().getChatProperties().customMenu == true{
+                            Button {
+                                stateViewModel.showCustomMenu = true
+                            } label: {
+                                appearance.images.threeDots
+                                    .frame(width: 20, height: 20, alignment: .center)
                             }
-                            if isGroup == false{
-                                blockUserButton()
+
+                        }else{
+                            Menu {
+                                if realmManager.allMessages?.count != 0 || realmManager.messages.count != 0{
+                                    clearChatButton()
+                                }
+                                if isGroup == false{
+                                    blockUserButton()
+                                }
+                            } label: {
+                                appearance.images.threeDots
+                                    .frame(width: 20, height: 20, alignment: .center)
                             }
-                        } label: {
-                            appearance.images.threeDots
-                                .frame(width: 20, height: 20, alignment: .center)
                         }
+                        
                     }
                 }
             }
