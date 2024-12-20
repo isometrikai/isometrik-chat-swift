@@ -42,6 +42,14 @@ public class MetaDataDB : Object, ObjectKeyIdentifiable {
     @Persisted public var productCount : Int?
     @Persisted public var collectionImage : String?
     @Persisted public var collectionId : String?
+    
+    //payment
+    @Persisted public var paymentRequestId : String?
+    @Persisted public var orderId : String?
+    @Persisted public var status : Int?
+    @Persisted public var friendPaymentRequestExpiryTime : Int?
+    @Persisted public var currencyCode : String?
+    @Persisted public var amount : Double?
 }
 
 public class PDPImageDB: Object, ObjectKeyIdentifiable {

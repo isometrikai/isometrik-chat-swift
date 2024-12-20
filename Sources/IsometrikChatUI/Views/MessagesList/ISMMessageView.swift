@@ -32,6 +32,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToCollectionLink(collectionId : String,completeUrl: String)
     func backButtonAction()
     func navigateToShareContact(conversationId : String)
+    func viewDetailForPaymentRequest(orderId : String, paymentRequestId : String)
 }
 
 public struct ISMMessageView: View {
@@ -181,6 +182,7 @@ public struct ISMMessageView: View {
     @State var navigateToProductLink : MessagesDB = MessagesDB()
     @State var navigateToSocialLink : MessagesDB = MessagesDB()
     @State var navigateToCollectionLink : MessagesDB = MessagesDB()
+    @State var viewDetailsForPaymentRequest : MessagesDB = MessagesDB()
     @State var navigateToChatList : Bool = false
     
     //MARK: - BODY
@@ -445,6 +447,11 @@ public struct ISMMessageView: View {
             if !navigateToCollectionLink.messageId.isEmpty{
                 self.delegate?.navigateToCollectionLink(collectionId: navigateToCollectionLink.metaData?.collectionId ?? "", completeUrl: navigateToCollectionLink.metaData?.url ?? "")
                 navigateToCollectionLink = MessagesDB()
+            }
+        }.onChange(of: viewDetailsForPaymentRequest.messageId) { _, _ in
+            if !viewDetailsForPaymentRequest.messageId.isEmpty{
+                self.delegate?.viewDetailForPaymentRequest(orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "", paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "")
+                viewDetailsForPaymentRequest = MessagesDB()
             }
         }
         .onChange(of: navigateToMediaSliderId, { _, _ in

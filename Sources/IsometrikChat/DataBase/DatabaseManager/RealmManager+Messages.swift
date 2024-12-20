@@ -125,7 +125,12 @@ extension RealmManager{
                     metadataValue.productCount = metaData.productCount
                     metadataValue.collectionImage = metaData.collectionImage
                     metadataValue.collectionId = metaData.collectionId
-                    
+                    metadataValue.paymentRequestId = metaData.paymentRequestId
+                    metadataValue.orderId = metaData.orderId
+                    metadataValue.status = metaData.status
+                    metadataValue.friendPaymentRequestExpiryTime = metaData.friendPaymentRequestExpiryTime
+                    metadataValue.currencyCode = metaData.currencyCode
+                    metadataValue.amount = metaData.amount
 
                     
                     if let replyMessage = metaData.replyMessage {
@@ -416,7 +421,12 @@ extension RealmManager{
                         metaData.productCount = value.metaData?.productCount ?? value.details?.metaData?.productCount
                         metaData.collectionImage = value.metaData?.collectionImage ?? value.details?.metaData?.collectionImage
                         metaData.collectionId = value.metaData?.collectionId ?? value.details?.metaData?.collectionId
-                        
+                        metaData.paymentRequestId = value.metaData?.paymentRequestId ?? value.details?.metaData?.paymentRequestId
+                        metaData.orderId = value.metaData?.orderId ?? value.details?.metaData?.orderId
+                        metaData.status = value.metaData?.status ?? value.details?.metaData?.status
+                        metaData.friendPaymentRequestExpiryTime = value.metaData?.friendPaymentRequestExpiryTime ?? value.details?.metaData?.friendPaymentRequestExpiryTime
+                        metaData.currencyCode = value.metaData?.currencyCode ?? value.details?.metaData?.currencyCode
+                        metaData.amount = value.metaData?.amount ?? value.details?.metaData?.amount
                         
                         obj.metaData = metaData
                         

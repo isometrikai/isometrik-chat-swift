@@ -86,6 +86,8 @@ struct ISMMessageSubView: View {
     @Binding var navigateToProductLink : MessagesDB
     @Binding var navigateToSocialLink : MessagesDB
     @Binding var navigateToCollectionLink : MessagesDB
+    //payment
+    @Binding var viewDetailsForPaymentRequest : MessagesDB
     
     
     //MARK:  - BODY
@@ -1380,6 +1382,56 @@ struct ISMMessageSubView: View {
                             }
                         }.padding(.vertical,2)
                     }
+                case .paymentRequest:
+                    HStack(alignment: .bottom){
+                        if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                            //When its group show member avatar in message
+                            inGroupUserAvatarView()
+                        }
+                        ZStack(alignment: .bottomTrailing){
+                            VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                    //when its group show member name in message
+                                    inGroupUserName()
+                                }
+                                
+                                VStack(alignment: .trailing,spacing: 5){
+                                    PaymentRequestUI(status: .ActiveRequest, isReceived: self.isReceived,message: self.message) {
+                                        //view details
+                                        viewDetailsForPaymentRequest = self.message
+                                    } declineRequest: {
+                                        //decline request
+                                    }
+                                    dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
+                                }//:ZStack
+                                .frame(width: 303)
+                                .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                .overlay(
+                                    appearance.messageBubbleType == .BubbleWithOutTail ?
+                                    AnyView(
+                                        UnevenRoundedRectangle(
+                                            topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                            bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                            bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                            topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                            style: .circular
+                                        )
+                                        .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                    ) : AnyView(EmptyView())
+                                )
+                                if appearance.timeInsideBubble == false{
+                                    dateAndStatusView(onImage: false)
+                                        .padding(.bottom,5)
+                                        .padding(.trailing,5)
+                                }
+                            }
+                            
+                            if message.reactions.count > 0{
+                                reactionsView()
+                            }
+                        }.padding(.vertical,2)
+                    }
                 default:
                     EmptyView()
                 }
@@ -2179,96 +2231,133 @@ public struct ImageAsset {
 
 
 
-enum PaymentRequestStatus {
-    case active
-    case accept
-    case declined
-    case expired
+enum PaymentRequestStatus: Int {
+    case ActiveRequest = 0
+    case Accepted = 1
+    case Rejected = 2
+    case Expired = 3
+    case Cancelled = 4
 }
 
 struct PaymentRequestUI: View {
     var status: PaymentRequestStatus
-    
+    var isReceived : Bool
+    var message : MessagesDB
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    var viewDetails : () -> ()
+    var declineRequest : () -> ()
     var body: some View {
-        ZStack {
-            VStack(spacing: 16) {
-                // Header and Payment Status
-                headerView
-                
-                // Payment Amount
-                VStack(spacing: 8) {
-                    Text("Total you pay")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
+        VStack(alignment: .center, spacing: 0) {
+            // Header and Payment Status
+            headerView.padding(.bottom,16)
+            
+            appearance.images.paymentLogo
+                .resizable()
+                .frame(width: 70, height: 60, alignment: .center)
+                .padding(.bottom,10)
+            
+            // Payment Amount
+            VStack(spacing: 8) {
+                Text(isReceived ? "Total you pay" : "Total your friend pays")
+                    .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                    .foregroundColor(Color(hex: "#121511"))
+                var amount: AttributedString {
+                    var attributedString = AttributedString("\(message.metaData?.amount ?? 0) \(message.metaData?.currencyCode ?? "")")
                     
-                    Text("28.00 JOD")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundColor(.black)
-                    
-                    // Conditional Messages Based on Status
-                    if status == .active {
-                        Text("Payment request will expire in 5:3:00")
-                            .font(.footnote)
-                            .foregroundColor(.gray)
-                    } else if status == .declined {
-                        Text("You declined the payment request")
-                            .font(.footnote)
-                            .foregroundColor(.gray)
-                    } else if status == .expired {
-                        Text("Payment request expired")
-                            .font(.footnote)
-                            .foregroundColor(.gray)
+                    // Style "clear chat"
+                    if let range = attributedString.range(of: "\(message.metaData?.amount ?? 0)") {
+                        attributedString[range].foregroundColor = Color(hex: "#121511")
+                        attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 26)
                     }
+                    
+                    return attributedString
                 }
-                .padding(.horizontal, 16)
+                Text(amount)
+                    .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().light, size: 26))
+                    .foregroundColor(Color(hex: "#121511"))
+                    .padding(.bottom,16)
+                    .lineSpacing(32 - 26) // Line spacing calculated as (line height - font size)
+                    .tracking(-0.015 * 26)
                 
-                // Action Buttons for Active Request Only
-                if status == .active {
-                    HStack(spacing: 20) {
+                // Conditional Messages Based on Status
+                if status == .ActiveRequest {
+                    var attributedText: AttributedString {
+                        var attributedString = AttributedString("Payment request will expire in 5:3:00")
+                        
+                        // Style "clear chat"
+                        if let range = attributedString.range(of: "5:3:00") {
+                            attributedString[range].foregroundColor = Color(hex: "#3A341C")
+                            attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 12)
+                        }
+                        
+                        return attributedString
+                    }
+                    Text(attributedText)
+                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                        .foregroundColor(Color(hex: "#3A341C")).padding(.bottom,16)
+                } else if status == .Rejected {
+                    Text("You declined the payment request")
+                        .font(.footnote)
+                        .foregroundColor(.gray).padding(.bottom,16)
+                } else if status == .Expired {
+                    Text("Payment request expired")
+                        .font(.footnote)
+                        .foregroundColor(.gray).padding(.bottom,16)
+                }
+            }
+            .padding(.horizontal, 16)
+            
+            // Action Buttons for Active Request Only
+            if status == .ActiveRequest {
+                HStack(spacing: 20) {
+                    if isReceived == true{
                         Button(action: {
-                            // Decline action
+                            declineRequest()
                         }) {
                             Text("Decline")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(RoundedRectangle(cornerRadius: 8).stroke(Color.black, lineWidth: 1))
+                                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
+                                .foregroundStyle(Color(hex: "#163300"))
+                                .frame(width: 121, height: 32, alignment: .center)
+                                .background(RoundedRectangle(cornerRadius: 16).stroke(Color(hex: "#163300"), lineWidth: 1))
                         }
                         
                         Button(action: {
-                            // View Details action
+                            viewDetails()
                         }) {
                             Text("View Details")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.green)
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
+                                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
+                                .foregroundStyle(Color(hex: "#163300"))
+                                .frame(width: 121, height: 32, alignment: .center)
+                                .background(Color(hex: "#86EA5D"))
+                                .cornerRadius(16)
+                        }
+                    }else{
+                        Button(action: {
+                            viewDetails()
+                        }) {
+                            Text("View Details")
+                                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
+                                .foregroundStyle(Color(hex: "#163300"))
+                                .frame(width: 225, height: 32, alignment: .center)
+                                .background(RoundedRectangle(cornerRadius: 16).stroke(Color(hex: "#163300"), lineWidth: 1))
                         }
                     }
-                    .padding(.horizontal, 16)
                 }
-                
-                // Timestamp
-                HStack {
-                    Spacer()
-                    Text("11:27 pm")
-                        .font(.caption)
-                        .foregroundColor(.gray)
+                .padding(.horizontal, 16)
+            }else if status == .Accepted{
+                HStack(spacing: 20) {
+                    Button(action: {
+                        // Decline action
+                    }) {
+                        Text("Paid")
+                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
+                            .foregroundStyle(Color(hex: "#6A6C6A"))
+                            .frame(width: 225, height: 32, alignment: .center)
+                            .background(Color(hex: "#F5F5F2"))
+                            .cornerRadius(16)
+                    }
                 }
-                .padding(.trailing, 16)
-            }
-            .background(Color.white)
-            .cornerRadius(16)
-            .shadow(radius: 4)
-            .padding()
-            .blur(radius: status == .expired ? 2 : 0) // Blurred effect when expired
-            
-            // Dimmed overlay for the expired view
-            if status == .expired {
-                Color.black.opacity(0.2)
-                    .cornerRadius(16)
-                    .padding()
+                .padding(.horizontal, 16)
             }
         }
     }
@@ -2276,25 +2365,41 @@ struct PaymentRequestUI: View {
     // Header View Based on Status
     @ViewBuilder
     private var headerView: some View {
-        if status == .active {
+        if status == .ActiveRequest {
             Text("Payment Request")
-                .font(.headline)
-                .foregroundColor(.black)
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
+                .foregroundColor(Color(hex: "#121511"))
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(Color.green)
+                .background(Color(hex: "#86EA5D"))
                 .cornerRadius(10, corners: [.topLeft, .topRight])
-        } else if status == .declined {
+        }else if status == .Accepted {
+            Text("Payment Request")
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
+                .foregroundColor(Color(hex: "#121511"))
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color(hex: "#86EA5D"))
+                .cornerRadius(10, corners: [.topLeft, .topRight])
+        } else if status == .Rejected {
             Text("Request Declined")
-                .font(.headline)
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
+                .foregroundColor(.white)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color(hex: "#FF3B30"))
+                .cornerRadius(10, corners: [.topLeft, .topRight])
+        } else if status == .Expired {
+            Text("Payment Request")
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
                 .foregroundColor(.black)
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(Color.red)
+                .background(Color.gray)
                 .cornerRadius(10, corners: [.topLeft, .topRight])
-        } else if status == .expired {
-            Text("Payment Request")
-                .font(.headline)
+        }else if status == .Cancelled {
+            Text("Payment Request Cancelled")
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
                 .foregroundColor(.black)
                 .padding()
                 .frame(maxWidth: .infinity)

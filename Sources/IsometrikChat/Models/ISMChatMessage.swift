@@ -248,6 +248,14 @@ public struct ISMChatMetaData: Codable {
     public var collectionImage : String?
     public var collectionId : String?
     
+    //payment
+    public var paymentRequestId : String?
+    public var orderId : String?
+    public var status : Int?
+    public var friendPaymentRequestExpiryTime : Int?
+    public var currencyCode : String?
+    public var amount : Double?
+    
     public var isSharedFromApp : Bool?
     
     public init(
@@ -276,7 +284,13 @@ public struct ISMChatMetaData: Codable {
         productCount : Int? = nil,
         collectionImage : String? = nil,
         collectionId : String? = nil,
-        isSharedFromApp : Bool? = nil
+        isSharedFromApp : Bool? = nil,
+        paymentRequestId : String? = nil,
+        orderId : String? = nil,
+        status : Int? = nil,
+        friendPaymentRequestExpiryTime : Int? = nil,
+        currencyCode : String? = nil,
+        amount : Double? = nil
     ) {
         self.replyMessage = replyMessage
         self.locationAddress = locationAddress
@@ -304,6 +318,12 @@ public struct ISMChatMetaData: Codable {
         self.collectionImage = collectionImage
         self.collectionId = collectionId
         self.isSharedFromApp = isSharedFromApp
+        self.paymentRequestId = paymentRequestId
+        self.orderId = orderId
+        self.status = status
+        self.friendPaymentRequestExpiryTime = friendPaymentRequestExpiryTime
+        self.currencyCode = currencyCode
+        self.amount = amount
     }
     
     public init(from decoder: Decoder) throws {
@@ -334,6 +354,12 @@ public struct ISMChatMetaData: Codable {
         collectionImage = try? container.decode(String.self, forKey: .collectionImage)
         collectionId = try? container.decode(String.self, forKey: .collectionId)
         isSharedFromApp = try? container.decode(Bool.self, forKey: .isSharedFromApp)
+        paymentRequestId = try? container.decode(String.self, forKey: .paymentRequestId)
+        orderId = try? container.decode(String.self, forKey: .orderId)
+        status = try? container.decode(Int.self, forKey: .status)
+        friendPaymentRequestExpiryTime = try? container.decode(Int.self, forKey: .friendPaymentRequestExpiryTime)
+        currencyCode = try? container.decode(String.self, forKey: .currencyCode)
+        amount = try? container.decode(Double.self, forKey: .amount)
     }
 }
 

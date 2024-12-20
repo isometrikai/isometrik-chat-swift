@@ -305,7 +305,12 @@ extension RealmManager {
                     messageMetaData.productCount = value.lastMessageDetails?.metaData?.productCount
                     messageMetaData.collectionImage = value.lastMessageDetails?.metaData?.collectionImage
                     messageMetaData.collectionId = value.lastMessageDetails?.metaData?.collectionId
-                    
+                    messageMetaData.paymentRequestId = value.lastMessageDetails?.metaData?.paymentRequestId
+                    messageMetaData.orderId = value.lastMessageDetails?.metaData?.orderId
+                    messageMetaData.status = value.lastMessageDetails?.metaData?.status
+                    messageMetaData.friendPaymentRequestExpiryTime = value.lastMessageDetails?.metaData?.friendPaymentRequestExpiryTime
+                    messageMetaData.currencyCode = value.lastMessageDetails?.metaData?.currencyCode
+                    messageMetaData.amount = value.lastMessageDetails?.metaData?.amount
                     
                     
                     

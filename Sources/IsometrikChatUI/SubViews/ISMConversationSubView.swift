@@ -128,6 +128,14 @@ struct ISMConversationSubView: View {
                             AudioCallUI()
                         case ISMChatMediaType.VideoCall.value:
                             VideoCallUI()
+                        case ISMChatMediaType.PaymentRequest.value:
+                            if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
+                                let text = "You have sent a payment request"
+                                getLabel(text: text, image: "")
+                            }else{
+                                let text = "\(chat.lastMessageDetails?.userName ?? "") sent you a payment request"
+                                getLabel(text: text, image: "")
+                            }
                         default:
                             actionLabels()
                         }

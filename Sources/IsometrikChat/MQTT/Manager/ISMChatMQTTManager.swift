@@ -540,7 +540,13 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                         collectionDescription : messageInfo.metaData?.collectionDescription,
                         productCount : messageInfo.metaData?.productCount,
                         collectionImage : messageInfo.metaData?.collectionImage,
-                        collectionId : messageInfo.metaData?.collectionId
+                        collectionId : messageInfo.metaData?.collectionId,
+                        paymentRequestId : messageInfo.metaData?.paymentRequestId,
+                        orderId : messageInfo.metaData?.orderId,
+                        status : messageInfo.metaData?.status,
+                        friendPaymentRequestExpiryTime : messageInfo.metaData?.friendPaymentRequestExpiryTime,
+                        currencyCode : messageInfo.metaData?.currencyCode,
+                        amount : messageInfo.metaData?.amount
                     )
                     
                     if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
@@ -564,7 +570,13 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             collectionDescription : messageInfo.details?.metaData?.collectionDescription,
                             productCount : messageInfo.details?.metaData?.productCount,
                             collectionImage : messageInfo.details?.metaData?.collectionImage,
-                            collectionId : messageInfo.details?.metaData?.collectionId
+                            collectionId : messageInfo.details?.metaData?.collectionId,
+                            paymentRequestId : messageInfo.details?.metaData?.paymentRequestId,
+                            orderId : messageInfo.details?.metaData?.orderId,
+                            status : messageInfo.details?.metaData?.status,
+                            friendPaymentRequestExpiryTime : messageInfo.details?.metaData?.friendPaymentRequestExpiryTime,
+                            currencyCode : messageInfo.details?.metaData?.currencyCode,
+                            amount : messageInfo.details?.metaData?.amount
                         )
                     }
                     
@@ -668,7 +680,13 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             collectionDescription : messageInfo.metaData?.collectionDescription,
                             productCount : messageInfo.metaData?.productCount,
                             collectionImage : messageInfo.metaData?.collectionImage,
-                            collectionId : messageInfo.metaData?.collectionId
+                            collectionId : messageInfo.metaData?.collectionId,
+                            paymentRequestId : messageInfo.metaData?.paymentRequestId,
+                            orderId : messageInfo.metaData?.orderId,
+                            status : messageInfo.metaData?.status,
+                            friendPaymentRequestExpiryTime : messageInfo.metaData?.friendPaymentRequestExpiryTime,
+                            currencyCode : messageInfo.metaData?.currencyCode,
+                            amount : messageInfo.metaData?.amount
                         )
                         
                         if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
@@ -692,7 +710,13 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                                 collectionDescription : messageInfo.details?.metaData?.collectionDescription,
                                 productCount : messageInfo.details?.metaData?.productCount,
                                 collectionImage : messageInfo.details?.metaData?.collectionImage,
-                                collectionId : messageInfo.details?.metaData?.collectionId
+                                collectionId : messageInfo.details?.metaData?.collectionId,
+                                paymentRequestId : messageInfo.details?.metaData?.paymentRequestId,
+                                orderId : messageInfo.details?.metaData?.orderId,
+                                status : messageInfo.details?.metaData?.status,
+                                friendPaymentRequestExpiryTime : messageInfo.details?.metaData?.friendPaymentRequestExpiryTime,
+                                currencyCode : messageInfo.details?.metaData?.currencyCode,
+                                amount : messageInfo.details?.metaData?.amount
                             )
                         }
                         
