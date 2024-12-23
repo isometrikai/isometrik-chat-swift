@@ -134,7 +134,7 @@ extension ISMMessageView{
                               navigateToMediaSliderId: $navigateToMediaSliderId, navigateToDocumentUrl: $navigateToDocumentUrl, deleteMessage: $deleteMessage,
                               message: message, 
                               postIdToNavigate: $postIdToNavigate,
-                              productIdToNavigate: $productIdToNavigate, navigateToSocialProfileId: $navigateToSocialProfileId, navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate, navigateToProductLink: $navigateToProductLink, navigateToSocialLink: $navigateToSocialLink, navigateToCollectionLink: $navigateToCollectionLink, viewDetailsForPaymentRequest: $viewDetailsForPaymentRequest)
+                              productIdToNavigate: $productIdToNavigate, navigateToSocialProfileId: $navigateToSocialProfileId, navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate, navigateToProductLink: $navigateToProductLink, navigateToSocialLink: $navigateToSocialLink, navigateToCollectionLink: $navigateToCollectionLink, viewDetailsForPaymentRequest: $viewDetailsForPaymentRequest, declinePaymentRequest: $declinePaymentRequest)
             .environmentObject(self.realmManager)
         }
     }

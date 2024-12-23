@@ -62,10 +62,11 @@ struct ConfirmationPopup: View {
     var popUpType : PopUpType
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @Binding var isPresented : Bool
+    var showCrossButton : Bool
     var body: some View {
         VStack(spacing: 32) {
             HStack{
-                if popUpType == .Delete{
+                if showCrossButton == true{
                     Button {
                         isPresented = false
                     } label: {

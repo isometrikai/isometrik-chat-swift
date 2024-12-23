@@ -88,6 +88,7 @@ struct ISMMessageSubView: View {
     @Binding var navigateToCollectionLink : MessagesDB
     //payment
     @Binding var viewDetailsForPaymentRequest : MessagesDB
+    @Binding var declinePaymentRequest : MessagesDB
     
     
     //MARK:  - BODY
@@ -1401,6 +1402,7 @@ struct ISMMessageSubView: View {
                                         viewDetailsForPaymentRequest = self.message
                                     } declineRequest: {
                                         //decline request
+                                        declinePaymentRequest = self.message
                                     }
                                     dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
                                 }//:ZStack

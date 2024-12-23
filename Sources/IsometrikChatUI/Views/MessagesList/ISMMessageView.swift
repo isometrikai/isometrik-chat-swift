@@ -33,6 +33,7 @@ public protocol ISMMessageViewDelegate{
     func backButtonAction()
     func navigateToShareContact(conversationId : String)
     func viewDetailForPaymentRequest(orderId : String, paymentRequestId : String)
+    func declinePaymentRequest(orderId : String, paymentRequestId : String)
 }
 
 public struct ISMMessageView: View {
@@ -183,6 +184,7 @@ public struct ISMMessageView: View {
     @State var navigateToSocialLink : MessagesDB = MessagesDB()
     @State var navigateToCollectionLink : MessagesDB = MessagesDB()
     @State var viewDetailsForPaymentRequest : MessagesDB = MessagesDB()
+    @State var declinePaymentRequest : MessagesDB = MessagesDB()
     @State var navigateToChatList : Bool = false
     
     //MARK: - BODY
@@ -453,6 +455,10 @@ public struct ISMMessageView: View {
                 self.delegate?.viewDetailForPaymentRequest(orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "", paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "")
                 viewDetailsForPaymentRequest = MessagesDB()
             }
+        }.onChange(of: declinePaymentRequest.messageId) { _, _ in
+            if !declinePaymentRequest.messageId.isEmpty{
+                stateViewModel.showDeclinePaymentRequestPopUp = true
+            }
         }
         .onChange(of: navigateToMediaSliderId, { _, _ in
             if !navigateToMediaSliderId.isEmpty{
@@ -593,7 +599,30 @@ public struct ISMMessageView: View {
             .presentationDetents([.fraction(0.25)])
             .presentationDragIndicator(.visible)
         })
-        
+        .sheet(isPresented: $stateViewModel.showDeclinePaymentRequestPopUp, content: {
+            ConfirmationPopup(
+                title: "Decline Request?",
+                message: "Are you sure you want to decline payment request?",
+                confirmButtonTitle: "Decline request",
+                cancelButtonTitle: "Cancel",
+                confirmAction: {
+                    let orderId = declinePaymentRequest.metaData?.orderId ?? ""
+                    let paymentRequestId = declinePaymentRequest.metaData?.paymentRequestId ?? ""
+                    declinePaymentRequest = MessagesDB()
+                    self.delegate?.declinePaymentRequest(orderId: orderId, paymentRequestId: paymentRequestId)
+                    stateViewModel.showDeclinePaymentRequestPopUp = false
+                },
+                cancelAction: {
+                    declinePaymentRequest = MessagesDB()
+                    stateViewModel.showDeclinePaymentRequestPopUp = false
+                },
+                popUpType: .Menu,
+                isPresented: $stateViewModel.showDeclinePaymentRequestPopUp,
+                showCrossButton: true
+            )
+            .presentationDetents([.fraction(0.3)])
+            .presentationDragIndicator(.visible)
+        })
         .sheet(isPresented: $stateViewModel.showClearChatPopup, content: {
             var attributedText: AttributedString {
                 var attributedString = AttributedString("Are you sure you want to clear chat? This action is undoable.")
@@ -619,7 +648,8 @@ public struct ISMMessageView: View {
                     stateViewModel.showClearChatPopup = false
                 },
                 popUpType: .Menu,
-                isPresented: $stateViewModel.showClearChatPopup
+                isPresented: $stateViewModel.showClearChatPopup,
+                showCrossButton: false
             )
             .presentationDetents([.fraction(0.3)])
             .presentationDragIndicator(.visible)
@@ -650,7 +680,8 @@ public struct ISMMessageView: View {
                     stateViewModel.showBlockUserPopup = false
                 },
                 popUpType: .Menu,
-                isPresented: $stateViewModel.showBlockUserPopup
+                isPresented: $stateViewModel.showBlockUserPopup,
+                showCrossButton: false
             )
             .presentationDetents([.fraction(0.3)])
             .presentationDragIndicator(.visible)
@@ -693,7 +724,8 @@ public struct ISMMessageView: View {
                     }
                 },
                 popUpType: .Delete,
-                isPresented: $stateViewModel.showDeleteMultipleMessage
+                isPresented: $stateViewModel.showDeleteMultipleMessage,
+                showCrossButton: true
             )
             .presentationDetents([.fraction(0.3)])
             .presentationDragIndicator(.visible)
