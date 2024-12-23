@@ -231,6 +231,20 @@ public class ISMChatHelper: NSObject {
         }
     }
     
+    public class func getPaymentStatus(status: Int) -> ISMChatPaymentRequestStatus{
+        if status == 1{
+            return .Accepted
+        }else if status == 2{
+            return .Rejected
+        }else if status == 3{
+            return .Expired
+        }else if status == 4{
+            return .Cancelled
+        }else{
+            return .ActiveRequest
+        }
+    }
+    
     //MARK: - GET EMOJI
     
     public class func getEmoji(valueString : String) -> String{
