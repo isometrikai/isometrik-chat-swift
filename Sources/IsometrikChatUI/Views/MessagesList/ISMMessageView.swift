@@ -289,6 +289,7 @@ public struct ISMMessageView: View {
                         getConversationDetail()
                         reload()
                     }
+                    self.textFieldtxt = self.realmManager.getLastInputTextInConversation(conversationId: self.conversationID ?? "")
                 }
                 .onDisappear{
                     OnMessageList = false

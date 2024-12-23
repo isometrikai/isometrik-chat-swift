@@ -103,6 +103,10 @@ extension ISMMessageView{
         }
     }
     
+    func saveMyLastInputTextIfNotSent(){
+        self.realmManager.saveLastInputTextInConversation(text: textFieldtxt, conversationId: self.conversationID ?? "")
+    }
+    
     func backButtonView() -> some View {
         HStack{
             if stateViewModel.showforwardMultipleMessage || (stateViewModel.showDeleteMultipleMessage && chatProperties.customMenu == false) {
@@ -121,6 +125,7 @@ extension ISMMessageView{
                     //just resetting unread count for this conversation while going back to conversation list
                     //            realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
                     //sometimes keyboard doesn't get dismissed
+                    saveMyLastInputTextIfNotSent()
                     OndisappearOnBack()
                     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)

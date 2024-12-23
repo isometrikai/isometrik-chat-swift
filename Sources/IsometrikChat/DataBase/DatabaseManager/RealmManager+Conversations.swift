@@ -134,6 +134,32 @@ extension RealmManager {
         }
     }
     
+    public func saveLastInputTextInConversation(text : String,conversationId : String){
+        if let localRealm = localRealm {
+            do {
+                let taskToDelete = localRealm.objects(ConversationDB.self).filter(NSPredicate(format: "conversationId == %@", conversationId))
+                guard !taskToDelete.isEmpty else { return }
+                try localRealm.write {
+                    taskToDelete.first?.lastInputText = text
+                }
+            } catch {
+                print("Error while saving last input text in  \(conversationId) to Realm: \(error)")
+            }
+        }
+    }
+    
+    
+    public func getLastInputTextInConversation(conversationId : String) -> String{
+        let conversation = conversations.first { con in
+            con.conversationId == conversationId
+        }
+        if conversation != nil{
+            return conversation?.lastInputText ?? ""
+        }else{
+            return ""
+        }
+    }
+    
     
     //MARK: - We check if conversation already exist in local DB, if yes updateit, else save/add
     public func manageConversationList(arr: [ISMChatConversationsDetail]) {

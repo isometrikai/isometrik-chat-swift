@@ -41,6 +41,8 @@ public class ConversationDB: Object, ObjectKeyIdentifiable {
     @Persisted public var deletedMessage : Bool = false
     @Persisted var metaData : ConversationMetaData?
     
+    @Persisted public var lastInputText : String?
+    
     public override class func primaryKey() -> String? {
         return "conversationId"
     }
