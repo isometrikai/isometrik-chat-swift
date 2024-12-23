@@ -133,7 +133,7 @@ struct ISMConversationSubView: View {
                                 let text = "You have sent a payment request"
                                 getLabel(text: text, image: "")
                             }else{
-                                let text = "\(chat.lastMessageDetails?.userName ?? "") sent you a payment request"
+                                let text = "\(chat.lastMessageDetails?.senderName ?? "") sent you a payment request"
                                 getLabel(text: text, image: "")
                             }
                         default:

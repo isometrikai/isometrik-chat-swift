@@ -231,7 +231,7 @@ public class ISMChatHelper: NSObject {
         }
     }
     
-    public class func getPaymentStatus(status: Int) -> ISMChatPaymentRequestStatus{
+    public class func getPaymentStatus(status: Int,sentAt: Double,expireAt: Int) -> ISMChatPaymentRequestStatus{
         if status == 1{
             return .Accepted
         }else if status == 2{
@@ -241,7 +241,17 @@ public class ISMChatHelper: NSObject {
         }else if status == 4{
             return .Cancelled
         }else{
-            return .ActiveRequest
+            // Calculate expiration time
+            let sentAtSeconds = sentAt / 1000.0
+            let expirationTimestamp = sentAtSeconds + Double(expireAt * 60) // expireAt is in minutes
+            let currentTimestamp = Date().timeIntervalSince1970
+            
+            // Check if the current time exceeds the expiration timestamp
+            if currentTimestamp >= expirationTimestamp {
+                return .Expired
+            }else{
+                return .ActiveRequest
+            }
         }
     }
     
