@@ -1405,7 +1405,7 @@ struct ISMMessageSubView: View {
                                     dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
                                 }//:ZStack
                                 .frame(width: 303)
-                                .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                .background(Color(hex: "#F5F5F2"))
                                 .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                 .overlay(
                                     appearance.messageBubbleType == .BubbleWithOutTail ?
@@ -2177,11 +2177,11 @@ struct ISMMessageSubView: View {
             Text(message.sentAt.datetotime())
                 .font(appearance.fonts.messageListMessageTime)
                 .foregroundColor(onImage ? Color.white : (isReceived ? appearance.colorPalette.messageListMessageTimeReceived :  appearance.colorPalette.messageListMessageTimeSend))
-            if message.metaData?.isBroadCastMessage == true && fromBroadCastFlow != true && !isReceived && !message.deletedMessage{
-                appearance.images.broadcastMessageStatus
-                    .resizable()
-                    .frame(width: 11, height: 10)
-            }
+//            if message.metaData?.isBroadCastMessage == true && fromBroadCastFlow != true && !isReceived && !message.deletedMessage{
+//                appearance.images.broadcastMessageStatus
+//                    .resizable()
+//                    .frame(width: 11, height: 10)
+//            }
             if !isReceived && !message.deletedMessage{
                 switch self.messageDeliveredType{
                 case .BlueTick:
