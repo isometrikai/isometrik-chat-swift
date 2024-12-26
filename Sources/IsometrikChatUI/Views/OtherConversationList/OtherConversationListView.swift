@@ -56,7 +56,7 @@ public struct OtherConversationListView : View {
 //                        }
                         
                         
-                        Text("Open a chat to get more info about who’s messaging you. They won’t know that you’ve seen it until you accept.")
+                        Text("Open a chat to get more info about who’s messaging you. They won’t know that you’ve seen it until you accept.".localized)
                             .foregroundColor(Color(hex: "#FF4E00"))
                             .font(appearance.fonts.chatListUserMessage)
                             .padding(.horizontal,35)

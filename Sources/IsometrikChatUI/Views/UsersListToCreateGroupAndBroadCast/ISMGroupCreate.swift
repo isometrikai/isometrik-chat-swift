@@ -70,7 +70,7 @@ public struct ISMGroupCreate: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     VStack {
-                        Text("New Group")
+                        Text("New Group".localized)
                             .font(appearance.fonts.navigationBarTitle)
                             .foregroundColor(appearance.colorPalette.navigationBarTitle)
                     }

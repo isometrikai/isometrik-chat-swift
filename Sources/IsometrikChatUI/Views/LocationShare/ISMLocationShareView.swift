@@ -49,7 +49,7 @@ struct ISMLocationShareView: View {
                     }
                     Spacer()
                     
-                    Text("Share Location")
+                    Text("Share Location".localized)
                         .font(appearance.fonts.navigationBarTitle)
                         .foregroundColor(appearance.colorPalette.navigationBarTitle)
                     
@@ -97,7 +97,7 @@ struct ISMLocationShareView: View {
                                     appearance.images.mapTarget
                                         .resizable()
                                         .frame(width: 40,height: 40)
-                                    Text("Use my current location")
+                                    Text("Use my current location".localized)
                                         .foregroundColor(Color(hex: "#0E0F0C"))
                                         .font(appearance.fonts.locationMessageTitle)
                                 }
@@ -116,7 +116,7 @@ struct ISMLocationShareView: View {
                                         .resizable()
                                         .frame(width: 40, height: 40, alignment: .center)
                                     VStack(alignment: .leading){
-                                        Text("Use this location")
+                                        Text("Use this location".localized)
                                             .foregroundColor(Color(hex: "#0E0F0C"))
                                             .font(appearance.fonts.locationMessageTitle)
                                         Text(self.mapViewModel.places.first?.place.name ?? "")
@@ -138,7 +138,7 @@ struct ISMLocationShareView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     VStack {
-                        Text("Send Location")
+                        Text("Send Location".localized)
                             .font(appearance.fonts.navigationBarTitle)
                             .foregroundColor(appearance.colorPalette.navigationBarTitle)
                     }
@@ -156,9 +156,9 @@ struct ISMLocationShareView: View {
             // Permission denied alert
             .alert(isPresented: $locationManager.permissionDenied) {
                 Alert(
-                    title: Text("Permission Denied"),
-                    message: Text("Please Enable Permission in App Settings"),
-                    dismissButton: .default(Text("Go to Settings")) {
+                    title: Text("Permission Denied".localized),
+                    message: Text("Please Enable Permission in App Settings".localized),
+                    dismissButton: .default(Text("Go to Settings".localized)) {
                         UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                     }
                 )
@@ -202,10 +202,10 @@ struct ISMLocationShareView: View {
                                 .resizable()
                                 .frame(width: 24,height: 24)
                             VStack(alignment: .leading,spacing: 3){
-                                Text("Send your current location")
+                                Text("Send your current location".localized)
                                     .font(appearance.fonts.messageListMessageText)
                                     .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
-                                Text("Accurate to 5 meters")
+                                Text("Accurate to 5 meters".localized)
                                     .font(appearance.fonts.chatListUserMessage)
                                     .foregroundColor(appearance.colorPalette.chatListUserMessage)
                             }//:VSTACK
@@ -215,7 +215,7 @@ struct ISMLocationShareView: View {
                 }.listRowSeparator(.hidden)
             }//:SECTION
             
-            Section(header: Text("NEARBY PLACES")) {
+            Section(header: Text("NEARBY PLACES".localized)) {
                 ForEach(self.mapViewModel.places, id: \.place.placeID) { placeLikelihood in
                     PlaceRow(place: placeLikelihood.place)
                         .onTapGesture {

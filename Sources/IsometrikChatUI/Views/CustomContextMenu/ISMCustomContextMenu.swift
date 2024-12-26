@@ -99,7 +99,7 @@ struct ISMCustomContextMenu: View {
                             dismiss()
                         } label: {
                             HStack{
-                                Text("Reply")
+                                Text("Reply".localized)
                                     .font(appearance.fonts.contextMenuOptions)
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
@@ -116,7 +116,7 @@ struct ISMCustomContextMenu: View {
                             dismiss()
                         } label: {
                             HStack{
-                                Text("Forward")
+                                Text("Forward".localized)
                                     .font(appearance.fonts.contextMenuOptions)
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
@@ -134,7 +134,7 @@ struct ISMCustomContextMenu: View {
                             dismiss()
                         } label: {
                             HStack{
-                                Text("Edit")
+                                Text("Edit".localized)
                                     .font(appearance.fonts.contextMenuOptions)
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
@@ -152,7 +152,7 @@ struct ISMCustomContextMenu: View {
                             dismiss()
                         } label: {
                             HStack{
-                                Text("Copy")
+                                Text("Copy".localized)
                                     .font(appearance.fonts.contextMenuOptions)
                                     .foregroundColor(Color(hex: "#294566"))
                                 Spacer()
@@ -177,7 +177,7 @@ struct ISMCustomContextMenu: View {
                                     dismiss()
                                 } label: {
                                     HStack{
-                                        Text("Info")
+                                        Text("Info".localized)
                                             .font(appearance.fonts.contextMenuOptions)
                                             .foregroundColor(Color(hex: "#294566"))
                                         Spacer()
@@ -200,7 +200,7 @@ struct ISMCustomContextMenu: View {
                                 dismiss()
                             } label: {
                                 HStack{
-                                    Text("Info")
+                                    Text("Info".localized)
                                         .font(appearance.fonts.contextMenuOptions)
                                         .foregroundColor(Color(hex: "#294566"))
                                     Spacer()
@@ -218,7 +218,7 @@ struct ISMCustomContextMenu: View {
                         dismiss()
                     } label: {
                         HStack{
-                            Text("Delete")
+                            Text("Delete".localized)
                                 .font(appearance.fonts.contextMenuOptions)
                                 .foregroundColor(Color(hex: "#DD3719"))
                             Spacer()

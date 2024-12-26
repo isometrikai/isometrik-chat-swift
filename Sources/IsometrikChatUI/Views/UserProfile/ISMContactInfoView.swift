@@ -140,7 +140,7 @@ struct ISMContactInfoView: View {
                                                 appearance.images.mediaIcon
                                                     .resizable()
                                                     .frame(width: 29,height: 29)
-                                                Text("View Profile")
+                                                Text("View Profile".localized)
                                                     .font(appearance.fonts.messageListMessageText)
                                                     .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                                 Spacer()

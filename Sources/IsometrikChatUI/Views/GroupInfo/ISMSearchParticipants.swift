@@ -82,17 +82,17 @@ struct ISMSearchParticipants: View {
             Button {
                 //navigate to detailed contact Info
             } label: {
-                Text("Info")
+                Text("Info".localized)
             }
             Button {
                 makeGroupAdmin()
             } label: {
-                Text(selectedMember.isAdmin == false ? "Make Group Admin" : "Dismiss as Admin")
+                Text(selectedMember.isAdmin == false ? "Make Group Admin".localized : "Dismiss as Admin".localized)
             }
             Button {
                 removefromGroup()
             } label: {
-                Text("Remove from Group")
+                Text("Remove from Group".localized)
             }
             Button("Cancel", role: .cancel, action: {})
         } message: {
@@ -102,7 +102,7 @@ struct ISMSearchParticipants: View {
         .toolbar {
             ToolbarItem(placement: .principal) {
                 VStack {
-                    Text("Search members")
+                    Text("Search members".localized)
                         .font(appearance.fonts.navigationBarTitle)
                         .foregroundColor(appearance.colorPalette.navigationBarTitle)
                     if let count = members?.membersCount{

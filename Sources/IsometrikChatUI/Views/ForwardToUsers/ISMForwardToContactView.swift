@@ -103,7 +103,7 @@ struct ISMForwardToContactView: View {
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         VStack {
-                            Text("Send To")
+                            Text("Send To".localized)
                                 .font(appearance.fonts.navigationBarTitle)
                                 .foregroundColor(appearance.colorPalette.navigationBarTitle)
                         }
@@ -133,7 +133,7 @@ struct ISMForwardToContactView: View {
                         }
                         Spacer()
                         Button(action : {forwardMsg()}) {
-                            Text("Forward")
+                            Text("Forward".localized)
                                 .font(appearance.fonts.messageListReplyToolbarHeader)
                                 .foregroundStyle(appearance.colorPalette.userProfileEditText)
                             
@@ -150,7 +150,7 @@ struct ISMForwardToContactView: View {
             }
             
             if showAlertFormoreThan5 == true{
-                Text("You can only share with up to 5 chats.")
+                Text("You can only share with up to 5 chats.".localized)
                     .font(Font.caption)
                     .padding()
                     .background(.black.opacity(0.4))
@@ -261,7 +261,7 @@ private extension ISMForwardToContactView{
                                                  customType: singleMessage.customType,
                                                  placeName: singleMessage.metaData?.locationAddress,
                                                  metaData: singleMessage.metaData ?? nil) {
-                            ISMChatHelper.print("Message Forwarded")
+                            ISMChatHelper.print("Message Forwarded".localized)
                             NotificationCenter.default.post(name: NSNotification.refreshConvList, object: nil)
                             messageGroup.leave()
                         }

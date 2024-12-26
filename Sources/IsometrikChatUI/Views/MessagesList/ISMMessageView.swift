@@ -303,7 +303,7 @@ public struct ISMMessageView: View {
                     ActivityIndicatorView(isPresented: $chatViewModel.isBusy)
                 }
                 if stateViewModel.messageCopied == true{
-                    Text("Message copied")
+                    Text("Message copied".localized)
                         .font(appearance.fonts.alertText)
                         .padding()
                         .background(appearance.colorPalette.alertBackground)
@@ -330,11 +330,11 @@ public struct ISMMessageView: View {
         .confirmationDialog("", isPresented: $stateViewModel.showUnblockPopUp) {
             unblockActionSheetButton()
         } message: {
-            Text("Unblock contact to send a message")
+            Text("Unblock contact to send a message".localized)
         }
         .confirmationDialog("", isPresented: $stateViewModel.uAreBlock) {
         } message: {
-            Text("Action not allowed, the user has already blocked You")
+            Text("Action not allowed, the user has already blocked You".localized)
         }
         .confirmationDialog("", isPresented: $stateViewModel.clearThisChat) {
             Button("Delete", role: .destructive) {
@@ -602,10 +602,10 @@ public struct ISMMessageView: View {
         })
         .sheet(isPresented: $stateViewModel.showDeclinePaymentRequestPopUp, content: {
             ConfirmationPopup(
-                title: "Decline Request?",
-                message: "Are you sure you want to decline payment request?",
-                confirmButtonTitle: "Decline request",
-                cancelButtonTitle: "Cancel",
+                title: "Decline Request?".localized,
+                message: "Are you sure you want to decline payment request?".localized,
+                confirmButtonTitle: "Decline request".localized,
+                cancelButtonTitle: "Cancel".localized,
                 confirmAction: {
                     let orderId = declinePaymentRequest.metaData?.orderId ?? ""
                     let paymentRequestId = declinePaymentRequest.metaData?.paymentRequestId ?? ""
@@ -637,10 +637,10 @@ public struct ISMMessageView: View {
                 return attributedString
             }
             ConfirmationPopup(
-                title: "Clear chat?",
+                title: "Clear chat?".localized,
                 message: attributedText,
-                confirmButtonTitle: "Yes, clear",
-                cancelButtonTitle: "Cancel",
+                confirmButtonTitle: "Yes, clear".localized,
+                cancelButtonTitle: "Cancel".localized,
                 confirmAction: {
                     clearChat()
                     stateViewModel.showClearChatPopup = false
@@ -669,10 +669,10 @@ public struct ISMMessageView: View {
                 return attributedString
             }
             ConfirmationPopup(
-                title: "Block User?",
+                title: "Block User?".localized,
                 message: attributedText,
-                confirmButtonTitle: "Block",
-                cancelButtonTitle: "Cancel",
+                confirmButtonTitle: "Block".localized,
+                cancelButtonTitle: "Cancel".localized,
                 confirmAction: {
                     blockChatFromUser()
                     stateViewModel.showBlockUserPopup = false
@@ -689,7 +689,7 @@ public struct ISMMessageView: View {
         })
         .sheet(isPresented: $stateViewModel.showDeleteMultipleMessage, content:{
             var attributedText: AttributedString {
-                var attributedString = AttributedString("Are you sure you want to permanently delete this message?")
+                var attributedString = AttributedString("Are you sure you want to permanently delete this message?".localized)
                 
                 // Style "clear chat"
                 if let range = attributedString.range(of: "permanently delete") {
@@ -700,10 +700,10 @@ public struct ISMMessageView: View {
                 return attributedString
             }
             ConfirmationPopup(
-                title: "Delete Message",
+                title: "Delete Message".localized,
                 message: attributedText,
-                confirmButtonTitle: "For everyone",
-                cancelButtonTitle: "For me",
+                confirmButtonTitle: "For everyone".localized,
+                cancelButtonTitle: "For me".localized,
                 confirmAction: {
                     stateViewModel.showBlockUserPopup = false
                     if let message = deleteMessage.first{
@@ -807,11 +807,11 @@ public struct ISMMessageView: View {
                 }
             }
         })
-        .alert("Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.", isPresented: $stateViewModel.showingNoInternetAlert) {
-            Button("OK", role: .cancel) { }
+        .alert("Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.".localized, isPresented: $stateViewModel.showingNoInternetAlert) {
+            Button("OK".localized, role: .cancel) { }
         }
         .alert("Call \(self.opponenDetail?.userName ?? "")", isPresented: $stateViewModel.showCallPopUp) {
-            Button("Cancel", role: .cancel) {
+            Button("Cancel".localized, role: .cancel) {
                 if stateViewModel.audioCallToUser == true{
                     stateViewModel.audioCallToUser = false
                 }
@@ -820,13 +820,13 @@ public struct ISMMessageView: View {
                 }
             }
             if stateViewModel.audioCallToUser {
-                Button("Voice Call") {
+                Button("Voice Call".localized) {
                     stateViewModel.audioCallToUser = false
                     calling(type: .AudioCall)
                 }
             }
             if stateViewModel.videoCallToUser {
-                Button("Video Call") {
+                Button("Video Call".localized) {
                     stateViewModel.videoCallToUser = false
                     calling(type: .VideoCall)
                 }
@@ -951,7 +951,7 @@ public struct ISMMessageView: View {
                         if members.count >= 2{
                             self.memberString = members.prefix(1).map { $0.userName ?? "" }.joined(separator: ", ")
                             if members.count > 2 {
-                                self.memberString! += ", and others"
+                                self.memberString! += ", and others".localized
                             }
                         }else{
                             self.memberString = members.map { $0.userName ?? "" }.joined(separator: ", ")

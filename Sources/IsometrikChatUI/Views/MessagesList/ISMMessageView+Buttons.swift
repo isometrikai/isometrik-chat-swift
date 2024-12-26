@@ -18,12 +18,12 @@ extension ISMMessageView{
     
     func showPermissionDeniedAlert() {
         let alertController = UIAlertController(
-            title: "Audio Permission Required",
-            message: "We need access to your microphone for recording audio. Please enable it in Settings.",
+            title: "Audio Permission Required".localized,
+            message: "We need access to your microphone for recording audio. Please enable it in Settings.".localized,
             preferredStyle: .alert
         )
         
-        let settingsAction = UIAlertAction(title: "Open Settings", style: .default) { _ in
+        let settingsAction = UIAlertAction(title: "Open Settings".localized, style: .default) { _ in
             if let appSettings = URL(string: UIApplication.openSettingsURLString) {
                 if UIApplication.shared.canOpenURL(appSettings) {
                     UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
@@ -31,7 +31,7 @@ extension ISMMessageView{
             }
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
         
         alertController.addAction(settingsAction)
         alertController.addAction(cancelAction)

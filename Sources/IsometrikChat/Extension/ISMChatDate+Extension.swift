@@ -69,7 +69,7 @@ extension NSDate{
             if isSectionHeader == false{
                 return "today at \(timeFormatter.string(from: exactDate as Date))"
             }else{
-                return "Today"
+                return "Today".localized
             }
         }else if daysBetween == 1 || daysBetween == -1{
             let timeFormatter = DateFormatter()
@@ -77,7 +77,7 @@ extension NSDate{
             if isSectionHeader == false{
                 return "yesterday at\(timeFormatter.string(from: exactDate as Date))"
             }else{
-                return "Yesterday"
+                return "Yesterday".localized
             }
         }else{
             let timeFormatter = DateFormatter()

@@ -64,13 +64,13 @@ struct ISMEditGroupView: View {
                     Button(action: {
                         showSheet = true
                     }, label: {
-                        Text("Edit")
+                        Text("Edit".localized)
                             .font(appearance.fonts.messageListMessageText)
                             .foregroundColor(appearance.colorPalette.userProfileEditText)
                     })
                 }
                 
-                TextField("Write your group name", text: $groupName)
+                TextField("Write your group name".localized, text: $groupName)
                     .padding()
                     .frame( height: 50)
                     .font(appearance.fonts.messageListMessageText)
@@ -88,7 +88,7 @@ struct ISMEditGroupView: View {
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         VStack {
-                            Text("Edit Group")
+                            Text("Edit Group".localized)
                                 .font(appearance.fonts.navigationBarTitle)
                                 .foregroundColor(appearance.colorPalette.navigationBarTitle)
                         }
@@ -101,19 +101,19 @@ struct ISMEditGroupView: View {
                         Button(action: {
                             showCamera.toggle()
                         }, label: {
-                            Text("Camera")
+                            Text("Camera".localized)
                         })
                         
                         Button(action: {
                             showGallery.toggle()
                         }, label: {
-                            Text("Gallery")
+                            Text("Gallery".localized)
                         })
                         
                         Button(action: {
                             removeImage = true
                         }, label: {
-                            Text("Remove")
+                            Text("Remove".localized)
                         })
                     }
                 }
@@ -160,7 +160,7 @@ struct ISMEditGroupView: View {
         Button {
             editGroup()
         } label: {
-            Text("Done")
+            Text("Done".localized)
                 .font(appearance.fonts.messageListMessageText)
                 .foregroundColor(groupName != "" || image.count != 0 ? appearance.colorPalette.userProfileEditText : Color.gray)
         }

@@ -166,7 +166,7 @@ extension ISMMessageView{
                     }
                 }
             }
-            Button("Cancel", role: .cancel) {
+            Button("Cancel".localized, role: .cancel) {
                 // Handle cancel action if needed
             }
         }
@@ -176,30 +176,30 @@ extension ISMMessageView{
     func deleteActionSheetButtons() -> some View {
         VStack {
             if fromBroadCastFlow == true{
-                Button("Delete for Everyone", role: .destructive) {
+                Button("Delete for Everyone".localized, role: .destructive) {
                     deleteMultipleBroadcastMessages(otherUserMessage: false, type: .DeleteForEveryone)
                     
                 }
-                Button("Delete for Me", role: .destructive) {
+                Button("Delete for Me".localized, role: .destructive) {
                     deleteMultipleBroadcastMessages(otherUserMessage: false, type: .DeleteForYou)
                 }
             }else{
                 if otherUserMessageDeleteForMe() {
                     //other user
-                    Button("Delete for Me", role: .destructive) {
+                    Button("Delete for Me".localized, role: .destructive) {
                         deleteMultipleMessages(otherUserMessage: true, type: .DeleteForYou)
                     }
                 } else {
                     //my msg
-                    Button("Delete for Everyone", role: .destructive) {
+                    Button("Delete for Everyone".localized, role: .destructive) {
                         deleteMultipleMessages(otherUserMessage: false, type: .DeleteForEveryone)
                     }
-                    Button("Delete for Me", role: .destructive) {
+                    Button("Delete for Me".localized, role: .destructive) {
                         deleteMultipleMessages(otherUserMessage: false, type: .DeleteForYou)
                     }
                 }
             }
-            Button("Cancel", role: .cancel) {
+            Button("Cancel".localized, role: .cancel) {
                 // Handle cancel action if needed
             }
         }
@@ -212,7 +212,7 @@ extension ISMMessageView{
     }
     
     func unblockActionSheetButton() -> some View {
-        Button("Unblock") {
+        Button("Unblock".localized) {
             conversationViewModel.blockUnBlockUser(opponentId: self.conversationDetail?.conversationDetails?.opponentDetails?.id ?? "", needToBlock: false) { obj in
                 print("Success")
                 self.conversationDetail?.conversationDetails?.messagingDisabled = false

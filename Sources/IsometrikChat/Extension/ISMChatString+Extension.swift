@@ -7,6 +7,23 @@
 
 import Foundation
 import UIKit
+import SwiftUICore
+
+public protocol Localizable {
+    var localized: String { get }
+    var localizedKey: LocalizedStringKey { get }
+}
+
+extension String: Localizable {
+    public var localized: String {
+        return NSLocalizedString(self, comment: "")
+    }
+    
+    public var localizedKey: LocalizedStringKey {
+        return LocalizedStringKey(self)
+    }
+}
+
 
 extension String {
     public func capitalizingFirstLetter() -> String {

@@ -53,12 +53,12 @@ public struct ISMProfileView: View {
                                     Button {
                                         showSheet = true
                                     } label: {
-                                        Text("Edit")
+                                        Text("Edit".localized)
                                             .foregroundColor(appearance.colorPalette.userProfileEditText)
                                             .font(appearance.fonts.userProfileeditText)
                                     }
                                 }
-                                Text("Enter your name and add an optional profile picture")
+                                Text("Enter your name and add an optional profile picture".localized)
                                     .foregroundColor(appearance.colorPalette.userProfileDescription)
                                     .font(appearance.fonts.userProfileDescription)
                                     .fixedSize(horizontal: false, vertical: true)
@@ -69,20 +69,20 @@ public struct ISMProfileView: View {
                             Divider()
                                 .background(appearance.colorPalette.userProfileSeparator)
                             
-                            TextField("Enter name", text: $userName)
+                            TextField("Enter name".localized, text: $userName)
                                 .font(appearance.fonts.userProfilefields)
                                 .foregroundColor(appearance.colorPalette.userProfileFields)
                             
                         }
                         
-                        Section(header: Text("Email")) {
-                            TextField("Enter email", text: $email)
+                        Section(header: Text("Email".localized)) {
+                            TextField("Enter email".localized, text: $email)
                                 .font(appearance.fonts.userProfilefields)
                                 .foregroundColor(appearance.colorPalette.userProfileFields)
                             
                         }
                         
-                        Section(header: Text("About")) {
+                        Section(header: Text("About".localized)) {
                             TextField("", text: $about)
                                 .font(appearance.fonts.userProfilefields)
                                 .foregroundColor(appearance.colorPalette.userProfileFields)
@@ -93,7 +93,7 @@ public struct ISMProfileView: View {
                                 appearance.images.NotificationsIcon
                                     .resizable()
                                     .frame(width: 29, height: 29)
-                                Text("Notifications")
+                                Text("Notifications".localized)
                                     .font(appearance.fonts.userProfilefields)
                                     .foregroundColor(appearance.colorPalette.userProfileFields)
                                 Spacer()
@@ -103,7 +103,7 @@ public struct ISMProfileView: View {
                                 appearance.images.lastSeenIcon
                                     .resizable()
                                     .frame(width: 29, height: 29)
-                                Text("Last Seen")
+                                Text("Last Seen".localized)
                                     .font(appearance.fonts.userProfilefields)
                                     .foregroundColor(appearance.colorPalette.userProfileFields)
                                 Spacer()
@@ -116,7 +116,7 @@ public struct ISMProfileView: View {
                                     appearance.images.LogoutIcon
                                         .resizable()
                                         .frame(width: 29, height: 29)
-                                    Text("Logout")
+                                    Text("Logout".localized)
                                         .font(appearance.fonts.userProfilefields)
                                         .foregroundColor(appearance.colorPalette.userProfileFields)
                                     Spacer()
@@ -149,7 +149,7 @@ public struct ISMProfileView: View {
                 }
                 
                 if userNameAlert == true{
-                    Text("User name can't be empty")
+                    Text("User name can't be empty".localized)
                         .font(appearance.fonts.alertText)
                         .padding()
                         .background(appearance.colorPalette.alertBackground)
@@ -162,7 +162,7 @@ public struct ISMProfileView: View {
                         }
                 }
                 if emailAlert == true{
-                    Text("Email can't be empty")
+                    Text("Email can't be empty".localized)
                         .font(appearance.fonts.alertText)
                         .padding()
                         .background(appearance.colorPalette.alertBackground)
@@ -184,7 +184,7 @@ public struct ISMProfileView: View {
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         VStack {
-                            Text("Edit Profile")
+                            Text("Edit Profile".localized)
                                 .font(appearance.fonts.navigationBarTitle)
                                 .foregroundColor(appearance.colorPalette.navigationBarTitle)
                         }
@@ -224,7 +224,7 @@ public struct ISMProfileView: View {
                 Button {
                     updateProfile()
                 } label: {
-                    Text("Done")
+                    Text("Done".localized)
                         .font(appearance.fonts.userProfileDoneButton)
                         .foregroundColor(appearance.colorPalette.userProfileDoneButton)
                 }

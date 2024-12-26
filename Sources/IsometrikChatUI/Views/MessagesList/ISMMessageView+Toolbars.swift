@@ -105,7 +105,7 @@ extension ISMMessageView{
                 .padding(.bottom,10)
                 .multilineTextAlignment(.leading)
                 
-            Text("If you accept, you both can see information such as when you’ve read messages.")
+            Text("If you accept, you both can see information such as when you’ve read messages.".localized)
                 .font(appearance.fonts.messageListMessageText)
                 .foregroundColor(appearance.colorPalette.chatListUserMessage)
                 .padding(.horizontal,15)

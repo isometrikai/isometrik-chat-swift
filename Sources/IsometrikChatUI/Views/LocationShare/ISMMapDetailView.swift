@@ -118,12 +118,12 @@ struct ISMMapDetailView: View {
             Button(action: {
                 openAppleMap()
             }, label: {
-                Text("Open in Maps")
+                Text("Open in Maps".localized)
             })
             Button(action: {
                 openGoogleMap()
             }, label: {
-                Text("Open in Google Map")
+                Text("Open in Google Map".localized)
             })
         }
     }

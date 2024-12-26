@@ -1,0 +1,159 @@
+//
+//  Localizable.strings
+//  IsometrikChat
+//
+//  Created by My Book on 24/12/24.
+//
+
+"Chats" = "Chats";
+"New Chat" = "New Chat";
+"tap here for more info" = "tap here for more info";
+"Today" = "Today";
+"Messages are end to end encrypted. No one \noutside of this chat can read to them." = "Messages are end to end encrypted. No one \noutside of this chat can read to them.";
+"Type a message" = "Type a message";
+"You deleted this message." = "You deleted this message.";
+"This message was deleted." = "This message was deleted.";
+"Send To" = "Send To";
+"You can only share with up to 5 chats." = "You can only share with up to 5 chats.";
+"Message Forwarded" = "Message Forwarded";
+"READ BY" = "READ BY";
+"DELIVERED TO" = "DELIVERED TO";
+"Read" = "Read";
+"Delivered" = "Delivered";
+"Message Info" = "Message Info";
+"Message copied" = "Message copied";
+"Unblock contact to send a message" = "Unblock contact to send a message";
+
+"Message copied" = "Message copied";
+"OK" = "OK";
+"Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data." = "Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.";
+"Call" = "Call";
+"Cancel" = "Cancel";
+"Voice Call" = "Voice Call";
+"Video Call" = "Video Call";
+", and others" = ", and others";
+"Action not allowed, the user has already blocked You" = "Action not allowed, the user has already blocked You";
+"Clear all messages from" = "Clear all messages from";
+"this chat" = "this chat";
+"This chat will be empty but will remain in your chat list." = "This chat will be empty but will remain in your chat list.";
+"Blocked user will be no longer be able to send you messages." = "Blocked user will be no longer be able to send you messages.";
+"Decline Request?" = "Decline Request?";
+"Are you sure you want to decline payment request?" = "Are you sure you want to decline payment request?";
+"Decline request" = "Decline request";
+"Delete Message" = "Delete Message";
+"Are you sure you want to permanently delete this message?" = "Are you sure you want to permanently delete this message?";
+"For everyone" = "For everyone";
+"For me" = "For me";
+"Delete for Everyone" = "Delete for Everyone";
+"Delete for Me" = "Delete for Me";
+"Unblock" = "Unblock";
+"Audio Permission Required" = "Audio Permission Required";
+"We need access to your microphone for recording audio. Please enable it in Settings." = "We need access to your microphone for recording audio. Please enable it in Settings.";
+"Open Settings" = "Open Settings";
+"You can't send messages to this group because you're no longer a member." = "You can't send messages to this group because you're no longer a member.";
+"You blocked this user" = "You blocked this user";
+"You are blocked" = "You are blocked";
+"You unblocked this user" = "You unblocked this user";
+"You are unblocked" = "You are unblocked";
+"You changed this group title" = "You changed this group title";
+"changed this group title" = "changed this group title";
+"You changed this group image" = "You changed this group image";
+"changed this group image" = "changed this group image";
+"You created group" = "You created group";
+"created group" = "created group";
+"You has left" = "You has left";
+"You updated notifications setting" = "You updated notifications setting";
+"updated notifications setting" = "updated notifications setting";
+"If you accept, you both can see information such as when you’ve read messages." = "If you accept, you both can see information such as when you’ve read messages.";
+"Accept message request from" = "Accept message request from";
+"Reject" = "Reject";
+"Accept" = "Accept";
+"Open a chat to get more info about who’s messaging you. They won’t know that you’ve seen it until you accept." = "Open a chat to get more info about who’s messaging you. They won’t know that you’ve seen it until you accept.";
+"No other chats found!" = "No other chats found!";
+"New Broadcast" = "New Broadcast";
+"New Group" = "New Group";
+"Enter Group Name." = "Enter Group Name.";
+
+// Chat Location
+"Share Location" = "Share Location";
+"Use my current location" = "Use my current location";
+"Use this location" = "Use this location";
+"Open in Maps" = "Open in Maps";
+"Send Location" = "Send Location";
+"Permission Denied" = "Permission Denied";
+"Please Enable Permission in App Settings" = "Please Enable Permission in App Settings";
+"Go to Settings" = "Go to Settings";
+"Send your current location" = "Send your current location";
+"Accurate to 5 meters" = "Accurate to 5 meters";
+"NEARBY PLACES" = "NEARBY PLACES";
+"Open in Google Map" = "Open in Google Map";
+
+// Chat Group View
+"Write your group name" = "Write your group name";
+"Edit Group" = "Edit Group";
+"Remove" = "Remove";
+"Group name can't be empty" = "Group name can't be empty";
+"Make Group Admin" = "Make Group Admin";
+"Dismiss as Admin" = "Dismiss as Admin";
+"Search members" = "Search members";
+"Remove from Group" = "Remove from Group";
+
+// Chat interface
+"Forward" = "Forward";
+"Reply" = "Reply";
+"Copy" = "Copy";
+"Edit" = "Edit";
+"Info" = "Info";
+"Delete" = "Delete";
+
+// Chat status
+"online" = "nline";
+"Offline" = "Offline";
+"typing..." = "typing...";
+"is typing..." = "is typing...";
+"Last seen" = "Last seen";
+
+// Error messages
+"Error" = "Error";
+"No internet connection" = "No internet connection";
+"Failed to send message" = "Failed to send message";
+"Please try again" = "Please try again";
+
+// Chat management
+"Clear chat" = "Clear History";
+"Block User" = "Block User";
+"Clear chat?" = "Clear chat?";
+"Are you sure you want to clear chat? This action is undoable." = "Are you sure you want to clear chat? This action is undoable.";
+"Cancel" = "Cancel";
+"Yes, clear" =  "Yes, clear":
+"Block User?" = "Block User?";
+"Are you sure you want to Block" = "Are you sure you want to Block";
+"Block" = "Block";
+
+// Chat Attachment
+"Camera"  = "Camera";
+"Gallery" = "Gallery";
+"Document" = "Document";
+"Location" = "Location";
+"Contact" = "Contact";
+"Sticker" = "Sticker";
+
+// Chat Contact Info
+"View Profile" = "View Profile";
+"Media, Links and Docs" = "Media, Links and Docs";
+"Delete Chat" = "Delete Chat";
+"Enter your name and add an optional profile picture" = "Enter your name and add an optional profile picture";
+"Enter name" = "Enter name";
+"Email" = "Email";
+"Enter email" = "Enter email";
+"About" = "About";
+"Edit Profile" = "Edit Profile";
+"Email can't be empty" = "Email can't be empty";
+"User name can't be empty" = "User name can't be empty";
+"Logout" = "Logout";
+"Last Seen" = "Last Seen".;
+"Notifications" = "Notifications";
+// Chat reaction
+"Reacted" = "Reacted";
+"to a message" = "to a message";
+

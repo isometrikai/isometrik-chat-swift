@@ -48,7 +48,7 @@ public struct ISMUsersView: View {
                                                 navigatetoCreatGroup = true
                                             } label: {
                                                 HStack{
-                                                    Text("New Group")
+                                                    Text("New Group".localized)
                                                         .font(appearance.fonts.messageListMessageText)
                                                         .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                                     Spacer()
@@ -63,7 +63,7 @@ public struct ISMUsersView: View {
                                                 navigatetoCreatBroadCast = true
                                             } label: {
                                                 HStack{
-                                                    Text("New Broadcast")
+                                                    Text("New Broadcast".localized)
                                                         .font(appearance.fonts.messageListMessageText)
                                                         .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                                     Spacer()
@@ -174,7 +174,7 @@ public struct ISMUsersView: View {
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         VStack {
-                            Text("New Chat")
+                            Text("New Chat".localized)
                                 .font(appearance.fonts.navigationBarTitle)
                                 .foregroundColor(appearance.colorPalette.navigationBarTitle)
                         }
