@@ -34,6 +34,7 @@ extension ISMMessageView{
                 MentionUserList(showMentionList: $stateViewModel.showMentionList,filteredUsers: $filteredUsers, mentionUsers: $mentionUsers, textFieldtxt: $textFieldtxt)
             case .forward:
                 ForwardMessageToolBar(forwardMessageSelected: $forwardMessageSelected,movetoForwardList: $stateViewModel.movetoForwardList) {
+                    self.stateViewModel.showforwardMultipleMessage = false
                     self.delegate?.navigateToUserListToForward(messages: forwardMessageSelected)
                 }
             case .delete:
