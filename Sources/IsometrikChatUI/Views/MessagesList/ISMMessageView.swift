@@ -733,6 +733,7 @@ public struct ISMMessageView: View {
         })
         .sheet(isPresented: $stateViewModel.showSheet){
             if selectedSheetIndex == 0 {
+//                CameraCaptureView(isShown: $stateViewModel.showSheet)
                 ISMCameraView(media : $cameraImageToUse, isShown: $stateViewModel.showSheet, uploadMedia: $stateViewModel.uploadMedia,mediaType: .both)
             } else if selectedSheetIndex == 1 {
                 DocumentPicker(documents: $chatViewModel.documentSelectedFromPicker, isShown: self.$stateViewModel.showSheet)

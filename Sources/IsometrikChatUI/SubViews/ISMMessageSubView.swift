@@ -1397,7 +1397,7 @@ struct ISMMessageSubView: View {
                                 }
                                 
                                 VStack(alignment: .trailing,spacing: 5){
-                                    PaymentRequestUI(status: ISMChatHelper.getPaymentStatus(status: self.message.metaData?.status ?? 0, sentAt: self.message.sentAt, expireAt: 30), isReceived: self.isReceived,message: self.message) {
+                                    PaymentRequestUI(status: ISMChatHelper.getPaymentStatus(status: self.message.metaData?.status ?? 0, sentAt: self.message.sentAt, expireAt: self.message.metaData?.friendPaymentRequestExpiryTime ?? 0), isReceived: self.isReceived,message: self.message) {
                                         //view details
                                         viewDetailsForPaymentRequest = self.message
                                     } declineRequest: {
@@ -2369,7 +2369,7 @@ struct PaymentRequestUI: View {
                 }
             }
         }.onAppear {
-            totalTime = 30 * 60
+            totalTime = (message.metaData?.friendPaymentRequestExpiryTime ?? 0) * 60
             startTimer()
         }.onDisappear{
             stopTimer()

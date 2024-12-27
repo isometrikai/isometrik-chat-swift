@@ -193,6 +193,11 @@ public struct ISMChatImages {
     public var forwardSendButton : Image = loadImageSafely(with: "forward_send")
     public var shareSendButton : Image = loadImageSafely(with: "share_send")
     public var paymentLogo : Image = loadImageSafely(with: "paymentLogo")
+    public var whiteCross : Image = loadImageSafely(with: "cancelWhite")
+    public var flash : Image = loadImageSafely(with: "flash")
+    public var filter : Image = loadImageSafely(with: "filterIcon")
+    public var gallery : Image = loadImageSafely(with: "galleryicon")
+    public var flipCamera : Image = loadImageSafely(with: "flipCamera")
     public init(){}
     
     public init(
