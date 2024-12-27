@@ -128,14 +128,6 @@ struct ISMConversationSubView: View {
                             AudioCallUI()
                         case ISMChatMediaType.VideoCall.value:
                             VideoCallUI()
-                        case ISMChatMediaType.PaymentRequest.value:
-                            if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
-                                let text = "You have sent a payment request"
-                                getLabel(text: text, image: "")
-                            }else{
-                                let text = "\(chat.lastMessageDetails?.senderName ?? "") sent you a payment request"
-                                getLabel(text: text, image: "")
-                            }
                         default:
                             actionLabels()
                         }
@@ -276,6 +268,72 @@ struct ISMConversationSubView: View {
             }else if chat.lastMessageDetails?.action == ISMChatActionType.messageDetailsUpdated.value{
                 if let body = chat.lastMessageDetails?.body {
                     getLabel(hideImage: true, text: body, image: "")
+                }
+            }else if chat.lastMessageDetails?.customType == ISMChatMediaType.PaymentRequest.value{
+                if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
+                    let text = "You have sent a payment request"
+                    HStack(alignment: .top,spacing: 5){
+                        if chat.isGroup == false{
+                            if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
+                                messageDeliveryStatus()
+                                    .padding(.top,3)
+                            }
+                        }
+                        Text(text)
+                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                            .font(appearance.fonts.chatListUserMessage)
+                            .padding(.trailing, 40)
+                            .lineLimit(2)
+                        //UNREAD MESSAGE COUNT
+                        let count = chat.unreadMessagesCount
+                        if count > 0{
+                            Spacer()
+                            let textWidth = "\(chat.unreadMessagesCount)".widthOfString(usingFont: UIFont.regular(size: 12))
+                            let circleSize = max(20, textWidth + 14)
+                            
+                            Text("\(count)")
+                                .foregroundColor(appearance.colorPalette.chatListUnreadMessageCount)
+                                .font(appearance.fonts.chatListUnreadMessageCount)
+                                .padding(7)
+                                .frame(width: circleSize, height: circleSize)
+                                .background(
+                                    Circle()
+                                        .fill(appearance.colorPalette.chatListUnreadMessageCountBackground)
+                                )
+                        }
+                    }
+                }else{
+                    let text = "\(chat.lastMessageDetails?.senderName ?? "") sent you a payment request"
+                    HStack(alignment: .top,spacing: 5){
+                        if chat.isGroup == false{
+                            if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
+                                messageDeliveryStatus()
+                                    .padding(.top,3)
+                            }
+                        }
+                        Text(text)
+                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                            .font(appearance.fonts.chatListUserMessage)
+                            .padding(.trailing, 40)
+                            .lineLimit(2)
+                        //UNREAD MESSAGE COUNT
+                        let count = chat.unreadMessagesCount
+                        if count > 0{
+                            Spacer()
+                            let textWidth = "\(chat.unreadMessagesCount)".widthOfString(usingFont: UIFont.regular(size: 12))
+                            let circleSize = max(20, textWidth + 14)
+                            
+                            Text("\(count)")
+                                .foregroundColor(appearance.colorPalette.chatListUnreadMessageCount)
+                                .font(appearance.fonts.chatListUnreadMessageCount)
+                                .padding(7)
+                                .frame(width: circleSize, height: circleSize)
+                                .background(
+                                    Circle()
+                                        .fill(appearance.colorPalette.chatListUnreadMessageCountBackground)
+                                )
+                        }
+                    }
                 }
             }
             else{

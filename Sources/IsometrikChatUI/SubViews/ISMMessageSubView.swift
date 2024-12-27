@@ -1397,7 +1397,7 @@ struct ISMMessageSubView: View {
                                 }
                                 
                                 VStack(alignment: .trailing,spacing: 5){
-                                    PaymentRequestUI(status: ISMChatHelper.getPaymentStatus(status: self.message.metaData?.status ?? 0, sentAt: self.message.sentAt, expireAt: self.message.metaData?.friendPaymentRequestExpiryTime ?? 0), isReceived: self.isReceived,message: self.message) {
+                                    PaymentRequestUI(status: ISMChatHelper.getPaymentStatus(status: self.message.metaData?.status ?? 0, sentAt: self.message.sentAt, expireAt: 30), isReceived: self.isReceived,message: self.message) {
                                         //view details
                                         viewDetailsForPaymentRequest = self.message
                                     } declineRequest: {
@@ -2244,6 +2244,7 @@ struct PaymentRequestUI: View {
     var declineRequest : () -> ()
     @State private var timer: Timer?
     @State private var totalTime : Int = 0
+    @State private var remainingTime: TimeInterval = 0
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
             // Header and Payment Status
@@ -2280,10 +2281,10 @@ struct PaymentRequestUI: View {
                 // Conditional Messages Based on Status
                 if status == .ActiveRequest {
                     var attributedText: AttributedString {
-                        var attributedString = AttributedString("Payment request will expire in \(timeString(from: totalTime))")
+                        var attributedString = AttributedString("Payment request will expire in \(timeString(from: remainingTime))")
                         
                         // Style "clear chat"
-                        if let range = attributedString.range(of: "\(timeString(from: totalTime))") {
+                        if let range = attributedString.range(of: "\(timeString(from: remainingTime))") {
                             attributedString[range].foregroundColor = Color(hex: "#3A341C")
                             attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 12).monospacedDigit()
                         }
@@ -2368,7 +2369,7 @@ struct PaymentRequestUI: View {
                 }
             }
         }.onAppear {
-            totalTime = (message.metaData?.friendPaymentRequestExpiryTime ?? 0) * 60
+            totalTime = 30 * 60
             startTimer()
         }.onDisappear{
             stopTimer()
@@ -2376,12 +2377,14 @@ struct PaymentRequestUI: View {
     }
     
     private func startTimer() {
-            stopTimer() // Stop any existing timer before starting a new one
-            timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-                if  totalTime > 0 {
-                    totalTime -= 1
-                } else {
-                    stopTimer()
+        let expirationTimestamp = (message.sentAt / 1000.0) + Double(totalTime)
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+                let currentTimestamp = Date().timeIntervalSince1970
+                remainingTime = max(0, expirationTimestamp - currentTimestamp)
+                
+                // Stop the timer when countdown reaches 0
+                if remainingTime <= 0 {
+                    timer.invalidate()
                 }
             }
         }
@@ -2391,12 +2394,12 @@ struct PaymentRequestUI: View {
             timer = nil
         }
         
-    private func timeString(from seconds: Int) -> String {
-            let hours = seconds / 3600
-            let minutes = (seconds % 3600) / 60
-            let seconds = seconds % 60
-            return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-        }
+    private func timeString(from remainingTime: TimeInterval) -> String {
+        let hours = Int(remainingTime) / 3600
+        let minutes = (Int(remainingTime) % 3600) / 60
+        let seconds = Int(remainingTime) % 60
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
     
     // Header View Based on Status
     @ViewBuilder
