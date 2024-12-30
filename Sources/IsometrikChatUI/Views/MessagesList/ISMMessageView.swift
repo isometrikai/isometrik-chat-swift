@@ -32,7 +32,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToCollectionLink(collectionId : String,completeUrl: String)
     func backButtonAction()
     func navigateToShareContact(conversationId : String)
-    func viewDetailForPaymentRequest(orderId : String, paymentRequestId : String,isReceived : Bool,senderInfo : UserDB?)
+    func viewDetailForPaymentRequest(orderId : String, paymentRequestId : String,isReceived : Bool,senderInfo : UserDB?,paymentRequestUserId : String)
     func declinePaymentRequest(paymentRequestUserId : String, paymentRequestId : String)
 }
 
@@ -458,11 +458,13 @@ public struct ISMMessageView: View {
             }
         }.onChange(of: viewDetailsForPaymentRequest.messageId) { _, _ in
             if !viewDetailsForPaymentRequest.messageId.isEmpty{
+                let appUserId = self.conversationDetail?.conversationDetails?.metaData?.userId ?? ""
                 self.delegate?.viewDetailForPaymentRequest(
                     orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "",
                     paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",
                     isReceived: getIsReceived(message: viewDetailsForPaymentRequest),
-                    senderInfo: viewDetailsForPaymentRequest.senderInfo
+                    senderInfo: viewDetailsForPaymentRequest.senderInfo,
+                    paymentRequestUserId: appUserId
                 )
                 viewDetailsForPaymentRequest = MessagesDB()
             }
@@ -750,7 +752,7 @@ public struct ISMMessageView: View {
             .presentationDetents([.fraction(0.3)])
             .presentationDragIndicator(.visible)
         })
-        .sheet(isPresented: $stateViewModel.showSheet){
+        .fullScreenCover(isPresented: $stateViewModel.showSheet){
             if selectedSheetIndex == 0 {
 //                CameraCaptureView(isShown: $stateViewModel.showSheet)
                 ISMCameraView(media : $cameraImageToUse, isShown: $stateViewModel.showSheet, uploadMedia: $stateViewModel.uploadMedia,mediaType: .both)
