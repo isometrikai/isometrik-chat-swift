@@ -303,7 +303,7 @@ public struct ISMMessageView: View {
                     ActivityIndicatorView(isPresented: $chatViewModel.isBusy)
                 }
                 if stateViewModel.messageCopied == true{
-                    Text("Message copied".localized)
+                    Text("Message copied")
                         .font(appearance.fonts.alertText)
                         .padding()
                         .background(appearance.colorPalette.alertBackground)
@@ -330,7 +330,7 @@ public struct ISMMessageView: View {
         .confirmationDialog("", isPresented: $stateViewModel.showUnblockPopUp) {
             unblockActionSheetButton()
         } message: {
-            Text("Unblock contact to send a message".localized)
+            Text(appearance.strings.unblockContact)
         }
         .confirmationDialog("", isPresented: $stateViewModel.uAreBlock) {
         } message: {
@@ -603,7 +603,7 @@ public struct ISMMessageView: View {
         .sheet(isPresented: $stateViewModel.showDeclinePaymentRequestPopUp, content: {
             ConfirmationPopup(
                 title: "Decline Request?".localized,
-                message: "Are you sure you want to decline payment request?".localized,
+                message: "Are you sure you want to decline payment request?".attributedLocalized,
                 confirmButtonTitle: "Decline request".localized,
                 cancelButtonTitle: "Cancel".localized,
                 confirmAction: {
@@ -637,10 +637,10 @@ public struct ISMMessageView: View {
                 return attributedString
             }
             ConfirmationPopup(
-                title: "Clear chat?".localized,
+                title: "Clear chat?",
                 message: attributedText,
-                confirmButtonTitle: "Yes, clear".localized,
-                cancelButtonTitle: "Cancel".localized,
+                confirmButtonTitle: "Yes, clear",
+                cancelButtonTitle: "Cancel",
                 confirmAction: {
                     clearChat()
                     stateViewModel.showClearChatPopup = false
@@ -669,10 +669,10 @@ public struct ISMMessageView: View {
                 return attributedString
             }
             ConfirmationPopup(
-                title: "Block User?".localized,
+                title: "Block User?",
                 message: attributedText,
-                confirmButtonTitle: "Block".localized,
-                cancelButtonTitle: "Cancel".localized,
+                confirmButtonTitle: "Block",
+                cancelButtonTitle: "Cancel",
                 confirmAction: {
                     blockChatFromUser()
                     stateViewModel.showBlockUserPopup = false
@@ -689,7 +689,7 @@ public struct ISMMessageView: View {
         })
         .sheet(isPresented: $stateViewModel.showDeleteMultipleMessage, content:{
             var attributedText: AttributedString {
-                var attributedString = AttributedString("Are you sure you want to permanently delete this message?".localized)
+                var attributedString = AttributedString("Are you sure you want to permanently delete this message?")
                 
                 // Style "clear chat"
                 if let range = attributedString.range(of: "permanently delete") {
@@ -700,10 +700,10 @@ public struct ISMMessageView: View {
                 return attributedString
             }
             ConfirmationPopup(
-                title: "Delete Message".localized,
+                title: "Delete Message",
                 message: attributedText,
-                confirmButtonTitle: "For everyone".localized,
-                cancelButtonTitle: "For me".localized,
+                confirmButtonTitle: "For everyone",
+                cancelButtonTitle: "For me",
                 confirmAction: {
                     stateViewModel.showBlockUserPopup = false
                     if let message = deleteMessage.first{
@@ -807,11 +807,11 @@ public struct ISMMessageView: View {
                 }
             }
         })
-        .alert("Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.".localized, isPresented: $stateViewModel.showingNoInternetAlert) {
-            Button("OK".localized, role: .cancel) { }
+        .alert("Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.", isPresented: $stateViewModel.showingNoInternetAlert) {
+            Button("OK", role: .cancel) { }
         }
         .alert("Call \(self.opponenDetail?.userName ?? "")", isPresented: $stateViewModel.showCallPopUp) {
-            Button("Cancel".localized, role: .cancel) {
+            Button("Cancel", role: .cancel) {
                 if stateViewModel.audioCallToUser == true{
                     stateViewModel.audioCallToUser = false
                 }
@@ -820,13 +820,13 @@ public struct ISMMessageView: View {
                 }
             }
             if stateViewModel.audioCallToUser {
-                Button("Voice Call".localized) {
+                Button("Voice Call") {
                     stateViewModel.audioCallToUser = false
                     calling(type: .AudioCall)
                 }
             }
             if stateViewModel.videoCallToUser {
-                Button("Video Call".localized) {
+                Button("Video Call") {
                     stateViewModel.videoCallToUser = false
                     calling(type: .VideoCall)
                 }
@@ -951,7 +951,7 @@ public struct ISMMessageView: View {
                         if members.count >= 2{
                             self.memberString = members.prefix(1).map { $0.userName ?? "" }.joined(separator: ", ")
                             if members.count > 2 {
-                                self.memberString! += ", and others".localized
+                                self.memberString! += ", and others"
                             }
                         }else{
                             self.memberString = members.map { $0.userName ?? "" }.joined(separator: ", ")

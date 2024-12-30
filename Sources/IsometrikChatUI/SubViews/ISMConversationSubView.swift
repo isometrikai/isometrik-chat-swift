@@ -220,9 +220,9 @@ struct ISMConversationSubView: View {
             if chat.lastMessageDetails?.action == ISMChatActionType.conversationCreated.value{
                 getLabel(text: "Conversation created", image: "person.fill")
             }else if chat.lastMessageDetails?.action == ISMChatActionType.userBlock.value || chat.lastMessageDetails?.action == ISMChatActionType.userBlockConversation.value{
-                getLabel(text: "Blocked", image: "circle.slash")
+                getLabel(text: appearance.strings.blocked, image: "circle.slash")
             }else if chat.lastMessageDetails?.action == ISMChatActionType.userUnblock.value || chat.lastMessageDetails?.action == ISMChatActionType.userUnblockConversation.value{
-                getLabel(text: "Unblocked", image: "circle.slash")
+                getLabel(text: appearance.strings.unblocked, image: "circle.slash")
             }else if chat.lastMessageDetails?.action == ISMChatActionType.reactionAdd.value{
                 let emoji = ISMChatHelper.getEmoji(valueString: chat.lastMessageDetails?.reactionType ?? "")
                 if chat.lastMessageDetails?.userId == userData?.userId{

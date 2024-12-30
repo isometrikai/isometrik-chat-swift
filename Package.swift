@@ -78,6 +78,5 @@ let package = Package(
                 .process("Resources/en.lproj"),
                 .process("Resources/fr.lproj")
             ])
-        
     ]
 )

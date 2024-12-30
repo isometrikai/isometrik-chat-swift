@@ -94,6 +94,7 @@ public struct ISMConversationView : View {
                     } else {
                         if ISMChatSdk.getInstance().getFramework() == .UIKit{
                             CustomSearchBar(searchText: $query).padding(.horizontal,15)
+                            Text(appearance.strings.unblockContact)
                         }
                         if conversationData.count == 0{
                             Spacer()
@@ -634,3 +635,8 @@ public struct ISMConversationView : View {
 //        isProcessing = false
 //    }
 //}
+struct ISMConversationView_Previews: PreviewProvider {
+    static var previews: some View { ISMConversationView()
+            .environment(\.locale, .init(identifier: "en"))
+    }
+}

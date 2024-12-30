@@ -21,6 +21,7 @@ public class ISMAppearance {
     public var colorPalette : ISMChatColorPalette
     public var fonts : ISMChatFonts
     public var images :  ISMChatImages
+    public var strings : ISMChatString
     public var messageBubbleType : ISMChatBubbleType
     public var messageBubbleTailPosition : ISMChatTailPosition
     public var placeholders : ISMChatPlaceholders
@@ -33,6 +34,7 @@ public class ISMAppearance {
     public init(
         colorPalette: ISMChatColorPalette = ISMChatColorPalette(),
         images: ISMChatImages = ISMChatImages(),
+        strings: ISMChatString = ISMChatString(),
         fonts: ISMChatFonts = ISMChatFonts(),
         messageBubbleType : ISMChatBubbleType = .BubbleWithOutTail,
         messageBubbleTailPosition : ISMChatTailPosition = .bottom,
@@ -46,6 +48,7 @@ public class ISMAppearance {
     ) {
         self.colorPalette = colorPalette
         self.images = images
+        self.strings = strings
         self.fonts = fonts
         self.messageBubbleType = messageBubbleType
         self.messageBubbleTailPosition = messageBubbleTailPosition
@@ -57,6 +60,10 @@ public class ISMAppearance {
         self.messageListBackgroundImage = messageListBackgroundImage ??  ""
         self.dateFormats = dateFormats
     }
+    
+    public static var localizationProvider: (_ key: String, _ table: String) -> String = { key, table in
+        Bundle.isometrikChat.localizedString(forKey: key, value: nil, table: table)
+    }
 }
 
 public class ISMChatDateFormats{
@@ -67,10 +74,10 @@ public class ISMChatDateFormats{
     }
 }
 public class ISMChatStrings {
-    public var endToEndEncrypted : String = "Messages are end to end encrypted. No one \noutside of this chat can read to them."
-    public var messageInputTextViewPlaceholder : String = "Type a message"
-    public var messageDeletedByMe : String = "You deleted this message."
-    public var messageDeletedByOther : String = "This message was deleted."
+    public var endToEndEncrypted : String = "Messages are end to end encrypted. No one \noutside of this chat can read to them.".localized
+    public var messageInputTextViewPlaceholder : String = "Type a message".localized
+    public var messageDeletedByMe : String = "You deleted this message.".localized
+    public var messageDeletedByOther : String = "This message was deleted.".localized
     public init(){}
     public init(endToEndEncrypted: String? = nil,messageInputTextViewPlaceholder : String? = nil,messageDeletedByMe : String? = nil,messageDeletedByOther : String? = nil) {
         self.endToEndEncrypted = endToEndEncrypted ?? ""

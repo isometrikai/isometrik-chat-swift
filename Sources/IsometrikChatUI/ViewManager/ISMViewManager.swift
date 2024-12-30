@@ -15,10 +15,12 @@ public class ISMViewManager{
     
     public func conversationList(delegete : ISMConversationViewDelegate? = nil) -> some View {
         return ISMConversationView(delegate: delegete)
+            .environment(\.locale, .init(identifier: "en"))
     }
     
     public func messageList(conversationViewModel : ConversationViewModel,conversationId: String,user : UserDB? = nil,isGroup : Bool,fromBroadCastFlow : Bool,groupCastId : String,groupConversationTitle : String,groupImage : String,delegate : ISMMessageViewDelegate? = nil,myIsometrikUserId : String) -> some View{
         return ISMMessageView(conversationViewModel: conversationViewModel, conversationID: conversationId, opponenDetail: user, myUserId: myIsometrikUserId, isGroup: isGroup, fromBroadCastFlow: fromBroadCastFlow, groupCastId: groupCastId,groupConversationTitle : groupConversationTitle,groupImage : groupImage,delegate:delegate)
+            .environment(\.locale, .init(identifier: "en"))
     }
     
     public func otherconversationList(delegete : OtherConversationListViewDelegate? = nil) -> some View {

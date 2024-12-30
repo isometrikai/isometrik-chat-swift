@@ -12,11 +12,29 @@ import SwiftUICore
 public protocol Localizable {
     var localized: String { get }
     var localizedKey: LocalizedStringKey { get }
+    var attributedLocalized: AttributedString { get }
 }
 
 extension String: Localizable {
+    public var attributedLocalized: AttributedString {
+        do {
+            return try AttributedString(localized: String.LocalizationValue(self))
+        } catch {
+            print("Failed to create AttributedString for \(self): \(error)")
+            return AttributedString(self)
+        }
+    }
+    
     public var localized: String {
-        return NSLocalizedString(self, comment: "")
+        let localizedString = NSLocalizedString(self, comment: "")
+        let currentLocale = Locale.current
+        print("Current Locale: \(currentLocale.identifier)") 
+        if localizedString == self {
+                    print("Failed to localize key: '\(self)' - No translation found for current locale")
+                } else {
+                    print("Localized string for key '\(self)': \(localizedString)")
+                }
+        return localizedString
     }
     
     public var localizedKey: LocalizedStringKey {
