@@ -32,7 +32,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToCollectionLink(collectionId : String,completeUrl: String)
     func backButtonAction()
     func navigateToShareContact(conversationId : String)
-    func viewDetailForPaymentRequest(orderId : String, paymentRequestId : String,isReceived : Bool)
+    func viewDetailForPaymentRequest(orderId : String, paymentRequestId : String,isReceived : Bool,senderInfo : UserDB?)
     func declinePaymentRequest(paymentRequestUserId : String, paymentRequestId : String)
 }
 
@@ -461,7 +461,8 @@ public struct ISMMessageView: View {
                 self.delegate?.viewDetailForPaymentRequest(
                     orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "",
                     paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",
-                    isReceived: getIsReceived(message: viewDetailsForPaymentRequest)
+                    isReceived: getIsReceived(message: viewDetailsForPaymentRequest),
+                    senderInfo: viewDetailsForPaymentRequest.senderInfo
                 )
                 viewDetailsForPaymentRequest = MessagesDB()
             }
