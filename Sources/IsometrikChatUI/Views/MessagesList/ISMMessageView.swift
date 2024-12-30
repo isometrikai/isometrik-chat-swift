@@ -442,18 +442,27 @@ public struct ISMMessageView: View {
         }
         .onChange(of: navigateToSocialLink.messageId) { _, _ in
             if !navigateToSocialLink.messageId.isEmpty{
-                self.delegate?.navigateToSocialLink(socialLinkId: navigateToSocialLink.metaData?.socialPostId ?? "")
+                self.delegate?.navigateToSocialLink(
+                    socialLinkId: navigateToSocialLink.metaData?.socialPostId ?? ""
+                )
                 navigateToSocialLink = MessagesDB()
             }
         }
         .onChange(of: navigateToCollectionLink.messageId) { _, _ in
             if !navigateToCollectionLink.messageId.isEmpty{
-                self.delegate?.navigateToCollectionLink(collectionId: navigateToCollectionLink.metaData?.collectionId ?? "", completeUrl: navigateToCollectionLink.metaData?.url ?? "")
+                self.delegate?.navigateToCollectionLink(
+                    collectionId: navigateToCollectionLink.metaData?.collectionId ?? "",
+                    completeUrl: navigateToCollectionLink.metaData?.url ?? ""
+                )
                 navigateToCollectionLink = MessagesDB()
             }
         }.onChange(of: viewDetailsForPaymentRequest.messageId) { _, _ in
             if !viewDetailsForPaymentRequest.messageId.isEmpty{
-                self.delegate?.viewDetailForPaymentRequest(orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "", paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",isReceived: getIsReceived(message: viewDetailsForPaymentRequest))
+                self.delegate?.viewDetailForPaymentRequest(
+                    orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "",
+                    paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",
+                    isReceived: getIsReceived(message: viewDetailsForPaymentRequest)
+                )
                 viewDetailsForPaymentRequest = MessagesDB()
             }
         }.onChange(of: declinePaymentRequest.messageId) { _, _ in
@@ -545,7 +554,9 @@ public struct ISMMessageView: View {
         })
         .onChange(of: stateViewModel.navigateToAddParticipantsInGroupViaDelegate, { _, _ in
             if stateViewModel.navigateToAddParticipantsInGroupViaDelegate == true{
-                delegate?.navigateToAppMemberInGroup(conversationId: self.conversationID ?? "", groupMembers: self.conversationDetail?.conversationDetails?.members)
+                delegate?.navigateToAppMemberInGroup(
+                    conversationId: self.conversationID ?? "",
+                    groupMembers: self.conversationDetail?.conversationDetails?.members)
                 stateViewModel.navigateToAddParticipantsInGroupViaDelegate = false
             }
         })
@@ -556,19 +567,26 @@ public struct ISMMessageView: View {
         })
         .onChange(of: navigateToSocialProfileId, { _, _ in
             if !navigateToSocialProfileId.isEmpty {
-                delegate?.navigateToAppProfile(userId: navigateToSocialProfileId, storeId: "", userType: 0)
+                delegate?.navigateToAppProfile(
+                    userId: navigateToSocialProfileId,
+                    storeId: "",
+                    userType: 0)
                 navigateToSocialProfileId = ""
             }
         })
         .onChange(of: postIdToNavigate, { _, _ in
             if !postIdToNavigate.isEmpty{
-                delegate?.navigateToPost(postId: postIdToNavigate)
+                delegate?.navigateToPost(
+                    postId: postIdToNavigate
+                )
                 postIdToNavigate = ""
             }
         })
         .onChange(of: productIdToNavigate, { _, _ in
             if let productId = productIdToNavigate.productId, !productId.isEmpty{
-                delegate?.navigateToProduct(productId: productId, productCategoryId: productIdToNavigate.productCategoryId ?? "")
+                delegate?.navigateToProduct(
+                    productId: productId,
+                    productCategoryId: productIdToNavigate.productCategoryId ?? "")
                 productIdToNavigate = ProductDB()
             }
         })
