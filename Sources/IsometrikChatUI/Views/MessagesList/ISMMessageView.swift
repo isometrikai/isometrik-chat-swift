@@ -32,8 +32,8 @@ public protocol ISMMessageViewDelegate{
     func navigateToCollectionLink(collectionId : String,completeUrl: String)
     func backButtonAction()
     func navigateToShareContact(conversationId : String)
-    func viewDetailForPaymentRequest(orderId : String, paymentRequestId : String)
-    func declinePaymentRequest(orderId : String, paymentRequestId : String)
+    func viewDetailForPaymentRequest(orderId : String, paymentRequestId : String,isReceived : Bool)
+    func declinePaymentRequest(paymentRequestUserId : String, paymentRequestId : String)
 }
 
 public struct ISMMessageView: View {
@@ -453,7 +453,7 @@ public struct ISMMessageView: View {
             }
         }.onChange(of: viewDetailsForPaymentRequest.messageId) { _, _ in
             if !viewDetailsForPaymentRequest.messageId.isEmpty{
-                self.delegate?.viewDetailForPaymentRequest(orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "", paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "")
+                self.delegate?.viewDetailForPaymentRequest(orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "", paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",isReceived: getIsReceived(message: viewDetailsForPaymentRequest))
                 viewDetailsForPaymentRequest = MessagesDB()
             }
         }.onChange(of: declinePaymentRequest.messageId) { _, _ in
@@ -607,10 +607,10 @@ public struct ISMMessageView: View {
                 confirmButtonTitle: "Decline request",
                 cancelButtonTitle: "Cancel",
                 confirmAction: {
-                    let orderId = declinePaymentRequest.metaData?.orderId ?? ""
+                    let appUserId = self.conversationDetail?.conversationDetails?.metaData?.userId ?? ""
                     let paymentRequestId = declinePaymentRequest.metaData?.paymentRequestId ?? ""
                     declinePaymentRequest = MessagesDB()
-                    self.delegate?.declinePaymentRequest(orderId: orderId, paymentRequestId: paymentRequestId)
+                    self.delegate?.declinePaymentRequest(paymentRequestUserId: appUserId, paymentRequestId: paymentRequestId)
                     stateViewModel.showDeclinePaymentRequestPopUp = false
                 },
                 cancelAction: {
