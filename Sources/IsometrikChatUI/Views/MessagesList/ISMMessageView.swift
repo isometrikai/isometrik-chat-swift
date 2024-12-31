@@ -458,15 +458,17 @@ public struct ISMMessageView: View {
             }
         }.onChange(of: viewDetailsForPaymentRequest.messageId) { _, _ in
             if !viewDetailsForPaymentRequest.messageId.isEmpty{
-                let appUserId = viewDetailsForPaymentRequest.userIdentifier ?? ""
-                self.delegate?.viewDetailForPaymentRequest(
-                    orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "",
-                    paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",
-                    isReceived: getIsReceived(message: viewDetailsForPaymentRequest),
-                    senderInfo: viewDetailsForPaymentRequest.senderInfo,
-                    paymentRequestUserId: appUserId
-                )
-                viewDetailsForPaymentRequest = MessagesDB()
+                self.conversationViewModel.getUserData { myData in
+                    let appUserId = myData?.userIdentifier ?? ""
+                    self.delegate?.viewDetailForPaymentRequest(
+                        orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "",
+                        paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",
+                        isReceived: getIsReceived(message: viewDetailsForPaymentRequest),
+                        senderInfo: viewDetailsForPaymentRequest.senderInfo,
+                        paymentRequestUserId: appUserId
+                    )
+                    viewDetailsForPaymentRequest = MessagesDB()
+                }
             }
         }.onChange(of: declinePaymentRequest.messageId) { _, _ in
             if !declinePaymentRequest.messageId.isEmpty{
