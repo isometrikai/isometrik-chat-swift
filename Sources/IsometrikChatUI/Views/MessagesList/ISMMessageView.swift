@@ -33,7 +33,7 @@ public protocol ISMMessageViewDelegate{
     func backButtonAction()
     func navigateToShareContact(conversationId : String)
     func viewDetailForPaymentRequest(orderId : String, paymentRequestId : String,isReceived : Bool,senderInfo : UserDB?,paymentRequestUserId : String)
-    func declinePaymentRequest(paymentRequestUserId : String, paymentRequestId : String)
+    func declinePaymentRequest(paymentRequestUserId : String, paymentRequestId : String,completion:@escaping()->())
 }
 
 public struct ISMMessageView: View {
@@ -458,7 +458,7 @@ public struct ISMMessageView: View {
             }
         }.onChange(of: viewDetailsForPaymentRequest.messageId) { _, _ in
             if !viewDetailsForPaymentRequest.messageId.isEmpty{
-                let appUserId = declinePaymentRequest.userIdentifier ?? ""
+                let appUserId = viewDetailsForPaymentRequest.userIdentifier ?? ""
                 self.delegate?.viewDetailForPaymentRequest(
                     orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "",
                     paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",
@@ -631,7 +631,11 @@ public struct ISMMessageView: View {
                     let appUserId = declinePaymentRequest.userIdentifier ?? ""
                     let paymentRequestId = declinePaymentRequest.metaData?.paymentRequestId ?? ""
                     declinePaymentRequest = MessagesDB()
-                    self.delegate?.declinePaymentRequest(paymentRequestUserId: appUserId, paymentRequestId: paymentRequestId)
+                    self.delegate?.declinePaymentRequest(paymentRequestUserId: appUserId, paymentRequestId: paymentRequestId, completion: {
+                        chatViewModel.updateMessageMetaData(messageId: declinePaymentRequest.messageId ?? "", conversationId: declinePaymentRequest.conversationId ?? "", metaData: declinePaymentRequest.metaData ?? MetaDataDB()) { _ in
+                            print("message updated sucessfully")
+                        }
+                    })
                     stateViewModel.showDeclinePaymentRequestPopUp = false
                 },
                 cancelAction: {
