@@ -2302,6 +2302,10 @@ struct PaymentRequestUI: View {
                     Text(isReceived ? "Expired" : "This payment request has expired.")
                         .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
                         .foregroundColor(Color(hex: "#6A6C6A")).padding(.bottom,16)
+                }else if status == .Cancelled {
+                    Text(isReceived ? "This order has been cancelled." : "You cancelled this order.")
+                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                        .foregroundColor(Color(hex: "#6A6C6A")).padding(.bottom,16)
                 }
             }
             .padding(.horizontal, 16)
@@ -2439,10 +2443,10 @@ struct PaymentRequestUI: View {
         }else if status == .Cancelled {
             Text("Payment Request Cancelled")
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
-                .foregroundColor(Color(hex: "#454745"))
+                .foregroundColor(isReceived ? Color(hex: "#454745") : Color.white)
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(Color.gray)
+                .background(isReceived ? Color.gray : Color(hex: "#FF3B30"))
                 .cornerRadius(10, corners: [.topLeft, .topRight])
         }
     }
