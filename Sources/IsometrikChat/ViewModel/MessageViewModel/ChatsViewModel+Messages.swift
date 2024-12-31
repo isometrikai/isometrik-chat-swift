@@ -50,8 +50,9 @@ extension ChatsViewModel{
     }
     
     
-    public func updateMessageMetaData(body : [String : Any],completion:@escaping(String)->()){
+    public func updateMessageMetaData(messageId : String,conversationId : String,metaData : [String : Any],completion:@escaping(String)->()){
         let endPoint = ISMChatMessagesEndpoint.editMessage
+        let body = ["messageId" : messageId,"conversationId" : conversationId, "metaData" : metaData] as [String : Any]
         let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
 
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatSendMsg, ISMChatNewAPIError>) in

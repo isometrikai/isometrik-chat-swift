@@ -458,7 +458,7 @@ public struct ISMMessageView: View {
             }
         }.onChange(of: viewDetailsForPaymentRequest.messageId) { _, _ in
             if !viewDetailsForPaymentRequest.messageId.isEmpty{
-                let appUserId = self.conversationDetail?.conversationDetails?.metaData?.userId ?? ""
+                let appUserId = declinePaymentRequest.userIdentifier ?? ""
                 self.delegate?.viewDetailForPaymentRequest(
                     orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "",
                     paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",
@@ -628,7 +628,7 @@ public struct ISMMessageView: View {
                 confirmButtonTitle: "Decline request",
                 cancelButtonTitle: "Cancel",
                 confirmAction: {
-                    let appUserId = self.conversationDetail?.conversationDetails?.metaData?.userId ?? ""
+                    let appUserId = declinePaymentRequest.userIdentifier ?? ""
                     let paymentRequestId = declinePaymentRequest.metaData?.paymentRequestId ?? ""
                     declinePaymentRequest = MessagesDB()
                     self.delegate?.declinePaymentRequest(paymentRequestUserId: appUserId, paymentRequestId: paymentRequestId)
@@ -754,8 +754,8 @@ public struct ISMMessageView: View {
         })
         .fullScreenCover(isPresented: $stateViewModel.showSheet){
             if selectedSheetIndex == 0 {
-//                CameraCaptureView(isShown: $stateViewModel.showSheet)
-                ISMCameraView(media : $cameraImageToUse, isShown: $stateViewModel.showSheet, uploadMedia: $stateViewModel.uploadMedia,mediaType: .both)
+                CameraCaptureView(isShown: $stateViewModel.showSheet, sendUrl: $cameraImageToUse)
+//                ISMCameraView(media : $cameraImageToUse, isShown: $stateViewModel.showSheet, uploadMedia: $stateViewModel.uploadMedia,mediaType: .both)
             } else if selectedSheetIndex == 1 {
                 DocumentPicker(documents: $chatViewModel.documentSelectedFromPicker, isShown: self.$stateViewModel.showSheet)
             } else{

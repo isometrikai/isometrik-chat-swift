@@ -198,6 +198,13 @@ public struct ISMChatImages {
     public var filter : Image = loadImageSafely(with: "filterIcon")
     public var gallery : Image = loadImageSafely(with: "galleryicon")
     public var flipCamera : Image = loadImageSafely(with: "flipCamera")
+    
+    
+    public var rotateImage : Image = loadImageSafely(with: "rotateCameraImage")
+    public var addStickerToImage : Image = loadImageSafely(with: "addStickerToCameraImage")
+    public var addTextToImage : Image = loadImageSafely(with: "addTextToCameraImage")
+    public var drawToImage : Image = loadImageSafely(with: "drawOnCameraImage")
+    
     public init(){}
     
     public init(

@@ -252,7 +252,7 @@ public struct ISMChatMetaData: Codable {
     public var paymentRequestId : String?
     public var orderId : String?
     public var status : Int?
-    public var friendPaymentRequestExpiryTime : Int?
+    public var requestAPaymentExpiryTime : Int?
     public var currencyCode : String?
     public var amount : Double?
     
@@ -288,7 +288,7 @@ public struct ISMChatMetaData: Codable {
         paymentRequestId : String? = nil,
         orderId : String? = nil,
         status : Int? = nil,
-        friendPaymentRequestExpiryTime : Int? = nil,
+        requestAPaymentExpiryTime : Int? = nil,
         currencyCode : String? = nil,
         amount : Double? = nil
     ) {
@@ -321,7 +321,7 @@ public struct ISMChatMetaData: Codable {
         self.paymentRequestId = paymentRequestId
         self.orderId = orderId
         self.status = status
-        self.friendPaymentRequestExpiryTime = friendPaymentRequestExpiryTime
+        self.requestAPaymentExpiryTime = requestAPaymentExpiryTime
         self.currencyCode = currencyCode
         self.amount = amount
     }
@@ -357,7 +357,7 @@ public struct ISMChatMetaData: Codable {
         paymentRequestId = try? container.decode(String.self, forKey: .paymentRequestId)
         orderId = try? container.decode(String.self, forKey: .orderId)
         status = try? container.decode(Int.self, forKey: .status)
-        friendPaymentRequestExpiryTime = try? container.decode(Int.self, forKey: .friendPaymentRequestExpiryTime)
+        requestAPaymentExpiryTime = try? container.decode(Int.self, forKey: .requestAPaymentExpiryTime)
         currencyCode = try? container.decode(String.self, forKey: .currencyCode)
         amount = try? container.decode(Double.self, forKey: .amount)
     }

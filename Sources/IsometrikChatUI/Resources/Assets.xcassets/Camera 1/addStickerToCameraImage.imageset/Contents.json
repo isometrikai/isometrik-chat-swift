@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "solar_sticker-square-linear.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "solar_sticker-square-linear@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "solar_sticker-square-linear@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -334,7 +334,7 @@ extension RealmManager {
                     messageMetaData.paymentRequestId = value.lastMessageDetails?.metaData?.paymentRequestId
                     messageMetaData.orderId = value.lastMessageDetails?.metaData?.orderId
                     messageMetaData.status = value.lastMessageDetails?.metaData?.status
-                    messageMetaData.friendPaymentRequestExpiryTime = value.lastMessageDetails?.metaData?.friendPaymentRequestExpiryTime
+                    messageMetaData.requestAPaymentExpiryTime = value.lastMessageDetails?.metaData?.requestAPaymentExpiryTime
                     messageMetaData.currencyCode = value.lastMessageDetails?.metaData?.currencyCode
                     messageMetaData.amount = value.lastMessageDetails?.metaData?.amount
                     

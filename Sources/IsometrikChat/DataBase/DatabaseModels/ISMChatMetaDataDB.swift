@@ -47,7 +47,7 @@ public class MetaDataDB : Object, ObjectKeyIdentifiable {
     @Persisted public var paymentRequestId : String?
     @Persisted public var orderId : String?
     @Persisted public var status : Int?
-    @Persisted public var friendPaymentRequestExpiryTime : Int?
+    @Persisted public var requestAPaymentExpiryTime : Int?
     @Persisted public var currencyCode : String?
     @Persisted public var amount : Double?
 }

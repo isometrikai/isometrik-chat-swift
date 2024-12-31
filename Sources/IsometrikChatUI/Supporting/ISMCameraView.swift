@@ -16,20 +16,50 @@ struct CameraCaptureView: View {
     @State private var selectedFilter: String = "None"
     @State private var showGallery = false
     @Binding var isShown : Bool
-    @State private var capturedImage: UIImage? = nil
+    @State private var capturedURL: URL? = nil
+    @State var textFieldtxt : String = ""
+    @State private var isFlashOn: Bool = false
+    @State private var isPlaying = true
+    
+    @State private var player: AVPlayer?
+    @Binding var sendUrl : URL?
+
+
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
 
     var body: some View {
         ZStack {
-            if let capturedImage = capturedImage{
-                Image(uiImage: capturedImage)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.black.opacity(0.8))
-                    .transition(.opacity)
+            if let capturedURL = capturedURL{
+                if ISMChatHelper.isVideoString(media: capturedURL.absoluteString){
+                    ZStack {
+                        // Video Player
+                        GeometryReader { geometry in
+                            VideoPlayer(player: player)
+                                .scaledToFill()
+                                .frame(width: geometry.size.width, height: geometry.size.height)
+                                .clipped()
+                        }
+                    }
+                    .onAppear {
+                        player = AVPlayer(url: capturedURL)
+                        player?.play()
+                    }
+                    .onDisappear {
+                        player?.pause()
+                    }
+                }else{
+                    GeometryReader { geometry in
+                        ISMChatImageCahcingManger.viewImage(url: capturedURL.absoluteString ?? "")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .clipped()
+                            .ignoresSafeArea()
+                            .edgesIgnoringSafeArea(.all)
+                    }
+                }
             }else{
-                CameraPreview(zoomLevel: $zoomLevel, isRecording: $isRecording, capturedImage: $capturedImage)
+                CameraPreview(zoomLevel: $zoomLevel, isRecording: $isRecording, capturedURL: $capturedURL)
                     .edgesIgnoringSafeArea(.all)
             }
 
@@ -37,21 +67,57 @@ struct CameraCaptureView: View {
                 // Top bar with options
                 HStack {
                     Button(action: {
-                        isShown = false
+                        if let capturedURL = capturedURL{
+//                            capturedURL = nil
+                        }else{
+                            isShown = false
+                        }
                     }) {
                         appearance.images.whiteCross
                             .resizable()
                             .frame(width: 40, height: 40, alignment: .center)
-                    }
+                    }.padding(.leading,5)
 
                     Spacer()
 
-                    if let capturedImage = capturedImage{
-                        
+                    if let capturedURL = capturedURL{
+                        HStack(spacing: 22){
+                            Button(action: {
+                                
+                            }) {
+                                appearance.images.rotateImage
+                                    .resizable()
+                                    .frame(width: 20, height: 20, alignment: .center)
+                            }
+                            Button(action: {
+                                
+                            }) {
+                                appearance.images.addStickerToImage
+                                    .resizable()
+                                    .frame(width: 20, height: 20, alignment: .center)
+                            }
+                            Button(action: {
+                                
+                            }) {
+                                appearance.images.addTextToImage
+                                    .resizable()
+                                    .frame(width: 20, height: 20, alignment: .center)
+                            }
+                            Button(action: {
+                                
+                            }) {
+                                appearance.images.drawToImage
+                                    .resizable()
+                                    .frame(width: 20, height: 20, alignment: .center)
+                            }
+                        }.padding(.trailing,15)
                     }else{
                         Button(action: {
                             // Filter action
+                            isFlashOn.toggle()
+                                NotificationCenter.default.post(name: NSNotification.Name("ToggleFlash"), object: isFlashOn)
                         }) {
+//                            Image(systemName: isFlashOn ? "bolt.fill" : "bolt.slash")
                             appearance.images.flash
                                 .resizable()
                                 .frame(width: 24, height: 24, alignment: .center)
@@ -69,64 +135,95 @@ struct CameraCaptureView: View {
                         }
                     }
                     
-                }
+                }.background(self.capturedURL != nil ? Color.black.opacity(0.6) : Color.clear)
 
                 Spacer()
 
-                // Bottom controls
-                VStack(alignment: .center) {
-                    // Zoom slider
-                    HStack(spacing: 24){
-                        Button(action: {
-                            // Filter action
-                        }) {
-                            appearance.images.filter
-                                .resizable()
-                                .frame(width: 30, height: 30, alignment: .center)
-                        }
+                if let capturedURL = capturedURL{
+                    HStack(spacing: 10){
+                        TextField(appearance.constantStrings.messageInputTextViewPlaceholder, text: $textFieldtxt, axis: .vertical)
+                            .textInputAutocapitalization(.never) // Prevents autocapitalization
+                            .disableAutocorrection(true)
+                            .lineLimit(5)
+                            .font(appearance.fonts.messageListTextViewText ?? .body)
+                            .foregroundColor(appearance.colorPalette.messageListTextViewText ?? .black)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(appearance.colorPalette.messageListTextViewBackground)
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(appearance.colorPalette.messageListTextViewBoarder, lineWidth: 1)
+                            )
                         
                         Button(action: {
-                            // Filter action
+                            self.sendUrl = capturedURL
+                            isShown = false
                         }) {
-                            Text("1x")
-                                .font(appearance.fonts.contactDetailsTitle)
-                                .foregroundColor(.white)
-                        }
-                    }.padding(.bottom,30)
-                    
-                    CaptureButton(isRecording: $isRecording) {
-                                            NotificationCenter.default.post(name: NSNotification.Name("CapturePhoto"), object: nil)
-                                        }
-
-                    HStack {
-                        // Gallery button
-                        Button(action: {
-                            showGallery = true
-                        }) {
-                            appearance.images.gallery
+                            appearance.images.sendMessage
                                 .resizable()
-                                .frame(width: 40, height: 40, alignment: .center)
+                                .frame(width: 40, height: 40)
                         }
-
-                        Spacer()
-
-                        // Capture button
                         
-
-                        Spacer()
-
-                        // Flip camera button
-                        Button(action: {
-                            NotificationCenter.default.post(name: NSNotification.Name("FlipCamera"), object: nil)
-                        }) {
-                            appearance.images.flipCamera
-                                .resizable()
-                                .frame(width: 40, height: 40, alignment: .center)
+                    }.padding(.bottom,20).padding(.horizontal,15)
+                }else{
+                    // Bottom controls
+                    VStack(alignment: .center) {
+                        // Zoom slider
+                        HStack(spacing: 24){
+                            Button(action: {
+                                // Filter action
+                            }) {
+                                appearance.images.filter
+                                    .resizable()
+                                    .frame(width: 30, height: 30, alignment: .center)
+                            }
+                            
+                            Button(action: {
+                                // Filter action
+                            }) {
+                                Text("1x")
+                                    .font(appearance.fonts.contactDetailsTitle)
+                                    .foregroundColor(.white)
+                            }
+                        }.padding(.bottom,30)
+                        
+                        CaptureButton(isRecording: $isRecording) {
+                            NotificationCenter.default.post(name: NSNotification.Name("CapturePhoto"), object: nil)
                         }
+                        
+                        HStack {
+                            // Gallery button
+                            Button(action: {
+                                //                            showGallery = true
+                            }) {
+                                appearance.images.gallery
+                                    .resizable()
+                                    .frame(width: 40, height: 40, alignment: .center)
+                            }
+                            
+                            Spacer()
+                            
+                            // Capture button
+                            
+                            
+                            Spacer()
+                            
+                            // Flip camera button
+                            Button(action: {
+                                NotificationCenter.default.post(name: NSNotification.Name("FlipCamera"), object: nil)
+                            }) {
+                                appearance.images.flipCamera
+                                    .resizable()
+                                    .frame(width: 40, height: 40, alignment: .center)
+                            }
+                        }
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
+                    .padding(.bottom, 20)
                 }
-                .padding(.bottom, 20)
             }
         }
         .sheet(isPresented: $showGallery) {
@@ -134,13 +231,22 @@ struct CameraCaptureView: View {
             PhotoPicker()
         }
     }
+    
+    private func togglePlayPause() {
+            if isPlaying {
+                player?.pause()
+            } else {
+                player?.play()
+            }
+            isPlaying.toggle()
+        }
 }
 
 // Camera Preview using UIViewControllerRepresentable
 struct CameraPreview: UIViewControllerRepresentable {
     @Binding var zoomLevel: CGFloat
     @Binding var isRecording: Bool
-    @Binding var capturedImage: UIImage?
+    @Binding var capturedURL: URL?
 
     func makeUIViewController(context: Context) -> CameraViewController {
         let controller = CameraViewController()
@@ -155,8 +261,8 @@ struct CameraPreview: UIViewControllerRepresentable {
             controller.capturePhoto()
         }
 
-        controller.onCapture = { image in
-            self.capturedImage = image
+        controller.onCapture = { url in
+            self.capturedURL = url
         }
 
         return controller
@@ -168,6 +274,75 @@ struct CameraPreview: UIViewControllerRepresentable {
     }
 }
 
+import AVFoundation
+import AVKit
+import SwiftUI
+
+
+
+// SwiftUI Wrapper for AVPlayerViewController
+//struct VideoPlayerView: UIViewControllerRepresentable {
+//    var videoURL: URL
+//
+//    func makeUIViewController(context: Context) -> VideoPlayerViewController {
+//        let viewController = VideoPlayerViewController()
+//        viewController.videoURL = videoURL
+//        return viewController
+//    }
+//
+//    func updateUIViewController(_ uiViewController: VideoPlayerViewController, context: Context) {
+//        // Update the controller if needed
+//    }
+//}
+
+//class VideoPlayerViewController: UIViewController {
+//    var player: AVPlayer?
+//    var playerLayer: AVPlayerLayer?
+//    var playerItem: AVPlayerItem?
+//    var playPauseButton: UIButton!
+//    var videoURL: URL!
+//
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//
+//        // Initialize AVPlayer with the video URL
+//        playerItem = AVPlayerItem(url: videoURL)
+//        player = AVPlayer(playerItem: playerItem)
+//
+//        // Initialize AVPlayerLayer and make it full screen
+//        playerLayer = AVPlayerLayer(player: player)
+//        playerLayer?.frame = view.bounds
+//        playerLayer?.videoGravity = .resizeAspect // Maintains aspect ratio, fits within bounds
+//        // Use `.resizeAspectFill` for filling the screen, which may crop parts of the video
+//        // playerLayer?.videoGravity = .resizeAspectFill
+//
+//        view.layer.addSublayer(playerLayer!)
+//
+//        // Set up the play/pause button
+//        playPauseButton = UIButton(type: .system)
+//        playPauseButton.frame = CGRect(x: 20, y: view.bounds.height - 60, width: 100, height: 40)
+//        playPauseButton.setTitle("Play", for: .normal)
+//        playPauseButton.addTarget(self, action: #selector(togglePlayPause), for: .touchUpInside)
+//        view.addSubview(playPauseButton)
+//
+//        // Play the video
+//        player?.play()
+//    }
+//
+//
+//    // Play/Pause button action
+//    @objc func togglePlayPause() {
+//        if player?.timeControlStatus == .playing {
+//            player?.pause()
+//            playPauseButton.setTitle("Play", for: .normal)
+//        } else {
+//            player?.play()
+//            playPauseButton.setTitle("Pause", for: .normal)
+//        }
+//    }
+//}
+
+
 
 
 // UIKit Camera Controller
@@ -175,84 +350,135 @@ import UIKit
 import AVFoundation
 
 class CameraViewController: UIViewController {
-    var zoomLevel: CGFloat = 1.0
-    var isRecording: Bool = false
     private var captureSession: AVCaptureSession!
     private var videoOutput: AVCaptureMovieFileOutput!
     private var photoOutput: AVCapturePhotoOutput! // Add photo output
     private var previewLayer: AVCaptureVideoPreviewLayer!
     private var currentCameraPosition: AVCaptureDevice.Position = .back
-    var onCapture: ((UIImage) -> Void)? // Callback for captured image
+    var onCapture: ((URL) -> Void)? // Callback for captured image
+    private var isFlashOn: Bool = false
+    
+    var isRecording: Bool = false {
+        didSet {
+            if isRecording {
+                startRecording()
+            } else {
+                stopRecording()
+            }
+        }
+    }
+    
+    var zoomLevel: CGFloat = 1.0 {
+            didSet {
+                guard let videoDevice = AVCaptureDevice.default(for: .video) else { return }
+                try? videoDevice.lockForConfiguration()
+                videoDevice.videoZoomFactor = max(1.0, min(zoomLevel, videoDevice.activeFormat.videoMaxZoomFactor))
+                videoDevice.unlockForConfiguration()
+            }
+        }
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCamera()
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("ToggleFlash"), object: nil, queue: .main) { [weak self] notification in
+               guard let isFlashOn = notification.object as? Bool else { return }
+               self?.isFlashOn = isFlashOn
+               self?.toggleFlash(isOn: isFlashOn)
+           }
     }
-
-    /// Sets up the camera with the current position.
-    func setupCamera() {
-        captureSession = AVCaptureSession()
-        captureSession.sessionPreset = .high
-        configureCamera(for: currentCameraPosition)
-    }
-
-    /// Configures the camera for a given position (front/back).
-    private func configureCamera(for position: AVCaptureDevice.Position) {
-        captureSession.beginConfiguration()
-
-        // Remove existing inputs
-        if let inputs = captureSession.inputs as? [AVCaptureDeviceInput] {
-            for input in inputs {
-                captureSession.removeInput(input)
-            }
-        }
-
-        // Get the desired camera
-        guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position) else {
-            print("Failed to get camera at position: \(position)")
+    
+    
+    private func toggleFlash(isOn: Bool) {
+        guard let currentDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: currentCameraPosition) else {
+            print("Failed to access the current camera device.")
             return
         }
 
         do {
-            let input = try AVCaptureDeviceInput(device: camera)
-            if captureSession.canAddInput(input) {
-                captureSession.addInput(input)
-            }
+            try currentDevice.lockForConfiguration()
+            currentDevice.torchMode = isOn ? .on : .off
+            currentDevice.unlockForConfiguration()
         } catch {
-            print("Error setting up camera input: \(error)")
+            print("Error configuring torch: \(error)")
         }
-
-        // Configure video output (for recording)
-        if videoOutput == nil {
-            videoOutput = AVCaptureMovieFileOutput()
-        }
-        if captureSession.canAddOutput(videoOutput) {
-            captureSession.addOutput(videoOutput)
-        }
-
-        // Configure photo output (for capturing images)
-        if photoOutput == nil {
-            photoOutput = AVCapturePhotoOutput()
-        }
-        if captureSession.canAddOutput(photoOutput) {
-            captureSession.addOutput(photoOutput)
-        }
-
-        // Configure preview layer
-        if previewLayer == nil {
-            previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-            previewLayer.videoGravity = .resizeAspectFill
-            previewLayer.frame = view.bounds
-            view.layer.addSublayer(previewLayer)
-        }
-
-        captureSession.commitConfiguration()
-        captureSession.startRunning()
     }
+
+    private func setupCamera() {
+            captureSession = AVCaptureSession()
+            captureSession.sessionPreset = .high
+            configureCamera(for: .back)
+        }
+
+        private func configureCamera(for position: AVCaptureDevice.Position) {
+            captureSession.beginConfiguration()
+
+            // Remove existing inputs and outputs
+            captureSession.inputs.forEach { captureSession.removeInput($0) }
+            captureSession.outputs.forEach { captureSession.removeOutput($0) }
+
+            // Add camera input
+            guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position),
+                  let videoInput = try? AVCaptureDeviceInput(device: camera) else {
+                print("Error: Could not configure camera for position \(position)")
+                captureSession.commitConfiguration()
+                return
+            }
+
+            if captureSession.canAddInput(videoInput) {
+                captureSession.addInput(videoInput)
+            }
+
+            // Add audio input
+            if let audioDevice = AVCaptureDevice.default(for: .audio),
+               let audioInput = try? AVCaptureDeviceInput(device: audioDevice),
+               captureSession.canAddInput(audioInput) {
+                captureSession.addInput(audioInput)
+            }
+
+            // Add photo output
+            photoOutput = AVCapturePhotoOutput()
+            if captureSession.canAddOutput(photoOutput) {
+                captureSession.addOutput(photoOutput)
+            }
+
+            // Add video output
+            videoOutput = AVCaptureMovieFileOutput()
+            if captureSession.canAddOutput(videoOutput) {
+                captureSession.addOutput(videoOutput)
+            }
+
+            // Configure preview layer
+            if previewLayer == nil {
+                previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+                previewLayer.videoGravity = .resizeAspectFill
+                previewLayer.frame = view.bounds
+                view.layer.addSublayer(previewLayer)
+            }
+
+            captureSession.commitConfiguration()
+            captureSession.startRunning()
+        }
+    
+    private func getCamera(with position: AVCaptureDevice.Position) -> AVCaptureDevice? {
+            return AVCaptureDevice.devices(for: .video).first(where: { $0.position == position })
+        }
+    
+    private func startRecording() {
+            let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mov")
+            videoOutput.startRecording(to: outputURL, recordingDelegate: self)
+        }
+
+        private func stopRecording() {
+            if let videoOutput = videoOutput{
+                videoOutput.stopRecording()
+            }
+        }
 
     /// Captures a photo
     func capturePhoto() {
         let settings = AVCapturePhotoSettings()
+        settings.flashMode = isFlashOn ? .on : .off
         photoOutput.capturePhoto(with: settings, delegate: self)
     }
 
@@ -271,11 +497,34 @@ class CameraViewController: UIViewController {
     }
 }
 
+
 extension CameraViewController: AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let data = photo.fileDataRepresentation(),
               let image = UIImage(data: data) else { return }
-        onCapture?(image) // Pass the captured image to the callback
+        
+        // Save the image to a temporary directory
+        let tempDirectory = FileManager.default.temporaryDirectory
+        let fileName = UUID().uuidString + ".jpg"
+        let fileURL = tempDirectory.appendingPathComponent(fileName)
+        
+        do {
+            try data.write(to: fileURL)
+            print("Image saved at: \(fileURL)")
+            onCapture?(fileURL) // Pass the captured image and the file URL to the callback
+        } catch {
+            print("Error saving image: \(error)")
+        }
+    }
+}
+
+
+extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        if error == nil {
+            print("Video saved at: \(outputFileURL)")
+            onCapture?(outputFileURL)
+        }
     }
 }
 
@@ -290,20 +539,14 @@ struct CaptureButton: View {
         ZStack {
             // Outer ring
             Circle()
-                .stroke(lineWidth: 4)
-                .foregroundColor(.white)
+                .stroke(lineWidth: 5)
+                .foregroundColor(isRecording ? Color.red.opacity(0.7) : Color.white)
                 .frame(width: 80, height: 80)
-            
-            // Middle ring
-            Circle()
-                .stroke(lineWidth: 4)
-                .foregroundColor(.orange)
-                .frame(width: 70, height: 70)
             
             // Inner circle
             Circle()
                 .fill(isRecording ? Color.red.opacity(0.7) : Color.white)
-                .frame(width: 60, height: 60)
+                .frame(width: 70, height: 70)
         }
         .onTapGesture {
             onCapture()

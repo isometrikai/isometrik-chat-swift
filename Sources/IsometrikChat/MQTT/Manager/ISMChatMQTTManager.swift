@@ -544,7 +544,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                         paymentRequestId : messageInfo.metaData?.paymentRequestId,
                         orderId : messageInfo.metaData?.orderId,
                         status : messageInfo.metaData?.status,
-                        friendPaymentRequestExpiryTime : messageInfo.metaData?.friendPaymentRequestExpiryTime,
+                        requestAPaymentExpiryTime : messageInfo.metaData?.requestAPaymentExpiryTime,
                         currencyCode : messageInfo.metaData?.currencyCode,
                         amount : messageInfo.metaData?.amount
                     )
@@ -574,7 +574,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             paymentRequestId : messageInfo.details?.metaData?.paymentRequestId,
                             orderId : messageInfo.details?.metaData?.orderId,
                             status : messageInfo.details?.metaData?.status,
-                            friendPaymentRequestExpiryTime : messageInfo.details?.metaData?.friendPaymentRequestExpiryTime,
+                            requestAPaymentExpiryTime : messageInfo.details?.metaData?.requestAPaymentExpiryTime,
                             currencyCode : messageInfo.details?.metaData?.currencyCode,
                             amount : messageInfo.details?.metaData?.amount
                         )
@@ -684,7 +684,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             paymentRequestId : messageInfo.metaData?.paymentRequestId,
                             orderId : messageInfo.metaData?.orderId,
                             status : messageInfo.metaData?.status,
-                            friendPaymentRequestExpiryTime : messageInfo.metaData?.friendPaymentRequestExpiryTime,
+                            requestAPaymentExpiryTime : messageInfo.metaData?.requestAPaymentExpiryTime,
                             currencyCode : messageInfo.metaData?.currencyCode,
                             amount : messageInfo.metaData?.amount
                         )
@@ -714,7 +714,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                                 paymentRequestId : messageInfo.details?.metaData?.paymentRequestId,
                                 orderId : messageInfo.details?.metaData?.orderId,
                                 status : messageInfo.details?.metaData?.status,
-                                friendPaymentRequestExpiryTime : messageInfo.details?.metaData?.friendPaymentRequestExpiryTime,
+                                requestAPaymentExpiryTime : messageInfo.details?.metaData?.requestAPaymentExpiryTime,
                                 currencyCode : messageInfo.details?.metaData?.currencyCode,
                                 amount : messageInfo.details?.metaData?.amount
                             )

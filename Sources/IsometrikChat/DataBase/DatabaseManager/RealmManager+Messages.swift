@@ -97,7 +97,7 @@ extension RealmManager{
                 messageToUpdate.first?.body = body
                 messageToUpdate.first?.messageUpdated = true
                 
-                if let customType = customType{
+                if let customType = customType,!customType.isEmpty{
                     messageToUpdate.first?.customType = customType
                 }
 
@@ -128,7 +128,7 @@ extension RealmManager{
                     metadataValue.paymentRequestId = metaData.paymentRequestId
                     metadataValue.orderId = metaData.orderId
                     metadataValue.status = metaData.status
-                    metadataValue.friendPaymentRequestExpiryTime = metaData.friendPaymentRequestExpiryTime
+                    metadataValue.requestAPaymentExpiryTime = metaData.requestAPaymentExpiryTime
                     metadataValue.currencyCode = metaData.currencyCode
                     metadataValue.amount = metaData.amount
 
@@ -424,7 +424,7 @@ extension RealmManager{
                         metaData.paymentRequestId = value.metaData?.paymentRequestId ?? value.details?.metaData?.paymentRequestId
                         metaData.orderId = value.metaData?.orderId ?? value.details?.metaData?.orderId
                         metaData.status = value.metaData?.status ?? value.details?.metaData?.status
-                        metaData.friendPaymentRequestExpiryTime = value.metaData?.friendPaymentRequestExpiryTime ?? value.details?.metaData?.friendPaymentRequestExpiryTime
+                        metaData.requestAPaymentExpiryTime = value.metaData?.requestAPaymentExpiryTime ?? value.details?.metaData?.requestAPaymentExpiryTime
                         metaData.currencyCode = value.metaData?.currencyCode ?? value.details?.metaData?.currencyCode
                         metaData.amount = value.metaData?.amount ?? value.details?.metaData?.amount
                         
