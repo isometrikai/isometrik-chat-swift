@@ -1472,7 +1472,9 @@ struct ISMMessageSubView: View {
                     hostingController.view.frame = contextMenuVC.view.bounds
                     hostingController.didMove(toParent: contextMenuVC)
                     
-                    self.viewControllerHolder?.present(contextMenuVC, animated: true)
+                    if self.message.customType != ISMChatMediaType.PaymentRequest.value{
+                        self.viewControllerHolder?.present(contextMenuVC, animated: true)
+                    }
                 }
             )
             .allowsHitTesting(true)
@@ -2306,6 +2308,10 @@ struct PaymentRequestUI: View {
                     Text(isReceived ? "This order has been cancelled." : "You cancelled this order.")
                         .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
                         .foregroundColor(Color(hex: "#6A6C6A")).padding(.bottom,16)
+                }else if status == .Accepted{
+                    Text("The payment has already been made.")
+                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                        .foregroundColor(Color(hex: "#6A6C6A")).padding(.bottom,16)
                 }
             }
             .padding(.horizontal, 16)
@@ -2438,7 +2444,7 @@ struct PaymentRequestUI: View {
                 .foregroundColor(Color(hex: "#454745"))
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(Color.gray)
+                .background(Color(hex: "#BDBDBA"))
                 .cornerRadius(10, corners: [.topLeft, .topRight])
         }else if status == .Cancelled {
             Text("Payment Request Cancelled")
@@ -2446,7 +2452,7 @@ struct PaymentRequestUI: View {
                 .foregroundColor(isReceived ? Color(hex: "#454745") : Color.white)
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(isReceived ? Color.gray : Color(hex: "#FF3B30"))
+                .background(isReceived ? Color(hex: "#BDBDBA") : Color(hex: "#FF3B30"))
                 .cornerRadius(10, corners: [.topLeft, .topRight])
         }
     }

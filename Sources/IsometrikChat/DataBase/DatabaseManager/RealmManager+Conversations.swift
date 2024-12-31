@@ -356,6 +356,82 @@ extension RealmManager {
                         readStatus.timestamp = read.timestamp ?? 0
                         lastMessage.readBy.append(readStatus)
                     }
+                    if let metaData = value.lastMessageDetails?.details?.metaData ?? value.lastMessageDetails?.metaData{
+                        let metadataValue = MetaDataDB()
+                        metadataValue.locationAddress = metaData.locationAddress
+                        metadataValue.captionMessage = metaData.captionMessage
+                        metadataValue.isBroadCastMessage = metaData.isBroadCastMessage
+                        metadataValue.storeName = metaData.storeName
+                        metadataValue.productName = metaData.productName
+                        metadataValue.bestPrice = metaData.bestPrice
+                        metadataValue.scratchPrice = metaData.scratchPrice
+                        metadataValue.url = metaData.url
+                        metadataValue.parentProductId = metaData.parentProductId
+                        metadataValue.childProductId = metaData.childProductId
+                        metadataValue.entityType = metaData.entityType
+                        metadataValue.productImage = metaData.productImage
+                        metadataValue.thumbnailUrl = metaData.thumbnailUrl
+                        metadataValue.Description = metaData.description
+                        metadataValue.isVideoPost = metaData.isVideoPost
+                        metadataValue.socialPostId = metaData.socialPostId
+                        metadataValue.productImage = metaData.productImage
+                        metadataValue.collectionTitle = metaData.collectionTitle
+                        metadataValue.collectionDescription = metaData.collectionDescription
+                        metadataValue.productCount = metaData.productCount
+                        metadataValue.collectionImage = metaData.collectionImage
+                        metadataValue.collectionId = metaData.collectionId
+                        metadataValue.paymentRequestId = metaData.paymentRequestId
+                        metadataValue.orderId = metaData.orderId
+                        metadataValue.status = metaData.status
+                        metadataValue.requestAPaymentExpiryTime = metaData.requestAPaymentExpiryTime
+                        metadataValue.currencyCode = metaData.currencyCode
+                        metadataValue.amount = metaData.amount
+                        
+                        
+                        if let replyMessage = metaData.replyMessage {
+                            let replyMessageDB = ReplyMessageDB()
+                            replyMessageDB.parentMessageId = replyMessage.parentMessageId
+                            replyMessageDB.parentMessageBody = replyMessage.parentMessageBody
+                            replyMessageDB.parentMessageUserId = replyMessage.parentMessageUserId
+                            replyMessageDB.parentMessageUserName = replyMessage.parentMessageUserName
+                            replyMessageDB.parentMessageMessageType = replyMessage.parentMessageMessageType
+                            replyMessageDB.parentMessageAttachmentUrl = replyMessage.parentMessageAttachmentUrl
+                            replyMessageDB.parentMessageInitiator = replyMessage.parentMessageInitiator
+                            replyMessageDB.parentMessagecaptionMessage = replyMessage.parentMessagecaptionMessage
+                            metadataValue.replyMessage = replyMessageDB
+                        }
+                        
+                        if let contacts = metaData.contacts {
+                            let contactDBList = RealmSwift.List<ContactDB>()
+                            contacts.forEach { contact in
+                                let contactDB = ContactDB()
+                                contactDB.contactName = contact.contactName
+                                contactDB.contactIdentifier = contact.contactIdentifier
+                                contactDB.contactImageUrl = contact.contactImageUrl
+                                contactDBList.append(contactDB)
+                            }
+                            metadataValue.contacts = contactDBList
+                        }
+                        
+                        if let post = metaData.post {
+                            let postDB = PostDB()
+                            postDB.postId = post.postId
+                            postDB.postUrl = post.postUrl
+                            metadataValue.post = postDB
+                        }
+                        
+                        if let product = metaData.product {
+                            let productDB = ProductDB()
+                            productDB.productId = product.productId
+                            productDB.productUrl = product.productUrl
+                            productDB.productCategoryId = product.productCategoryId
+                            metadataValue.product = productDB
+                        }
+                        
+                        
+                        
+                        lastMessage.metaData = metadataValue
+                    }
                     
                     conversation.lastMessageDetails = lastMessage
                     localRealm.add(conversation)
@@ -448,6 +524,83 @@ extension RealmManager {
                         deliverObj.timestamp = obj.timestamp
                         
                         listToUpdate.first?.lastMessageDetails?.readBy.append(deliverObj)
+                    }
+                    
+                    if let metaData = obj.lastMessageDetails?.details?.metaData ?? obj.lastMessageDetails?.metaData{
+                        let metadataValue = MetaDataDB()
+                        metadataValue.locationAddress = metaData.locationAddress
+                        metadataValue.captionMessage = metaData.captionMessage
+                        metadataValue.isBroadCastMessage = metaData.isBroadCastMessage
+                        metadataValue.storeName = metaData.storeName
+                        metadataValue.productName = metaData.productName
+                        metadataValue.bestPrice = metaData.bestPrice
+                        metadataValue.scratchPrice = metaData.scratchPrice
+                        metadataValue.url = metaData.url
+                        metadataValue.parentProductId = metaData.parentProductId
+                        metadataValue.childProductId = metaData.childProductId
+                        metadataValue.entityType = metaData.entityType
+                        metadataValue.productImage = metaData.productImage
+                        metadataValue.thumbnailUrl = metaData.thumbnailUrl
+                        metadataValue.Description = metaData.description
+                        metadataValue.isVideoPost = metaData.isVideoPost
+                        metadataValue.socialPostId = metaData.socialPostId
+                        metadataValue.productImage = metaData.productImage
+                        metadataValue.collectionTitle = metaData.collectionTitle
+                        metadataValue.collectionDescription = metaData.collectionDescription
+                        metadataValue.productCount = metaData.productCount
+                        metadataValue.collectionImage = metaData.collectionImage
+                        metadataValue.collectionId = metaData.collectionId
+                        metadataValue.paymentRequestId = metaData.paymentRequestId
+                        metadataValue.orderId = metaData.orderId
+                        metadataValue.status = metaData.status
+                        metadataValue.requestAPaymentExpiryTime = metaData.requestAPaymentExpiryTime
+                        metadataValue.currencyCode = metaData.currencyCode
+                        metadataValue.amount = metaData.amount
+                        
+                        
+                        if let replyMessage = metaData.replyMessage {
+                            let replyMessageDB = ReplyMessageDB()
+                            replyMessageDB.parentMessageId = replyMessage.parentMessageId
+                            replyMessageDB.parentMessageBody = replyMessage.parentMessageBody
+                            replyMessageDB.parentMessageUserId = replyMessage.parentMessageUserId
+                            replyMessageDB.parentMessageUserName = replyMessage.parentMessageUserName
+                            replyMessageDB.parentMessageMessageType = replyMessage.parentMessageMessageType
+                            replyMessageDB.parentMessageAttachmentUrl = replyMessage.parentMessageAttachmentUrl
+                            replyMessageDB.parentMessageInitiator = replyMessage.parentMessageInitiator
+                            replyMessageDB.parentMessagecaptionMessage = replyMessage.parentMessagecaptionMessage
+                            metadataValue.replyMessage = replyMessageDB
+                        }
+                        
+                        if let contacts = metaData.contacts {
+                            let contactDBList = RealmSwift.List<ContactDB>()
+                            contacts.forEach { contact in
+                                let contactDB = ContactDB()
+                                contactDB.contactName = contact.contactName
+                                contactDB.contactIdentifier = contact.contactIdentifier
+                                contactDB.contactImageUrl = contact.contactImageUrl
+                                contactDBList.append(contactDB)
+                            }
+                            metadataValue.contacts = contactDBList
+                        }
+                        
+                        if let post = metaData.post {
+                            let postDB = PostDB()
+                            postDB.postId = post.postId
+                            postDB.postUrl = post.postUrl
+                            metadataValue.post = postDB
+                        }
+                        
+                        if let product = metaData.product {
+                            let productDB = ProductDB()
+                            productDB.productId = product.productId
+                            productDB.productUrl = product.productUrl
+                            productDB.productCategoryId = product.productCategoryId
+                            metadataValue.product = productDB
+                        }
+                        
+                        
+                        
+                        listToUpdate.first?.lastMessageDetails?.metaData = metadataValue
                     }
                     
                     getAllConversations()
@@ -685,12 +838,92 @@ extension RealmManager {
     }
     
     //MARK: - update last message body on edit
-    public func updateLastMessageOnEdit(conversationId: String, messageId: String, newBody: String) {
+    public func updateLastMessageOnEdit(conversationId: String, messageId: String, newBody: String, metaData: ISMChatMetaData? = nil,customType : String? = nil) {
         if let localRealm = localRealm {
             let conversationToUpdate = localRealm.objects(ConversationDB.self).where{$0.conversationId == conversationId && $0.isDelete == false && $0.lastMessageDetails.messageId == messageId}
             try! localRealm.write {
                 conversationToUpdate.first?.lastMessageDetails?.body = newBody
-                getAllConversations()
+                if let customType = customType,!customType.isEmpty{
+                    conversationToUpdate.first?.lastMessageDetails?.customType = customType
+                }
+
+                if let metaData = metaData {
+                    let metadataValue = MetaDataDB()
+                    metadataValue.locationAddress = metaData.locationAddress
+                    metadataValue.captionMessage = metaData.captionMessage
+                    metadataValue.isBroadCastMessage = metaData.isBroadCastMessage
+                    metadataValue.storeName = metaData.storeName
+                    metadataValue.productName = metaData.productName
+                    metadataValue.bestPrice = metaData.bestPrice
+                    metadataValue.scratchPrice = metaData.scratchPrice
+                    metadataValue.url = metaData.url
+                    metadataValue.parentProductId = metaData.parentProductId
+                    metadataValue.childProductId = metaData.childProductId
+                    metadataValue.entityType = metaData.entityType
+                    metadataValue.productImage = metaData.productImage
+                    metadataValue.thumbnailUrl = metaData.thumbnailUrl
+                    metadataValue.Description = metaData.description
+                    metadataValue.isVideoPost = metaData.isVideoPost
+                    metadataValue.socialPostId = metaData.socialPostId
+                    metadataValue.productImage = metaData.productImage
+                    metadataValue.collectionTitle = metaData.collectionTitle
+                    metadataValue.collectionDescription = metaData.collectionDescription
+                    metadataValue.productCount = metaData.productCount
+                    metadataValue.collectionImage = metaData.collectionImage
+                    metadataValue.collectionId = metaData.collectionId
+                    metadataValue.paymentRequestId = metaData.paymentRequestId
+                    metadataValue.orderId = metaData.orderId
+                    metadataValue.status = metaData.status
+                    metadataValue.requestAPaymentExpiryTime = metaData.requestAPaymentExpiryTime
+                    metadataValue.currencyCode = metaData.currencyCode
+                    metadataValue.amount = metaData.amount
+                    
+                    
+                    if let replyMessage = metaData.replyMessage {
+                        let replyMessageDB = ReplyMessageDB()
+                        replyMessageDB.parentMessageId = replyMessage.parentMessageId
+                        replyMessageDB.parentMessageBody = replyMessage.parentMessageBody
+                        replyMessageDB.parentMessageUserId = replyMessage.parentMessageUserId
+                        replyMessageDB.parentMessageUserName = replyMessage.parentMessageUserName
+                        replyMessageDB.parentMessageMessageType = replyMessage.parentMessageMessageType
+                        replyMessageDB.parentMessageAttachmentUrl = replyMessage.parentMessageAttachmentUrl
+                        replyMessageDB.parentMessageInitiator = replyMessage.parentMessageInitiator
+                        replyMessageDB.parentMessagecaptionMessage = replyMessage.parentMessagecaptionMessage
+                        metadataValue.replyMessage = replyMessageDB
+                    }
+                    
+                    if let contacts = metaData.contacts {
+                        let contactDBList = RealmSwift.List<ContactDB>()
+                        contacts.forEach { contact in
+                            let contactDB = ContactDB()
+                            contactDB.contactName = contact.contactName
+                            contactDB.contactIdentifier = contact.contactIdentifier
+                            contactDB.contactImageUrl = contact.contactImageUrl
+                            contactDBList.append(contactDB)
+                        }
+                        metadataValue.contacts = contactDBList
+                    }
+                    
+                    if let post = metaData.post {
+                        let postDB = PostDB()
+                        postDB.postId = post.postId
+                        postDB.postUrl = post.postUrl
+                        metadataValue.post = postDB
+                    }
+                    
+                    if let product = metaData.product {
+                        let productDB = ProductDB()
+                        productDB.productId = product.productId
+                        productDB.productUrl = product.productUrl
+                        productDB.productCategoryId = product.productCategoryId
+                        metadataValue.product = productDB
+                    }
+                    
+                    
+                    
+                    conversationToUpdate.first?.lastMessageDetails?.metaData = metadataValue
+                    getAllConversations()
+                }
             }
         }
     }

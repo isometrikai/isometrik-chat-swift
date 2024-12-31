@@ -128,12 +128,63 @@ struct ISMConversationSubView: View {
                             AudioCallUI()
                         case ISMChatMediaType.VideoCall.value:
                             VideoCallUI()
+                        case ISMChatMediaType.PaymentRequest.value:
+                            PaymentRequestUI()
                         default:
                             actionLabels()
                         }
                     }else{
-                        actionLabels()
+                        if chat.lastMessageDetails?.metaData?.paymentRequestId != nil{
+                            PaymentRequestUI()
+                        }else{
+                            actionLabels()
+                        }
                     }
+                }
+            }
+        }
+    }
+    
+    func PaymentRequestUI() -> some View{
+        let text = getPaymentRequestText()
+        return HStack(alignment: .top,spacing: 5){
+            if chat.isGroup == false{
+                if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
+                    messageDeliveryStatus()
+                        .padding(.top,3)
+                }
+            }
+            Text(text)
+                .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                .font(appearance.fonts.chatListUserMessage)
+                .padding(.trailing, 40)
+                .lineLimit(2)
+            //UNREAD MESSAGE COUNT
+            if chat.lastMessageDetails?.customType == ISMChatMediaType.PaymentRequest.value && ISMChatHelper.getPaymentStatus(status: self.chat.lastMessageDetails?.metaData?.status ?? 0, sentAt: self.chat.lastMessageDetails?.sentAt ?? 0, expireAt: self.chat.lastMessageDetails?.metaData?.requestAPaymentExpiryTime ?? 0) == .ActiveRequest{
+                Spacer()
+                
+                Text("Pay Now")
+                    .foregroundColor(appearance.colorPalette.chatListUnreadMessageCount)
+                    .font(appearance.fonts.chatListUnreadMessageCount)
+                    .frame(width: 68, height: 22)
+                    .background(appearance.colorPalette.chatListUnreadMessageCountBackground)
+                    .cornerRadius(11)
+            }else{
+                let count = chat.unreadMessagesCount
+                if count > 0{
+                    Spacer()
+                    let textWidth = "\(chat.unreadMessagesCount)".widthOfString(usingFont: UIFont.regular(size: 12))
+                    let circleSize = max(20, textWidth + 14)
+                    
+                    Text("\(count)")
+                        .foregroundColor(appearance.colorPalette.chatListUnreadMessageCount)
+                        .font(appearance.fonts.chatListUnreadMessageCount)
+                        .padding(7)
+                        .frame(width: circleSize, height: circleSize)
+                        .background(
+                            Circle()
+                                .fill(appearance.colorPalette.chatListUnreadMessageCountBackground)
+                        )
                 }
             }
         }
@@ -269,72 +320,6 @@ struct ISMConversationSubView: View {
                 if let body = chat.lastMessageDetails?.body {
                     getLabel(hideImage: true, text: body, image: "")
                 }
-            }else if chat.lastMessageDetails?.customType == ISMChatMediaType.PaymentRequest.value{
-                if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
-                    let text = "You have sent a payment request"
-                    HStack(alignment: .top,spacing: 5){
-                        if chat.isGroup == false{
-                            if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
-                                messageDeliveryStatus()
-                                    .padding(.top,3)
-                            }
-                        }
-                        Text(text)
-                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
-                            .font(appearance.fonts.chatListUserMessage)
-                            .padding(.trailing, 40)
-                            .lineLimit(2)
-                        //UNREAD MESSAGE COUNT
-                        let count = chat.unreadMessagesCount
-                        if count > 0{
-                            Spacer()
-                            let textWidth = "\(chat.unreadMessagesCount)".widthOfString(usingFont: UIFont.regular(size: 12))
-                            let circleSize = max(20, textWidth + 14)
-                            
-                            Text("\(count)")
-                                .foregroundColor(appearance.colorPalette.chatListUnreadMessageCount)
-                                .font(appearance.fonts.chatListUnreadMessageCount)
-                                .padding(7)
-                                .frame(width: circleSize, height: circleSize)
-                                .background(
-                                    Circle()
-                                        .fill(appearance.colorPalette.chatListUnreadMessageCountBackground)
-                                )
-                        }
-                    }
-                }else{
-                    let text = "\(chat.lastMessageDetails?.senderName ?? "") sent you a payment request"
-                    HStack(alignment: .top,spacing: 5){
-                        if chat.isGroup == false{
-                            if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
-                                messageDeliveryStatus()
-                                    .padding(.top,3)
-                            }
-                        }
-                        Text(text)
-                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
-                            .font(appearance.fonts.chatListUserMessage)
-                            .padding(.trailing, 40)
-                            .lineLimit(2)
-                        //UNREAD MESSAGE COUNT
-                        let count = chat.unreadMessagesCount
-                        if count > 0{
-                            Spacer()
-                            let textWidth = "\(chat.unreadMessagesCount)".widthOfString(usingFont: UIFont.regular(size: 12))
-                            let circleSize = max(20, textWidth + 14)
-                            
-                            Text("\(count)")
-                                .foregroundColor(appearance.colorPalette.chatListUnreadMessageCount)
-                                .font(appearance.fonts.chatListUnreadMessageCount)
-                                .padding(7)
-                                .frame(width: circleSize, height: circleSize)
-                                .background(
-                                    Circle()
-                                        .fill(appearance.colorPalette.chatListUnreadMessageCountBackground)
-                                )
-                        }
-                    }
-                }
             }
             else{
                 if let body = chat.lastMessageDetails?.body {
@@ -388,6 +373,34 @@ struct ISMConversationSubView: View {
                     .cornerRadius(10)
             }
         }
+    }
+    
+    func getPaymentRequestText() -> String{
+        let status = ISMChatHelper.getPaymentStatus(status: self.chat.lastMessageDetails?.metaData?.status ?? 0, sentAt: self.chat.lastMessageDetails?.sentAt ?? 0, expireAt: self.chat.lastMessageDetails?.metaData?.requestAPaymentExpiryTime ?? 0)
+        if status == .ActiveRequest {
+            if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
+                return "You have sent a payment request"
+            }else{
+                return "\(chat.lastMessageDetails?.senderName ?? "") sent you a payment request"
+            }
+        } else if status == .Rejected {
+            if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
+                return "You declined the payment request"
+            }else{
+                return "\(chat.lastMessageDetails?.senderName ?? "") declined the payment request"
+            }
+        } else if status == .Expired {
+            return "This payment request has expired"
+        }else if status == .Cancelled {
+            if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
+                return "You cancelled this order"
+            }else{
+                return "\(chat.lastMessageDetails?.senderName ?? "") cancelled this order"
+            }
+        }else if status == .Accepted{
+            return "This payment request is paid"
+        }
+        return ""
     }
     
     func getLabel(hideImage : Bool? = false, text : String, image : String,isReaction : Bool? = false,isSticker : Bool? = false) -> some View{

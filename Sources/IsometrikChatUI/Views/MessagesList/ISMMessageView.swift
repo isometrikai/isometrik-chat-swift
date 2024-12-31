@@ -633,11 +633,14 @@ public struct ISMMessageView: View {
                     self.conversationViewModel.getUserData { myData in
                         let appUserId = myData?.userIdentifier ?? ""
                         let paymentRequestId = declinePaymentRequest.metaData?.paymentRequestId ?? ""
+//                        let messageId = declinePaymentRequest.messageId ?? ""
+//                        let conversationId = declinePaymentRequest.conversationId ?? ""
+//                        let metaData = declinePaymentRequest.metaData ?? MetaDataDB()
                         declinePaymentRequest = MessagesDB()
                         self.delegate?.declinePaymentRequest(paymentRequestUserId: appUserId, paymentRequestId: paymentRequestId, completion: {
-                            chatViewModel.updateMessageMetaData(messageId: declinePaymentRequest.messageId ?? "", conversationId: declinePaymentRequest.conversationId ?? "", metaData: declinePaymentRequest.metaData ?? MetaDataDB()) { _ in
-                                print("message updated sucessfully")
-                            }
+//                            chatViewModel.updateMessageMetaData(messageId: messageId, conversationId: conversationId, metaData: metaData) { _ in
+//                                print("message updated sucessfully")
+//                            }
                         })
                         stateViewModel.showDeclinePaymentRequestPopUp = false
                     }
