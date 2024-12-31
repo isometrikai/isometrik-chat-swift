@@ -628,15 +628,17 @@ public struct ISMMessageView: View {
                 confirmButtonTitle: "Decline request",
                 cancelButtonTitle: "Cancel",
                 confirmAction: {
-                    let appUserId = declinePaymentRequest.userIdentifier ?? ""
-                    let paymentRequestId = declinePaymentRequest.metaData?.paymentRequestId ?? ""
-                    declinePaymentRequest = MessagesDB()
-                    self.delegate?.declinePaymentRequest(paymentRequestUserId: appUserId, paymentRequestId: paymentRequestId, completion: {
-                        chatViewModel.updateMessageMetaData(messageId: declinePaymentRequest.messageId ?? "", conversationId: declinePaymentRequest.conversationId ?? "", metaData: declinePaymentRequest.metaData ?? MetaDataDB()) { _ in
-                            print("message updated sucessfully")
-                        }
-                    })
-                    stateViewModel.showDeclinePaymentRequestPopUp = false
+                    self.conversationViewModel.getUserData { myData in
+                        let appUserId = myData?.userIdentifier ?? ""
+                        let paymentRequestId = declinePaymentRequest.metaData?.paymentRequestId ?? ""
+                        declinePaymentRequest = MessagesDB()
+                        self.delegate?.declinePaymentRequest(paymentRequestUserId: appUserId, paymentRequestId: paymentRequestId, completion: {
+                            chatViewModel.updateMessageMetaData(messageId: declinePaymentRequest.messageId ?? "", conversationId: declinePaymentRequest.conversationId ?? "", metaData: declinePaymentRequest.metaData ?? MetaDataDB()) { _ in
+                                print("message updated sucessfully")
+                            }
+                        })
+                        stateViewModel.showDeclinePaymentRequestPopUp = false
+                    }
                 },
                 cancelAction: {
                     declinePaymentRequest = MessagesDB()
