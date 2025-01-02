@@ -251,7 +251,7 @@ public struct ISMChatMetaData: Codable {
     //payment
     public var paymentRequestId : String?
     public var orderId : String?
-    public var status : Int?
+    public var paymentRequestedMembers : [PaymentRequestedMembers]?
     public var requestAPaymentExpiryTime : Int?
     public var currencyCode : String?
     public var amount : Double?
@@ -287,7 +287,7 @@ public struct ISMChatMetaData: Codable {
         isSharedFromApp : Bool? = nil,
         paymentRequestId : String? = nil,
         orderId : String? = nil,
-        status : Int? = nil,
+        paymentRequestedMembers : [PaymentRequestedMembers]? = nil,
         requestAPaymentExpiryTime : Int? = nil,
         currencyCode : String? = nil,
         amount : Double? = nil
@@ -320,7 +320,7 @@ public struct ISMChatMetaData: Codable {
         self.isSharedFromApp = isSharedFromApp
         self.paymentRequestId = paymentRequestId
         self.orderId = orderId
-        self.status = status
+        self.paymentRequestedMembers = paymentRequestedMembers
         self.requestAPaymentExpiryTime = requestAPaymentExpiryTime
         self.currencyCode = currencyCode
         self.amount = amount
@@ -356,13 +356,35 @@ public struct ISMChatMetaData: Codable {
         isSharedFromApp = try? container.decode(Bool.self, forKey: .isSharedFromApp)
         paymentRequestId = try? container.decode(String.self, forKey: .paymentRequestId)
         orderId = try? container.decode(String.self, forKey: .orderId)
-        status = try? container.decode(Int.self, forKey: .status)
+        paymentRequestedMembers = try? container.decode([PaymentRequestedMembers].self, forKey: .paymentRequestedMembers)
         requestAPaymentExpiryTime = try? container.decode(Int.self, forKey: .requestAPaymentExpiryTime)
         currencyCode = try? container.decode(String.self, forKey: .currencyCode)
         amount = try? container.decode(Double.self, forKey: .amount)
     }
 }
 
+public struct PaymentRequestedMembers : Codable{
+    var userId : String?
+    var userName : String?
+    var status : Int?
+    var statusText : String?
+    var appUserId : String?
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        userId = try? container.decode(String.self, forKey: .userId)
+        userName = try? container.decode(String.self, forKey: .userName)
+        status = try? container.decode(Int.self, forKey: .status)
+        statusText = try? container.decode(String.self, forKey: .statusText)
+        appUserId = try? container.decode(String.self, forKey: .appUserId)
+    }
+    public init(userId : String? = nil,userName : String? = nil,status : Int? = nil,statusText : String? = nil,appUserId : String? = nil){
+        self.userId = userId
+        self.userName = userName
+        self.status = status
+        self.statusText = statusText
+        self.appUserId = appUserId
+    }
+}
 
 public struct PDPImageData : Codable{
     var small : String?

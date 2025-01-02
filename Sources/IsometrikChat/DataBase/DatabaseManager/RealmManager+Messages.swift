@@ -127,10 +127,23 @@ extension RealmManager{
                     metadataValue.collectionId = metaData.collectionId
                     metadataValue.paymentRequestId = metaData.paymentRequestId
                     metadataValue.orderId = metaData.orderId
-                    metadataValue.status = metaData.status
                     metadataValue.requestAPaymentExpiryTime = metaData.requestAPaymentExpiryTime
                     metadataValue.currencyCode = metaData.currencyCode
                     metadataValue.amount = metaData.amount
+                    
+                    if let members = metaData.paymentRequestedMembers{
+                        let paymentDBList = RealmSwift.List<PaymentRequestMembersDB>()
+                        members.forEach { member in
+                            let paymentRequestMembersDB = PaymentRequestMembersDB()
+                            paymentRequestMembersDB.userId = member.userId
+                            paymentRequestMembersDB.userName = member.userName
+                            paymentRequestMembersDB.status = member.status
+                            paymentRequestMembersDB.statusText = member.statusText
+                            paymentRequestMembersDB.appUserId = member.appUserId
+                            paymentDBList.append(paymentRequestMembersDB)
+                        }
+                        metadataValue.paymentRequestedMembers = paymentDBList
+                    }
 
                     
                     if let replyMessage = metaData.replyMessage {
@@ -423,10 +436,22 @@ extension RealmManager{
                         metaData.collectionId = value.metaData?.collectionId ?? value.details?.metaData?.collectionId
                         metaData.paymentRequestId = value.metaData?.paymentRequestId ?? value.details?.metaData?.paymentRequestId
                         metaData.orderId = value.metaData?.orderId ?? value.details?.metaData?.orderId
-                        metaData.status = value.metaData?.status ?? value.details?.metaData?.status
                         metaData.requestAPaymentExpiryTime = value.metaData?.requestAPaymentExpiryTime ?? value.details?.metaData?.requestAPaymentExpiryTime
                         metaData.currencyCode = value.metaData?.currencyCode ?? value.details?.metaData?.currencyCode
                         metaData.amount = value.metaData?.amount ?? value.details?.metaData?.amount
+                        
+                        
+                        if let members = value.metaData?.paymentRequestedMembers ?? value.details?.metaData?.paymentRequestedMembers{
+                            for x in members{
+                                let member = PaymentRequestMembersDB()
+                                member.userId = x.userId
+                                member.userName = x.userName
+                                member.status = x.status
+                                member.statusText = x.statusText
+                                member.appUserId = x.appUserId
+                                metaData.paymentRequestedMembers.append(member)
+                            }
+                        }
                         
                         obj.metaData = metaData
                         

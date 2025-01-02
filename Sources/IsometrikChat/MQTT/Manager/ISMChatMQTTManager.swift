@@ -509,7 +509,19 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                     let productDetail = ISMChatProductMetaData(productId: messageInfo.metaData?.product?.productId, productUrl: messageInfo.metaData?.product?.productUrl, productCategoryId: messageInfo.metaData?.product?.productCategoryId)
                     
                     
-                    
+                    // added message in messagesdb
+                    var paymentRequestedMembers : [PaymentRequestedMembers] = []
+                    if let members = messageInfo.metaData?.paymentRequestedMembers, members.count > 0{
+                        for x in members{
+                            var data = PaymentRequestedMembers()
+                            data.userId = x.userId
+                            data.userName = x.userName
+                            data.status = x.status
+                            data.statusText = x.statusText
+                            data.appUserId = x.appUserId
+                            paymentRequestedMembers.append(data)
+                        }
+                    }
                     
                     let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")
                     
@@ -543,7 +555,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                         collectionId : messageInfo.metaData?.collectionId,
                         paymentRequestId : messageInfo.metaData?.paymentRequestId,
                         orderId : messageInfo.metaData?.orderId,
-                        status : messageInfo.metaData?.status,
+                        paymentRequestedMembers: paymentRequestedMembers,
                         requestAPaymentExpiryTime : messageInfo.metaData?.requestAPaymentExpiryTime,
                         currencyCode : messageInfo.metaData?.currencyCode,
                         amount : messageInfo.metaData?.amount
@@ -552,6 +564,20 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                     if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
                         bodyUpdated = messageInfo.details?.body
                         customType = messageInfo.details?.customType
+                        
+                        var paymentRequestedMembersDetails : [PaymentRequestedMembers] = []
+                        if let members = messageInfo.details?.metaData?.paymentRequestedMembers, members.count > 0{
+                            for x in members{
+                                var data = PaymentRequestedMembers()
+                                data.userId = x.userId
+                                data.userName = x.userName
+                                data.status = x.status
+                                data.statusText = x.statusText
+                                data.appUserId = x.appUserId
+                                paymentRequestedMembersDetails.append(data)
+                            }
+                        }
+                        
                         metaData = ISMChatMetaData(
                             storeName: messageInfo.details?.metaData?.storeName,
                             productName: messageInfo.details?.metaData?.productName,
@@ -573,7 +599,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             collectionId : messageInfo.details?.metaData?.collectionId,
                             paymentRequestId : messageInfo.details?.metaData?.paymentRequestId,
                             orderId : messageInfo.details?.metaData?.orderId,
-                            status : messageInfo.details?.metaData?.status,
+                            paymentRequestedMembers : paymentRequestedMembersDetails,
                             requestAPaymentExpiryTime : messageInfo.details?.metaData?.requestAPaymentExpiryTime,
                             currencyCode : messageInfo.details?.metaData?.currencyCode,
                             amount : messageInfo.details?.metaData?.amount
@@ -653,6 +679,20 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             }
                         }
                         
+                        // added message in messagesdb
+                        var paymentRequestedMembers : [PaymentRequestedMembers] = []
+                        if let members = messageInfo.metaData?.paymentRequestedMembers, members.count > 0{
+                            for x in members{
+                                var data = PaymentRequestedMembers()
+                                data.userId = x.userId
+                                data.userName = x.userName
+                                data.status = x.status
+                                data.statusText = x.statusText
+                                data.appUserId = x.appUserId
+                                paymentRequestedMembers.append(data)
+                            }
+                        }
+                        
                         var bodyUpdated = messageInfo.body
                         var customType = messageInfo.customType
                         var metaData = ISMChatMetaData(
@@ -683,7 +723,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             collectionId : messageInfo.metaData?.collectionId,
                             paymentRequestId : messageInfo.metaData?.paymentRequestId,
                             orderId : messageInfo.metaData?.orderId,
-                            status : messageInfo.metaData?.status,
+                            paymentRequestedMembers: paymentRequestedMembers,
                             requestAPaymentExpiryTime : messageInfo.metaData?.requestAPaymentExpiryTime,
                             currencyCode : messageInfo.metaData?.currencyCode,
                             amount : messageInfo.metaData?.amount
@@ -692,6 +732,20 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                         if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
                             bodyUpdated = messageInfo.details?.body
                             customType = messageInfo.details?.customType
+                            
+                            var paymentRequestedMembersDetails : [PaymentRequestedMembers] = []
+                            if let members = messageInfo.details?.metaData?.paymentRequestedMembers, members.count > 0{
+                                for x in members{
+                                    var data = PaymentRequestedMembers()
+                                    data.userId = x.userId
+                                    data.userName = x.userName
+                                    data.status = x.status
+                                    data.statusText = x.statusText
+                                    data.appUserId = x.appUserId
+                                    paymentRequestedMembersDetails.append(data)
+                                }
+                            }
+                            
                             metaData = ISMChatMetaData(
                                 storeName: messageInfo.details?.metaData?.storeName,
                                 productName: messageInfo.details?.metaData?.productName,
@@ -713,7 +767,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                                 collectionId : messageInfo.details?.metaData?.collectionId,
                                 paymentRequestId : messageInfo.details?.metaData?.paymentRequestId,
                                 orderId : messageInfo.details?.metaData?.orderId,
-                                status : messageInfo.details?.metaData?.status,
+                                paymentRequestedMembers : paymentRequestedMembersDetails,
                                 requestAPaymentExpiryTime : messageInfo.details?.metaData?.requestAPaymentExpiryTime,
                                 currencyCode : messageInfo.details?.metaData?.currencyCode,
                                 amount : messageInfo.details?.metaData?.amount

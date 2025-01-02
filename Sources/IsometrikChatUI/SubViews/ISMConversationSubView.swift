@@ -160,7 +160,7 @@ struct ISMConversationSubView: View {
                 .padding(.trailing, 40)
                 .lineLimit(2)
             //UNREAD MESSAGE COUNT
-            if chat.lastMessageDetails?.customType == ISMChatMediaType.PaymentRequest.value && ISMChatHelper.getPaymentStatus(status: self.chat.lastMessageDetails?.metaData?.status ?? 0, sentAt: self.chat.lastMessageDetails?.sentAt ?? 0, expireAt: self.chat.lastMessageDetails?.metaData?.requestAPaymentExpiryTime ?? 0) == .ActiveRequest{
+            if chat.lastMessageDetails?.customType == ISMChatMediaType.PaymentRequest.value && ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "", metaData: self.chat.lastMessageDetails?.metaData, sentAt: self.chat.lastMessageDetails?.sentAt ?? 0) == .ActiveRequest{
                 Spacer()
                 
                 Text("Pay Now")
@@ -376,7 +376,7 @@ struct ISMConversationSubView: View {
     }
     
     func getPaymentRequestText() -> String{
-        let status = ISMChatHelper.getPaymentStatus(status: self.chat.lastMessageDetails?.metaData?.status ?? 0, sentAt: self.chat.lastMessageDetails?.sentAt ?? 0, expireAt: self.chat.lastMessageDetails?.metaData?.requestAPaymentExpiryTime ?? 0)
+        let status = ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "",metaData: self.chat.lastMessageDetails?.metaData, sentAt: self.chat.lastMessageDetails?.sentAt ?? 0)
         if status == .ActiveRequest {
             if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
                 return "You have sent a payment request"
@@ -398,7 +398,9 @@ struct ISMConversationSubView: View {
                 return "\(chat.lastMessageDetails?.senderName ?? "") cancelled this order"
             }
         }else if status == .Accepted{
-            return "This payment request is paid"
+            return "You have successfully paid for the order."
+        }else if status == .PayedByOther{
+            return "The payment has already been made."
         }
         return ""
     }

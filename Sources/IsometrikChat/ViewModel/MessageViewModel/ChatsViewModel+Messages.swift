@@ -50,21 +50,21 @@ extension ChatsViewModel{
     }
     
     
-    public func updateMessageMetaData(messageId : String,conversationId : String,metaData : MetaDataDB,completion:@escaping(String)->()){
-        let endPoint = ISMChatMessagesEndpoint.editMessage
-        let metaDataDictionary = metaData.toDictionary()
-        let body = ["messageId" : messageId,"conversationId" : conversationId, "metaData" : metaDataDictionary] as [String : Any]
-        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
-
-        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatSendMsg, ISMChatNewAPIError>) in
-            switch result{
-            case .success(let data,_):
-                completion(data.messageId ?? "")
-            case .failure(let error):
-                ISMChatHelper.print("Update Message Api failed -----> \(String(describing: error))")
-            }
-        }
-    }
+//    public func updateMessageMetaData(messageId : String,conversationId : String,metaData : MetaDataDB,completion:@escaping(String)->()){
+//        let endPoint = ISMChatMessagesEndpoint.editMessage
+//        let metaDataDictionary = metaData.toDictionary()
+//        let body = ["messageId" : messageId,"conversationId" : conversationId, "metaData" : metaDataDictionary] as [String : Any]
+//        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+//
+//        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatSendMsg, ISMChatNewAPIError>) in
+//            switch result{
+//            case .success(let data,_):
+//                completion(data.messageId ?? "")
+//            case .failure(let error):
+//                ISMChatHelper.print("Update Message Api failed -----> \(String(describing: error))")
+//            }
+//        }
+//    }
     
     
     

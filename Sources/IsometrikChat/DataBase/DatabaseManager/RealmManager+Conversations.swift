@@ -333,12 +333,23 @@ extension RealmManager {
                     messageMetaData.collectionId = value.lastMessageDetails?.metaData?.collectionId
                     messageMetaData.paymentRequestId = value.lastMessageDetails?.metaData?.paymentRequestId
                     messageMetaData.orderId = value.lastMessageDetails?.metaData?.orderId
-                    messageMetaData.status = value.lastMessageDetails?.metaData?.status
                     messageMetaData.requestAPaymentExpiryTime = value.lastMessageDetails?.metaData?.requestAPaymentExpiryTime
                     messageMetaData.currencyCode = value.lastMessageDetails?.metaData?.currencyCode
                     messageMetaData.amount = value.lastMessageDetails?.metaData?.amount
                     
-                    
+                    if let members = value.lastMessageDetails?.metaData?.paymentRequestedMembers {
+                        let paymentRequestMembersDB = RealmSwift.List<PaymentRequestMembersDB>()
+                        members.forEach { member in
+                            let membersDB = PaymentRequestMembersDB()
+                            membersDB.userId = member.userId
+                            membersDB.userName = member.userName
+                            membersDB.status = member.status
+                            membersDB.statusText = member.statusText
+                            membersDB.appUserId = member.appUserId
+                            paymentRequestMembersDB.append(membersDB)
+                        }
+                        messageMetaData.paymentRequestedMembers = paymentRequestMembersDB
+                    }
                     
                     
                     lastMessage.metaData = messageMetaData
@@ -382,10 +393,22 @@ extension RealmManager {
                         metadataValue.collectionId = metaData.collectionId
                         metadataValue.paymentRequestId = metaData.paymentRequestId
                         metadataValue.orderId = metaData.orderId
-                        metadataValue.status = metaData.status
                         metadataValue.requestAPaymentExpiryTime = metaData.requestAPaymentExpiryTime
                         metadataValue.currencyCode = metaData.currencyCode
                         metadataValue.amount = metaData.amount
+                        if let members = metaData.paymentRequestedMembers {
+                            let membersDBList = RealmSwift.List<PaymentRequestMembersDB>()
+                            members.forEach { member in
+                                let paymentRequestMembersDB = PaymentRequestMembersDB()
+                                paymentRequestMembersDB.userId = member.userId
+                                paymentRequestMembersDB.userName = member.userName
+                                paymentRequestMembersDB.status = member.status
+                                paymentRequestMembersDB.statusText = member.statusText
+                                paymentRequestMembersDB.appUserId = member.appUserId
+                                membersDBList.append(paymentRequestMembersDB)
+                            }
+                            metadataValue.paymentRequestedMembers = membersDBList
+                        }
                         
                         
                         if let replyMessage = metaData.replyMessage {
@@ -552,10 +575,24 @@ extension RealmManager {
                         metadataValue.collectionId = metaData.collectionId
                         metadataValue.paymentRequestId = metaData.paymentRequestId
                         metadataValue.orderId = metaData.orderId
-                        metadataValue.status = metaData.status
+//                        metadataValue.status = metaData.status
                         metadataValue.requestAPaymentExpiryTime = metaData.requestAPaymentExpiryTime
                         metadataValue.currencyCode = metaData.currencyCode
                         metadataValue.amount = metaData.amount
+                        
+                        if let members = metaData.paymentRequestedMembers {
+                            let membersDBList = RealmSwift.List<PaymentRequestMembersDB>()
+                            members.forEach { member in
+                                let paymentRequestMembersDB = PaymentRequestMembersDB()
+                                paymentRequestMembersDB.userId = member.userId
+                                paymentRequestMembersDB.userName = member.userName
+                                paymentRequestMembersDB.status = member.status
+                                paymentRequestMembersDB.statusText = member.statusText
+                                paymentRequestMembersDB.appUserId = member.appUserId
+                                membersDBList.append(paymentRequestMembersDB)
+                            }
+                            metadataValue.paymentRequestedMembers = membersDBList
+                        }
                         
                         
                         if let replyMessage = metaData.replyMessage {
@@ -873,10 +910,23 @@ extension RealmManager {
                     metadataValue.collectionId = metaData.collectionId
                     metadataValue.paymentRequestId = metaData.paymentRequestId
                     metadataValue.orderId = metaData.orderId
-                    metadataValue.status = metaData.status
                     metadataValue.requestAPaymentExpiryTime = metaData.requestAPaymentExpiryTime
                     metadataValue.currencyCode = metaData.currencyCode
                     metadataValue.amount = metaData.amount
+                    
+                    if let members = metaData.paymentRequestedMembers {
+                        let membersDBList = RealmSwift.List<PaymentRequestMembersDB>()
+                        members.forEach { member in
+                            let paymentRequestMembersDB = PaymentRequestMembersDB()
+                            paymentRequestMembersDB.userId = member.userId
+                            paymentRequestMembersDB.userName = member.userName
+                            paymentRequestMembersDB.status = member.status
+                            paymentRequestMembersDB.statusText = member.statusText
+                            paymentRequestMembersDB.appUserId = member.appUserId
+                            membersDBList.append(paymentRequestMembersDB)
+                        }
+                        metadataValue.paymentRequestedMembers = membersDBList
+                    }
                     
                     
                     if let replyMessage = metaData.replyMessage {

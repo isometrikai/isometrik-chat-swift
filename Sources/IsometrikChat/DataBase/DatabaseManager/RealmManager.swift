@@ -39,7 +39,7 @@ public class RealmManager: ObservableObject {
         do {
             let config = Realm.Configuration(
                 fileURL: getRealmFileURL(for: userId),
-                schemaVersion: 42
+                schemaVersion: 43
             )
             Realm.Configuration.defaultConfiguration = config
             localRealm = try Realm()

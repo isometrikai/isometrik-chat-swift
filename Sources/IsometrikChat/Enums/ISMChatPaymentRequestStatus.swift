@@ -12,4 +12,5 @@ public enum ISMChatPaymentRequestStatus: Int {
     case Rejected = 2
     case Expired = 3
     case Cancelled = 4
+    case PayedByOther = 5
 }

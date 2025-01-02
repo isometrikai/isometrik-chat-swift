@@ -1397,7 +1397,7 @@ struct ISMMessageSubView: View {
                                 }
                                 
                                 VStack(alignment: .trailing,spacing: 5){
-                                    PaymentRequestUI(status: ISMChatHelper.getPaymentStatus(status: self.message.metaData?.status ?? 0, sentAt: self.message.sentAt, expireAt: self.message.metaData?.requestAPaymentExpiryTime ?? 0), isReceived: self.isReceived,message: self.message) {
+                                    PaymentRequestUI(status: ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "",metaData: self.message.metaData, sentAt: self.message.sentAt), isReceived: self.isReceived,message: self.message) {
                                         //view details
                                         viewDetailsForPaymentRequest = self.message
                                     } declineRequest: {
@@ -2247,6 +2247,7 @@ struct PaymentRequestUI: View {
     @State private var timer: Timer?
     @State private var totalTime : Int = 0
     @State private var remainingTime: TimeInterval = 0
+    var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
             // Header and Payment Status
@@ -2259,9 +2260,21 @@ struct PaymentRequestUI: View {
             
             // Payment Amount
             VStack(spacing: 8) {
-                Text(isReceived ? "Total you pay" : "Total your friend pays")
-                    .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
-                    .foregroundColor((status == .Rejected || status == .Expired) ? Color(hex: "#6A6C6A") : Color(hex: "#121511"))
+                if status == .Accepted || status == .PayedByOther{
+                    if let otherUserName = message.metaData?.paymentRequestedMembers.first(where: { $0.userId != userData?.userId && $0.status == 1 }) {
+                        Text("Paid by \(otherUserName.userName ?? "Unknown User")")
+                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                            .foregroundColor((status == .Rejected || status == .Expired) ? Color(hex: "#6A6C6A") : Color(hex: "#121511"))
+                    } else {
+                        Text("You Paid")
+                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                            .foregroundColor((status == .Rejected || status == .Expired) ? Color(hex: "#6A6C6A") : Color(hex: "#121511"))
+                    }
+                }else{
+                    Text(isReceived ? "Total you pay" : "Total your friend pays")
+                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                        .foregroundColor((status == .Rejected || status == .Expired) ? Color(hex: "#6A6C6A") : Color(hex: "#121511"))
+                }
                 var amount: AttributedString {
                     var attributedString = AttributedString("\(message.metaData?.amount ?? 0) \(message.metaData?.currencyCode ?? "")")
                     
@@ -2308,10 +2321,6 @@ struct PaymentRequestUI: View {
                     Text(isReceived ? "This order has been cancelled." : "You cancelled this order.")
                         .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
                         .foregroundColor(Color(hex: "#6A6C6A")).padding(.bottom,16)
-                }else if status == .Accepted{
-                    Text("The payment has already been made.")
-                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
-                        .foregroundColor(Color(hex: "#6A6C6A")).padding(.bottom,16)
                 }
             }
             .padding(.horizontal, 16)
@@ -2353,20 +2362,29 @@ struct PaymentRequestUI: View {
                     }
                 }
                 .padding(.horizontal, 16)
+            }else if status == .PayedByOther{
+                Button(action: {
+                    // Decline action
+                }) {
+                    Text("Paid")
+                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
+                        .foregroundStyle(Color(hex: "#6A6C6A"))
+                        .frame(width: 225, height: 32, alignment: .center)
+                        .background(Color(hex: "#dfdfdc"))
+                        .cornerRadius(16)
+                }.padding(.bottom,15)
             }else if status == .Accepted{
-                HStack(spacing: 20) {
-                    Button(action: {
-                        // Decline action
-                    }) {
-                        Text("Paid")
-                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
-                            .foregroundStyle(Color(hex: "#6A6C6A"))
-                            .frame(width: 225, height: 32, alignment: .center)
-                            .background(Color(hex: "#F5F5F2"))
-                            .cornerRadius(16)
-                    }
+                Button(action: {
+                    // Decline action
+                }) {
+                    Text("Paid by myself")
+                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
+                        .foregroundStyle(Color(hex: "#6A6C6A"))
+                        .frame(width: 225, height: 32, alignment: .center)
+                        .background(Color(hex: "#dfdfdc"))
+                        .cornerRadius(16)
                 }
-                .padding(.horizontal, 16)
+                .padding(.bottom,15)
             }else if status == .Expired && isReceived == false{
                 Button(action: {
                     viewDetails()
@@ -2377,6 +2395,16 @@ struct PaymentRequestUI: View {
                         .frame(width: 225, height: 32, alignment: .center)
                         .background(RoundedRectangle(cornerRadius: 16).stroke(Color(hex: "#163300"), lineWidth: 1))
                 }
+            }
+            
+            if status == .Accepted{
+                Text("You have successfully paid for the order.")
+                    .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                    .foregroundColor(Color(hex: "#6A6C6A")).padding(.bottom,16)
+            }else if status == .PayedByOther{
+                Text("The payment has already been made.")
+                    .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                    .foregroundColor(Color(hex: "#6A6C6A")).padding(.bottom,16)
             }
         }.onAppear {
             totalTime = (message.metaData?.requestAPaymentExpiryTime ?? 0) * 60
@@ -2425,12 +2453,20 @@ struct PaymentRequestUI: View {
         }else if status == .Accepted {
             Text("Payment Request")
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
-                .foregroundColor(Color(hex: "#121511"))
+                .foregroundColor(Color(hex: "#454745"))
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(Color(hex: "#86EA5D"))
+                .background(Color(hex: "#BDBDBA"))
                 .cornerRadius(10, corners: [.topLeft, .topRight])
-        } else if status == .Rejected {
+        } else if status == .PayedByOther {
+            Text("Payment Request")
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
+                .foregroundColor(Color(hex: "#454745"))
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color(hex: "#BDBDBA"))
+                .cornerRadius(10, corners: [.topLeft, .topRight])
+        }else if status == .Rejected {
             Text("Request Declined")
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
                 .foregroundColor(.white)
