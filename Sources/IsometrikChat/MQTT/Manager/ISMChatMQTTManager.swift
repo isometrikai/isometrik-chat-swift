@@ -561,6 +561,19 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                         amount : messageInfo.metaData?.amount
                     )
                     
+                    var metaDataJsonString : String = ""
+                    do {
+                        // Convert metaData to JSON
+                        let jsonData = try JSONEncoder().encode(metaData)
+                        
+                        // Convert JSON data to string
+                        if let jsonString = String(data: jsonData, encoding: .utf8) {
+                            metaDataJsonString = jsonString
+                        }
+                    } catch {
+                        print("Failed to convert metaData to JSON: \(error.localizedDescription)")
+                    }
+                    
                     if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
                         bodyUpdated = messageInfo.details?.body
                         customType = messageInfo.details?.customType
@@ -604,6 +617,18 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             currencyCode : messageInfo.details?.metaData?.currencyCode,
                             amount : messageInfo.details?.metaData?.amount
                         )
+                        
+                        do {
+                            // Convert metaData to JSON
+                            let jsonData = try JSONEncoder().encode(metaData)
+                            
+                            // Convert JSON data to string
+                            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                                metaDataJsonString = jsonString
+                            }
+                        } catch {
+                            print("Failed to convert metaData to JSON: \(error.localizedDescription)")
+                        }
                     }
                     
                     var mentionedUser: [ISMChatMentionedUser] = []
@@ -729,6 +754,19 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             amount : messageInfo.metaData?.amount
                         )
                         
+                        var metaDataJsonString : String = ""
+                        do {
+                            // Convert metaData to JSON
+                            let jsonData = try JSONEncoder().encode(metaData)
+                            
+                            // Convert JSON data to string
+                            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                                metaDataJsonString = jsonString
+                            }
+                        } catch {
+                            print("Failed to convert metaData to JSON: \(error.localizedDescription)")
+                        }
+                        
                         if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
                             bodyUpdated = messageInfo.details?.body
                             customType = messageInfo.details?.customType
@@ -774,6 +812,18 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             )
                         }
                         
+                        do {
+                            // Convert metaData to JSON
+                            let jsonData = try JSONEncoder().encode(metaData)
+                            
+                            // Convert JSON data to string
+                            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                                metaDataJsonString = jsonString
+                            }
+                        } catch {
+                            print("Failed to convert metaData to JSON: \(error.localizedDescription)")
+                        }
+                        
                         var mentionedUser : [ISMChatMentionedUser] = []
                         if messageInfo.mentionedUsers != nil{
                             for x in mentionedUser{
@@ -782,7 +832,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             }
                         }
                         
-                        let message = ISMChatMessage(sentAt: messageInfo.sentAt,body: bodyUpdated, messageId: messageInfo.messageId,mentionedUsers: mentionedUser,metaData : metaData, customType: customType,action: messageInfo.action, attachment: messageInfo.attachments,conversationId: messageInfo.conversationId, userId: messageInfo.userId, userName: messageInfo.userName, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, memberName: messageInfo.memberName, memberId: messageInfo.memberId, memberIdentifier: messageInfo.memberIdentifier,senderInfo: senderInfo,members: membersArray,reactions: messageInfo.reactions)
+                        let message = ISMChatMessage(sentAt: messageInfo.sentAt,body: bodyUpdated, messageId: messageInfo.messageId,mentionedUsers: mentionedUser,metaData : metaData,metaDataJsonString: metaDataJsonString, customType: customType,action: messageInfo.action, attachment: messageInfo.attachments,conversationId: messageInfo.conversationId, userId: messageInfo.userId, userName: messageInfo.userName, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, memberName: messageInfo.memberName, memberId: messageInfo.memberId, memberIdentifier: messageInfo.memberIdentifier,senderInfo: senderInfo,members: membersArray,reactions: messageInfo.reactions)
                         
                         DispatchQueue.main.async {
                             self.realmManager.saveMessage(obj: [message])

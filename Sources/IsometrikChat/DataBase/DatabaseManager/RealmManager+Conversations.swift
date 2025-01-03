@@ -972,8 +972,22 @@ extension RealmManager {
                     
                     
                     conversationToUpdate.first?.lastMessageDetails?.metaData = metadataValue
-                    getAllConversations()
+                    
+                    
                 }
+                
+                do {
+                    // Convert metaData to JSON
+                    let jsonData = try JSONEncoder().encode(metaData)
+                    
+                    // Convert JSON data to string
+                    if let jsonString = String(data: jsonData, encoding: .utf8) {
+                        conversationToUpdate.first?.lastMessageDetails?.metaDataJsonString = jsonString
+                    }
+                } catch {
+                    print("Failed to convert metaData to JSON: \(error.localizedDescription)")
+                }
+                getAllConversations()
             }
         }
     }

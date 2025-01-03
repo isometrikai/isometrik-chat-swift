@@ -30,6 +30,7 @@ public class MessagesDB: Object, ObjectKeyIdentifiable {
     @Persisted public var messageType : Int = -1
     @Persisted public var parentMessageId : String = ""
     @Persisted public var metaData : MetaDataDB?
+    @Persisted public var metaDataJsonString : String?
     @Persisted public var attachments : RealmSwift.List<AttachmentDB>
     @Persisted public var initiatorIdentifier : String = ""
     @Persisted public var initiatorId : String = ""

@@ -190,6 +190,18 @@ extension RealmManager{
 
                     messageToUpdate.first?.metaData = metadataValue
                 }
+                
+                do {
+                    // Convert metaData to JSON
+                    let jsonData = try JSONEncoder().encode(metaData)
+                    
+                    // Convert JSON data to string
+                    if let jsonString = String(data: jsonData, encoding: .utf8) {
+                        messageToUpdate.first?.metaDataJsonString = jsonString
+                    }
+                } catch {
+                    print("Failed to convert metaData to JSON: \(error.localizedDescription)")
+                }
             }
         }
     }
@@ -454,6 +466,7 @@ extension RealmManager{
                         }
                         
                         obj.metaData = metaData
+                        obj.metaDataJsonString = value.metaDataJsonString
                         
                         
                         let user = UserDB()

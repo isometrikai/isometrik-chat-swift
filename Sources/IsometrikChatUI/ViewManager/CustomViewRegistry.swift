@@ -13,14 +13,14 @@ public protocol CustomMessageViewProvider {
     associatedtype ViewData
     associatedtype ContentView: View
     
-    static func parseData(_ data: [String: Any]) -> ViewData?
+    static func parseData(_ data: MessagesDB) -> ViewData?
     static func createView(data: ViewData) -> ContentView
 }
 
 public class CustomViewRegistry {
     public static let shared = CustomViewRegistry()
     
-    private var viewBuilders: [String: ([String: Any]) -> AnyView] = [:]
+    private var viewBuilders: [String: (MessagesDB) -> AnyView] = [:]
     
     public func register<Provider: CustomMessageViewProvider>(
         for type: String,
@@ -34,11 +34,8 @@ public class CustomViewRegistry {
         }
     }
     
-    public func view(for message: [String: Any]) -> AnyView {
-        guard let customType = message["customType"] as? String else {
-               return AnyView(Text("Invalid message: Missing customType"))
-           }
-        return viewBuilders[customType]?(message) ??
-            AnyView(Text("No view registered for type: \(customType)"))
+    public func view(for message: MessagesDB) -> AnyView {
+        return viewBuilders[message.customType]?(message) ??
+            AnyView(Text("No view registered for type: \(message.customType)"))
     }
 }

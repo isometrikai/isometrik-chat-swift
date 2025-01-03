@@ -1435,8 +1435,7 @@ struct ISMMessageSubView: View {
                         }.padding(.vertical,2)
                     }
                 default:
-                    EmptyView()
-//                    CustomViewRegistry.shared.view(for: <#T##[String : Any]#>)
+                    CustomViewRegistry.shared.view(for: self.message)
                 }
             }.simultaneousGesture(
                 LongPressGesture(minimumDuration: 0.5).onEnded { _ in

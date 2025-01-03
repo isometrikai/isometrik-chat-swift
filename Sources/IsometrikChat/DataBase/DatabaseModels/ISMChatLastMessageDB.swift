@@ -24,6 +24,7 @@ public class LastMessageDB : Object, ObjectKeyIdentifiable {
     @Persisted public var customType : String?
     @Persisted public var action : String?
     @Persisted public var metaData : MetaDataDB?
+    @Persisted public var metaDataJsonString : String?
     @Persisted public var deliveredTo : RealmSwift.List<MessageDeliveryStatusDB>
     @Persisted public var readBy : RealmSwift.List<MessageDeliveryStatusDB>
     @Persisted public var msgSyncStatus : String = ""

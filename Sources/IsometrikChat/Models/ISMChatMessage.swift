@@ -35,6 +35,7 @@ public struct ISMChatMessage : Codable,Identifiable{
     public var messageType : Int?
     public var parentMessageId : String?
     public var metaData : ISMChatMetaData?
+    public var metaDataJsonString : String?
     public var attachments : [ISMChatAttachment]?
     public var initiatorIdentifier : String?
     public var initiatorId : String?
@@ -73,6 +74,16 @@ public struct ISMChatMessage : Codable,Identifiable{
         deliveredTo = try? container.decode([ISMChatUserStatus].self, forKey: .deliveredTo)
         messageType = try? container.decode(Int.self, forKey: .messageType)
         parentMessageId = try? container.decode(String.self, forKey: .parentMessageId)
+        // Extract raw JSON string for metaData
+        if let rawMetaData = try? container.decodeIfPresent(AnyCodable.self, forKey: .metaData) {
+            let encoder = JSONEncoder()
+            if let rawData = try? encoder.encode(rawMetaData),
+               let jsonString = String(data: rawData, encoding: .utf8) {
+                metaDataJsonString = jsonString
+            }
+        } else {
+            metaDataJsonString = nil
+        }
         metaData = try? container.decodeIfPresent(ISMChatMetaData.self, forKey: .metaData)
         attachments = try? container.decode([ISMChatAttachment].self, forKey: .attachments)
         initiatorIdentifier = try? container.decode(String.self, forKey: .initiatorIdentifier)
@@ -98,12 +109,13 @@ public struct ISMChatMessage : Codable,Identifiable{
         config  = try? container.decode(ISMCallConfig.self, forKey: .config)
         details  = try? container.decode(ISMChatUpdateMessageDetail.self, forKey: .details)
     }
-    public init(sentAt : Double? = nil, body : String? = nil,messageId : String? = nil,mentionedUsers : [ISMChatMentionedUser]? = nil,metaData : ISMChatMetaData? = nil,customType : String? = nil,initiatorIdentifier : String? = nil,action : String? = nil,attachment : [ISMChatAttachment]? = nil,conversationId : String? = nil,userId : String? = nil,userName : String? = nil,initiatorId : String? = nil,initiatorName : String? = nil,memberName : String? = nil,memberId : String? = nil, memberIdentifier : String? = nil,senderInfo : ISMChatUser? = nil,members : [ISMChatMemberAdded]? = nil,messageUpdated : Bool? = nil,reactions : [String: [String]]? = nil,missedByMembers : [String]? = nil,meetingId : String? = nil,callDurations : [ISMCallMeetingDuration]? = nil,audioOnly : Bool? = false,autoTerminate : Bool? = nil,config : ISMCallConfig? = nil,messageType : Int? = nil,details : ISMChatUpdateMessageDetail? = nil){
+    public init(sentAt : Double? = nil, body : String? = nil,messageId : String? = nil,mentionedUsers : [ISMChatMentionedUser]? = nil,metaData : ISMChatMetaData? = nil,metaDataJsonString : String? = nil,customType : String? = nil,initiatorIdentifier : String? = nil,action : String? = nil,attachment : [ISMChatAttachment]? = nil,conversationId : String? = nil,userId : String? = nil,userName : String? = nil,initiatorId : String? = nil,initiatorName : String? = nil,memberName : String? = nil,memberId : String? = nil, memberIdentifier : String? = nil,senderInfo : ISMChatUser? = nil,members : [ISMChatMemberAdded]? = nil,messageUpdated : Bool? = nil,reactions : [String: [String]]? = nil,missedByMembers : [String]? = nil,meetingId : String? = nil,callDurations : [ISMCallMeetingDuration]? = nil,audioOnly : Bool? = false,autoTerminate : Bool? = nil,config : ISMCallConfig? = nil,messageType : Int? = nil,details : ISMChatUpdateMessageDetail? = nil){
         self.sentAt = sentAt
         self.body = body
         self.messageId = messageId
         self.mentionedUsers = mentionedUsers
         self.metaData = metaData
+        self.metaDataJsonString = metaDataJsonString
         self.customType = customType
         self.action = action
         self.initiatorIdentifier = initiatorIdentifier
@@ -441,5 +453,82 @@ public struct ISMChatProductMetaData : Codable{
         self.productId = productId
         self.productUrl = productUrl
         self.productCategoryId = productCategoryId
+    }
+}
+
+
+public struct AnyCodable: Codable {
+    public let value: Any
+
+    public init(_ value: Any) {
+        self.value = value
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(Bool.self) {
+            self.value = value
+        } else if let value = try? container.decode(Int.self) {
+            self.value = value
+        } else if let value = try? container.decode(Double.self) {
+            self.value = value
+        } else if let value = try? container.decode(String.self) {
+            self.value = value
+        } else if let value = try? container.decode([AnyCodable].self) {
+            self.value = value.map { $0.value }
+        } else if let value = try? container.decode([String: AnyCodable].self) {
+            self.value = value.mapValues { $0.value }
+        } else {
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unsupported type")
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        if let value = value as? Bool {
+            try container.encode(value)
+        } else if let value = value as? Int {
+            try container.encode(value)
+        } else if let value = value as? Double {
+            try container.encode(value)
+        } else if let value = value as? String {
+            try container.encode(value)
+        } else if let value = value as? [Any] {
+            try container.encode(value.map { AnyCodable($0) })
+        } else if let value = value as? [String: Any] {
+            try container.encode(value.mapValues { AnyCodable($0) })
+        } else {
+            throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: encoder.codingPath, debugDescription: "Unsupported type"))
+        }
+    }
+}
+
+extension AnyCodable: Equatable {
+    public static func == (lhs: AnyCodable, rhs: AnyCodable) -> Bool {
+        switch (lhs.value, rhs.value) {
+        case let (lhs as Bool, rhs as Bool):
+            return lhs == rhs
+        case let (lhs as Int, rhs as Int):
+            return lhs == rhs
+        case let (lhs as Double, rhs as Double):
+            return lhs == rhs
+        case let (lhs as String, rhs as String):
+            return lhs == rhs
+        case let (lhs as [AnyCodable], rhs as [AnyCodable]):
+            return lhs == rhs
+        case let (lhs as [String: AnyCodable], rhs as [String: AnyCodable]):
+            return lhs == rhs
+        default:
+            return false
+        }
+    }
+}
+
+extension AnyCodable: CustomStringConvertible {
+    public var description: String {
+        if let value = value as? CustomStringConvertible {
+            return value.description
+        }
+        return String(describing: value)
     }
 }
