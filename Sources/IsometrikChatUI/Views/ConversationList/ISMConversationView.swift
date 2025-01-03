@@ -94,7 +94,7 @@ public struct ISMConversationView : View {
                         Spacer()
                     } else {
                         if ISMChatSdk.getInstance().getFramework() == .UIKit{
-                            CustomSearchBar(searchText: $query).padding(.horizontal,15)
+                            CustomSearchBar(searchText:  $query, isDisabled: ISMChatSdkUI.getInstance().getChatProperties().onTapOfSearchBarOpenNewScreen == true).padding(.horizontal,15)
                                 .onTapGesture {
                                     if ISMChatSdkUI.getInstance().getChatProperties().onTapOfSearchBarOpenNewScreen == true{
                                         self.delegate?.navigateToCustomSearchOnTapOfSearchBar()

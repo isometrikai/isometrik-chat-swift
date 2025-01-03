@@ -52,7 +52,7 @@ public struct ISMBroadCastList: View {
             VStack {
                 if allBroadCasts?.count != 0 {
                     if ISMChatSdk.getInstance().getFramework() == .UIKit{
-                        CustomSearchBar(searchText: $query).padding(.horizontal,15)
+                        CustomSearchBar(searchText: $query, isDisabled: false).padding(.horizontal,15)
                     }
                     BroadcastListView()
                 } 

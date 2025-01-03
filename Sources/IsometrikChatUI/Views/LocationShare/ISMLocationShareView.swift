@@ -76,7 +76,7 @@ struct ISMLocationShareView: View {
                 }.padding(.horizontal,15)
                 
                 if chatproperties.shareOnlyCurrentLocation == false{
-                    CustomSearchBar(searchText: $searchText).padding(.horizontal,15)
+                    CustomSearchBar(searchText: $searchText, isDisabled: false).padding(.horizontal,15)
                 }
                 
                 if isTextFieldFocused == false{

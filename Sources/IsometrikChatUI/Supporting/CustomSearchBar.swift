@@ -11,6 +11,7 @@ public struct CustomSearchBar: View {
     @Binding var searchText: String
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     let searchBar = ISMChatSdkUI.getInstance().getCustomSearchBar()
+    let isDisabled : Bool?
     
     public var body: some View {
         HStack(alignment: .center, spacing: 5) {
@@ -27,6 +28,7 @@ public struct CustomSearchBar: View {
                         .padding(.leading,5)
                 }
                 TextField("", text: $searchText)
+                    .disabled(isDisabled ?? false)
                     .font(searchBar.searchTextFont) // Apply font to the typed text
                     .padding(.vertical, 8)
                     .padding(.horizontal, 5)
