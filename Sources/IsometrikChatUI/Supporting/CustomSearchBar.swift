@@ -44,7 +44,7 @@ public struct CustomSearchBar: View {
                 })
             }
         }
-        .frame(height: 38)
+        .frame(height: CGFloat(searchBar.height))
         .padding(.horizontal, 15)
         .background(searchBar.searchBarBackgroundColor)
         .cornerRadius(CGFloat(searchBar.cornerRadius))

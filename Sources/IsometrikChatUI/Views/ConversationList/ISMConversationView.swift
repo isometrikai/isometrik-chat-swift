@@ -14,6 +14,7 @@ import IsometrikChat
 public protocol ISMConversationViewDelegate{
     func navigateToMessageList(selectedUserToNavigate : UserDB?,conversationId : String?,isGroup : Bool?,groupImage : String?,groupName : String?)
     func navigateToUsersListToCreateChat(conversationType : ISMChatConversationTypeConfig)
+    func navigateToCustomSearchOnTapOfSearchBar()
 }
 
 public struct ISMConversationView : View {
@@ -94,6 +95,11 @@ public struct ISMConversationView : View {
                     } else {
                         if ISMChatSdk.getInstance().getFramework() == .UIKit{
                             CustomSearchBar(searchText: $query).padding(.horizontal,15)
+                                .onTapGesture {
+                                    if ISMChatSdkUI.getInstance().getChatProperties().onTapOfSearchBarOpenNewScreen == true{
+                                        self.delegate.navigateToCustomSearchOnTapOfSearchBar()
+                                    }
+                                }
                         }
                         if conversationData.count == 0{
                             Spacer()
