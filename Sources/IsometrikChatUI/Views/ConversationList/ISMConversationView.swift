@@ -97,7 +97,7 @@ public struct ISMConversationView : View {
                             CustomSearchBar(searchText: $query).padding(.horizontal,15)
                                 .onTapGesture {
                                     if ISMChatSdkUI.getInstance().getChatProperties().onTapOfSearchBarOpenNewScreen == true{
-                                        self.delegate.navigateToCustomSearchOnTapOfSearchBar()
+                                        self.delegate?.navigateToCustomSearchOnTapOfSearchBar()
                                     }
                                 }
                         }
