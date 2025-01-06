@@ -124,7 +124,7 @@ extension ISMMessageView{
                               messageCopied: $stateViewModel.messageCopied,
                               previousAudioRef: $previousAudioRef,
                               updateMessage: $updateMessage,
-                              showForward: $stateViewModel.showforwardMultipleMessage,
+                              forwardMessageSelected: $forwardMessageSelectedToShow,
                               navigateToLocationDetail: $navigateToLocationDetail,
                               selectedReaction:  $selectedReaction,
                               sentRecationToMessageId: $sentRecationToMessageId,

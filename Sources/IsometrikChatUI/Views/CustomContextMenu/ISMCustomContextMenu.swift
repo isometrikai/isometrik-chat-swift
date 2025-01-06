@@ -42,7 +42,8 @@ struct ISMCustomContextMenu: View {
     @Binding var selectedMessageToReply : MessagesDB
     @Binding var navigateToMessageInfo : Bool
     @Binding var showMessageInfoInsideMessage : Bool
-    @Binding var showForward: Bool
+//    @Binding var showForward: Bool
+    @Binding var forwardMessageSelected : MessagesDB
     @Binding var updateMessage : MessagesDB
     @Binding var messageCopied : Bool
     @State private var navigatetoMessageInfo : Bool = false
@@ -314,7 +315,8 @@ struct ISMCustomContextMenu: View {
                            ISMChatHelper.getMessageType(message: message) != .VideoCall &&
                            message.deletedMessage == false,
                 action: {
-                    showForward = true
+                    forwardMessageSelected = message
+//                    showForward = true
                     dismiss()
                 }
             ),

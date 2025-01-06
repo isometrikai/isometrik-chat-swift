@@ -40,7 +40,7 @@ struct ISMMessageSubView: View {
     @Binding var messageCopied : Bool
     @Binding var previousAudioRef: AudioPlayViewModel?
     @Binding var updateMessage : MessagesDB
-    @Binding var showForward : Bool
+    @Binding var forwardMessageSelected : MessagesDB
     @Binding var navigateToLocationDetail : ISMChatLocationData
     @Binding var selectedReaction : String?
     @Binding var sentRecationToMessageId : String
@@ -1457,7 +1457,7 @@ struct ISMMessageSubView: View {
                             selectedMessageToReply: $selectedMessageToReply,
                             navigateToMessageInfo: $navigatetoMessageInfo,
                             showMessageInfoInsideMessage: $showMessageInfoInsideMessage,
-                            showForward: $showForward,
+                            forwardMessageSelected: $forwardMessageSelected,
                             updateMessage: $updateMessage,
                             messageCopied: $messageCopied,
                             navigateToDeletePopUp: $navigateToDeletePopUp,

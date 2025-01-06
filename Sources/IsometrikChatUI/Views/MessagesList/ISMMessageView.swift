@@ -147,6 +147,7 @@ public struct ISMMessageView: View {
     
     
     @State var updateMessage : MessagesDB = MessagesDB()
+    @State var forwardMessageSelectedToShow : MessagesDB = MessagesDB()
     
     @State var selectedUserToMention : String?
     
@@ -587,6 +588,13 @@ public struct ISMMessageView: View {
                 postIdToNavigate = ""
             }
         })
+        .onChange(of: forwardMessageSelectedToShow) { oldValue, newValue in
+            guard !newValue.messageId.isEmpty, newValue != oldValue else { return }
+            
+            self.forwardMessageView(message: newValue)
+            stateViewModel.showforwardMultipleMessage = true
+            forwardMessageSelectedToShow = MessagesDB()
+        }
         .onChange(of: productIdToNavigate, { _, _ in
             if let productId = productIdToNavigate.productId, !productId.isEmpty{
                 delegate?.navigateToProduct(
@@ -885,6 +893,7 @@ public struct ISMMessageView: View {
                 stateViewModel.showScrollToBottomView = false
             }
             stateViewModel.onLoad = true
+            forwardMessageSelected.removeAll()
         }
     }
     
