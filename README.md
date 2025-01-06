@@ -113,6 +113,43 @@ extension AppDelegate : PKPushRegistryDelegate{
         let viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
         viewModel.sharePost(user: UserDB(), postId: postId/reelId, postURL: "", postCaption: ""){}
         Note - post Url should be image
+        
+12. You can create you own UI, and pass in chat initialize
+                CustomMessageBubbleViewRegistry.shared.register(customType: "AttachmentMessage:Text", view: TextMessageView.self)
+                CustomConversationListCellViewRegistry.shared.register(view: ConversationListMessageView.self)  
+                
+            struct TextMessageView: CustomMessageBubbleViewProvider {
+                static func parseData(_ data: IsometrikChat.MessagesDB) -> IsometrikChat.MessagesDB? {
+                return data
+                }
+                typealias ViewData = MessagesDB
+
+                static func createView(data: MessagesDB) -> some View {
+
+                return Text(data.metaDataJsonString ?? "")
+                .font(.headline)
+            }
+            
+
+            struct ConversationListMessageView: CustomConversationListCellViewProvider {
+                static func parseData(_ data: IsometrikChat.ConversationDB) -> IsometrikChat.ConversationDB? {
+                return data
+                }
+
+                typealias ViewData = ConversationDB
+
+                static func createView(data: ConversationDB) -> some View {
+
+                return Text(data.lastMessageDetails?.body ?? "")
+                .font(.headline)
+             }
+           }
+           
+           
+           You need to pass UI for message bubble for all customTypes
+           In chatProperties pass "useCustomViewRegistered" key as true.
+
+}      
 
 
 # Logout

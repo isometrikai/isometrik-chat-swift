@@ -559,8 +559,15 @@ public struct ISMConversationView : View {
     }
 
     private func conversationSubView(for data: ConversationDB) -> some View {
-        ISMConversationSubView(chat: data, hasUnreadCount: data.unreadMessagesCount > 0)
-            .padding(.horizontal,15).padding(.vertical,10)
+        HStack{
+            if ISMChatSdkUI.getInstance().getChatProperties().useCustomViewRegistered == true{
+                CustomConversationListCellViewRegistry.shared.view(for: data)
+                    .padding(.horizontal,15).padding(.vertical,10)
+            }else{
+                ISMConversationSubView(chat: data, hasUnreadCount: data.unreadMessagesCount > 0)
+                    .padding(.horizontal,15).padding(.vertical,10)
+            }
+        }
     }
 
     private func handlePagination(for data: ConversationDB) {

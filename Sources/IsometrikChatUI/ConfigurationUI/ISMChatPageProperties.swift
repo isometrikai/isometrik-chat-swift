@@ -38,7 +38,8 @@ public struct ISMChatPageProperties {
     public var customMenu: Bool = false
     public var editMessageForOnly15Mins : Bool = false
     public var onTapOfSearchBarOpenNewScreen : Bool = false
-    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, navigateToAppProfileFromMessageList: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool,customJobCardInMessageList : Bool,externalMemberAddInGroup : Bool,captializeMessageListHeaders : Bool? = false,hideLinkPreview : Bool? = false,maskNumberAndEmail : Bool? = false,hideSendButtonUntilEmptyTextView: Bool? = false,gifLogoOnTextViewLeft : Bool? = false,showUserTypeInConversationListAfterName : Bool? = false,showSearchCrossButton:  Bool? = false,chatListSeperatorShouldMeetEnds : Bool? = false,messageListReplyBarMeetEnds : Bool? = false,hideUserProfileImageFromAudioMessage : Bool? = false,hideDocumentPreview : Bool? = false,customShareContactFlow : Bool? = false,shareOnlyCurrentLocation : Bool? = false,replyMessageInsideInputView : Bool? = false,messageInfoBelowMessage : Bool? = false,customMenu :Bool? = false,editMessageForOnly15Mins : Bool? = false,onTapOfSearchBarOpenNewScreen : Bool? = false) {
+    public var useCustomViewRegistered : Bool = false
+    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, navigateToAppProfileFromMessageList: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool,customJobCardInMessageList : Bool,externalMemberAddInGroup : Bool,captializeMessageListHeaders : Bool? = false,hideLinkPreview : Bool? = false,maskNumberAndEmail : Bool? = false,hideSendButtonUntilEmptyTextView: Bool? = false,gifLogoOnTextViewLeft : Bool? = false,showUserTypeInConversationListAfterName : Bool? = false,showSearchCrossButton:  Bool? = false,chatListSeperatorShouldMeetEnds : Bool? = false,messageListReplyBarMeetEnds : Bool? = false,hideUserProfileImageFromAudioMessage : Bool? = false,hideDocumentPreview : Bool? = false,customShareContactFlow : Bool? = false,shareOnlyCurrentLocation : Bool? = false,replyMessageInsideInputView : Bool? = false,messageInfoBelowMessage : Bool? = false,customMenu :Bool? = false,editMessageForOnly15Mins : Bool? = false,onTapOfSearchBarOpenNewScreen : Bool? = false,useCustomViewRegistered: Bool? = false) {
         self.attachments = attachments
         self.features = features
         self.conversationType = conversationType
@@ -68,5 +69,6 @@ public struct ISMChatPageProperties {
         self.customMenu = customMenu ?? false
         self.editMessageForOnly15Mins = editMessageForOnly15Mins ?? false
         self.onTapOfSearchBarOpenNewScreen = onTapOfSearchBarOpenNewScreen ?? false
+        self.useCustomViewRegistered = useCustomViewRegistered ?? false
     }
 }

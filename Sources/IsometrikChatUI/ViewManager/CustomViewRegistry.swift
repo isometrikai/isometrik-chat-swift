@@ -9,7 +9,7 @@ import IsometrikChat
 import SwiftUI
 import Foundation
 
-public protocol CustomMessageViewProvider {
+public protocol CustomMessageBubbleViewProvider {
     associatedtype ViewData
     associatedtype ContentView: View
     
@@ -17,14 +17,15 @@ public protocol CustomMessageViewProvider {
     static func createView(data: ViewData) -> ContentView
 }
 
-public class CustomViewRegistry {
-    public static let shared = CustomViewRegistry()
+
+public class CustomMessageBubbleViewRegistry {
+    public static let shared = CustomMessageBubbleViewRegistry()
     
     private var viewBuilders: [String: (MessagesDB) -> AnyView] = [:]
     
-    public func register<Provider: CustomMessageViewProvider>(
-        for type: String,
-        provider: Provider.Type
+    public func register<Provider: CustomMessageBubbleViewProvider>(
+        customType type: String,
+        view: Provider.Type
     ) {
         viewBuilders[type] = { message in
             if let parsedData = Provider.parseData(message) {
@@ -36,6 +37,43 @@ public class CustomViewRegistry {
     
     public func view(for message: MessagesDB) -> AnyView {
         return viewBuilders[message.customType]?(message) ??
-            AnyView(Text("No view registered for type: \(message.customType)"))
+        AnyView(Text(message.body ?? ""))
     }
 }
+
+
+
+
+
+public protocol CustomConversationListCellViewProvider {
+    associatedtype ViewData
+    associatedtype ContentView: View
+    
+    static func parseData(_ data: ConversationDB) -> ViewData?
+    static func createView(data: ViewData) -> ContentView
+}
+
+public class CustomConversationListCellViewRegistry {
+    public static let shared = CustomConversationListCellViewRegistry()
+    
+    private var defaultViewBuilder: ((ConversationDB) -> AnyView)?
+    
+    public func register<Provider: CustomConversationListCellViewProvider>(
+        view: Provider.Type
+    ) {
+        defaultViewBuilder = { message in
+            if let parsedData = Provider.parseData(message) {
+                return AnyView(Provider.createView(data: parsedData))
+            }
+            return AnyView(Text("Unable to render default view"))
+        }
+    }
+    
+    public func view(for message: ConversationDB) -> AnyView {
+        if let defaultBuilder = defaultViewBuilder {
+            return defaultBuilder(message)
+        }
+        return AnyView(Text(message.lastMessageDetails?.body ?? ""))
+    }
+}
+
