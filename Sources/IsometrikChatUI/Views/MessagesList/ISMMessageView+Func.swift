@@ -17,7 +17,7 @@ extension ISMMessageView{
         let messageIds = deleteMessage.map { $0.messageId }
         func handleDeleteCompletion() {
             stateViewModel.showDeleteMultipleMessage = false
-            realmManager.deleteMessages(msgs: deleteMessage)
+            realmManager.deleteMessages(msgs: deleteMessage,type: type)
             getMessages()
             deleteMessage.removeAll()
         }

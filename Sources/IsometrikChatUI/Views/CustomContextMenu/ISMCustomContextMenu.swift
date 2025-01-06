@@ -323,10 +323,11 @@ struct ISMCustomContextMenu: View {
             ContextMenuAction(
                 label: "Edit",
                 icon: appearance.images.contextMenuedit,
-                condition: showEditOption && !isReceived &&
-                           ISMChatHelper.getMessageType(message: message) == .text &&
-                           fromBroadCastFlow != true &&
-                           message.deletedMessage == false,
+                condition: showEditOption &&
+                !isReceived &&
+                ISMChatHelper.getMessageType(message: message) == .text &&
+                fromBroadCastFlow != true &&
+                message.deletedMessage == false && sentTimeLessThan15MinutesAgo(sentTime: message.sentAt) == true,
                 action: {
                     updateMessage = message
                     dismiss()
@@ -349,9 +350,7 @@ struct ISMCustomContextMenu: View {
                 condition: !isReceived &&
                            ISMChatHelper.getMessageType(message: message) != .AudioCall &&
                            ISMChatHelper.getMessageType(message: message) != .VideoCall &&
-                           message.deletedMessage == false &&
-                           (ISMChatSdkUI.getInstance().getChatProperties().editMessageForOnly15Mins == false ||
-                           isSentTimeLessThan15MinutesAgo(sentTime: message.sentAt)),
+                           message.deletedMessage == false ,
                 action: {
                     if ISMChatSdkUI.getInstance().getChatProperties().messageInfoBelowMessage == false {
                         navigateToMessageInfo = true
@@ -375,17 +374,21 @@ struct ISMCustomContextMenu: View {
     }
 
     
-    func isSentTimeLessThan15MinutesAgo(sentTime: Double) -> Bool {
-        // Convert the sent time (Double) into a Date object
-        let sentDate = Date(timeIntervalSince1970: sentTime)
+    func sentTimeLessThan15MinutesAgo(sentTime: Double) -> Bool {
+        // Check if the "editMessageForOnly15Mins" property is disabled
+        guard ISMChatSdkUI.getInstance().getChatProperties().editMessageForOnly15Mins else {
+            return true
+        }
         
-        // Get the current date and time
-        let currentDate = Date()
-        
-        // Calculate the time difference in seconds
-        let timeDifference = currentDate.timeIntervalSince(sentDate)
-        
-        // Check if the time difference is less than 15 minutes (15 * 60 seconds)
-        return timeDifference <= 15 * 60
+        let sentAtSeconds = sentTime / 1000.0
+            
+            // Get the current date's timestamp in seconds
+            let currentTimeStamp = Date().timeIntervalSince1970
+            
+            // Calculate the time difference
+            let timeDifference = currentTimeStamp - sentAtSeconds
+            
+            // Check if the time difference is less than 15 minutes
+            return timeDifference < 15 * 60
     }
 }

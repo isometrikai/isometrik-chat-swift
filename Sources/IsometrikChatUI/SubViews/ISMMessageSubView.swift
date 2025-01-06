@@ -95,40 +95,44 @@ struct ISMMessageSubView: View {
     var body: some View {
         VStack(alignment: isReceived == true ? .leading : .trailing, spacing: 2){
             if message.deletedMessage == true{
-                ZStack{
-                    VStack(alignment: isReceived == true ? .leading : .trailing, spacing: 2){
-                        HStack{
-                            appearance.images.deletedMessageLogo
-                                .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-                                .frame(width: appearance.imagesSize.deletedMessageLogo.width, height: appearance.imagesSize.deletedMessageLogo.height, alignment: .center)
-                            Text(isReceived == true ? appearance.constantStrings.messageDeletedByOther :  appearance.constantStrings.messageDeletedByMe)
-                                .lineSpacing(8)
-                                .tracking(-0.5 / 1000)
-                                .font(appearance.fonts.messageListMessageDeleted)
-                                .italic()
-                                .foregroundColor(appearance.colorPalette.messageListMessageDeleted)
-                        }
-                        .opacity(0.7)
-                        dateAndStatusView(onImage: false)
-                    }//:VStack
-                    .padding(8)
-                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-                    .overlay(
-                        appearance.messageBubbleType == .BubbleWithOutTail ?
-                        AnyView(
-                            UnevenRoundedRectangle(
-                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-                                style: .circular
-                            )
-                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-                        ) : AnyView(EmptyView())
-                    )
-                }//:ZStack
-                .padding(.vertical,2)
+                if message.userId == userData?.userId{
+                    ZStack{
+                        VStack(alignment: isReceived == true ? .leading : .trailing, spacing: 2){
+                            HStack{
+                                appearance.images.deletedMessageLogo
+                                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                    .frame(width: appearance.imagesSize.deletedMessageLogo.width, height: appearance.imagesSize.deletedMessageLogo.height, alignment: .center)
+                                Text(isReceived == true ? appearance.constantStrings.messageDeletedByOther :  appearance.constantStrings.messageDeletedByMe)
+                                    .lineSpacing(8)
+                                    .tracking(-0.5 / 1000)
+                                    .font(appearance.fonts.messageListMessageDeleted)
+                                    .italic()
+                                    .foregroundColor(appearance.colorPalette.messageListMessageDeleted)
+                            }
+                            .opacity(0.7)
+                            dateAndStatusView(onImage: false)
+                        }//:VStack
+                        .padding(8)
+                        .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                        .overlay(
+                            appearance.messageBubbleType == .BubbleWithOutTail ?
+                            AnyView(
+                                UnevenRoundedRectangle(
+                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                    style: .circular
+                                )
+                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                            ) : AnyView(EmptyView())
+                        )
+                    }//:ZStack
+                    .padding(.vertical,2)
+                }else{
+                    EmptyView()
+                }
             }else{
                 HStack{
                     if ISMChatSdkUI.getInstance().getChatProperties().useCustomViewRegistered == true{

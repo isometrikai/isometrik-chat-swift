@@ -526,12 +526,16 @@ extension RealmManager{
     }
     
     //MARK: - delete selected messages
-    public func deleteMessages(msgs:[MessagesDB])  {
+    public func deleteMessages(msgs:[MessagesDB], type: ISMChatDeleteMessageType)  {
         if let localRealm = localRealm {
             do {
                 try localRealm.write {
                     for obj in msgs {
-                        obj.deletedMessage = true
+                        if type == .DeleteForYou{
+                            obj.isDelete = true // this will not show message after delete in UI
+                        }else{
+                            obj.deletedMessage = true
+                        }
                     }
                 }
             } catch {
