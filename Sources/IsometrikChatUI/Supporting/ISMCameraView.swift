@@ -23,6 +23,8 @@ struct CameraCaptureView: View {
     
     @State private var player: AVPlayer?
     @Binding var sendUrl : URL?
+    
+    @State var showCropper : Bool = false
 
 
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
@@ -67,9 +69,9 @@ struct CameraCaptureView: View {
                 // Top bar with options
                 HStack {
                     Button(action: {
-                        if let capturedURL = capturedURL{
-//                            capturedURL = nil
-                        }else{
+                        if capturedURL != nil {
+                            capturedURL = nil
+                        } else {
                             isShown = false
                         }
                     }) {
@@ -83,7 +85,7 @@ struct CameraCaptureView: View {
                     if let capturedURL = capturedURL{
                         HStack(spacing: 22){
                             Button(action: {
-                                
+                                showCropper = true
                             }) {
                                 appearance.images.rotateImage
                                     .resizable()
@@ -226,6 +228,9 @@ struct CameraCaptureView: View {
                 }
             }
         }
+        .fullScreenCover(isPresented: $showCropper, content: {
+            ISMImageCropper(imageUrl: $capturedURL, isShowing: $showCropper)
+        })
         .sheet(isPresented: $showGallery) {
             // Gallery picker view
             PhotoPicker()

@@ -11,7 +11,7 @@ import IsometrikChat
 
 public struct ISMImageCropper : UIViewControllerRepresentable{
     public typealias Coordinator = ImageEditorCoordinator
-    @Binding var imageUrl : URL
+    @Binding var imageUrl : URL?
     @Binding var isShowing : Bool
     
     public func makeCoordinator() -> ImageEditorCoordinator {
@@ -20,7 +20,7 @@ public struct ISMImageCropper : UIViewControllerRepresentable{
     public func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
     }
     public func makeUIViewController(context: UIViewControllerRepresentableContext<ISMImageCropper>) -> Mantis.CropViewController {
-        let editor = Mantis.cropViewController(image: UIImage(contentsOfFile: imageUrl.path) ?? UIImage())
+        let editor = Mantis.cropViewController(image: UIImage(contentsOfFile: imageUrl?.path ?? "") ?? UIImage())
         editor.delegate = context.coordinator
         return editor
     }
@@ -39,9 +39,9 @@ public class ImageEditorCoordinator : NSObject, CropViewControllerDelegate{
         
     }
     
-    @Binding var imageUrl : URL
+    @Binding var imageUrl : URL?
     @Binding var isShowing : Bool
-    public init(imageUrl: Binding<URL>, isShowing: Binding<Bool>) {
+    public init(imageUrl: Binding<URL?>, isShowing: Binding<Bool>) {
         _imageUrl = imageUrl
         _isShowing = isShowing
     }
