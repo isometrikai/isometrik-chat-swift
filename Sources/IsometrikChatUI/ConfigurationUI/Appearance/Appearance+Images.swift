@@ -204,6 +204,7 @@ public struct ISMChatImages {
     public var addStickerToImage : Image = loadImageSafely(with: "addStickerToCameraImage")
     public var addTextToImage : Image = loadImageSafely(with: "addTextToCameraImage")
     public var drawToImage : Image = loadImageSafely(with: "drawOnCameraImage")
+    public var undoLastStroke : Image = loadImageSafely(with: "undoLast")
     
     public init(){}
     

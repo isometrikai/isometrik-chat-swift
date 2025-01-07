@@ -13,7 +13,7 @@ import IsometrikChat
 
 struct ISMImageDraw: View {
     //MARK:  - PROPERTIES
-    @Binding var url : URL
+    @Binding var url : URL?
     @State var canvas = PKCanvasView()
     @State var imageData : Data = Data(count: 0)
     @State var toolpicker = PKToolPicker()
@@ -34,7 +34,9 @@ struct ISMImageDraw: View {
                     )
                 }
             }.onAppear(perform: {
-                fetchData(from: url)
+                if let url = url{
+                    fetchData(from: url)
+                }
             })
             .navigationBarBackButtonHidden()
             .navigationBarTitleDisplayMode(.inline)

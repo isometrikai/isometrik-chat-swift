@@ -9,6 +9,7 @@ import UIKit
 import SwiftUI
 import AVFoundation
 import IsometrikChat
+import PencilKit
 
 struct CameraCaptureView: View {
     @State private var isRecording = false
@@ -25,6 +26,11 @@ struct CameraCaptureView: View {
     @Binding var sendUrl : URL?
     
     @State var showCropper : Bool = false
+    @State var navigateToDraw : Bool = false
+    @State var imageData : Data = Data(count: 0)
+    @State var canvas = PKCanvasView()
+    @State var toolpicker = PKToolPicker()
+    @State var rect : CGRect = .zero
 
 
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
@@ -32,32 +38,42 @@ struct CameraCaptureView: View {
     var body: some View {
         ZStack {
             if let capturedURL = capturedURL{
-                if ISMChatHelper.isVideoString(media: capturedURL.absoluteString){
-                    ZStack {
-                        // Video Player
+                if navigateToDraw == true{
+                    GeometryReader { geometry in
+                        CanvasView(canvas: $canvas, imageData: $imageData, toolPicker:  $toolpicker, rect: geometry.size)
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .onAppear {
+                                rect = CGRect(origin: .zero, size: geometry.size)
+                            }
+                    }
+                }else{
+                    if ISMChatHelper.isVideoString(media: capturedURL.absoluteString){
+                        ZStack {
+                            // Video Player
+                            GeometryReader { geometry in
+                                VideoPlayer(player: player)
+                                    .scaledToFill()
+                                    .frame(width: geometry.size.width, height: geometry.size.height)
+                                    .clipped()
+                            }
+                        }
+                        .onAppear {
+                            player = AVPlayer(url: capturedURL)
+                            player?.play()
+                        }
+                        .onDisappear {
+                            player?.pause()
+                        }
+                    }else{
                         GeometryReader { geometry in
-                            VideoPlayer(player: player)
+                            ISMChatImageCahcingManger.viewImage(url: capturedURL.absoluteString ?? "")
+                                .resizable()
                                 .scaledToFill()
                                 .frame(width: geometry.size.width, height: geometry.size.height)
                                 .clipped()
+                                .ignoresSafeArea()
+                                .edgesIgnoringSafeArea(.all)
                         }
-                    }
-                    .onAppear {
-                        player = AVPlayer(url: capturedURL)
-                        player?.play()
-                    }
-                    .onDisappear {
-                        player?.pause()
-                    }
-                }else{
-                    GeometryReader { geometry in
-                        ISMChatImageCahcingManger.viewImage(url: capturedURL.absoluteString ?? "")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: geometry.size.width, height: geometry.size.height)
-                            .clipped()
-                            .ignoresSafeArea()
-                            .edgesIgnoringSafeArea(.all)
                     }
                 }
             }else{
@@ -69,10 +85,14 @@ struct CameraCaptureView: View {
                 // Top bar with options
                 HStack {
                     Button(action: {
-                        if capturedURL != nil {
-                            capturedURL = nil
-                        } else {
-                            isShown = false
+                        if navigateToDraw == true{
+                            cancelDrawImage()
+                        }else{
+                            if capturedURL != nil {
+                                capturedURL = nil
+                            } else {
+                                isShown = false
+                            }
                         }
                     }) {
                         appearance.images.whiteCross
@@ -83,36 +103,59 @@ struct CameraCaptureView: View {
                     Spacer()
 
                     if let capturedURL = capturedURL{
-                        HStack(spacing: 22){
-                            Button(action: {
-                                showCropper = true
-                            }) {
-                                appearance.images.rotateImage
-                                    .resizable()
-                                    .frame(width: 20, height: 20, alignment: .center)
-                            }
-                            Button(action: {
-                                
-                            }) {
-                                appearance.images.addStickerToImage
-                                    .resizable()
-                                    .frame(width: 20, height: 20, alignment: .center)
-                            }
-                            Button(action: {
-                                
-                            }) {
-                                appearance.images.addTextToImage
-                                    .resizable()
-                                    .frame(width: 20, height: 20, alignment: .center)
-                            }
-                            Button(action: {
-                                
-                            }) {
-                                appearance.images.drawToImage
-                                    .resizable()
-                                    .frame(width: 20, height: 20, alignment: .center)
-                            }
-                        }.padding(.trailing,15)
+                        if navigateToDraw == true{
+                            HStack(spacing: 22){
+                                Button(action: {
+                                    undoLastStroke()
+                                }) {
+                                    appearance.images.undoLastStroke
+                                        .resizable()
+                                        .frame(width: 24, height: 16, alignment: .center)
+                                }
+                                Button(action: {
+                                    saveAfterDraw()
+                                }) {
+                                    Text("Done")
+                                        .font(appearance.fonts.contactMessageTitle)
+                                        .foregroundColor(Color(hex: "#163300"))
+                                        .frame(width: 69, height: 32, alignment: .center)
+                                        .background(appearance.colorPalette.chatListUnreadMessageCountBackground)
+                                        .cornerRadius(16)
+                                        .padding(.horizontal,0.5)
+                                }
+                            }.padding(.trailing,15)
+                        }else{
+                            HStack(spacing: 22){
+                                Button(action: {
+                                    showCropper = true
+                                }) {
+                                    appearance.images.rotateImage
+                                        .resizable()
+                                        .frame(width: 20, height: 20, alignment: .center)
+                                }
+                                Button(action: {
+                                    
+                                }) {
+                                    appearance.images.addStickerToImage
+                                        .resizable()
+                                        .frame(width: 20, height: 20, alignment: .center)
+                                }
+                                Button(action: {
+                                    
+                                }) {
+                                    appearance.images.addTextToImage
+                                        .resizable()
+                                        .frame(width: 20, height: 20, alignment: .center)
+                                }
+                                Button(action: {
+                                    navigateToDraw = true
+                                }) {
+                                    appearance.images.drawToImage
+                                        .resizable()
+                                        .frame(width: 20, height: 20, alignment: .center)
+                                }
+                            }.padding(.trailing,15)
+                        }
                     }else{
                         Button(action: {
                             // Filter action
@@ -228,6 +271,11 @@ struct CameraCaptureView: View {
                 }
             }
         }
+        .onChange(of: capturedURL, {
+            if let capturedURL = capturedURL{
+                fetchData(from: capturedURL)
+            }
+        })
         .fullScreenCover(isPresented: $showCropper, content: {
             ISMImageCropper(imageUrl: $capturedURL, isShowing: $showCropper)
         })
@@ -235,6 +283,51 @@ struct CameraCaptureView: View {
             // Gallery picker view
             PhotoPicker()
         }
+    }
+    
+    
+    private func undoLastStroke() {
+        var strokes = canvas.drawing.strokes
+        if !strokes.isEmpty {
+            strokes.removeLast()
+            canvas.drawing = PKDrawing(strokes: strokes)
+        }
+    }
+    
+    func cancelDrawImage(){
+        canvas = PKCanvasView()
+        navigateToDraw = false
+    }
+    
+    func saveAfterDraw(){
+        UIGraphicsBeginImageContextWithOptions(self.rect.size, false, 1)
+        canvas.drawHierarchy(in: CGRect(origin: .zero, size: self.rect.size), afterScreenUpdates: true)
+        let generatedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        if let image = generatedImage{
+            let newUrl = ISMChatHelper.createImageURL()
+            if let imageData = image.jpegData(compressionQuality: 1.0) {
+                do {
+                    try imageData.write(to: newUrl)
+                    capturedURL = newUrl
+                    navigateToDraw = false
+                } catch {
+                    print("Error writing cropped image: \(error)")
+                    navigateToDraw = false
+                }
+            }
+            canvas = PKCanvasView()
+        }
+    }
+    
+    func fetchData(from url: URL) {
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let data = data {
+                DispatchQueue.main.async {
+                    self.imageData = data
+                }
+            }
+        }.resume()
     }
     
     private func togglePlayPause() {
