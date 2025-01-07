@@ -77,3 +77,37 @@ public class CustomConversationListCellViewRegistry {
     }
 }
 
+
+public protocol CustomMessageViewHeaderProvider {
+    associatedtype ViewData
+    associatedtype ContentView: View
+    
+    static func parseData(_ data: String) -> ViewData?
+    static func createView(data: ViewData) -> ContentView
+}
+
+public class CustomMessageViewHeaderRegistry {
+    public static let shared = CustomMessageViewHeaderRegistry()
+    
+    private var defaultViewBuilder: ((String) -> AnyView)?
+    
+    public func register<Provider: CustomMessageViewHeaderProvider>(
+        view: Provider.Type
+    ) {
+        defaultViewBuilder = { message in
+            if let parsedData = Provider.parseData(message) {
+                return AnyView(Provider.createView(data: parsedData))
+            }
+            return AnyView(Text("Unable to render default view"))
+        }
+    }
+    
+    public func view(for data: String) -> AnyView {
+        if let defaultBuilder = defaultViewBuilder {
+            return defaultBuilder(data)
+        }
+        return AnyView(Text(""))
+    }
+}
+
+

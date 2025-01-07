@@ -203,6 +203,7 @@ public struct ISMMessageView: View {
                                 }
                         }
                     }
+                    CustomMessageViewHeaderRegistry.shared.view(for: "")
                     ZStack{
                         GeometryReader{ reader in
                             if let image = ISMChatSdkUI.getInstance().getAppAppearance().appearance.messageListBackgroundImage ,!image.isEmpty{
