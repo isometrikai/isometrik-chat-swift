@@ -95,7 +95,7 @@ struct ISMDocumentViewer: View {
         }) {
             appearance.images.CloseSheet
                 .resizable()
-                .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
+                .frame(width: 18, height: 18)
         }
     }
     
