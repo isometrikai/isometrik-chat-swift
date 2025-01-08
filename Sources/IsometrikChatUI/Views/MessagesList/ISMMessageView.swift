@@ -256,7 +256,8 @@ public struct ISMMessageView: View {
                                     } else {
                                         //--------SLOW SCROLL---------//
                                     }
-                                }).highPriorityGesture(DragGesture())
+                                })
+//                                .highPriorityGesture(DragGesture())
                             }
                         }.padding(.bottom,5)
                         //No Message View
