@@ -15,6 +15,7 @@ public protocol ISMConversationViewDelegate{
     func navigateToMessageList(selectedUserToNavigate : UserDB?,conversationId : String?,isGroup : Bool?,groupImage : String?,groupName : String?)
     func navigateToUsersListToCreateChat(conversationType : ISMChatConversationTypeConfig)
     func navigateToCustomSearchOnTapOfSearchBar()
+    func navigateToPreviousScreen()
 }
 
 public struct ISMConversationView : View {
@@ -75,6 +76,7 @@ public struct ISMConversationView : View {
     @State public var isTextFieldFocused : Bool = false
     
     @State var path = NavigationPath()
+    @State var offset = CGSize.zero
     
     public init(delegate : ISMConversationViewDelegate? = nil){
         self.delegate = delegate
@@ -442,6 +444,15 @@ public struct ISMConversationView : View {
 //            }
 //        }
     
+    func detectDirection(value: DragGesture.Value) -> SwipeHVDirection {
+        if value.translation.width < -30 {
+            return .left
+        } else if value.translation.width > 30 {
+            return .right
+        } else {
+            return .none
+        }
+    }
     func onload(){
         self.viewModel.resetdata()
         self.viewModel.clearMessages()
@@ -526,11 +537,17 @@ public struct ISMConversationView : View {
 //            .onDelete(perform: handleDelete)
             .listRowBackground(Color.clear)
         }
-        .gesture(
-            DragGesture().onChanged { _ in
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        .gesture(DragGesture().onChanged { value in
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            offset = value.translation
+        }.onEnded { value in
+            offset = .zero
+            ISMChatHelper.print("value ",value.translation.width)
+            let direction = self.detectDirection(value: value)
+            if direction == .right {
+                self.delegate?.navigateToPreviousScreen()
             }
-        )
+        })
         .listStyle(.plain)
         .keyboardType(.default)
         .textContentType(.oneTimeCode)

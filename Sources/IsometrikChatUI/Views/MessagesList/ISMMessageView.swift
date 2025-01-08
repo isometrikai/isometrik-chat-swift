@@ -58,6 +58,7 @@ public struct ISMMessageView: View {
     let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
     let onlinetimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     @State var OnMessageList : Bool = false
+    @State var offset = CGSize.zero
     
     
     @State var navigateToMediaSliderId : String = ""
@@ -255,6 +256,14 @@ public struct ISMMessageView: View {
                                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                                     } else {
                                         //--------SLOW SCROLL---------//
+                                    }
+                                    offset = value.translation
+                                }.onEnded { value in
+                                    offset = .zero
+                                    ISMChatHelper.print("value ",value.translation.width)
+                                    let direction = self.detectDirection(value: value)
+                                    if direction == .right {
+                                        self.backButtonAction()
                                     }
                                 })
 //                                .highPriorityGesture(DragGesture())

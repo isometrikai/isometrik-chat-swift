@@ -1502,31 +1502,32 @@ struct ISMMessageSubView: View {
         .frame(maxWidth: .infinity, alignment: isReceived ? .leading : .trailing)
         .multilineTextAlignment(.leading) // Aligning the text based on message type
         
-//        .gesture(
-//            DragGesture()
-//                .onChanged { gesture in
-//                    if !message.deletedMessage{
-//                        offset = gesture.translation
-//                    }
-//                }
-//                .onEnded { value in
-//                    if !message.deletedMessage{
-//                        offset = .zero
-//                        ISMChatHelper.print("value ",value.translation.width)
-//                        let direction = self.detectDirection(value: value)
-//                        if direction == .left {
-//                            if showReplyOption{
-//                                selectedMessageToReply = message
-//                                UINotificationFeedbackGenerator().notificationOccurred(.warning)
-//                            }
-//                        }else if direction == .right{
+        .gesture(
+            DragGesture()
+                .onChanged { gesture in
+                    if !message.deletedMessage{
+                        offset = gesture.translation
+                    }
+                }
+                .onEnded { value in
+                    if !message.deletedMessage{
+                        offset = .zero
+                        ISMChatHelper.print("value ",value.translation.width)
+                        let direction = self.detectDirection(value: value)
+                        if direction == .left {
+                            if showReplyOption{
+                                selectedMessageToReply = message
+                                UINotificationFeedbackGenerator().notificationOccurred(.warning)
+                            }
+                        }
+//                        else if direction == .right{
 //                            if !isReceived{
 //                                navigatetoMessageInfo = true
 //                            }
 //                        }
-//                    }
-//                }
-//        )
+                    }
+                }
+        )
         .onAppear( perform: {
             self.navigateToInfo = false
             if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.File.value && message.customType == ISMChatMediaType.ReplyText.value{
