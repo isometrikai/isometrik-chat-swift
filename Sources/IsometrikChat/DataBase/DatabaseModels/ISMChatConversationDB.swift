@@ -39,8 +39,8 @@ public class ConversationDB: Object, ObjectKeyIdentifiable {
     
     @Persisted public var lastMessageDetails :LastMessageDB?
     @Persisted public var deletedMessage : Bool = false
-    @Persisted var metaData : ConversationMetaData?
-    @Persisted var metaDataJson : String?
+    @Persisted public var metaData : ConversationMetaData?
+    @Persisted public var metaDataJson : String?
     
     @Persisted public var lastInputText : String?
     
@@ -49,9 +49,9 @@ public class ConversationDB: Object, ObjectKeyIdentifiable {
     }
 }
 
-class ConversationMetaData : Object, ObjectKeyIdentifiable {
-    @Persisted var chatStatus : String?
-    @Persisted var membersIds : RealmSwift.List<String>
+public class ConversationMetaData : Object, ObjectKeyIdentifiable {
+    @Persisted public var chatStatus : String?
+    @Persisted public var membersIds : RealmSwift.List<String>
 }
 
 

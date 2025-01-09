@@ -337,18 +337,35 @@ public struct ISMConversationView : View {
                 if ISMChatSdkUI.getInstance().getChatProperties().createConversationFromChatList == true{
                     //create conversation button
                     if ISMChatSdk.getInstance().getFramework() == .UIKit{
-                        VStack {
-                            Spacer()
-                            HStack {
+                        if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == true && conversationData.count > 0{
+                            VStack {
                                 Spacer()
-                                Button(action: {
-                                    showMenuForConversationType.toggle()
-                                }, label: {
-                                    appearance.images.addConversation
-                                        .resizable()
-                                        .frame(width: 58, height: 58)
-                                })
-                                .padding()
+                                HStack {
+                                    Spacer()
+                                    Button(action: {
+                                        showMenuForConversationType.toggle()
+                                    }, label: {
+                                        appearance.images.addConversation
+                                            .resizable()
+                                            .frame(width: 58, height: 58)
+                                    })
+                                    .padding()
+                                }
+                            }
+                        }else if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == false{
+                            VStack {
+                                Spacer()
+                                HStack {
+                                    Spacer()
+                                    Button(action: {
+                                        showMenuForConversationType.toggle()
+                                    }, label: {
+                                        appearance.images.addConversation
+                                            .resizable()
+                                            .frame(width: 58, height: 58)
+                                    })
+                                    .padding()
+                                }
                             }
                         }
                     }else{
