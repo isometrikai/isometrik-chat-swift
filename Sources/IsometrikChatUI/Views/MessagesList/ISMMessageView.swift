@@ -204,7 +204,9 @@ public struct ISMMessageView: View {
                                 }
                         }
                     }
-                    CustomMessageViewHeaderRegistry.shared.view(for: "")
+                    if let conversationDetail = conversationDetail{
+                        CustomMessageViewHeaderRegistry.shared.view(for: conversationDetail)
+                    }
                     ZStack{
                         GeometryReader{ reader in
                             if let image = ISMChatSdkUI.getInstance().getAppAppearance().appearance.messageListBackgroundImage ,!image.isEmpty{

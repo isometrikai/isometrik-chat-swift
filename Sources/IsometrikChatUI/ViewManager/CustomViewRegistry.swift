@@ -82,14 +82,14 @@ public protocol CustomMessageViewHeaderProvider {
     associatedtype ViewData
     associatedtype ContentView: View
     
-    static func parseData(_ data: String) -> ViewData?
+    static func parseData(_ data: ISMChatConversationDetail) -> ViewData?
     static func createView(data: ViewData) -> ContentView
 }
 
 public class CustomMessageViewHeaderRegistry {
     public static let shared = CustomMessageViewHeaderRegistry()
     
-    private var defaultViewBuilder: ((String) -> AnyView)?
+    private var defaultViewBuilder: ((ISMChatConversationDetail) -> AnyView)?
     
     public func register<Provider: CustomMessageViewHeaderProvider>(
         view: Provider.Type
@@ -102,7 +102,7 @@ public class CustomMessageViewHeaderRegistry {
         }
     }
     
-    public func view(for data: String) -> AnyView {
+    public func view(for data: ISMChatConversationDetail) -> AnyView {
         if let defaultBuilder = defaultViewBuilder {
             return defaultBuilder(data)
         }
