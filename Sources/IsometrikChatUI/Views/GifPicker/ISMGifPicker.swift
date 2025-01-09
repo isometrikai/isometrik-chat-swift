@@ -20,13 +20,13 @@ struct ISMGiphyPicker: UIViewControllerRepresentable {
         Giphy.configure(apiKey:giphyApiKey)
         let giphy = GiphyViewController()
         giphy.delegate = context.coordinator
-        giphy.mediaTypeConfig = [.stickers,.emoji,.gifs]
+        giphy.mediaTypeConfig = [.recents,.stickers,.emoji,.gifs]
         GiphyViewController.trayHeightMultiplier = 1.0
         giphy.swiftUIEnabled = true
         giphy.shouldLocalizeSearch = true
         giphy.dimBackground = true
         giphy.modalPresentationStyle = .currentContext
-        giphy.theme = GPHTheme(type: .light)
+        giphy.theme = GPHTheme(type: .lightBlur)
         return giphy
     }
     
