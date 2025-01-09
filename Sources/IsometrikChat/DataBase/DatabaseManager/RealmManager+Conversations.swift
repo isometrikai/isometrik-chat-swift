@@ -209,6 +209,7 @@ extension RealmManager {
                         metaData.membersIds.append(objectsIn: membersIds)
                     }
                     conversation.metaData = metaData
+                    conversation.metaDataJson = value.metaDataJson ?? ""
                     
                     let config = ConfigDB()
                     config.typingEvents = value.config?.typingEvents
@@ -488,6 +489,7 @@ extension RealmManager {
                     listToUpdate.first?.privateOneToOne = obj.privateOneToOne ?? false
                     listToUpdate.first?.messagingDisabled = false
                     listToUpdate.first?.isGroup = obj.isGroup ?? false
+                    listToUpdate.first?.metaDataJson = obj.metaDataJson ?? ""
                     
                     let config = ConfigDB()
                     config.pushNotifications = obj.config?.pushNotifications

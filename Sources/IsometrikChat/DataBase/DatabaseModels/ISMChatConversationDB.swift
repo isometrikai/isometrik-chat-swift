@@ -40,6 +40,7 @@ public class ConversationDB: Object, ObjectKeyIdentifiable {
     @Persisted public var lastMessageDetails :LastMessageDB?
     @Persisted public var deletedMessage : Bool = false
     @Persisted var metaData : ConversationMetaData?
+    @Persisted var metaDataJson : String?
     
     @Persisted public var lastInputText : String?
     

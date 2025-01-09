@@ -40,6 +40,7 @@ public struct ISMChatConversationInDetail : Codable{
     public var conversationImageUrl : String?
     public var config : ISMChatConfigConversation?
     public var metaData : ISMChatUserMetaData?
+    public var metaDataJson : String?
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         opponentDetails = try? container.decode(ISMChatUser.self, forKey: .opponentDetails)
@@ -61,6 +62,7 @@ public struct ISMChatConversationInDetail : Codable{
         members = try? container.decode([ISMChatGroupMember].self, forKey: .members)
         config = try? container.decode(ISMChatConfigConversation.self, forKey: .config)
         metaData = try? container.decode(ISMChatUserMetaData.self, forKey: .metaData)
+        metaDataJson = try? container.decode(String.self, forKey: .metaData)
     }
 }
 

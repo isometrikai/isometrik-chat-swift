@@ -84,6 +84,7 @@ public struct ISMChatConversationsDetail : Identifiable, Codable{
     public var members : [ISMChatGroupMember]?
     public var config : ISMChatConfigConversation?
     public var metaData : ISMChatUserMetaData?
+    public var metaDataJson : String?
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         opponentDetails = try? container.decodeIfPresent(ISMChatUser.self, forKey: .opponentDetails)
@@ -104,8 +105,9 @@ public struct ISMChatConversationsDetail : Identifiable, Codable{
         members = try? container.decodeIfPresent([ISMChatGroupMember].self, forKey: .members)
         config = try? container.decodeIfPresent(ISMChatConfigConversation.self, forKey: .config)
         metaData = try? container.decodeIfPresent(ISMChatUserMetaData.self, forKey: .metaData)
+        metaDataJson = try? container.decodeIfPresent(String.self, forKey: .metaData)
     }
-    public init(opponentDetails : ISMChatUser? = nil,lastMessageDetails : ISMChatLastMessage? = nil,unreadMessagesCount : Int? = nil,typing : Bool? = nil,customType : String? = nil,isGroup : Bool? = nil,membersCount : Int? = nil,lastMessageSentAt : Int? = nil,createdAt : Double? = nil,conversationTitle : String? = nil,conversationImageUrl : String? = nil,createdBy : String? = nil,createdByUserName : String? = nil,privateOneToOne : Bool? = nil,conversationId : String? = nil,members : [ISMChatGroupMember]? = nil,config : ISMChatConfigConversation? = nil,metaData : ISMChatUserMetaData? = nil) {
+    public init(opponentDetails : ISMChatUser? = nil,lastMessageDetails : ISMChatLastMessage? = nil,unreadMessagesCount : Int? = nil,typing : Bool? = nil,customType : String? = nil,isGroup : Bool? = nil,membersCount : Int? = nil,lastMessageSentAt : Int? = nil,createdAt : Double? = nil,conversationTitle : String? = nil,conversationImageUrl : String? = nil,createdBy : String? = nil,createdByUserName : String? = nil,privateOneToOne : Bool? = nil,conversationId : String? = nil,members : [ISMChatGroupMember]? = nil,config : ISMChatConfigConversation? = nil,metaData : ISMChatUserMetaData? = nil,metaDataJson: String? = nil) {
         self.opponentDetails = opponentDetails
         self.lastMessageDetails = lastMessageDetails
         self.unreadMessagesCount = unreadMessagesCount
@@ -124,6 +126,7 @@ public struct ISMChatConversationsDetail : Identifiable, Codable{
         self.members = members
         self.config = config
         self.metaData = metaData
+        self.metaDataJson = metaDataJson
     }
 }
 

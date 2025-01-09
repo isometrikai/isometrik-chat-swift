@@ -253,7 +253,8 @@ extension ISMMessageView{
                         conversationId: conversationID,
                         members: self.conversationDetail?.conversationDetails?.members,
                         config: self.conversationDetail?.conversationDetails?.config,
-                        metaData: self.conversationDetail?.conversationDetails?.metaData
+                        metaData: self.conversationDetail?.conversationDetails?.metaData,
+                        metaDataJson: self.conversationDetail?.conversationDetails?.metaDataJson
                     )
                     realmManager.addConversation(obj: [conv])
                     // added this message locally for end to end encryption 
