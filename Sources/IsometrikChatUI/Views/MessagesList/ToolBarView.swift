@@ -295,18 +295,18 @@ struct MainToolBarView : View {
     private var audioButton: some View {
         ZStack {
             if !audioLocked {
-//                if chatViewModel.isRecording {
-//                    VStack {
-//                        appearance.images.audioLock
-//                            .padding()
-//                        Spacer()
-//                    }
-//                    .background(appearance.colorPalette.messageListToolBarBackground)
-//                    .cornerRadius(20, corners: .topLeft)
-//                    .cornerRadius(20, corners: .topRight)
-//                    .frame(width: 30, height: 50)
-//                    .offset(y: -50)
-//                }
+                if chatViewModel.isRecording {
+                    VStack {
+                        appearance.images.audioLock
+                            .padding()
+                        Spacer()
+                    }
+                    .background(appearance.colorPalette.messageListToolBarBackground)
+                    .cornerRadius(20, corners: .topLeft)
+                    .cornerRadius(20, corners: .topRight)
+                    .frame(width: 30, height: 50)
+                    .offset(y: -50)
+                }
                 AudioMessageButton(height: 20)
             }
         }
