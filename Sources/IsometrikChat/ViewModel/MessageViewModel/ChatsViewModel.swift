@@ -96,13 +96,16 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
   
     
     //MARK: - create conversation
-    public func createConversation(user : UserDB,chatStatus : String? = nil,completion:@escaping(ISMChatCreateConversationResponse?,ISMChatNewAPIError?)->()){
+    public func createConversation(user : UserDB,chatStatus : String? = nil,metaData : [String : Any]? = nil,completion:@escaping(ISMChatCreateConversationResponse?,ISMChatNewAPIError?)->()){
         var body : [String : Any]
         var memberIds : [String] = []
         memberIds.append(ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId ?? "")
         memberIds.append(user.userId ?? "")
         
-        let metaDataValue : [String : Any] = ["chatStatus" : chatStatus ?? "","membersIds" : memberIds]
+        var metaDataValue : [String : Any] = ["chatStatus" : chatStatus ?? "","membersIds" : memberIds]
+        if let metaData = metaData {
+            metaDataValue.merge(metaData) { current, _ in current }
+        }
         body = ["typingEvents" : true ,
                 "readEvents" : true,
                 "pushNotifications" : true,

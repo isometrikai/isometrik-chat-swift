@@ -78,7 +78,6 @@ public struct ISMChatConversationInDetail : Codable{
             metaDataJson = nil
         }
         metaData = try? container.decode(ISMChatUserMetaData.self, forKey: .metaData)
-        metaDataJson = try? container.decode(String.self, forKey: .metaData)
     }
 }
 
