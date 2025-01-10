@@ -83,8 +83,9 @@ public struct ISMChatConversationsDetail : Identifiable, Codable{
     public var conversationId : String?
     public var members : [ISMChatGroupMember]?
     public var config : ISMChatConfigConversation?
-    public var metaData : ISMChatUserMetaData?
     public var metaDataJson : String?
+    public var metaData : ISMChatUserMetaData?
+    
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         opponentDetails = try? container.decodeIfPresent(ISMChatUser.self, forKey: .opponentDetails)
@@ -115,7 +116,6 @@ public struct ISMChatConversationsDetail : Identifiable, Codable{
             metaDataJson = nil
         }
         metaData = try? container.decodeIfPresent(ISMChatUserMetaData.self, forKey: .metaData)
-        metaDataJson = try? container.decodeIfPresent(String.self, forKey: .metaData)
     }
     public init(opponentDetails : ISMChatUser? = nil,lastMessageDetails : ISMChatLastMessage? = nil,unreadMessagesCount : Int? = nil,typing : Bool? = nil,customType : String? = nil,isGroup : Bool? = nil,membersCount : Int? = nil,lastMessageSentAt : Int? = nil,createdAt : Double? = nil,conversationTitle : String? = nil,conversationImageUrl : String? = nil,createdBy : String? = nil,createdByUserName : String? = nil,privateOneToOne : Bool? = nil,conversationId : String? = nil,members : [ISMChatGroupMember]? = nil,config : ISMChatConfigConversation? = nil,metaData : ISMChatUserMetaData? = nil,metaDataJson: String? = nil) {
         self.opponentDetails = opponentDetails
