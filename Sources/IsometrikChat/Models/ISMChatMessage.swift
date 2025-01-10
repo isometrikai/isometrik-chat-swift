@@ -457,6 +457,8 @@ public struct ISMChatProductMetaData : Codable{
 }
 
 
+import Foundation
+
 public struct AnyCodable: Codable {
     public let value: Any
 
@@ -464,9 +466,13 @@ public struct AnyCodable: Codable {
         self.value = value
     }
 
+    // Decoding
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        if let value = try? container.decode(Bool.self) {
+        
+        if container.decodeNil() {
+            self.value = NSNull()
+        } else if let value = try? container.decode(Bool.self) {
             self.value = value
         } else if let value = try? container.decode(Int.self) {
             self.value = value
@@ -483,8 +489,10 @@ public struct AnyCodable: Codable {
         }
     }
 
+    // Encoding
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
+        
         if let value = value as? Bool {
             try container.encode(value)
         } else if let value = value as? Int {
@@ -497,12 +505,15 @@ public struct AnyCodable: Codable {
             try container.encode(value.map { AnyCodable($0) })
         } else if let value = value as? [String: Any] {
             try container.encode(value.mapValues { AnyCodable($0) })
+        } else if value is NSNull {
+            try container.encodeNil()
         } else {
             throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: encoder.codingPath, debugDescription: "Unsupported type"))
         }
     }
 }
 
+// Equatable
 extension AnyCodable: Equatable {
     public static func == (lhs: AnyCodable, rhs: AnyCodable) -> Bool {
         switch (lhs.value, rhs.value) {
@@ -518,12 +529,15 @@ extension AnyCodable: Equatable {
             return lhs == rhs
         case let (lhs as [String: AnyCodable], rhs as [String: AnyCodable]):
             return lhs == rhs
+        case (is NSNull, is NSNull):
+            return true
         default:
             return false
         }
     }
 }
 
+// CustomStringConvertible
 extension AnyCodable: CustomStringConvertible {
     public var description: String {
         if let value = value as? CustomStringConvertible {

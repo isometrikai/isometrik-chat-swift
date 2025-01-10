@@ -113,6 +113,12 @@ public struct ISMChatConversationsDetail : Identifiable, Codable{
                 metaDataJson = jsonString
             }
         } else {
+            do {
+                let rawMetaData = try container.decode(AnyCodable.self, forKey: .metaData)
+                print("Decoded rawMetaData: \(rawMetaData)")
+            } catch {
+                print("Failed to decode metaData: \(error)")
+            }
             metaDataJson = nil
         }
         metaData = try? container.decodeIfPresent(ISMChatUserMetaData.self, forKey: .metaData)
