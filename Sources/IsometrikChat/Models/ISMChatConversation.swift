@@ -104,6 +104,16 @@ public struct ISMChatConversationsDetail : Identifiable, Codable{
         conversationId = try? container.decodeIfPresent(String.self, forKey: .conversationId)
         members = try? container.decodeIfPresent([ISMChatGroupMember].self, forKey: .members)
         config = try? container.decodeIfPresent(ISMChatConfigConversation.self, forKey: .config)
+        // Extract raw JSON string for metaData
+        if let rawMetaData = try? container.decodeIfPresent(AnyCodable.self, forKey: .metaData) {
+            let encoder = JSONEncoder()
+            if let rawData = try? encoder.encode(rawMetaData),
+               let jsonString = String(data: rawData, encoding: .utf8) {
+                metaDataJson = jsonString
+            }
+        } else {
+            metaDataJson = nil
+        }
         metaData = try? container.decodeIfPresent(ISMChatUserMetaData.self, forKey: .metaData)
         metaDataJson = try? container.decodeIfPresent(String.self, forKey: .metaData)
     }
