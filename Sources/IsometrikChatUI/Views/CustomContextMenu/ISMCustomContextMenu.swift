@@ -116,11 +116,10 @@ struct ISMCustomContextMenu: View {
                                     Spacer()
                                     action.icon
                                         .resizable()
+                                        .aspectRatio(contentMode: .fit)
                                         .frame(
-                                            width: action.label == "Delete" ? appearance.imagesSize.messageInfo_deleteIcon.width :
-                                                    appearance.imagesSize.messageInfo_replyIcon.width,
-                                            height: action.label == "Delete" ? appearance.imagesSize.messageInfo_deleteIcon.height :
-                                                    appearance.imagesSize.messageInfo_replyIcon.height,
+                                            width: getCustomWidth(action: action),
+                                            height: getCustomHeight(action: action),
                                             alignment: .center
                                         )
                                 }
@@ -292,6 +291,42 @@ struct ISMCustomContextMenu: View {
         .background(Color.clear)
     }
     
+    
+    func getCustomWidth(action: ContextMenuAction) -> CGFloat{
+        if action.label ==  "Reply"{
+            return appearance.imagesSize.messageInfo_replyIcon.width
+        }else if action.label == "Forward"{
+            return appearance.imagesSize.messageInfo_forwardIcon.width
+        }else if action.label == "Edit"{
+            return appearance.imagesSize.messageInfo_editIcon.width
+        }else if action.label == "Copy"{
+            return appearance.imagesSize.messageInfo_copyIcon.width
+        }else if action.label == "Info"{
+            return appearance.imagesSize.messageInfo_infoIcon.width
+        }else if action.label == "Delete"{
+            return appearance.imagesSize.messageInfo_deleteIcon.width
+        }else{
+            return appearance.imagesSize.messageInfo_deleteIcon.width
+        }
+    }
+    
+    func getCustomHeight(action: ContextMenuAction) -> CGFloat{
+        if action.label ==  "Reply"{
+            return appearance.imagesSize.messageInfo_replyIcon.height
+        }else if action.label == "Forward"{
+            return appearance.imagesSize.messageInfo_forwardIcon.height
+        }else if action.label == "Edit"{
+            return appearance.imagesSize.messageInfo_editIcon.height
+        }else if action.label == "Copy"{
+            return appearance.imagesSize.messageInfo_copyIcon.height
+        }else if action.label == "Info"{
+            return appearance.imagesSize.messageInfo_infoIcon.height
+        }else if action.label == "Delete"{
+            return appearance.imagesSize.messageInfo_deleteIcon.height
+        }else{
+            return appearance.imagesSize.messageInfo_deleteIcon.height
+        }
+    }
     
     func getContextMenuActions() -> [ContextMenuAction] {
         return [

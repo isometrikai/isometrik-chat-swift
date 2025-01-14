@@ -57,8 +57,23 @@ extension ChatsViewModel{
             isRecording = false
             self.countSec = 0
             timerCount!.invalidate()
-            fetchAllRecording { url in
-                completion(url)
+            let recordedFileURL = audioRecorder.url
+            do {
+                let audioAsset = AVURLAsset(url: recordedFileURL)
+                let duration = CMTimeGetSeconds(audioAsset.duration)
+                
+                if duration < 1 {
+                    ISMChatHelper.print("Recording discarded. Duration was less than 1 second.")
+                    // Delete the recorded file
+                    try FileManager.default.removeItem(at: recordedFileURL)
+                } else {
+                    ISMChatHelper.print("Recording saved. Duration: \(duration) seconds.")
+                    fetchAllRecording { url in
+                        completion(url)
+                    }
+                }
+            } catch {
+                ISMChatHelper.print("Failed to get recording duration or delete the file: \(error)")
             }
         }
     }
