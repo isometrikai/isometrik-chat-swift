@@ -431,16 +431,46 @@ struct ISMContactInfoView: View {
     func customHeaderView() -> some View{
         VStack(alignment: .center){
             if onlyInfo == true{
-                UserAvatarView(avatar: (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")), showOnlineIndicator: conversationDetail?.conversationDetails?.opponentDetails?.online ?? (selectedToShowInfo?.online ?? false),size: CGSize(width: 116, height: 116), userName: conversationDetail?.conversationDetails?.opponentDetails?.userName ?? (selectedToShowInfo?.userName ?? ""),font: .regular(size: 50))
-                    .onTapGesture {
-                        let image = conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")
-                        if shouldShowImage(avatar: image){
-                            fullScreenImageURL = image
-                            withAnimation {
-                                showFullScreenImage = true
+                if conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType == 9 && appearance.images.defaultImagePlaceholderForBussinessUser != nil, let avatar =  conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl, ISMChatHelper.shouldShowPlaceholder(avatar: avatar) {
+                    appearance.images.defaultImagePlaceholderForBussinessUser?
+                        .resizable()
+                        .frame(width: 116, height: 116, alignment: .center)
+                        .cornerRadius(116/2)
+                        .onTapGesture {
+                            let image = conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")
+                            if shouldShowImage(avatar: image){
+                                fullScreenImageURL = image
+                                withAnimation {
+                                    showFullScreenImage = true
+                                }
                             }
                         }
-                    }
+                }else if conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType == 1 && appearance.images.defaultImagePlaceholderForNormalUser != nil , let avatar =  conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl, ISMChatHelper.shouldShowPlaceholder(avatar: avatar){
+                    appearance.images.defaultImagePlaceholderForNormalUser?
+                        .resizable()
+                        .frame(width: 116, height: 116, alignment: .center)
+                        .cornerRadius(116/2)
+                        .onTapGesture {
+                            let image = conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")
+                            if shouldShowImage(avatar: image){
+                                fullScreenImageURL = image
+                                withAnimation {
+                                    showFullScreenImage = true
+                                }
+                            }
+                        }
+                }else{
+                    UserAvatarView(avatar: (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")), showOnlineIndicator: conversationDetail?.conversationDetails?.opponentDetails?.online ?? (selectedToShowInfo?.online ?? false),size: CGSize(width: 116, height: 116), userName: conversationDetail?.conversationDetails?.opponentDetails?.userName ?? (selectedToShowInfo?.userName ?? ""),font: .regular(size: 50))
+                        .onTapGesture {
+                            let image = conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")
+                            if shouldShowImage(avatar: image){
+                                fullScreenImageURL = image
+                                withAnimation {
+                                    showFullScreenImage = true
+                                }
+                            }
+                        }
+                }
                 
                 Spacer(minLength: 10)
                 Text(conversationDetail?.conversationDetails?.opponentDetails?.userName?.capitalizingFirstLetter() ?? (selectedToShowInfo?.userName?.capitalizingFirstLetter() ?? ""))
@@ -458,16 +488,46 @@ struct ISMContactInfoView: View {
                         .textCase(nil)
                 }
             }else{
-                UserAvatarView(avatar: isGroup == false ? (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? "") : (conversationDetail?.conversationDetails?.conversationImageUrl ?? ""), showOnlineIndicator: conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,size: CGSize(width: 116, height: 116), userName: isGroup == false ? (conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "") : (conversationDetail?.conversationDetails?.conversationTitle ?? ""),font: .regular(size: 50))
-                    .onTapGesture {
-                        let image = isGroup == true ? (conversationDetail?.conversationDetails?.conversationImageUrl ?? "") : (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? "")
-                        if  shouldShowImage(avatar: image){
-                            fullScreenImageURL = image
-                            withAnimation {
-                                showFullScreenImage = true
+                if conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType == 9 && appearance.images.defaultImagePlaceholderForBussinessUser != nil, let avatar =  conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl, ISMChatHelper.shouldShowPlaceholder(avatar: avatar) {
+                    appearance.images.defaultImagePlaceholderForBussinessUser?
+                        .resizable()
+                        .frame(width: 116, height: 116, alignment: .center)
+                        .cornerRadius(116/2)
+                        .onTapGesture {
+                            let image = conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")
+                            if shouldShowImage(avatar: image){
+                                fullScreenImageURL = image
+                                withAnimation {
+                                    showFullScreenImage = true
+                                }
                             }
                         }
-                    }
+                }else if conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType == 1 && appearance.images.defaultImagePlaceholderForNormalUser != nil , let avatar =  conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl, ISMChatHelper.shouldShowPlaceholder(avatar: avatar){
+                    appearance.images.defaultImagePlaceholderForNormalUser?
+                        .resizable()
+                        .frame(width: 116, height: 116, alignment: .center)
+                        .cornerRadius(116/2)
+                        .onTapGesture {
+                            let image = conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? (selectedToShowInfo?.userProfileImageUrl ?? "")
+                            if shouldShowImage(avatar: image){
+                                fullScreenImageURL = image
+                                withAnimation {
+                                    showFullScreenImage = true
+                                }
+                            }
+                        }
+                }else{
+                    UserAvatarView(avatar: isGroup == false ? (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? "") : (conversationDetail?.conversationDetails?.conversationImageUrl ?? ""), showOnlineIndicator: conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,size: CGSize(width: 116, height: 116), userName: isGroup == false ? (conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "") : (conversationDetail?.conversationDetails?.conversationTitle ?? ""),font: .regular(size: 50))
+                        .onTapGesture {
+                            let image = isGroup == true ? (conversationDetail?.conversationDetails?.conversationImageUrl ?? "") : (conversationDetail?.conversationDetails?.opponentDetails?.userProfileImageUrl ?? "")
+                            if  shouldShowImage(avatar: image){
+                                fullScreenImageURL = image
+                                withAnimation {
+                                    showFullScreenImage = true
+                                }
+                            }
+                        }
+                }
                 
                 Spacer(minLength: 10)
                 

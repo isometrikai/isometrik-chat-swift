@@ -287,6 +287,13 @@ public class ISMChatHelper: NSObject {
         return ""
     }
     
+    public class func shouldShowPlaceholder(avatar: String) -> Bool {
+        return avatar == "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg" ||
+        avatar.isEmpty ||
+        avatar == "https://admin-media.isometrik.io/profile/def_profile.png" ||
+        avatar.contains("svg") || avatar == "https://www.gravatar.com/avatar/?d=identicon" || avatar == "https://cdn.getfudo.com/adminAssets/0/0/Logo.png"
+    }
+    
     //MARK: - Convert sec to min and hr
     public func covertSecToMinAndHour(seconds : Int) -> String{
         let (_,m,s) = (seconds / 3600, (seconds % 3600) / 60, (seconds % 3600) % 60)

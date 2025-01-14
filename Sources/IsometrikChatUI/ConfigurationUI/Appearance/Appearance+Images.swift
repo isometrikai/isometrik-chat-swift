@@ -206,6 +206,9 @@ public struct ISMChatImages {
     public var drawToImage : Image = loadImageSafely(with: "drawOnCameraImage")
     public var undoLastStroke : Image = loadImageSafely(with: "undoLast")
     
+    public var defaultImagePlaceholderForNormalUser : Image? = nil
+    public var defaultImagePlaceholderForBussinessUser : Image? = nil
+    
     public init(){}
     
     public init(
@@ -308,7 +311,9 @@ public struct ISMChatImages {
         audioPlayIcon: Image? = nil,
         audioPauseIcon : Image? = nil,
         deletedMessageLogo : Image? = nil,
-        locationLogo : Image? = nil
+        locationLogo : Image? = nil,
+        defaultImagePlaceholderForNormalUser : Image? = nil,
+        defaultImagePlaceholderForBussinessUser : Image? = nil
     ) {
         if let addConversation = addConversation { self.addConversation = addConversation }
         if let conversationListPlaceholder = conversationListPlaceholder { self.conversationListPlaceholder = conversationListPlaceholder }
@@ -410,6 +415,8 @@ public struct ISMChatImages {
         if let audioPauseIcon = audioPauseIcon { self.audioPauseIcon = audioPauseIcon}
         if let deletedMessageLogo = deletedMessageLogo { self.deletedMessageLogo = deletedMessageLogo}
         if let locationLogo = locationLogo { self.locationLogo = locationLogo}
+        if let defaultImagePlaceholderForNormalUser = defaultImagePlaceholderForNormalUser { self.defaultImagePlaceholderForNormalUser = defaultImagePlaceholderForNormalUser}
+        if let defaultImagePlaceholderForBussinessUser = defaultImagePlaceholderForBussinessUser { self.defaultImagePlaceholderForBussinessUser = defaultImagePlaceholderForBussinessUser}
     }
     
 }

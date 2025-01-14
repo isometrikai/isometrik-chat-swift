@@ -224,14 +224,28 @@ extension ISMMessageView{
     
     func customView() -> some View{
         HStack{
-            UserAvatarView(
-                avatar: getAvatarUrl(),
-                showOnlineIndicator: self.conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,
-                size: CGSize(width: 40, height: 40),
-                userName: getProfileName(),
-                font: .regular(size: 14)
-            )
-            .padding(.trailing, 5)
+            if opponenDetail?.metaData?.userType == 9 && appearance.images.defaultImagePlaceholderForBussinessUser != nil, let avatar =  opponenDetail?.userProfileImageUrl, ISMChatHelper.shouldShowPlaceholder(avatar: avatar) {
+                appearance.images.defaultImagePlaceholderForBussinessUser?
+                    .resizable()
+                    .frame(width: 40, height: 40, alignment: .center)
+                    .cornerRadius(20)
+                    .padding(.trailing, 5)
+            }else if opponenDetail?.metaData?.userType == 1 && appearance.images.defaultImagePlaceholderForNormalUser != nil , let avatar =  opponenDetail?.userProfileImageUrl, ISMChatHelper.shouldShowPlaceholder(avatar: avatar){
+                appearance.images.defaultImagePlaceholderForNormalUser?
+                    .resizable()
+                    .frame(width: 40, height: 40, alignment: .center)
+                    .cornerRadius(20)
+                    .padding(.trailing, 5)
+            }else{
+                UserAvatarView(
+                    avatar: getAvatarUrl(),
+                    showOnlineIndicator: self.conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,
+                    size: CGSize(width: 40, height: 40),
+                    userName: getProfileName(),
+                    font: .regular(size: 14)
+                )
+                .padding(.trailing, 5)
+            }
             
             VStack(alignment: .leading) {
                 Text(getProfileTitle())

@@ -23,19 +23,31 @@ struct ISMConversationSubView: View {
             if chat.isGroup == false && chat.opponentDetails?.userId == nil && chat.opponentDetails?.userName == nil{
                 BroadCastAvatarView(size: CGSize(width: 54, height: 54), broadCastImageSize: CGSize(width: 24, height: 24),broadCastLogo: appearance.images.broadCastLogo)
             }else{
-                UserAvatarView(
-                    avatar: chat.isGroup == true ? (chat.conversationImageUrl ) : (chat.opponentDetails?.userProfileImageUrl ?? ""),
-                    showOnlineIndicator: false,
-                    size: CGSize(width: 54, height: 54),
-                    userName: chat.isGroup == true ? chat.conversationTitle  : chat.opponentDetails?.userName ?? "",
-                    font: appearance.fonts.messageListMessageText)
-                .overlay(
-                    ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ?
-                    
-                    userTypeImageView(userType: chat.opponentDetails?.metaData?.userType ?? 0, isStarUser: chat.opponentDetails?.metaData?.isStarUser ?? false)
-                    
-                    : nil
-                )
+                if chat.opponentDetails?.metaData?.userType == 9 && appearance.images.defaultImagePlaceholderForBussinessUser != nil, let avatar =  chat.opponentDetails?.userProfileImageUrl, ISMChatHelper.shouldShowPlaceholder(avatar: avatar) {
+                    appearance.images.defaultImagePlaceholderForBussinessUser?
+                    .resizable()
+                    .frame(width: 54, height: 54, alignment: .center)
+                    .cornerRadius(54/2)
+                }else if chat.opponentDetails?.metaData?.userType == 1 && appearance.images.defaultImagePlaceholderForNormalUser != nil , let avatar =  chat.opponentDetails?.userProfileImageUrl, ISMChatHelper.shouldShowPlaceholder(avatar: avatar){
+                    appearance.images.defaultImagePlaceholderForNormalUser?
+                    .resizable()
+                    .frame(width: 54, height: 54, alignment: .center)
+                    .cornerRadius(54/2)
+                }else{
+                    UserAvatarView(
+                        avatar: chat.isGroup == true ? (chat.conversationImageUrl ) : (chat.opponentDetails?.userProfileImageUrl ?? ""),
+                        showOnlineIndicator: false,
+                        size: CGSize(width: 54, height: 54),
+                        userName: chat.isGroup == true ? chat.conversationTitle  : chat.opponentDetails?.userName ?? "",
+                        font: appearance.fonts.messageListMessageText)
+                    .overlay(
+                        ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ?
+                        
+                        userTypeImageView(userType: chat.opponentDetails?.metaData?.userType ?? 0, isStarUser: chat.opponentDetails?.metaData?.isStarUser ?? false)
+                        
+                        : nil
+                    )
+                }
             }
             VStack(alignment: .leading, spacing: 5, content: {
                 HStack{
