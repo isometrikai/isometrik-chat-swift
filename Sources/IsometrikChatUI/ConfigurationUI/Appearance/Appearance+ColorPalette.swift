@@ -100,14 +100,82 @@ public struct ISMChatColorPalette {
     public init(){
     }
     
-    public init(navigationBarTitle: Color, alertText: Color, alertBackground: Color, userProfileDescription: Color, userProfileeditText: Color, userProfilefields: Color, userProfilesectionHeader: Color, userProfileSeparator: Color, userProfileDoneButton: Color, chatListTitle: Color, chatListUserName: Color, chatListUserMessage: Color, chatListLastMessageTime: Color, chatListUnreadMessageCount: Color, chatListUnreadMessageCountBackground: Color, chatListBackground: Color, chatListseparatorColor: Color, messageListHeaderBackgroundColor: Color, messageListHeaderTitle: Color, messageListHeaderDescription: Color, messageListIcons: Color, messageListSectionHeaderBackground: Color, messageListSectionHeaderText: Color, messageListBackgroundColor: Color, messageListSendMessageBackgroundColor: Color, messageListReceivedMessageBackgroundColor: Color,messageListSendReplyMessageBackgroundColor: Color,messageListReceivedReplyMessageBackgroundColor: Color, messageListMessageBorderColor: Color, messageListMessageTextSend: Color,messageListMessageTextReceived: Color,messageListMessageMoreAndLessSend : Color, messageListMessageMoreAndLessReceived : Color, messageListMessageForwarded: Color, messageListMessageDeleted: Color, messageListMessageEdited: Color, messageListMessageTimeSend: Color,messageListMessageTimeReceived: Color, messageListToolBarBackground: Color,messageListReplyToolBarBackground: Color, messageListTextViewBackground: Color, messageListTextViewText: Color, messageListTextViewBoarder: Color, messageListActionText: Color, messageListActionBackground: Color, messageListTextViewPlaceholder: Color, messageListReplyToolbarRectangle: Color, messageListReplyToolbarHeader: Color, messageListReplyToolbarDescription: Color, messageListtoolbarSelected: Color, messageListtoolbarAction: Color, messageListreactionCount: Color, messageListgroupMemberUserName: Color, messageListcallingHeader: Color, messageListcallingTime: Color, messageListattachmentBackground: Color, mediaSliderHeader: Color, mediaSliderDescription: Color,audioBarDefault : Color,audioBarWhilePlaying : Color,avatarBackground : Color,avatarText : Color,attachmentsText : Color) {
+    public init(
+            navigationBarTitle: Color = .ismChatSdkAccentPrimary,
+            alertText: Color = .ismChatSdkWhite,
+            alertBackground: Color = Color.black.opacity(0.4),
+            cancelButton: Color = .ismChatCancelButton,
+            confirmButton: Color = .ismchatConfirmButton,
+            userProfileDescription: Color = .ismChatSdkGray,
+            userProfileEditText: Color = .ismChatSdkToolBarAction,
+            userProfileFields: Color = .ismChatSdkAccentPrimary,
+            userProfileSectionHeader: Color = .ismChatSdkGray,
+            userProfileSeparator: Color = .ismChatSdkListSeperator,
+            userProfileDoneButton: Color = .ismChatSdkToolBarAction,
+            chatListTitle: Color = .ismChatSdkAccentPrimary,
+            chatListUserName: Color = .ismChatSdkAccentPrimary,
+            chatListUserMessage: Color = .ismChatSdkGray,
+            chatListLastMessageTime: Color = .ismChatSdkGray,
+            chatListUnreadMessageCount: Color = .ismChatSdkWhite,
+            chatListUnreadMessageCountBackground: Color = .ismChatSdkRed,
+            chatListBackground: Color = .ismChatSdkWhite,
+            chatListSeparatorColor: Color = .ismChatSdkListSeperator,
+            messageListHeaderBackgroundColor: Color = .ismChatSdkWhite,
+            messageListHeaderTitle: Color = .ismChatSdkAccentPrimary,
+            messageListHeaderDescription: Color = .ismChatSdkGray,
+            messageListIcons: Color = .ismChatSdkAccentPrimary,
+            messageListSectionHeaderBackground: Color = .clear,
+            messageListSectionHeaderText: Color = .ismChatSdkGray,
+            messageListBackgroundColor: Color = .ismChatSdkScreenBackground,
+            messageListSendMessageBackgroundColor: Color = .ismChatSdkWhite,
+            messageListReceivedMessageBackgroundColor: Color = .ismChatSdkWhite,
+            messageListSendReplyMessageBackgroundColor: Color = .ismChatSdkWhite,
+            messageListReceivedReplyMessageBackgroundColor: Color = .ismChatSdkWhite,
+            messageListMessageBorderColor: Color = .ismChatSdkListSeperator,
+            messageListMessageTextSend: Color = .ismChatSdkAccentPrimary,
+            messageListMessageTextReceived: Color = .ismChatSdkAccentPrimary,
+            messageListMessageMoreAndLessSend: Color = .ismChatSdkAccentPrimary,
+            messageListMessageMoreAndLessReceived: Color = .ismChatSdkAccentPrimary,
+            messageListMessageForwarded: Color = .ismChatSdkGray,
+            messageListMessageDeleted: Color = .ismChatSdkAccentPrimary,
+            messageListMessageEdited: Color = .ismChatSdkGray,
+            messageListMessageTimeSend: Color = .ismChatSdkGray,
+            messageListMessageTimeReceived: Color = .ismChatSdkGray,
+            messageListToolBarBackground: Color = .ismChatSdkWhite,
+            messageListReplyToolBarBackground: Color = .ismChatSdkWhite,
+            messageListTextViewBackground: Color = .clear,
+            messageListTextViewText: Color = .black,
+            messageListTextViewBoarder: Color = .ismChatSdkListSeperator,
+            messageListActionText: Color = .ismChatSdkGray,
+            messageListActionBackground: Color = .ismChatSdkActionBackground,
+            messageListTextViewPlaceholder: Color = .ismChatSdkGray,
+            messageListReplyToolbarRectangle: Color = .ismChatSdkBGGradientFrom,
+            messageListReplyToolbarHeader: Color = .ismChatSdkAccentPrimary,
+            messageListReplyToolbarDescription: Color = .ismChatSdkGray,
+            messageListtoolbarSelected: Color = .ismChatSdkGray,
+            messageListtoolbarAction: Color = .ismChatSdkToolBarAction,
+            messageListreactionCount: Color = .ismChatSdkAccentPrimary,
+            messageListgroupMemberUserName: Color = .ismChatSdkRed,
+            messageListcallingHeader: Color = .ismChatSdkAccentPrimary,
+            messageListcallingTime: Color = .ismChatSdkGray,
+            messageListattachmentBackground: Color = .ismChatSdkAttachmentBackground,
+            mediaSliderHeader: Color = .ismChatSdkAccentPrimary,
+            mediaSliderDescription: Color = .ismChatSdkGray,
+            audioBarDefault: Color = .ismChatSdkBGGradientTo,
+            audioBarWhilePlaying: Color = .ismChatSdkListSeperator,
+            searchBarBackground: Color = Color(hex: "#F2F2F5"),
+            avatarBackground: Color = Color(hex: "EDEBFE"),
+            avatarText: Color = Color(hex: "7062E9"),
+            attachmentsText: Color = Color(hex: "#121511"),
+            attachmentsBackground: Color = Color(hex: "#F5F5F2")
+        )  {
         self.navigationBarTitle = navigationBarTitle
         self.alertText = alertText
         self.alertBackground = alertBackground
         self.userProfileDescription = userProfileDescription
-        self.userProfileEditText = userProfileeditText
-        self.userProfileFields = userProfilefields
-        self.userProfileSectionHeader = userProfilesectionHeader
+        self.userProfileEditText = userProfileEditText
+        self.userProfileFields = userProfileFields
+        self.userProfileSectionHeader = userProfileSectionHeader
         self.userProfileSeparator = userProfileSeparator
         self.userProfileDoneButton = userProfileDoneButton
         self.chatListTitle = chatListTitle
@@ -117,7 +185,7 @@ public struct ISMChatColorPalette {
         self.chatListUnreadMessageCount = chatListUnreadMessageCount
         self.chatListUnreadMessageCountBackground = chatListUnreadMessageCountBackground
         self.chatListBackground = chatListBackground
-        self.chatListSeparatorColor = chatListseparatorColor
+        self.chatListSeparatorColor = chatListSeparatorColor
         self.messageListHeaderBackgroundColor = messageListHeaderBackgroundColor
         self.messageListHeaderTitle = messageListHeaderTitle
         self.messageListHeaderDescription = messageListHeaderDescription
@@ -169,7 +237,7 @@ public struct ISMChatColorPalette {
 
 
 
-private extension Color {
+public extension Color {
     
     static let ismChatSdkAccentPrimary = mode(0x294566, 0x294566)
     static let ismChatSdkGray = mode(0x9EA4C3, 0x9EA4C3)
