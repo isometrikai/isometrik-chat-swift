@@ -233,7 +233,7 @@ public class ISMChatHelper: NSObject {
         }
     }
     
-    public class func getPaymentStatus(myUserId: String, metaData: MetaDataDB?, sentAt: Double) -> ISMChatPaymentRequestStatus {
+    public class func getPaymentStatus(myUserId: String,opponentId : String, metaData: MetaDataDB?, sentAt: Double) -> ISMChatPaymentRequestStatus {
         // Retrieve the member from paymentRequestedMembers matching myUserId
         guard let paymentRequestedMembers = metaData?.paymentRequestedMembers else {
             return .ActiveRequest // Default status if no members are found
@@ -241,6 +241,16 @@ public class ISMChatHelper: NSObject {
         // Find the specific member with myUserId
         guard let member = paymentRequestedMembers.first(where: { $0.userId == myUserId }) else {
             return .ActiveRequest // Default status if no matching member is found
+        }
+        
+        let opponentMember = paymentRequestedMembers.first(where: { $0.userId == opponentId })
+        
+        if member.status == 4 || opponentMember?.status == 4 {
+            return .Cancelled
+        }
+        
+        if member.status == 2 || opponentMember?.status == 2 {
+            return .Rejected
         }
 
         // Check the status of the matched member

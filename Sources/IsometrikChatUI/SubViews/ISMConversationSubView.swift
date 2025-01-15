@@ -172,7 +172,7 @@ struct ISMConversationSubView: View {
                 .padding(.trailing, 40)
                 .lineLimit(2)
             //UNREAD MESSAGE COUNT
-            if chat.lastMessageDetails?.customType == ISMChatMediaType.PaymentRequest.value && ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "", metaData: self.chat.lastMessageDetails?.metaData, sentAt: self.chat.lastMessageDetails?.sentAt ?? 0) == .ActiveRequest{
+            if chat.lastMessageDetails?.customType == ISMChatMediaType.PaymentRequest.value && ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "", opponentId: chat.opponentDetails?.userId ?? "", metaData: self.chat.lastMessageDetails?.metaData, sentAt: self.chat.lastMessageDetails?.sentAt ?? 0) == .ActiveRequest{
                 Spacer()
                 
                 Text("Pay Now")
@@ -396,7 +396,7 @@ struct ISMConversationSubView: View {
     }
     
     func getPaymentRequestText() -> String{
-        let status = ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "",metaData: self.chat.lastMessageDetails?.metaData, sentAt: self.chat.lastMessageDetails?.sentAt ?? 0)
+        let status = ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "", opponentId: chat.opponentDetails?.userId ?? "",metaData: self.chat.lastMessageDetails?.metaData, sentAt: self.chat.lastMessageDetails?.sentAt ?? 0)
         if status == .ActiveRequest {
             if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
                 return "You have sent a payment request"
@@ -404,10 +404,10 @@ struct ISMConversationSubView: View {
                 return "\(chat.lastMessageDetails?.senderName ?? "") sent you a payment request"
             }
         } else if status == .Rejected {
-            if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
+            if let otherUserName = self.chat.lastMessageDetails?.metaData?.paymentRequestedMembers.first(where: { $0.userId == userData?.userId && $0.status == 2 }) {
                 return "You declined the payment request"
             }else{
-                return "\(chat.lastMessageDetails?.senderName ?? "") declined the payment request"
+                return "Declined the payment request"
             }
         } else if status == .Expired {
             return "This payment request has expired"
@@ -415,7 +415,7 @@ struct ISMConversationSubView: View {
             if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
                 return "You cancelled this order"
             }else{
-                return "\(chat.lastMessageDetails?.senderName ?? "") cancelled this order"
+                return "Cancelled this order"
             }
         }else if status == .Accepted{
             return "You have successfully paid for the order."

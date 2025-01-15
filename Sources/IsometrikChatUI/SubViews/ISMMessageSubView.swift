@@ -1401,7 +1401,7 @@ struct ISMMessageSubView: View {
                                     }
                                     
                                     VStack(alignment: .trailing,spacing: 5){
-                                        PaymentRequestUI(status: ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "",metaData: self.message.metaData, sentAt: self.message.sentAt), isReceived: self.isReceived,message: self.message) {
+                                        PaymentRequestUI(status: ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "", opponentId: opponentDeatil.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt), isReceived: self.isReceived,message: self.message) {
                                             //view details
                                             viewDetailsForPaymentRequest = self.message
                                         } declineRequest: {
@@ -2316,9 +2316,15 @@ struct PaymentRequestUI: View {
                         .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
                         .foregroundColor(Color(hex: "#3A341C")).padding(.bottom,16)
                 } else if status == .Rejected {
-                    Text("You declined the payment request")
-                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
-                        .foregroundColor(Color(hex: "#6A6C6A")).padding(.bottom,16)
+                    if let otherUserName = message.metaData?.paymentRequestedMembers.first(where: { $0.userId == userData?.userId && $0.status == 2 }) {
+                        Text("You declined the payment request")
+                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                            .foregroundColor(Color(hex: "#6A6C6A")).padding(.bottom,16)
+                    }else{
+                        Text("Declined the payment request")
+                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                            .foregroundColor(Color(hex: "#6A6C6A")).padding(.bottom,16)
+                    }
                 } else if status == .Expired {
                     Text(isReceived ? "Expired" : "This payment request has expired.")
                         .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
