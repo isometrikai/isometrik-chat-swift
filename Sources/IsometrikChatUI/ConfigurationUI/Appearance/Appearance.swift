@@ -81,18 +81,57 @@ public class ISMChatStrings {
 }
 
 public class ISMChatPlaceholders {
-    public var chatListPlaceholder : AnyView = AnyView(VStack{})
-    public var messageListPlaceholder : AnyView  = AnyView(VStack{})
-    public var otherchatListPlaceholder : AnyView  = AnyView(VStack{})
-    public var broadCastListPlaceholder : AnyView  = AnyView(VStack{})
-    public var groupInfo_groupMembers : AnyView = AnyView(VStack{})
-    public init(){}
-    public init(chatListPlaceholder: AnyView, messageListPlaceholder: AnyView, otherchatListPlaceholder: AnyView, broadCastListPlaceholder: AnyView,groupInfo_groupMembers: AnyView) {
-        self.chatListPlaceholder = chatListPlaceholder
-        self.messageListPlaceholder = messageListPlaceholder
-        self.otherchatListPlaceholder = otherchatListPlaceholder
-        self.broadCastListPlaceholder = broadCastListPlaceholder
-        self.groupInfo_groupMembers = groupInfo_groupMembers
+    let images: ISMChatImages = ISMChatImages()
+    public var chatListPlaceholder: AnyView
+    public var messageListPlaceholder: AnyView
+    public var otherchatListPlaceholder: AnyView
+    public var broadCastListPlaceholder: AnyView
+    public var groupInfo_groupMembers: AnyView
+    
+    public init(
+        chatListPlaceholder: AnyView? = nil,
+        messageListPlaceholder: AnyView? = nil,
+        otherchatListPlaceholder: AnyView? = nil,
+        broadCastListPlaceholder: AnyView? = nil,
+        groupInfo_groupMembers: AnyView? = nil
+    ) {
+        self.chatListPlaceholder = chatListPlaceholder ??
+            ISMChatPlaceholders.defaultPlaceholder(
+                imageName: images.chatListPlaceHolder,
+                text: "No chats found!"
+            )
+        self.messageListPlaceholder = messageListPlaceholder ??
+            ISMChatPlaceholders.defaultPlaceholder(
+                imageName: images.messagesPlaceHolder,
+                text: "No message here yet!"
+            )
+        self.otherchatListPlaceholder = otherchatListPlaceholder ??
+            ISMChatPlaceholders.defaultPlaceholder(
+                imageName: images.chatListPlaceHolder,
+                text: "No chats found!"
+            )
+        self.broadCastListPlaceholder = broadCastListPlaceholder ??
+            ISMChatPlaceholders.defaultPlaceholder(
+                imageName: images.bordCastPlaceHolder,
+                text: "No broadcast list found!"
+            )
+        self.groupInfo_groupMembers = groupInfo_groupMembers ??
+            ISMChatPlaceholders.defaultPlaceholder(
+                imageName: images.membersPlaceHolder,
+                text: "No such member found!"
+            )
+    }
+
+    public static func defaultPlaceholder(imageName: Image, text: String) -> AnyView {
+        AnyView(
+            VStack(spacing: 20) {
+                imageName
+                    .frame(width: 120, height: 120)
+                Text(text)
+                    .foregroundColor(Color(hex: "#242424"))
+                    .font(.system(size: 16, weight: .bold))
+            }
+        )
     }
 }
 
@@ -110,7 +149,7 @@ public class ISMChatCustomFontNames{
     public var regular : String = "ProductSans-Regular"
     public var medium : String = "ProductSans-Medium"
     public var bold : String = "ProductSans-Bold"
-    public var semibold : String = "ProductSans-Bold"
+    public var semibold : String = "ProductSans-SemiBold"
     public var italic : String = "ProductSans-Italic"
     public init(){}
     public init(light: String, regular: String, bold: String,semiBold : String, medium: String, italic: String) {
