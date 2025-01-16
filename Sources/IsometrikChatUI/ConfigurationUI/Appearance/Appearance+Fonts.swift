@@ -7,8 +7,6 @@
 
 import UIKit
 import SwiftUI
-import UIKit
-
 
     public struct ISMChatFonts {
 
@@ -74,9 +72,53 @@ import UIKit
         public var contactDetailsNumber : Font = Font.regular(size: 14)
         public var contactDetailButtons : Font = Font.bold(size: 12)
         
-        public init(){}
-        
-        public init(navigationBarTitle: Font, alertText: Font, userProfileDescription: Font, userProfileeditText: Font, userProfilefields: Font, userProfilesectionHeader: Font, userProfileDoneButton: Font, chatListTitle: Font, chatListUserName: Font, chatListUserMessage: Font, chatListLastMessageTime: Font, chatListUnreadMessageCount: Font, messageListHeaderTitle: Font, messageListHeaderDescription: Font, messageListSectionHeaderText: Font, messageListMessageText: Font,messageListMessageMoreAndLess: Font, messageListMessageForwarded: Font, messageListMessageDeleted: Font, messageListMessageEdited: Font, messageListMessageTime: Font, messageListTextViewText: Font, messageListActionText: Font, messageListReplyToolbarHeader: Font, messageListReplyToolbarDescription: Font, messageListtoolbarSelected: Font, messageListtoolbarAction: Font, messageListreactionCount: Font, messageListgroupMemberUserName: Font, messageListcallingHeader: Font, messageListcallingTime: Font, mediaSliderHeader: Font, mediaSliderDescription: Font, contactInfoHeader: Font,searchbarText :Font,avatarText : Font,contextMenuOptions : Font,attachmentsText : Font,locationMessageTitle : Font,locationMessageDescription: Font,contactMessageTitle: Font? = nil,contactMessageButton : Font? = nil,contactDetailsTitle : Font? = nil,contactDetailsNumber : Font? = nil,contactDetailButtons: Font? = nil) {
+        public init(
+            navigationBarTitle: Font = .bold(size: 14),
+            alertText: Font = .regular(size: 14),
+            userProfileDescription: Font = .regular(size: 14),
+            userProfileeditText: Font = .regular(size: 14),
+            userProfilefields: Font = .regular(size: 16),
+            userProfilesectionHeader: Font = .regular(size: 14),
+            userProfileDoneButton: Font = .regular(size: 16),
+            chatListTitle: Font = .bold(size: 25),
+            chatListUserName: Font = .regular(size: 16),
+            chatListUserMessage: Font = .regular(size: 13),
+            chatListLastMessageTime: Font = .regular(size: 12),
+            chatListUnreadMessageCount: Font = .regular(size: 12),
+            messageListHeaderTitle: Font = .regular(size: 18),
+            messageListHeaderDescription: Font = .regular(size: 12),
+            messageListSectionHeaderText: Font = .regular(size: 14),
+            messageListMessageText: Font = .regular(size: 16),
+            messageListMessageMoreAndLess: Font = .regular(size: 16),
+            messageListMessageForwarded: Font = .italic(size: 12),
+            messageListMessageDeleted: Font = .italic(size: 16),
+            messageListMessageEdited: Font = .italic(size: 12),
+            messageListMessageTime: Font = .regular(size: 12),
+            messageListTextViewText: Font = .regular(size: 16),
+            messageListActionText: Font = .regular(size: 14),
+            messageListReplyToolbarHeader: Font = .regular(size: 14),
+            messageListReplyToolbarDescription: Font = .regular(size: 12),
+            messageListtoolbarSelected: Font = .regular(size: 16),
+            messageListtoolbarAction: Font = .bold(size: 16),
+            messageListreactionCount: Font = .regular(size: 14),
+            messageListgroupMemberUserName: Font = .regular(size: 12),
+            messageListcallingHeader: Font = .bold(size: 12),
+            messageListcallingTime: Font = .regular(size: 12),
+            mediaSliderHeader: Font = .regular(size: 16),
+            mediaSliderDescription: Font = .regular(size: 12),
+            contactInfoHeader: Font = .bold(size: 20),
+            searchbarText: Font = .regular(size: 14),
+            avatarText: Font = .medium(size: 16),
+            contextMenuOptions: Font = .regular(size: 16),
+            attachmentsText: Font = .regular(size: 12),
+            locationMessageTitle: Font = .regular(size: 16),
+            locationMessageDescription: Font = .regular(size: 12),
+            contactMessageTitle: Font = .bold(size: 14),
+            contactMessageButton: Font = .bold(size: 12),
+            contactDetailsTitle: Font = .bold(size: 14),
+            contactDetailsNumber: Font = .regular(size: 14),
+            contactDetailButtons: Font = .bold(size: 12)
+        ) {
             self.navigationBarTitle = navigationBarTitle
             self.alertText = alertText
             self.userProfileDescription = userProfileDescription

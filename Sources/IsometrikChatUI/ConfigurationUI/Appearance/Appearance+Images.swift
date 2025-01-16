@@ -206,6 +206,11 @@ public struct ISMChatImages {
     public var drawToImage : Image = loadImageSafely(with: "drawOnCameraImage")
     public var undoLastStroke : Image = loadImageSafely(with: "undoLast")
     
+    public var bordCastPlaceHolder : Image = loadImageSafely(with: "bordCastPlaceHolder")
+    public var chatListPlaceHolder : Image = loadImageSafely(with: "chatListPlaceHolder")
+    public var membersPlaceHolder : Image = loadImageSafely(with: "membersPlaceHolder")
+    public var messagesPlaceHolder : Image = loadImageSafely(with: "messagesPlaceHolder")
+    
     public var defaultImagePlaceholderForNormalUser : Image? = nil
     public var defaultImagePlaceholderForBussinessUser : Image? = nil
     
