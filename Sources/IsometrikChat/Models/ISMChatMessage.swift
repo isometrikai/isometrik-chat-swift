@@ -268,6 +268,13 @@ public struct ISMChatMetaData: Codable {
     public var currencyCode : String?
     public var amount : Double?
     
+    //dineInInvite
+    public var inviteTitle : String?
+    public var inviteTimestamp : String?
+    public var inviteRescheduledTimestamp : String?
+    public var inviteLocation : LocationData?
+    public var inviteMembers : [PaymentRequestedMembers]?
+    
     public var isSharedFromApp : Bool?
     
     public init(
@@ -302,7 +309,12 @@ public struct ISMChatMetaData: Codable {
         paymentRequestedMembers : [PaymentRequestedMembers]? = nil,
         requestAPaymentExpiryTime : Int? = nil,
         currencyCode : String? = nil,
-        amount : Double? = nil
+        amount : Double? = nil,
+        inviteTitle : String? = nil,
+        inviteTimestamp : String? = nil,
+        inviteRescheduledTimestamp : String? = nil,
+        inviteLocation : LocationData? = nil,
+        inviteMembers : [PaymentRequestedMembers]? = nil
     ) {
         self.replyMessage = replyMessage
         self.locationAddress = locationAddress
@@ -336,6 +348,11 @@ public struct ISMChatMetaData: Codable {
         self.requestAPaymentExpiryTime = requestAPaymentExpiryTime
         self.currencyCode = currencyCode
         self.amount = amount
+        self.inviteTitle = inviteTitle
+        self.inviteTimestamp = inviteTimestamp
+        self.inviteRescheduledTimestamp = inviteRescheduledTimestamp
+        self.inviteLocation = inviteLocation
+        self.inviteMembers = inviteMembers
     }
     
     public init(from decoder: Decoder) throws {
@@ -375,12 +392,31 @@ public struct ISMChatMetaData: Codable {
     }
 }
 
+public struct LocationData : Codable{
+    var name : String?
+    var latitude: Double?
+    var longitude: Double?
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try? container.decode(String.self, forKey: .name)
+        latitude = try? container.decode(Double.self, forKey: .latitude)
+        longitude = try? container.decode(Double.self, forKey: .longitude)
+    }
+    public init(name : String? = nil,latitude : Double? = nil,longitude : Double? = nil){
+        self.name = name
+        self.latitude = latitude
+        self.longitude = longitude
+    }
+}
+
 public struct PaymentRequestedMembers : Codable{
     var userId : String?
     var userName : String?
     var status : Int?
     var statusText : String?
     var appUserId : String?
+    var userProfileImage : String?
+    var declineReason : String?
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         userId = try? container.decode(String.self, forKey: .userId)
@@ -388,13 +424,17 @@ public struct PaymentRequestedMembers : Codable{
         status = try? container.decode(Int.self, forKey: .status)
         statusText = try? container.decode(String.self, forKey: .statusText)
         appUserId = try? container.decode(String.self, forKey: .appUserId)
+        userProfileImage = try? container.decode(String.self, forKey: .userProfileImage)
+        declineReason = try? container.decode(String.self, forKey: .declineReason)
     }
-    public init(userId : String? = nil,userName : String? = nil,status : Int? = nil,statusText : String? = nil,appUserId : String? = nil){
+    public init(userId : String? = nil,userName : String? = nil,status : Int? = nil,statusText : String? = nil,appUserId : String? = nil,userProfileImage : String? = nil,declineReason : String? = nil){
         self.userId = userId
         self.userName = userName
         self.status = status
         self.statusText = statusText
         self.appUserId = appUserId
+        self.userProfileImage = userProfileImage
+        self.declineReason = declineReason
     }
 }
 

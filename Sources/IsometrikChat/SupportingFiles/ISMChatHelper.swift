@@ -202,6 +202,10 @@ public class ISMChatHelper: NSObject {
             return .CollectionLink
         }else if message.customType == ISMChatMediaType.PaymentRequest.value{
             return .paymentRequest
+        }else if message.customType == ISMChatMediaType.DineInInvite.value{
+            return .dineInInvite
+        }else if message.customType == ISMChatMediaType.DineInStatus.value{
+            return .dineInInviteStatus
         }else if message.customType == ISMChatMediaType.OfferSent.value{
             return .OfferSent
         }

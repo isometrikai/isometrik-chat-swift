@@ -50,6 +50,20 @@ public class MetaDataDB : Object, ObjectKeyIdentifiable {
     @Persisted public var requestAPaymentExpiryTime : Int?
     @Persisted public var currencyCode : String?
     @Persisted public var amount : Double?
+    
+    //dineInInvite
+    @Persisted public var inviteTitle : String?
+    @Persisted public var inviteTimestamp : String?
+    @Persisted public var inviteRescheduledTimestamp : String?
+    @Persisted public var inviteLocation : LocationDB?
+    @Persisted public var inviteMembers : RealmSwift.List<PaymentRequestMembersDB>
+    
+}
+
+public class LocationDB: Object, ObjectKeyIdentifiable {
+    @Persisted public var name: String?
+    @Persisted public var latitude: Double?
+    @Persisted public var longitude: Double?
 }
 
 public class PaymentRequestMembersDB: Object, ObjectKeyIdentifiable {
@@ -58,6 +72,8 @@ public class PaymentRequestMembersDB: Object, ObjectKeyIdentifiable {
     @Persisted public var status: Int?
     @Persisted public var statusText: String?
     @Persisted public var appUserId : String?
+    @Persisted public var userProfileImage : String?
+    @Persisted public var declineReason : String?
 }
 
 public class PDPImageDB: Object, ObjectKeyIdentifiable {

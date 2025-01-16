@@ -60,5 +60,7 @@ public enum ISMChatMessageType {
     case SocialLink
     case CollectionLink
     case paymentRequest
+    case dineInInvite
+    case dineInInviteStatus
     case OfferSent
 }

@@ -337,6 +337,34 @@ extension RealmManager {
                     messageMetaData.requestAPaymentExpiryTime = value.lastMessageDetails?.metaData?.requestAPaymentExpiryTime
                     messageMetaData.currencyCode = value.lastMessageDetails?.metaData?.currencyCode
                     messageMetaData.amount = value.lastMessageDetails?.metaData?.amount
+                    messageMetaData.inviteTitle = value.lastMessageDetails?.metaData?.inviteTitle
+                    messageMetaData.inviteTimestamp = value.lastMessageDetails?.metaData?.inviteTimestamp
+                    messageMetaData.inviteRescheduledTimestamp = value.lastMessageDetails?.metaData?.inviteRescheduledTimestamp
+                    
+                    if let location = value.lastMessageDetails?.metaData?.inviteLocation {
+                        let locationDB = LocationDB()
+                        locationDB.name = location.name
+                        locationDB.latitude = location.latitude
+                        locationDB.longitude = location.longitude
+                        messageMetaData.inviteLocation = locationDB
+                    }
+                    
+                    if let inviteMembers = value.lastMessageDetails?.metaData?.inviteMembers{
+                        let inviteMembersDB = RealmSwift.List<PaymentRequestMembersDB>()
+                        inviteMembers.forEach { member in
+                            let membersDB = PaymentRequestMembersDB()
+                            membersDB.userId = member.userId
+                            membersDB.userName = member.userName
+                            membersDB.status = member.status
+                            membersDB.statusText = member.statusText
+                            membersDB.appUserId = member.appUserId
+                            membersDB.userProfileImage = member.userProfileImage
+                            membersDB.declineReason = member.declineReason
+                            inviteMembersDB.append(membersDB)
+                        }
+                        messageMetaData.inviteMembers = inviteMembersDB
+                    }
+                    
                     
                     if let members = value.lastMessageDetails?.metaData?.paymentRequestedMembers {
                         let paymentRequestMembersDB = RealmSwift.List<PaymentRequestMembersDB>()
@@ -409,6 +437,34 @@ extension RealmManager {
                                 membersDBList.append(paymentRequestMembersDB)
                             }
                             metadataValue.paymentRequestedMembers = membersDBList
+                        }
+                        
+                        metadataValue.inviteTitle = metaData.inviteTitle
+                        metadataValue.inviteTimestamp = metaData.inviteTimestamp
+                        metadataValue.inviteRescheduledTimestamp = metaData.inviteRescheduledTimestamp
+                        
+                        if let location = metaData.inviteLocation {
+                            let locationDB = LocationDB()
+                            locationDB.name = location.name
+                            locationDB.latitude = location.latitude
+                            locationDB.longitude = location.longitude
+                            metadataValue.inviteLocation = locationDB
+                        }
+                        
+                        if let inviteMembers = metaData.inviteMembers{
+                            let inviteMembersDB = RealmSwift.List<PaymentRequestMembersDB>()
+                            inviteMembers.forEach { member in
+                                let membersDB = PaymentRequestMembersDB()
+                                membersDB.userId = member.userId
+                                membersDB.userName = member.userName
+                                membersDB.status = member.status
+                                membersDB.statusText = member.statusText
+                                membersDB.appUserId = member.appUserId
+                                membersDB.userProfileImage = member.userProfileImage
+                                membersDB.declineReason = member.declineReason
+                                inviteMembersDB.append(membersDB)
+                            }
+                            metadataValue.inviteMembers = inviteMembersDB
                         }
                         
                         
@@ -594,6 +650,34 @@ extension RealmManager {
                                 membersDBList.append(paymentRequestMembersDB)
                             }
                             metadataValue.paymentRequestedMembers = membersDBList
+                        }
+                        
+                        metadataValue.inviteTitle = metaData.inviteTitle
+                        metadataValue.inviteTimestamp = metaData.inviteTimestamp
+                        metadataValue.inviteRescheduledTimestamp = metaData.inviteRescheduledTimestamp
+                        
+                        if let location = metaData.inviteLocation {
+                            let locationDB = LocationDB()
+                            locationDB.name = location.name
+                            locationDB.latitude = location.latitude
+                            locationDB.longitude = location.longitude
+                            metadataValue.inviteLocation = locationDB
+                        }
+                        
+                        if let inviteMembers = metaData.inviteMembers{
+                            let inviteMembersDB = RealmSwift.List<PaymentRequestMembersDB>()
+                            inviteMembers.forEach { member in
+                                let membersDB = PaymentRequestMembersDB()
+                                membersDB.userId = member.userId
+                                membersDB.userName = member.userName
+                                membersDB.status = member.status
+                                membersDB.statusText = member.statusText
+                                membersDB.appUserId = member.appUserId
+                                membersDB.userProfileImage = member.userProfileImage
+                                membersDB.declineReason = member.declineReason
+                                inviteMembersDB.append(membersDB)
+                            }
+                            metadataValue.inviteMembers = inviteMembersDB
                         }
                         
                         
@@ -928,6 +1012,34 @@ extension RealmManager {
                             membersDBList.append(paymentRequestMembersDB)
                         }
                         metadataValue.paymentRequestedMembers = membersDBList
+                    }
+                    
+                    metadataValue.inviteTitle = metaData.inviteTitle
+                    metadataValue.inviteTimestamp = metaData.inviteTimestamp
+                    metadataValue.inviteRescheduledTimestamp = metaData.inviteRescheduledTimestamp
+                    
+                    if let location = metaData.inviteLocation {
+                        let locationDB = LocationDB()
+                        locationDB.name = location.name
+                        locationDB.latitude = location.latitude
+                        locationDB.longitude = location.longitude
+                        metadataValue.inviteLocation = locationDB
+                    }
+                    
+                    if let inviteMembers = metaData.inviteMembers{
+                        let inviteMembersDB = RealmSwift.List<PaymentRequestMembersDB>()
+                        inviteMembers.forEach { member in
+                            let membersDB = PaymentRequestMembersDB()
+                            membersDB.userId = member.userId
+                            membersDB.userName = member.userName
+                            membersDB.status = member.status
+                            membersDB.statusText = member.statusText
+                            membersDB.appUserId = member.appUserId
+                            membersDB.userProfileImage = member.userProfileImage
+                            membersDB.declineReason = member.declineReason
+                            inviteMembersDB.append(membersDB)
+                        }
+                        metadataValue.inviteMembers = inviteMembersDB
                     }
                     
                     

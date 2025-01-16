@@ -1438,6 +1438,8 @@ struct ISMMessageSubView: View {
                                 }
                             }.padding(.vertical,2)
                         }
+                    case .dineInInvite:
+                        Text("Dine-In-Invite")
                     default:
                         CustomMessageBubbleViewRegistry.shared.view(for: self.message)
                     }
