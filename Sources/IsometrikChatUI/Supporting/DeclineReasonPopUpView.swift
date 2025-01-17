@@ -47,7 +47,7 @@ struct DeclineReasonPopUpView: View {
                         selectedOption = option
                     }
                 }
-            }.listStyle(InsetGroupedListStyle())
+            }.listStyle(.plain)
             
             if selectedOption == "Other"{
                 Text("Reason")
