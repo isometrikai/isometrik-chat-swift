@@ -1439,7 +1439,54 @@ struct ISMMessageSubView: View {
                             }.padding(.vertical,2)
                         }
                     case .dineInInvite:
-                        Text("Dine-In-Invite")
+                        HStack(alignment: .bottom){
+                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                //When its group show member avatar in message
+                                inGroupUserAvatarView()
+                            }
+                            ZStack(alignment: .bottomTrailing){
+                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                        //when its group show member name in message
+                                        inGroupUserName()
+                                    }
+                                    
+                                    VStack(alignment: .trailing,spacing: 5){
+                                        DineInRequestUI(status: ISMChatHelper.getDineInStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt), isReceived: self.isReceived, message:  self.message) {
+                                            viewDetailsForPaymentRequest = self.message
+                                        } declineRequest: {
+                                            declinePaymentRequest = self.message
+                                        }
+                                        dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
+                                    }//:ZStack
+                                    .frame(width: 280)
+                                    .background(Color(hex: "#F5F5F2"))
+                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                    .overlay(
+                                        appearance.messageBubbleType == .BubbleWithOutTail ?
+                                        AnyView(
+                                            UnevenRoundedRectangle(
+                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                style: .circular
+                                            )
+                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                        ) : AnyView(EmptyView())
+                                    )
+                                    if appearance.timeInsideBubble == false{
+                                        dateAndStatusView(onImage: false)
+                                            .padding(.bottom,5)
+                                            .padding(.trailing,5)
+                                    }
+                                }
+                                
+                                if message.reactions.count > 0{
+                                    reactionsView()
+                                }
+                            }.padding(.vertical,2)
+                        }
                     default:
                         CustomMessageBubbleViewRegistry.shared.view(for: self.message)
                     }
@@ -2243,7 +2290,136 @@ public struct ImageAsset {
 
 
 
+struct DineInRequestUI: View {
+    var status: ISMChatPaymentRequestStatus
+    var isReceived : Bool
+    var message : MessagesDB
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    var viewDetails : () -> ()
+    var declineRequest : () -> ()
+    var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
+    var body: some View {
+        VStack(alignment: .center, spacing: 0) {
+            // Header and Payment Status
+            headerView.padding(.bottom,16)
+            
+            
+            // Payment Amount
+            VStack(spacing: 8) {
+                
+                Text(message.metaData?.inviteTitle ?? "")
+                    .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 18))
+                    .foregroundColor(Color(hex: "#121511"))
+                
+                HStack(alignment: .center, spacing: 8) {
+                    
+                    Text(formatTimestamp(message.metaData?.inviteTimestamp ?? 0))
+                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 14))
+                        .foregroundColor(Color(hex: "#454745"))
+                }
+                HStack(alignment: .center, spacing: 8) {
+                    Text(message.metaData?.inviteLocation?.name ?? "")
+                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 14))
+                        .foregroundColor(Color(hex: "#454745"))
+                }
+                
+                if let memebersInvited = message.metaData?.inviteMembers{
+                    HStack(spacing: 4){
+                        ForEach(0..<min(memebersInvited.count, 4), id: \.self) { index in
+                            ZStack{
+                                ISMChatImageCahcingManger.viewImage(url: memebersInvited[index].userProfileImage ?? "")
+                                    .resizable()
+                                    .frame(width: 25, height: 25, alignment: .center)
+                                    .cornerRadius(25/2)
+                            }
+                        }
+                    }
+                }
+                
+                if isReceived == false{
+                    Text("You've sent a Dine-in invite. Please wait for your friend's response.")
+                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                        .foregroundColor(Color(hex: "#3A341C"))
+                }
+               
+            }
+            .padding(.horizontal, 16)
+            
+            // Action Buttons for Active Request Only
+            if status == .ActiveRequest {
+                HStack(spacing: 20) {
+                    if isReceived == true{
+                        Button(action: {
+                            declineRequest()
+                        }) {
+                            Text("Can’t attend")
+                                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
+                                .foregroundStyle(Color(hex: "#163300"))
+                                .frame(width: 121, height: 32, alignment: .center)
+                                .background(RoundedRectangle(cornerRadius: 16).stroke(Color(hex: "#163300"), lineWidth: 1))
+                        }
+                        
+                        Button(action: {
+                            viewDetails()
+                        }) {
+                            Text("Accept")
+                                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
+                                .foregroundStyle(Color(hex: "#163300"))
+                                .frame(width: 121, height: 32, alignment: .center)
+                                .background(Color(hex: "#86EA5D"))
+                                .cornerRadius(16)
+                        }
+                    }
+                }
+                .padding(.horizontal, 16)
+            }
+        }
+    }
+    func formatTimestamp(_ timestamp: TimeInterval) -> String {
+        // Convert the timestamp to a Date object
+        let date = Date(timeIntervalSince1970: timestamp)
+        
+        // Create a DateFormatter
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        
+        // Format the day with an ordinal suffix
+        let dayFormatter = DateFormatter()
+        dayFormatter.dateFormat = "d"
+        let day = dayFormatter.string(from: date)
+        
+        let ordinalSuffix: String
+        switch Int(day)! {
+        case 1, 21, 31:
+            ordinalSuffix = "st"
+        case 2, 22:
+            ordinalSuffix = "nd"
+        case 3, 23:
+            ordinalSuffix = "rd"
+        default:
+            ordinalSuffix = "th"
+        }
+        
+        // Format the rest of the date
+        formatter.dateFormat = "MMMM, yyyy • h:mm a"
+        let formattedDate = formatter.string(from: date)
+        
+        // Combine day with the ordinal suffix and the formatted date
+        return "\(day)\(ordinalSuffix) \(formattedDate)"
+    }
 
+    @ViewBuilder
+    private var headerView: some View {
+        Text(isReceived ? "You're Invited!" : "Dine-in Invite")
+            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
+            .foregroundColor(Color(hex: "#121511"))
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(Color(hex: "#86EA5D"))
+            .cornerRadius(10, corners: [.topLeft, .topRight])
+        
+    }
+}
 
 struct PaymentRequestUI: View {
     var status: ISMChatPaymentRequestStatus

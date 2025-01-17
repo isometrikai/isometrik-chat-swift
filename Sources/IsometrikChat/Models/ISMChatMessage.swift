@@ -270,8 +270,8 @@ public struct ISMChatMetaData: Codable {
     
     //dineInInvite
     public var inviteTitle : String?
-    public var inviteTimestamp : String?
-    public var inviteRescheduledTimestamp : String?
+    public var inviteTimestamp : Double?
+    public var inviteRescheduledTimestamp : Double?
     public var inviteLocation : LocationData?
     public var inviteMembers : [PaymentRequestedMembers]?
     
@@ -311,8 +311,8 @@ public struct ISMChatMetaData: Codable {
         currencyCode : String? = nil,
         amount : Double? = nil,
         inviteTitle : String? = nil,
-        inviteTimestamp : String? = nil,
-        inviteRescheduledTimestamp : String? = nil,
+        inviteTimestamp : Double? = nil,
+        inviteRescheduledTimestamp : Double? = nil,
         inviteLocation : LocationData? = nil,
         inviteMembers : [PaymentRequestedMembers]? = nil
     ) {
@@ -389,6 +389,11 @@ public struct ISMChatMetaData: Codable {
         requestAPaymentExpiryTime = try? container.decode(Int.self, forKey: .requestAPaymentExpiryTime)
         currencyCode = try? container.decode(String.self, forKey: .currencyCode)
         amount = try? container.decode(Double.self, forKey: .amount)
+        inviteTitle = try? container.decode(String.self, forKey: .inviteTitle)
+        inviteTimestamp = try? container.decode(Double.self, forKey: .inviteTimestamp)
+        inviteRescheduledTimestamp = try? container.decode(Double.self, forKey: .inviteRescheduledTimestamp)
+        inviteLocation = try? container.decode(LocationData.self, forKey: .inviteLocation)
+        inviteMembers = try? container.decode([PaymentRequestedMembers].self, forKey: .inviteMembers)
     }
 }
 

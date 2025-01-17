@@ -290,6 +290,49 @@ public class ISMChatHelper: NSObject {
         }
     }
     
+    public class func getDineInStatus(myUserId: String, metaData: MetaDataDB?, sentAt: Double) -> ISMChatPaymentRequestStatus {
+        // Retrieve the member from paymentRequestedMembers matching myUserId
+        guard let paymentRequestedMembers = metaData?.paymentRequestedMembers else {
+            return .ActiveRequest // Default status if no members are found
+        }
+        // Find the specific member with myUserId
+        guard let member = paymentRequestedMembers.first(where: { $0.userId == myUserId }) else {
+            return .ActiveRequest // Default status if no matching member is found
+        }
+
+        // Check the status of the matched member
+        if let status = member.status {
+            if status == 1{
+                return .Accepted
+            }else if status == 2{
+                return .Rejected
+            }else if status == 3{
+                // Check if any other user's status is 1 (Accepted)
+                    if paymentRequestedMembers.contains(where: { $0.userId != myUserId && $0.status == 1 }) {
+                        return .PayedByOther
+                    }else{
+                        return .Expired
+                    }
+            }else if status == 4{
+                return .Cancelled
+            }else{
+                // Calculate expiration time if status is not explicitly set
+                let sentAtSeconds = sentAt / 1000.0
+                let expirationTimestamp = sentAtSeconds + Double((metaData?.requestAPaymentExpiryTime ?? 0) * 60) // expireAt is in minutes
+                let currentTimestamp = Date().timeIntervalSince1970
+
+                // Check if the current time exceeds the expiration timestamp
+                if currentTimestamp >= expirationTimestamp {
+                    return .Expired
+                } else {
+                    return .ActiveRequest
+                }
+            }
+        }else{
+            return .ActiveRequest
+        }
+    }
+    
     //MARK: - GET EMOJI
     
     public class func getEmoji(valueString : String) -> String{

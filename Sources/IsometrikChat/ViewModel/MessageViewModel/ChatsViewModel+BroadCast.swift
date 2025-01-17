@@ -248,34 +248,34 @@ extension ChatsViewModel{
     }
     
     public func sendBroadCastMessage(messageType: Int = 0,groupcastId : String,body : String,customType: String,notificationBody: String,metaDataValue : [String: Any],searchTags : [String],completion:@escaping(String)->()){
-        var body : [String : Any] = [:]
+        var bodyData : [String : Any] = [:]
         let deviceId = UniqueIdentifierManager.shared.getUniqueIdentifier()
         var metaData : [String : Any] = [:]
         let eventDetail : [String : Any] = ["sendPushNotification" : true,"updateUnreadCount" : true]
-        body["showInConversation"] = true
-        body["messageType"] = messageType
-        body["encrypted"] = true
-        body["deviceId"] = deviceId
-        body["body"] = body
-        body["customType"] = customType
-        body["notificationTitle"] = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userName ?? ""
-        body["notificationBody"] = notificationBody
-        body["searchableTags"] = searchTags
-        body["events"] = eventDetail
-        body["groupcastId"] = groupcastId
-        body["hideNewConversationsForSender"] = false
-        body["notifyOnCompletion"] = false
-        body["sendPushForNewConversationCreated"] = false
+        bodyData["showInConversation"] = true
+        bodyData["messageType"] = messageType
+        bodyData["encrypted"] = true
+        bodyData["deviceId"] = deviceId
+        bodyData["body"] = body
+        bodyData["customType"] = customType
+        bodyData["notificationTitle"] = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userName ?? ""
+        bodyData["notificationBody"] = notificationBody
+        bodyData["searchableTags"] = searchTags
+        bodyData["events"] = eventDetail
+        bodyData["groupcastId"] = groupcastId
+        bodyData["hideNewConversationsForSender"] = false
+        bodyData["notifyOnCompletion"] = false
+        bodyData["sendPushForNewConversationCreated"] = false
         metaData = ["isBroadCastMessage" : true]
         if metaDataValue.count > 0{
             metaData.merge(metaDataValue) { current, new in
                 return new
             }
         }
-        body["metaData"] = metaData
+        bodyData["metaData"] = metaData
         
         let endPoint : ISMChatURLConvertible = ISMChatBroadCastEndpoint.sendBroadcastMessage
-        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: bodyData)
         
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatSendMsg, ISMChatNewAPIError>) in
             switch result{
