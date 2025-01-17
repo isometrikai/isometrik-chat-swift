@@ -214,6 +214,9 @@ public struct ISMChatImages {
     public var defaultImagePlaceholderForNormalUser : Image? = nil
     public var defaultImagePlaceholderForBussinessUser : Image? = nil
     
+    public var clockLogo : Image = loadImageSafely(with: "clockLogo")
+    public var locationMapLogo : Image = loadImageSafely(with: "locationMapLogo")
+    
     public init(){}
     
     public init(

@@ -292,11 +292,11 @@ public class ISMChatHelper: NSObject {
     
     public class func getDineInStatus(myUserId: String, metaData: MetaDataDB?, sentAt: Double) -> ISMChatPaymentRequestStatus {
         // Retrieve the member from paymentRequestedMembers matching myUserId
-        guard let paymentRequestedMembers = metaData?.paymentRequestedMembers else {
+        guard let inviteMembers = metaData?.inviteMembers else {
             return .ActiveRequest // Default status if no members are found
         }
         // Find the specific member with myUserId
-        guard let member = paymentRequestedMembers.first(where: { $0.userId == myUserId }) else {
+        guard let member = inviteMembers.first(where: { $0.userId == myUserId }) else {
             return .ActiveRequest // Default status if no matching member is found
         }
 
@@ -308,7 +308,7 @@ public class ISMChatHelper: NSObject {
                 return .Rejected
             }else if status == 3{
                 // Check if any other user's status is 1 (Accepted)
-                    if paymentRequestedMembers.contains(where: { $0.userId != myUserId && $0.status == 1 }) {
+                    if inviteMembers.contains(where: { $0.userId != myUserId && $0.status == 1 }) {
                         return .PayedByOther
                     }else{
                         return .Expired

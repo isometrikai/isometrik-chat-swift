@@ -142,6 +142,12 @@ struct ISMConversationSubView: View {
                             VideoCallUI()
                         case ISMChatMediaType.PaymentRequest.value:
                             PaymentRequestUI()
+                        case ISMChatMediaType.DineInInvite.value:
+                            if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
+                                getLabel(hideImage: true,text: "You have sent an invitation", image: "")
+                            }else{
+                                getLabel(hideImage: true,text: "Sent you an invitation", image: "")
+                            }
                         default:
                             actionLabels()
                         }

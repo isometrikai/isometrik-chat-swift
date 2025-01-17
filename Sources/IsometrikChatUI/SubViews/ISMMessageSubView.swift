@@ -1459,7 +1459,7 @@ struct ISMMessageSubView: View {
                                         }
                                         dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
                                     }//:ZStack
-                                    .frame(width: 280)
+                                    .frame(width: 303)
                                     .background(Color(hex: "#F5F5F2"))
                                     .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
                                     .overlay(
@@ -2301,49 +2301,88 @@ struct DineInRequestUI: View {
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
             // Header and Payment Status
-            headerView.padding(.bottom,16)
+            headerView
+                .padding(.bottom,16)
             
             
             // Payment Amount
-            VStack(spacing: 8) {
-                
-                Text(message.metaData?.inviteTitle ?? "")
-                    .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 18))
-                    .foregroundColor(Color(hex: "#121511"))
-                
-                HStack(alignment: .center, spacing: 8) {
+            
+                VStack(alignment: .leading,spacing: 8) {
                     
-                    Text(formatTimestamp(message.metaData?.inviteTimestamp ?? 0))
-                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 14))
-                        .foregroundColor(Color(hex: "#454745"))
-                }
-                HStack(alignment: .center, spacing: 8) {
-                    Text(message.metaData?.inviteLocation?.name ?? "")
-                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 14))
-                        .foregroundColor(Color(hex: "#454745"))
-                }
-                
-                if let memebersInvited = message.metaData?.inviteMembers{
-                    HStack(spacing: 4){
-                        ForEach(0..<min(memebersInvited.count, 4), id: \.self) { index in
-                            ZStack{
-                                ISMChatImageCahcingManger.viewImage(url: memebersInvited[index].userProfileImage ?? "")
-                                    .resizable()
-                                    .frame(width: 25, height: 25, alignment: .center)
-                                    .cornerRadius(25/2)
+                    Text(message.metaData?.inviteTitle ?? "")
+                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 18))
+                        .foregroundColor(Color(hex: "#121511"))
+                        .padding(.bottom,16)
+                    
+                    HStack(alignment: .center, spacing: 8) {
+                        
+                        appearance.images.clockLogo
+                            .resizable()
+                            .frame(width: 18, height: 18, alignment: .center)
+                        
+                        Text(formatTimestamp(message.metaData?.inviteTimestamp ?? 0))
+                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 14))
+                            .foregroundColor(Color(hex: "#454745"))
+                    }
+                    HStack(alignment: .center, spacing: 8) {
+                        appearance.images.locationMapLogo
+                            .resizable()
+                            .frame(width: 16.71, height: 20.31, alignment: .center)
+                        
+                        var attributedText: AttributedString {
+                            var attributedString = AttributedString("\(message.metaData?.inviteLocation?.name ?? "") Open Map")
+                            
+                            // Style "clear chat"
+                            if let range = attributedString.range(of: "Open Map") {
+                                attributedString[range].foregroundColor = Color(hex: "#454745")
+                                attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
+                                attributedString[range].underlineStyle = .single
                             }
+                            
+                            return attributedString
+                        }
+                        
+                        Text(attributedText)
+                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 14))
+                            .foregroundColor(Color(hex: "#454745"))
+                            .onTapGesture {
+                                if let range = attributedText.range(of: "Open Map") {
+                                    print("Open Map tapped!")
+                                }
+                            }
+                    }
+                    
+                    if let memebersInvited = message.metaData?.inviteMembers{
+                        HStack(spacing: 4){
+                            ForEach(0..<min(memebersInvited.count, 4), id: \.self) { index in
+                                ZStack{
+                                    let placeholderView = appearance.images.defaultImagePlaceholderForNormalUser?.resizable().scaledToFit()
+                                    ISMChatImageCahcingManger.networkImage(url: memebersInvited[index].userProfileImage ?? "", isProfileImage: true, placeholderView: placeholderView)
+                                        .scaledToFill()
+                                        .frame(width: 25, height: 25)
+                                        .clipShape(Circle())
+                                }
+                            }
+                        }.padding(.bottom,16)
+                    }
+                    
+                    if status == .Expired{
+                        HStack{
+                            Spacer()
+                            Text("Expired")
+                                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 12))
+                                .foregroundColor(Color(hex: "#6A6C6A"))
+                            Spacer()
                         }
                     }
-                }
-                
-                if isReceived == false{
-                    Text("You've sent a Dine-in invite. Please wait for your friend's response.")
-                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
-                        .foregroundColor(Color(hex: "#3A341C"))
-                }
-               
-            }
-            .padding(.horizontal, 16)
+                    
+                    if isReceived == false{
+                        Text("You've sent a Dine-in invite. Please wait for your friend's response.")
+                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                            .foregroundColor(Color(hex: "#3A341C"))
+                    }
+                    
+                }.padding(.horizontal, 20)
             
             // Action Buttons for Active Request Only
             if status == .ActiveRequest {
@@ -2366,12 +2405,10 @@ struct DineInRequestUI: View {
                                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
                                 .foregroundStyle(Color(hex: "#163300"))
                                 .frame(width: 121, height: 32, alignment: .center)
-                                .background(Color(hex: "#86EA5D"))
-                                .cornerRadius(16)
+                                .background(RoundedRectangle(cornerRadius: 16).stroke(Color(hex: "#163300"), lineWidth: 1))
                         }
                     }
-                }
-                .padding(.horizontal, 16)
+                }.padding(.horizontal, 16)
             }
         }
     }
@@ -2413,9 +2450,9 @@ struct DineInRequestUI: View {
         Text(isReceived ? "You're Invited!" : "Dine-in Invite")
             .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
             .foregroundColor(Color(hex: "#121511"))
-            .padding()
+            .frame(height: 73)
             .frame(maxWidth: .infinity)
-            .background(Color(hex: "#86EA5D"))
+            .background(status == .Expired ? Color(hex: "#BDBDBA") : Color(hex: "#86EA5D"))
             .cornerRadius(10, corners: [.topLeft, .topRight])
         
     }
