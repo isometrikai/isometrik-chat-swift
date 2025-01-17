@@ -148,6 +148,7 @@ extension RealmManager{
                     metadataValue.inviteTitle = metaData.inviteTitle
                     metadataValue.inviteTimestamp = metaData.inviteTimestamp
                     metadataValue.inviteRescheduledTimestamp = metaData.inviteRescheduledTimestamp
+                    metadataValue.groupCastId = metaData.groupCastId
                     
                     if let location = metaData.inviteLocation {
                         let locationDB = LocationDB()
@@ -496,6 +497,7 @@ extension RealmManager{
                         metaData.inviteTitle = value.metaData?.inviteTitle ?? value.details?.metaData?.inviteTitle
                         metaData.inviteTimestamp = value.metaData?.inviteTimestamp ?? value.details?.metaData?.inviteTimestamp
                         metaData.inviteRescheduledTimestamp = value.metaData?.inviteRescheduledTimestamp ?? value.details?.metaData?.inviteRescheduledTimestamp
+                        metaData.groupCastId = value.metaData?.groupCastId ?? value.details?.metaData?.groupCastId
                         
                         if let location = value.metaData?.inviteLocation ?? value.details?.metaData?.inviteLocation{
                             let locationDB = LocationDB()

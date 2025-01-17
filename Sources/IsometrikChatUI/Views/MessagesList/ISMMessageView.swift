@@ -34,6 +34,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToShareContact(conversationId : String)
     func viewDetailForPaymentRequest(orderId : String, paymentRequestId : String,isReceived : Bool,senderInfo : UserDB?,paymentRequestUserId : String)
     func declinePaymentRequest(paymentRequestUserId : String, paymentRequestId : String,completion:@escaping()->())
+    func dineInInvite(messageId : String, groupcastId : String,reason : String,createdByUserId : String,declineByUserId : String,inviteStatus : Int)
 }
 
 public struct ISMMessageView: View {
@@ -474,13 +475,17 @@ public struct ISMMessageView: View {
             if !viewDetailsForPaymentRequest.messageId.isEmpty{
                 self.conversationViewModel.getUserData { myData in
                     let appUserId = myData?.userIdentifier ?? ""
-                    self.delegate?.viewDetailForPaymentRequest(
-                        orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "",
-                        paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",
-                        isReceived: getIsReceived(message: viewDetailsForPaymentRequest),
-                        senderInfo: viewDetailsForPaymentRequest.senderInfo,
-                        paymentRequestUserId: appUserId
-                    )
+                    if viewDetailsForPaymentRequest.customType == ISMChatMediaType.PaymentRequest.value{
+                        self.delegate?.viewDetailForPaymentRequest(
+                            orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "",
+                            paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",
+                            isReceived: getIsReceived(message: viewDetailsForPaymentRequest),
+                            senderInfo: viewDetailsForPaymentRequest.senderInfo,
+                            paymentRequestUserId: appUserId
+                        )
+                    }else{
+                        self.delegate?.dineInInvite(messageId: viewDetailsForPaymentRequest.messageId ?? "", groupcastId: viewDetailsForPaymentRequest.groupcastId ?? "", reason: "", createdByUserId: viewDetailsForPaymentRequest.senderInfo?.metaData?.userId ?? "", declineByUserId: appUserId, inviteStatus: 1)
+                    }
                     viewDetailsForPaymentRequest = MessagesDB()
                 }
             }
@@ -645,31 +650,46 @@ public struct ISMMessageView: View {
             .presentationDragIndicator(.visible)
         })
         .sheet(isPresented: $stateViewModel.showDeclinePaymentRequestPopUp, content: {
-            ConfirmationPopup(
-                title: "Decline Request?",
-                message: "Are you sure you want to decline payment request?",
-                confirmButtonTitle: "Decline request",
-                cancelButtonTitle: "Cancel",
-                confirmAction: {
+            if declinePaymentRequest.customType == ISMChatMediaType.PaymentRequest.value{
+                ConfirmationPopup(
+                    title: "Decline Request?",
+                    message: "Are you sure you want to decline payment request?",
+                    confirmButtonTitle: "Decline request",
+                    cancelButtonTitle: "Cancel",
+                    confirmAction: {
+                        self.conversationViewModel.getUserData { myData in
+                            let appUserId = myData?.userIdentifier ?? ""
+                            let paymentRequestId = declinePaymentRequest.metaData?.paymentRequestId ?? ""
+                            declinePaymentRequest = MessagesDB()
+                            self.delegate?.declinePaymentRequest(paymentRequestUserId: appUserId, paymentRequestId: paymentRequestId, completion: {
+                            })
+                            stateViewModel.showDeclinePaymentRequestPopUp = false
+                        }
+                    },
+                    cancelAction: {
+                        declinePaymentRequest = MessagesDB()
+                        stateViewModel.showDeclinePaymentRequestPopUp = false
+                    },
+                    popUpType: .Menu,
+                    isPresented: $stateViewModel.showDeclinePaymentRequestPopUp,
+                    showCrossButton: true
+                )
+                .presentationDetents([.fraction(0.3)])
+                .presentationDragIndicator(.visible)
+            }else{
+                DeclineReasonPopUpView { reason in
                     self.conversationViewModel.getUserData { myData in
                         let appUserId = myData?.userIdentifier ?? ""
-                        let paymentRequestId = declinePaymentRequest.metaData?.paymentRequestId ?? ""
+                        self.delegate?.dineInInvite(messageId: declinePaymentRequest.messageId ?? "", groupcastId: declinePaymentRequest.metaData?.groupCastId ?? "", reason: reason, createdByUserId: declinePaymentRequest.senderInfo?.userIdentifier ?? "", declineByUserId: appUserId,inviteStatus: 2)
                         declinePaymentRequest = MessagesDB()
-                        self.delegate?.declinePaymentRequest(paymentRequestUserId: appUserId, paymentRequestId: paymentRequestId, completion: {
-                        })
                         stateViewModel.showDeclinePaymentRequestPopUp = false
                     }
-                },
-                cancelAction: {
+                } cancelAction: {
                     declinePaymentRequest = MessagesDB()
                     stateViewModel.showDeclinePaymentRequestPopUp = false
-                },
-                popUpType: .Menu,
-                isPresented: $stateViewModel.showDeclinePaymentRequestPopUp,
-                showCrossButton: true
-            )
-            .presentationDetents([.fraction(0.3)])
-            .presentationDragIndicator(.visible)
+                }.presentationDetents([.medium])
+                    .presentationDragIndicator(.visible)
+            }
         })
         .sheet(isPresented: $stateViewModel.showClearChatPopup, content: {
             var attributedText: AttributedString {

@@ -274,6 +274,7 @@ public struct ISMChatMetaData: Codable {
     public var inviteRescheduledTimestamp : Double?
     public var inviteLocation : LocationData?
     public var inviteMembers : [PaymentRequestedMembers]?
+    public var groupCastId : String?
     
     public var isSharedFromApp : Bool?
     
@@ -314,7 +315,8 @@ public struct ISMChatMetaData: Codable {
         inviteTimestamp : Double? = nil,
         inviteRescheduledTimestamp : Double? = nil,
         inviteLocation : LocationData? = nil,
-        inviteMembers : [PaymentRequestedMembers]? = nil
+        inviteMembers : [PaymentRequestedMembers]? = nil,
+        groupCastId : String? = nil
     ) {
         self.replyMessage = replyMessage
         self.locationAddress = locationAddress
@@ -353,6 +355,7 @@ public struct ISMChatMetaData: Codable {
         self.inviteRescheduledTimestamp = inviteRescheduledTimestamp
         self.inviteLocation = inviteLocation
         self.inviteMembers = inviteMembers
+        self.groupCastId = groupCastId
     }
     
     public init(from decoder: Decoder) throws {
@@ -394,6 +397,7 @@ public struct ISMChatMetaData: Codable {
         inviteRescheduledTimestamp = try? container.decode(Double.self, forKey: .inviteRescheduledTimestamp)
         inviteLocation = try? container.decode(LocationData.self, forKey: .inviteLocation)
         inviteMembers = try? container.decode([PaymentRequestedMembers].self, forKey: .inviteMembers)
+        groupCastId = try? container.decode(String.self, forKey: .groupCastId)
     }
 }
 

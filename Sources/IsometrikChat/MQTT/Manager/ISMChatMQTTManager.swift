@@ -558,7 +558,13 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                         paymentRequestedMembers: paymentRequestedMembers,
                         requestAPaymentExpiryTime : messageInfo.metaData?.requestAPaymentExpiryTime,
                         currencyCode : messageInfo.metaData?.currencyCode,
-                        amount : messageInfo.metaData?.amount
+                        amount : messageInfo.metaData?.amount,
+                        inviteTitle: messageInfo.metaData?.inviteTitle,
+                        inviteTimestamp: messageInfo.metaData?.inviteTimestamp,
+                        inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp,
+                        inviteLocation: messageInfo.metaData?.inviteLocation,
+                        inviteMembers: messageInfo.metaData?.inviteMembers,
+                        groupCastId: messageInfo.metaData?.groupCastId
                     )
                     
                     var metaDataJsonString : String = ""
@@ -615,7 +621,13 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             paymentRequestedMembers : paymentRequestedMembersDetails,
                             requestAPaymentExpiryTime : messageInfo.details?.metaData?.requestAPaymentExpiryTime,
                             currencyCode : messageInfo.details?.metaData?.currencyCode,
-                            amount : messageInfo.details?.metaData?.amount
+                            amount : messageInfo.details?.metaData?.amount,
+                            inviteTitle: messageInfo.metaData?.inviteTitle,
+                            inviteTimestamp: messageInfo.metaData?.inviteTimestamp,
+                            inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp,
+                            inviteLocation: messageInfo.metaData?.inviteLocation,
+                            inviteMembers: messageInfo.metaData?.inviteMembers,
+                            groupCastId: messageInfo.metaData?.groupCastId
                         )
                         
                         do {
@@ -751,7 +763,13 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             paymentRequestedMembers: paymentRequestedMembers,
                             requestAPaymentExpiryTime : messageInfo.metaData?.requestAPaymentExpiryTime,
                             currencyCode : messageInfo.metaData?.currencyCode,
-                            amount : messageInfo.metaData?.amount
+                            amount : messageInfo.metaData?.amount,
+                            inviteTitle: messageInfo.metaData?.inviteTitle,
+                            inviteTimestamp: messageInfo.metaData?.inviteTimestamp,
+                            inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp,
+                            inviteLocation: messageInfo.metaData?.inviteLocation,
+                            inviteMembers: messageInfo.metaData?.inviteMembers,
+                            groupCastId: messageInfo.metaData?.groupCastId
                         )
                         
                         var metaDataJsonString : String = ""
@@ -808,7 +826,13 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                                 paymentRequestedMembers : paymentRequestedMembersDetails,
                                 requestAPaymentExpiryTime : messageInfo.details?.metaData?.requestAPaymentExpiryTime,
                                 currencyCode : messageInfo.details?.metaData?.currencyCode,
-                                amount : messageInfo.details?.metaData?.amount
+                                amount : messageInfo.details?.metaData?.amount,
+                                inviteTitle: messageInfo.metaData?.inviteTitle,
+                                inviteTimestamp: messageInfo.metaData?.inviteTimestamp,
+                                inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp,
+                                inviteLocation: messageInfo.metaData?.inviteLocation,
+                                inviteMembers: messageInfo.metaData?.inviteMembers,
+                                groupCastId: messageInfo.metaData?.groupCastId
                             )
                         }
                         

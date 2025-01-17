@@ -266,7 +266,7 @@ extension ChatsViewModel{
         bodyData["hideNewConversationsForSender"] = false
         bodyData["notifyOnCompletion"] = false
         bodyData["sendPushForNewConversationCreated"] = false
-        metaData = ["isBroadCastMessage" : true]
+        metaData = ["isBroadCastMessage" : true,"groupCastId" : groupcastId]
         if metaDataValue.count > 0{
             metaData.merge(metaDataValue) { current, new in
                 return new

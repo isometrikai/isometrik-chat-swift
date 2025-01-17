@@ -340,6 +340,7 @@ extension RealmManager {
                     messageMetaData.inviteTitle = value.lastMessageDetails?.metaData?.inviteTitle
                     messageMetaData.inviteTimestamp = value.lastMessageDetails?.metaData?.inviteTimestamp
                     messageMetaData.inviteRescheduledTimestamp = value.lastMessageDetails?.metaData?.inviteRescheduledTimestamp
+                    messageMetaData.groupCastId = value.lastMessageDetails?.metaData?.groupCastId
                     
                     if let location = value.lastMessageDetails?.metaData?.inviteLocation {
                         let locationDB = LocationDB()
@@ -442,6 +443,7 @@ extension RealmManager {
                         metadataValue.inviteTitle = metaData.inviteTitle
                         metadataValue.inviteTimestamp = metaData.inviteTimestamp
                         metadataValue.inviteRescheduledTimestamp = metaData.inviteRescheduledTimestamp
+                        metadataValue.groupCastId = metaData.groupCastId
                         
                         if let location = metaData.inviteLocation {
                             let locationDB = LocationDB()
@@ -655,6 +657,7 @@ extension RealmManager {
                         metadataValue.inviteTitle = metaData.inviteTitle
                         metadataValue.inviteTimestamp = metaData.inviteTimestamp
                         metadataValue.inviteRescheduledTimestamp = metaData.inviteRescheduledTimestamp
+                        metadataValue.groupCastId = metaData.groupCastId
                         
                         if let location = metaData.inviteLocation {
                             let locationDB = LocationDB()
@@ -1017,6 +1020,7 @@ extension RealmManager {
                     metadataValue.inviteTitle = metaData.inviteTitle
                     metadataValue.inviteTimestamp = metaData.inviteTimestamp
                     metadataValue.inviteRescheduledTimestamp = metaData.inviteRescheduledTimestamp
+                    metadataValue.groupCastId = metaData.groupCastId
                     
                     if let location = metaData.inviteLocation {
                         let locationDB = LocationDB()
