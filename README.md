@@ -106,7 +106,12 @@ extension AppDelegate : PKPushRegistryDelegate{
 
 
 10. Add this in AppDelegate (didRefreshRegistrationToken) to subscribe topic
-        ISMChatHelper.subscribeFCM()
+        Messaging.messaging().subscribe(toTopic: ISMChatHelper.subscribeFCM()) { (error) in
+            if error != nil {
+                print("errror fcm topic ", error as Any)
+            }
+        }
+        
         
         
 11. Share Post/ Reel
