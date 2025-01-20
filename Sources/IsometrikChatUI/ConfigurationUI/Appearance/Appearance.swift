@@ -162,29 +162,46 @@ public class ISMChatCustomFontNames{
     }
 }
 
-public class ISMChatCustomSearchBar{
-    public var height : Int
-    public var cornerRadius : Int
-    public var borderWidth : Double
-    public var searchBarBackgroundColor : Color
-    public var searchBarBorderColor : Color
-    public var showCrossButton : Bool
-    public var searchBarSearchIcon : Image
-    public var searchCrossIcon : Image
-    public var sizeOfSearchIcon : CGSize
-    public var sizeofCrossIcon : CGSize
-    public var searchPlaceholderText : String
-    public var searchPlaceholderTextColor : Color
-    public var searchTextFont : Font
-    public init(height: Int,cornerRadius: Int,borderWidth: Double,searchBarBackgroundColor : Color,searchBarBorderColor: Color,showCrossButton: Bool,searchBarSearchIcon: Image,searchCrossIcon: Image,sizeOfSearchIcon: CGSize,sizeofCrossIcon: CGSize,searchPlaceholderText: String,searchPlaceholderTextColor: Color,searchTextFont: Font){
+public class ISMChatCustomSearchBar {
+    let images: ISMChatImages = ISMChatImages()
+    
+    public var height: Int
+    public var cornerRadius: Int
+    public var borderWidth: Double
+    public var searchBarBackgroundColor: Color
+    public var searchBarBorderColor: Color
+    public var showCrossButton: Bool
+    public var searchBarSearchIcon: Image
+    public var searchCrossIcon: Image
+    public var sizeOfSearchIcon: CGSize
+    public var sizeofCrossIcon: CGSize
+    public var searchPlaceholderText: String
+    public var searchPlaceholderTextColor: Color
+    public var searchTextFont: Font
+    
+    public init(
+        height: Int = 44,
+        cornerRadius: Int = 8,
+        borderWidth: Double = 1.0,
+        searchBarBackgroundColor: Color = .white,
+        searchBarBorderColor: Color = .gray,
+        showCrossButton: Bool = true,
+        searchBarSearchIcon: Image? = nil,
+        searchCrossIcon: Image? = nil,
+        sizeOfSearchIcon: CGSize = CGSize(width: 20, height: 20),
+        sizeofCrossIcon: CGSize = CGSize(width: 20, height: 20),
+        searchPlaceholderText: String = "Search",
+        searchPlaceholderTextColor: Color = .gray,
+        searchTextFont: Font = .system(size: 14)
+    ) {
         self.height = height
         self.cornerRadius = cornerRadius
         self.borderWidth = borderWidth
         self.searchBarBackgroundColor = searchBarBackgroundColor
         self.searchBarBorderColor = searchBarBorderColor
         self.showCrossButton = showCrossButton
-        self.searchBarSearchIcon = searchBarSearchIcon
-        self.searchCrossIcon = searchCrossIcon
+        self.searchBarSearchIcon = searchBarSearchIcon ?? images.searchIcon
+        self.searchCrossIcon = searchCrossIcon ?? images.cancelWithGreyBackground
         self.sizeOfSearchIcon = sizeOfSearchIcon
         self.sizeofCrossIcon = sizeofCrossIcon
         self.searchPlaceholderText = searchPlaceholderText
