@@ -2348,6 +2348,7 @@ struct DineInRequestUI: View {
                             .onTapGesture {
                                 if let range = attributedText.range(of: "Open Map") {
                                     print("Open Map tapped!")
+                                    openMaps()
                                 }
                             }
                     }
@@ -2412,6 +2413,16 @@ struct DineInRequestUI: View {
             }
         }
     }
+    
+    func openMaps() {
+        let url = "http://maps.apple.com/maps?saddr=\(message.metaData?.inviteLocation?.latitude ?? 0),\(message.metaData?.inviteLocation?.longitude ?? 0)"
+        UIApplication.shared.open(URL(string : url)!, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
+    }
+    
+    fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+        return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
+    }
+    
     func formatTimestamp(_ timestamp: TimeInterval) -> String {
         // Convert the timestamp to a Date object
         let date = Date(timeIntervalSince1970: timestamp)
