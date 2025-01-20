@@ -217,6 +217,9 @@ public struct ISMChatImages {
     public var clockLogo : Image = loadImageSafely(with: "clockLogo")
     public var locationMapLogo : Image = loadImageSafely(with: "locationMapLogo")
     
+    public var selectedDeleteOptions : Image = loadImageSafely(with: "selectedOptions")
+    public var deSelectedDeleteOptions : Image = loadImageSafely(with: "deSelectedOptions")
+    
     public init(){}
     
     public init(

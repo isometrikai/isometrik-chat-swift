@@ -16,63 +16,81 @@ struct DeclineReasonPopUpView: View {
         "Other"
     ]
     
-    // State to track the selected option
-    @State var selectedOption: String? = nil
+    @Binding var selectedOption: String?
     var confirmAction: (String) -> Void
     var cancelAction: () -> Void
     @State private var reasonText: String = "" // State to hold user input
     private let maxCharacterLimit = 1000
+    var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     var body: some View {
-        VStack(spacing: 32) {
+        VStack(alignment: .leading,spacing: 0) {
             Text("Select why you can’t attend")
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().bold, size: 16))
+                .foregroundColor(Color(hex: "#0E0F0C"))
+                .padding(.vertical,20)
             List {
                 ForEach(options, id: \.self) { option in
                     HStack {
                         // Radio button
-                        Circle()
-                            .strokeBorder(selectedOption == option ? Color.green : Color.gray, lineWidth: 2)
-                            .background(Circle().fill(selectedOption == option ? Color.green : Color.clear))
-                            .frame(width: 20, height: 20)
+                        if selectedOption == option{
+                            appearance.images.selectedDeleteOptions
+                                .resizable()
+                                .frame(width: 24, height: 24, alignment: .center)
+                        }else{
+                            appearance.images.deSelectedDeleteOptions
+                                .resizable()
+                                .frame(width: 24, height: 24, alignment: .center)
+                        }
                         
                         // Option text
                         Text(option)
-                            .font(.body)
-                            .foregroundColor(.primary)
+                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 16))
+                            .foregroundColor(Color(hex: "#0E0F0C"))
                         
                         Spacer()
-                    }
+                    }.padding(.vertical,7)
                     .contentShape(Rectangle())
                     .onTapGesture {
                         selectedOption = option
                     }
-                }
+                }.listRowSeparator(.hidden)
             }.listStyle(.plain)
+                .listRowSeparator(.hidden)
+                .padding(.bottom,20)
             
             if selectedOption == "Other"{
                 Text("Reason")
+                    .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 14))
+                    .foregroundColor(Color(hex: "#454745"))
+                    .padding(.bottom,8)
                 VStack(alignment: .trailing){
                     ZStack(alignment: .topLeading) {
                         // Placeholder text
-                        if reasonText.isEmpty {
-                            Text("Optional")
-                                .foregroundColor(.gray)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 12)
-                        }
+                        
                         
                         // Text editor
                         TextEditor(text: $reasonText)
                             .padding(8)
-                            .frame(height: 106) // Adjust the height as needed
+                            .frame(height: 75) // Adjust the height as needed
+                        
+                        if reasonText.isEmpty {
+                            Text("Optional")
+                                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 16))
+                                .foregroundColor(Color(hex: "#6A6C6A"))
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 12)
+                        }
                     }
                     Text("\(reasonText.count)/\(maxCharacterLimit)")
-                        .font(.caption)
-                        .foregroundColor(.gray)
+                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                        .foregroundColor(Color(hex: "#454745"))
+                        .padding()
                 }.overlay(
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(Color.gray, lineWidth: 1)
                 )
+                .padding(.bottom,20)
             }
             
             HStack {
@@ -110,6 +128,5 @@ struct DeclineReasonPopUpView: View {
         }
         .padding()
         .background(Color.white)
-        .padding(.horizontal, 0)
     }
 }
