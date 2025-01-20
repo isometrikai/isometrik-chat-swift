@@ -67,5 +67,6 @@ public class UIStateViewModel: ObservableObject {
     @Published public var showBlockUserPopup : Bool = false
     @Published public var showDeclinePaymentRequestPopUp : Bool = false
     @Published public var showDeclineDineInPopUp : Bool = false
+    @Published public var showInviteeDineInPopUp : Bool = false
     public init() {}
 }

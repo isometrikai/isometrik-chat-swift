@@ -11,12 +11,12 @@ import IsometrikChat
 struct InviteeListPopUpView: View {
     var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     var message : MessagesDB
-    @Binding var isPresented : Bool
+    var cancel : () -> ()
     var body: some View {
         VStack(alignment: .leading,spacing: 0) {
             HStack{
                 Button {
-                    isPresented = false
+                    cancel()
                 } label: {
                     appearance.images.dismissButton
                         .resizable()
@@ -34,7 +34,7 @@ struct InviteeListPopUpView: View {
                 Image("")
                     .resizable()
                     .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
-            }
+            }.padding(.horizontal,15).padding(.top,20)
         }
         if let memebersInvited = message.metaData?.inviteMembers{
             List {

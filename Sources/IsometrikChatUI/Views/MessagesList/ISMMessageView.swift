@@ -189,6 +189,7 @@ public struct ISMMessageView: View {
     @State var navigateToCollectionLink : MessagesDB = MessagesDB()
     @State var viewDetailsForPaymentRequest : MessagesDB = MessagesDB()
     @State var declinePaymentRequest : MessagesDB = MessagesDB()
+    @State var showInviteeListInDineInRequest : MessagesDB = MessagesDB()
     @State var navigateToChatList : Bool = false
     
     @State var declineReasonOption : String? = nil
@@ -502,6 +503,11 @@ public struct ISMMessageView: View {
                 stateViewModel.navigateToMediaSlider = true
             }
         })
+        .onChange(of: showInviteeListInDineInRequest.messageId, { _, _ in
+            if !showInviteeListInDineInRequest.messageId.isEmpty{
+                stateViewModel.showInviteeDineInPopUp = true
+            }
+        })
         .onChange(of: textFieldtxt, { _, newValue in
             // Update showMentionList based on conditions
             if newValue.last == "@" {
@@ -651,6 +657,13 @@ public struct ISMMessageView: View {
             )
             .presentationDetents([.fraction(0.25)])
             .presentationDragIndicator(.visible)
+        })
+        .sheet(isPresented: $stateViewModel.showInviteeDineInPopUp, content: {
+            InviteeListPopUpView(message: showInviteeListInDineInRequest) {
+                showInviteeListInDineInRequest = MessagesDB()
+                stateViewModel.showInviteeDineInPopUp = false
+            }.presentationDetents([.height(446)])
+                    .presentationDragIndicator(.visible)
         })
         .sheet(isPresented: $stateViewModel.showDeclinePaymentRequestPopUp, content: {
             if declinePaymentRequest.customType == ISMChatMediaType.PaymentRequest.value{

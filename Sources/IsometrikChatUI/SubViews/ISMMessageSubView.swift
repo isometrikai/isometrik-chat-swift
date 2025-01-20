@@ -89,6 +89,7 @@ struct ISMMessageSubView: View {
     //payment
     @Binding var viewDetailsForPaymentRequest : MessagesDB
     @Binding var declinePaymentRequest : MessagesDB
+    @Binding var showInviteeListInDineInRequest : MessagesDB
     
     
     //MARK:  - BODY
@@ -1452,10 +1453,12 @@ struct ISMMessageSubView: View {
                                     }
                                     
                                     VStack(alignment: .trailing,spacing: 5){
-                                        DineInRequestUI(status: ISMChatHelper.getDineInStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt), isReceived: self.isReceived, message:  self.message) {
+                                        DineInRequestUI(status: ISMChatHelper.getDineInStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt), isReceived: self.isReceived, message: self.message) {
                                             viewDetailsForPaymentRequest = self.message
                                         } declineRequest: {
                                             declinePaymentRequest = self.message
+                                        } showInvitee: {
+                                            showInviteeListInDineInRequest = self.message
                                         }
                                         dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
                                     }//:ZStack
@@ -2297,6 +2300,7 @@ struct DineInRequestUI: View {
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     var viewDetails : () -> ()
     var declineRequest : () -> ()
+    var showInvitee : () -> ()
     var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
@@ -2354,17 +2358,21 @@ struct DineInRequestUI: View {
                     }
                     
                     if let memebersInvited = message.metaData?.inviteMembers{
-                        HStack(spacing: 4){
-                            ForEach(0..<min(memebersInvited.count, 4), id: \.self) { index in
-                                ZStack{
-                                    let placeholderView = appearance.images.defaultImagePlaceholderForNormalUser?.resizable().scaledToFit()
-                                    ISMChatImageCahcingManger.networkImage(url: memebersInvited[index].userProfileImage ?? "", isProfileImage: true, placeholderView: placeholderView)
-                                        .scaledToFill()
-                                        .frame(width: 25, height: 25)
-                                        .clipShape(Circle())
+                        Button {
+                            showInvitee()
+                        } label: {
+                            HStack(spacing: 4){
+                                ForEach(0..<min(memebersInvited.count, 4), id: \.self) { index in
+                                    ZStack{
+                                        let placeholderView = appearance.images.defaultImagePlaceholderForNormalUser?.resizable().scaledToFit()
+                                        ISMChatImageCahcingManger.networkImage(url: memebersInvited[index].userProfileImage ?? "", isProfileImage: true, placeholderView: placeholderView)
+                                            .scaledToFill()
+                                            .frame(width: 25, height: 25)
+                                            .clipShape(Circle())
+                                    }
                                 }
-                            }
-                        }.padding(.bottom,16)
+                            }.padding(.bottom,16)
+                        }
                     }
                     
                     if status == .Expired{
