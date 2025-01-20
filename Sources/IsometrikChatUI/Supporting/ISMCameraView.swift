@@ -646,18 +646,27 @@ struct CaptureButton: View {
                 .fill(isRecording ? Color.red.opacity(0.7) : Color.white)
                 .frame(width: 70, height: 70)
         }
-        .onTapGesture {
-            onCapture()
-        }
-        .onLongPressGesture {
-            // Start recording video action
-            isRecording = true
-        } onPressingChanged: { isPressing in
-            if !isPressing {
-                // Stop recording video action
-                isRecording = false
+        .simultaneousGesture(
+            TapGesture()
+                .onEnded {
+                    if !isRecording {
+                        onCapture()
+                    }
+                }
+        )
+        .onLongPressGesture(
+            minimumDuration: 0.5, // Customize duration for the long press
+            pressing: { isPressing in
+                if isPressing {
+                    isRecording = true
+                }else{
+                    isRecording = false
+                }
+            },
+            perform: {
+                
             }
-        }
+        )
     }
 }
 
