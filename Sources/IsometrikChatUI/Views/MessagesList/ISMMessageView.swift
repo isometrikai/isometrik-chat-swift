@@ -34,7 +34,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToShareContact(conversationId : String)
     func viewDetailForPaymentRequest(orderId : String, paymentRequestId : String,isReceived : Bool,senderInfo : UserDB?,paymentRequestUserId : String)
     func declinePaymentRequest(paymentRequestUserId : String, paymentRequestId : String,completion:@escaping()->())
-    func dineInInvite(messageId : String, groupcastId : String,reason : String,createdByUserId : String,declineByUserId : String,inviteStatus : Int)
+    func dineInInvite(messageId : String, groupcastId : String,reason : String,createdByUserId : String,declineByUserId : String,inviteStatus : Int,orderId: String)
 }
 
 public struct ISMMessageView: View {
@@ -485,7 +485,7 @@ public struct ISMMessageView: View {
                             paymentRequestUserId: self.myAppUserId ?? ""
                         )
                     }else{
-                        self.delegate?.dineInInvite(messageId: viewDetailsForPaymentRequest.messageId ?? "", groupcastId: viewDetailsForPaymentRequest.groupcastId ?? "", reason: "", createdByUserId: viewDetailsForPaymentRequest.senderInfo?.metaData?.userId ?? "", declineByUserId: self.myAppUserId ?? "", inviteStatus: 1)
+                        self.delegate?.dineInInvite(messageId: viewDetailsForPaymentRequest.messageId ?? "", groupcastId: viewDetailsForPaymentRequest.groupcastId ?? "", reason: "", createdByUserId: viewDetailsForPaymentRequest.senderInfo?.metaData?.userId ?? "", declineByUserId: self.myAppUserId ?? "", inviteStatus: 1,orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "")
                     }
                     viewDetailsForPaymentRequest = MessagesDB()
 //                }
@@ -681,7 +681,7 @@ public struct ISMMessageView: View {
                 DeclineReasonPopUpView { reason in
 //                    self.conversationViewModel.getUserData { myData in
 //                        let appUserId = myData?.userIdentifier ?? ""
-                        self.delegate?.dineInInvite(messageId: declinePaymentRequest.messageId ?? "", groupcastId: declinePaymentRequest.metaData?.groupCastId ?? "", reason: reason, createdByUserId: declinePaymentRequest.senderInfo?.userIdentifier ?? "", declineByUserId: self.myAppUserId ?? "",inviteStatus: 2)
+                        self.delegate?.dineInInvite(messageId: declinePaymentRequest.messageId ?? "", groupcastId: declinePaymentRequest.metaData?.groupCastId ?? "", reason: reason, createdByUserId: declinePaymentRequest.senderInfo?.userIdentifier ?? "", declineByUserId: self.myAppUserId ?? "",inviteStatus: 2,orderId: declinePaymentRequest.metaData?.orderId ?? "")
                         declinePaymentRequest = MessagesDB()
                         stateViewModel.showDeclinePaymentRequestPopUp = false
 //                    }
