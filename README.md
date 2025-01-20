@@ -156,8 +156,14 @@ extension AppDelegate : PKPushRegistryDelegate{
 
 Add this code when u logout
 
-
+        Messaging.messaging().unsubscribe(fromTopic: ISMChatHelper.unSubscribeFCM(userId: userId))
         ISMChatSdk.getInstance().onTerminate(userId: IsomertricChatid ?? "")
         ISMChatSdk.sharedInstance = nil
+        
+Profile Switch:
+Add this code when u have mutiple profiles in one account
+
+        Messaging.messaging().unsubscribe(fromTopic: ISMChatHelper.unSubscribeFCM(userId: userId))
+        ISMChatSdk.getInstance().onProfileSwitch(oldUserId : String,appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig,hostFrameworkType : FrameworkType,conversationListViewControllerName : UIViewController.Type?,messagesListViewControllerName : UIViewController.Type?)
 
 

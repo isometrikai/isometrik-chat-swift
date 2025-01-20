@@ -152,7 +152,7 @@ public class ConversationViewModel : NSObject ,ObservableObject{
             switch result{
             case .success(let data,_) :
                 completion(data.count)
-            case .failure(let error) :
+            case .failure(_) :
                 completion(0)
             }
         }

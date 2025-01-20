@@ -135,10 +135,7 @@ public class ISMChatSdk{
     }
     
     public func onTerminate(userId : String) {
-        //1. unsubscribe fcm
         if checkifChatInitialied() == true{
-            ISMChatHelper.unSubscribeFCM(userId: userId)
-            //2. unsubscribe mqtt
             if mqttSession != nil {
                 self.mqttSession?.unSubscribe()
             }
@@ -153,9 +150,6 @@ public class ISMChatSdk{
     }
     
     public func onProfileSwitch(oldUserId : String,appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig,hostFrameworkType : FrameworkType,conversationListViewControllerName : UIViewController.Type?,messagesListViewControllerName : UIViewController.Type?){
-        //1. unsubscribe fcm
-        ISMChatHelper.unSubscribeFCM(userId: oldUserId)
-        //2. unsubscribe mqtt
         if mqttSession != nil {
             self.mqttSession?.unSubscribe()
         }

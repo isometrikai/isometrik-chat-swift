@@ -12,7 +12,7 @@ import AVFoundation
 import PDFKit
 import CoreLocation
 import CoreLocationUI
-import FirebaseMessaging
+//import FirebaseMessaging
 import PhotosUI
 
 public class ISMChatHelper: NSObject {
@@ -590,30 +590,34 @@ public class ISMChatHelper: NSObject {
         return NSURL(fileURLWithPath: lastComponent).pathExtension
     }
     
-    public class func subscribeFCM(userId : String){
-        Messaging.messaging().subscribe(toTopic: "chat-\(userId)") { (error) in
-            if error != nil {
-                print("errror fcm topic ", error as Any)
-            }
-        }
+    public class func subscribeFCM(userId : String) -> String{
+        return "chat-\(userId)"
+//        Messaging.messaging().subscribe(toTopic: "chat-\(userId)") { (error) in
+//            if error != nil {
+//                print("errror fcm topic ", error as Any)
+//            }
+//        }
     }
     
 //    unsubscribe all fcm topics
-    public class func unSubscribeFCM(userId : String){
-        Messaging.messaging().unsubscribe(fromTopic: "chat-\(userId)")
+    public class func unSubscribeFCM(userId : String) -> String{
+        return "chat-\(userId)"
+//        Messaging.messaging().unsubscribe(fromTopic: "chat-\(userId)")
     }
     
-    public class func subscribeTopic(name : String){
-        Messaging.messaging().subscribe(toTopic: "\(name)") { (error) in
-            if error != nil {
-                print("errror subscribing topic ", error as Any)
-            }
-        }
+    public class func subscribeTopic(name : String) -> String{
+        return name
+//        Messaging.messaging().subscribe(toTopic: "\(name)") { (error) in
+//            if error != nil {
+//                print("errror subscribing topic ", error as Any)
+//            }
+//        }
     }
     
 //    unsubscribe all fcm topics
-    public class func unSubscribeTopic(name : String){
-        Messaging.messaging().unsubscribe(fromTopic: "\(name)")
+    public class func unSubscribeTopic(name : String) -> String{
+        return name
+//        Messaging.messaging().unsubscribe(fromTopic: "\(name)")
     }
     
     public class func getVideoSize(_ url: URL) async -> CGSize {

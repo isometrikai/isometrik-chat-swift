@@ -1136,7 +1136,7 @@ extension RealmManager {
     //MARK: - update last message delivered
     public func updateLastmsgDeliver(conId:String,messageId : String,userId : String,updatedAt : Double) {
         if let localRealm = localRealm {
-            let taskToUpdate = localRealm.objects(LastMessageDB.self).filter(NSPredicate(format: "conversationId == %@ AND messageId == %@", (conId ), (messageId ?? "")))
+            let taskToUpdate = localRealm.objects(LastMessageDB.self).filter(NSPredicate(format: "conversationId == %@ AND messageId == %@", (conId ), (messageId)))
             if !taskToUpdate.isEmpty {
                 try! localRealm.write {
                     taskToUpdate.first?.readBy.removeAll()
