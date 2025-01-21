@@ -477,21 +477,18 @@ public struct ISMMessageView: View {
             }
         }.onChange(of: viewDetailsForPaymentRequest.messageId) { _, _ in
             if !viewDetailsForPaymentRequest.messageId.isEmpty{
-//                self.conversationViewModel.getUserData { myData in
-//                    let appUserId = myData?.userIdentifier ?? ""
-                    if viewDetailsForPaymentRequest.customType == ISMChatMediaType.PaymentRequest.value{
-                        self.delegate?.viewDetailForPaymentRequest(
-                            orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "",
-                            paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",
-                            isReceived: getIsReceived(message: viewDetailsForPaymentRequest),
-                            senderInfo: viewDetailsForPaymentRequest.senderInfo,
-                            paymentRequestUserId: self.myAppUserId ?? ""
-                        )
-                    }else{
-                        self.delegate?.dineInInvite(messageId: viewDetailsForPaymentRequest.messageId ?? "", groupcastId: viewDetailsForPaymentRequest.metaData?.groupCastId ?? "", reason: "", createdByUserId: viewDetailsForPaymentRequest.senderInfo?.userIdentifier ?? "", declineByUserId: self.myAppUserId ?? "",inviteStatus: 1)
-                    }
-                    viewDetailsForPaymentRequest = MessagesDB()
-//                }
+                if viewDetailsForPaymentRequest.customType == ISMChatMediaType.PaymentRequest.value{
+                    self.delegate?.viewDetailForPaymentRequest(
+                        orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "",
+                        paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",
+                        isReceived: getIsReceived(message: viewDetailsForPaymentRequest),
+                        senderInfo: viewDetailsForPaymentRequest.senderInfo,
+                        paymentRequestUserId: self.myAppUserId ?? ""
+                    )
+                }else{
+                    self.delegate?.dineInInvite(messageId: viewDetailsForPaymentRequest.messageId ?? "", groupcastId: viewDetailsForPaymentRequest.metaData?.groupCastId ?? "", reason: "", createdByUserId: viewDetailsForPaymentRequest.senderInfo?.userIdentifier ?? "", declineByUserId: self.myAppUserId ?? "",inviteStatus: 1)
+                }
+                viewDetailsForPaymentRequest = MessagesDB()
             }
         }.onChange(of: declinePaymentRequest.messageId) { _, _ in
             if !declinePaymentRequest.messageId.isEmpty{
@@ -673,14 +670,11 @@ public struct ISMMessageView: View {
                     confirmButtonTitle: "Decline request",
                     cancelButtonTitle: "Cancel",
                     confirmAction: {
-//                        self.conversationViewModel.getUserData { myData in
-//                            let appUserId = myData?.userIdentifier ?? ""
                             let paymentRequestId = declinePaymentRequest.metaData?.paymentRequestId ?? ""
                             declinePaymentRequest = MessagesDB()
                         self.delegate?.declinePaymentRequest(paymentRequestUserId: myAppUserId ?? "", paymentRequestId: paymentRequestId, completion: {
                             })
                             stateViewModel.showDeclinePaymentRequestPopUp = false
-//                        }
                     },
                     cancelAction: {
                         declinePaymentRequest = MessagesDB()
@@ -694,12 +688,9 @@ public struct ISMMessageView: View {
                 .presentationDragIndicator(.visible)
             }else{
                 DeclineReasonPopUpView(selectedOption: $declineReasonOption){ reason in
-//                    self.conversationViewModel.getUserData { myData in
-//                        let appUserId = myData?.userIdentifier ?? ""
                         self.delegate?.dineInInvite(messageId: declinePaymentRequest.messageId ?? "", groupcastId: declinePaymentRequest.metaData?.groupCastId ?? "", reason: reason, createdByUserId: declinePaymentRequest.senderInfo?.userIdentifier ?? "", declineByUserId: self.myAppUserId ?? "",inviteStatus: 2)
                         declinePaymentRequest = MessagesDB()
                         stateViewModel.showDeclinePaymentRequestPopUp = false
-//                    }
                 } cancelAction: {
                     declinePaymentRequest = MessagesDB()
                     stateViewModel.showDeclinePaymentRequestPopUp = false
@@ -824,9 +815,7 @@ public struct ISMMessageView: View {
                 ISMShareContactList(dissmiss: $stateViewModel.showSheet , selectedContact: self.$selectedContactToShare, shareContact: $stateViewModel.shareContact)
             }
         }.fullScreenCover(isPresented: $stateViewModel.showLocationSharing, content: {
-//        NavigationStack{
                 ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId, placeName: $placeName, address: $placeAddress)
-//            }
         })
         .fullScreenCover(isPresented: $stateViewModel.navigateToDocumentViewer, content: {
             if let documentUrl = URL(string: navigateToDocumentUrl){
