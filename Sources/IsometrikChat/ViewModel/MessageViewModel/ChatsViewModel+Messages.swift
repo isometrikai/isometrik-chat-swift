@@ -67,6 +67,56 @@ extension ChatsViewModel{
     
     
     //MARK: - send Reel
+    
+    public func sendCustomMessage(messageType: Int = 0,conversationId : String,body : String,customType: String,notificationBody: String,metaDataValue : [String: Any],searchTags : [String],completion:@escaping(String)->()){
+        var bodyData : [String : Any] = [:]
+        let deviceId = UniqueIdentifierManager.shared.getUniqueIdentifier()
+        var metaData : [String : Any] = [:]
+        let eventDetail : [String : Any] = ["sendPushNotification" : true,"updateUnreadCount" : true]
+        bodyData["showInConversation"] = true
+        bodyData["messageType"] = messageType
+        bodyData["encrypted"] = true
+        bodyData["deviceId"] = deviceId
+        bodyData["body"] = body
+        bodyData["customType"] = customType
+        bodyData["notificationTitle"] = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userName ?? ""
+        bodyData["notificationBody"] = notificationBody
+        bodyData["searchableTags"] = searchTags
+        bodyData["events"] = eventDetail
+        bodyData["conversationId"] = conversationId
+        bodyData["hideNewConversationsForSender"] = false
+        bodyData["notifyOnCompletion"] = false
+        bodyData["sendPushForNewConversationCreated"] = false
+        metaData = ["isBroadCastMessage" : true]
+        if metaDataValue.count > 0{
+            metaData.merge(metaDataValue) { current, new in
+                return new
+            }
+        }
+        bodyData["metaData"] = metaData
+        
+        let endPoint : ISMChatURLConvertible = ISMChatMessagesEndpoint.sendMessage
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatSendMsg, ISMChatNewAPIError>) in
+            switch result{
+            case .success(let data,_):
+                completion(data.messageId ?? "")
+                NotificationCenter.default.post(name: NSNotification.refrestConversationListLocally,object: nil)
+            case .failure(let error):
+                ISMChatHelper.print("Get send Message Api failed -----> \(String(describing: error))")
+            }
+        }
+    }
+    
+    public func shareInviteResponse(user: UserDB,customType: String,body: String,notificationBody: String,metaData : [String : Any],searchTags : [String],completion:@escaping(String)->()){
+        self.createConversation(user: user,chatStatus: ISMChatStatus.Reject.value) { response,error  in
+            self.sendCustomMessage(conversationId:  response?.conversationId ?? "", body: "", customType: customType, notificationBody: "", metaDataValue: metaData, searchTags: searchTags) { messageId in
+                completion(messageId)
+            }
+        }
+    }
+    
     public func sharePost(user: UserDB,postId : String,postURL : String,postCaption : String,completion:@escaping()->()){
         self.createConversation(user: user,chatStatus: ISMChatStatus.Reject.value) { response,error  in
             self.sendMessage(messageKind: .post, customType: ISMChatMediaType.Post.value, conversationId: response?.conversationId ?? "", message: postURL, fileName: "", fileSize: nil, mediaId: nil,caption: postCaption,postId: postId) { _, _ in
