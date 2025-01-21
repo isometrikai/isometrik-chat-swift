@@ -1483,6 +1483,11 @@ struct ISMMessageSubView: View {
                                             .padding(.bottom,5)
                                             .padding(.trailing,5)
                                     }
+                                    if ISMChatHelper.getDineInStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt) == .Rejected || ISMChatHelper.getDineInStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt) == .Accepted{
+                                        Text("Your response is sent to \(self.message.senderInfo.userName ?? "")")
+                                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                                            .foregroundColor(Color(hex: "#6A6C6A"))
+                                    }
                                 }
                                 
                                 if message.reactions.count > 0{
@@ -2389,6 +2394,10 @@ struct DineInRequestUI: View {
                         Text("You've sent a Dine-in invite. Please wait for your friend's response.")
                             .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
                             .foregroundColor(Color(hex: "#3A341C"))
+                    }else if status == .Cancelled{
+                        Text("This dine-in reservation is cancelled.")
+                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                            .foregroundColor(Color(hex: "#3A341C"))
                     }
                     
                 }.padding(.horizontal, 20)
@@ -2418,6 +2427,24 @@ struct DineInRequestUI: View {
                         }
                     }
                 }.padding(.horizontal, 16)
+            }else if status == .Rejected{
+                Button(action: {
+                    
+                }) {
+                    Text("Declined")
+                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
+                        .foregroundStyle(Color(hex: "#6A6C6A"))
+                        .frame(width: 225, height: 32, alignment: .center)
+                }
+            }else if status == .Accepted{
+                Button(action: {
+                    
+                }) {
+                    Text("Accepted")
+                        .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
+                        .foregroundStyle(Color(hex: "#6A6C6A"))
+                        .frame(width: 225, height: 32, alignment: .center)
+                }
             }
         }
     }
@@ -2466,14 +2493,31 @@ struct DineInRequestUI: View {
 
     @ViewBuilder
     private var headerView: some View {
-        Text(isReceived ? "You're Invited!" : "Dine-in Invite")
-            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
-            .foregroundColor(Color(hex: "#121511"))
-            .frame(height: 73)
-            .frame(maxWidth: .infinity)
-            .background(status == .Expired ? Color(hex: "#BDBDBA") : Color(hex: "#86EA5D"))
-            .cornerRadius(10, corners: [.topLeft, .topRight])
-        
+        if status == .ActiveRequest || status == .Expired{
+            Text(isReceived ? "You're Invited!" : "Dine-in Invite")
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
+                .foregroundColor(Color(hex: "#121511"))
+                .frame(height: 73)
+                .frame(maxWidth: .infinity)
+                .background(status == .Expired ? Color(hex: "#BDBDBA") : Color(hex: "#86EA5D"))
+                .cornerRadius(10, corners: [.topLeft, .topRight])
+        }else if status == .Cancelled{
+            Text(isReceived ? "Dine-in Invite - Cancelled" : "Dine-in Invite")
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
+                .foregroundColor(Color.white)
+                .frame(height: 73)
+                .frame(maxWidth: .infinity)
+                .background(Color(hex: "#FF3B30"))
+                .cornerRadius(10, corners: [.topLeft, .topRight])
+        }else if status == .Rejected{
+            Text("You're Invited!")
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
+                .foregroundColor(Color.white)
+                .frame(height: 73)
+                .frame(maxWidth: .infinity)
+                .background(Color(hex: "#FF3B30"))
+                .cornerRadius(10, corners: [.topLeft, .topRight])
+        }
     }
 }
 
