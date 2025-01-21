@@ -58,6 +58,7 @@ public class MetaDataDB : Object, ObjectKeyIdentifiable {
     @Persisted public var inviteLocation : LocationDB?
     @Persisted public var inviteMembers : RealmSwift.List<PaymentRequestMembersDB>
     @Persisted public var groupCastId : String?
+    @Persisted public var status : Int?
 }
 
 public class LocationDB: Object, ObjectKeyIdentifiable {

@@ -146,6 +146,7 @@ extension RealmManager{
                     }
                     
                     metadataValue.inviteTitle = metaData.inviteTitle
+                    metadataValue.status = metaData.status
                     metadataValue.inviteTimestamp = metaData.inviteTimestamp
                     metadataValue.inviteRescheduledTimestamp = metaData.inviteRescheduledTimestamp
                     metadataValue.groupCastId = metaData.groupCastId
@@ -495,6 +496,7 @@ extension RealmManager{
                         }
                         
                         metaData.inviteTitle = value.metaData?.inviteTitle ?? value.details?.metaData?.inviteTitle
+                        metaData.status = value.metaData?.status ?? value.details?.metaData?.status
                         metaData.inviteTimestamp = value.metaData?.inviteTimestamp ?? value.details?.metaData?.inviteTimestamp
                         metaData.inviteRescheduledTimestamp = value.metaData?.inviteRescheduledTimestamp ?? value.details?.metaData?.inviteRescheduledTimestamp
                         metaData.groupCastId = value.metaData?.groupCastId ?? value.details?.metaData?.groupCastId

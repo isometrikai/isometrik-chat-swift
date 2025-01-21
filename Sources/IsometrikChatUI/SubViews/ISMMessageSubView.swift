@@ -1509,13 +1509,7 @@ struct ISMMessageSubView: View {
                                     }
                                     
                                     VStack(alignment: .trailing,spacing: 5){
-//                                        DineInRequestUI(status: ISMChatHelper.getDineInStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt), isReceived: self.isReceived, message: self.message) {
-//                                            viewDetailsForPaymentRequest = self.message
-//                                        } declineRequest: {
-//                                            declinePaymentRequest = self.message
-//                                        } showInvitee: {
-//                                            showInviteeListInDineInRequest = self.message
-//                                        }
+                                        DineInStatusUI(status: ISMChatHelper.getDineUserStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData), isReceived: self.isReceived, message: self.message)
                                         dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
                                     }//:ZStack
                                     .frame(width: 303)
@@ -1585,7 +1579,7 @@ struct ISMMessageSubView: View {
                     hostingController.view.frame = contextMenuVC.view.bounds
                     hostingController.didMove(toParent: contextMenuVC)
                     
-                    if self.message.customType != ISMChatMediaType.PaymentRequest.value{
+                    if self.message.customType != ISMChatMediaType.PaymentRequest.value || self.message.customType != ISMChatMediaType.DineInInvite.value || self.message.customType != ISMChatMediaType.DineInStatus.value{
                         self.viewControllerHolder?.present(contextMenuVC, animated: true)
                     }
                 }
@@ -2348,6 +2342,37 @@ public struct ImageAsset {
  }
 
 
+struct DineInStatusUI : View{
+    var status: ISMChatPaymentRequestStatus
+    var isReceived : Bool
+    var message : MessagesDB
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    var body: some View {
+        VStack(alignment: .center, spacing: 0) {
+            Text(status == .Accepted ? "Accepted" : "Can’t attend")
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
+                .foregroundColor(status == .Accepted ? Color(hex: "#121511") : Color.white)
+                .frame(height: 73)
+                .frame(maxWidth: .infinity)
+                .background(status == .Accepted ? Color(hex: "#86EA5D") : Color(hex: "#FF3B30"))
+                .cornerRadius(10, corners: [.topLeft, .topRight])
+                .padding(.bottom,16)
+            
+            Text(message.metaData?.inviteTitle ?? "")
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
+                .foregroundColor(Color(hex: "#0E0F0C"))
+                .padding(.bottom,16)
+                .padding(.bottom,8)
+            
+            Text(status == .Accepted ? "\(message.senderInfo?.userName ?? "") accepted the invitation!" : "\(message.senderInfo?.userName ?? "") can’t attend the event.")
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
+                .foregroundColor(Color(hex: "#0E0F0C"))
+                .padding(.bottom,8)
+            
+        }
+    }
+}
+
 
 struct DineInRequestUI: View {
     var status: ISMChatPaymentRequestStatus
@@ -2446,11 +2471,11 @@ struct DineInRequestUI: View {
                             .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
                             .foregroundColor(Color(hex: "#3A341C"))
                     }
-//                    else if status == .Cancelled{
-//                        Text("This dine-in reservation is cancelled.")
-//                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
-//                            .foregroundColor(Color(hex: "#3A341C"))
-//                    }
+                    else if status == .Cancelled{
+                        Text("This dine-in reservation is cancelled.")
+                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                            .foregroundColor(Color(hex: "#3A341C"))
+                    }
                     
                 }.padding(.horizontal, 20)
             

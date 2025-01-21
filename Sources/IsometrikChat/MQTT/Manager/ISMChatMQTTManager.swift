@@ -564,7 +564,8 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                         inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp,
                         inviteLocation: messageInfo.metaData?.inviteLocation,
                         inviteMembers: messageInfo.metaData?.inviteMembers,
-                        groupCastId: messageInfo.metaData?.groupCastId
+                        groupCastId: messageInfo.metaData?.groupCastId,
+                        status: messageInfo.metaData?.status
                     )
                     
                     var metaDataJsonString : String = ""
@@ -627,7 +628,8 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp,
                             inviteLocation: messageInfo.metaData?.inviteLocation,
                             inviteMembers: messageInfo.metaData?.inviteMembers,
-                            groupCastId: messageInfo.metaData?.groupCastId
+                            groupCastId: messageInfo.metaData?.groupCastId,
+                            status: messageInfo.metaData?.status
                         )
                         
                         do {
@@ -769,7 +771,8 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp,
                             inviteLocation: messageInfo.metaData?.inviteLocation,
                             inviteMembers: messageInfo.metaData?.inviteMembers,
-                            groupCastId: messageInfo.metaData?.groupCastId
+                            groupCastId: messageInfo.metaData?.groupCastId,
+                            status: messageInfo.metaData?.status
                         )
                         
                         var metaDataJsonString : String = ""
@@ -832,7 +835,8 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                                 inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp,
                                 inviteLocation: messageInfo.metaData?.inviteLocation,
                                 inviteMembers: messageInfo.metaData?.inviteMembers,
-                                groupCastId: messageInfo.metaData?.groupCastId
+                                groupCastId: messageInfo.metaData?.groupCastId,
+                                status: messageInfo.metaData?.status
                             )
                         }
                         

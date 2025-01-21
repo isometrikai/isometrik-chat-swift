@@ -338,6 +338,7 @@ extension RealmManager {
                     messageMetaData.currencyCode = value.lastMessageDetails?.metaData?.currencyCode
                     messageMetaData.amount = value.lastMessageDetails?.metaData?.amount
                     messageMetaData.inviteTitle = value.lastMessageDetails?.metaData?.inviteTitle
+                    messageMetaData.status = value.lastMessageDetails?.metaData?.status
                     messageMetaData.inviteTimestamp = value.lastMessageDetails?.metaData?.inviteTimestamp
                     messageMetaData.inviteRescheduledTimestamp = value.lastMessageDetails?.metaData?.inviteRescheduledTimestamp
                     messageMetaData.groupCastId = value.lastMessageDetails?.metaData?.groupCastId
@@ -441,6 +442,7 @@ extension RealmManager {
                         }
                         
                         metadataValue.inviteTitle = metaData.inviteTitle
+                        metadataValue.status = metaData.status
                         metadataValue.inviteTimestamp = metaData.inviteTimestamp
                         metadataValue.inviteRescheduledTimestamp = metaData.inviteRescheduledTimestamp
                         metadataValue.groupCastId = metaData.groupCastId
@@ -655,6 +657,7 @@ extension RealmManager {
                         }
                         
                         metadataValue.inviteTitle = metaData.inviteTitle
+                        metadataValue.status = metaData.status
                         metadataValue.inviteTimestamp = metaData.inviteTimestamp
                         metadataValue.inviteRescheduledTimestamp = metaData.inviteRescheduledTimestamp
                         metadataValue.groupCastId = metaData.groupCastId
@@ -1018,6 +1021,7 @@ extension RealmManager {
                     }
                     
                     metadataValue.inviteTitle = metaData.inviteTitle
+                    metadataValue.status = metaData.status
                     metadataValue.inviteTimestamp = metaData.inviteTimestamp
                     metadataValue.inviteRescheduledTimestamp = metaData.inviteRescheduledTimestamp
                     metadataValue.groupCastId = metaData.groupCastId
