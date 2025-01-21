@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "activelabel.swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/optonaut/ActiveLabel.swift",
-      "state" : {
-        "revision" : "36949c1a69ef8b40574da20c9e24b115f387b1cf",
-        "version" : "1.1.5"
-      }
-    },
-    {
       "identity" : "alamofire",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Alamofire/Alamofire",
@@ -70,15 +61,6 @@
       "state" : {
         "branch" : "main",
         "revision" : "084de2822a17dd14b943231914e14f4fcd4dff7f"
-      }
-    },
-    {
-      "identity" : "keychainaccess",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kishikawakatsumi/KeychainAccess",
-      "state" : {
-        "branch" : "master",
-        "revision" : "e0c7eebc5a4465a3c4680764f26b7a61f567cdaf"
       }
     },
     {
@@ -205,15 +187,6 @@
       "state" : {
         "revision" : "9f0c76544701845ad98716f3f6a774a892152bcb",
         "version" : "1.26.0"
-      }
-    },
-    {
-      "identity" : "swiftui-mediapicker",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/UWAppDev/SwiftUI-MediaPicker",
-      "state" : {
-        "revision" : "96f18b1350873dec0a76355c7060cd0a06100901",
-        "version" : "0.2.0"
       }
     },
     {

@@ -488,7 +488,7 @@ public struct ISMMessageView: View {
                             paymentRequestUserId: self.myAppUserId ?? ""
                         )
                     }else{
-                        self.delegate?.dineInInvite(messageId: viewDetailsForPaymentRequest.messageId ?? "", groupcastId: viewDetailsForPaymentRequest.groupcastId ?? "", reason: "", createdByUserId: viewDetailsForPaymentRequest.senderInfo?.metaData?.userId ?? "", declineByUserId: self.myAppUserId ?? "", inviteStatus: 1)
+                        self.delegate?.dineInInvite(messageId: declinePaymentRequest.messageId ?? "", groupcastId: declinePaymentRequest.metaData?.groupCastId ?? "", reason: "", createdByUserId: declinePaymentRequest.senderInfo?.userIdentifier ?? "", declineByUserId: self.myAppUserId ?? "",inviteStatus: 1)
                     }
                     viewDetailsForPaymentRequest = MessagesDB()
 //                }
