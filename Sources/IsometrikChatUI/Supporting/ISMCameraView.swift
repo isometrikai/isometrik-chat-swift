@@ -646,6 +646,17 @@ struct CaptureButton: View {
                 .fill(isRecording ? Color.red.opacity(0.7) : Color.white)
                 .frame(width: 70, height: 70)
         }
+        .highPriorityGesture(
+            DragGesture(minimumDistance: 0) // Detects a press without requiring movement
+                .onChanged { _ in
+                    if !isRecording {
+                        isRecording = true // Start recording on press
+                    }
+                }
+                .onEnded { _ in
+                    isRecording = false // Stop recording on release
+                }
+        )
         .simultaneousGesture(
             TapGesture()
                 .onEnded {
@@ -653,19 +664,6 @@ struct CaptureButton: View {
                         onCapture()
                     }
                 }
-        )
-        .onLongPressGesture(
-            minimumDuration: 0.5, // Customize duration for the long press
-            pressing: { isPressing in
-                if isPressing {
-                    isRecording = true
-                }else{
-                    isRecording = false
-                }
-            },
-            perform: {
-                
-            }
         )
     }
 }
