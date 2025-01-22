@@ -35,6 +35,8 @@ public protocol ISMMessageViewDelegate{
     func dineInInvite(inviteTitle : String,messageId : String, groupcastId : String,reason : String,createdByUserId : String,declineByUserId : String,inviteStatus : Int,inviteSenderIsometricId : String)
 }
 
+public extension ISMMessageViewDelegate{}
+
 public struct ISMMessageView: View {
     
     //MARK: - PROPERTIES
@@ -910,7 +912,7 @@ public struct ISMMessageView: View {
             //added this from on appear
             
             
-            if chatFeatures.contains(.audiocall) == true || chatFeatures.contains(.videocall) == true{
+            if chatFeatures.contains(.audiocall) == true || chatFeatures.contains(.videocall) == true || chatFeatures.contains(.audio) == true{
                 checkAudioPermission()
             }
             realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
