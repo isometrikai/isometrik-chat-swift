@@ -96,7 +96,7 @@ extension ChatsViewModel{
         bodyData["metaData"] = metaData
         
         let endPoint : ISMChatURLConvertible = ISMChatMessagesEndpoint.sendMessage
-        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: bodyData)
         
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatSendMsg, ISMChatNewAPIError>) in
             switch result{
