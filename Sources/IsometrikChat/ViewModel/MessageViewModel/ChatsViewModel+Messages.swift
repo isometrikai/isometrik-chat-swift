@@ -111,7 +111,7 @@ extension ChatsViewModel{
     
     public func shareInviteResponse(user: UserDB,customType: String,body: String,notificationBody: String,metaData : [String : Any],searchTags : [String],completion:@escaping(String)->()){
         self.createConversation(user: user,chatStatus: ISMChatStatus.Reject.value) { response,error  in
-            self.sendCustomMessage(conversationId:  response?.conversationId ?? "", body: "", customType: customType, notificationBody: "", metaDataValue: metaData, searchTags: searchTags) { messageId in
+            self.sendCustomMessage(conversationId:  response?.conversationId ?? "", body: body, customType: customType, notificationBody: "", metaDataValue: metaData, searchTags: searchTags) { messageId in
                 completion(messageId)
             }
         }
