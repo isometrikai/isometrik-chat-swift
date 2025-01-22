@@ -2513,6 +2513,8 @@ struct DineInRequestUI: View {
                         .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
                         .foregroundStyle(Color(hex: "#6A6C6A"))
                         .frame(width: 225, height: 32, alignment: .center)
+                        .background(Color(hex: "#dfdfdc"))
+                        .cornerRadius(16)
                 }
             }else if status == .Accepted{
                 Button(action: {
@@ -2522,6 +2524,8 @@ struct DineInRequestUI: View {
                         .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
                         .foregroundStyle(Color(hex: "#6A6C6A"))
                         .frame(width: 225, height: 32, alignment: .center)
+                        .background(Color(hex: "#dfdfdc"))
+                        .cornerRadius(16)
                 }
             }
         }
@@ -2594,6 +2598,14 @@ struct DineInRequestUI: View {
                 .frame(height: 73)
                 .frame(maxWidth: .infinity)
                 .background(Color(hex: "#FF3B30"))
+                .cornerRadius(10, corners: [.topLeft, .topRight])
+        }else if status == .Accepted{
+            Text("You're Invited!")
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
+                .foregroundColor(Color(hex: "#121511"))
+                .frame(height: 73)
+                .frame(maxWidth: .infinity)
+                .background(Color(hex: "#86EA5D"))
                 .cornerRadius(10, corners: [.topLeft, .topRight])
         }
     }
