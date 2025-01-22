@@ -62,5 +62,18 @@ public enum ISMChatMessageType {
     case paymentRequest
     case dineInInvite
     case dineInInviteStatus
+    
+    
     case OfferSent
+    case CounterOffer
+    case EditOffer
+    case AcceptOrder
+    case CancelDeal
+    case CancelOffer
+    case BuyDirectRequest
+    case AcceptBusyDirectRequest
+    case CancelBuyDirectRequest
+    case RejectBuyDirectRequest
+    case PaymentEscrowed
+    case DealComplete
 }

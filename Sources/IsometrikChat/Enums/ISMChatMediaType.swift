@@ -31,7 +31,19 @@ public enum ISMChatMediaType : CaseIterable{
     case PaymentRequest
     case DineInInvite
     case DineInStatus
+    //
     case OfferSent
+    case CounterOffer
+    case EditOffer
+    case AcceptOrder
+    case CancelDeal
+    case CancelOffer
+    case BuyDirectRequest
+    case AcceptBusyDirectRequest
+    case CancelBuyDirectRequest
+    case RejectBuyDirectRequest
+    case PaymentEscrowed
+    case DealComplete
     public var value : String{
         switch self {
         case .Text:
@@ -81,7 +93,29 @@ public enum ISMChatMediaType : CaseIterable{
         case .DineInStatus:
             return "AttachmentMessage:DineInInviteStatus"
         case .OfferSent:
-            return "AttachmentMessage:Offer Sent"
+            return "OFFER_SENT"
+        case .CounterOffer:
+            return "COUNTER_OFFER"
+        case .EditOffer:
+            return "EDIT_OFFER"
+        case .AcceptOrder:
+            return "ACCEPT_OFFER"
+        case .CancelDeal:
+            return "CANCEL_DEAL"
+        case .CancelOffer:
+            return "CANCEL_OFFER"
+        case .BuyDirectRequest:
+            return "BUYDIRECT_REQUEST"
+        case .AcceptBusyDirectRequest:
+            return "ACCEPT_BUYDIRECT_REQUEST"
+        case .CancelBuyDirectRequest:
+            return "CANCEL_BUYDIRECT_REQUEST"
+        case .RejectBuyDirectRequest:
+            return "REJECT_BUYDIRECT_REQUEST"
+        case .PaymentEscrowed:
+            return "PAYMENT_ESCROWED"
+        case .DealComplete:
+            return "DEAL_COMPLETE"
         }
     }
 }

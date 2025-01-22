@@ -208,6 +208,28 @@ public class ISMChatHelper: NSObject {
             return .dineInInviteStatus
         }else if message.customType == ISMChatMediaType.OfferSent.value{
             return .OfferSent
+        }else if message.customType == ISMChatMediaType.CounterOffer.value{
+            return .CounterOffer
+        }else if message.customType == ISMChatMediaType.EditOffer.value{
+            return .EditOffer
+        }else if message.customType == ISMChatMediaType.AcceptOrder.value{
+            return .AcceptOrder
+        }else if message.customType == ISMChatMediaType.CancelDeal.value{
+            return .CancelDeal
+        }else if message.customType == ISMChatMediaType.CancelOffer.value{
+            return .CancelOffer
+        }else if message.customType == ISMChatMediaType.BuyDirectRequest.value{
+            return .BuyDirectRequest
+        }else if message.customType == ISMChatMediaType.AcceptBusyDirectRequest.value{
+            return .AcceptBusyDirectRequest
+        }else if message.customType == ISMChatMediaType.CancelBuyDirectRequest.value{
+            return .CancelBuyDirectRequest
+        }else if message.customType == ISMChatMediaType.RejectBuyDirectRequest.value{
+            return .RejectBuyDirectRequest
+        }else if message.customType == ISMChatMediaType.PaymentEscrowed.value{
+            return .PaymentEscrowed
+        }else if message.customType == ISMChatMediaType.DealComplete.value{
+            return .DealComplete
         }
         else{
             if message.action == ISMChatActionType.userBlock.value || message.action == ISMChatActionType.userBlockConversation.value{
