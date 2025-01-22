@@ -205,7 +205,7 @@ extension ISMMessageView{
                         } else {
                             let storeId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.storeId
                             let userId = self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId
-                            ?? opponenDetail?.metaData?.userId
+                            ?? opponenDetail?.metaData?.userId ?? opponenDetail?.userIdentifier
                             ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier
                             
                             delegate?.navigateToAppProfile(userId: userId ?? "", storeId: storeId ?? "", userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0)
