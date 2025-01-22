@@ -21,6 +21,9 @@ import IsometrikChat
                  }else if let body = messageInfo.body, body.isValidURL && !body.contains("map"){
                      realmManager.fetchLinks(conId: self.conversationID ?? "")
                  }
+                 if messageInfo.action == "userBlock" || messageInfo.action == "userBlockConversation" || messageInfo.action == "userUnblock" || messageInfo.action == "userUnblockConversation" {
+                     self.reload()
+                 }
                  self.getMessages()
                  if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
                      chatViewModel.readMessageIndicator(conversationId: converId, messageId: messId) { _ in

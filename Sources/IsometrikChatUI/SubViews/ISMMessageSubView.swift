@@ -1604,7 +1604,7 @@ struct ISMMessageSubView: View {
         .frame(maxWidth: .infinity, alignment: isReceived ? .leading : .trailing)
         .multilineTextAlignment(.leading) // Aligning the text based on message type
         
-        .gesture(
+        .simultaneousGesture(
             DragGesture()
                 .onChanged { gesture in
                     if !message.deletedMessage{
