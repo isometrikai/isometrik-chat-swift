@@ -2361,13 +2361,14 @@ struct DineInStatusUI : View{
             Text(message.metaData?.inviteTitle ?? "")
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
                 .foregroundColor(Color(hex: "#0E0F0C"))
-                .padding(.bottom,16)
                 .padding(.bottom,8)
             
             Text(status == .Accepted ? "\(message.senderInfo?.userName ?? "") accepted the invitation!" : "\(message.senderInfo?.userName ?? "") can’t attend the event.")
-                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
-                .foregroundColor(Color(hex: "#0E0F0C"))
+                .multilineTextAlignment(.center)
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 14))
+                .foregroundColor(Color(hex: "#454745"))
                 .padding(.bottom,8)
+                .padding(.horizontal,15)
             
         }
     }
