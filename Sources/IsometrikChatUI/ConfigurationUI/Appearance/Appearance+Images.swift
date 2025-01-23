@@ -219,6 +219,7 @@ public struct ISMChatImages {
     
     public var selectedDeleteOptions : Image = loadImageSafely(with: "selectedOptions")
     public var deSelectedDeleteOptions : Image = loadImageSafely(with: "deSelectedOptions")
+    public var acceptDineInRequest : Image = loadImageSafely(with: "green_Tick")
     
     public init(){}
     

@@ -332,6 +332,10 @@ public class ISMChatHelper: NSObject {
         guard let member = inviteMembers.first(where: { $0.userId == myUserId }) else {
             return .ActiveRequest // Default status if no matching member is found
         }
+        
+        if let reschduled = metaData?.inviteRescheduledTimestamp, reschduled != 0{
+            return .Rescheduled
+        }
 
         // Check the status of the matched member
         if let status = member.status {

@@ -1446,6 +1446,7 @@ struct ISMMessageSubView: View {
                                 inGroupUserAvatarView()
                             }
                             ZStack(alignment: .bottomTrailing){
+                                let status = ISMChatHelper.getDineInStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt)
                                 VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
                                     if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
                                         //when its group show member name in message
@@ -1453,7 +1454,7 @@ struct ISMMessageSubView: View {
                                     }
                                     
                                     VStack(alignment: .trailing,spacing: 5){
-                                        DineInRequestUI(status: ISMChatHelper.getDineInStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt), isReceived: self.isReceived, message: self.message) {
+                                        DineInRequestUI(status: status, isReceived: self.isReceived, message: self.message) {
                                             viewDetailsForPaymentRequest = self.message
                                         } declineRequest: {
                                             declinePaymentRequest = self.message
@@ -1483,11 +1484,11 @@ struct ISMMessageSubView: View {
                                             .padding(.bottom,5)
                                             .padding(.trailing,5)
                                     }
-//                                    if ISMChatHelper.getDineInStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt) == .Rejected || ISMChatHelper.getDineInStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt) == .Accepted{
-//                                        Text("Your response is sent to \(self.message.senderInfo.userName ?? "")")
-//                                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
-//                                            .foregroundColor(Color(hex: "#6A6C6A"))
-//                                    }
+                                    if status == .Rejected || status == .Accepted{
+                                        Text("Your response is sent to \(self.message.senderInfo?.userName ?? "")")
+                                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                                            .foregroundColor(Color(hex: "#6A6C6A"))
+                                    }
                                 }
                                 
                                 if message.reactions.count > 0{
@@ -1496,49 +1497,53 @@ struct ISMMessageSubView: View {
                             }.padding(.vertical,2)
                         }
                     case .dineInInviteStatus:
-                        HStack(alignment: .bottom){
-                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-                                //When its group show member avatar in message
-                                inGroupUserAvatarView()
-                            }
-                            ZStack(alignment: .bottomTrailing){
-                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
-                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-                                        //when its group show member name in message
-                                        inGroupUserName()
+                        if isReceived == true{
+                            HStack(alignment: .bottom){
+                                if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                    //When its group show member avatar in message
+                                    inGroupUserAvatarView()
+                                }
+                                ZStack(alignment: .bottomTrailing){
+                                    VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                        if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                            //when its group show member name in message
+                                            inGroupUserName()
+                                        }
+                                        
+                                        VStack(alignment: .trailing,spacing: 5){
+                                            DineInStatusUI(status: ISMChatHelper.getDineUserStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData), isReceived: self.isReceived, message: self.message)
+                                            dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
+                                        }//:ZStack
+                                        .frame(width: 303)
+                                        .background(Color(hex: "#F5F5F2"))
+                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                        .overlay(
+                                            appearance.messageBubbleType == .BubbleWithOutTail ?
+                                            AnyView(
+                                                UnevenRoundedRectangle(
+                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                    style: .circular
+                                                )
+                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                            ) : AnyView(EmptyView())
+                                        )
+                                        if appearance.timeInsideBubble == false{
+                                            dateAndStatusView(onImage: false)
+                                                .padding(.bottom,5)
+                                                .padding(.trailing,5)
+                                        }
                                     }
                                     
-                                    VStack(alignment: .trailing,spacing: 5){
-                                        DineInStatusUI(status: ISMChatHelper.getDineUserStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData), isReceived: self.isReceived, message: self.message)
-                                        dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
-                                    }//:ZStack
-                                    .frame(width: 303)
-                                    .background(Color(hex: "#F5F5F2"))
-                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-                                    .overlay(
-                                        appearance.messageBubbleType == .BubbleWithOutTail ?
-                                        AnyView(
-                                            UnevenRoundedRectangle(
-                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-                                                style: .circular
-                                            )
-                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-                                        ) : AnyView(EmptyView())
-                                    )
-                                    if appearance.timeInsideBubble == false{
-                                        dateAndStatusView(onImage: false)
-                                            .padding(.bottom,5)
-                                            .padding(.trailing,5)
+                                    if message.reactions.count > 0{
+                                        reactionsView()
                                     }
-                                }
-                                
-                                if message.reactions.count > 0{
-                                    reactionsView()
-                                }
-                            }.padding(.vertical,2)
+                                }.padding(.vertical,2)
+                            }
+                        }else{
+                            EmptyView()
                         }
                     default:
                         CustomMessageBubbleViewRegistry.shared.view(for: self.message)
@@ -2356,7 +2361,14 @@ struct DineInStatusUI : View{
                 .frame(maxWidth: .infinity)
                 .background(status == .Accepted ? Color(hex: "#86EA5D") : Color(hex: "#FF3B30"))
                 .cornerRadius(10, corners: [.topLeft, .topRight])
-                .padding(.bottom,16)
+                .padding(.bottom,status == .Accepted ? 8 : 16)
+            
+            if status == .Accepted{
+                appearance.images.acceptDineInRequest
+                    .resizable()
+                    .frame(width: 40, height: 40, alignment: .center)
+                    .padding(.bottom,8)
+            }
             
             Text(message.metaData?.inviteTitle ?? "")
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
@@ -2405,11 +2417,35 @@ struct DineInRequestUI: View {
                         appearance.images.clockLogo
                             .resizable()
                             .frame(width: 18, height: 18, alignment: .center)
+                        if status == .Rescheduled{
+                            Text(formatTimestamp(message.metaData?.inviteRescheduledTimestamp ?? 0))
+                                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 14))
+                                .foregroundColor(Color(hex: "#454745"))
+                        }else{
+                            Text(formatTimestamp(message.metaData?.inviteTimestamp ?? 0))
+                                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 14))
+                                .foregroundColor(Color(hex: "#454745"))
+                                .strikethrough(status == .Cancelled ? true : false, color: Color(hex: "#454745"))
+                        }
                         
-                        Text(formatTimestamp(message.metaData?.inviteTimestamp ?? 0))
-                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 14))
-                            .foregroundColor(Color(hex: "#454745"))
                     }
+                    
+                    if status == .Rescheduled{
+                        HStack(alignment: .center, spacing: 8) {
+
+                            Image("")
+                                .resizable()
+                                .frame(width: 18, height: 18, alignment: .center)
+                            
+                            Text(formatTimestamp(message.metaData?.inviteTimestamp ?? 0))
+                                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 14))
+                                .foregroundColor(Color(hex: "#454745"))
+                                .strikethrough(true, color: Color(hex: "#454745"))
+                        }
+                    }
+                    
+                    
+                    
                     HStack(alignment: .center, spacing: 8) {
                         appearance.images.locationMapLogo
                             .resizable()
@@ -2473,7 +2509,11 @@ struct DineInRequestUI: View {
                             .foregroundColor(Color(hex: "#3A341C"))
                     }
                     else if status == .Cancelled{
-                        Text("This dine-in reservation is cancelled.")
+                        Text(isReceived ? "This dine-in reservation is cancelled." : "You've cancelled the Dine-in reservation.")
+                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                            .foregroundColor(Color(hex: "#3A341C"))
+                    }else if status == .Rescheduled{
+                        Text(isReceived ? "Your friend has rescheduled Dine-in invite." : "You've rescheduled Dine-in invite. Please wait for your friend's response.")
                             .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
                             .foregroundColor(Color(hex: "#3A341C"))
                     }
@@ -2601,6 +2641,14 @@ struct DineInRequestUI: View {
                 .cornerRadius(10, corners: [.topLeft, .topRight])
         }else if status == .Accepted{
             Text("You're Invited!")
+                .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
+                .foregroundColor(Color(hex: "#121511"))
+                .frame(height: 73)
+                .frame(maxWidth: .infinity)
+                .background(Color(hex: "#86EA5D"))
+                .cornerRadius(10, corners: [.topLeft, .topRight])
+        }else if status == .Rescheduled{
+            Text(isReceived ? "You're Invited! - Rescheduled" : "Dine-in Invite - Rescheduled")
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
                 .foregroundColor(Color(hex: "#121511"))
                 .frame(height: 73)
