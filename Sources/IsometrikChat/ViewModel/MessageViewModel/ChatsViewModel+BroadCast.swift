@@ -239,10 +239,10 @@ extension ChatsViewModel{
         }
     }
     
-    public func sendGroupCastMessageWithCustomMetaData(users :  [ISMChatUser],messageKind: ISMChatMessageType,customType: String,body: String,notificationBody: String,metaData : [String : Any],searchTags : [String],completion:@escaping(String)->()){
+    public func sendGroupCastMessageWithCustomMetaData(users :  [ISMChatUser],messageKind: ISMChatMessageType,customType: String,body: String,notificationBody: String,metaData : [String : Any],searchTags : [String],completion:@escaping(String,String)->()){
         self.createBroadCast(users: users) { response in
             self.sendBroadCastMessage(messageType: 0, groupcastId: response?.groupcastId ?? "", body: body, customType: customType, notificationBody: notificationBody, metaDataValue: metaData, searchTags: searchTags) { messageId in
-                completion(messageId)
+                completion(messageId,response?.groupcastId ?? "")
             }
         }
     }
