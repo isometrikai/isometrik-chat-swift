@@ -8,73 +8,8 @@
 import Foundation
 import SwiftUI
 import LinkPresentation
-//
-//enum PreviewType : Int, CaseIterable{
-//    case Cell
-//    case TextView
-//}
-//
-//struct ISMLinkPreview: View {
-//    let urlString: String
-//    var body: some View {
-//        URLEmbeddedViewRepresentable(urlString: urlString, type: .Cell)
-//            .frame(width: 250,height: 100)
-//            .onTapGesture {
-//                if urlString.contains("https"){
-//                    openURLInSafari(urlString: urlString)
-//                }else{
-//                    let fullURLString = "https://" + urlString
-//                    openURLInSafari(urlString: fullURLString)
-//                }
-//            }
-//    }
-//    
-//    func openURLInSafari(urlString : String) {
-//        if let url = URL(string: urlString) {
-//            UIApplication.shared.open(url)
-//        }
-//    }
-//}
-//
-//struct URLEmbeddedViewRepresentable: UIViewRepresentable {
-//    
-//   
-//    let urlString: String
-//    let type : PreviewType
-//    @State var themeFonts = ISMChatSdk.getInstance().getAppAppearance().appearance.fonts
-//    @State var themeColor = ISMChatSdk.getInstance().getAppAppearance().appearance.colorPalette
-//
-//    func makeUIView(context: Context) -> URLEmbeddedView {
-//        let embeddedView = URLEmbeddedView()
-//        embeddedView.load(urlString: urlString)
-//        return embeddedView
-//    }
-//
-//    func updateUIView(_ uiView: URLEmbeddedView, context: Context) {
-//        uiView.load(urlString: urlString)
-//        
-//        uiView.textProvider[.title].font = UIFont.regular(size: 14)
-//        uiView.textProvider[.title].fontColor = UIColor(themeColor.messageList_MessageText ?? Color.primary)
-//        uiView.textProvider[.title].numberOfLines = type == .Cell ? 2 : 1
-//        
-//        uiView.textProvider[.description].font = UIFont.regular(size: 12)
-//        uiView.textProvider[.description].fontColor = UIColor(themeColor.messageList_MessageText ?? Color.primary)
-//        uiView.textProvider[.description].numberOfLines = type == .Cell ? 2 : 1
-//        
-//        
-//        uiView.textProvider[.noDataTitle].font = UIFont.regular(size: 12)
-//        uiView.textProvider[.noDataTitle].fontColor = UIColor(themeColor.messageList_MessageText ?? Color.primary)
-//        uiView.textProvider[.noDataTitle].numberOfLines = type == .Cell ? 2 : 1
-//        
-//        uiView.textProvider[.domain].font = UIFont.regular(size: 10)
-//        uiView.textProvider[.domain].fontColor = UIColor(themeColor.messageList_MessageText ?? Color.primary)
-//        uiView.textProvider[.domain].numberOfLines = type == .Cell ? 2 : 1
-//        
-//        uiView.cornerRaidus = type == .Cell ? 10 : 0
-//        uiView.borderColor = type == .Cell ? UIColor(themeColor.messageList_attachmentBackground ?? Color.gray) : UIColor.clear
-//    }
-//}
-//
+
+/// A view that displays a preview toolbar for URLs with metadata
 struct LinkPreviewToolBarView : View {
     let text : String
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
@@ -85,6 +20,7 @@ struct LinkPreviewToolBarView : View {
         VStack {
             if let metadata = metadata {
                 HStack(spacing: 8) {
+                    // Display preview image if available
                     if let imageProvider = metadata.imageProvider {
                         LinkPreviewImage(imageProvider: imageProvider)
                             .frame(width: 45, height: 45)
@@ -96,6 +32,7 @@ struct LinkPreviewToolBarView : View {
                             .clipped()
                     }
                     
+                    // Display title and description
                     VStack(alignment: .leading, spacing: 4) {
                         Text(metadata.title ?? "")
                             .font(appearance.fonts.messageListReplyToolbarHeader)
@@ -119,6 +56,9 @@ struct LinkPreviewToolBarView : View {
         .background(appearance.colorPalette.messageListattachmentBackground)
         .frame(height: 70)
     }
+    
+    /// Fetches metadata for the URL
+    /// - Note: Adds https:// prefix if not present in the URL
     private func loadMetadata() {
         let provider = LPMetadataProvider()
         var url = URL(string: text)
@@ -136,12 +76,13 @@ struct LinkPreviewToolBarView : View {
     }
 }
 
-
-
-
+/// A view that displays a rich preview for URLs including image and metadata
 struct ISMLinkPreview: View {
+    // Input properties
     let url: URL
     let isRecived : Bool
+    
+    // State management
     @State private var metadata: LPLinkMetadata?
     @State private var isLoading = true
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
@@ -185,6 +126,7 @@ struct ISMLinkPreview: View {
         }
     }
     
+    /// Fetches metadata for the provided URL using LinkPresentation framework
     private func loadMetadata() {
         let provider = LPMetadataProvider()
         provider.startFetchingMetadata(for: url) { metadata, error in
@@ -196,6 +138,7 @@ struct ISMLinkPreview: View {
     }
 }
 
+/// A view that handles loading and displaying preview images from NSItemProvider
 struct LinkPreviewImage: View {
     let imageProvider: NSItemProvider
     @State private var image: UIImage?
@@ -207,6 +150,7 @@ struct LinkPreviewImage: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             } else {
+                // Show placeholder while image loads
                 Color.gray.opacity(0.3)
             }
         }
@@ -215,6 +159,7 @@ struct LinkPreviewImage: View {
         }
     }
     
+    /// Asynchronously loads the image from the NSItemProvider
     private func loadImage() {
         imageProvider.loadObject(ofClass: UIImage.self) { image, error in
             if let image = image as? UIImage {

@@ -13,29 +13,42 @@ import GoogleMaps
 import CoreLocation
 import IsometrikChat
 
+/// A SwiftUI view that displays a location on a map with a custom pin
+/// This view supports both static map images and interactive map functionality
 struct ISMLocationSubView: View {
     
     //MARK:  - PROPERTIES
+    /// Region to display on the map
     @State private var region: MKCoordinateRegion
+    /// Google Maps marker for location indication
     @State private var markers: GMSMarker?
+    /// Flag to control map interaction
     @State private var isMapInteractive = true
+    /// Cached static map image
     @State private var mapImage: UIImage?
-    @State private var latitude : Double?
-    @State private var longitute : Double?
+    /// Location coordinates
+    @State private var latitude: Double?
+    @State private var longitute: Double?  // Note: Typo in 'longitude'
+    /// UI appearance configuration
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
-    init(message : MessagesDB) {
-        if let latitude = message.attachments.first?.latitude, let longitude = message.attachments.first?.longitude {
+    /// Initializes the location view with message data
+    /// - Parameter message: Message object containing location information
+    init(message: MessagesDB) {
+        // Extract location coordinates from message attachments
+        if let latitude = message.attachments.first?.latitude, 
+           let longitude = message.attachments.first?.longitude {
+            // Initialize marker at the specified coordinates
             self.markers = GMSMarker(position: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
-            // Create a region centered around the marker's coordinates
             self.latitude = latitude
             self.longitute = longitude
+            // Set initial map region with zoom level
             self.region = MKCoordinateRegion(
                 center: CLLocationCoordinate2D(latitude: latitude, longitude: longitude),
-                span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01) // Adjust the delta values for your desired zoom level
+                span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
             )
         } else {
-            // Default to London City if no coordinates are provided
+            // Fallback to default location (London) if coordinates are missing
             self.region = MKCoordinateRegion(
                 center: CLLocationCoordinate2D(latitude: 51.5, longitude: -0.12),
                 span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
@@ -73,18 +86,23 @@ struct ISMLocationSubView: View {
         }
     }
     
+    /// Generates and caches a static map image
     private func fetchMapImage() {
         let mapSnapshotOptions = MKMapSnapshotter.Options()
         
+        // Configure map snapshot with location and display options
         let location = CLLocationCoordinate2D(latitude: latitude ?? 0, longitude: longitute ?? 0)
+        let region = MKCoordinateRegion(
+            center: location,
+            span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        )
         
-        // Adjust the span to zoom in or out
-        let region = MKCoordinateRegion(center: location, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-        
+        // Configure snapshot parameters
         mapSnapshotOptions.region = region
-        mapSnapshotOptions.size = CGSize(width: 350, height: 200) // Adjust the size as needed
+        mapSnapshotOptions.size = CGSize(width: 350, height: 200)
         mapSnapshotOptions.showsBuildings = true
         
+        // Generate map snapshot
         let snapshotter = MKMapSnapshotter(options: mapSnapshotOptions)
         snapshotter.start { snapshot, error in
             guard let snapshot = snapshot, error == nil else {
@@ -98,11 +116,13 @@ struct ISMLocationSubView: View {
     
 }
 
+/// Model representing a map annotation with unique identifier
 struct CustomAnnotation: Identifiable {
     var id = UUID()
     var coordinate: CLLocationCoordinate2D
 }
 
+/// UIViewRepresentable wrapper for Google Maps view
 struct GoogleMapsView: UIViewRepresentable {
 
     // MARK: - PROPERTIES

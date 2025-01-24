@@ -8,13 +8,19 @@
 import SwiftUI
 import IsometrikChat
 
+/// A SwiftUI view that represents a single conversation row in a chat list
+/// Displays user avatar, name, last message, timestamp and unread count
 struct ISMConversationSubView: View {
     
     //MARK:  - PROPERTIES
     
+    /// The conversation database model containing chat details
     let chat : ConversationDB
+    /// Flag indicating if there are unread messages
     let hasUnreadCount : Bool
+    /// UI appearance configuration for the chat SDK
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    /// Current user's configuration
     var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
     
     //MARK:  - BODY
@@ -83,6 +89,7 @@ struct ISMConversationSubView: View {
     }//:Body
     
     
+    /// Generates the appropriate message preview text based on message type and status
     func getMessageText() -> some View {
         HStack {
             if chat.typing == true{
@@ -163,6 +170,7 @@ struct ISMConversationSubView: View {
         }
     }
     
+    /// Generates UI for payment request messages with status indicators
     func PaymentRequestUI() -> some View{
         let text = getPaymentRequestText()
         return HStack(alignment: .top,spacing: 5){
@@ -208,6 +216,7 @@ struct ISMConversationSubView: View {
         }
     }
     
+    /// Displays video call status with appropriate icons and text
     func VideoCallUI() -> some View{
         HStack{
             if chat.lastMessageDetails?.action == ISMChatActionType.meetingCreated.value{
@@ -242,6 +251,7 @@ struct ISMConversationSubView: View {
         }
     }
     
+    /// Displays audio call status with appropriate icons and text
     func AudioCallUI() -> some View{
         HStack{
             if chat.lastMessageDetails?.action == ISMChatActionType.meetingCreated.value{
@@ -276,6 +286,7 @@ struct ISMConversationSubView: View {
         }
     }
     
+    /// Handles display of various chat action messages (group changes, reactions etc)
     func actionLabels() -> some View{
         HStack {
             if chat.lastMessageDetails?.action == ISMChatActionType.conversationCreated.value{
@@ -356,6 +367,15 @@ struct ISMConversationSubView: View {
         }
     }
     
+    /// Generates call-related status text with icons
+    /// - Parameters:
+    ///   - text1: Primary text (e.g. "Video Call")
+    ///   - text2: Secondary text (e.g. "In call")
+    ///   - color: Text color
+    ///   - outgoing: If call is outgoing
+    ///   - missedCall: If call was missed
+    ///   - addDot: Show separator dot
+    ///   - image: System image name for icon
     func callKitText(text1 : String,text2 : String,color : Color,outgoing : Bool,missedCall : Bool,addDot : Bool,image : String) -> some View{
         HStack(alignment: .center,spacing: 5){
             
@@ -401,6 +421,7 @@ struct ISMConversationSubView: View {
         }
     }
     
+    /// Gets the appropriate payment request status text
     func getPaymentRequestText() -> String{
         let status = ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "", opponentId: chat.opponentDetails?.userId ?? "",metaData: self.chat.lastMessageDetails?.metaData, sentAt: self.chat.lastMessageDetails?.sentAt ?? 0)
         if status == .ActiveRequest {
@@ -431,6 +452,7 @@ struct ISMConversationSubView: View {
         return ""
     }
     
+    /// Generates label for messages with optional image icon
     func getLabel(hideImage : Bool? = false, text : String, image : String,isReaction : Bool? = false,isSticker : Bool? = false) -> some View{
         HStack(alignment: .top,spacing: 5){
             
@@ -506,6 +528,7 @@ struct ISMConversationSubView: View {
             }
         }
     }
+    /// Shows message delivery status indicators (sent/delivered/read)
     func messageDeliveryStatus() -> some View {
         if chat.isGroup == false{
             if (chat.lastMessageDetails?.deliveredTo.count == 1 && chat.lastMessageDetails?.deliveredTo.first?.userId != nil) && (chat.lastMessageDetails?.readBy.count == 1 && chat.lastMessageDetails?.readBy.first?.userId != nil) {
@@ -531,6 +554,7 @@ struct ISMConversationSubView: View {
             return AnyView(EmptyView())
         }
     }
+    /// Gets the sender name text for group chats
     func getSenderNameText() -> some View {
         if let messageDetails = chat.lastMessageDetails {
             let senderId = messageDetails.initiatorId ?? (messageDetails.senderId ?? messageDetails.userId)
@@ -557,6 +581,7 @@ struct ISMConversationSubView: View {
         }
     }
     
+    /// Shows user type indicator icon (business/influencer)
     func userTypeImageView(userType : Int,isStarUser : Bool) -> some View{
         VStack{
             if userType == 1 && isStarUser == true{
