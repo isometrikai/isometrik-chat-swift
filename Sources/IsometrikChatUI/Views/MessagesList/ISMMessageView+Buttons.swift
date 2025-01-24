@@ -146,9 +146,9 @@ extension ISMMessageView{
     }
     
     func detectDirection(value: DragGesture.Value) -> SwipeHVDirection {
-        if value.translation.width < -50 {
+        if value.translation.width < -60 {
             return .left
-        } else if value.translation.width > 50 {
+        } else if value.translation.width > 60 {
             return .right
         } else {
             return .none

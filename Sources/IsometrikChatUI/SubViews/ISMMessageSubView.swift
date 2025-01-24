@@ -2323,16 +2323,16 @@ struct ISMMessageSubView: View {
     }
     
     func detectDirection(value: DragGesture.Value) -> SwipeHVDirection {
-        if value.startLocation.x < value.location.x - 24 {
+        if value.startLocation.x < value.location.x - 28 {
             return .left
         }
-        if value.startLocation.x > value.location.x + 24 {
+        if value.startLocation.x > value.location.x + 28 {
             return .right
         }
-        if value.startLocation.y < value.location.y - 24 {
+        if value.startLocation.y < value.location.y - 28 {
             return .down
         }
-        if value.startLocation.y > value.location.y + 24 {
+        if value.startLocation.y > value.location.y + 28 {
             return .up
         }
         return .none
