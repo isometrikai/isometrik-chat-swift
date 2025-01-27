@@ -7,7 +7,10 @@
 
 import SwiftUI
 
+/// A SwiftUI view that presents a popup for selecting reasons to decline an event/invitation
+/// This view provides a list of predefined options and a custom text input for "Other" option
 struct DeclineReasonPopUpView: View {
+    // Predefined options for declining
     private let options = [
         "Prior commitments",
         "Travel limitations",
@@ -16,34 +19,37 @@ struct DeclineReasonPopUpView: View {
         "Other"
     ]
     
-    @Binding var selectedOption: String?
-    var confirmAction: (String) -> Void
-    var cancelAction: () -> Void
-    @State private var reasonText: String = "" // State to hold user input
+    // MARK: - Properties
+    @Binding var selectedOption: String? // Currently selected reason
+    var confirmAction: (String) -> Void  // Callback for handling confirmation
+    var cancelAction: () -> Void         // Callback for handling cancellation
+    @State private var reasonText: String = "" // Custom reason text for "Other" option
     private let maxCharacterLimit = 1000
     var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     var body: some View {
-        VStack(alignment: .leading,spacing: 0) {
-            Text("Select why you can’t attend")
+        VStack(alignment: .leading, spacing: 0) {
+            // MARK: - Header
+            Text("Select why you can't attend")
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().bold, size: 16))
                 .foregroundColor(Color(hex: "#0E0F0C"))
-                .padding(.vertical,20)
+                .padding(.vertical, 20)
+            
+            // MARK: - Options List
             List {
                 ForEach(options, id: \.self) { option in
                     HStack {
-                        // Radio button
-                        if selectedOption == option{
+                        // Custom radio button implementation using images
+                        if selectedOption == option {
                             appearance.images.selectedDeleteOptions
                                 .resizable()
                                 .frame(width: 24, height: 24, alignment: .center)
-                        }else{
+                        } else {
                             appearance.images.deSelectedDeleteOptions
                                 .resizable()
                                 .frame(width: 24, height: 24, alignment: .center)
                         }
                         
-                        // Option text
                         Text(option)
                             .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 16))
                             .foregroundColor(Color(hex: "#0E0F0C"))
@@ -59,6 +65,8 @@ struct DeclineReasonPopUpView: View {
                 .listRowSeparator(.hidden)
                 .padding(.bottom,20)
             
+            // MARK: - Custom Reason Input
+            // Only show text input field when "Other" is selected
             if selectedOption == "Other"{
                 Text("Reason")
                     .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 14))
@@ -93,7 +101,9 @@ struct DeclineReasonPopUpView: View {
                 .padding(.bottom,20)
             }
             
+            // MARK: - Action Buttons
             HStack {
+                // Cancel button
                 Button(action: cancelAction) {
                     Text("Cancel")
                         .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
@@ -106,15 +116,16 @@ struct DeclineReasonPopUpView: View {
                                 .stroke(Color(hex: "#163300"), lineWidth: 1)
                         )
                 }
+                
+                // Send response button
                 Button {
-                    if let selected = selectedOption{
-                        if selected == "Other"{
-                            confirmAction(reasonText)
-                        }else{
-                            confirmAction(selected)
-                        }
-                    }else{
-                        confirmAction("")
+                    // Handle response based on selection
+                    if let selected = selectedOption {
+                        // If "Other" is selected, send custom reason text
+                        // Otherwise, send the selected predefined option
+                        confirmAction(selected == "Other" ? reasonText : selected)
+                    } else {
+                        confirmAction("") // Send empty string if nothing selected
                     }
                 } label: {
                     Text("Send response")

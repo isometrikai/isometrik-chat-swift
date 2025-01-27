@@ -11,27 +11,30 @@ import AVFoundation
 import IsometrikChat
 import PencilKit
 
+/// A SwiftUI view that provides camera capture functionality with photo and video capabilities
 struct CameraCaptureView: View {
+    // State variables for camera control
     @State private var isRecording = false
     @State private var zoomLevel: CGFloat = 1.0
     @State private var selectedFilter: String = "None"
     @State private var showGallery = false
-    @Binding var isShown : Bool
-    @State private var capturedURL: URL? = nil
-    @State var textFieldtxt : String = ""
     @State private var isFlashOn: Bool = false
     @State private var isPlaying = true
     
+    // Media handling state
+    @Binding var isShown: Bool
+    @State private var capturedURL: URL? = nil
+    @State var textFieldtxt: String = ""
     @State private var player: AVPlayer?
-    @Binding var sendUrl : URL?
+    @Binding var sendUrl: URL?
     
-    @State var showCropper : Bool = false
-    @State var navigateToDraw : Bool = false
-    @State var imageData : Data = Data(count: 0)
+    // Drawing and editing state
+    @State var showCropper: Bool = false
+    @State var navigateToDraw: Bool = false
+    @State var imageData: Data = Data(count: 0)
     @State var canvas = PKCanvasView()
     @State var toolpicker = PKToolPicker()
-    @State var rect : CGRect = .zero
-
+    @State var rect: CGRect = .zero
 
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
 
@@ -285,7 +288,7 @@ struct CameraCaptureView: View {
         }
     }
     
-    
+    /// Removes the last drawn stroke from the canvas
     private func undoLastStroke() {
         var strokes = canvas.drawing.strokes
         if !strokes.isEmpty {
@@ -294,17 +297,21 @@ struct CameraCaptureView: View {
         }
     }
     
-    func cancelDrawImage(){
+    /// Cancels the drawing mode and resets the canvas
+    func cancelDrawImage() {
         canvas = PKCanvasView()
         navigateToDraw = false
     }
     
-    func saveAfterDraw(){
+    /// Saves the drawn image by converting canvas to image and storing it
+    func saveAfterDraw() {
+        // Create image context with current view size
         UIGraphicsBeginImageContextWithOptions(self.rect.size, false, 1)
         canvas.drawHierarchy(in: CGRect(origin: .zero, size: self.rect.size), afterScreenUpdates: true)
         let generatedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        if let image = generatedImage{
+        
+        if let image = generatedImage {
             let newUrl = ISMChatHelper.createImageURL()
             if let imageData = image.jpegData(compressionQuality: 1.0) {
                 do {
@@ -340,29 +347,31 @@ struct CameraCaptureView: View {
         }
 }
 
-// Camera Preview using UIViewControllerRepresentable
+/// Camera preview implementation using UIViewControllerRepresentable
 struct CameraPreview: UIViewControllerRepresentable {
     @Binding var zoomLevel: CGFloat
     @Binding var isRecording: Bool
     @Binding var capturedURL: URL?
-
+    
+    /// Creates and configures the camera view controller
     func makeUIViewController(context: Context) -> CameraViewController {
         let controller = CameraViewController()
         controller.zoomLevel = zoomLevel
         controller.isRecording = isRecording
-
+        
+        // Setup notification observers for camera controls
         NotificationCenter.default.addObserver(forName: NSNotification.Name("FlipCamera"), object: nil, queue: .main) { _ in
             controller.flipCamera()
         }
-
+        
         NotificationCenter.default.addObserver(forName: NSNotification.Name("CapturePhoto"), object: nil, queue: .main) { _ in
             controller.capturePhoto()
         }
-
+        
         controller.onCapture = { url in
             self.capturedURL = url
         }
-
+        
         return controller
     }
 
@@ -447,15 +456,20 @@ import SwiftUI
 import UIKit
 import AVFoundation
 
+/// Main camera view controller handling camera operations
 class CameraViewController: UIViewController {
+    // Camera session components
     private var captureSession: AVCaptureSession!
     private var videoOutput: AVCaptureMovieFileOutput!
-    private var photoOutput: AVCapturePhotoOutput! // Add photo output
+    private var photoOutput: AVCapturePhotoOutput!
     private var previewLayer: AVCaptureVideoPreviewLayer!
     private var currentCameraPosition: AVCaptureDevice.Position = .back
-    var onCapture: ((URL) -> Void)? // Callback for captured image
-    private var isFlashOn: Bool = false
     
+    // Callback for captured media
+    var onCapture: ((URL) -> Void)?
+    
+    // Camera control properties
+    private var isFlashOn: Bool = false
     var isRecording: Bool = false {
         didSet {
             if isRecording {

@@ -11,13 +11,14 @@ import Kingfisher
 import IsometrikChat
 import ExyteMediaPicker
 
-
+/// Represents a media item to be uploaded with associated metadata
 public struct ISMMediaUpload : Hashable {
-    public var url : URL
-    public var caption : String
-    public var isVideo: Bool
+    public var url : URL        // The URL of the media file
+    public var caption : String // Optional caption for the media
+    public var isVideo: Bool    // Indicates if the media is a video
 }
 
+/// A view that provides media editing capabilities for images and videos
 struct ISMMediaEditor: View {
     
     //MARK:  - PROPERTIES
@@ -223,9 +224,13 @@ struct ISMMediaEditor: View {
     }
     
     //MARK: - CONFIGURE
+    /// Dismisses the keyboard by resigning first responder
     func dismissKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
+    /// Loads an image from a file URL
+    /// - Parameter fileURL: The URL of the image file
+    /// - Returns: Optional UIImage if loading succeeds
     func loadImageFromURL(fileURL: URL) -> UIImage? {
         do {
             let imageData = try Data(contentsOf: fileURL)
@@ -236,6 +241,9 @@ struct ISMMediaEditor: View {
         }
     }
     
+    /// Creates a video player view for the given URL
+    /// - Parameter url: The URL of the video file
+    /// - Returns: A VideoPlayer view
     func VideoPlayerView(url : URL) -> some View{
         let vp =  AVPlayer(url:  url)
         return VideoPlayer(player: vp)
@@ -256,7 +264,7 @@ struct ISMMediaEditor: View {
     }
 }
 
-
+/// Displays a single media item with zoom capabilities
 struct MediaCell: View {
     @StateObject var viewModel: MediaCellViewModel
     @ObservedObject var keyboardHeightHelper = ISMKeyboardHeightHelper.shared
@@ -417,7 +425,7 @@ struct MediaEditorCell: View {
     }
 }
 
-
+/// Handles media playback and presentation
 final class MediaCellViewModel: ObservableObject {
 
     let media: Media
@@ -433,6 +441,7 @@ final class MediaCellViewModel: ObservableObject {
         self.media = media
     }
 
+    /// Initializes media loading and preparation
     func onStart() async {
             guard imageUrl == nil || player == nil else { return }
 
@@ -469,6 +478,7 @@ final class MediaCellViewModel: ObservableObject {
             }
         }
 
+    /// Toggles video playback state
     func togglePlay() {
         if isPlaying {
             player?.pause()
@@ -478,6 +488,7 @@ final class MediaCellViewModel: ObservableObject {
         isPlaying = !isPlaying
     }
 
+    /// Cleanup resources when view disappears
     func onStop() {
         imageUrl = nil
         player = nil

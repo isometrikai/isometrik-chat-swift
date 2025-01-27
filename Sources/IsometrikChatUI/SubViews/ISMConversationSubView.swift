@@ -529,6 +529,7 @@ struct ISMConversationSubView: View {
         }
     }
     /// Shows message delivery status indicators (sent/delivered/read)
+    /// If its not group, then we check 'DeliveredTo' count should be one and 'DeliveredTo' should contain userId, same we will check for read
     func messageDeliveryStatus() -> some View {
         if chat.isGroup == false{
             if (chat.lastMessageDetails?.deliveredTo.count == 1 && chat.lastMessageDetails?.deliveredTo.first?.userId != nil) && (chat.lastMessageDetails?.readBy.count == 1 && chat.lastMessageDetails?.readBy.first?.userId != nil) {

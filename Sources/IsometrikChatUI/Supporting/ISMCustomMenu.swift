@@ -8,12 +8,21 @@
 
 import SwiftUI
 
+/// A custom menu view that provides options for chat management
+/// This view contains buttons for clearing chat history and blocking users
 struct ISMCustomMenu: View {
-    // Actions for each button
+    // MARK: - Properties
+    
+    /// Closure to handle clearing chat history
     var clearChatAction: () -> Void
+    
+    /// Closure to handle blocking a user
     var blockUserAction: () -> Void
+    
+    /// UI appearance configuration from the SDK
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
+    // MARK: - Body
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Button(action: clearChatAction) {
@@ -47,22 +56,50 @@ struct ISMCustomMenu: View {
     }
 }
 
-enum PopUpType : CaseIterable{
+/// Defines the types of popups available in the application
+enum PopUpType: CaseIterable {
+    /// Standard menu popup
     case Menu
+    /// Delete confirmation popup
     case Delete
 }
 
+/// A customizable confirmation popup view
+/// Used for displaying confirmations and alerts to the user
 struct ConfirmationPopup: View {
+    // MARK: - Properties
+    
+    /// The title displayed at the top of the popup
     var title: String
+    
+    /// The main message content of the popup
     var message: AttributedString
+    
+    /// Text for the confirm button
     var confirmButtonTitle: String
+    
+    /// Text for the cancel button
     var cancelButtonTitle: String
+    
+    /// Action to perform when confirm is pressed
     var confirmAction: () -> Void
+    
+    /// Action to perform when cancel is pressed
     var cancelAction: () -> Void
-    var popUpType : PopUpType
+    
+    /// Type of popup to display (affects styling)
+    var popUpType: PopUpType
+    
+    /// UI appearance configuration from the SDK
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    @Binding var isPresented : Bool
-    var showCrossButton : Bool
+    
+    /// Binding to control the popup's visibility
+    @Binding var isPresented: Bool
+    
+    /// Determines if the dismiss button should be shown
+    var showCrossButton: Bool
+    
+    // MARK: - Body
     var body: some View {
         VStack(spacing: 32) {
             HStack{

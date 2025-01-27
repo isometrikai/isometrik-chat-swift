@@ -11,15 +11,23 @@ import UIKit
 import YPImagePicker
 import IsometrikChat
 
+/// A SwiftUI view that provides media picking functionality using YPImagePicker
+/// This view can be used for both profile picture selection and general media selection
 struct ISMMediaPickerView: View {
     
     //MARK:  - PROPERTIES
+    /// Array of selected media URLs (for videos)
     @Binding var selectedMedia: [URL]
-    @Binding var selectedProfilePicture : [UIImage]
-    @State var cancel : Bool = false
+    /// Array of selected profile pictures (for images)
+    @Binding var selectedProfilePicture: [UIImage]
+    /// Flag to handle cancellation
+    @State var cancel: Bool = false
+    /// Environment variable to handle view dismissal
     @Environment(\.dismiss) var dismiss
     @Environment(\.presentationMode) var presentationMode
-    var isProfile : Bool = false
+    /// Flag to determine if picker is being used for profile picture selection
+    var isProfile: Bool = false
+    /// UI appearance configuration
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     //MARK:  - LIFECYCLE
     var body: some View {
@@ -44,14 +52,18 @@ struct ISMMediaPickerView: View {
     }
 }
 
-
+/// UIViewControllerRepresentable wrapper for YPImagePicker to use in SwiftUI
 struct YPImagePickerWrapper: UIViewControllerRepresentable {
-    @Binding var selectedProfile : [UIImage]
+    /// Selected profile pictures binding
+    @Binding var selectedProfile: [UIImage]
+    /// Selected video URLs binding
     @Binding var selectedVideos: [URL]
-    var isProfile : Bool = false
+    /// Flag for profile picture mode
+    var isProfile: Bool = false
+    /// Closure to handle picker dismissal
     var dismissalHandler: () -> Void
     
-    
+    /// Coordinator class to handle YPImagePicker delegate methods
     class Coordinator: NSObject, UINavigationControllerDelegate {
         var parent: YPImagePickerWrapper
         
@@ -59,13 +71,16 @@ struct YPImagePickerWrapper: UIViewControllerRepresentable {
             self.parent = parent
         }
         
+        /// Handles the completion of media selection
         func imagePicker(_ picker: YPImagePicker, didFinishWith items: [YPMediaItem]) {
+            // Clear existing selections
             parent.selectedVideos.removeAll()
             parent.selectedProfile.removeAll()
+            
+            // Process selected items
             for item in items {
                 switch item {
                 case .photo(let photo):
-                    //                    parent.selectedImages.append(photo.url!)
                     print(photo.image)
                 case .video(let video):
                     parent.selectedVideos.append(video.url)
@@ -74,19 +89,22 @@ struct YPImagePickerWrapper: UIViewControllerRepresentable {
             parent.dismissalHandler()
         }
         
+        /// Handles picker cancellation
         func imagePickerDidCancel(_ picker: YPImagePicker) {
             parent.dismissalHandler()
         }
     }
-    
     
     func makeCoordinator() -> Coordinator {
         return Coordinator(parent: self)
     }
     
     func makeUIViewController(context: Context) -> UIViewController {
+        // Configure YPImagePicker based on use case
         var config = YPImagePickerConfiguration()
-        if isProfile == true{
+        
+        // Special configuration for profile picture selection
+        if isProfile {
             config.screens = [.library]
             config.library.maxNumberOfItems = 1
             config.showsCrop = .circle
@@ -94,20 +112,26 @@ struct YPImagePickerWrapper: UIViewControllerRepresentable {
             config.shouldSaveNewPicturesToAlbum = false
         }
         
+        // Initialize and configure the picker
         let picker = YPImagePicker(configuration: config)
         picker.modalPresentationStyle = .fullScreen
         
+        // Handle selection completion
         picker.didFinishPicking { items, cancelled in
-            if cancelled{
+            if cancelled {
                 dismissalHandler()
+                return
             }
+            
+            // Clear existing selections
             selectedVideos.removeAll()
             selectedProfile.removeAll()
+            
+            // Process selected items
             for item in items {
                 switch item {
                 case .photo(let photo):
-                    print(photo.image)
-                    if isProfile == true{
+                    if isProfile {
                         selectedProfile.append(photo.image)
                     }
                 case .video(let video):

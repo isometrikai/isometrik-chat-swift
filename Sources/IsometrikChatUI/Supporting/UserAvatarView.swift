@@ -8,29 +8,32 @@
 import SwiftUI
 import IsometrikChat
 
+/// A view that displays a user's avatar with an optional online status indicator
 public struct UserAvatarView: View {
-    var avatar: String
+    // Properties for configuring the avatar display
+    var avatar: String          // URL string for the avatar image
     var showOnlineIndicator: Bool
     var size: CGSize = .defaultAvatarSize
-    var userName : String
-    var font : Font = .regular(size: 16)
+    var userName: String
+    var font: Font = .regular(size: 16)
     
     public init(
         avatar: String,
         showOnlineIndicator: Bool,
         size: CGSize = .defaultAvatarSize,
-        userName : String,
-        font : Font = .headline
+        userName: String,
+        font: Font = .headline
     ) {
         self.avatar = avatar
         self.showOnlineIndicator = showOnlineIndicator
         self.size = size
+        // Transform full name into initials (up to 2 characters)
         self.userName = userName
-            .components(separatedBy: " ")
-            .compactMap { $0.first }
-            .prefix(2)
-            .map { String($0).uppercased() }
-            .joined()
+            .components(separatedBy: " ")     // Split name into words
+            .compactMap { $0.first }          // Get first character of each word
+            .prefix(2)                        // Take first two characters
+            .map { String($0).uppercased() }  // Convert to uppercase strings
+            .joined()                         // Join characters together
         self.font = font
     }
     
@@ -50,13 +53,15 @@ public struct UserAvatarView: View {
     }
 }
 
+/// A view that renders either a network image or a placeholder with user initials
 public struct AvatarView: View {
+    // Properties for avatar configuration
     var avatar: String
     var size: CGSize = .defaultAvatarSize
-    var userName : String
-    var font : Font = .headline
+    var userName: String
+    var font: Font = .headline
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    @State private var isValid: Bool?
+    @State private var isValid: Bool?    // Tracks if the avatar URL is valid
     
     public var body: some View {
         Group {
@@ -78,6 +83,7 @@ public struct AvatarView: View {
         }
     }
     
+    /// Placeholder view shown when avatar image is unavailable
     private var placeholderView: some View {
         ZStack {
             Circle()
@@ -95,6 +101,7 @@ public struct AvatarView: View {
         .clipShape(Circle())
     }
     
+    /// Validates if the provided image URL is accessible
     private func validateImageURL() {
         isValidImageURL(avatar) { isValid in
             DispatchQueue.main.async {
@@ -103,7 +110,10 @@ public struct AvatarView: View {
         }
     }
     
-    
+    /// Checks if a URL points to a valid image resource
+    /// - Parameters:
+    ///   - urlString: The URL string to validate
+    ///   - completion: Closure called with boolean indicating URL validity
     func isValidImageURL(_ urlString: String, completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: urlString) else {
             completion(false)
@@ -125,10 +135,12 @@ public struct AvatarView: View {
     }
 }
 
+/// A specialized avatar view for broadcast messages
 public struct BroadCastAvatarView: View {
     var size: CGSize = .defaultAvatarSize
-    var broadCastImageSize : CGSize
-    var broadCastLogo : Image
+    var broadCastImageSize: CGSize
+    var broadCastLogo: Image
+    
     public var body: some View {
         ZStack{
             Circle()
@@ -146,7 +158,6 @@ public struct BroadCastAvatarView: View {
         )
     }
 }
-
 
 /// View used for the online indicator.
 public struct OnlineIndicatorView: View {

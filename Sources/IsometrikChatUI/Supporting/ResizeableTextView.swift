@@ -8,20 +8,32 @@
 import Foundation
 import SwiftUI
 
+/// A SwiftUI wrapper for UITextView that provides resizable text input with placeholder support
+/// and mention user functionality
 struct ResizeableTextView: UIViewRepresentable {
 
     // MARK: - PROPERTIES
+    /// The text content of the text view
     @Binding var text: String
+    /// Dynamic height of the text view that adjusts with content
     @Binding var height: CGFloat
+    /// Indicates if user has started typing
     @Binding var typingStarted: Bool
+    /// Placeholder text shown when text view is empty
     var placeholderText: String
+    /// Controls visibility of mention user list
     @Binding var showMentionList: Bool
+    /// Number of filtered users available for mention
     var filteredMentionUserCount: Int
+    /// Currently selected mention user
     @Binding var mentionUser: String?
+    /// Color for placeholder text
     let placeholderColor: Color
+    /// Color for active text
     let textViewColor: UIColor
 
     // MARK: - CONFIGURE
+    /// Creates and configures the initial UITextView
     func makeUIView(context: Context) -> UITextView {
         let textView = UITextView()
         textView.delegate = context.coordinator
@@ -37,6 +49,7 @@ struct ResizeableTextView: UIViewRepresentable {
         return textView
     }
 
+    /// Updates the UITextView when SwiftUI state changes
     func updateUIView(_ textView: UITextView, context: Context) {
         if text.isEmpty && !textView.isFirstResponder {
             textView.text = placeholderText
@@ -66,6 +79,8 @@ struct ResizeableTextView: UIViewRepresentable {
             self.parent = parent
         }
 
+        /// Handles text view editing start
+        /// - Clears placeholder text and updates text color
         func textViewDidBeginEditing(_ textView: UITextView) {
             if textView.text == parent.placeholderText {
                 textView.text = ""
@@ -76,6 +91,8 @@ struct ResizeableTextView: UIViewRepresentable {
             }
         }
 
+        /// Handles text view editing end
+        /// - Restores placeholder if text is empty
         func textViewDidEndEditing(_ textView: UITextView) {
             if textView.text.isEmpty {
                 textView.text = parent.placeholderText
@@ -86,6 +103,9 @@ struct ResizeableTextView: UIViewRepresentable {
             }
         }
 
+        /// Handles text changes in real-time
+        /// - Updates parent text and height
+        /// - Manages mention list visibility based on @ symbol
         func textViewDidChange(_ textView: UITextView) {
             DispatchQueue.main.async {
                 self.parent.text = textView.text
@@ -104,15 +124,20 @@ struct ResizeableTextView: UIViewRepresentable {
     }
 }
 
-
-struct CaptionTextView: UIViewRepresentable{
+/// A SwiftUI wrapper for UITextView specifically designed for caption input
+/// with custom styling and border
+struct CaptionTextView: UIViewRepresentable {
     
-    //MARK:  - PROPERTIES
-    @Binding var text:String
-    @Binding var height:CGFloat
+    // MARK: - PROPERTIES
+    /// The text content of the caption
+    @Binding var text: String
+    /// Dynamic height of the text view
+    @Binding var height: CGFloat
+    /// Placeholder text shown when caption is empty
     var placeholderText: String
     
-    //MARK: - CONFIGURE
+    // MARK: - CONFIGURE
+    /// Creates and configures the initial UITextView with custom styling
     func makeUIView(context: Context) -> UITextView {
         let textView = UITextView()
         textView.delegate = context.coordinator
@@ -134,6 +159,7 @@ struct CaptionTextView: UIViewRepresentable{
         return textView
     }
     
+    /// Updates the UITextView when SwiftUI state changes
     func updateUIView(_ textView: UITextView, context: Context) {
         textView.text = text
     }
@@ -142,24 +168,18 @@ struct CaptionTextView: UIViewRepresentable{
         CaptionTextView.Coordinator(self)
     }
     
-    class Coordinator: NSObject, UITextViewDelegate{
+    class Coordinator: NSObject, UITextViewDelegate {
         var parent: CaptionTextView
         
         init(_ params: CaptionTextView) {
             self.parent = params
         }
         
-        func textViewDidBeginEditing(_ textView: UITextView) {
-        }
-        
-        func textViewDidEndEditing(_ textView: UITextView) {
-        }
-        
+        /// Updates parent text and height when content changes
         func textViewDidChange(_ textView: UITextView) {
             DispatchQueue.main.async {
                 self.parent.height = textView.contentSize.height
                 self.parent.text = textView.text
-
             }
         }
     }

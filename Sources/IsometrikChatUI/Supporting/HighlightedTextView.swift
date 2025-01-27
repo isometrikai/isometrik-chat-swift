@@ -9,6 +9,13 @@ import Foundation
 import SwiftUI
 import IsometrikChat
 
+/// A view that displays text with highlighted mentions of users
+/// - Parameters:
+///   - originalText: The text content to display
+///   - mentionedUsers: Array of users that can be mentioned in the text
+///   - isReceived: Boolean indicating if the message is received or sent
+///   - navigateToInfo: Binding to control navigation to user info
+///   - navigatetoUser: Binding to the selected user for navigation
 struct HighlightedTextView : View{
     
     @State var originalText: String
@@ -23,6 +30,7 @@ struct HighlightedTextView : View{
         HashtagText(originalText)
             .modifier(HashtagTextModifier(mentionedUsers: mentionedUsers,isReceived: self.isReceived, navigateToInfo : $navigateToInfo,navigatetoUser : $navigatetoUser))
             .onOpenURL { url in
+                // Handle taps on mentioned users by parsing the URL and navigating to user info
                 if let keyword = self.parseURL(url: url) {
                         if let matchedUser = mentionedUsers.first(where: { member in
                             if let memberUsername = member.userName {
@@ -37,6 +45,10 @@ struct HighlightedTextView : View{
                 }
             }
     }
+    
+    /// Extracts the username from a mention URL
+    /// - Parameter url: URL in format "hashtagtext://username"
+    /// - Returns: The extracted username or nil if invalid format
     private func parseURL(url: URL) -> String? {
         let string = url.absoluteString
         if let keyword = string.split(separator: "//").last {
@@ -46,7 +58,7 @@ struct HighlightedTextView : View{
     }
 }
 
-
+/// A basic text view wrapper for applying mention highlighting
 struct HashtagText: View {
     
     var text: String
@@ -61,7 +73,7 @@ struct HashtagText: View {
     
 }
 
-
+/// Protocol defining the interface for text modification
 protocol TextModifier {
     associatedtype Body : View
     func body(text: HashtagText) -> Self.Body
@@ -73,7 +85,7 @@ extension HashtagText {
     }
 }
 
-
+/// Modifier that handles the highlighting and styling of mentioned users in text
 struct HashtagTextModifier: TextModifier {
     let mentionedUsers: [ISMChatGroupMember]
     var firstNameIsValid : Bool = false

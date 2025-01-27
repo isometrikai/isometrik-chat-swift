@@ -8,22 +8,33 @@
 import SwiftUI
 import IsometrikChat
 
-struct TextBox : Identifiable{
+/// Represents a text box that can be added and manipulated on an image
+struct TextBox : Identifiable {
     var id = UUID().uuidString
     var text : String = ""
     var isBold : Bool = false
+    /// Current position of the text box
     var offset: CGSize = .zero
+    /// Previous position of the text box (used for drag calculations)
     var lastoffset: CGSize = .zero
     var textColor : Color = .black
+    /// Flag to track if text box has been confirmed/added
     var isAdded : Bool = false
 }
 
+/// View for adding and editing text overlays on images
 struct ISMImageText: View {
+    
+    // MARK: - Properties
     @Binding var url : URL
     @Binding var isShowing : Bool
+    /// Array of text boxes added to the image
     @State var textBoxes : [TextBox] = []
+    /// Flag to show text input interface
     @State var addNewBox = false
+    /// Index of currently selected text box
     @State var currentIndex : Int = 0
+    /// Raw image data
     @State var imageData : Data = Data(count: 0)
     @State var rect : CGRect = .zero
     
@@ -91,7 +102,10 @@ struct ISMImageText: View {
         }.navigationViewStyle(StackNavigationViewStyle())
     }
     
-    func getIndex(textBox : TextBox)-> Int{
+    /// Returns the index of a given text box in the textBoxes array
+    /// - Parameter textBox: The text box to find
+    /// - Returns: Index of the text box, or 0 if not found
+    func getIndex(textBox : TextBox)-> Int {
         let index = textBoxes.firstIndex{ (box) -> Bool in
             return textBox.id == box.id
             
@@ -99,47 +113,8 @@ struct ISMImageText: View {
         return index
     }
     
-    var navBarTrailingBtn: some View {
-        HStack{
-            if addNewBox == false{
-                
-                Button(action: {
-                    AddNewTextField()
-                }) {
-                    Image(systemName: "plus")
-                }
-                Button(action: {
-                    save()
-                }) {
-                    Text("Done")
-                        .foregroundColor(.blue)
-                }
-            }else{
-                Button(action: {
-                    textBoxes[currentIndex].isAdded = true
-                    withAnimation {
-                        addNewBox = false
-                    }
-                }) {
-                    Text("Done")
-                        .foregroundColor(.blue)
-                }
-            }
-        }
-    }
-    
-    var navBarLeadingBtn: some View {
-        Button(action: {
-            addNewBox == false ? withAnimation {
-                isShowing = false
-            } : cancelImageText()
-        }) {
-            Text("Cancel")
-                .foregroundColor(.blue)
-        }
-    }
-    
-    func AddNewTextField(){
+    /// Adds a new text box and shows the text input interface
+    func AddNewTextField() {
         textBoxes.append(TextBox())
         currentIndex = textBoxes.count - 1
         withAnimation {
@@ -147,6 +122,8 @@ struct ISMImageText: View {
         }
     }
     
+    /// Fetches image data from the provided URL
+    /// - Parameter url: URL of the image to load
     func fetchData(from url: URL) {
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let data = data {
@@ -157,6 +134,8 @@ struct ISMImageText: View {
         }.resume()
     }
     
+    /// Handles cancellation of text input
+    /// Removes the text box if it wasn't confirmed
     func cancelImageText(){
         withAnimation {
             addNewBox = false
@@ -166,6 +145,8 @@ struct ISMImageText: View {
         }
     }
     
+    /// Saves the image with text overlays
+    /// Creates a new image by rendering the SwiftUI view hierarchy
     func save() {
         let swiftUIView =
         ZStack {
@@ -223,9 +204,52 @@ struct ISMImageText: View {
             }
         }
     }
+    
+    // MARK: - Navigation Bar Items
+    
+    var navBarTrailingBtn: some View {
+        HStack{
+            if addNewBox == false{
+                
+                Button(action: {
+                    AddNewTextField()
+                }) {
+                    Image(systemName: "plus")
+                }
+                Button(action: {
+                    save()
+                }) {
+                    Text("Done")
+                        .foregroundColor(.blue)
+                }
+            }else{
+                Button(action: {
+                    textBoxes[currentIndex].isAdded = true
+                    withAnimation {
+                        addNewBox = false
+                    }
+                }) {
+                    Text("Done")
+                        .foregroundColor(.blue)
+                }
+            }
+        }
+    }
+    
+    var navBarLeadingBtn: some View {
+        Button(action: {
+            addNewBox == false ? withAnimation {
+                isShowing = false
+            } : cancelImageText()
+        }) {
+            Text("Cancel")
+                .foregroundColor(.blue)
+        }
+    }
 }
 
-struct CanvasViewNew :  UIViewRepresentable {
+/// UIView wrapper for displaying the image
+struct CanvasViewNew : UIViewRepresentable {
     @Binding var imageData : Data
     var rect : CGSize
     

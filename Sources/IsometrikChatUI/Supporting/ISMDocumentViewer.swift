@@ -10,17 +10,26 @@ import SwiftUI
 import PDFKit
 import IsometrikChat
 
-
+/// A SwiftUI view that displays PDF and text documents with sharing capabilities
+/// This viewer supports both PDF and text file formats with different rendering approaches for each
 struct ISMDocumentViewer: View {
     
-    //MARK:  - PROPERTIES
+    // MARK: - PROPERTIES
+    /// The URL of the document to display
     let url: URL?
-    let title : String
+    /// Title to display in the navigation bar
+    let title: String
+    /// Tracks the current page number for PDF documents
     @State var currentPage: Int = 0
+    /// Total number of pages in the PDF document
     @State var total: Int = 0
+    /// Controls visibility of the share sheet
     @State private var isShowingActivityView = false
-    @State private var documentSaved : Bool = false
+    /// Indicates whether the document was successfully saved
+    @State private var documentSaved: Bool = false
+    /// UI appearance configuration from the SDK
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    /// Environment variable to handle view dismissal
     @Environment(\.dismiss) var dismiss
     
     //MARK:  - LIFECYCLE
@@ -99,6 +108,8 @@ struct ISMDocumentViewer: View {
         }
     }
     
+    /// Saves the document to the local file system
+    /// Uses FileDownloader to asynchronously download and store the file
     func saveToFile(){
         if let url = url{
             FileDownloader.loadFileAsync(url: url) { (path, error) in
@@ -110,6 +121,8 @@ struct ISMDocumentViewer: View {
         }
     }
     
+    /// Presents a system share sheet for the document
+    /// Uses UIKit's activity view controller to handle sharing
     func actionSheet() {
         if let url = url {
             let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
@@ -127,6 +140,7 @@ struct ISMDocumentViewer: View {
     }
 }
 
+/// UIViewRepresentable wrapper for PDFKit's PDFView that supports page tracking
 struct PDFKitRepresentedView: UIViewRepresentable {
     
     //MARK:  - PROPERTIES
@@ -140,6 +154,9 @@ struct PDFKitRepresentedView: UIViewRepresentable {
     }
     
     //MARK:  - LIFECYCLE
+    /// Creates and configures the PDF view with the specified document
+    /// - Parameter context: The context in which the view is being created
+    /// - Returns: A configured PDFView instance
     func makeUIView(context: Context) -> UIView {
         guard let document = PDFDocument(url: self.url) else { return UIView() }
         
@@ -167,6 +184,7 @@ struct PDFKitRepresentedView: UIViewRepresentable {
     }
 }
 
+/// A simplified PDFKit wrapper for basic PDF display
 struct PDFKitView: UIViewRepresentable {
     let url: URL // new variable to get the URL of the document
     
@@ -184,6 +202,7 @@ struct PDFKitView: UIViewRepresentable {
     }
 }
 
+/// Displays text file content with loading states and error handling
 struct TextFileView: View {
     let url: URL // The URL to the .txt file
     @State private var fileContent: String = "" // To hold the file content
@@ -219,7 +238,8 @@ struct TextFileView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
-    // Function to load the content of the .txt file
+    /// Asynchronously loads the text file content from the URL
+    /// Handles loading states and potential errors during file fetch
     func loadTextFile() {
             let request = URLRequest(url: url)
             
@@ -247,6 +267,8 @@ struct TextFileView: View {
         }
 }
 
+/// SwiftUI wrapper for UIKit's activity view controller
+/// Enables system share sheet functionality
 struct ActivityView: UIViewControllerRepresentable {
     let activityItems: [Any]
 
