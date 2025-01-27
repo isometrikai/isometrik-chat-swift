@@ -13,66 +13,71 @@ public protocol OtherConversationListViewDelegate{
 }
 
 public struct OtherConversationListView : View {
+    // StateObject to manage realm data
     @StateObject public var realmManager = RealmManager.shared
+    // Delegate for navigation actions
     public var delegate: OtherConversationListViewDelegate?
+    // Appearance settings for the chat UI
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    
     public var body: some View {
         NavigationStack {
-            ZStack{
+            ZStack {
+                // Set background color for the chat list
                 appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack {
-                    if realmManager.getOtherConversationCount() == 0{
-                        if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true{
+                    // Check if there are any other conversations
+                    if realmManager.getOtherConversationCount() == 0 {
+                        // Display custom placeholder if enabled
+                        if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true {
                             appearance.placeholders.otherchatListPlaceholder
-                        }else{
+                        } else {
+                            // Default message when no chats are found
                             Text("No other chats found!")
                         }
-                    }else{
-                        List{
-                            ForEach(realmManager.getOtherConversation()){ data in
-                                ZStack{
-                                    VStack{
+                    } else {
+                        // Display the list of conversations
+                        List {
+                            ForEach(realmManager.getOtherConversation()) { data in
+                                ZStack {
+                                    VStack {
+                                        // Button to navigate to the message view
                                         Button {
                                             delegate?.navigateToMessageVc(selectedUserToNavigate: data.opponentDetails, conversationId: data.lastMessageDetails?.conversationId)
                                         } label: {
+                                            // Subview for displaying conversation details
                                             ISMConversationSubView(chat: data, hasUnreadCount: (data.unreadMessagesCount) > 0)
-                                        }.padding(.bottom,10)
-                                        Divider()//.padding(.horizontal,15)
-                                    }//.frame(height: 40)
+                                        }
+                                        .padding(.bottom, 10)
+                                        Divider() // Divider between conversations
+                                    }
                                 }
-                                //:ZStack
-                            }//:FOREACH
-                           
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
+                            } // End of ForEach
+                            .listRowBackground(Color.clear) // Clear background for list rows
+                            .listRowSeparator(.hidden) // Hide row separators
                         }
-                        .listStyle(.plain)
-                        .keyboardType(.default)
-                        .textContentType(.oneTimeCode)
-                        .autocorrectionDisabled(true)
-//                        .refreshable {
-//                            self.viewModel.resetdata()
-//                            self.getConversationList()
-//                        }
+                        .listStyle(.plain) // Set list style
+                        .keyboardType(.default) // Default keyboard type
+                        .textContentType(.oneTimeCode) // Set text content type
+                        .autocorrectionDisabled(true) // Disable autocorrection
                         
-                        
-                        Text("Open a chat to get more info about who’s messaging you. They won’t know that you’ve seen it until you accept.")
-                            .foregroundColor(Color(hex: "#FF4E00"))
-                            .font(appearance.fonts.chatListUserMessage)
-                            .padding(.horizontal,35)
-                            .padding(.vertical,15)
-                            .background(Color(hex: "#F5F5F5"))
-                            .frame(maxWidth: .infinity)
-                        
+                        // Instruction text for users
+                        Text("Open a chat to get more info about who's messaging you. They won't know that you've seen it until you accept.")
+                            .foregroundColor(Color(hex: "#FF4E00")) // Set text color
+                            .font(appearance.fonts.chatListUserMessage) // Set font style
+                            .padding(.horizontal, 35) // Horizontal padding
+                            .padding(.vertical, 15) // Vertical padding
+                            .background(Color(hex: "#F5F5F5")) // Background color
+                            .frame(maxWidth: .infinity) // Full width frame
                     }
-                }//:VStack
-                .navigationBarHidden(true)
-                .navigationBarTitleDisplayMode(.inline)
-            }
-        }//:NavigationView
-        .navigationViewStyle(.stack)
-        .onLoad{
-           
+                } // End of VStack
+                .navigationBarHidden(true) // Hide navigation bar
+                .navigationBarTitleDisplayMode(.inline) // Set title display mode
+            } // End of ZStack
+        } // End of NavigationStack
+        .navigationViewStyle(.stack) // Set navigation view style
+        .onLoad {
+            // Load additional data or perform actions on view load
         }
     }
 }

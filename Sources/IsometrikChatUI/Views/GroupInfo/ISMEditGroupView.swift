@@ -9,30 +9,42 @@ import SwiftUI
 import IsometrikChat
 import ExyteMediaPicker
 
+/// A view that allows users to edit group information including name and profile picture
+/// Supports camera, gallery selection and image removal functionality
 struct ISMEditGroupView: View {
     
     //MARK: - PROPERTIES
+    // View presentation and navigation
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @State var imageUrl : String?
+    // Media selection and handling states
+    @State var imageUrl: String?
     @State private var showSheet = false
     @State private var showCamera = false
     @State private var showGallery = false
-    @State var cameraImageToUse : URL?
-    @State public var uploadMedia : Bool = false
-    @State private var image : [UIImage] = []
-    @State private var selectedMedia : [URL] = []
+    @State var cameraImageToUse: URL?
+    @State public var uploadMedia: Bool = false
+    @State private var image: [UIImage] = []
+    @State private var selectedMedia: [URL] = []
+    
+    // View Models
     @ObservedObject var viewModel = ChatsViewModel()
     @ObservedObject var conversationViewModel = ConversationViewModel()
+    
+    // Group information states
     @State private var groupName = ""
-    var existingGroupName : String
-    var existingImage : String
-    var conversationId : String?
-    @State private var NameAlert : Bool = false
+    var existingGroupName: String
+    var existingImage: String
+    var conversationId: String?
+    
+    // UI States
+    @State private var NameAlert: Bool = false
     @FocusState private var isFocused: Bool
+    @State var showProgressView: Bool = false
+    @State var removeImage: Bool = false
+    
+    // Appearance configuration
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    @State var showProgressView : Bool = false
-    @State var removeImage : Bool = false
     
     //MARK: - BODY
     var body: some View {
@@ -176,35 +188,46 @@ struct ISMEditGroupView: View {
         }
     }
     
-    func editGroup(){
-        if !groupName.isEmpty{
+    //MARK: - Group Edit Functions
+    
+    /// Handles the group editing process including name and image updates
+    /// Validates group name and manages different update scenarios
+    func editGroup() {
+        // Validate group name is not empty
+        if !groupName.isEmpty {
             showProgressView = true
-            if existingGroupName != groupName{
-                if let image = image.first{
+            
+            // Case 1: Group name has changed
+            if existingGroupName != groupName {
+                if let image = image.first {
+                    // Update both name and image
                     viewModel.updateGroupTitle(title: groupName, conversationId: conversationId ?? "") { _ in
                         updategroupImage(image: image)
                     }
-                }else{
+                } else {
+                    // Update name only
                     viewModel.updateGroupTitle(title: groupName, conversationId: conversationId ?? "") { _ in
                         NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
                         presentationMode.wrappedValue.dismiss()
                     }
                 }
-            }else{
-                if let image = image.first{
+            } else {
+                // Case 2: Only image has changed
+                if let image = image.first {
                     updategroupImage(image: image)
-                }else if let imageUrl = cameraImageToUse{
+                } else if let imageUrl = cameraImageToUse {
                     updategroupImageUrl(imageUrl: imageUrl)
-                }else{
+                } else {
                     presentationMode.wrappedValue.dismiss()
                 }
             }
-        }else{
+        } else {
             NameAlert = true
         }
     }
     
-    func removeImageInApi(){
+    /// Removes the group image and sets it back to default
+    func removeImageInApi() {
         let defaultImage = "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg"
         viewModel.updateGroupImage(image: defaultImage, conversationId: conversationId ?? "") { _ in
             NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
@@ -212,8 +235,11 @@ struct ISMEditGroupView: View {
         }
     }
     
-    func updategroupImageUrl(imageUrl : URL){
-        viewModel.uploadConversationUrl(url:imageUrl , conversationType: 0, newConversation: false, conversationId: conversationId ?? "", conversationTitle: groupName) { value in
+    /// Updates group image using a URL
+    /// - Parameter imageUrl: URL of the new image
+    func updategroupImageUrl(imageUrl: URL) {
+        viewModel.uploadConversationUrl(url: imageUrl, conversationType: 0, newConversation: false, 
+            conversationId: conversationId ?? "", conversationTitle: groupName) { value in
             viewModel.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "") { _ in
                 NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
                 presentationMode.wrappedValue.dismiss()
@@ -221,8 +247,11 @@ struct ISMEditGroupView: View {
         }
     }
     
-    func updategroupImage(image : UIImage){
-        viewModel.uploadConversationImage(image: image, conversationType: 0, newConversation: false, conversationId: conversationId ?? "", conversationTitle: groupName) { value in
+    /// Updates group image using a UIImage
+    /// - Parameter image: UIImage to be set as group image
+    func updategroupImage(image: UIImage) {
+        viewModel.uploadConversationImage(image: image, conversationType: 0, newConversation: false,
+            conversationId: conversationId ?? "", conversationTitle: groupName) { value in
             viewModel.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "") { _ in
                 NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
                 presentationMode.wrappedValue.dismiss()

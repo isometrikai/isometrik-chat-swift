@@ -9,13 +9,16 @@ import Foundation
 import SwiftUI
 import IsometrikChat
 
+/// Represents a single action item in the context menu
 struct ContextMenuAction {
-    let label: String
-    let icon: Image
-    let condition: Bool
-    let action: () -> Void
+    let label: String     // Display text
+    let icon: Image       // Icon to show
+    let condition: Bool   // Whether this action should be shown
+    let action: () -> Void // Callback when selected
 }
 
+/// Custom context menu view for chat messages
+/// Provides options like reply, forward, edit, copy, info and delete
 struct ISMCustomContextMenu: View {
     @Environment(\.dismiss) var dismiss
     
@@ -62,10 +65,9 @@ struct ISMCustomContextMenu: View {
     
     var body: some View {
         ZStack {
-            // Semi-transparent overlay
+            // Semi-transparent backdrop that dismisses menu when tapped
             Rectangle()
                 .fill(.black.opacity(0.5))
-//                .background(.ultraThinMaterial)
                 .blur(radius: 0.7, opaque: false)
                 .ignoresSafeArea()
                 .onTapGesture {
@@ -75,7 +77,8 @@ struct ISMCustomContextMenu: View {
             VStack(alignment: isReceived ? .leading : .trailing) {
                 Spacer()
                 
-                if showReactionsOption && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall && message.deletedMessage == false{
+                // Reactions grid - only shown for non-call messages that aren't deleted
+                if showReactionsOption && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall && message.deletedMessage == false {
                     LazyVGrid(
                         columns: [GridItem(.adaptive(minimum: 35))],
                         spacing: 10
@@ -97,12 +100,12 @@ struct ISMCustomContextMenu: View {
                     .padding(.horizontal,15)
                 }
                 
+                // Message info preview
                 ISMMessageInfoSubView(previousAudioRef: $previousAudioRef, messageType: ISMChatHelper.getMessageType(message: message), message: message, viewWidth: viewWidth, isReceived: self.isReceived, messageDeliveredType: ISMChatHelper.checkMessageDeliveryType(message: message, isGroup: self.isGroup ,memberCount: realmManager.getMemberCount(convId: self.conversationId), isOneToOneGroup: ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup), conversationId: conversationId,isGroup: self.isGroup, groupconversationMember: [], fromBroadCastFlow: self.fromBroadCastFlow)
                     .padding(.horizontal,15)
                     .environmentObject(self.realmManager)
                 
-               
-
+                // Context menu options list
                 VStack {
                     ForEach(getContextMenuActions(), id: \.label) { action in
                         if action.condition {
@@ -291,7 +294,7 @@ struct ISMCustomContextMenu: View {
         .background(Color.clear)
     }
     
-    
+    /// Gets the appropriate icon width for a menu action
     func getCustomWidth(action: ContextMenuAction) -> CGFloat{
         if action.label ==  "Reply"{
             return appearance.imagesSize.messageInfo_replyIcon.width
@@ -310,6 +313,7 @@ struct ISMCustomContextMenu: View {
         }
     }
     
+    /// Gets the appropriate icon height for a menu action  
     func getCustomHeight(action: ContextMenuAction) -> CGFloat{
         if action.label ==  "Reply"{
             return appearance.imagesSize.messageInfo_replyIcon.height
@@ -328,8 +332,10 @@ struct ISMCustomContextMenu: View {
         }
     }
     
+    /// Builds the array of available context menu actions based on message type and permissions
     func getContextMenuActions() -> [ContextMenuAction] {
         return [
+            // Reply option - available for non-broadcast, non-call, non-deleted messages
             ContextMenuAction(
                 label: "Reply",
                 icon: appearance.images.contextMenureply,
@@ -408,22 +414,18 @@ struct ISMCustomContextMenu: View {
         ]
     }
 
-    
+    /// Checks if a message was sent within the last 15 minutes
+    /// Used to determine if editing is still allowed
     func sentTimeLessThan15MinutesAgo(sentTime: Double) -> Bool {
-        // Check if the "editMessageForOnly15Mins" property is disabled
+        // Allow editing if 15 min restriction is disabled
         guard ISMChatSdkUI.getInstance().getChatProperties().editMessageForOnly15Mins else {
             return true
         }
         
         let sentAtSeconds = sentTime / 1000.0
-            
-            // Get the current date's timestamp in seconds
-            let currentTimeStamp = Date().timeIntervalSince1970
-            
-            // Calculate the time difference
-            let timeDifference = currentTimeStamp - sentAtSeconds
-            
-            // Check if the time difference is less than 15 minutes
-            return timeDifference < 15 * 60
+        let currentTimeStamp = Date().timeIntervalSince1970
+        let timeDifference = currentTimeStamp - sentAtSeconds
+        
+        return timeDifference < 15 * 60 // 15 minutes in seconds
     }
 }

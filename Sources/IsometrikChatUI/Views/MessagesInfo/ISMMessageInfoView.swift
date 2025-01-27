@@ -8,26 +8,37 @@
 import SwiftUI
 import IsometrikChat
 
+/// A view that displays detailed information about a message, including delivery and read receipts
+/// for both individual and group conversations.
 public struct ISMMessageInfoView: View {
     
     //MARK:  - PROPERTIES
+    // Navigation control
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
+    // Audio playback state
     @State var previousAudioRef: AudioPlayViewModel?
     
+    // Required message and conversation properties
     let conversationId : String
     let message : MessagesDB
     let viewWidth : CGFloat
     let mediaType : ISMChatMediaType
     var viewModel = ChatsViewModel()
+    
+    // Group chat properties
     let isGroup : Bool
     let groupMember : [ISMChatGroupMember]
     let fromBroadCastFlow : Bool?
+    
+    // Message delivery tracking
     @State  var deliveredAt : Double?
     @State  var readAt : Double?
     @EnvironmentObject var realmManager : RealmManager
     @State var deliveredUsers : [ISMChatUser]?
     @State var readUsers : [ISMChatUser]?
+    
+    // UI configuration
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     var onClose: () -> Void
     
@@ -217,6 +228,7 @@ public struct ISMMessageInfoView: View {
         }
     }
     //MARK: - CONFIGURE
+    /// Fetches message delivery and read information for regular conversations
     func getData(){
         viewModel.getMessageDeliveredInfo(messageId: message.messageId , conversationId: conversationId) { info in
             self.deliveredAt = info?.users?.first?.timestamp ?? 0
@@ -229,6 +241,7 @@ public struct ISMMessageInfoView: View {
         }
     }
     
+    /// Fetches message delivery and read information for broadcast messages
     func getGroupCastData(){
         viewModel.getGroupCastMessageDeliveredInfo(messageId: message.messageId, groupcastId: message.groupcastId ?? "") { info in
             self.deliveredAt = info?.users?.first?.timestamp ?? 0
@@ -241,6 +254,11 @@ public struct ISMMessageInfoView: View {
         }
     }
     
+    /// Creates a section header view with formatted date/time
+    /// - Parameters:
+    ///   - message: The message to display the header for
+    ///   - color: Text color for the header
+    ///   - font: Font to use for the header
     func sectionHeader(firstMessage message : MessagesDB,color : Color,font : Font) -> some View{
        let sentAt = message.sentAt
        let date = NSDate().descriptiveStringLastSeen(time: sentAt,isSectionHeader: true)
@@ -257,6 +275,9 @@ public struct ISMMessageInfoView: View {
        .cornerRadius(5)
    }
     
+    /// Updates the delivered users list by removing users who have read the message
+    /// to avoid showing them in both lists
+    /// - Parameter readUsers: Array of users who have read the message
     func updateDeliveredUsers(readUsers : [ISMChatUser]?) {
         if let readUserIds = readUsers?.map({ $0.userId }),
            let currentDeliveredUsers = deliveredUsers {
@@ -264,6 +285,7 @@ public struct ISMMessageInfoView: View {
         }
     }
     
+    /// Creates the navigation bar's leading button (close button)
     func navigationBarLeadingButtons()  -> some View {
         Button(action: {
 //            onClose()
@@ -278,7 +300,7 @@ public struct ISMMessageInfoView: View {
     }
 }
 
-
+/// A subview that displays user information along with their message status timestamp
 struct ISMMessageInfoDetailUserSubView : View {
     
     let user : ISMChatUser

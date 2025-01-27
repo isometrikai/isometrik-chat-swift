@@ -9,22 +9,33 @@ import SwiftUI
 import IsometrikChat
 import AVKit
 
+/// A SwiftUI view that displays media content (images/videos) in a full-screen viewer
+/// with gesture-based dismissal, sharing capabilities, and thumbnail navigation.
 struct ISMChatMediaViewer : View {
-
+    // MARK: - Properties
+    
+    /// View model that handles the media viewer's business logic and state
     @StateObject var viewModel: ISMChatMediaViewerViewModel
+    /// Closure called when the viewer should be closed
     var onClose: () -> Void
+    /// UI appearance configuration from the SDK
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    /// Controls the visibility of the share sheet
     @State var isShareSheetPresented : Bool = false
+    /// Controls video playback state
     @State var toggleVideo : Bool = false
+    /// Controls navigation to media detail view
     @State var navigatetoMedia : Bool = false
 
     var body: some View {
+        // Configure dismissal gesture that tracks vertical drag
         let closeGesture = DragGesture()
             .onChanged { viewModel.offset = closeSize(from: $0.translation) }
             .onEnded {
                 withAnimation {
                     viewModel.offset = .zero
                 }
+                // Dismiss viewer if dragged down more than 100 points
                 if $0.translation.height >= 100 {
                     onClose()
                 }
@@ -106,6 +117,7 @@ struct ISMChatMediaViewer : View {
         }
     }
     
+    /// Builds the header view containing close button and media metadata
     func headerView() -> some View{
         ZStack(alignment: .center){
             HStack{
@@ -130,6 +142,7 @@ struct ISMChatMediaViewer : View {
         }
     }
     
+    /// Builds the footer view containing media controls and action buttons
     func footerView() -> some View{
         HStack {
             Button {
@@ -206,16 +219,22 @@ struct ISMChatMediaViewer : View {
     }
 }
 
+// MARK: - Private Extensions
+
 private extension ISMChatMediaViewer {
+    /// Calculates the size for the close gesture, ensuring vertical movement only
+    /// - Parameter size: The translation size from the drag gesture
+    /// - Returns: A CGSize with only vertical movement
     func closeSize(from size: CGSize) -> CGSize {
         CGSize(width: 0, height: max(size.height, 0))
     }
 }
 
-
-
+/// A UIViewControllerRepresentable wrapper for UIActivityViewController to enable sharing
 struct ShareSheet: UIViewControllerRepresentable {
+    /// Items to be shared
     var items: [Any]
+    /// Optional custom activities
     var activities: [UIActivity]? = nil
 
     func makeUIViewController(context: Context) -> UIActivityViewController {

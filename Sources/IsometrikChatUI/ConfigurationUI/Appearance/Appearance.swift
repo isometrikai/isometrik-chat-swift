@@ -67,7 +67,7 @@ public class ISMChatDateFormats{
     }
 }
 public class ISMChatStrings {
-    public var endToEndEncrypted : String = "Messages are end to end encrypted. No one \noutside of this chat can read to them."
+    public var endToEndEncrypted : String = "Messages are end to end encrypted. No one outside of this chat can read to them."
     public var messageInputTextViewPlaceholder : String = "Type a message"
     public var messageDeletedByMe : String = "You deleted this message."
     public var messageDeletedByOther : String = "This message was deleted."

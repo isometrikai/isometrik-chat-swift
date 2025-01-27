@@ -8,11 +8,24 @@
 import SwiftUI
 import IsometrikChat
 
-public protocol ISMBroadCastListDelegate{
-    func navigateToBroadCastList(groupcastId : String,groupCastTitle : String,groupcastImage : String)
-    func navigateToBroadCastInfo(groupcastId : String,groupcastTitle : String,groupcastImage : String)
+/// Protocol for handling broadcast list navigation events
+public protocol ISMBroadCastListDelegate {
+    /// Navigate to broadcast list messages
+    /// - Parameters:
+    ///   - groupcastId: Unique identifier of the broadcast
+    ///   - groupCastTitle: Title of the broadcast
+    ///   - groupcastImage: Image URL of the broadcast
+    func navigateToBroadCastList(groupcastId: String, groupCastTitle: String, groupcastImage: String)
+    
+    /// Navigate to broadcast information screen
+    /// - Parameters:
+    ///   - groupcastId: Unique identifier of the broadcast
+    ///   - groupcastTitle: Title of the broadcast 
+    ///   - groupcastImage: Image URL of the broadcast
+    func navigateToBroadCastInfo(groupcastId: String, groupcastTitle: String, groupcastImage: String)
 }
 
+/// View for displaying list of broadcast messages
 public struct ISMBroadCastList: View {
     
     //MARK:  - PROPERTIES
@@ -94,6 +107,7 @@ public struct ISMBroadCastList: View {
         }
     }
     
+    /// Fetches the list of broadcasts from the server
     func getBroadcastList(){
         self.viewModel.getBroadCastList { data in
             if let groupcast = data?.groupcasts{
@@ -102,6 +116,8 @@ public struct ISMBroadCastList: View {
         }
     }
     
+    /// Filters broadcast list based on search query
+    /// Matches broadcast titles containing the search text
     func searchInBroadCastList(){
             let  conversation = storeBroadCasts
             allBroadCasts = conversation?.filter { conversation in
@@ -112,6 +128,7 @@ public struct ISMBroadCastList: View {
     //MARK: - CONFIGURE
     
     
+    /// Creates the main broadcast list view
     private func BroadcastListView() -> some View {
         List(allBroadCasts ?? []) { broadcast in
             BroadcastRowView(broadcast: broadcast)
@@ -127,6 +144,8 @@ public struct ISMBroadCastList: View {
     }
     
     
+    /// Creates a row view for a single broadcast
+    /// - Parameter broadcast: Broadcast details to display
     private func BroadcastRowView(broadcast: ISMChatBroadCastDetail) -> some View {
         ZStack {
             HStack(spacing: 15) {
@@ -227,6 +246,7 @@ public struct ISMBroadCastList: View {
 
     
    
+    /// Creates empty state view when no broadcasts exist
     private func EmptyStateView() -> some View {
         VStack{
             if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder {
@@ -331,6 +351,8 @@ public struct ISMBroadCastList: View {
         }
     }
     
+    /// Deletes a broadcast list and its associated messages
+    /// - Parameter groupcastId: ID of broadcast to delete
     func deleteBroadCastList(groupcastId : String){
         viewModel.deleteBroadCastList(groupcastId: groupcastId) { _ in
 //            self.realmManager.deleteBroadCast(groupcastId: groupcastId)

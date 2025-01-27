@@ -8,14 +8,22 @@
 import SwiftUI
 import IsometrikChat
 
+/// A SwiftUI view that displays and manages the list of blocked users
+/// Allows viewing, editing and unblocking users from the blocked list
 public struct ISMBlockUserView: View {
     
     //MARK:  - PROPERTIES
+    /// View model handling conversation-related operations
     @ObservedObject public var conversationViewModel = ConversationViewModel()
+    /// Environment variable to dismiss the view
     @Environment(\.dismiss) public var dismiss
+    /// State variable to track if edit mode is enabled
     @State public var edit : Bool = false
+    /// Array to store the list of blocked users
     @State public var blockedUser : [ISMChatUser] = []
+    /// Array to store users selected for unblocking
     @State public var removedUser : [ISMChatUser] = []
+    /// UI appearance configuration instance
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK:  - BODY
@@ -99,12 +107,16 @@ public struct ISMBlockUserView: View {
     }
     
     //MARK:  - CONFIGURE
+    /// Refreshes the list of blocked users from the conversation view model
     func refreshBlockUser() {
         conversationViewModel.getBlockUsers { obj in
             self.blockedUser = obj?.users ?? []
         }
     }
     
+    /// Creates and returns the navigation bar trailing button
+    /// - Returns: A view containing either "Edit" or "Done" button based on edit mode
+    /// When in edit mode and users are selected for removal, it unblocks them
     func navigationTrailing() -> some View{
         Button(action: {
             if edit == true{

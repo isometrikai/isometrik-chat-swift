@@ -8,18 +8,34 @@
 import SwiftUI
 import IsometrikChat
 
+/// A view that allows users to forward messages to one or more contacts
+/// Supports selecting up to 5 contacts and handles message forwarding with attachments
 struct ISMForwardToContactView: View {
     
     //MARK: - PROPERTIES
+    /// Environment variable to dismiss the view
     @Environment(\.dismiss) var dismiss
+    
+    /// Array of selected users to forward messages to
     @State var selections: [ISMChatUser] = []
-    @State var showSendView = false
+    
+    /// View model instances for chat and conversation management
     var viewModel = ChatsViewModel()
     @ObservedObject var conversationViewModel = ConversationViewModel()
-    @Binding var messages : [MessagesDB]
-    @State var selectedUser : [String] = []
-    @Binding var showforwardMultipleMessage : Bool
-    @State var showAlertFormoreThan5 : Bool = false
+    
+    /// Messages to be forwarded
+    @Binding var messages: [MessagesDB]
+    
+    /// Array of selected usernames for display
+    @State var selectedUser: [String] = []
+    
+    /// Controls visibility of the forward message view
+    @Binding var showforwardMultipleMessage: Bool
+    
+    /// Alert state for when user tries to select more than 5 contacts
+    @State var showAlertFormoreThan5: Bool = false
+    
+    /// UI appearance configuration
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK:  - LIFECYCLE
@@ -195,10 +211,9 @@ struct ISMForwardToContactView: View {
     }
 }
 
-
-//MARK: - TOOLBAR
-private extension ISMForwardToContactView{
-    func ToolBarView() -> some View{
+/// Extension for handling toolbar-related views
+private extension ISMForwardToContactView {
+    func ToolBarView() -> some View {
         VStack{
             Spacer()
             
@@ -207,11 +222,20 @@ private extension ISMForwardToContactView{
 }
 
 //MARK: - FORWARD MESSAGE
-private extension ISMForwardToContactView{
+private extension ISMForwardToContactView {
+    /// Handles the forwarding of messages to selected contacts
+    /// Process:
+    /// 1. Creates new conversations with selected users if they don't exist
+    /// 2. Forwards all selected messages to each conversation
+    /// 3. Uses dispatch groups to handle async operations
+    /// 4. Updates UI and dismisses view when complete
     func forwardMsg() {
+        // Input validation
         guard !selections.isEmpty else {
             return
         }
+        
+        // Track new conversation IDs
         var newConversationIds: [String] = []
 
         DispatchQueue.global(qos: .userInitiated).async {
@@ -277,5 +301,4 @@ private extension ISMForwardToContactView{
             }
         }
     }
-
 }

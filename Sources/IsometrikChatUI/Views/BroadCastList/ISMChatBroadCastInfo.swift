@@ -8,22 +8,33 @@
 import SwiftUI
 import IsometrikChat
 
+/// A SwiftUI view that displays and manages broadcast list information
+/// This view allows users to:
+/// - View and edit the broadcast list name
+/// - See list recipients and their count
+/// - Navigate to member management
 struct ISMChatBroadCastInfo: View {
     
     //MARK: - PROPERTIES
-    let broadcastTitle : String?
-    let groupcastId : String?
+    // Broadcast information
+    let broadcastTitle: String?  // Title of the broadcast list
+    let groupcastId: String?     // Unique identifier for the broadcast group
     
+    // View Models and Managers
     @ObservedObject var viewModel = ChatsViewModel()
     @ObservedObject var conversationviewModel = ConversationViewModel()
-    @EnvironmentObject var realmManager : RealmManager
+    @EnvironmentObject var realmManager: RealmManager
+    
+    // UI Configuration
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    @State var listName : String = ""
+    
+    // State Variables
+    @State var listName: String = ""                  // Editable list name
     @Environment(\.dismiss) var dismiss
-    @State var membersInfo : ISMChatBroadCastMembers? = nil
-    @State var navigatetoAddMember : Bool = false
-    @State var groupCastIdToNavigate : String = ""
-    @State var navigatetoCreatGroup : Bool = false
+    @State var membersInfo: ISMChatBroadCastMembers? = nil  // Members data
+    @State var navigatetoAddMember: Bool = false      // Navigation state
+    @State var groupCastIdToNavigate: String = ""     // ID for navigation
+    @State var navigatetoCreatGroup: Bool = false     // Group creation state
     
     //MARK: - BODY
     var body: some View {
@@ -104,6 +115,8 @@ struct ISMChatBroadCastInfo: View {
             }
     }
     
+    // MARK: - Navigation Bar Items
+    /// Leading navigation bar button (Back button)
     var navBarLeadingBtn : some View{
         Button {
             dismiss()
@@ -113,6 +126,9 @@ struct ISMChatBroadCastInfo: View {
                 .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
         }
     }
+    
+    /// Trailing navigation bar button (Save button)
+    /// Only shows "Save" when list name has been modified
     var trailingBarLeadingBtn : some View{
         if listName != broadcastTitle{
             Button {

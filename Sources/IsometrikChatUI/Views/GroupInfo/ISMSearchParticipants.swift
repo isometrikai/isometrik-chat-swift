@@ -11,17 +11,36 @@ import IsometrikChat
 struct ISMSearchParticipants: View {
     
     //MARK: - PROPERTIES
+    
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
+    /// View model for managing chat-related operations
     @ObservedObject var viewModel = ChatsViewModel()
+    
+    /// View model for conversation-specific operations
     @ObservedObject var conversationViewModel = ConversationViewModel()
+    
+    /// Currently selected member in the list
     @State var selectedMember : ISMChatGroupMember = ISMChatGroupMember()
+    
+    /// Search query string
     @State private var query = ""
+    
+    /// Controls visibility of member options dialog
     @State var showOptions : Bool = false
+    
+    /// Stores the original list of members before any filtering
     @State var originalMembers : ISMGroupMember?
+    
+    /// Current filtered list of members
     @State var members : ISMGroupMember?
+    
+    /// ID of the current conversation/group
     var conversationID : String?
-    @State private var isEditing  : Bool = false
+    
+    /// Tracks if user is currently editing the search field
+    @State private var isEditing : Bool = false
+    
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK: - BODY
@@ -127,6 +146,9 @@ struct ISMSearchParticipants: View {
         }
     }
     
+    // MARK: - Helper Methods
+    
+    /// Fetches group members from the server
     func getMembers(){
         viewModel.getGroupMembers(conversationId: self.conversationID ?? "") { data in
             members = data
@@ -134,6 +156,7 @@ struct ISMSearchParticipants: View {
         }
     }
     
+    /// Toggles admin status for the selected member
     func makeGroupAdmin(){
         if selectedMember.isAdmin == false{
             viewModel.addGroupAdmin(memberId: selectedMember.userId ?? "", conversationId: conversationID ?? "") { data in
@@ -146,6 +169,7 @@ struct ISMSearchParticipants: View {
         }
     }
     
+    /// Removes the selected member from the group
     func removefromGroup(){
         viewModel.removeUserFromGroup(members: selectedMember.userId ?? "", conversationId: conversationID ?? "") { _ in
             getMembers()

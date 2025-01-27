@@ -13,21 +13,29 @@ import IsometrikChat
 public struct ISMUsersView: View {
     
     //MARK:  - PROPERTIES
+    // Environment dismiss action to close the view
     @Environment(\.dismiss) public var dismiss
     
+    // Observed object for managing conversation data
     @ObservedObject public var viewModel = ConversationViewModel()
     
+    // Binding properties for selected user and conversation ID
     @Binding public var selectedUser : UserDB
     @Binding public var selectedUserconversationId : String
 
+    // State for creating a conversation response
     @State public var createconversation : ISMChatCreateConversationResponse?
    
+    // State flags to show group and broadcast options based on chat properties
     @State public var showGroupOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.GroupConversation)
     @State public var showBroadCastOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.BroadCastConversation)
     
+    // Environment object for managing Realm database
     @EnvironmentObject public var realmManager : RealmManager
+    // State flags for navigation to create group or broadcast
     @State public var navigatetoCreatGroup : Bool = false
     @State public var navigatetoCreatBroadCast : Bool = false
+    // Appearance settings for the chat UI
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @Binding public var groupCastIdToNavigate : String
     
@@ -36,14 +44,17 @@ public struct ISMUsersView: View {
         ZStack{
             NavigationStack{
                 VStack {
+                    // Show a loading indicator if no users are available
                     if viewModel.users.count == 0{
                         ProgressView()
-                    }else{
+                    } else {
                         ScrollViewReader { proxy in
                             List {
-                                if showGroupOption == true || showBroadCastOption == true{
+                                // Display options for creating new group or broadcast if available
+                                if showGroupOption == true || showBroadCastOption == true {
                                     Section {
-                                        if showGroupOption{
+                                        // Button to create a new group
+                                        if showGroupOption {
                                             Button {
                                                 navigatetoCreatGroup = true
                                             } label: {
@@ -58,7 +69,8 @@ public struct ISMUsersView: View {
                                                 }
                                             }
                                         }
-                                        if showBroadCastOption{
+                                        // Button to create a new broadcast
+                                        if showBroadCastOption {
                                             Button {
                                                 navigatetoCreatBroadCast = true
                                             } label: {
@@ -80,30 +92,28 @@ public struct ISMUsersView: View {
                                     }
                                 }
                                 
+                                // Display users grouped by sections
                                 ForEach(viewModel.usersSectionDictionary.keys.sorted(), id:\.self) { key in
                                     if let contacts = viewModel.usersSectionDictionary[key]?.filter({ (contact) -> Bool in
                                         self.viewModel.searchedText.isEmpty ? true :
-                                        "\(contact)".lowercased().contains(self.viewModel.searchedText.lowercased())}), !contacts.isEmpty{
+                                        "\(contact)".lowercased().contains(self.viewModel.searchedText.lowercased())}), !contacts.isEmpty {
                                         Section(header: Text("\(key)")) {
-                                            ForEach(contacts){ value in
-                                                ZStack{
-                                                    HStack(spacing:10){
-                                                        UserAvatarView(avatar: value.userProfileImageUrl ?? "", showOnlineIndicator: value.online ?? false,size: CGSize(width: 29, height: 29), userName: value.userName ?? "",font: .regular(size: 12))
+                                            ForEach(contacts) { value in
+                                                ZStack {
+                                                    HStack(spacing:10) {
+                                                        // Display user avatar and name
+                                                        UserAvatarView(avatar: value.userProfileImageUrl ?? "", showOnlineIndicator: value.online ?? false, size: CGSize(width: 29, height: 29), userName: value.userName ?? "", font: .regular(size: 12))
                                                         VStack(alignment: .leading, spacing: 5, content: {
                                                             Text(value.userName ?? "User")
                                                                 .font(appearance.fonts.messageListMessageText)
                                                                 .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
-//                                                            Text(value.metaData?.about ?? "Hey there! I am using Wetalk.")
-//                                                                .font(themeFonts.chatListUserMessage)
-//                                                                .foregroundColor(themeColor.chatListUserMessage)
-//                                                                .lineLimit(2)
-                                                            
                                                         })//:VStack
                                                     }//:HStack
                                                     .fixedSize(horizontal: true, vertical: true)
                                                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                                                    // Button to select a user
                                                     Button {
-                                                        
+                                                        // Set selected user and conversation ID
                                                         self.selectedUserconversationId = realmManager.getConversationId(opponentUserId: value.userId ?? "", myUserId: ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId ?? "")
                                                         let data = UserDB()
                                                         data.userId = value.userId
@@ -115,12 +125,13 @@ public struct ISMUsersView: View {
                                                         
                                                         selectedUser = data
                                                         
-                                                        dismiss()
+                                                        dismiss() // Dismiss the view
                                                         
                                                     } label: {
                                                     }
                                                 }//:ZStack
                                                 .onAppear {
+                                                    // Load more users if necessary
                                                     if viewModel.moreDataAvailableForGetUsers && viewModel.apiCalling == false {
                                                         if let contactIndex = viewModel.usersSectionDictionary.values.flatMap({ $0 }).firstIndex(where: { $0.userId == value.userId }) {
                                                             let totalCount = viewModel.usersSectionDictionary.values.flatMap({ $0 }).count
@@ -138,34 +149,35 @@ public struct ISMUsersView: View {
                                 }
                             }.listStyle(DefaultListStyle())
                                 .listRowSeparatorTint(appearance.colorPalette.chatListSeparatorColor)
-                            //                            .overlay(sectionIndexTitles(proxy: proxy))
                         }
                     }
                 }//:VStack
+                // Navigation destinations for creating group and broadcast conversations
                 .navigationDestination(isPresented: $navigatetoCreatGroup, destination: {
-                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .Group,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
+                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.viewModel, selectUserFor: .Group, groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
                 })
                 .navigationDestination(isPresented: $navigatetoCreatBroadCast, destination: {
-                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .BroadCast,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
+                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.viewModel, selectUserFor: .BroadCast, groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
                 })
-                
-//                .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .Group,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate),isActive: $navigatetoCreatGroup).environmentObject(realmManager))
-//                .background(NavigationLink("", destination: ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup,viewModel: self.viewModel,selectUserFor: .BroadCast,groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate),isActive: $navigatetoCreatBroadCast).environmentObject(realmManager))
                 .searchable(text: $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always))
                 .onChange(of: viewModel.debounceSearchedText, { _, _ in
+                    // Reset user data and fetch users on search text change
                     print("~~SEARCHING WITH DEBOUNCING \(viewModel.searchedText)")
                     self.viewModel.resetGetUsersdata()
                     getUsers()
                 })
                 .onDisappear {
+                    // Clear search text on view disappear
                     viewModel.searchedText = ""
                     viewModel.debounceSearchedText = ""
                 }
                 .onAppear {
+                    // Reset user data and fetch users on view appear
                     self.viewModel.resetGetUsersdata()
                     getUsers()
                 }
                 .refreshable {
+                    // Refresh user list
                     refreshUsers()
                 }
                 .navigationBarBackButtonHidden(true)
@@ -186,13 +198,15 @@ public struct ISMUsersView: View {
     
     //MARK: - CONFIGURE
     
+    // Function to display section index titles for the user list
     func sectionIndexTitles(proxy: ScrollViewProxy) -> some View {
         SectionIndexTitles(proxy: proxy, titles: viewModel.usersSectionDictionary.keys.sorted())
         .frame(maxWidth: .infinity, alignment: .trailing)
         .padding()
     }
     
-    func getUsers(){
+    // Function to fetch users based on search text
+    func getUsers() {
         viewModel.apiCalling = true
         viewModel.getUsers(search: viewModel.searchedText) { data in
             viewModel.users.append(contentsOf: data?.users ?? [])
@@ -200,17 +214,19 @@ public struct ISMUsersView: View {
         }
     }
     
-    func refreshUsers(){
+    // Function to refresh the user list
+    func refreshUsers() {
         self.viewModel.resetGetUsersdata()
         viewModel.refreshGetUser() { users in
-            if let appendUser = users?.users{
+            if let appendUser = users?.users {
                 viewModel.users.append(contentsOf: appendUser)
                 viewModel.usersSectionDictionary = viewModel.getSectionedDictionary(data: viewModel.users)
             }
         }
     }
     
-    var navBarLeadingBtn : some View{
+    // Navigation bar leading button to dismiss the view
+    var navBarLeadingBtn : some View {
         Button(action: { dismiss() }) {
             appearance.images.CloseSheet
                 .resizable()

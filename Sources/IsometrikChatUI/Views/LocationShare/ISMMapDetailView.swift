@@ -9,15 +9,28 @@ import SwiftUI
 import MapKit
 import IsometrikChat
 
+/// A SwiftUI view that displays a detailed map view with location information and sharing options
 struct ISMMapDetailView: View {
     
     //MARK:  - PROPERTIES
     @Environment(\.dismiss) var dismiss
+    
+    /// The underlying MapKit view instance
     @State private var mapView = MKMapView()
+    
+    /// Controls the visibility of the share options bottom sheet
     @State private var showBottomSheet : Bool = false
+    
+    /// Location data containing coordinates and address information
     var data: ISMChatLocationData?
+    
+    /// Camera position for the map view
     @State var camera : MapCameraPosition = .automatic
+    
+    /// UI appearance configuration from the SDK
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    
+    /// The map's visible region, initialized with default coordinates
     @State private var region = MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), // Replace with your default coordinate
             span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05) // Adjust this for zoom level
@@ -78,16 +91,19 @@ struct ISMMapDetailView: View {
         }
     }
     
+    /// Updates the map's visible region based on the provided coordinate
+    /// - Parameter coordinate: The coordinate to center the map on
     func updateRegion(for coordinate: CLLocationCoordinate2D?) {
-           if let coordinate = coordinate {
-               region = MKCoordinateRegion(
-                   center: coordinate,
-                   span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02) // Set the desired zoom level
-               )
-           }
-       }
+        if let coordinate = coordinate {
+            region = MKCoordinateRegion(
+                center: coordinate,
+                span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+            )
+        }
+    }
     
     //MARK: - CONFIGURE
+    /// Creates the navigation bar's trailing button (share button)
     func navigationBarTrailingButtons() -> some View{
         Button(action: {
             showBottomSheet = true
@@ -100,6 +116,7 @@ struct ISMMapDetailView: View {
         }).padding(.leading)
     }
     
+    /// Creates the navigation bar's leading button (back button)
     func navigationBarLeadingButtons() -> some View{
         HStack{
             Button(action: {
@@ -113,6 +130,7 @@ struct ISMMapDetailView: View {
         }
     }
     
+    /// Creates the action sheet buttons for opening different map applications
     func attachmentActionSheetButtons() -> some View{
         VStack{
             Button(action: {
@@ -128,6 +146,8 @@ struct ISMMapDetailView: View {
         }
     }
     
+    /// Opens the location in Google Maps app or web browser
+    /// If the Google Maps app is installed, opens there, otherwise falls back to browser
     func openGoogleMap() {
         if (UIApplication.shared.canOpenURL(URL(string:"comgooglemaps://")!)) {  //if phone has an app
             if let url = URL(string: "comgooglemaps-x-callback://?saddr=&daddr=\(self.data?.coordinate.latitude ?? 0.0),\(self.data?.coordinate.longitude ?? 0.0)&directionsmode=driving") {
@@ -142,6 +162,8 @@ struct ISMMapDetailView: View {
         }
     }
     
+    /// Opens the location in Apple Maps
+    /// Creates a map item with the location data and launches Apple Maps with the specified options
     func openAppleMap(){
         let latitude: CLLocationDegrees = self.data?.coordinate.latitude ?? 0.0
         let longitude: CLLocationDegrees = self.data?.coordinate.longitude ?? 0.0
@@ -159,12 +181,13 @@ struct ISMMapDetailView: View {
     }
 }
 
-
+/// Model representing a custom map annotation with unique identifier
 struct CustomAnnotation1: Identifiable {
     var id: UUID
     var annotation: MKPointAnnotation
 }
 
+/// Model representing a map annotation item with coordinate information
 struct MapAnnotationItem: Identifiable {
     let id = UUID()
     let coordinate: CLLocationCoordinate2D

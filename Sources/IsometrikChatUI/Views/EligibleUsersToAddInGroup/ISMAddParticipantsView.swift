@@ -8,16 +8,22 @@
 import SwiftUI
 import IsometrikChat
 
+/// A view that displays a list of users that can be added as participants to a group conversation
 struct ISMAddParticipantsView: View {
     
     //MARK: - PROPERTIES
     @Environment(\.dismiss) var dismiss
     
+    /// Array of selected users to be added to the group
     @State private var userSelected : [ISMChatUser] = []
+    /// View model handling conversation-related operations
     @ObservedObject var viewModel = ConversationViewModel()
+    /// View model handling chat-related operations
     @ObservedObject var chatViewModel = ChatsViewModel()
+    /// ID of the existing conversation if adding members to an existing group
     var conversationId : String? = nil
     @EnvironmentObject var realmManager : RealmManager
+    /// UI appearance configuration
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     //MARK: - BODY
@@ -86,6 +92,8 @@ struct ISMAddParticipantsView: View {
     
     //MARK:  - CONFIGURE
     
+    /// Creates a cell view for each participant in the list
+    /// - Parameter value: User object containing participant details
     func participantsSubView(value : ISMChatUser) -> some View{
         ZStack{
             HStack(alignment: .center, spacing:20){
@@ -132,6 +140,7 @@ struct ISMAddParticipantsView: View {
     }
     
     
+    /// Creates a horizontal scrollable header showing selected users
     func HeaderView() -> some View{
         HStack(alignment: .top){
             ScrollViewReader { reader in  // read scroll position and scroll to
@@ -171,13 +180,17 @@ struct ISMAddParticipantsView: View {
         }.padding(.vertical,5)
     }
     
+    /// Handles adding selected participants to the group
+    /// If conversationId exists, adds members to existing group
+    /// Otherwise creates a new group with selected members
     func addParticipant(){
-        //create grp API
         let member = userSelected.map { $0.id }
-        //add participant in already exist grp
-        if let conversationId = conversationId{
+        
+        if let conversationId = conversationId {
             chatViewModel.addMembersInAlredyExistingGroup(members: member, conversationId: conversationId) { data in
+                // Update local database member count
                 realmManager.updateMemberCount(convId: conversationId, inc: true, dec: false, count: 1)
+                // Notify observers about member changes
                 NotificationCenter.default.post(name: NSNotification.memberAddAndRemove,object: nil)
                 self.dismiss()
             }
@@ -210,6 +223,9 @@ struct ISMAddParticipantsView: View {
             .padding()
     }
     
+    /// Fetches eligible users that can be added to the group
+    /// - Handles pagination through viewModel.moreDataAvailableForGetUsers
+    /// - Updates viewModel.eligibleUsers with fetched results
     func getUsers(){
         viewModel.apiCalling = true
         viewModel.getEligibleUsers(search: viewModel.searchedText, conversationId: self.conversationId ?? "") {  data in

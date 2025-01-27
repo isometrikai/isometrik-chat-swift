@@ -17,6 +17,7 @@ public enum SelectUserFor: CaseIterable{
 public struct ISMCreateGroupConversationView: View {
     
     //MARK:  - PROPERTIES
+    // Environment and binding properties for managing view state
     @Environment(\.dismiss) public var dismiss
     @Binding public var showSheetView : Bool
     @State public var image : UIImage?
@@ -26,8 +27,6 @@ public struct ISMCreateGroupConversationView: View {
     @ObservedObject public var chatViewModel = ChatsViewModel()
     public var conversationId : String? = nil
     public var selectUserFor : SelectUserFor = .Group
-//    @State public var navigateTocreateGroup : Bool = false
-//    @State var navigateToMessageView : Bool = false
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     public let groupCastId : String?
     @EnvironmentObject public var realmManager : RealmManager
@@ -39,17 +38,22 @@ public struct ISMCreateGroupConversationView: View {
             VStack {
                 ScrollViewReader { proxy in
                     List {
+                        // Display header if users are selected
                         if userSelected.count > 0 {
                             HeaderView()
                         }
+                        // Iterate through user sections
                         ForEach(viewModel.usersSectionDictionary.keys.sorted(), id:\.self) { key in
+                            // Filter contacts based on search text
                             if let contacts = viewModel.usersSectionDictionary[key]?.filter({ (contact) -> Bool in
                                 self.viewModel.searchedText.isEmpty ? true :
                                 "\(contact)".lowercased().contains(self.viewModel.searchedText.lowercased())}), !contacts.isEmpty{
                                 Section(header: Text("\(key)")) {
+                                    // Display each contact in the section
                                     ForEach(contacts){ value in
                                         ZStack{
                                             HStack(spacing:5){
+                                                // User avatar and details
                                                 UserAvatarView(avatar: value.userProfileImageUrl ?? "", showOnlineIndicator: value.online ?? false,size: CGSize(width: 40, height: 40), userName: value.userName ?? "",font: .regular(size: 14))
                                                 VStack(alignment: .leading, spacing: 5, content: {
                                                     Text(value.userName ?? "User")
@@ -59,11 +63,11 @@ public struct ISMCreateGroupConversationView: View {
                                                         .font(appearance.fonts.chatListUserMessage)
                                                         .foregroundColor(appearance.colorPalette.chatListUserMessage)
                                                         .lineLimit(2)
-                                                    
                                                 })//:VStack
                                                 
                                                 Spacer()
                                                 
+                                                // Indicate if user is selected
                                                 if userSelected.contains(where: { user in
                                                     user.id == value.id
                                                 }){
@@ -77,6 +81,7 @@ public struct ISMCreateGroupConversationView: View {
                                                 }
                                             }//:HStack
                                             
+                                            // Button to select/deselect user
                                             Button {
                                                 userselectedHere(value: value)
                                             } label: {
@@ -84,6 +89,7 @@ public struct ISMCreateGroupConversationView: View {
                                             
                                         }//:Zstack
                                         .onAppear {
+                                            // Load more users if needed
                                             if viewModel.moreDataAvailableForGetUsers && viewModel.apiCalling == false{
                                                 if self.viewModel.users.last?.userId == contacts.last?.userId {
                                                     self.getUsers()
@@ -95,13 +101,14 @@ public struct ISMCreateGroupConversationView: View {
                             }
                         }
                     }//:LIST
+                    // Additional UI configurations
                     .listStyle(DefaultListStyle())
-                    //                        .overlay(sectionIndexTitles(proxy: proxy))
                     .navigationBarBackButtonHidden(true)
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
                             VStack {
+                                // Set navigation title based on user selection type
                                 if selectUserFor == .Group{
                                     Text("Add Members")
                                         .font(appearance.fonts.navigationBarTitle)
@@ -115,11 +122,10 @@ public struct ISMCreateGroupConversationView: View {
                         }
                     }
                     .navigationBarItems(leading: navBarLeadingBtn, trailing: navBarTrailingBtn)
-//                    .background(NavigationLink("", destination:  ISMMessageView(conversationViewModel : self.viewModel,conversationID: "",opponenDetail: nil,userId: viewModel.userData?.userIdentifier, isGroup: false,fromBroadCastFlow: true,groupCastId: self.groupCastId ?? "", groupConversationTitle: nil, groupImage: nil)
-//                        .environmentObject(realmManager), isActive: $navigateToMessageView))
                 }
             }//:VStack
             .onAppear {
+                // Reset and fetch users on appear
                 self.viewModel.resetGetUsersdata()
                 getUsers()
             }
@@ -128,11 +134,13 @@ public struct ISMCreateGroupConversationView: View {
             }
             .searchable(text: $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always))
             .onChange(of: viewModel.debounceSearchedText, { _, _ in
+                // Handle search text changes
                 print("~~SEARCHING WITH DEBOUNCING \(viewModel.searchedText)")
                 self.viewModel.resetGetUsersdata()
                 getUsers()
             })
             .onDisappear {
+                // Clear search text on disappear
                 viewModel.searchedText = ""
                 viewModel.debounceSearchedText = ""
             }
@@ -141,6 +149,7 @@ public struct ISMCreateGroupConversationView: View {
     
     //MARK:  - CONFIGURE
     
+    // Function to select or deselect a user
     func userselectedHere(value : ISMChatUser){
         if userSelected.contains(where: { user in
             user.id == value.id
@@ -153,6 +162,7 @@ public struct ISMCreateGroupConversationView: View {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
     }
     
+    // Function to create the header view for selected users
     func HeaderView() -> some View{
         HStack(alignment: .top){
             ScrollViewReader { reader in  // read scroll position and scroll to
@@ -173,6 +183,7 @@ public struct ISMCreateGroupConversationView: View {
                                         .foregroundColor(appearance.colorPalette.chatListUserMessage)
                                         .lineLimit(2)
                                 }.onTapGesture {
+                                    // Remove user from selection on tap
                                     if userSelected.contains(where: { user1 in
                                         user1.id == user.id
                                     }){
@@ -193,6 +204,7 @@ public struct ISMCreateGroupConversationView: View {
         }.padding(.vertical,5)
     }
     
+    // Navigation button for proceeding to the next step
     var navBarTrailingBtn: some View {
         VStack{
             ZStack{
@@ -218,7 +230,7 @@ public struct ISMCreateGroupConversationView: View {
                         }
                     }else{
                         Button {
-                            
+                            // Create broadcast with selected users
                             chatViewModel.createBroadCast(users: self.userSelected) { data in
                                 if let groupcastId = data?.groupcastId{
                                     groupCastIdToNavigate = groupcastId
@@ -237,6 +249,7 @@ public struct ISMCreateGroupConversationView: View {
         }
     }
     
+    // Navigation button for going back
     var navBarLeadingBtn: some View {
         Button(action: { dismiss() }) {
             appearance.images.backButton
@@ -245,12 +258,7 @@ public struct ISMCreateGroupConversationView: View {
         }
     }
     
-    func sectionIndexTitles(proxy: ScrollViewProxy) -> some View {
-        SectionIndexTitles(proxy: proxy, titles: viewModel.usersSectionDictionary.keys.sorted())
-            .frame(maxWidth: .infinity, alignment: .trailing)
-            .padding()
-    }
-    
+    // Function to get users based on the selected type
     func getUsers(){
         viewModel.apiCalling = true
         if selectUserFor == .AddMemberInBroadcast{
@@ -266,6 +274,7 @@ public struct ISMCreateGroupConversationView: View {
         }
     }
     
+    // Function to refresh the user list
     func refreshUsers(){
         self.viewModel.resetGetUsersdata()
         viewModel.refreshGetUser() { users in

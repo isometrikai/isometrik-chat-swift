@@ -9,6 +9,11 @@ import SwiftUI
 import ISMSwiftCall
 import IsometrikChat
 
+/// ISMProfileView is a SwiftUI view that handles user profile management including:
+/// - Profile picture management
+/// - User information updates (name, email, about)
+/// - Notification and last seen preferences
+/// - User logout functionality
 public struct ISMProfileView: View {
     
     //MARK:  - PROPERTIES
@@ -195,7 +200,9 @@ public struct ISMProfileView: View {
         }.navigationViewStyle(StackNavigationViewStyle())
     }
     
-    func userData(completion:@escaping()->()){
+    /// Fetches current user data from the server
+    /// - Parameter completion: Callback executed after successful data fetch
+    func userData(completion:@escaping()->()) {
         viewModel.getUserData { data in
             if let user = data {
                 self.viewModel.userData = user
@@ -232,45 +239,56 @@ public struct ISMProfileView: View {
         }
     }
     
-    func updateNotification(){
+    /// Updates user notification preferences
+    func updateNotification() {
         viewModel.updateUserData(notification: isSwitchOn) { _ in
-            print("Notication status updated.")
+            print("Notification status updated.")
         }
     }
-    func updateLastSeen(){
+    
+    /// Updates user's last seen visibility preference
+    func updateLastSeen() {
         viewModel.updateUserData(showLastSeen: self.showLastSeen) { _ in
             print("Last Seen status updated.")
         }
     }
     
-    func updateProfile(){
-        if !userName.isEmpty{
-            if !email.isEmpty{
-                if let image = image.first{
-//                    vm.isBusy = true
+    /// Handles profile update logic with validation
+    /// - Validates required fields (username, email)
+    /// - Handles profile picture updates
+    /// - Updates user data on the server
+    func updateProfile() {
+        // Validate username
+        if !userName.isEmpty {
+            // Validate email
+            if !email.isEmpty {
+                if let image = image.first {
+                    // Update profile with new image
                     viewModel.getPredefinedUrlToUpdateProfilePicture(image: image) { value in
-                        viewModel.updateUserData(userName: self.userName, userIdentifier: self.email, profileImage: value,about: self.about) { _ in
+                        viewModel.updateUserData(userName: self.userName, 
+                                               userIdentifier: self.email, 
+                                               profileImage: value,
+                                               about: self.about) { _ in
                             userData {
-                                
-//                                vm.isBusy = false
                                 dismiss()
                             }
                         }
                     }
-                }else{
-//                    vm.isBusy = true
-                    viewModel.updateUserData(userName: self.userName, userIdentifier: self.email, profileImage: nil,about: self.about) { _ in
+                } else {
+                    // Update profile without changing image
+                    viewModel.updateUserData(userName: self.userName, 
+                                           userIdentifier: self.email, 
+                                           profileImage: nil,
+                                           about: self.about) { _ in
                         userData {
-                            
-//                            vm.isBusy = false
                             dismiss()
                         }
                     }
                 }
-            }else{
+            } else {
                 emailAlert = true
             }
-        }else{
+        } else {
             userNameAlert = true
         }
     }

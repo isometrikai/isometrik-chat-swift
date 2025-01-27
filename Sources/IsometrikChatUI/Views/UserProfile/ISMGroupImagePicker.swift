@@ -9,100 +9,104 @@ import SwiftUI
 import ExyteMediaPicker
 
 struct ISMGroupImagePicker: View {
+    // Binding to control the presentation of the image picker
     @Binding var isPresented: Bool
-    @Binding var images : [URL] 
+    // Binding to hold the selected images' URLs
+    @Binding var images: [URL] 
+    // State to manage the media items selected from the picker
     @State var medias: [Media] = []
+    // State to manage the media picker mode (photos or videos)
     @State private var mediaPickerMode = MediaPickerMode.photos
 //    @State private var currentFullscreenMedia: Media?
+    // Appearance settings for the UI
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    // Maximum number of images that can be selected
     let maxCount: Int = 1
     
-    //MARK: - BODY
+    // MARK: - BODY
     var body: some View {
-        NavigationStack{
+        NavigationStack {
             MediaPicker(
                 isPresented: $isPresented,
-                onChange: { medias = $0 },
+                onChange: { medias = $0 }, // Update medias when selection changes
                 albumSelectionBuilder: { _, albumSelectionView, _ in
                     VStack {
-                        headerView
-                        albumSelectionView
+                        headerView // Custom header view
+                        albumSelectionView // The album selection view provided by the picker
                         Spacer()
-                        footerView
+                        footerView // Custom footer view
                             .background(Color.white)
                     }
-                    .background(Color.white)
+                    .background(Color.white) // Background color for the entire view
                 }
-                            
             )
-            .pickerMode($mediaPickerMode)
-//            .currentFullscreenMedia($currentFullscreenMedia)
-            .mediaSelectionStyle(.checkmark)
-            .mediaSelectionLimit(maxCount)
+            .pickerMode($mediaPickerMode) // Set the media picker mode
+            .mediaSelectionStyle(.checkmark) // Style for media selection
+            .mediaSelectionLimit(maxCount) // Limit the number of selections
 //            .showLiveCameraCell()
-            .mediaSelectionType(.photo)
+            .mediaSelectionType(.photo) // Specify that only photos can be selected
             .mediaPickerTheme(
                 main: .init(
-                    albumSelectionBackground: .white,
-                    fullscreenPhotoBackground: .white
+                    albumSelectionBackground: .white, // Background for album selection
+                    fullscreenPhotoBackground: .white // Background for fullscreen photo view
                 ),
                 selection: .init(
-                    emptyTint: .white,
-                    emptyBackground: .white.opacity(0.25),
-                    selectedTint: ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette.messageListReplyToolbarRectangle,
-                    fullscreenTint: .gray
+                    emptyTint: .white, // Tint for empty selection
+                    emptyBackground: .white.opacity(0.25), // Background for empty selection
+                    selectedTint: ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette.messageListReplyToolbarRectangle, // Tint for selected items
+                    fullscreenTint: .gray // Tint for fullscreen view
                 )
             )
-            .background(Color.white)
-            .foregroundColor(.black)
+            .background(Color.white) // Background color for the picker
+            .foregroundColor(.black) // Text color for the picker
         }
     }
-    //MARK: - CONFIGURATION
+    
+    // MARK: - CONFIGURATION
     var headerView: some View {
         HStack {
             HStack {
-                Text("Cancel")
-                    .font(appearance.fonts.navigationBarTitle)
+                Text("Cancel") // Cancel button text
+                    .font(appearance.fonts.navigationBarTitle) // Font for the button
             }
             .onTapGesture {
                 withAnimation {
-                    isPresented = false
+                    isPresented = false // Dismiss the picker with animation
                 }
             }
             
-            Spacer()
-            
-            
+            Spacer() // Spacer to push content to the edges
         }
-        .padding()
+        .padding() // Padding around the header
     }
     
     var footerView: some View {
         Button {
-            images.removeAll()
+            images.removeAll() // Clear the selected images
             Task {
-                await getData {
-                    DispatchQueue.main.async{
-                        isPresented = false
+                await getData { // Fetch data asynchronously
+                    DispatchQueue.main.async {
+                        isPresented = false // Dismiss the picker after fetching data
                     }
                 }
             }
         } label: {
             HStack(spacing: 5) {
-                Text("Done")
-                    .font(appearance.fonts.navigationBarTitle)
-                    .foregroundColor(.white)
+                Text("Done") // Done button text
+                    .font(appearance.fonts.navigationBarTitle) // Font for the button
+                    .foregroundColor(.white) // Text color for the button
             }
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity) // Make the button take full width
         }
-        .greenButtonStyle(mediaCount: medias.count)
-        .padding(.horizontal,25)
-        .disabled(medias.count == 0 ? true : false)
+        .greenButtonStyle(mediaCount: medias.count) // Custom style for the button
+        .padding(.horizontal, 25) // Horizontal padding for the button
+        .disabled(medias.count == 0) // Disable button if no media is selected
     }
     
+    // Function to fetch the URL of the first selected media
     func getData(completion: @escaping () -> Void) async {
-        if let url = await medias.first?.getURL() {
-            images.append(url)
+        if let url = await medias.first?.getURL() { // Get URL of the first media
+            images.append(url) // Append the URL to the images array
         }
     }
 }

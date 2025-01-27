@@ -8,19 +8,33 @@
 import SwiftUI
 import ExyteMediaPicker
 
+/// ISMMediaPicker is a SwiftUI view that provides media selection functionality
+/// using the ExyteMediaPicker library. It allows users to select multiple photos
+/// and videos with a customizable interface.
 struct ISMMediaPicker: View {
     
     //MARK: - PROPERTIES
+    /// Controls the presentation state of the media picker
     @Binding var isPresented: Bool
+    /// Stores the currently selected media items
     @State var medias: [Media] = []
+    /// Array to store processed media items ready for upload
     @Binding var sendMedias : [ISMMediaUpload]
+    /// Controls the picker mode (photos/videos)
     @State private var mediaPickerMode = MediaPickerMode.photos
+    /// Tracks the currently displayed full-screen media item
     @State private var currentFullscreenMedia: Media?
+    /// UI appearance configuration from the SDK
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    /// Maximum number of media items that can be selected
     let maxCount: Int = 5
+    /// Controls navigation to the media editor
     @State var navigateToEditor : Bool = false
+    /// Name of the recipient
     let opponenetName : String
+    /// Caption text for the media items
     @Binding var mediaCaption : String
+    /// Trigger for sending media to message
     @Binding var sendMediaToMessage : Bool
     
     //MARK: - BODY
@@ -72,21 +86,26 @@ struct ISMMediaPicker: View {
             })
         }
     }
+    /// Processes selected media items and prepares them for sending
+    /// - Parameter completion: Callback executed after processing all media items
     func appendMediaToSendMedias(completion: @escaping () -> Void) async {
         for media in medias {
             if let url = await media.getURL() {
                 let isVideo = media.type == .video
                 let caption = self.mediaCaption
+                // Reset caption after processing
                 self.mediaCaption = ""
-
+                
+                // Create and append new media upload object
                 let mediaUpload = ISMMediaUpload(url: url, caption: caption, isVideo: isVideo)
                 sendMedias.append(mediaUpload)
             }
         }
-        // Call completion once the loop is done
+        // Execute completion handler after processing all media
         completion()
     }
     //MARK: - CONFIGURATION
+    /// Header view displaying cancel button and selection count
     var headerView: some View {
         HStack {
             HStack {
@@ -107,6 +126,7 @@ struct ISMMediaPicker: View {
         .padding()
     }
     
+    /// Footer view with the Next button for proceeding to media editor
     var footerView: some View {
         Button {
             navigateToEditor = true
@@ -124,7 +144,10 @@ struct ISMMediaPicker: View {
     }
 }
 
+/// Custom button style extension for the media picker
 extension View {
+    /// Applies a green button style that changes appearance based on media selection
+    /// - Parameter mediaCount: Number of selected media items
     func greenButtonStyle(mediaCount : Int) -> some View {
         self.font(.headline)
             .foregroundColor(.white)

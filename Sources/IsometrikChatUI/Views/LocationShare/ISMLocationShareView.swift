@@ -12,25 +12,35 @@ import GooglePlaces
 import Combine
 import IsometrikChat
 
+/// A SwiftUI view that handles location sharing functionality
+/// This view provides both current location sharing and place search capabilities
 struct ISMLocationShareView: View {
     // MARK: - PROPERTIES
     @Environment(\.dismiss) var dismiss
     
+    // View Models and Location Management
     @StateObject private var mapViewModel = MapViewModel()
     @StateObject private var locationManager = LocationManager()
+    
+    // UI State Properties
     @State private var showSheet = true
+    @State private var isTextFieldFocused: Bool = false
+    @State private var searchText = ""
+    @State private var predictions: [GMSAutocompletePrediction] = []
+    @State private var selectedPlaceAfterSearch: GMSPlace?
+    
+    // Binding Properties for Location Data
     @Binding var longitude: Double?
     @Binding var latitude: Double?
     @Binding var placeId: String?
     @Binding var placeName: String?
     @Binding var address: String?
-    @State private var isTextFieldFocused: Bool = false
-    @State private var searchText = ""
-    @State private var predictions: [GMSAutocompletePrediction] = []
-    @State private var selectedPlaceAfterSearch: GMSPlace?
+    
+    // Configuration Properties
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     let chatproperties = ISMChatSdkUI.getInstance().getChatProperties()
-     var sessionToken: GMSAutocompleteSessionToken = GMSAutocompleteSessionToken()
+    // Session token for Google Places API requests
+    var sessionToken: GMSAutocompleteSessionToken = GMSAutocompleteSessionToken()
 
     
     // MARK: - LIFECYCLE
@@ -293,48 +303,65 @@ struct ISMLocationShareView: View {
     func getPlaces(){
         mapViewModel.currentPlacesList()
     }
-    private func fetchAutoCompletePredictions() {
-            let filter = GMSAutocompleteFilter()
-            let placesClient = GMSPlacesClient.shared()
-            
-            // Use the session token for consistency between searches
-            placesClient.findAutocompletePredictions(fromQuery: searchText, filter: filter, sessionToken: sessionToken) { predictions, error in
-                if let error = error {
-                    ISMChatHelper.print("Error fetching autocomplete predictions: \(error.localizedDescription)")
-                    return
-                }
-                
-                if let predictions = predictions {
-                    self.predictions = predictions
-                }
-            }
-        }
 
-    private func selectPlace(_ prediction: GMSAutocompletePrediction) {
+    // MARK: - Location Search Methods
+    
+    /// Fetches autocomplete predictions from Google Places API
+    /// This method is called when the user types in the search bar
+    private func fetchAutoCompletePredictions() {
+        let filter = GMSAutocompleteFilter()
         let placesClient = GMSPlacesClient.shared()
         
-        // Specify the place fields that you want to retrieve
+        // Use session token to optimize billing and ensure consistency
+        placesClient.findAutocompletePredictions(
+            fromQuery: searchText, 
+            filter: filter, 
+            sessionToken: sessionToken
+        ) { predictions, error in
+            if let error = error {
+                ISMChatHelper.print("Error fetching autocomplete predictions: \(error.localizedDescription)")
+                return
+            }
+            
+            if let predictions = predictions {
+                self.predictions = predictions
+            }
+        }
+    }
+
+    /// Handles the selection of a place from the autocomplete predictions
+    /// - Parameter prediction: The selected GMSAutocompletePrediction object
+    private func selectPlace(_ prediction: GMSAutocompletePrediction) {
+        let placesClient = GMSPlacesClient.shared()
         let placeFields: GMSPlaceField = [.name, .coordinate, .placeID, .formattedAddress]
         
-        // Use the correct fetchPlace method with placeID and placeFields
-        placesClient.fetchPlace(fromPlaceID: prediction.placeID, placeFields: placeFields, sessionToken: sessionToken) {  place, error in
+        placesClient.fetchPlace(
+            fromPlaceID: prediction.placeID,
+            placeFields: placeFields,
+            sessionToken: sessionToken
+        ) { place, error in
             if let error = error {
                 ISMChatHelper.print("An error occurred: \(error.localizedDescription)")
                 return
             }
             
             if let place = place {
-                // Use the fetched place data
-                self.longitude = place.coordinate.longitude
-                self.latitude = place.coordinate.latitude
-                self.placeId = place.placeID
-                self.placeName = place.name
-                self.address = place.formattedAddress
+                // Update location data and dismiss view
+                self.updateLocationData(with: place)
                 self.dismiss()
             }
         }
     }
-
+    
+    /// Updates the location data bindings with the selected place
+    /// - Parameter place: The GMSPlace object containing location details
+    private func updateLocationData(with place: GMSPlace) {
+        self.longitude = place.coordinate.longitude
+        self.latitude = place.coordinate.latitude
+        self.placeId = place.placeID
+        self.placeName = place.name
+        self.address = place.formattedAddress
+    }
 }
 extension View {
     func hideKeyboard() {
@@ -345,6 +372,7 @@ extension View {
 
 
 
+/// LocationManager class that handles location services and permissions
 final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
     

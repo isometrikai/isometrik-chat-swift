@@ -13,24 +13,21 @@ struct ISMShareContactList: View {
     
     //MARK: - PROPERTIES
     
-    @Binding var dissmiss: Bool
-    @Binding var selectedContact : [ISMChatPhoneContact]
-    @Binding var shareContact : Bool
+    @Binding var dissmiss: Bool // Binding to dismiss the view
+    @Binding var selectedContact : [ISMChatPhoneContact] // Binding to hold selected contacts
+    @Binding var shareContact : Bool // Binding to indicate if sharing is in progress
     
+    @State private var query = "" // State variable for search query
+    @ObservedObject var viewModel = ConversationViewModel() // ViewModel for managing conversation data
+    @State private var contacts : [ISMChatContacts] = [] // State variable to hold fetched contacts
+    @State var contactSectionDictionary : Dictionary<String , [ISMChatContacts]> = [:] // Dictionary to organize contacts by section
     
-    @State private var query = ""
-    @ObservedObject var viewModel = ConversationViewModel()
-    @State private var contacts : [ISMChatContacts] = []
-    @State var contactSectionDictionary : Dictionary<String , [ISMChatContacts]> = [:]
+    @State private var createconversation : ISMChatCreateConversationResponse? // State variable for conversation response
+    @State var selection: Bool = false // State variable for selection state
+    @State private var conversationId : String = "" // State variable for conversation ID
     
-    
-    @State private var createconversation : ISMChatCreateConversationResponse?
-    @State var selection: Bool = false
-    @State private var conversationId : String = ""
-    
-    
-    @State var contactSelected : [ISMChatContacts] = []
-    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    @State var contactSelected : [ISMChatContacts] = [] // State variable for currently selected contacts
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance // Appearance settings
     
     //MARK: - BODY
     var body: some View {
@@ -39,15 +36,19 @@ struct ISMShareContactList: View {
                 VStack {
                     ScrollViewReader { proxy in
                         List {
+                            // Display header if any contacts are selected
                             if contactSelected.count > 0 {
                                 HeaderView()
                             }
                             
+                            // Iterate through sorted keys of the contact section dictionary
                             ForEach(contactSectionDictionary.keys.sorted(), id: \.self) { key in
+                                // Filter contacts based on the search query
                                 if let contacts = contactSectionDictionary[key]?.filter({ contact in
                                     self.query.isEmpty ? true : "\(contact.contact)".lowercased().contains(self.query.lowercased())
                                 }), !contacts.isEmpty {
                                     Section(header: Text("\(key)").font(.system(size: 14))) {
+                                        // Display each contact in the section
                                         ForEach(contacts) { value in
                                             ZStack {
                                                 HStack(spacing: 10) {
@@ -94,6 +95,7 @@ struct ISMShareContactList: View {
                                                     }
                                                 }
                                                 
+                                                // Button to select/deselect contact
                                                 Button {
                                                     contactSelection(value: value)
                                                 } label: {
@@ -125,15 +127,14 @@ struct ISMShareContactList: View {
             }.navigationViewStyle(StackNavigationViewStyle())
                 .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
                 .onAppear {
-                    requestContactAccess()
-                    
+                    requestContactAccess() // Request access to contacts when the view appears
                 }
         }
     }
     
     //MARK: - CONFIGURE
     func HeaderView() -> some View{
-        
+        // Header view to display selected contacts
         HStack(alignment: .top){
             ScrollViewReader { reader in
                 ScrollView(.horizontal,showsIndicators: false) {
@@ -155,6 +156,7 @@ struct ISMShareContactList: View {
                                         .foregroundColor(appearance.colorPalette.chatListUserMessage)
                                         .lineLimit(2)
                                 }.onTapGesture {
+                                    // Remove contact from selection on tap
                                     if contactSelected.contains(where: { user1 in
                                         user1.id == user.id
                                     }){
@@ -166,8 +168,8 @@ struct ISMShareContactList: View {
                         }
                     }
                 } .onChange(of: contactSelected.count, { _, _ in
-                    withAnimation {  // add animation for scroll to top
-                        reader.scrollTo(contactSelected.last?.id, anchor: .center) // scroll
+                    withAnimation {  // Add animation for scroll to top
+                        reader.scrollTo(contactSelected.last?.id, anchor: .center) // Scroll to the last selected contact
                     }
                 })
             }
@@ -175,20 +177,22 @@ struct ISMShareContactList: View {
     }
     
     var navBarTrailingBtn: some View {
+        // Button to finalize sharing of selected contacts
         VStack{
             Button(action: {
-                self.share()
-                self.shareContact = true
-                self.dissmiss = false
+                self.share() // Call share function
+                self.shareContact = true // Indicate sharing is in progress
+                self.dissmiss = false // Dismiss the view
             }) {
                 Text("Done")
                     .font(appearance.fonts.messageListMessageText)
                     .foregroundColor(contactSelected.count == 0 ? Color.gray : appearance.colorPalette.userProfileEditText)
-            }.disabled(contactSelected.count == 0)
+            }.disabled(contactSelected.count == 0) // Disable button if no contacts are selected
         }
     }
     
     var navBarLeadingBtn: some View {
+        // Button to cancel the sharing process
         Button(action: { self.dissmiss = false }) {
             Text("Cancel")
                 .font(appearance.fonts.messageListMessageText)
@@ -197,46 +201,49 @@ struct ISMShareContactList: View {
     }
     
     public func contactSelection(value : ISMChatContacts){
+        // Function to handle contact selection and deselection
         if contactSelected.contains(where: { contact in
             contact.id == value.id
         }){
-            contactSelected.removeAll(where: { $0.id == value.id })
-            //when selected or removed dismiss keyboard
-            query = ""
+            contactSelected.removeAll(where: { $0.id == value.id }) // Remove contact if already selected
+            query = "" // Dismiss keyboard
         }else{
-            contactSelected.append(value)
-            //when selected or removed dismiss keyboard
-            query = ""
+            contactSelected.append(value) // Add contact to selection
+            query = "" // Dismiss keyboard
         }
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil) // Dismiss keyboard
     }
     
     public func dataToURLString(_ data: Data) -> String? {
+        // Convert data to a URL-encoded string
         let urlString = String(data: data, encoding: .utf8)
         return urlString?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
     }
     
     public func share(){
+        // Function to share selected contacts
         for x in contactSelected{
-            guard let number = x.contact.phoneNumbers.first?.value.stringValue else {return}
-            let phone = ISMChatPhone(number: "\(number)")
-            let imageUrl = "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg"
-            let contactInfo : ISMChatPhoneContact = ISMChatPhoneContact(id: x.id, displayName: "\(x.contact.givenName) \(x.contact.familyName)", phones: [phone], imageUrl: imageUrl, imageData: x.contact.imageData ?? Data())
-            selectedContact.append(contactInfo)
+            guard let number = x.contact.phoneNumbers.first?.value.stringValue else {return} // Get phone number
+            let phone = ISMChatPhone(number: "\(number)") // Create phone object
+            let imageUrl = "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg" // Placeholder image URL
+            let contactInfo : ISMChatPhoneContact = ISMChatPhoneContact(id: x.id, displayName: "\(x.contact.givenName) \(x.contact.familyName)", phones: [phone], imageUrl: imageUrl, imageData: x.contact.imageData ?? Data()) // Create contact info object
+            selectedContact.append(contactInfo) // Append to selected contacts
         }
     }
     
     public func sectionIndexTitles(proxy: ScrollViewProxy) -> some View {
+        // Function to display section index titles for quick navigation
         SectionIndexTitles(proxy: proxy, titles: contactSectionDictionary.keys.sorted())
             .frame(maxWidth: .infinity, alignment: .trailing)
             .padding()
     }
     
     public func requestContactAccess() {
+        // Request access to the user's contacts
         let store = CNContactStore()
         store.requestAccess(for: .contacts) { (granted, error) in
             if granted {
-                fetchContacts()
+                fetchContacts() // Fetch contacts if access is granted
             } else {
                 // Handle not granted access
             }
@@ -244,7 +251,7 @@ struct ISMShareContactList: View {
     }
     
     public func fetchContacts() {
-        // Create a background queue
+        // Function to fetch contacts from the user's contact store
         DispatchQueue.global(qos: .background).async {
             let store = CNContactStore()
             let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactImageDataAvailableKey, CNContactImageDataKey]
@@ -252,17 +259,17 @@ struct ISMShareContactList: View {
             
             do {
                 try store.enumerateContacts(with: request) { (contact, _) in
-                    contacts.append(ISMChatContacts(id: UUID(), contact: contact))
+                    contacts.append(ISMChatContacts(id: UUID(), contact: contact)) // Append each contact to the contacts array
                 }
             } catch {
                 // Handle the error
                 print("Error fetching contacts: \(error)")
             }
             
-            // Once the contacts are fetched, update the UI on the main thread
+            // Update the UI on the main thread after fetching contacts
             DispatchQueue.main.async {
                 if contacts.count > 0 {
-                    contactSectionDictionary = viewModel.getContactDictionary(data: contacts)
+                    contactSectionDictionary = viewModel.getContactDictionary(data: contacts) // Organize contacts into sections
                 }
             }
         }
