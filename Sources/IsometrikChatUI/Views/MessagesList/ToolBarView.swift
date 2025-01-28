@@ -315,7 +315,7 @@ struct MainToolBarView : View {
     func AudioMessageButton(height : CGFloat) -> some View{
         Button(action: {
             ISMChatHelper.print("recording done")
-            if isClicked == true{
+            if isClicked == true && audioLocked == false{
                 chatViewModel.isRecording = false
                 isClicked = false
                 chatViewModel.stopRecording { url in
@@ -345,23 +345,9 @@ struct MainToolBarView : View {
                 }
                 .sequenced(before:
                             DragGesture(minimumDistance: 2)
-                    .onEnded { value in
-                        if value.translation.width < -50 {
-                            UINotificationFeedbackGenerator().notificationOccurred(.warning)
-                            if isClicked == true{
-                                chatViewModel.isRecording = false
-                                self.chatViewModel.countSec = 0
-                                self.chatViewModel.timerValue = "0:00"
-                                isClicked = false
-                                chatViewModel.stopRecording { url in
+                                .onEnded { value in
+                                    handleDragGesture(value)
                                 }
-                            }
-                        }else if chatViewModel.isRecording && value.translation.height < -50 {
-                            UINotificationFeedbackGenerator().notificationOccurred(.success)
-                            print("Dragged up")
-                            audioLocked = true
-                        }
-                    }
                           )
         )
     }
@@ -441,10 +427,13 @@ struct MainToolBarView : View {
 
     private func cancelRecordingOnDrag() {
         UINotificationFeedbackGenerator().notificationOccurred(.warning)
-        if isClicked {
+        if isClicked == true{
             chatViewModel.isRecording = false
+            self.chatViewModel.countSec = 0
+            self.chatViewModel.timerValue = "0:00"
             isClicked = false
-            chatViewModel.stopRecording { _ in }
+            chatViewModel.stopRecording { url in
+            }
         }
     }
 

@@ -15,6 +15,7 @@ import PencilKit
 struct CameraCaptureView: View {
     // State variables for camera control
     @State private var isRecording = false
+    @State private var isVideo = false
     @State private var zoomLevel: CGFloat = 1.0
     @State private var selectedFilter: String = "None"
     @State private var showGallery = false
@@ -238,7 +239,7 @@ struct CameraCaptureView: View {
                             }
                         }.padding(.bottom,30)
                         
-                        CaptureButton(isRecording: $isRecording) {
+                        CaptureButton(isRecording: $isRecording, isVideo: $isVideo) {
                             NotificationCenter.default.post(name: NSNotification.Name("CapturePhoto"), object: nil)
                         }
                         
@@ -645,40 +646,72 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
 // Custom Capture Button
 struct CaptureButton: View {
     @Binding var isRecording: Bool
+    @Binding var isVideo: Bool
     var onCapture: () -> Void
 
     var body: some View {
-        ZStack {
-            // Outer ring
-            Circle()
-                .stroke(lineWidth: 5)
-                .foregroundColor(isRecording ? Color.red.opacity(0.7) : Color.white)
-                .frame(width: 80, height: 80)
+        Button {
+            if isVideo {
+                isRecording = false
+                isVideo = false
+            } else {
+                onCapture()
+            }
+        } label: {
             
-            // Inner circle
-            Circle()
-                .fill(isRecording ? Color.red.opacity(0.7) : Color.white)
-                .frame(width: 70, height: 70)
-        }
-        .highPriorityGesture(
-            DragGesture(minimumDistance: 0) // Detects a press without requiring movement
-                .onChanged { _ in
-                    if !isRecording {
-                        isRecording = true // Start recording on press
-                    }
+            ZStack {
+                // Outer ring
+                Circle()
+                    .stroke(lineWidth: 5)
+                    .foregroundColor(isRecording ? Color.red.opacity(0.7) : Color.white)
+                    .frame(width: 80, height: 80)
+                
+                // Inner circle
+                Circle()
+                    .fill(isRecording ? Color.red.opacity(0.7) : Color.white)
+                    .frame(width: 70, height: 70)
+            }
+            
+        }.simultaneousGesture(
+            LongPressGesture(minimumDuration: 0.5).onEnded({ value in
+                withAnimation {
+                    isVideo = true
+                    isRecording = true
                 }
-                .onEnded { _ in
-                    isRecording = false // Stop recording on release
-                }
-        )
-        .simultaneousGesture(
-            TapGesture()
-                .onEnded {
-                    if !isRecording {
-                        onCapture()
-                    }
-                }
-        )
+            })
+        ).buttonStyle(.plain)
+        
+        //        ZStack {
+        //            // Outer ring
+        //            Circle()
+        //                .stroke(lineWidth: 5)
+        //                .foregroundColor(isRecording ? Color.red.opacity(0.7) : Color.white)
+        //                .frame(width: 80, height: 80)
+        //
+        //            // Inner circle
+        //            Circle()
+        //                .fill(isRecording ? Color.red.opacity(0.7) : Color.white)
+        //                .frame(width: 70, height: 70)
+        //        }
+        //        .highPriorityGesture(
+        //            DragGesture(minimumDistance: 0) // Detects a press without requiring movement
+        //                .onChanged { _ in
+        //                    if !isRecording {
+        //                        isRecording = true // Start recording on press
+        //                    }
+        //                }
+        //                .onEnded { _ in
+        //                    isRecording = false // Stop recording on release
+        //                }
+        //        )
+        //        .simultaneousGesture(
+        //            TapGesture()
+        //                .onEnded {
+        //                    if !isRecording {
+        //                        onCapture()
+        //                    }
+        //                }
+        //        )
     }
 }
 
