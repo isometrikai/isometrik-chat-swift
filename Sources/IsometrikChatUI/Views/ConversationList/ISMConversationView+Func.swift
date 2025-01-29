@@ -11,11 +11,15 @@ import IsometrikChat
 
 extension ISMConversationView{
     
+    /// Determines if more data should be loaded based on the last conversation.
+    /// - Parameter item: The conversation item to check.
+    /// - Returns: A boolean indicating whether to load more data.
     func shouldLoadMoreData(_ item: ConversationDB) -> Bool {
         guard let lastItem = realmManager.getConversation().last else { return false }
         return item.conversationId == lastItem.conversationId
     }
     
+    /// Loads more conversation data if the current count is a multiple of 20.
     func loadMoreData() {
         guard viewModel.conversations.count % 20 == 0 else {
             return
@@ -26,6 +30,8 @@ extension ISMConversationView{
         }
     }
     
+    /// Fetches user data and updates the view model with the retrieved information.
+    /// - Parameter completion: A closure that returns the user ID.
     func getuserData(completion :@escaping (String?)->()){
         viewModel.getUserData { data in
             if let user = data {
@@ -42,12 +48,14 @@ extension ISMConversationView{
         }
     }
     
+    /// Updates the count of other conversations and posts a notification.
     func getOtherChatCountUpdate(){
         let count = realmManager.getOtherConversationCount()
         let otherConversationCount : [String: Int] = ["count": count]
         NotificationCenter.default.post(name: NSNotification.refreshOtherChatCount, object: nil, userInfo: otherConversationCount)
     }
     
+    /// Retrieves the list of conversations and updates the view model accordingly.
     func getConversationList(){
         viewModel.getChatList(search: "") { data in
             self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: data?.conversations ?? [], query: ""))
@@ -65,6 +73,7 @@ extension ISMConversationView{
         }
     }
     
+    /// Fetches the broadcast list and updates the realm manager with the retrieved data.
     func getBroadcastList(){
         chatViewModel.getBroadCastList { data in
             if let groupcast = data?.groupcasts{
@@ -77,6 +86,8 @@ extension ISMConversationView{
         }
     }
     
+    /// Deletes a conversation and its associated messages and media.
+    /// - Parameter conversationId: The ID of the conversation to delete.
     func deleteConversation(conversationId: String) {
         viewModel.deleteConversation(conversationId: conversationId) {
             realmManager.deleteConversation(convID: conversationId)
@@ -90,6 +101,8 @@ extension ISMConversationView{
         }
     }
     
+    /// Clears the messages of a conversation without deleting it.
+    /// - Parameter conversationId: The ID of the conversation to clear.
     func clearConversation(conversationId : String){
         viewModel.clearChat(conversationId: conversationId) {
             self.realmManager.clearMessages()
@@ -102,6 +115,8 @@ extension ISMConversationView{
         }
     }
     
+    /// Exits a group conversation and deletes its associated data.
+    /// - Parameter conversationId: The ID of the group conversation to exit.
     func exitGroup(conversationId : String){
         chatViewModel.exitGroup(conversationId: conversationId) {
             realmManager.deleteConversation(convID: conversationId)
@@ -115,6 +130,7 @@ extension ISMConversationView{
         }
     }
     
+    /// Searches for conversations based on a query and updates the conversation list.
     func searchInConversationList() {
         let conversation = realmManager.storeConv
         realmManager.conversations = conversation.filter { conversation in

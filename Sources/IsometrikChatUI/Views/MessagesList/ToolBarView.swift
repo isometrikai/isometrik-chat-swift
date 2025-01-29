@@ -10,6 +10,7 @@ import IsometrikChat
 import SDWebImageSwiftUI
 import AVKit
 
+// Enum to represent the state of the toolbar
 enum ToolbarState {
     case mention
     case forward
@@ -17,9 +18,7 @@ enum ToolbarState {
     case normal
 }
 
-
-
-
+// View for displaying a list of users to mention
 struct MentionUserList : View{
     @Binding var showMentionList : Bool
     @Binding var filteredUsers: [ISMChatGroupMember]
@@ -32,7 +31,7 @@ struct MentionUserList : View{
             List(filteredUsers, id: \.self){ user in
                 if let userName = user.userName {
                     Button {
-                        appendUserToText(user: userName)
+                        appendUserToText(user: userName) // Append selected user to text field
                     } label: {
                         HStack(spacing : 5){
                             UserAvatarView(
@@ -48,7 +47,7 @@ struct MentionUserList : View{
                 }
             }
             .onDisappear(perform: {
-                filteredUsers = mentionUsers
+                filteredUsers = mentionUsers // Reset filtered users when the view disappears
             })
             .listStyle(.plain)
             .frame(height: min(CGFloat(filteredUsers.count) * 35,200))
@@ -56,8 +55,9 @@ struct MentionUserList : View{
         }
     }
     
+    // Function to append the selected user to the text field
     private func appendUserToText(user: String) {
-        let trimmedText = textFieldtxt.trimmingCharacters(in: .whitespacesAndNewlines) // Trim any whitespace/newline
+        let trimmedText = textFieldtxt.trimmingCharacters(in: .whitespacesAndNewlines) // Trim whitespace/newline
         print("Current trimmed text: \(trimmedText)")
         
         // Get the first name (first word of the user)
@@ -83,10 +83,10 @@ struct MentionUserList : View{
             // Convert AttributedString back to String to update the text
             textFieldtxt = String(attributedText.characters)
             
-            showMentionList = false
+            showMentionList = false // Hide mention list after selection
             print("Updated text: \(textFieldtxt)")
         } else {
-            print("No @ symbol found")
+            print("No @ symbol found") // Log if no @ symbol is found
         }
     }
 }
@@ -102,6 +102,7 @@ struct ForwardMessageToolBar : View {
             Divider()
             HStack{
                 Button {
+                    // Navigate to forward list based on framework
                     if ISMChatSdk.getInstance().getFramework() == .UIKit{
                         navigateToForwardList()
                     }else{
@@ -114,7 +115,7 @@ struct ForwardMessageToolBar : View {
                         .resizable()
                         .frame(width: 24, height: 24, alignment: .center)
                 }
-                .disabled(forwardMessageSelected.count == 0)
+                .disabled(forwardMessageSelected.count == 0) // Disable button if no messages are selected
                 
                 Spacer()
                 Text("\(forwardMessageSelected.count) Selected")
@@ -123,6 +124,7 @@ struct ForwardMessageToolBar : View {
                 Spacer()
                 
                 Button {
+                    // Share the last selected message
                     if let url = forwardMessageSelected.last?.body {
                         let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
 
@@ -141,7 +143,7 @@ struct ForwardMessageToolBar : View {
                         .resizable()
                         .frame(width: 24, height: 24, alignment: .center)
                 }
-                .disabled(forwardMessageSelected.count == 0)
+                .disabled(forwardMessageSelected.count == 0) // Disable button if no messages are selected
             }
             .frame(height: 40)
             .padding(.vertical,10)
@@ -163,13 +165,13 @@ struct DelegateMessageToolBar : View {
                     .font(Font.regular(size: 16))
                 Spacer()
                 Button {
-                    showDeleteActionSheet = true
+                    showDeleteActionSheet = true // Show delete confirmation
                 } label: {
                     Text("Delete")
                         .foregroundColor(deleteMessage.count == 0 ? Color.onboardingPlaceholder : .red)
                         .font(Font.regular(size: 16))
                 }
-                .disabled(deleteMessage.count == 0)
+                .disabled(deleteMessage.count == 0) // Disable button if no messages are selected
             }
             .padding(.vertical,10)
             .padding(.horizontal,20)
@@ -198,19 +200,22 @@ struct BasicToolBarView : View {
     var onSendMessage : () -> ()
     var body: some View {
         VStack(spacing: 0) {
+            // Show reply toolbar if a message is selected
             if ISMChatSdkUI.getInstance().getChatProperties().replyMessageInsideInputView == false{
                 if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
                     ReplyToolBarView(selectedMsgToReply: $selectedMsgToReply)
                 }
             }
             
+            // Show link preview if the text is a valid URL
             if textFieldtxt.isValidURL && !ISMChatSdkUI.getInstance().getChatProperties().hideLinkPreview {
                 Divider()
                 LinkPreviewToolBarView(text: textFieldtxt)
             }
             
+            // Main toolbar for sending messages
             MainToolBarView(textFieldtxt: $textFieldtxt, parentMessageIdToScroll: $parentMessageIdToScroll, audioLocked: $audioLocked, isClicked: $isClicked,uAreBlock: $uAreBlock,showUnblockPopUp: $showUnblockPopUp,isShowingRedTimerStart: $isShowingRedTimerStart,showActionSheet: $showActionSheet,showGifPicker: $showGifPicker,audioPermissionCheck: $audioPermissionCheck, keyboardFocused: $keyboardFocused, selectedMsgToReply: $selectedMsgToReply, onSendMessage: {
-                onSendMessage()
+                onSendMessage() // Trigger send message action
             })
                 .environmentObject(self.realmManager)
                 .environmentObject(self.chatViewModel)
@@ -239,12 +244,13 @@ struct MainToolBarView : View {
     var onSendMessage : () -> ()
     var body: some View {
         HStack {
+            // Show input text view or audio toolbar based on recording state
             if !chatViewModel.isRecording {
                 inputTextView()
             } else {
                 audioToolbarContent()
             }
-            sendMessageButton()
+            sendMessageButton() // Button to send the message
         }
         .padding(.top, 10)
         .padding(.bottom, 20)
@@ -283,7 +289,7 @@ struct MainToolBarView : View {
 
     private var sendMessageButtonView: some View {
         Button(action: {
-            onSendMessage()
+            onSendMessage() // Trigger send message action
         }) {
             appearance.images.sendMessage
                 .resizable()
@@ -307,7 +313,7 @@ struct MainToolBarView : View {
                     .frame(width: 30, height: 50)
                     .offset(y: -50)
                 }
-                AudioMessageButton(height: 20)
+                AudioMessageButton(height: 20) // Button for audio message
             }
         }
     }
@@ -319,7 +325,7 @@ struct MainToolBarView : View {
                 chatViewModel.isRecording = false
                 isClicked = false
                 chatViewModel.stopRecording { url in
-                    chatViewModel.audioUrl = url
+                    chatViewModel.audioUrl = url // Store the recorded audio URL
                 }
             }
         }) {
@@ -331,14 +337,14 @@ struct MainToolBarView : View {
         .simultaneousGesture(
             LongPressGesture(minimumDuration: 0.1)
                 .onEnded { value in
-                    ISMChatHelper.print("Tap currently holded")
+                    ISMChatHelper.print("Tap currently held")
                     if isMessagingEnabled() == true && chatViewModel.isBusy == false{
                         if audioPermissionCheck == true{
                             isClicked = true
                             chatViewModel.isRecording = true
-                            chatViewModel.startRecording()
+                            chatViewModel.startRecording() // Start recording audio
                         }else{
-                            checkAudioPermission()
+                            checkAudioPermission() // Check for audio permission
                             ISMChatHelper.print("Access Denied for audio permission")
                         }
                     }
@@ -346,7 +352,7 @@ struct MainToolBarView : View {
                 .sequenced(before:
                             DragGesture(minimumDistance: 2)
                                 .onEnded { value in
-                                    handleDragGesture(value)
+                                    handleDragGesture(value) // Handle drag gesture for recording
                                 }
                           )
         )
@@ -382,7 +388,7 @@ struct MainToolBarView : View {
             chatViewModel.isRecording = false
             isClicked = false
             chatViewModel.stopRecording { url in
-                chatViewModel.audioUrl = url
+                chatViewModel.audioUrl = url // Store the recorded audio URL
             }
         }
     }
@@ -393,7 +399,7 @@ struct MainToolBarView : View {
             if audioPermissionCheck {
                 isClicked = true
                 chatViewModel.isRecording = true
-                chatViewModel.startRecording()
+                chatViewModel.startRecording() // Start recording audio
             } else {
                 ISMChatHelper.print("Access Denied for audio permission")
             }
@@ -403,9 +409,9 @@ struct MainToolBarView : View {
     func isMessagingEnabled() -> Bool{
         if self.conversationDetail?.conversationDetails?.messagingDisabled == true{
             if realmManager.messages.last?.last?.initiatorId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId{
-                uAreBlock = true
+                uAreBlock = true // User is blocked
             }else{
-                showUnblockPopUp = true
+                showUnblockPopUp = true // Show unblock popup
             }
             return false
         }else{
@@ -441,7 +447,7 @@ struct MainToolBarView : View {
         UINotificationFeedbackGenerator().notificationOccurred(.success)
         ISMChatHelper.print("Dragged up to lock recording")
         
-        audioLocked = true
+        audioLocked = true // Lock the recording
     }
 
 
@@ -516,7 +522,7 @@ struct MainToolBarView : View {
             isClicked = false
             audioLocked = false
             chatViewModel.stopRecording { url in
-                chatViewModel.audioUrl = url
+                chatViewModel.audioUrl = url // Store the recorded audio URL
             }
         }
     }
@@ -571,7 +577,7 @@ struct MainToolBarView : View {
     private var attachmentButton: some View {
         Button(action: {
             DispatchQueue.main.async {
-                showActionSheet = true
+                showActionSheet = true // Show action sheet for attachments
             }
         }) {
             appearance.images.addAttcahment
@@ -584,7 +590,7 @@ struct MainToolBarView : View {
     private var gifButton: some View {
         Button {
             DispatchQueue.main.async {
-                showGifPicker = true
+                showGifPicker = true // Show GIF picker
             }
         } label: {
             appearance.images.addSticker
@@ -599,26 +605,26 @@ struct MainToolBarView : View {
             .disableAutocorrection(true) 
             .lineLimit(5)
             .onTapGesture {
-                scrollToLastMessage()
+                scrollToLastMessage() // Scroll to the last message on tap
             }
             .font(appearance.fonts.messageListTextViewText ?? .body)
             .foregroundColor(appearance.colorPalette.messageListTextViewText ?? .black)
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
             .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
-                keyboardFocused = true
+                keyboardFocused = true // Set keyboard focused state
             }
             .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
-                keyboardFocused = false
+                keyboardFocused = false // Reset keyboard focused state
             }
     }
     
     private func scrollToLastMessage() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
             if let lastMessageId = realmManager.messages.last?.last?.id.description {
-                parentMessageIdToScroll = lastMessageId
+                parentMessageIdToScroll = lastMessageId // Update parent message ID to scroll
             } else {
-                print("No last message found in Realm")
+                print("No last message found in Realm") // Log if no last message found
             }
         }
     }

@@ -8,55 +8,49 @@
 import Foundation
 import SwiftUI
 
-extension ISMConversationView{
-    func navigationLeading() -> some View{
-        HStack{
+extension ISMConversationView {
+    /// Creates the leading navigation view with a user avatar and a "Chats" label.
+    /// - Returns: A view containing the user avatar and the "Chats" text.
+    func navigationLeading() -> some View {
+        HStack {
+            // Button to show the user's profile when tapped
             Button {
                 showProfile = true
             } label: {
-                UserAvatarView(avatar: myUserData?.userProfileImage ?? "" , showOnlineIndicator: false,size: CGSize(width: 38, height: 38),userName : myUserData?.userName ?? "" ,font: .regular(size: 14))
+                // Displays the user's avatar with a default image if none is available
+                UserAvatarView(avatar: myUserData?.userProfileImage ?? "", showOnlineIndicator: false, size: CGSize(width: 38, height: 38), userName: myUserData?.userName ?? "", font: .regular(size: 14))
             }
+            // Displays the "Chats" label with bold font
             Text("Chats")
                 .font(Font.bold(size: 25))
         }
     }
     
-    func navigationTrailing() -> some View{
+    /// Creates the trailing navigation menu with options for blocking users and viewing broadcast lists.
+    /// - Returns: A view containing a menu with navigation links.
+    func navigationTrailing() -> some View {
         Menu {
+            // Navigation link to the blocked users view
             NavigationLink {
                 ISMBlockUserView(conversationViewModel: self.viewModel)
             } label: {
                 Label("Blocked Users", systemImage: "circle.slash")
             }
 
-//            Button {
-//                navigateToBlockUsers = true
-//            } label: {
-//                Label("Blocked Users", systemImage: "circle.slash")
-//            }
-            if showBroadCastOption == true{
+            // Conditional display of the broadcast lists option
+            if showBroadCastOption == true {
+                // Navigation link to the broadcast lists view
                 NavigationLink {
                     ISMBroadCastList()
                 } label: {
                     Label("Broadcast Lists", systemImage: "circle.slash")
                 }
-
-//                Button {
-//                    navigateToBroadcastList = true
-//                } label: {
-//                    Label("Broadcast Lists", systemImage: "circle.slash")
-//                }
             }
-//                            Button {
-//                                isDarkMode.toggle()
-//                            } label: {
-//                                Label(isDarkMode ? "Light Mode" : " Dark Mode", systemImage: isDarkMode ?  "sun.max.fill" : "moon.fill")
-//                            }
         } label: {
+            // Displays the three dots icon for the menu
             appearance.images.threeDots
                 .resizable()
                 .frame(width: 5, height: 20, alignment: .center)
-            
         }
     }
 }

@@ -13,6 +13,10 @@ import IsometrikChat
 extension ISMMessageView{
     
     //MARK: - DELETE MULTIPLE MESSAGE
+    /// Deletes multiple messages based on the user's selection.
+    /// - Parameters:
+    ///   - otherUserMessage: A boolean indicating if the message is from another user.
+    ///   - type: The type of message deletion.
     func deleteMultipleMessages(otherUserMessage: Bool, type: ISMChatDeleteMessageType) {
         let messageIds = deleteMessage.map { $0.messageId }
         func handleDeleteCompletion() {
@@ -31,6 +35,10 @@ extension ISMMessageView{
     }
     
     //MARK: - DELETE MULTIPLE MESSAGE For Broadcast
+    /// Deletes multiple broadcast messages.
+    /// - Parameters:
+    ///   - otherUserMessage: A boolean indicating if the message is from another user.
+    ///   - type: The type of message deletion.
     func deleteMultipleBroadcastMessages(otherUserMessage: Bool, type: ISMChatDeleteMessageType) {
         let messageIds = deleteMessage.map { $0.messageId }
         for id in messageIds{
@@ -43,6 +51,9 @@ extension ISMMessageView{
     }
     
     //MARK: - REPLY MESSAGE
+    /// Replies to a message if it is a reply type.
+    /// - Parameter message: The message to reply to.
+    /// - Returns: A boolean indicating if the reply was successful.
     func replyMessage(message : ISMChatMessage) -> Bool{
         if message.messageType == 2{ //reply
             if ((self.chatViewModel.allMessages?.contains(where: { msg in
@@ -61,6 +72,7 @@ extension ISMMessageView{
     
     //MARK: - ON CHANGE FUNCTIONS
     
+    /// Sends a message if a document is selected from the picker.
     func sendMessageIfDocumentSelected() {
         if chatViewModel.documentSelectedFromPicker != nil{
             sendMessage(msgType: .document)
@@ -181,6 +193,8 @@ extension ISMMessageView{
     }
     
     //MARK: - SEND MESSAGE
+    /// Sends a message based on the message type and current state.
+    /// - Parameter msgType: The type of message to send.
     func sendMessage(msgType: ISMChatMessageType) {
         self.text = self.textFieldtxt
         clearTextField()
@@ -578,6 +592,9 @@ extension ISMMessageView{
                         self.delegate?.uploadOnExternalCDN(messageKind: .photo, mediaUrl: media.url , completion: { imageUrl, imageData in
                             sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: mediaName, mediaUrl: imageUrl, mediaData: imageData, thubnailUrl: imageUrl, sentAt: sentAt, objectId: localIds.first ?? "", caption: media.caption)
                             localIds.removeFirst()
+                            if media == self.mediaSelectedFromPicker.last {
+                                self.mediaSelectedFromPicker.removeAll()
+                            }
                         })
                     }else{
                         chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: nil, document: nil, video: media.url, audio: nil, mediaName: mediaName) {  data, filename, size in

@@ -12,6 +12,11 @@ import IsometrikChat
 extension ISMMessageView{
     
     //MARK: - GET MESSAGE VIEW
+    /// Generates the view for displaying messages in a grid format.
+    /// - Parameters:
+    ///   - scrollReader: A proxy for scrolling the view.
+    ///   - viewWidth: The width of the view.
+    /// - Returns: A view containing the messages.
     func getMessagesView(scrollReader : ScrollViewProxy,viewWidth : CGFloat) -> some View{
         LazyVGrid(columns: columns,spacing: 0/*,pinnedViews: [.sectionHeaders]*/) {
             let sectionMessages = realmManager.messages
@@ -20,6 +25,7 @@ extension ISMMessageView{
                 Section(header: sectionHeader(firstMessage: messages.first ?? MessagesDB(), color: appearance.colorPalette.userProfileSectionHeader, font: appearance.fonts.messageListSectionHeaderText)){
                     ForEach(messages) { message in
                         VStack{
+                            // Determine the type of message and display the appropriate header
                             if ISMChatHelper.getMessageType(message: message) == .blockUser{
                                 grpHeader(action: .userBlock, userName: message.userName, senderId: message.initiatorId)
                             }else if ISMChatHelper.getMessageType(message: message) == .unblockUser{
@@ -43,8 +49,10 @@ extension ISMMessageView{
                             }else if ISMChatHelper.getMessageType(message: message) == .conversationSettingsUpdated{
                                 grpHeader(action: .conversationSettingsUpdated, userName: message.initiatorId == userData?.userId ? ConstantStrings.you :  message.initiatorName, senderId: message.initiatorId,member: message.memberId == userData?.userId ? ConstantStrings.you.lowercased() : message.memberName)
                             }else{
+                                // Default message view for unhandled message types
                                 defaultMessageView(message: message, scrollReader: scrollReader, viewWidth: viewWidth)
                                     .onTapGesture {
+                                        // Handle tap gestures for forwarding or deleting messages
                                         if stateViewModel.showforwardMultipleMessage == true{
                                             self.forwardMessageView(message: message)
                                         }else if stateViewModel.showDeleteMultipleMessage == true{
@@ -71,6 +79,7 @@ extension ISMMessageView{
                 }//:SECTION
             }//:ForEach
             .onAppear(perform: {
+                // Scroll to the last message on load
                 if stateViewModel.onLoad == true{
                     if let messageIdToScroll =  realmManager.messages.last?.last?.id.description{
                         scrollTo(messageId: messageIdToScroll, anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader)
@@ -78,12 +87,13 @@ extension ISMMessageView{
                 }
             })
             .onChange(of: parentMessageIdToScroll, { _, _ in
+                // Scroll to a specific parent message if needed
                 if parentMessageIdToScroll != ""{
                     scrollTo(messageId: parentMessageIdToScroll,  anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader)
                 }
             })
             .onChange(of: parentMsgToScroll, { _, _ in
-                //scroll to parent msg, if tap on reply message view
+                // Scroll to parent message if tapped on reply message view
                 if parentMsgToScroll != nil{
                     if let msg = parentMsgToScroll{
                         scrollToParentMessage(message: msg, scrollReader: scrollReader)
@@ -100,11 +110,19 @@ extension ISMMessageView{
         }//:LazyVGrid
     }
     
+    /// Displays the default message view for a given message.
+    /// - Parameters:
+    ///   - message: The message to display.
+    ///   - scrollReader: A proxy for scrolling the view.
+    ///   - viewWidth: The width of the view.
+    /// - Returns: A view representing the default message.
     func defaultMessageView(message : MessagesDB,scrollReader : ScrollViewProxy,viewWidth : CGFloat) -> some View{
         HStack{
+            // Show forward button if applicable
             if stateViewModel.showforwardMultipleMessage == true && (ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall){
                 multipleForwardMessageButtonView(message: message)
             }
+            // Show delete button if applicable
             if ISMChatSdkUI.getInstance().getChatProperties().customMenu == false{
                 if stateViewModel.showDeleteMultipleMessage == true{
                     multipleDeleteMessageButtonView(message: message)

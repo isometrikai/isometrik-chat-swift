@@ -39,26 +39,28 @@ public extension ISMMessageViewDelegate{}
 
 public struct ISMMessageView: View {
     
-    //MARK: - PROPERTIES
-    
+    // MARK: - PROPERTIES
+    // Environment and state properties for managing the view's state and dependencies
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
     @State public var chatViewModel = ChatsViewModel()
     public var conversationViewModel: ConversationViewModel
     @ObservedObject public var stateViewModel = UIStateViewModel()
     
-    @EnvironmentObject public var realmManager : RealmManager
+    // Environment objects for managing realm and network state
+    @EnvironmentObject public var realmManager: RealmManager
     @EnvironmentObject public var networkMonitor: NetworkMonitor
     
-     var chatFeatures = ISMChatSdkUI.getInstance().getChatProperties().features
-     var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    // Various properties related to chat features, appearance, and user data
+    var chatFeatures = ISMChatSdkUI.getInstance().getChatProperties().features
+    var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
-     var chatProperties = ISMChatSdkUI.getInstance().getChatProperties()
+    var chatProperties = ISMChatSdkUI.getInstance().getChatProperties()
     
+    // State properties for managing UI state and user interactions
     let columns = [GridItem(.flexible(minimum: 10))]
     let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
     let onlinetimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
-    @State var OnMessageList : Bool = false
+    @State var OnMessageList: Bool = false
     @State var offset = CGSize.zero
     
     
@@ -194,7 +196,7 @@ public struct ISMMessageView: View {
     
     @State var declineReasonOption : String? = nil
     
-    //MARK: - BODY
+    // MARK: - BODY
     public var body: some View {
         VStack{
             ZStack{

@@ -12,6 +12,7 @@ import IsometrikChat
 
 extension ISMMessageView{
     
+    // Function to display a toolbar message indicating the user is no longer a member of the group
     func NoLongerMemberToolBar() -> some View{
         VStack{
             HStack{
@@ -27,6 +28,7 @@ extension ISMMessageView{
         .background(appearance.colorPalette.messageListToolBarBackground)
     }
     
+    // Function to determine which toolbar to display based on the current state
     func toolBarView() -> some View {
         Group {
             switch toolbarState {
@@ -47,6 +49,7 @@ extension ISMMessageView{
             }
         }
     }
+    // Computed property to determine the current state of the toolbar
     var toolbarState: ToolbarState {
         if stateViewModel.showMentionList && isGroup == true && !filteredUsers.isEmpty { return .mention }
         if stateViewModel.showforwardMultipleMessage { return .forward }
@@ -56,6 +59,7 @@ extension ISMMessageView{
 
     
     
+    // Function to check if the user has the option to allow messaging based on their profile type and conversation details
     func showOptionToAllow() -> Bool {
         let myProfileType = userData?.userProfileType
         let userId = userData?.userId
@@ -95,6 +99,7 @@ extension ISMMessageView{
         return false
     }
     
+    // Function to display the accept/reject view for message requests
     func acceptRejectView() -> some View{
         VStack{
             Divider()
@@ -106,7 +111,7 @@ extension ISMMessageView{
                 .padding(.bottom,10)
                 .multilineTextAlignment(.leading)
                 
-            Text("If you accept, you both can see information such as when you’ve read messages.")
+            Text("If you accept, you both can see information such as when you've read messages.")
                 .font(appearance.fonts.messageListMessageText)
                 .foregroundColor(appearance.colorPalette.chatListUserMessage)
                 .padding(.horizontal,15)
@@ -116,6 +121,7 @@ extension ISMMessageView{
             HStack(spacing: 14){
                 Button {
                     presentationMode.wrappedValue.dismiss()
+                    // Dismiss the view without taking action
 //                    self.messageVCDelegate?.navigateBack(isFromProfile: self.fromProfile ?? false, isfromBroadcast: self.fromBroadCastFlow ?? false)
                 } label: {
                     Text("Reject")
@@ -129,7 +135,7 @@ extension ISMMessageView{
                 }
                 
                 Button {
-                    //call api
+                    // Call API to accept the message request
                     chatViewModel.acceptRequestToAllowMessage(conversationId: self.conversationID ?? "", completion: { _ in
                         NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
                         getConversationDetail()

@@ -15,7 +15,7 @@ extension ISMMessageView{
     
     //MARK: - AUDIO MESSAGE BUTTON
     
-    
+    /// Displays an alert when microphone permission is denied.
     func showPermissionDeniedAlert() {
         let alertController = UIAlertController(
             title: "Audio Permission Required",
@@ -23,6 +23,7 @@ extension ISMMessageView{
             preferredStyle: .alert
         )
         
+        // Action to open app settings
         let settingsAction = UIAlertAction(title: "Open Settings", style: .default) { _ in
             if let appSettings = URL(string: UIApplication.openSettingsURLString) {
                 if UIApplication.shared.canOpenURL(appSettings) {
@@ -31,18 +32,21 @@ extension ISMMessageView{
             }
         }
         
+        // Action to cancel the alert
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
         alertController.addAction(settingsAction)
         alertController.addAction(cancelAction)
         
-        // Assuming this is within a UIViewController context:
+        // Presenting the alert on the main thread
         DispatchQueue.main.async {
             UIApplication.shared.windows.first?.rootViewController?.present(alertController, animated: true, completion: nil)
         }
     }
     
     //MARK: - MULTIPLE FORWARD MESSAGE BUTTON VIEW
+    
+    /// Returns a view for the forward message button based on selection state.
     func multipleForwardMessageButtonView(message : MessagesDB) -> some View{
         if forwardMessageSelected.contains(where: { msg in
             msg.messageId == message.messageId
@@ -58,6 +62,8 @@ extension ISMMessageView{
     }
     
     //MARK: - MULTIPLE DELETE MESSAGE BUTTON VIEW
+    
+    /// Returns a view for the delete message button based on selection state.
     func multipleDeleteMessageButtonView(message: MessagesDB) -> some View {
         if deleteMessage.contains(where: { msg in
             msg.messageId == message.messageId
@@ -73,6 +79,8 @@ extension ISMMessageView{
     }
     
     //MARK: - SCROLL TO BOTTOM MESSAGE
+    
+    /// Returns a button that scrolls to the bottom of the message list.
     func scrollToBottomButton() -> some View {
         return Button(action: {
             parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
@@ -89,6 +97,8 @@ extension ISMMessageView{
     }
     
     //MARK: - NAVIGATION LEADING BUTTON
+    
+    /// Returns a view containing navigation buttons on the leading side of the navigation bar.
     func navigationBarLeadingButtons() -> some View {
         HStack {
             backButtonView()
@@ -103,10 +113,12 @@ extension ISMMessageView{
         }
     }
     
+    /// Saves the last input text if it has not been sent.
     func saveMyLastInputTextIfNotSent(){
         self.realmManager.saveLastInputTextInConversation(text: textFieldtxt, conversationId: self.conversationID ?? "")
     }
     
+    /// Returns a view for the back button with appropriate actions based on the state.
     func backButtonView() -> some View {
         HStack{
             if stateViewModel.showforwardMultipleMessage || (stateViewModel.showDeleteMultipleMessage && chatProperties.customMenu == false) {
@@ -132,6 +144,7 @@ extension ISMMessageView{
         }
     }
     
+    /// Handles the action when the back button is pressed.
     func backButtonAction(){
         //just resetting unread count for this conversation while going back to conversation list
         //            realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
@@ -145,6 +158,7 @@ extension ISMMessageView{
         presentationMode.wrappedValue.dismiss()
     }
     
+    /// Detects the swipe direction based on the drag gesture value.
     func detectDirection(value: DragGesture.Value) -> SwipeHVDirection {
         if value.translation.width < -60 {
             return .left
@@ -155,6 +169,7 @@ extension ISMMessageView{
         }
     }
     
+    /// Returns a view for the broadcast button with appropriate actions.
     func broadcastButtonView() -> some View {
         Button {
             if ISMChatSdk.getInstance().getFramework() == .UIKit {
@@ -186,6 +201,7 @@ extension ISMMessageView{
         }
     }
     
+    /// Returns the title for the broadcast based on available data.
     func getBroadcastTitle() -> String {
         if let groupConversationTitle = groupConversationTitle, !groupConversationTitle.isEmpty, groupConversationTitle != "Default" {
             return groupConversationTitle
@@ -194,6 +210,7 @@ extension ISMMessageView{
         }
     }
     
+    /// Returns a view for the profile button with appropriate actions based on conditions.
     func profileButtonView() -> some View {
         HStack {
             if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup != true {
@@ -222,6 +239,7 @@ extension ISMMessageView{
         }
     }
     
+    /// Returns a custom view for displaying user information.
     func customView() -> some View{
         HStack{
             if opponenDetail?.metaData?.userType == 9 && appearance.images.defaultImagePlaceholderForBussinessUser != nil, let avatar =  opponenDetail?.userProfileImageUrl, ISMChatHelper.shouldShowPlaceholder(avatar: avatar) {
@@ -261,6 +279,7 @@ extension ISMMessageView{
         }
     }
     
+    /// Returns the avatar URL based on the chat properties.
     func getAvatarUrl() -> String {
         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
             return ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userProfileImageUrl ?? ""
@@ -269,6 +288,7 @@ extension ISMMessageView{
         }
     }
     
+    /// Returns the profile name based on the chat properties.
     func getProfileName() -> String {
         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
             return ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userName ?? ""
@@ -277,6 +297,7 @@ extension ISMMessageView{
         }
     }
     
+    /// Returns the profile title based on the chat properties.
     func getProfileTitle() -> String {
         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
             return ISMChatHelper.getOpponentForOneToOneGroup(myUserId: myUserId ?? "", members: self.conversationDetail?.conversationDetails?.members ?? [])?.userName ?? ""
@@ -285,6 +306,7 @@ extension ISMMessageView{
         }
     }
     
+    /// Returns the profile subtitle based on the chat properties and user status.
     func getProfileSubtitle() -> String {
         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup {
             let title = self.conversationDetail?.conversationDetails?.conversationTitle ?? ""
@@ -320,6 +342,7 @@ extension ISMMessageView{
     //MARK: - NAVIGATION TRAILING BUTTONS
     
     
+    /// Returns a view containing navigation buttons on the trailing side of the navigation bar.
     func navigationBarTrailingButtons() -> some View {
         HStack {
             if stateViewModel.showforwardMultipleMessage || (stateViewModel.showDeleteMultipleMessage && chatProperties.customMenu == false){
@@ -390,6 +413,7 @@ extension ISMMessageView{
         }
     }
     
+    /// Initiates a call based on the specified type (audio or video).
     func calling(type : ISMLiveCallType){
         self.endEditing(true)
         if self.isGroup == true{
@@ -414,6 +438,7 @@ extension ISMMessageView{
         }
     }
     
+    /// Returns a button to clear the chat.
     func clearChatButton() -> some View{
         Button {
             if self.conversationDetail != nil{
@@ -431,6 +456,7 @@ extension ISMMessageView{
         }
     }
     
+    /// Returns a button to block or unblock a user.
     func blockUserButton() -> some View{
         Button {
             if self.conversationDetail != nil{

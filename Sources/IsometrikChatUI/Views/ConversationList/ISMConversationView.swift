@@ -20,41 +20,29 @@ public protocol ISMConversationViewDelegate{
 
 public struct ISMConversationView : View {
     
-    //MARK:  - PROPERTIES
-    @State public var navigateToMessages : Bool = false
-    //search
-    @State public var query = ""
-    
-    //alert
-    @State public var showingNoInternetAlert = false
-    
-    @State private var hasAppeared = false
-    
-    //sheet
-    @State public var showProfile : Bool = false
-    @State public var createChat : Bool = false
-  
-    @State public var navigateToBlockUsers = false
-    @State public var navigateToBroadcastList = false
-    
-    //action
-    @State public var showOptionView = false
-    @State public var showDeleteOptions : Bool = false
-    @State public var selectedForDelete : ConversationDB?
-    
-    //1 to 1 conversation
-    @State public var selectedUserToNavigate : UserDB = UserDB()
-    @State public var selectedUserConversationId : String = ""
-    @State public var navigatetoSelectedUser : Bool = false
-    
-    @ObservedObject public var viewModel = ConversationViewModel()
-    @StateObject public var realmManager = RealmManager.shared
-    @StateObject public var networkMonitor = NetworkMonitor()
-    @ObservedObject public var chatViewModel = ChatsViewModel()
-    @State public var showBroadCastOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.BroadCastConversation)
-    
-    public let NC = NotificationCenter.default
-    @State public var onConversationList = false
+    // MARK: - PROPERTIES
+    // State variables to manage navigation and UI states
+    @State public var navigateToMessages : Bool = false // Flag to navigate to messages
+    @State public var query = "" // Search query for conversations
+    @State public var showingNoInternetAlert = false // Alert for no internet connection
+    @State private var hasAppeared = false // Track if the view has appeared
+    @State public var showProfile : Bool = false // Flag to show user profile
+    @State public var createChat : Bool = false // Flag to initiate chat creation
+    @State public var navigateToBlockUsers = false // Flag for blocking users
+    @State public var navigateToBroadcastList = false // Flag for navigating to broadcast list
+    @State public var showOptionView = false // Flag to show options view
+    @State public var showDeleteOptions : Bool = false // Flag to show delete options
+    @State public var selectedForDelete : ConversationDB? // Selected conversation for deletion
+    @State public var selectedUserToNavigate : UserDB = UserDB() // User selected for navigation
+    @State public var selectedUserConversationId : String = "" // ID of the selected user's conversation
+    @State public var navigatetoSelectedUser : Bool = false // Flag to navigate to selected user
+    @ObservedObject public var viewModel = ConversationViewModel() // ViewModel for conversation data
+    @StateObject public var realmManager = RealmManager.shared // Realm manager for data persistence
+    @StateObject public var networkMonitor = NetworkMonitor() // Monitor for network status
+    @ObservedObject public var chatViewModel = ChatsViewModel() // ViewModel for chat data
+    @State public var showBroadCastOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.BroadCastConversation) // Flag for showing broadcast options
+    public let NC = NotificationCenter.default // Notification center for handling notifications
+    @State public var onConversationList = false // Flag to track if on conversation list
     
     //local notification
     @State public var navigateToMessageViewFromLocalNotification : Bool = false
@@ -84,31 +72,36 @@ public struct ISMConversationView : View {
     
     
     
-    //MARK:  - BODY
+    // MARK: - BODY
     public var body: some View {
         NavigationStack(path: $path) {
-            ZStack{
-                appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
+            ZStack {
+                appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all) // Background color
                 VStack {
+                    // Show placeholder if no conversations are available
                     if shouldShowPlaceholder {
                         Spacer()
                         showPlaceholderView
                         Spacer()
                     } else {
-                        if ISMChatSdk.getInstance().getFramework() == .UIKit{
-                            CustomSearchBar(searchText:  $query, isDisabled: ISMChatSdkUI.getInstance().getChatProperties().onTapOfSearchBarOpenNewScreen == true).padding(.horizontal,15)
+                        // Search bar for filtering conversations
+                        if ISMChatSdk.getInstance().getFramework() == .UIKit {
+                            CustomSearchBar(searchText:  $query, isDisabled: ISMChatSdkUI.getInstance().getChatProperties().onTapOfSearchBarOpenNewScreen == true)
+                                .padding(.horizontal, 15)
                                 .onTapGesture {
-                                    if ISMChatSdkUI.getInstance().getChatProperties().onTapOfSearchBarOpenNewScreen == true{
+                                    // Navigate to custom search on tap
+                                    if ISMChatSdkUI.getInstance().getChatProperties().onTapOfSearchBarOpenNewScreen == true {
                                         self.delegate?.navigateToCustomSearchOnTapOfSearchBar()
                                     }
                                 }
                         }
-                        if conversationData.count == 0{
+                        // Show placeholder if no conversation data is available
+                        if conversationData.count == 0 {
                             Spacer()
                             showPlaceholderView
                             Spacer()
-                        }else{
-                            conversationListView
+                        } else {
+                            conversationListView // Display the list of conversations
                         }
                     }
                 }
@@ -402,65 +395,6 @@ public struct ISMConversationView : View {
     
     // MARK: - Helper Computed Properties
     
-//    private mutating func handleNewMessage(_ messageInfo: ISMChatMessageDelivered) {
-//            let now = Date()
-//            guard now.timeIntervalSince(lastProcessingTime) >= processingInterval else { return }
-//            lastProcessingTime = now
-//            
-//            autoreleasepool {
-//                // Handle realm updates
-//                self.realmManager.newMessageReceived(myuserId: self.myUserData.userId, messageInfo: messageInfo) {
-//                    
-//                    self.getConversationList()
-//                    
-//                }
-//                
-//                // Update conversation list
-////                self.updateConversationObj(
-////                    conversations: self.getSortedFilteredChats(
-////                        conversation: self.conversations,
-////                        query: self.query
-////                    )
-////                )
-//                
-//                self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: viewModel.conversations, query: query))
-//                
-//                // Handle message delivery status
-//                if let converId = messageInfo.conversationId,
-//                   let messId = messageInfo.messageId {
-//                    DispatchQueue.global(qos: .utility).async {
-//                        self.chatViewModel.deliveredMessageIndicator(
-//                            conversationId: converId,
-//                            messageId: messId
-//                        ) { _ in }
-//                    }
-//                }
-//                
-//                // Handle notifications
-//                if onScreen && myUserData.allowNotification {
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                        ISMChatLocalNotificationManager.setNotification(
-//                            1,
-//                            of: .seconds,
-//                            repeats: false,
-//                            title: messageInfo.senderName ?? "",
-//                            body: messageInfo.notificationBody ?? (messageInfo.body ?? ""),
-//                            userInfo: [
-//                                "senderId": messageInfo.senderId ?? "",
-//                                "senderName": messageInfo.senderName ?? "",
-//                                "conversationId": messageInfo.conversationId ?? "",
-//                                "body": messageInfo.notificationBody ?? "",
-//                                "userIdentifier": messageInfo.senderIdentifier ?? "",
-//                                "messageId": messageInfo.messageId ?? ""
-//                            ]
-//                        )
-//                    }
-//                }
-//                
-//                self.localNotificationForActions(messageInfo: messageInfo)
-//            }
-//        }
-    
     func detectDirection(value: DragGesture.Value) -> SwipeHVDirection {
         if value.translation.width < -30 {
             return .left
@@ -470,6 +404,7 @@ public struct ISMConversationView : View {
             return .none
         }
     }
+    
     func onload(){
         self.viewModel.resetdata()
         self.viewModel.clearMessages()
@@ -488,17 +423,20 @@ public struct ISMConversationView : View {
     }
 
     private var shouldShowPlaceholder: Bool {
+        // Determine if the placeholder should be shown based on conversation count and search query
         let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
         let conversationCount = isOtherConversationList ? realmManager.getPrimaryConversationCount() : realmManager.getConversationCount()
         return conversationCount == 0 && query.isEmpty
     }
 
     private var showPlaceholderView: some View {
+        // View to display when there are no conversations
         Group {
             if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder {
                 appearance.placeholders.chatListPlaceholder
             } else {
                 Button {
+                    // Action to create a new chat
                     if ISMChatSdk.getInstance().getFramework() == .SwiftUI {
                         createChat = true
                     }
@@ -513,20 +451,23 @@ public struct ISMConversationView : View {
     }
 
     private var conversationListView: some View {
+        // View to display the list of conversations
         List {
             ForEach(conversationData) { data in
                 VStack(spacing: 0) {
+                    // Button to navigate to the selected conversation
                     if ISMChatSdk.getInstance().getFramework() == .UIKit {
                         Button {
                             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                            navigateToMessageList(for: data)
+                            navigateToMessageList(for: data) // Navigate to message list for selected conversation
                         } label: {
-                            conversationSubView(for: data)
+                            conversationSubView(for: data) // Display conversation subview
                                 .onAppear {
-                                    handlePagination(for: data)
+                                    handlePagination(for: data) // Handle pagination for loading more data
                                 }
                         }
                     } else {
+                        // SwiftUI navigation link for conversation
                         ZStack {
                             conversationSubView(for: data)
                                 .onAppear {
@@ -555,14 +496,15 @@ public struct ISMConversationView : View {
             .listRowBackground(Color.clear)
         }
         .gesture(DragGesture().onChanged { value in
+            // Handle drag gesture for navigation
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             offset = value.translation
         }.onEnded { value in
             offset = .zero
             ISMChatHelper.print("value ",value.translation.width)
-            let direction = self.detectDirection(value: value)
+            let direction = self.detectDirection(value: value) // Detect swipe direction
             if direction == .right {
-                self.delegate?.navigateToPreviousScreen()
+                self.delegate?.navigateToPreviousScreen() // Navigate back on right swipe
             }
         })
         .listStyle(.plain)
@@ -570,8 +512,8 @@ public struct ISMConversationView : View {
         .textContentType(.oneTimeCode)
         .autocorrectionDisabled(true)
         .refreshable {
-            viewModel.resetdata()
-            getConversationList()
+            viewModel.resetdata() // Reset view model data on refresh
+            getConversationList() // Fetch updated conversation list
         }
     }
 
@@ -583,6 +525,7 @@ public struct ISMConversationView : View {
     }
 
     private func navigateToMessageList(for data: ConversationDB) {
+        // Navigate to the message list for the selected conversation
         delegate?.navigateToMessageList(
             selectedUserToNavigate: data.opponentDetails,
             conversationId: data.lastMessageDetails?.conversationId,
@@ -593,6 +536,7 @@ public struct ISMConversationView : View {
     }
 
     private func conversationSubView(for data: ConversationDB) -> some View {
+        // Subview for displaying individual conversation details
         HStack{
             if ISMChatSdkUI.getInstance().getChatProperties().useCustomViewRegistered == true{
                 CustomConversationListCellViewRegistry.shared.view(for: data)
