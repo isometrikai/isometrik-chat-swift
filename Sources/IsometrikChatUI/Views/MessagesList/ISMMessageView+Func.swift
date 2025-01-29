@@ -1117,11 +1117,11 @@ extension ISMMessageView{
     }
     
     //MARK: - BLOCK USER
-    func blockChatFromUser(){
-        conversationViewModel.blockUnBlockUser(opponentId: self.conversationDetail?.conversationDetails?.opponentDetails?.id ?? "", needToBlock: true) { obj in
+    func blockChatFromUser(block : Bool){
+        conversationViewModel.blockUnBlockUser(opponentId: self.conversationDetail?.conversationDetails?.opponentDetails?.id ?? "", needToBlock: block) { obj in
             print("Success")
-            self.conversationDetail?.conversationDetails?.messagingDisabled = true
-            self.delegate?.externalBlockMechanism(appUserId: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? "",block: true)
+            self.conversationDetail?.conversationDetails?.messagingDisabled = block
+            self.delegate?.externalBlockMechanism(appUserId: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? "",block: block)
         }
     }
 }

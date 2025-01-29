@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import IsometrikChat
 
 /// A custom menu view that provides options for chat management
 /// This view contains buttons for clearing chat history and blocking users
@@ -21,6 +22,10 @@ struct ISMCustomMenu: View {
     
     /// UI appearance configuration from the SDK
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
+    
+    var initiatorId : String?
+    var messagingDisabled : Bool?
     
     // MARK: - Body
     var body: some View {
@@ -43,9 +48,15 @@ struct ISMCustomMenu: View {
                     appearance.images.contextBlockUser
                         .resizable()
                         .frame(width: 48, height: 48, alignment: .center)
-                    Text("Block user")
-                        .foregroundColor(appearance.colorPalette.messageListMessageTextReceived)
-                        .font(appearance.fonts.messageListMessageText)
+                    if messagingDisabled == true && initiatorId == userData?.userId{
+                        Text("UnBlock user")
+                            .foregroundColor(appearance.colorPalette.messageListMessageTextReceived)
+                            .font(appearance.fonts.messageListMessageText)
+                    }else{
+                        Text("Block user")
+                            .foregroundColor(appearance.colorPalette.messageListMessageTextReceived)
+                            .font(appearance.fonts.messageListMessageText)
+                    }
                     Spacer()
                 }
                 .padding()

@@ -366,61 +366,10 @@ public struct ISMMessageView: View {
         }
         .confirmationDialog("", isPresented: $stateViewModel.blockThisChat) {
             Button("Block", role: .destructive) {
-                blockChatFromUser()
+                blockChatFromUser(block: true)
             }
         } message: {
             Text("Block \(conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")? \n Blocked user will be no longer be able to send you messages.")
-        }
-        .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMessageNewReceived.name)){ notification in
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
-                return
-            }
-            ISMChatHelper.print("MESSAGE RECEIVED----------------->\(messageInfo)")
-                messageReceived(messageInfo: messageInfo)
-                actionOnMessageDelivered(messageInfo: messageInfo)
-        }
-        .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttTypingEvent.name)){ notification in
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatTypingEvent else {
-                return
-            }
-            ISMChatHelper.print("TYPING EVENT----------------->\(messageInfo)")
-            if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId != messageInfo.userId && OnMessageList == true{
-                userTyping(messageInfo: messageInfo)
-            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: ISMChatMQTTNotificationType.mqttMeetingEnded.name)){ notification in
-            guard let messageInfo = notification.userInfo?["data"] as? ISMMeeting else {
-                return
-            }
-            ISMChatHelper.print("Meeting ended----------------->\(messageInfo)")
-            if messageInfo.conversationId == self.conversationID{
-                if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
-                    addMeeting(messageInfo: messageInfo)
-                }
-            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: NSNotification.refrestMessagesListLocally)) { _ in
-            getMessages()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: NSNotification.updateGroupInfo)) { _ in
-            self.getConversationDetail()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: NSNotification.groupActions)) { notification in
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
-                return
-            }
-            ISMChatHelper.print("Group Actions----------------->\(messageInfo)")
-            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
-                groupAction(messageInfo: messageInfo)
-                //local notification
-                sendLocalNotification(messageInfo: messageInfo)
-                //action if required
-                actionOnMessageDelivered(messageInfo: messageInfo)
-            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: NSNotification.memberAddAndRemove)) { _ in
-            self.getConversationDetail()
-            self.reload()
         }
         .onChange(of: chatViewModel.documentSelectedFromPicker, { _, _ in
             sendMessageIfDocumentSelected()
@@ -652,8 +601,9 @@ public struct ISMMessageView: View {
                 blockUserAction: {
                     stateViewModel.showCustomMenu = false
                     stateViewModel.showBlockUserPopup = true
-                }
-            )
+                },
+                initiatorId: realmManager.messages.last?.last?.initiatorId,
+                messagingDisabled: self.conversationDetail?.conversationDetails?.messagingDisabled)
             .presentationDetents([.fraction(0.25)])
             .presentationDragIndicator(.visible)
         })
@@ -733,11 +683,21 @@ public struct ISMMessageView: View {
         })
         
         .sheet(isPresented: $stateViewModel.showBlockUserPopup, content: {
+            var unBlock = self.conversationDetail?.conversationDetails?.messagingDisabled == true && realmManager.messages.last?.last?.initiatorId == userData?.userId
             var attributedText: AttributedString {
-                var attributedString = AttributedString("Are you sure you want to Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?")
+                var string = ""
+                var range = ""
+                if unBlock{
+                    string = "Are you sure you want to UnBlock \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?"
+                    range = "UnBlock \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")"
+                }else{
+                    string = "Are you sure you want to Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?"
+                    range = "Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")"
+                }
+                var attributedString = AttributedString(string)
                 
                 // Style "clear chat"
-                if let range = attributedString.range(of: "Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")") {
+                if let range = attributedString.range(of: range) {
                     attributedString[range].foregroundColor = Color(hex: "#454745")
                     attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
                 }
@@ -745,12 +705,12 @@ public struct ISMMessageView: View {
                 return attributedString
             }
             ConfirmationPopup(
-                title: "Block User?",
+                title: unBlock ?  "UnBlock User?" : "Block User?",
                 message: attributedText,
-                confirmButtonTitle: "Block",
+                confirmButtonTitle: unBlock ? "UnBlock" : "Block",
                 cancelButtonTitle: "Cancel",
                 confirmAction: {
-                    blockChatFromUser()
+                    blockChatFromUser(block: !unBlock)
                     stateViewModel.showBlockUserPopup = false
                 },
                 cancelAction: {
@@ -940,12 +900,12 @@ public struct ISMMessageView: View {
     
     func OndisappearOnBack(){
         removeObservers()
-        NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil)
-        NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttTypingEvent.name, object: nil)
-        NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMeetingEnded.name, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.refrestMessagesListLocally, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.updateGroupInfo, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.memberAddAndRemove, object: nil)
+//        NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil)
+//        NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttTypingEvent.name, object: nil)
+//        NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMeetingEnded.name, object: nil)
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.refrestMessagesListLocally, object: nil)
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.updateGroupInfo, object: nil)
+//        NotificationCenter.default.removeObserver(self, name: NSNotification.memberAddAndRemove, object: nil)
         NotificationCenter.default.removeObserver(self)
         self.conversationID = nil
         nilData()
@@ -1148,48 +1108,96 @@ public struct ISMMessageView: View {
 
 extension ISMMessageView{
     private func addNotificationObservers() {
-            // List of notification types you want to observe
-            let notificationTypes: [Notification.Name] = [
-                ISMChatMQTTNotificationType.mqttUserBlockConversation.name,
-                ISMChatMQTTNotificationType.mqttUserUnblockConversation.name,
-            ]
+        // List of notification types you want to observe
+        let notificationTypes: [Notification.Name] = [
+            ISMChatMQTTNotificationType.mqttUserBlockConversation.name,
+            ISMChatMQTTNotificationType.mqttUserUnblockConversation.name,
+            ISMChatMQTTNotificationType.mqttMessageNewReceived.name,
+            ISMChatMQTTNotificationType.mqttTypingEvent.name,
+            ISMChatMQTTNotificationType.mqttMeetingEnded.name,
+            NSNotification.refrestMessagesListLocally,
+            NSNotification.updateGroupInfo,
+            NSNotification.groupActions,
+            NSNotification.memberAddAndRemove
+        ]
+        
+        // Iterate over each notification type and add a subscriber
+        for notificationType in notificationTypes {
+            NotificationCenter.default.publisher(for: notificationType)
+                .sink { notification in
+                    handleNotification(notification, type: notificationType)
+                }
+                .store(in: &cancellables)
+        }
+    }
 
-            // Iterate over each notification type and add a subscriber
-            for notificationType in notificationTypes {
-                NotificationCenter.default.publisher(for: notificationType)
-                    .sink { notification in
-                        handleNotification(notification, type: notificationType)
+    private func handleNotification(_ notification: Notification, type: Notification.Name) {
+        // Handle the notification based on its type
+        switch type {
+        case ISMChatMQTTNotificationType.mqttUserBlockConversation.name:
+            if let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered {
+                ISMChatHelper.print("USER BLOCKED ----------------->\(messageInfo)")
+                messageReceived(messageInfo: messageInfo)
+                getConversationDetail()
+            }
+            
+        case ISMChatMQTTNotificationType.mqttUserUnblockConversation.name:
+            if let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered {
+                ISMChatHelper.print("USER UNBLOCKED ----------------->\(messageInfo)")
+                messageReceived(messageInfo: messageInfo)
+                getConversationDetail()
+            }
+        case ISMChatMQTTNotificationType.mqttMessageNewReceived.name:
+            if let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered{
+                ISMChatHelper.print("MESSAGE RECEIVED----------------->\(messageInfo)")
+                messageReceived(messageInfo: messageInfo)
+                actionOnMessageDelivered(messageInfo: messageInfo)
+            }
+        case ISMChatMQTTNotificationType.mqttTypingEvent.name:
+            if let messageInfo = notification.userInfo?["data"] as? ISMChatTypingEvent {
+                ISMChatHelper.print("TYPING EVENT----------------->\(messageInfo)")
+                if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId != messageInfo.userId && OnMessageList == true{
+                    userTyping(messageInfo: messageInfo)
+                }
+            }
+        case ISMChatMQTTNotificationType.mqttMeetingEnded.name:
+            if let messageInfo = notification.userInfo?["data"] as? ISMMeeting {
+                ISMChatHelper.print("Meeting ended----------------->\(messageInfo)")
+                if messageInfo.conversationId == self.conversationID{
+                    if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                        addMeeting(messageInfo: messageInfo)
                     }
-                    .store(in: &cancellables)
-            }
-        }
-
-        private func handleNotification(_ notification: Notification, type: Notification.Name) {
-            // Handle the notification based on its type
-            switch type {
-            case ISMChatMQTTNotificationType.mqttUserBlockConversation.name:
-                if let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered {
-                    ISMChatHelper.print("USER BLOCKED ----------------->\(messageInfo)")
-                    messageReceived(messageInfo: messageInfo)
-                    getConversationDetail()
                 }
-                
-            case ISMChatMQTTNotificationType.mqttUserUnblockConversation.name:
-                if let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered {
-                    ISMChatHelper.print("USER UNBLOCKED ----------------->\(messageInfo)")
-                    messageReceived(messageInfo: messageInfo)
-                    getConversationDetail()
-                }
-            default:
-                break
             }
+        case NSNotification.refrestMessagesListLocally:
+            getMessages()
+        case  NSNotification.updateGroupInfo:
+            self.getConversationDetail()
+        case NSNotification.groupActions:
+            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
+                return
+            }
+            ISMChatHelper.print("Group Actions----------------->\(messageInfo)")
+            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                groupAction(messageInfo: messageInfo)
+                //local notification
+                sendLocalNotification(messageInfo: messageInfo)
+                //action if required
+                actionOnMessageDelivered(messageInfo: messageInfo)
+            }
+        case NSNotification.memberAddAndRemove:
+            self.getConversationDetail()
+            self.reload()
+        default:
+            break
         }
+    }
 
-        private func removeObservers() {
-            // Cancel all observers
-            cancellables.forEach { $0.cancel() }
-            cancellables.removeAll()
-        }
+    private func removeObservers() {
+        // Cancel all observers
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+    }
 }
 
 
