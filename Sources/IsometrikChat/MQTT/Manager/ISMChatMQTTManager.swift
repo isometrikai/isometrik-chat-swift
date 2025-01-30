@@ -866,7 +866,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                         DispatchQueue.main.async {
                             self.realmManager.saveMessage(obj: [message])
                         }
-                    }else{
+                    }else if messageInfo.metaData?.isSharedFromApp == true{
                         // there are lots of messages send by logged in user from backend we need to save those too in realm
                         var contact : [ISMChatContactMetaData] = []
                         if let contacts = messageInfo.metaData?.contacts, contacts.count > 0{
