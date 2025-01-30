@@ -75,7 +75,7 @@ extension NSDate{
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "h:mm a"
             if isSectionHeader == false{
-                return "yesterday at\(timeFormatter.string(from: exactDate as Date))"
+                return "yesterday at \(timeFormatter.string(from: exactDate as Date))"
             }else{
                 return "Yesterday"
             }
