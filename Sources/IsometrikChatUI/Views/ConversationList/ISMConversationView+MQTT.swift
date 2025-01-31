@@ -125,41 +125,11 @@ extension ISMConversationView{
         }
     }
     
-    /// Adds a reaction to a message in the conversation.
-    /// - Parameter messageInfo: Information about the reaction event.
-    func addReaction(messageInfo: ISMChatReactions){
-        // Update last message in conversationList
-        if myUserData?.userId != messageInfo.userId{
-            let msg = ISMChatLastMessage(sentAt: messageInfo.sentAt,conversationId: messageInfo.conversationId, body: nil, messageId: messageInfo.messageId, timeStamp: messageInfo.sentAt, action: messageInfo.action,userName: messageInfo.userName ?? "", reactionType: messageInfo.reactionType)
-            
-            self.realmManager.updateLastmsg(conId: messageInfo.conversationId ?? "", msg: msg)
-            // increase unread count
-            //        self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 1)
-            
-            self.realmManager.getAllConversations()
-            
+    /// All things are happening in mqtt Manager, we are just refreshing list, to come that chat on top
+    func reactionUpdate(messageInfo: ISMChatReactions){
+        if conversationData.first?.conversationId != messageInfo.conversationId{
+            //added code to take user at top
             self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: viewModel.conversations, query: query))
-            
-            realmManager.addReactionToMessage(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", reaction: messageInfo.reactionType ?? "", userId: messageInfo.userId ?? "")
-        }
-    }
-    
-    /// Removes a reaction from a message in the conversation.
-    /// - Parameter messageInfo: Information about the reaction event.
-    func removeReaction(messageInfo: ISMChatReactions){
-        // Update last message in conversationList
-        if myUserData?.userId != messageInfo.userId{
-            let msg = ISMChatLastMessage(sentAt: messageInfo.sentAt,conversationId: messageInfo.conversationId, body: nil, messageId: messageInfo.messageId, timeStamp: messageInfo.sentAt, action: messageInfo.action,userName: messageInfo.userName ?? "", reactionType: messageInfo.reactionType)
-            
-            self.realmManager.updateLastmsg(conId: messageInfo.conversationId ?? "", msg: msg)
-            
-            //        self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 1)
-            
-            self.realmManager.getAllConversations()
-            
-            self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: viewModel.conversations, query: query))
-            
-            realmManager.removeReactionFromMessage(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", reaction: messageInfo.reactionType ?? "", userId: messageInfo.userId ?? "")
         }
     }
     

@@ -1494,7 +1494,7 @@ struct ISMMessageSubView: View {
                                 if message.reactions.count > 0{
                                     reactionsView()
                                 }
-                            }.padding(.vertical,2)
+                            }.padding(.vertical,5)
                         }
                     case .dineInInviteStatus:
                         if isReceived == true{
@@ -2396,6 +2396,9 @@ struct DineInRequestUI: View {
     var declineRequest : () -> ()
     var showInvitee : () -> ()
     var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
+    @State private var isDeclineDisabled = false
+    @State private var isAcceptDisabled = false
+    
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
             // Header and Payment Status
@@ -2524,25 +2527,37 @@ struct DineInRequestUI: View {
             if status == .ActiveRequest {
                 HStack(spacing: 20) {
                     if isReceived == true{
+                        
                         Button(action: {
+                            guard !isDeclineDisabled else { return }
+                            isDeclineDisabled = true
                             declineRequest()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                isDeclineDisabled = false
+                            }
                         }) {
                             Text("Can’t attend")
                                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
                                 .foregroundStyle(Color(hex: "#163300"))
                                 .frame(width: 121, height: 32, alignment: .center)
                                 .background(RoundedRectangle(cornerRadius: 16).stroke(Color(hex: "#163300"), lineWidth: 1))
-                        }
+                        }.disabled(isDeclineDisabled)
                         
                         Button(action: {
+                            guard !isAcceptDisabled else { return }
+                            isAcceptDisabled = true
                             viewDetails()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                isAcceptDisabled = false
+                            }
                         }) {
                             Text("Accept")
                                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
                                 .foregroundStyle(Color(hex: "#163300"))
                                 .frame(width: 121, height: 32, alignment: .center)
                                 .background(RoundedRectangle(cornerRadius: 16).stroke(Color(hex: "#163300"), lineWidth: 1))
-                        }
+                        }.disabled(isAcceptDisabled)
+                        
                     }
                 }.padding(.horizontal, 16)
             }else if status == .Rejected{
