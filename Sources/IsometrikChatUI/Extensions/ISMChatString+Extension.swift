@@ -4,6 +4,8 @@
 //
 //  Created by My Book on 31/01/25.
 //
+import Foundation
+import UIKit
 import SwiftUI
 extension String {
     
