@@ -169,16 +169,16 @@ extension ISMMessageView{
         ZStack {
             let userId = userData?.userId
             if action == .userBlock{
-                let text = senderId == userId ? "You blocked this user" : "You are blocked"
+                let text = senderId == userId ? "You blocked this user" : "youAreBlocked".localized()
                 customText(text: text)
             }else if action == .userUnblock{
-                let text = senderId == userId ? "You unblocked this user" : "You are unblocked"
+                let text = senderId == userId ? "You unblocked this user".localized() : "youAreUnblocked".localized()
                 customText(text: text)
             }else if action == .conversationTitleUpdated{
-                let text = senderId == userId ? "You changed this group title" : "\(userName) changed this group title"
+                let text = senderId == userId ? "You changed this group title".localized() : "\(userName) changed this group title".localized()
                 customText(text: text)
             }else if action == .conversationImageUpdated{
-                let text = senderId == userId ? "You changed this group image" : "\(userName) changed this group image"
+                let text = senderId == userId ? "You changed this group image".localized() : "\(userName) changed this group image".localized()
                 customText(text: text)
             }else if action == .conversationCreated{
                 if let isGroup = isGroup{
@@ -186,7 +186,7 @@ extension ISMMessageView{
                         let text = appearance.constantStrings.endToEndEncrypted
                         customTextWithImage(text: text, image: appearance.images.messageLock)
                     }else{
-                        let text = senderId == userId ? "You created group" : "\(userName) created group"
+                        let text = senderId == userId ? "You created group".localized() : "\(userName) created group"
                         customText(text: text)
                     }
                 }else{
@@ -198,7 +198,7 @@ extension ISMMessageView{
                 let text = senderId == userId ? "You added \(member ?? "")" : "\(userName) added \(memberName)"
                 customText(text: text)
             }else if action == .memberLeave{
-                let text = senderId == userId ? "You has left" : "\(userName) has left"
+                let text = senderId == userId ? "You has left".localized() : "\(userName) has left"
                 customText(text: text)
             }else if action == .membersRemove{
                 let memberName = memberId == userId ? ConstantStrings.you.lowercased() : "\(member ?? "")"
@@ -211,7 +211,7 @@ extension ISMMessageView{
                 let text = "\(userName) removed \(member ?? "") as an Admin"
                 customText(text: text)
             }else if action == .conversationSettingsUpdated{
-                let text = senderId == userId ? "You updated notifications setting" : "\(userName) updated notifications setting"
+                let text = senderId == userId ? "You updated notifications setting".localized() : "\(userName) updated notifications setting"
                 customText(text: text)
             }
         }
