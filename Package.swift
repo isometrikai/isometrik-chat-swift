@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "IsometrikChat",
+    defaultLocalization: "en",
     platforms: [.iOS(.v17),],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -59,7 +60,9 @@ let package = Package(
                 .product(name: "ExyteMediaPicker", package: "MediaPicker"),
                 .product(name: "GiphyUISDK", package: "giphy-ios-sdk"),
             ],resources: [
-                .process("Resources/Assets.xcassets")
+                .process("Resources/Assets.xcassets"),
+                .process("Resources/en.lproj"),
+                .process("Resources/fr.lproj")
             ])
         
     ]

@@ -1,0 +1,164 @@
+//
+//  Localizable.strings
+//  IsometrikChat
+//
+//  Created by My Book on 24/12/24.
+
+// General Chat Strings
+"chats" = "Chats";
+"newChat" = "New Chat";
+"tapHereForMoreInfo" = "tap here for more info";
+"today" = "Today";
+"endToEndEncryptedMessage" = "Messages are end to end encrypted. No one 
+outside of this chat can read to them.";
+"typeAMessage" = "Type a message";
+"youDeletedThisMessage" = "You deleted this message.";
+"thisMessageWasDeleted" = "This message was deleted.";
+"sendTo" = "Send To";
+"maxShareLimit" = "You can only share with up to 5 chats.";
+"messageForwarded" = "Message Forwarded";
+"readBy" = "READ BY";
+"deliveredTo" = "DELIVERED TO";
+"read" = "Read";
+"delivered" = "Delivered";
+"messageInfo" = "Message Info";
+"messageCopied" = "Message copied";
+"unblockContact" = "Unblock contact to send a message";
+
+// General UI and Errors
+"ok" = "OK";
+"noInternetMessage" = "Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.";
+"call" = "Call";
+"cancel" = "Cancel";
+"voiceCall" = "Voice Call";
+"videoCall" = "Video Call";
+"andOthers" = ", and others";
+"actionNotAllowedBlocked" = "Action not allowed, the user has already blocked You";
+"clearAllMessages" = "Clear all messages from";
+"thisChat" = "this chat";
+"emptyChatWarning" = "This chat will be empty but will remain in your chat list.";
+
+// Decline/Confirmation Actions
+"blockedUserWarning" = "Blocked user will be no longer be able to send you messages.";
+"declineRequest" = "Decline Request?";
+"declinePaymentRequestWarning" = "Are you sure you want to decline payment request?";
+"declineRequestButton" = "Decline request";
+"deleteMessage" = "Delete Message";
+"deleteMessageWarning" = "Are you sure you want to permanently delete this message?";
+"deleteForEveryone" = "Delete for Everyone";
+"deleteForMe" = "Delete for Me";
+"unblock" = "Unblock";
+"blocked" = "Blocked";
+"unblocked" = "Unblocked";
+
+// Audio Permission
+"audioPermissionRequired" = "Audio Permission Required";
+"microphoneAccessMessage" = "We need access to your microphone for recording audio. Please enable it in Settings.";
+"openSettings" = "Open Settings";
+
+// Chat Group Strings
+"groupMemberRestriction" = "You can't send messages to this group because you're no longer a member.";
+"youBlockedUser" = "You blocked this user";
+"youAreBlocked" = "You are blocked";
+"youUnblockedUser" = "You unblocked this user";
+"youAreUnblocked" = "You are unblocked";
+"changedGroupTitle" = "changed this group title";
+"changedGroupImage" = "changed this group image";
+"createdGroup" = "created group";
+"userLeft" = "You has left";
+"updatedNotificationSetting" = "You updated notifications setting";
+
+// Message Requests
+"messageRequestInfo" = "If you accept, you both can see information such as when you’ve read messages.";
+"acceptMessageRequest" = "Accept message request from";
+"reject" = "Reject";
+"accept" = "Accept";
+"openChatMessage" = "Open a chat to get more info about who’s messaging you. They won’t know that you’ve seen it until you accept.";
+"noOtherChatsFound" = "No other chats found!";
+"newBroadcast" = "New Broadcast";
+"newGroup" = "New Group";
+"enterGroupName" = "Enter Group Name.";
+"conversationCreated" = "Conversation created"
+
+// Chat Location
+"shareLocation" = "Share Location";
+"useMyCurrentLocation" = "Use my current location";
+"useThisLocation" = "Use this location";
+"openInMaps" = "Open in Maps";
+"sendLocation" = "Send Location";
+"permissionDenied" = "Permission Denied";
+"enablePermissionMessage" = "Please Enable Permission in App Settings";
+"goToSettings" = "Go to Settings";
+"sendCurrentLocation" = "Send your current location";
+"accurateTo5Meters" = "Accurate to 5 meters";
+"nearbyPlaces" = "NEARBY PLACES";
+"openInGoogleMaps" = "Open in Google Map";
+
+// Chat Group View
+"writeGroupName" = "Write your group name";
+"editGroup" = "Edit Group";
+"remove" = "Remove";
+"groupNameEmptyWarning" = "Group name can't be empty";
+"makeGroupAdmin" = "Make Group Admin";
+"dismissAsAdmin" = "Dismiss as Admin";
+"searchMembers" = "Search members";
+"removeFromGroup" = "Remove from Group";
+
+// Chat Interface Actions
+"forward" = "Forward";
+"reply" = "Reply";
+"copy" = "Copy";
+"edit" = "Edit";
+"info" = "Info";
+"delete" = "Delete";
+"block" = "Block";
+
+// Chat Status
+"online" = "online";
+"offline" = "Offline";
+"typing" = "typing...";
+"isTyping" = "is typing...";
+"lastSeen" = "Last seen";
+
+// Error Messages
+"error" = "Error";
+"noInternetConnection" = "No internet connection";
+"failedToSendMessage" = "Failed to send message";
+"pleaseTryAgain" = "Please try again";
+
+// Chat Management
+"clearChat" = "Clear History";
+"blockUser" = "Block User";
+"clearChatConfirmation" = "Clear chat?";
+"clearChatWarning" = "Are you sure you want to clear chat? This action is undoable.";
+"yesClear" = "Yes, clear";
+"blockUserConfirmation" = "Block User?";
+"blockConfirmation" = "Are you sure you want to Block";
+
+// Chat Attachment
+"camera" = "Camera";
+"gallery" = "Gallery";
+"document" = "Document";
+"location" = "Location";
+"contact" = "Contact";
+"sticker" = "Sticker";
+
+// Chat Contact Info
+"viewProfile" = "View Profile";
+"mediaLinksAndDocs" = "Media, Links and Docs";
+"deleteChat" = "Delete Chat";
+"enterNameAndProfilePic" = "Enter your name and add an optional profile picture";
+"enterName" = "Enter name";
+"email" = "Email";
+"enterEmail" = "Enter email";
+"about" = "About";
+"editProfile" = "Edit Profile";
+"emailEmptyWarning" = "Email can't be empty";
+"usernameEmptyWarning" = "User name can't be empty";
+"logout" = "Logout";
+"lastSeenLabel" = "Last Seen";
+"notifications" = "Notifications";
+
+// Chat Reaction
+"reacted" = "Reacted";
+"toAMessage" = "to a message";

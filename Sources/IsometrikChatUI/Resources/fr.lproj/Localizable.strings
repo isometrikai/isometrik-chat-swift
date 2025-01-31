@@ -1,0 +1,161 @@
+//
+//  Localizable.strings
+//  IsometrikChat
+//
+//  Created by My Book on 24/12/24.
+//
+
+// General Chat Strings
+"chats" = "Discussions";
+"newChat" = "Nouvelle discussion";
+"tapHereForMoreInfo" = "tapez ici pour plus d'infos";
+"today" = "Aujourd'hui";
+"endToEndEncryptedMessage" = "Les messages sont cryptés de bout en bout. Personne à l'extérieur de cette discussion ne peut les lire.";
+"typeAMessage" = "Tapez un message";
+"youDeletedThisMessage" = "Vous avez supprimé ce message.";
+"thisMessageWasDeleted" = "Ce message a été supprimé.";
+"sendTo" = "Envoyer à";
+"maxShareLimit" = "Vous ne pouvez partager qu'avec jusqu'à 5 discussions.";
+"messageForwarded" = "Message transféré";
+"readBy" = "LU PAR";
+"deliveredTo" = "LIVRÉ À";
+"read" = "Lu";
+"delivered" = "Livré";
+"messageInfo" = "Infos du message";
+"messageCopied" = "Message copié";
+"unblockContact" = "Débloquer le contact pour envoyer un message";
+
+// General UI and Errors
+"ok" = "OK";
+"noInternetMessage" = "Oups ! Il semble que votre connexion Internet ne fonctionne pas pour le moment. Veuillez vérifier vos paramètres réseau et assurez-vous que vous êtes connecté à un réseau Wi-Fi ou aux données mobiles.";
+"call" = "Appel";
+"cancel" = "Annuler";
+"voiceCall" = "Appel vocal";
+"videoCall" = "Appel vidéo";
+"andOthers" = ", et d'autres";
+"actionNotAllowedBlocked" = "Action non autorisée, l'utilisateur vous a déjà bloqué";
+"clearAllMessages" = "Effacer tous les messages de";
+"thisChat" = "cette discussion";
+"emptyChatWarning" = "Cette discussion sera vide mais restera dans votre liste de discussions.";
+
+// Decline/Confirmation Actions
+"blockedUserWarning" = "L'utilisateur bloqué ne pourra plus vous envoyer de messages.";
+"declineRequest" = "Refuser la demande ?";
+"declinePaymentRequestWarning" = "Êtes-vous sûr de vouloir refuser la demande de paiement ?";
+"declineRequestButton" = "Refuser la demande";
+"deleteMessage" = "Supprimer le message";
+"deleteMessageWarning" = "Êtes-vous sûr de vouloir supprimer ce message de façon permanente ?";
+"deleteForEveryone" = "Supprimer pour tout le monde";
+"deleteForMe" = "Supprimer pour moi";
+"unblock" = "Débloquer";
+
+// Audio Permission
+"audioPermissionRequired" = "Permission audio requise";
+"microphoneAccessMessage" = "Nous avons besoin d'accéder à votre microphone pour enregistrer de l'audio. Veuillez l'activer dans les paramètres.";
+"openSettings" = "Ouvrir les paramètres";
+
+// Chat Group Strings
+"groupMemberRestriction" = "Vous ne pouvez pas envoyer de messages à ce groupe car vous n'êtes plus membre.";
+"youBlockedUser" = "Vous avez bloqué cet utilisateur";
+"youAreBlocked" = "Vous êtes bloqué";
+"youUnblockedUser" = "Vous avez débloqué cet utilisateur";
+"youAreUnblocked" = "Vous êtes débloqué";
+"changedGroupTitle" = "a changé le titre de ce groupe";
+"changedGroupImage" = "a changé l'image du groupe";
+"createdGroup" = "a créé un groupe";
+"userLeft" = "Vous avez quitté";
+"updatedNotificationSetting" = "Vous avez mis à jour les paramètres de notification";
+
+// Message Requests
+"messageRequestInfo" = "Si vous acceptez, vous pourrez voir des informations telles que la date à laquelle vous avez lu les messages.";
+"acceptMessageRequest" = "Accepter la demande de message de";
+"reject" = "Rejeter";
+"accept" = "Accepter";
+"openChatMessage" = "Ouvrir une discussion pour obtenir plus d'infos sur la personne qui vous envoie un message. Ils ne sauront pas que vous l'avez vue jusqu'à ce que vous acceptiez.";
+"noOtherChatsFound" = "Aucune autre discussion trouvée !";
+"newBroadcast" = "Nouvelle diffusion";
+"newGroup" = "Nouveau groupe";
+"enterGroupName" = "Entrez le nom du groupe.";
+
+// Chat Location
+"shareLocation" = "Partager l'emplacement";
+"useMyCurrentLocation" = "Utiliser ma position actuelle";
+"useThisLocation" = "Utiliser cet emplacement";
+"openInMaps" = "Ouvrir dans Maps";
+"sendLocation" = "Envoyer l'emplacement";
+"permissionDenied" = "Permission refusée";
+"enablePermissionMessage" = "Veuillez activer la permission dans les paramètres de l'application";
+"goToSettings" = "Aller aux paramètres";
+"sendCurrentLocation" = "Envoyer votre position actuelle";
+"accurateTo5Meters" = "Précis à 5 mètres";
+"nearbyPlaces" = "LIEUX À PROXIMITÉ";
+"openInGoogleMaps" = "Ouvrir dans Google Maps";
+
+// Chat Group View
+"writeGroupName" = "Écrivez le nom de votre groupe";
+"editGroup" = "Modifier le groupe";
+"remove" = "Supprimer";
+"groupNameEmptyWarning" = "Le nom du groupe ne peut pas être vide";
+"makeGroupAdmin" = "Faire administrateur du groupe";
+"dismissAsAdmin" = "Retirer en tant qu'administrateur";
+"searchMembers" = "Rechercher des membres";
+"removeFromGroup" = "Retirer du groupe";
+
+// Chat Interface Actions
+"forward" = "Transférer";
+"reply" = "Répondre";
+"copy" = "Copier";
+"edit" = "Modifier";
+"info" = "Info";
+"delete" = "Supprimer";
+"block" = "Bloquer";
+
+// Chat Status
+"online" = "en ligne";
+"offline" = "Hors ligne";
+"typing" = "tape...";
+"isTyping" = "est en train de taper...";
+"lastSeen" = "Vu pour la dernière fois";
+
+// Error Messages
+"error" = "Erreur";
+"noInternetConnection" = "Pas de connexion Internet";
+"failedToSendMessage" = "Échec de l'envoi du message";
+"pleaseTryAgain" = "Veuillez réessayer";
+
+// Chat Management
+"clearChat" = "Effacer l'historique";
+"blockUser" = "Bloquer l'utilisateur";
+"clearChatConfirmation" = "Effacer la discussion ?";
+"clearChatWarning" = "Êtes-vous sûr de vouloir effacer la discussion ? Cette action est irréversible.";
+"yesClear" = "Oui, effacer";
+"blockUserConfirmation" = "Bloquer l'utilisateur ?";
+"blockConfirmation" = "Êtes-vous sûr de vouloir bloquer";
+
+// Chat Attachment
+"camera" = "Caméra";
+"gallery" = "Galerie";
+"document" = "Document";
+"location" = "Emplacement";
+"contact" = "Contact";
+"sticker" = "Autocollant";
+
+// Chat Contact Info
+"viewProfile" = "Voir le profil";
+"mediaLinksAndDocs" = "Médias, liens et documents";
+"deleteChat" = "Supprimer la discussion";
+"enterNameAndProfilePic" = "Entrez votre nom et ajoutez une photo de profil optionnelle";
+"enterName" = "Entrez le nom";
+"email" = "Email";
+"enterEmail" = "Entrez l'email";
+"about" = "À propos";
+"editProfile" = "Modifier le profil";
+"emailEmptyWarning" = "L'email ne peut pas être vide";
+"usernameEmptyWarning" = "Le nom d'utilisateur ne peut pas être vide";
+"logout" = "Se déconnecter";
+"lastSeenLabel" = "Vu pour la dernière fois";
+"notifications" = "Notifications";
+
+// Chat Reaction
+"reacted" = "A réagi";
+"toAMessage" = "à un message";
