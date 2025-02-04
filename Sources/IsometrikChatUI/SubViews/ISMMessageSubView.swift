@@ -1612,26 +1612,30 @@ struct ISMMessageSubView: View {
         .simultaneousGesture(
             DragGesture()
                 .onChanged { gesture in
-                    if !message.deletedMessage{
+                    if !message.deletedMessage {
                         offset = gesture.translation
                     }
                 }
                 .onEnded { value in
-                    if !message.deletedMessage{
+                    if !message.deletedMessage {
                         offset = .zero
-                        ISMChatHelper.print("value ",value.translation.width)
-                        let direction = self.detectDirection(value: value)
-                        if direction == .left {
-                            if showReplyOption{
-                                selectedMessageToReply = message
-                                UINotificationFeedbackGenerator().notificationOccurred(.warning)
+                        ISMChatHelper.print("value ", value.translation.width)
+
+                        // Ignore vertical scrolling by checking if horizontal movement is significantly larger
+                        if abs(value.translation.width) > abs(value.translation.height) {
+                            let direction = self.detectDirection(value: value)
+                            if direction == .left {
+                                if showReplyOption {
+                                    selectedMessageToReply = message
+                                    UINotificationFeedbackGenerator().notificationOccurred(.warning)
+                                }
                             }
+        //                    else if direction == .right{
+        //                        if !isReceived{
+        //                            navigatetoMessageInfo = true
+        //                        }
+        //                    }
                         }
-//                        else if direction == .right{
-//                            if !isReceived{
-//                                navigatetoMessageInfo = true
-//                            }
-//                        }
                     }
                 }
         )
@@ -2323,19 +2327,20 @@ struct ISMMessageSubView: View {
     }
     
     func detectDirection(value: DragGesture.Value) -> SwipeHVDirection {
-        if value.startLocation.x < value.location.x - 28 {
-            return .left
+        let horizontalThreshold: CGFloat = 50
+        let verticalThreshold: CGFloat = 50
+        
+        let horizontalMovement = value.location.x - value.startLocation.x
+        let verticalMovement = value.location.y - value.startLocation.y
+
+        if abs(horizontalMovement) > abs(verticalMovement) {  // Ensure it's primarily a horizontal swipe
+            if horizontalMovement < -horizontalThreshold {
+                return .left
+            } else if horizontalMovement > horizontalThreshold {
+                return .right
+            }
         }
-        if value.startLocation.x > value.location.x + 28 {
-            return .right
-        }
-        if value.startLocation.y < value.location.y - 28 {
-            return .down
-        }
-        if value.startLocation.y > value.location.y + 28 {
-            return .up
-        }
-        return .none
+        return .none  // Ignore vertical movements
     }
 }
 
