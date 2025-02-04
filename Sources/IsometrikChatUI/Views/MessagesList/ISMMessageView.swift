@@ -723,7 +723,7 @@ public struct ISMMessageView: View {
             .presentationDetents([.fraction(0.3)])
             .presentationDragIndicator(.visible)
         })
-        .sheet(isPresented: $stateViewModel.showDeleteMultipleMessage, content:{
+        .sheet(isPresented: $stateViewModel.showDeleteSingleMessage, content:{
             var attributedText: AttributedString {
                 var attributedString = AttributedString("Are you sure you want to permanently delete this message?")
                 
@@ -761,7 +761,7 @@ public struct ISMMessageView: View {
                     }
                 },
                 popUpType: .Delete,
-                isPresented: $stateViewModel.showDeleteMultipleMessage,
+                isPresented: $stateViewModel.showDeleteSingleMessage,
                 showCrossButton: true
             )
             .presentationDetents([.fraction(0.3)])

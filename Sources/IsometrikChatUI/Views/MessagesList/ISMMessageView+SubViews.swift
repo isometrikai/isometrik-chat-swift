@@ -123,7 +123,7 @@ extension ISMMessageView{
                 multipleForwardMessageButtonView(message: message)
             }
             // Show delete button if applicable
-            if ISMChatSdkUI.getInstance().getChatProperties().customMenu == false{
+            if ISMChatSdkUI.getInstance().getChatProperties().multipleSelectionOfMessageForDelete == true{
                 if stateViewModel.showDeleteMultipleMessage == true{
                     multipleDeleteMessageButtonView(message: message)
                 }
@@ -137,7 +137,7 @@ extension ISMMessageView{
                               opponentDeatil: (self.conversationDetail?.conversationDetails?.opponentDetails ?? ISMChatUser()),
                               isGroup:  self.isGroup,
                               fromBroadCastFlow: self.fromBroadCastFlow,
-                              navigateToDeletePopUp: $stateViewModel.showDeleteMultipleMessage,
+                              navigateToDeletePopUp: chatProperties.multipleSelectionOfMessageForDelete == true ? $stateViewModel.showDeleteMultipleMessage : $stateViewModel.showDeleteSingleMessage,
                               selectedMessageToReply: $selectedMsgToReply,
                               messageCopied: $stateViewModel.messageCopied,
                               previousAudioRef: $previousAudioRef,

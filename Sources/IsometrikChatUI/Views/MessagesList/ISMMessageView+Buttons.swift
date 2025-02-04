@@ -121,7 +121,7 @@ extension ISMMessageView{
     /// Returns a view for the back button with appropriate actions based on the state.
     func backButtonView() -> some View {
         HStack{
-            if stateViewModel.showforwardMultipleMessage || (stateViewModel.showDeleteMultipleMessage && chatProperties.customMenu == false) {
+            if stateViewModel.showforwardMultipleMessage || (stateViewModel.showDeleteMultipleMessage && chatProperties.multipleSelectionOfMessageForDelete == true) {
                 Button {
                     stateViewModel.showforwardMultipleMessage = false
                     forwardMessageSelected.removeAll()
@@ -345,7 +345,7 @@ extension ISMMessageView{
     /// Returns a view containing navigation buttons on the trailing side of the navigation bar.
     func navigationBarTrailingButtons() -> some View {
         HStack {
-            if stateViewModel.showforwardMultipleMessage || (stateViewModel.showDeleteMultipleMessage && chatProperties.customMenu == false){
+            if stateViewModel.showforwardMultipleMessage || (stateViewModel.showDeleteMultipleMessage && chatProperties.multipleSelectionOfMessageForDelete == true){
                
             }else {
                 

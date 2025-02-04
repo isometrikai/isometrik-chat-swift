@@ -22,6 +22,7 @@ public class UIStateViewModel: ObservableObject {
     @Published public var isShowingRedTimerStart : Bool = false
     
     @Published public var showDeleteMultipleMessage = false
+    @Published public var showDeleteSingleMessage = false
     @Published public var showDeleteActionSheet = false
     @Published public var showforwardMultipleMessage : Bool = false
     @Published public var movetoForwardList : Bool = false

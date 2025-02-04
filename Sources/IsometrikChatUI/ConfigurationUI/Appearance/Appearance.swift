@@ -73,10 +73,10 @@ public class ISMChatStrings {
     public var messageDeletedByOther : String = "This message was deleted."
     public init(){}
     public init(endToEndEncrypted: String? = nil,messageInputTextViewPlaceholder : String? = nil,messageDeletedByMe : String? = nil,messageDeletedByOther : String? = nil) {
-        self.endToEndEncrypted = endToEndEncrypted ?? ""
-        self.messageInputTextViewPlaceholder = messageInputTextViewPlaceholder ?? ""
-        self.messageDeletedByMe = messageDeletedByMe ?? ""
-        self.messageDeletedByOther = messageDeletedByOther ?? ""
+        self.endToEndEncrypted = endToEndEncrypted ?? self.endToEndEncrypted
+        self.messageInputTextViewPlaceholder = messageInputTextViewPlaceholder ?? self.messageInputTextViewPlaceholder
+        self.messageDeletedByMe = messageDeletedByMe ?? self.messageDeletedByMe
+        self.messageDeletedByOther = messageDeletedByOther ?? self.messageDeletedByOther
     }
 }
 
