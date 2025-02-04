@@ -250,17 +250,19 @@ extension ISMMessageView{
     }
     
     func customTextWithImage(text : String, image : Image) -> some View{
-        HStack(alignment: .top,spacing: 5){
+        let screenWidth = UIScreen.main.bounds.width - 60
+        return HStack(alignment: .top,spacing: 5){
             image
                 .resizable()
                 .frame(width: 10,height: 13)
                 .foregroundColor(appearance.colorPalette.messageListActionText)
                 .padding(.top,2)
             Text(text)
+                .multilineTextAlignment(.center)
                 .foregroundColor(appearance.colorPalette.messageListActionText)
                 .font(appearance.fonts.messageListActionText)
                 
-        }.frame(width: text.widthOfString(usingFont: UIFont.regular(size: 13)))
+        }.frame(width: screenWidth)
             .padding(.vertical, 5)
             .background(appearance.colorPalette.messageListActionBackground)
             .cornerRadius(5)
