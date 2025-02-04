@@ -257,7 +257,7 @@ extension ISMMessageView{
             }else{
                 UserAvatarView(
                     avatar: getAvatarUrl(),
-                    showOnlineIndicator: self.conversationDetail?.conversationDetails?.opponentDetails?.online ?? false,
+                    showOnlineIndicator: self.conversationDetail?.conversationDetails?.opponentDetails?.online ?? (self.opponenDetail?.online ?? false),
                     size: CGSize(width: 40, height: 40),
                     userName: getProfileName(),
                     font: .regular(size: 14)

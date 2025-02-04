@@ -982,6 +982,8 @@ public struct ISMMessageView: View {
             //GET CONVERSATION DETAIL API
             chatViewModel.getConversationDetail(conversationId: self.conversationID ?? "", isGroup: self.isGroup ?? false) { data in
                 self.conversationDetail = data
+                self.opponenDetail?.lastSeen = data?.conversationDetails?.opponentDetails?.lastSeen
+                self.opponenDetail?.online = data?.conversationDetails?.opponentDetails?.online
                 if isGroup == true{
                     if let members = data?.conversationDetails?.members {
                         if members.count >= 2{
@@ -1102,6 +1104,8 @@ public struct ISMMessageView: View {
     private func executeRepeatedly() {
         chatViewModel.getConversationDetail(conversationId: self.conversationID ?? "", isGroup: self.isGroup ?? false) { data in
             self.conversationDetail = data
+            self.opponenDetail?.lastSeen = data?.conversationDetails?.opponentDetails?.lastSeen
+            self.opponenDetail?.online = data?.conversationDetails?.opponentDetails?.online
         }
     }
 }
