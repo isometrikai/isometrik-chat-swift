@@ -179,60 +179,10 @@ public struct ISMConversationView : View {
                 .onDisappear {
                     onConversationList = false
                     removeObservers()
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttConversationCreated.name, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttUpdateUser.name, object: nil)
-//                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttmessageDetailsUpdated.name, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttTypingEvent.name, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageDeleteForAll.name, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttUserBlockConversation.name, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttUserUnblockConversation.name, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: NSNotification.refreshConvList, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: NSNotification.refrestConversationListLocally, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: NSNotification.localNotification, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttAddReaction.name, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttRemoveReaction.name, object: nil)
-                    NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMeetingEnded.name, object: nil)
                     NotificationCenter.default.removeObserver(self)
                 }
-                
                 if ISMChatSdkUI.getInstance().getChatProperties().createConversationFromChatList == true{
-                    //create conversation button
-                    if ISMChatSdk.getInstance().getFramework() == .UIKit{
-                        if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == true && conversationData.count > 0{
-                            VStack {
-                                Spacer()
-                                HStack {
-                                    Spacer()
-                                    Button(action: {
-                                        showMenuForConversationType.toggle()
-                                    }, label: {
-                                        appearance.images.addConversation
-                                            .resizable()
-                                            .frame(width: 58, height: 58)
-                                    })
-                                    .padding()
-                                }
-                            }
-                        }else if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == false{
-                            VStack {
-                                Spacer()
-                                HStack {
-                                    Spacer()
-                                    Button(action: {
-                                        showMenuForConversationType.toggle()
-                                    }, label: {
-                                        appearance.images.addConversation
-                                            .resizable()
-                                            .frame(width: 58, height: 58)
-                                    })
-                                    .padding()
-                                }
-                            }
-                        }
-                    }else{
-                        ISMCreateConversationButtonView(navigate: $createChat,showOfflinePopUp: $showingNoInternetAlert)
-                    }
+                    createConversationButton
                 }
             }
         }//:NavigationView
@@ -278,16 +228,13 @@ public struct ISMConversationView : View {
         self.viewModel.resetdata()
         self.viewModel.clearMessages()
         realmManager.getAllConversations()
-        
         realmManager.hardDeleteAll()
-//            self.viewModel.userData = UserDefaults.standard.retrieveCodable(for: "userInfo")
         self.getConversationList()
         self.realmManager.hardDeleteMsgs()
         if !networkMonitor.isConnected {
             showingNoInternetAlert = true
         }
         getuserData{ userId in
-            //self.chatViewModel.getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId: userId ?? "")
         }
     }
 
@@ -383,6 +330,48 @@ public struct ISMConversationView : View {
         .refreshable {
             viewModel.resetdata() // Reset view model data on refresh
             getConversationList() // Fetch updated conversation list
+        }
+    }
+    
+    
+    private var createConversationButton : some View{
+        VStack{
+            //create conversation button
+            if ISMChatSdk.getInstance().getFramework() == .UIKit{
+                if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == true && conversationData.count > 0{
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                showMenuForConversationType.toggle()
+                            }, label: {
+                                appearance.images.addConversation
+                                    .resizable()
+                                    .frame(width: 58, height: 58)
+                            })
+                            .padding()
+                        }
+                    }
+                }else if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == false{
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                showMenuForConversationType.toggle()
+                            }, label: {
+                                appearance.images.addConversation
+                                    .resizable()
+                                    .frame(width: 58, height: 58)
+                            })
+                            .padding()
+                        }
+                    }
+                }
+            }else{
+                ISMCreateConversationButtonView(navigate: $createChat,showOfflinePopUp: $showingNoInternetAlert)
+            }
         }
     }
 
@@ -502,7 +491,6 @@ extension ISMConversationView{
         let notificationTypes: [Notification.Name] = [
             ISMChatMQTTNotificationType.mqttConversationCreated.name,
             ISMChatMQTTNotificationType.mqttUpdateUser.name,
-//            ISMChatMQTTNotificationType.mqttmessageDetailsUpdated.name,
             ISMChatMQTTNotificationType.mqttMessageNewReceived.name,
             ISMChatMQTTNotificationType.mqttTypingEvent.name,
             ISMChatMQTTNotificationType.mqttMessageDeleteForAll.name,
@@ -549,17 +537,6 @@ extension ISMConversationView{
                 self.getuserData { _ in
                 }
             }
-//        case ISMChatMQTTNotificationType.mqttmessageDetailsUpdated.name:
-//            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
-//                return
-//            }
-//            ISMChatHelper.print("MESSAGE UPDATED ----------------->\(messageInfo)")
-//            realmManager.updateMessageBody(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", body: messageInfo.details?.body ?? "", metaData: messageInfo.details?.metaData ?? ISMChatMetaData(), customType: messageInfo.details?.customType ?? "")
-//            if let url = messageInfo.details?.metaData?.url{
-//                realmManager.updateLastMessageOnEdit(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", newBody: url,metaData: messageInfo.details?.metaData ?? ISMChatMetaData())
-//            }else{
-//                realmManager.updateLastMessageOnEdit(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", newBody: messageInfo.details?.body ?? "",metaData: messageInfo.details?.metaData ?? ISMChatMetaData())
-//            }
         case ISMChatMQTTNotificationType.mqttMessageNewReceived.name:
             guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
                 return

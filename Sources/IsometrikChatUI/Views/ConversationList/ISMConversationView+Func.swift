@@ -36,14 +36,7 @@ extension ISMConversationView{
         viewModel.getUserData { data in
             if let user = data {
                 viewModel.userData = user
-                //                self.viewModel.updateUserObj(obj: user)
             }
-//            self.userSession.setnotification(on: data?.notification ?? true)
-//            self.userSession.setUserProfilePicture(url:  data?.userProfileImageUrl ?? "")
-//            self.userSession.setUserName(userName: data?.userName ?? "")
-//            self.userSession.setUserEmailId(email: data?.userIdentifier ?? "")
-//            self.userSession.setUserBio(bio: data?.metaData?.about ?? "")
-//            self.userSession.setLastSeen(showLastSeen: data?.metaData?.showlastSeen ?? true)
             completion(data?.userId)
         }
     }

@@ -244,7 +244,6 @@ public struct ISMMessageView: View {
                                                 }
                                             }
                                     )
-//                                    .highPriorityGesture(DragGesture())
                             }else{
                                 ScrollView{
                                     ScrollViewReader{ scrollReader in
@@ -275,7 +274,6 @@ public struct ISMMessageView: View {
                                         self.backButtonAction()
                                     }
                                 })
-//                                .highPriorityGesture(DragGesture())
                             }
                         }.padding(.bottom,5)
                         //No Message View
@@ -342,9 +340,6 @@ public struct ISMMessageView: View {
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(leading: navigationBarLeadingButtons(), trailing: navigationBarTrailingButtons())
         .navigationBarBackButtonHidden(true)
-//        .confirmationDialog("", isPresented: $stateViewModel.showActionSheet, titleVisibility: .hidden) {
-//            attachmentActionSheetButtons()
-//        }
         .confirmationDialog("", isPresented: $stateViewModel.showDeleteActionSheet, titleVisibility: .hidden) {
             deleteActionSheetButtons()
         }
@@ -900,12 +895,6 @@ public struct ISMMessageView: View {
     
     func OndisappearOnBack(){
         removeObservers()
-//        NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil)
-//        NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttTypingEvent.name, object: nil)
-//        NotificationCenter.default.removeObserver(self, name: ISMChatMQTTNotificationType.mqttMeetingEnded.name, object: nil)
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.refrestMessagesListLocally, object: nil)
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.updateGroupInfo, object: nil)
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.memberAddAndRemove, object: nil)
         NotificationCenter.default.removeObserver(self)
         self.conversationID = nil
         nilData()
@@ -947,18 +936,6 @@ public struct ISMMessageView: View {
         self.realmManager.messages = chatViewModel.getSectionMessage(for: self.realmManager.allMessages ?? [])
         parentMessageIdToScroll = ""
         parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
-//        if self.realmManager.messages.count > 0 {
-//            if (self.realmManager.messages.last?.count ?? 0) > 0 {
-//                if let msgObj = self.realmManager.messages.last?.last {
-//                    //don't update last message if it action id reaction Add or Remove, as we filter those in message List
-//                    let action = realmManager.getConversationListLastMessageAction(conversationId: self.conversationID ?? "")
-//                    if action != ISMChatActionType.reactionAdd.value && action != ISMChatActionType.reactionRemove.value{
-//                        realmManager.updateLastMessageDetails(conId: self.conversationID ?? "", msgObj: msgObj)
-////                        parentMessageIdToScroll = realmManager.messages.last?.last?.id.description ?? ""
-//                    }
-//                }
-//            }
-//        }
     }
     
     
@@ -1010,14 +987,6 @@ public struct ISMMessageView: View {
     }
     
     func reloadBroadCastMessages(){
-//        
-//        self.realmManager.getMsgsThroughGroupCastId(groupcastId: self.groupCastId ?? "")
-//       parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
-//        var lastSent = Int(self.realmManager.messages.last?.last?.sentAt ?? 0.0).description
-//        //GET ALL MESSAGES IN CONVERSTION API
-//        if self.realmManager.allMessages?.count == 0 {
-//            lastSent = ""
-//        }
         self.realmManager.getMsgsThroughConversationId(conversationId: self.conversationID ?? "")
         parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
         var lastSent = Int(self.realmManager.messages.last?.last?.sentAt ?? 0.0).description
