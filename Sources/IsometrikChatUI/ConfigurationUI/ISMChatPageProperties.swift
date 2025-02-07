@@ -9,12 +9,12 @@ import Foundation
 import SwiftUI
 
 public struct ISMChatPageProperties {
-    public var attachments: [ISMChatConfigAttachmentType] // Array of attachment types
-    public var features : [ISMChatConfigFeature] // Array of chat features
-    public var conversationType : [ISMChatConversationTypeConfig] // Array of conversation types
-    public var hideNavigationBarForConversationList : Bool
-    public var navigateToAppProfileFromMessageList : Bool
-    public var createConversationFromChatList : Bool
+    public var attachments: [ISMChatConfigAttachmentType] = [.camera,.gallery,.contact,.document,.location,.sticker] // Array of attachment types
+    public var features : [ISMChatConfigFeature] = [.reply,.forward,.edit,.audio,.reaction,.audiocall,.videocall,.gif,.reel] // Array of chat features
+    public var conversationType : [ISMChatConversationTypeConfig] = [.OneToOneConversation,.GroupConversation,.BroadCastConversation] // Array of conversation types
+    public var hideNavigationBarForConversationList : Bool = false
+    public var navigateToAppProfileFromMessageList : Bool = false
+    public var createConversationFromChatList : Bool = false
     public var otherConversationList : Bool = false
     public var showCustomPlaceholder : Bool = false
     public var isOneToOneGroup : Bool = false
@@ -42,18 +42,18 @@ public struct ISMChatPageProperties {
     public var dontShowBlockedStatusinConversationList : Bool = false
     public var dontShowCreateButtonTillNoConversation : Bool = false
     public var multipleSelectionOfMessageForDelete : Bool = true
-    public init(attachments: [ISMChatConfigAttachmentType], features: [ISMChatConfigFeature], conversationType: [ISMChatConversationTypeConfig], hideNavigationBarForConversationList: Bool, navigateToAppProfileFromMessageList: Bool, createConversationFromChatList: Bool, otherConversationList: Bool, showCustomPlaceholder: Bool, isOneToOneGroup: Bool,customJobCardInMessageList : Bool,externalMemberAddInGroup : Bool,captializeMessageListHeaders : Bool? = false,hideLinkPreview : Bool? = false,maskNumberAndEmail : Bool? = false,hideSendButtonUntilEmptyTextView: Bool? = false,gifLogoOnTextViewLeft : Bool? = false,showUserTypeInConversationListAfterName : Bool? = false,showSearchCrossButton:  Bool? = false,chatListSeperatorShouldMeetEnds : Bool? = false,messageListReplyBarMeetEnds : Bool? = false,hideUserProfileImageFromAudioMessage : Bool? = false,hideDocumentPreview : Bool? = false,customShareContactFlow : Bool? = false,shareOnlyCurrentLocation : Bool? = false,replyMessageInsideInputView : Bool? = false,messageInfoBelowMessage : Bool? = false,customMenu :Bool? = false,editMessageForOnly15Mins : Bool? = false,onTapOfSearchBarOpenNewScreen : Bool? = false,useCustomViewRegistered: Bool? = false,dontShowBlockedStatusinConversationList : Bool? = false,dontShowCreateButtonTillNoConversation : Bool? = false,multipleSelectionOfMessageForDelete : Bool? = true) {
-        self.attachments = attachments
-        self.features = features
-        self.conversationType = conversationType
-        self.hideNavigationBarForConversationList = hideNavigationBarForConversationList
-        self.navigateToAppProfileFromMessageList = navigateToAppProfileFromMessageList
-        self.createConversationFromChatList = createConversationFromChatList
-        self.otherConversationList = otherConversationList
-        self.showCustomPlaceholder = showCustomPlaceholder
-        self.isOneToOneGroup = isOneToOneGroup
-        self.customJobCardInMessageList = customJobCardInMessageList
-        self.externalMemberAddInGroup = externalMemberAddInGroup
+    public init(attachments: [ISMChatConfigAttachmentType]? = nil, features: [ISMChatConfigFeature]? = nil, conversationType: [ISMChatConversationTypeConfig]? = nil, hideNavigationBarForConversationList: Bool? = false, navigateToAppProfileFromMessageList: Bool? = false, createConversationFromChatList: Bool? = false, otherConversationList: Bool? = false, showCustomPlaceholder: Bool? = false, isOneToOneGroup: Bool? = false,customJobCardInMessageList : Bool? = false,externalMemberAddInGroup : Bool? = false,captializeMessageListHeaders : Bool? = false,hideLinkPreview : Bool? = false,maskNumberAndEmail : Bool? = false,hideSendButtonUntilEmptyTextView: Bool? = false,gifLogoOnTextViewLeft : Bool? = false,showUserTypeInConversationListAfterName : Bool? = false,showSearchCrossButton:  Bool? = false,chatListSeperatorShouldMeetEnds : Bool? = false,messageListReplyBarMeetEnds : Bool? = false,hideUserProfileImageFromAudioMessage : Bool? = false,hideDocumentPreview : Bool? = false,customShareContactFlow : Bool? = false,shareOnlyCurrentLocation : Bool? = false,replyMessageInsideInputView : Bool? = false,messageInfoBelowMessage : Bool? = false,customMenu :Bool? = false,editMessageForOnly15Mins : Bool? = false,onTapOfSearchBarOpenNewScreen : Bool? = false,useCustomViewRegistered: Bool? = false,dontShowBlockedStatusinConversationList : Bool? = false,dontShowCreateButtonTillNoConversation : Bool? = false,multipleSelectionOfMessageForDelete : Bool? = true) {
+        self.attachments = attachments ?? self.attachments
+        self.features = features ?? self.features
+        self.conversationType = conversationType ?? self.conversationType
+        self.hideNavigationBarForConversationList = hideNavigationBarForConversationList ?? false
+        self.navigateToAppProfileFromMessageList = navigateToAppProfileFromMessageList ?? false
+        self.createConversationFromChatList = createConversationFromChatList ?? false
+        self.otherConversationList = otherConversationList ?? false
+        self.showCustomPlaceholder = showCustomPlaceholder ?? false
+        self.isOneToOneGroup = isOneToOneGroup ?? false
+        self.customJobCardInMessageList = customJobCardInMessageList ?? false
+        self.externalMemberAddInGroup = externalMemberAddInGroup ?? false
         self.captializeMessageListHeaders = captializeMessageListHeaders ?? false
         self.hideLinkPreview = hideLinkPreview ?? false
         self.maskNumberAndEmail = maskNumberAndEmail ?? false

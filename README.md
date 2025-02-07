@@ -1,8 +1,12 @@
-# ISOMETRIKCHAT
+# Isometrik Chat IOS SDK
 
-This project is a chat SDK that you can integrate into your apps to add chat flow functionality.
+`Isometrik Chat IOS SDK` is a package that provides chat functionality for iOS projects, supporting both UIKit and SwiftUI.
 
-## Installation
+## Setup
+
+For detailed Info.plist setup instructions, please refer to the guide below and add the required configurations to your project:
+
+- [Detailed Setup](./README_SETUP.md)
 
 
 ## Usage
@@ -21,48 +25,79 @@ This project is a chat SDK that you can integrate into your apps to add chat flo
 
 7. Initialization: Initialize the ChatSDK and ChatSDK UI with the provided configurations.
 
+### Initialize IsometrikChat
 
-func initializeChatIsometrik(_ completion: @escaping ()->Void){
-    
-    //add what attachments you need only
-    let attachment : [ISMChatConfigAttachmentType] = [.camera,.gallery,.document,.location,.contact]
-    
-    //add what features u need only
-    let feature : [ISMChatConfigFeature] = [.forward,.edit,.audio,.reply,.audiocall,.videocall,.gif,.reaction]
-    
-    // add here what type of conversations type u need
-    let conversationTypes : [ISMChatConversationTypeConfig] = [.OneToOneConversation,.GroupConversation,.BroadCastConversation]
-    
-    // add images , fonts, colors and bubbleType as per requirement here
-    let customColors = ISMChatColorPalette()
-    let customFonts = ISMChatFonts()
-    let customImages = ISMChatImages()
-    let messageBubbleType : ISMChatBubbleType = .BubbleWithOutTail
-    let customPlaceholder = ISMChatPlaceholders() // u can pass anyView here
-    let customFontNames = ISMChatCustomFontNames(light: "ProductSans-Light", regular: "ProductSans-Regular", bold: "ProductSans-Bold", medium: "ProductSans-Medium", italic: "ProductSans-Italic")
-    
-    
-    let appConfig = ISMChatConfiguration(accountId: accountId, projectId: projectId, keySetId: keysetId, licensekey: licenseKey, MQTTHost: MQTTHost, MQTTPort: MQTTPort, appSecret: appSecret, userSecret: userSecret, authToken: authToken)
-    
-    let userConfig = ISMChatUserConfig(userToken: authToken, userId: userId, userName: userName, userEmail: userEmail, userProfileImage: userProfileImage)
-    
-    //For isometricChat
-    ISMChatSdk.getInstance().appConfiguration(appConfig: appConfig, userConfig: userConfig)
-    
-    //For isometricChatUI
-    ISMChatSdkUI.getInstance().appConfiguration(chatProperties: ISMChatPageProperties(attachments: attachment, features: feature, conversationType: conversationTypes, hideNavigationBarForConversationList: true, allowToNavigateToAppProfile: true, createConversationFromChatList: false, otherConversationList: true, showCustomPlaceholder: true, isOneToOneGroup: false), appearance: ISMAppearance(colorPalette: customColors, images: customImages, fonts: customFonts, messageBubbleType: messageBubbleType, placeholders: customPlaceholder, customFontNames: customFontNames))
-    
-    return ISMChatSdk.getInstance()
+```dart
+let appConfig = ISMChatConfiguration(accountId: accountId, projectId: projectId, keySetId: keysetId, licensekey: licenseKey, MQTTHost: configuration.MQTTHost, MQTTPort: configuration.MQTTPort, appSecret: configuration.appSecret, userSecret: configuration.userSecret, authToken: token)
+
+let userConfig = ISMChatUserConfig(userToken: token, userId: userId, userName: userName, userEmail: userEmail ?? "", userProfileImage: userProfileImage ?? "", userProfileType: "")
+
+let framework : FrameworkType = .UIKit
+
+let chatListHostViewController = ChatVC.self
+
+let messageListHostViewController = MessageVC.self
+
+ISMChatSdk.getInstance().appConfiguration(appConfig: appConfig, userConfig: userConfig, hostFrameworkType: framework, conversationListViewControllerName: chatListHostViewController, messagesListViewControllerName: messageListHostViewController, uploadOnExternalCDN: false, giphyApiKey: "")
+```
+
+##### Required Parameters
+
+- `appConfig`: Contains essential configuration details that must be provided.
+- `userConfig`: Holds user-specific properties required for the chat page.
+- `hostFrameworkType`: Specifies the framework type; pass .UIKit or .SwiftUI.
+
+##### Optional Parameters
+
+- `conversationListViewControllerName`:  The host view controller for the chat list.
+- `messagesListViewControllerName`: The host view controller for the message list.
+- `uploadOnExternalCDN`: Pass true to store media in an external cloud.
+- `giphyApiKey`: The API key required to enable GIFs and stickers.
+
+
+### Initialize IsometrikChatUI
+
+```dart
+let chatProperties = ISMChatPageProperties(attachments: attachment, features: feature, conversationType: conversationTypes, hideNavigationBarForConversationList: true, allowToNavigateToAppProfile: true, createConversationFromChatList: false, otherConversationList: true, showCustomPlaceholder: true, isOneToOneGroup: false)
+
+let appearance = ISMAppearance(colorPalette: customColors, images: customImages, fonts: customFonts, messageBubbleType: messageBubbleType, placeholders: customPlaceholder, customFontNames: customFontNames)
+
+let customFontNames = ISMChatCustomFontNames(light: "ProductSans-Light", regular: "ProductSans-Regular", bold: "ProductSans-Bold", semiBold: "ProductSans-Bold", medium: "ProductSans-Medium", italic: "ProductSans-Italic")
+
+let customSearchBar = ISMChatCustomSearchBar(height: 40, cornerRadius: 20, borderWidth: 0.75, searchBarBackgroundColor: Color(hex: "#F2F2F5"), searchBarBorderColor: Color(hex: "#F2F2F5"), showCrossButton: true, searchBarSearchIcon: Image("search_ecom"), searchCrossIcon: Image("chats_close"),sizeOfSearchIcon: CGSize(width: 13, height: 13),sizeofCrossIcon: CGSize(width: 12, height: 12), searchPlaceholderText: "Search", searchPlaceholderTextColor: Color(hex: "#bfbfca"), searchTextFont: Font.custom(Primary.Regular.rawValue, size: 14))
+
+ISMChatSdkUI.getInstance().appConfiguration(chatProperties: chatProperties, appearance: appearance, fontNames: customFontNames, customSearchBar: customSearchBar)
+```
+
+##### Required Parameters
+- none
+
+##### Optional Parameters
+- `chatProperties`: Includes attachments, features, conversation types, etc.
+- `appearance`: Includes color palette, images, fonts, message bubble type, placeholders, time inside bubble, image sizes, constant strings, message list background image, and date formats.
+- `fontNames`:  Allows you to pass custom fonts.
+- `customSearchBar`: Enables you to create a custom search bar.
+
+
+8. To enable audio call and video call features, add the following function in AppDelegate inside didFinishLaunchingWithOptions.
+
+### Related Repositories
+
+For call functionality, check out the Isometrik Call iOS SDK:
+[Isometrik Call iOS](https://github.com/isometrikai/isometrik-call-ios)  
+
+
+```dart
+
+import PushKit
+
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+   registerPushKit()
 }
 
 
-
-8. For call, you need to add this func in AppDelegate (didFinishLaunchingWithOptions)
-"registerPushKit()"
-
-
 extension AppDelegate : PKPushRegistryDelegate{
-    
+
     func registerPushKit(){
         let mainQueue = DispatchQueue.main
         let callRegistry = PKPushRegistry(queue: mainQueue)
@@ -70,105 +105,106 @@ extension AppDelegate : PKPushRegistryDelegate{
         // Register to receive push notifications
         callRegistry.desiredPushTypes = [PKPushType.voIP]
     }
-    
+
     func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
         ISMCallManager.shared.pushRegistry(registry, didUpdate: pushCredentials, for: type)
     }
-    
-    
-    
+
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType){
         ISMCallManager.shared.pushRegistry(registry, didReceiveIncomingPushWith: payload, for: .voIP,completion: nil)
     }
-    
+
     func pushRegistry(_ registry: PKPushRegistry,
-                      didReceiveIncomingPushWith payload: PKPushPayload,
-                      for type: PKPushType,
-                      completion: @escaping () -> Void) {
+    didReceiveIncomingPushWith payload: PKPushPayload,
+    for type: PKPushType,
+    completion: @escaping () -> Void) {
         if type == .voIP {
             ISMCallManager.shared.pushRegistry(registry, didReceiveIncomingPushWith: payload, for: .voIP) {
                 completion()
             }
         }
     }
-    
+
     func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
         if type == .voIP {
             ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(registry, type: type)
         }
     }
 }
+```
+
+9. Add the following in AppDelegate inside didFinishLaunchingWithOptions to configure Google Services and Google Places, which are used in chat for location sharing.
+
+```dart
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    GMSServices.provideAPIKey("")
+    GMSPlacesClient.provideAPIKey("")
+}
+```
 
 
-9. Add this in AppDelegate (didFinishLaunchingWithOptions) for GoogleServices and GooglePlaces used in Chat for sharing location.
-        GMSServices.provideAPIKey("")
-        GMSPlacesClient.provideAPIKey("")
+10. Add this to subscribe to the chat notifications topic, passing the isometricChatUserId of the logged-in user.
+
+```dart
+Messaging.messaging().subscribe(toTopic: ISMChatHelper.subscribeFCM(userId: isometricChatUserId))
+```      
+
+11. Add this to unsubscribe to the chat notifications topic, passing the isometricChatUserId of the logged-in user.
 
 
-10. Add this in AppDelegate (didRefreshRegistrationToken) to subscribe topic
-        Messaging.messaging().subscribe(toTopic: ISMChatHelper.subscribeFCM()) { (error) in
-            if error != nil {
-                print("errror fcm topic ", error as Any)
-            }
-        }
+```dart
+Messaging.messaging().unsubscribe(fromTopic: ISMChatHelper.unSubscribeFCM(userId: isometricChatUserId))
+``` 
         
+12. You can create your own custom message bubble UI. Add the following code when initializing the chat.
+
+```dart
+CustomMessageBubbleViewRegistry.shared.register(customType: "AttachmentMessage:Text", view: TextMessageView.self)
+CustomConversationListCellViewRegistry.shared.register(view: ConversationListMessageView.self)  
+
+Example:
+
+struct TextMessageView: CustomMessageBubbleViewProvider {
+    static func parseData(_ data: IsometrikChat.MessagesDB) -> IsometrikChat.MessagesDB? {
+        return data
+    }
+    typealias ViewData = MessagesDB
+
+    static func createView(data: MessagesDB) -> some View {
+        return Text(data.metaDataJsonString ?? "").font(.headline)
+    }
+}
+
+
+struct ConversationListMessageView: CustomConversationListCellViewProvider {
+    static func parseData(_ data: IsometrikChat.ConversationDB) -> IsometrikChat.ConversationDB? {
+        return data
+    }
+
+    typealias ViewData = ConversationDB
+
+    static func createView(data: ConversationDB) -> some View {
+        return Text(data.lastMessageDetails?.body ?? "").font(.headline)
+    }
+}   
+```    
+
+
+13. Logout
+
+```dart
+Messaging.messaging().unsubscribe(fromTopic: ISMChatHelper.unSubscribeFCM(userId: userId))
+ISMChatSdk.getInstance().onTerminate(userId: IsomertricChatUserid ?? "")
+ISMChatSdk.sharedInstance = nil
+```
         
-        
-11. Share Post/ Reel
-        let viewModel = ChatsViewModel(ismChatSDK: ISMChatSdk.getInstance())
-        viewModel.sharePost(user: UserDB(), postId: postId/reelId, postURL: "", postCaption: ""){}
-        Note - post Url should be image
-        
-12. You can create you own UI, and pass in chat initialize
-                CustomMessageBubbleViewRegistry.shared.register(customType: "AttachmentMessage:Text", view: TextMessageView.self)
-                CustomConversationListCellViewRegistry.shared.register(view: ConversationListMessageView.self)  
-                
-            struct TextMessageView: CustomMessageBubbleViewProvider {
-                static func parseData(_ data: IsometrikChat.MessagesDB) -> IsometrikChat.MessagesDB? {
-                return data
-                }
-                typealias ViewData = MessagesDB
+14. Profile Switch:
 
-                static func createView(data: MessagesDB) -> some View {
+Add this code when you have multiple profiles under one account to enable profile switching.
 
-                return Text(data.metaDataJsonString ?? "")
-                .font(.headline)
-            }
-            
-
-            struct ConversationListMessageView: CustomConversationListCellViewProvider {
-                static func parseData(_ data: IsometrikChat.ConversationDB) -> IsometrikChat.ConversationDB? {
-                return data
-                }
-
-                typealias ViewData = ConversationDB
-
-                static func createView(data: ConversationDB) -> some View {
-
-                return Text(data.lastMessageDetails?.body ?? "")
-                .font(.headline)
-             }
-           }
-           
-           
-           You need to pass UI for message bubble for all customTypes
-           In chatProperties pass "useCustomViewRegistered" key as true.
-
-}      
-
-
-# Logout
-
-Add this code when u logout
-
-        Messaging.messaging().unsubscribe(fromTopic: ISMChatHelper.unSubscribeFCM(userId: userId))
-        ISMChatSdk.getInstance().onTerminate(userId: IsomertricChatid ?? "")
-        ISMChatSdk.sharedInstance = nil
-        
-Profile Switch:
-Add this code when u have mutiple profiles in one account
-
-        Messaging.messaging().unsubscribe(fromTopic: ISMChatHelper.unSubscribeFCM(userId: userId))
-        ISMChatSdk.getInstance().onProfileSwitch(oldUserId : String,appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig,hostFrameworkType : FrameworkType,conversationListViewControllerName : UIViewController.Type?,messagesListViewControllerName : UIViewController.Type?)
+```dart
+Messaging.messaging().unsubscribe(fromTopic: ISMChatHelper.unSubscribeFCM(userId: userId))
+ISMChatSdk.getInstance().onProfileSwitch(oldUserId : String,appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig,hostFrameworkType : FrameworkType,conversationListViewControllerName : UIViewController.Type?,messagesListViewControllerName : UIViewController.Type?)
+```
 
 

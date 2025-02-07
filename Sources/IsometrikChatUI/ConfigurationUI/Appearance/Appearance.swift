@@ -27,7 +27,6 @@ public class ISMAppearance {
     public var timeInsideBubble : Bool
     public var imagesSize : ISMChatImageSizes
     public var constantStrings : ISMChatStrings
-    public var messageCustomBubbleView : ISMChatMessageCustomBubble
     public var messageListBackgroundImage : String?
     public var dateFormats : ISMChatDateFormats
     public init(
@@ -40,7 +39,6 @@ public class ISMAppearance {
         timeInsideBubble : Bool = true,
         imagesSize : ISMChatImageSizes = ISMChatImageSizes(),
         constantStrings : ISMChatStrings = ISMChatStrings(),
-        messageCustomBubbleView : ISMChatMessageCustomBubble = ISMChatMessageCustomBubble(),
         messageListBackgroundImage: String? = nil,
         dateFormats : ISMChatDateFormats = ISMChatDateFormats()
     ) {
@@ -53,7 +51,6 @@ public class ISMAppearance {
         self.timeInsideBubble = timeInsideBubble
         self.imagesSize = imagesSize
         self.constantStrings = constantStrings
-        self.messageCustomBubbleView = messageCustomBubbleView
         self.messageListBackgroundImage = messageListBackgroundImage ??  ""
         self.dateFormats = dateFormats
     }
@@ -152,13 +149,13 @@ public class ISMChatCustomFontNames{
     public var semibold : String = "ProductSans-SemiBold"
     public var italic : String = "ProductSans-Italic"
     public init(){}
-    public init(light: String, regular: String, bold: String,semiBold : String, medium: String, italic: String) {
-        self.light = light
-        self.regular = regular
-        self.bold = bold
-        self.semibold = semiBold
-        self.medium = medium
-        self.italic = italic
+    public init(light: String? = nil, regular: String? = nil, bold: String? = nil,semiBold : String? = nil, medium: String? = nil, italic: String? = nil) {
+        self.light = light ?? self.light
+        self.regular = regular ?? self.regular
+        self.bold = bold ?? self.bold
+        self.semibold = semiBold ?? self.semibold
+        self.medium = medium ?? self.medium
+        self.italic = italic ?? self.italic
     }
 }
 

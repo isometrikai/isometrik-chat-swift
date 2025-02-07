@@ -58,7 +58,7 @@ public class ISMChatSdkUI{
     
     
     
-    public func appConfiguration(chatProperties : ISMChatPageProperties,appearance : ISMAppearance,fontNames : ISMChatCustomFontNames? = nil,customSearchBar: ISMChatCustomSearchBar) {
+    public func appConfiguration(chatProperties : ISMChatPageProperties? = ISMChatPageProperties(),appearance : ISMAppearance? = ISMAppearance(),fontNames : ISMChatCustomFontNames? = ISMChatCustomFontNames(),customSearchBar: ISMChatCustomSearchBar? = ISMChatCustomSearchBar()) {
         self.fontNames = fontNames
         
         //UI Properties
@@ -67,6 +67,6 @@ public class ISMChatSdkUI{
         customSearch = customSearchBar
         
        //Appearance
-        appAppearance = ISMChatAppearance(appearance: appearance)
+        appAppearance = ISMChatAppearance(appearance: appearance ?? ISMAppearance())
     }
 }
