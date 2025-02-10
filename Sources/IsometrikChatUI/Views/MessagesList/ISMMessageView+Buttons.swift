@@ -225,7 +225,7 @@ extension ISMMessageView{
                             ?? opponenDetail?.metaData?.userId ?? opponenDetail?.userIdentifier
                             ?? self.conversationDetail?.conversationDetails?.opponentDetails?.userIdentifier
                             
-                            delegate?.navigateToAppProfile(userId: userId ?? "", storeId: storeId ?? "", userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0,isometricChatUserId: self.conversationDetail?.conversationDetails?.opponentDetails?.userId ?? "")
+                            delegate?.navigateToAppProfile(userId: userId ?? "", storeId: storeId ?? "", userType: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userType ?? 0,conversationID: self.conversationDetail?.conversationDetails?.opponentDetails?.userId ?? "")
                         }
                     } else {
                         self.stateViewModel.navigateToUserProfile = true
