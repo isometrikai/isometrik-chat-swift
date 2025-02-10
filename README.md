@@ -193,7 +193,7 @@ struct ConversationListMessageView: CustomConversationListCellViewProvider {
 13. Logout
 
 ```dart
-Messaging.messaging().unsubscribe(fromTopic: ISMChatHelper.unSubscribeFCM(userId: userId))
+Messaging.messaging().unsubscribe(fromTopic: ISMChatHelper.unSubscribeFCM(userId: IsomertricChatUserid))
 ISMChatSdk.getInstance().onTerminate(userId: IsomertricChatUserid ?? "")
 ISMChatSdk.sharedInstance = nil
 ```
@@ -203,7 +203,7 @@ ISMChatSdk.sharedInstance = nil
 Add this code when you have multiple profiles under one account to enable profile switching.
 
 ```dart
-Messaging.messaging().unsubscribe(fromTopic: ISMChatHelper.unSubscribeFCM(userId: userId))
+Messaging.messaging().unsubscribe(fromTopic: ISMChatHelper.unSubscribeFCM(userId: IsomertricChatUserid))
 ISMChatSdk.getInstance().onProfileSwitch(oldUserId : String,appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig,hostFrameworkType : FrameworkType,conversationListViewControllerName : UIViewController.Type?,messagesListViewControllerName : UIViewController.Type?)
 ```
 
