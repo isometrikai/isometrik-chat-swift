@@ -547,7 +547,7 @@ public struct ISMMessageView: View {
                     userId: navigateToSocialProfileId,
                     storeId: "",
                     userType: 0,
-                    conversationID: "")
+                    conversationID: self.conversationID ?? "")
                 navigateToSocialProfileId = ""
             }
         })
