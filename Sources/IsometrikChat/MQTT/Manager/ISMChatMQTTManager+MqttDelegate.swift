@@ -218,7 +218,14 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                 }
             }
         case .mqttDeleteConversationLocally:
-            break
+            self.messageReceived(data) { result in
+                switch result{
+                case .success(let data):
+                    self.realmManager.deleteConversation(convID: data.conversationId ?? "")
+                case .failure(let error):
+                    NotificationCenter.default.post(name: NSNotification.groupActions, object: nil,userInfo: ["data": "","error" : error])
+                }
+            }
         case .mqttAddAdmin:
             self.messageReceived(data) { result in
                 switch result{
