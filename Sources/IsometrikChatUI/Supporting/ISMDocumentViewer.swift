@@ -16,9 +16,7 @@ struct ISMDocumentViewer: View {
     
     // MARK: - PROPERTIES
     /// The URL of the document to display
-    let url: URL?
-    /// Title to display in the navigation bar
-    let title: String
+    let url: String?
     /// Tracks the current page number for PDF documents
     @State var currentPage: Int = 0
     /// Total number of pages in the PDF document
@@ -34,66 +32,68 @@ struct ISMDocumentViewer: View {
     
     //MARK:  - LIFECYCLE
     var body: some View {
-        ZStack{
-            if let url = url{
-                VStack {
-                    // Using the PDFKitView and passing the previously created pdfURL
-                    if url.absoluteString.contains(".pdf"){
-                        PDFKitView(url: url).scaledToFill()
-                    }else{
-                        TextFileView(url: url)
-                    }
+        NavigationStack{
+            ZStack{
+                if let url = URL(string: url ?? ""){
+                    VStack {
+                        // Using the PDFKitView and passing the previously created pdfURL
+                        if url.absoluteString.contains(".pdf"){
+                            PDFKitView(url: url).scaledToFill()
+                        }else{
+                            TextFileView(url: url)
+                        }
                         
-                }.navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .principal) {
-                            VStack {
-                                Text(title)
-                                    .font(appearance.fonts.mediaSliderHeader)
-                                    .foregroundColor(appearance.colorPalette.mediaSliderHeader)
+                    }.navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .principal) {
+                                VStack {
+                                    Text(ISMChatHelper.getFileNameFromURL(url: url))
+                                        .font(appearance.fonts.mediaSliderHeader)
+                                        .foregroundColor(appearance.colorPalette.mediaSliderHeader)
+                                }
                             }
                         }
-                    }
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Menu {
-                                Button {
-                                    isShowingActivityView = true
+                        .toolbar {
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                Menu {
+                                    Button {
+                                        isShowingActivityView = true
+                                    } label: {
+                                        Label("Share", systemImage: "square.and.arrow.up")
+                                    }
+                                    Button {
+                                        saveToFile()
+                                    } label: {
+                                        Label("Save to File", systemImage: "folder")
+                                    }
                                 } label: {
-                                    Label("Share", systemImage: "square.and.arrow.up")
+                                    appearance.images.threeDots
+                                        .resizable()
+                                        .frame(width: 5, height: 20, alignment: .center)
+                                    
                                 }
-                                Button {
-                                    saveToFile()
-                                } label: {
-                                    Label("Save to File", systemImage: "folder")
-                                }
-                            } label: {
-                                appearance.images.threeDots
-                                    .resizable()
-                                    .frame(width: 5, height: 20, alignment: .center)
-                                
+                            }
+                        }//:ToolBar
+                        .sheet(isPresented: $isShowingActivityView) {
+                            ActivityView(activityItems: [url])
+                        }
+                }
+                if documentSaved == true{
+                    Text("Saved to File.")
+                        .font(Font.caption)
+                        .padding()
+                        .background(.black.opacity(0.4))
+                        .foregroundColor(.white)
+                        .cornerRadius(5)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                documentSaved = false
                             }
                         }
-                    }//:ToolBar
-                    .sheet(isPresented: $isShowingActivityView) {
-                        ActivityView(activityItems: [url])
-                    }
-            }
-            if documentSaved == true{
-                Text("Saved to File.")
-                    .font(Font.caption)
-                    .padding()
-                    .background(.black.opacity(0.4))
-                    .foregroundColor(.white)
-                    .cornerRadius(5)
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            documentSaved = false
-                        }
-                    }
-            }
-        } .navigationBarBackButtonHidden()
-            .navigationBarItems(leading: navigationBarLeadingButtons())
+                }
+            } .navigationBarBackButtonHidden()
+                .navigationBarItems(leading: navigationBarLeadingButtons())
+        }
     }
     
     
@@ -111,7 +111,7 @@ struct ISMDocumentViewer: View {
     /// Saves the document to the local file system
     /// Uses FileDownloader to asynchronously download and store the file
     func saveToFile(){
-        if let url = url{
+        if let url = URL(string: url ?? ""){
             FileDownloader.loadFileAsync(url: url) { (path, error) in
                 if let path = path{
                     print("PDF File downloaded to : \(path)")

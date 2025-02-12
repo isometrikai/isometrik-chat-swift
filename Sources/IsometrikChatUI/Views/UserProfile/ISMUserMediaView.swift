@@ -338,7 +338,7 @@ struct ISMUserMediaView: View {
     // Show file view
     func showFileView(_ value: MediaDB) -> some View {
         NavigationLink(
-            destination: ISMDocumentViewer(url: URL(string: value.mediaUrl)!, title: "") // Navigate to document viewer
+            destination: ISMDocumentViewer(url: value.mediaUrl) // Navigate to document viewer
         ) {
             ZStack(alignment: .leading) {
                 Color.white.cornerRadius(8) // Background color for file

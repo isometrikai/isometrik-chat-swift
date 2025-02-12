@@ -776,13 +776,7 @@ public struct ISMMessageView: View {
                 ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId, placeName: $placeName, address: $placeAddress)
         })
         .fullScreenCover(isPresented: $stateViewModel.navigateToDocumentViewer, content: {
-            if let documentUrl = URL(string: navigateToDocumentUrl){
-                let urlExtension = ISMChatHelper.getExtensionFromURL(url: documentUrl)
-                let fileName = ISMChatHelper.getFileNameFromURL(url: documentUrl)
-                NavigationStack{
-                    ISMDocumentViewer(url: documentUrl, title: fileName)
-                }
-            }
+            ISMDocumentViewer(url: navigateToDocumentUrl)
         })
         .sheet(isPresented: self.$stateViewModel.showVideoPicker) {
             ISMMediaPicker(isPresented: self.$stateViewModel.showVideoPicker, sendMedias: $mediaSelectedFromPicker,opponenetName: isGroup == true ? (self.conversationDetail?.conversationDetails?.conversationTitle ?? "" ) : (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""),mediaCaption: $mediaCaption,sendMediaToMessage: $stateViewModel.sendMedia)
