@@ -62,11 +62,72 @@ public struct ISMMessageInfoView: View {
                 }.modifier(BackgroundImageMessageInfo())
                 List{
                     if isGroup == true || fromBroadCastFlow == true{
-                        Section {
-                            if let members = readUsers{
-                                if members.count > 0{
-                                    ForEach(members, id: \.self) { member in
-                                        ISMMessageInfoDetailUserSubView(user: member)
+                        if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
+                            Section {
+                                HStack{
+                                    appearance.images.messageRead
+                                        .resizable().frame(width: 15, height: 9, alignment: .center).padding(.horizontal,10)
+                                    Text("Read")
+                                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+                                        .font(appearance.fonts.messageListMessageText)
+                                    Spacer()
+                                    if let readAtTime = self.readAt{
+                                        let text = NSDate().descriptiveStringMessageInfo(time: readAtTime)
+                                        Text(text)
+                                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                            .font(appearance.fonts.chatListUserMessage)
+                                            .padding(.horizontal,10)
+                                    }else{
+                                        Text("---")
+                                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                            .font(appearance.fonts.chatListUserMessage)
+                                            .padding(.horizontal,10)
+                                    }
+                                }//:HSTACK
+                                
+                                HStack{
+                                    appearance.images.messageDelivered
+                                        .resizable().frame(width: 15, height: 9, alignment: .center).padding(.horizontal,10)
+                                    Text("Delivered")
+                                        .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
+                                        .font(appearance.fonts.messageListMessageText)
+                                    Spacer()
+                                    if let deliveredAtTime = self.deliveredAt{
+                                        let text = NSDate().descriptiveStringMessageInfo(time: deliveredAtTime)
+                                        Text(text)
+                                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                            .font(appearance.fonts.chatListUserMessage)
+                                            .padding(.horizontal,10)
+                                    }else{
+                                        Text("---")
+                                            .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                            .font(appearance.fonts.chatListUserMessage)
+                                            .padding(.horizontal,10)
+                                    }
+                                    
+                                }//:HSTACK
+                                
+                            } header: {
+                                Text("")
+                            } footer: {
+                                Text("")
+                            }.listRowBackground(Color.white)
+                        }else{
+                            Section {
+                                if let members = readUsers{
+                                    if members.count > 0{
+                                        ForEach(members, id: \.self) { member in
+                                            ISMMessageInfoDetailUserSubView(user: member)
+                                        }
+                                    }else{
+                                        HStack{
+                                            Spacer()
+                                            Text("---")
+                                                .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                                .font(appearance.fonts.chatListUserMessage)
+                                                .padding(.horizontal,10)
+                                            Spacer()
+                                        }
                                     }
                                 }else{
                                     HStack{
@@ -78,36 +139,36 @@ public struct ISMMessageInfoView: View {
                                         Spacer()
                                     }
                                 }
-                            }else{
-                                HStack{
-                                    Spacer()
-                                    Text("---")
+                            } header: {
+                                HStack(spacing : 5){
+                                    appearance.images.messageRead
+                                        .resizable().frame(width: 15, height: 9, alignment: .center)
+                                    
+                                    Text("READ BY")
                                         .foregroundColor(appearance.colorPalette.chatListUserMessage)
                                         .font(appearance.fonts.chatListUserMessage)
-                                        .padding(.horizontal,10)
-                                    Spacer()
-                                }
-                            }
-                        } header: {
-                            HStack(spacing : 5){
-                                appearance.images.messageRead
-                                    .resizable().frame(width: 15, height: 9, alignment: .center)
-                                
-                                Text("READ BY")
-                                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
-                                    .font(appearance.fonts.chatListUserMessage)
-                                    .textCase(nil)
-                                
-                            }.listRowInsets(EdgeInsets())
-                        } footer: {
-                            Text("")
-                        }.listRowBackground(Color.white)
-                        
-                        Section {
-                            if let members = deliveredUsers{
-                                if members.count > 0{
-                                    ForEach(members, id: \.self) { member in
-                                        ISMMessageInfoDetailUserSubView(user: member)
+                                        .textCase(nil)
+                                    
+                                }.listRowInsets(EdgeInsets())
+                            } footer: {
+                                Text("")
+                            }.listRowBackground(Color.white)
+                            
+                            Section {
+                                if let members = deliveredUsers{
+                                    if members.count > 0{
+                                        ForEach(members, id: \.self) { member in
+                                            ISMMessageInfoDetailUserSubView(user: member)
+                                        }
+                                    }else{
+                                        HStack{
+                                            Spacer()
+                                            Text("---")
+                                                .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                                .font(appearance.fonts.chatListUserMessage)
+                                                .padding(.horizontal,10)
+                                            Spacer()
+                                        }
                                     }
                                 }else{
                                     HStack{
@@ -119,29 +180,20 @@ public struct ISMMessageInfoView: View {
                                         Spacer()
                                     }
                                 }
-                            }else{
-                                HStack{
-                                    Spacer()
-                                    Text("---")
+                            } header: {
+                                HStack(spacing : 5){
+                                    appearance.images.messageDelivered
+                                        .resizable().frame(width: 15, height: 9, alignment: .center)
+                                    Text("DELIVERED TO")
                                         .foregroundColor(appearance.colorPalette.chatListUserMessage)
                                         .font(appearance.fonts.chatListUserMessage)
-                                        .padding(.horizontal,10)
-                                    Spacer()
-                                }
-                            }
-                        } header: {
-                            HStack(spacing : 5){
-                                appearance.images.messageDelivered
-                                    .resizable().frame(width: 15, height: 9, alignment: .center)
-                                Text("DELIVERED TO")
-                                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
-                                    .font(appearance.fonts.chatListUserMessage)
-                                    .textCase(nil)
-                                
-                            }.listRowInsets(EdgeInsets())
-                        } footer: {
-                            Text("")
-                        }.listRowBackground(Color.white)
+                                        .textCase(nil)
+                                    
+                                }.listRowInsets(EdgeInsets())
+                            } footer: {
+                                Text("")
+                            }.listRowBackground(Color.white)
+                        }
                     }else{
                         Section {
                             HStack{
