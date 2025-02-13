@@ -11,6 +11,20 @@ import UIKit
 
 extension ChatsViewModel{
     
+    public func getCustomTypeMessagesAsPerSentAndReceived(senderId : String, customtypes : String,senderIdsExclusive: Bool,conversationId : String,completion:@escaping([ISMChatMessage]?)->()){
+        let endPoint = ISMChatMessagesEndpoint.getCustomTypeMessages(conversationId: conversationId, customTypes: customtypes, senderIds: senderId, senderIdsExclusive: senderIdsExclusive)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatMessages, ISMChatNewAPIError>) in
+            switch result{
+            case .success(let user,_) :
+                completion(user.messages)
+            case .failure(_) :
+                completion([])
+            }
+        }
+    }
+    
     //MARK: - get messages
     public func getMessages(refresh : Bool? = nil,conversationId : String,lastMessageTimestamp:String,completion:@escaping(ISMChatMessages?)->()){
         

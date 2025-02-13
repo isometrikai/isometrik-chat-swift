@@ -10,6 +10,7 @@ import Foundation
 enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
     
     case getMessages(conversationId: String,lastMessageTimestamp: String)
+    case getCustomTypeMessages(conversationId: String,customTypes: String,senderIds: String,senderIdsExclusive: Bool)
     case sendMessage
     case editMessage
     case deleteMessageForMe(conversationId: String,messageIds: String)
@@ -27,6 +28,8 @@ enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
     var path: String {
         switch self {
         case .getMessages:
+            return "/chat/messages"
+        case .getCustomTypeMessages:
             return "/chat/messages"
         case .editMessage:
             return "/chat/message"
@@ -52,6 +55,8 @@ enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
     var method: ISMChatHTTPMethod {
         switch self {
         case .getMessages:
+            return .get
+        case .getCustomTypeMessages:
             return .get
         case .editMessage:
             return .patch
@@ -83,6 +88,11 @@ enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
             if !lastMessageTimestamp.isEmpty{
                 params.updateValue(lastMessageTimestamp, forKey: "lastMessageTimestamp")
             }
+            return params
+        case .getCustomTypeMessages(let conversationId, let customTypes,let senderIds, let senderIdsExclusive):
+            let params : [String : String] = [
+                "conversationId" : "\(conversationId)", "customTypes" : "\(customTypes)" , "senderIds" : "\(senderIds)", "senderIdsExclusive" : "\(senderIdsExclusive)"
+            ]
             return params
         case .editMessage:
             return [:]
@@ -122,7 +132,7 @@ enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
     
     var headers: [String: String]? {
         switch self {
-        case .getMessages, .editMessage,.sendMessage,.deleteMessageForMe,.deleteMessageForEveryone,.forwardMessage,.messageDeliveredInfo,.messageReadInfo,.allUnreadMessagesFromAllConversation,.markMessageStatusRead:
+        case .getMessages,.getCustomTypeMessages, .editMessage,.sendMessage,.deleteMessageForMe,.deleteMessageForEveryone,.forwardMessage,.messageDeliveredInfo,.messageReadInfo,.allUnreadMessagesFromAllConversation,.markMessageStatusRead:
             return ["userToken": ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userToken ?? "",
                     "userSecret": ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.userSecret ?? "",
                     "projectId": ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.projectId ?? "",
