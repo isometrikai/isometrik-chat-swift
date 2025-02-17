@@ -733,6 +733,27 @@ extension RealmManager {
                     }
                     
                     getAllConversations()
+                    
+                }
+                // change or update status of messages in this conversation, if read/delivered or got new message
+                if obj.lastMessageDetails?.senderId == self.userData?.userId{
+                    if let readTo = obj.lastMessageDetails?.readBy{
+                        if readTo.count > 0{
+                            self.updateAllReadStatus(conId: obj.conversationId ?? "")
+                            self.updateDeliveredToInAllmsgs(convId: obj.conversationId ?? "", userId: readTo.first?.userId ?? "", updatedAt: readTo.first?.timestamp ?? 0)
+                            self.updateReadbyInAllmsgs(convId: obj.conversationId ?? "", userId: readTo.first?.userId ?? "", updatedAt: readTo.first?.timestamp ?? 0)
+                        }
+                    }
+                    if let deliveredTo = obj.lastMessageDetails?.deliveredTo{
+                        if deliveredTo.count > 0{
+                            self.updateAllDeliveryStatus(conId: obj.conversationId ?? "")
+                            self.updateDeliveredToInAllmsgs(convId: obj.conversationId ?? "", userId: deliveredTo.first?.userId ?? "", updatedAt: deliveredTo.first?.timestamp ?? 0)
+                        }
+                    }
+                }else{
+                    self.updateAllReadStatus(conId: obj.conversationId ?? "")
+                    self.updateDeliveredToInAllmsgs(convId: obj.conversationId ?? "", userId: obj.opponentDetails?.userId ?? "", updatedAt: obj.lastMessageDetails?.sentAt ?? 0)
+                    self.updateReadbyInAllmsgs(convId: obj.conversationId ?? "", userId: obj.opponentDetails?.userId ?? "", updatedAt: obj.lastMessageDetails?.sentAt ?? 0)
                 }
             } catch {
                 print("Error updating task \(obj.id) to Realm: \(error)")
