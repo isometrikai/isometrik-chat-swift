@@ -66,7 +66,7 @@ struct ISMMediaPicker: View {
                 selection: .init(
                     emptyTint: .white,
                     emptyBackground: .white.opacity(0.25),
-                    selectedTint: ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette.messageListReplyToolbarRectangle,
+                    selectedTint: ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette.mediaPickerButton,
                     fullscreenTint: .gray
                 )
             )
@@ -157,7 +157,7 @@ extension View {
                     Color.gray.opacity(0.6)
                         .cornerRadius(16)
                 }else{
-                    ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette.messageListReplyToolbarRectangle
+                    ISMChatSdkUI.getInstance().getAppAppearance().appearance.colorPalette.mediaPickerButton
                         .cornerRadius(16)
                 }
             }

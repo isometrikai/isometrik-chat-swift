@@ -96,6 +96,7 @@ public struct ISMChatColorPalette {
     
     public var attachmentsText : Color = Color(hex: "#121511")
     public var attachmentsBackground : Color = Color(hex: "#F5F5F2")
+    public var mediaPickerButton : Color = .ismChatSdkBGGradientFrom
     
     public init(){
     }
@@ -167,7 +168,8 @@ public struct ISMChatColorPalette {
             avatarBackground: Color = Color(hex: "EDEBFE"),
             avatarText: Color = Color(hex: "7062E9"),
             attachmentsText: Color = Color(hex: "#121511"),
-            attachmentsBackground: Color = Color(hex: "#F5F5F2")
+            attachmentsBackground: Color = Color(hex: "#F5F5F2"),
+            mediaPickerButton : Color = .ismChatSdkBGGradientFrom
         )  {
         self.navigationBarTitle = navigationBarTitle
         self.alertText = alertText
@@ -232,6 +234,7 @@ public struct ISMChatColorPalette {
         self.avatarBackground = avatarBackground
         self.avatarText = avatarText
         self.attachmentsText = attachmentsText
+            self.mediaPickerButton = mediaPickerButton
     }
 }
 
