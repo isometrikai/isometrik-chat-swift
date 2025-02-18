@@ -31,6 +31,7 @@ public enum ISMChatMediaType : CaseIterable{
     case PaymentRequest
     case DineInInvite
     case DineInStatus
+    case ProfileShare
     //
     case OfferSent
     case CounterOffer
@@ -92,6 +93,8 @@ public enum ISMChatMediaType : CaseIterable{
             return "AttachmentMessage:DineInInvite"
         case .DineInStatus:
             return "AttachmentMessage:DineInInviteStatus"
+        case .ProfileShare:
+            return "AttachmentMessage:ProfileShare"
         case .OfferSent:
             return "OFFER_SENT"
         case .CounterOffer:

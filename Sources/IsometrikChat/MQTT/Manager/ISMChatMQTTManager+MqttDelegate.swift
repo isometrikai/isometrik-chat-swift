@@ -517,19 +517,6 @@ extension ISMChatMQTTManager{
                         status: messageInfo.metaData?.status
                     )
                     
-                    var metaDataJsonString : String = ""
-                    do {
-                        // Convert metaData to JSON
-                        let jsonData = try JSONEncoder().encode(metaData)
-                        
-                        // Convert JSON data to string
-                        if let jsonString = String(data: jsonData, encoding: .utf8) {
-                            metaDataJsonString = jsonString
-                        }
-                    } catch {
-                        print("Failed to convert metaData to JSON: \(error.localizedDescription)")
-                    }
-                    
                     if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
                         bodyUpdated = messageInfo.details?.body
                         customType = messageInfo.details?.customType
@@ -581,17 +568,6 @@ extension ISMChatMQTTManager{
                             status: messageInfo.metaData?.status
                         )
                         
-                        do {
-                            // Convert metaData to JSON
-                            let jsonData = try JSONEncoder().encode(metaData)
-                            
-                            // Convert JSON data to string
-                            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                                metaDataJsonString = jsonString
-                            }
-                        } catch {
-                            print("Failed to convert metaData to JSON: \(error.localizedDescription)")
-                        }
                     }
                     
                     var mentionedUser: [ISMChatMentionedUser] = []
@@ -725,19 +701,6 @@ extension ISMChatMQTTManager{
                             status: messageInfo.metaData?.status
                         )
                         
-                        var metaDataJsonString : String = ""
-                        do {
-                            // Convert metaData to JSON
-                            let jsonData = try JSONEncoder().encode(metaData)
-                            
-                            // Convert JSON data to string
-                            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                                metaDataJsonString = jsonString
-                            }
-                        } catch {
-                            print("Failed to convert metaData to JSON: \(error.localizedDescription)")
-                        }
-                        
                         if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
                             bodyUpdated = messageInfo.details?.body
                             customType = messageInfo.details?.customType
@@ -790,18 +753,6 @@ extension ISMChatMQTTManager{
                             )
                         }
                         
-                        do {
-                            // Convert metaData to JSON
-                            let jsonData = try JSONEncoder().encode(metaData)
-                            
-                            // Convert JSON data to string
-                            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                                metaDataJsonString = jsonString
-                            }
-                        } catch {
-                            print("Failed to convert metaData to JSON: \(error.localizedDescription)")
-                        }
-                        
                         var mentionedUser : [ISMChatMentionedUser] = []
                         if messageInfo.mentionedUsers != nil{
                             for x in mentionedUser{
@@ -810,7 +761,7 @@ extension ISMChatMQTTManager{
                             }
                         }
                         
-                        let message = ISMChatMessage(sentAt: messageInfo.sentAt,body: bodyUpdated, messageId: messageInfo.messageId,mentionedUsers: mentionedUser,metaData : metaData,metaDataJsonString: metaDataJsonString, customType: customType,action: messageInfo.action, attachment: messageInfo.attachments,conversationId: messageInfo.conversationId, userId: messageInfo.userId, userName: messageInfo.userName, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, memberName: messageInfo.memberName, memberId: messageInfo.memberId, memberIdentifier: messageInfo.memberIdentifier,senderInfo: senderInfo,members: membersArray,reactions: messageInfo.reactions)
+                        let message = ISMChatMessage(sentAt: messageInfo.sentAt,body: bodyUpdated, messageId: messageInfo.messageId,mentionedUsers: mentionedUser,metaData : metaData,metaDataJsonString: messageInfo.metaDataJson, customType: customType,action: messageInfo.action, attachment: messageInfo.attachments,conversationId: messageInfo.conversationId, userId: messageInfo.userId, userName: messageInfo.userName, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, memberName: messageInfo.memberName, memberId: messageInfo.memberId, memberIdentifier: messageInfo.memberIdentifier,senderInfo: senderInfo,members: membersArray,reactions: messageInfo.reactions)
                         
                         DispatchQueue.main.async {
                             self.realmManager.saveMessage(obj: [message])
@@ -917,19 +868,6 @@ extension ISMChatMQTTManager{
                             status: messageInfo.metaData?.status
                         )
                         
-                        var metaDataJsonString : String = ""
-                        do {
-                            // Convert metaData to JSON
-                            let jsonData = try JSONEncoder().encode(metaData)
-                            
-                            // Convert JSON data to string
-                            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                                metaDataJsonString = jsonString
-                            }
-                        } catch {
-                            print("Failed to convert metaData to JSON: \(error.localizedDescription)")
-                        }
-                        
                         if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
                             bodyUpdated = messageInfo.details?.body
                             customType = messageInfo.details?.customType
@@ -982,17 +920,6 @@ extension ISMChatMQTTManager{
                             )
                         }
                         
-                        do {
-                            // Convert metaData to JSON
-                            let jsonData = try JSONEncoder().encode(metaData)
-                            
-                            // Convert JSON data to string
-                            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                                metaDataJsonString = jsonString
-                            }
-                        } catch {
-                            print("Failed to convert metaData to JSON: \(error.localizedDescription)")
-                        }
                         
                         var mentionedUser : [ISMChatMentionedUser] = []
                         if messageInfo.mentionedUsers != nil{
@@ -1002,7 +929,7 @@ extension ISMChatMQTTManager{
                             }
                         }
                         
-                        let message = ISMChatMessage(sentAt: messageInfo.sentAt,body: bodyUpdated, messageId: messageInfo.messageId,mentionedUsers: mentionedUser,metaData : metaData,metaDataJsonString: metaDataJsonString, customType: customType,action: messageInfo.action, attachment: messageInfo.attachments,conversationId: messageInfo.conversationId, userId: messageInfo.userId, userName: messageInfo.userName, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, memberName: messageInfo.memberName, memberId: messageInfo.memberId, memberIdentifier: messageInfo.memberIdentifier,senderInfo: senderInfo,members: membersArray,reactions: messageInfo.reactions)
+                        let message = ISMChatMessage(sentAt: messageInfo.sentAt,body: bodyUpdated, messageId: messageInfo.messageId,mentionedUsers: mentionedUser,metaData : metaData,metaDataJsonString: messageInfo.metaDataJson, customType: customType,action: messageInfo.action, attachment: messageInfo.attachments,conversationId: messageInfo.conversationId, userId: messageInfo.userId, userName: messageInfo.userName, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, memberName: messageInfo.memberName, memberId: messageInfo.memberId, memberIdentifier: messageInfo.memberIdentifier,senderInfo: senderInfo,members: membersArray,reactions: messageInfo.reactions)
                         
                         DispatchQueue.main.async {
                             self.realmManager.saveMessage(obj: [message])

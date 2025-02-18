@@ -206,6 +206,8 @@ public class ISMChatHelper: NSObject {
             return .dineInInvite
         }else if message.customType == ISMChatMediaType.DineInStatus.value{
             return .dineInInviteStatus
+        }else if message.customType == ISMChatMediaType.ProfileShare.value{
+            return .ProfileShare
         }else if message.customType == ISMChatMediaType.OfferSent.value{
             return .OfferSent
         }else if message.customType == ISMChatMediaType.CounterOffer.value{
