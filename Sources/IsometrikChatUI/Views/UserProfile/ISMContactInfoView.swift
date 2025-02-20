@@ -190,7 +190,7 @@ struct ISMContactInfoView: View {
                     }.background(Color.backgroundView)
                         .scrollContentBackground(.hidden)
                         // Disable scrolling if content fits in screen
-                        .scrollDisabled(geometry.size.height >= geometry.frame(in: .global).height)
+//                        .scrollDisabled(geometry.size.height >= geometry.frame(in: .global).height)
                 }
             }
         }
