@@ -901,7 +901,7 @@ public struct ISMMessageView: View {
             if !networkMonitor.isConnected {
                 toolBarView()
                 //in some apps if booking is closed then we can't messsage
-            }else if conversationDetail?.conversationDetails?.customType == "CLOSED" || self.realmManager.messages.last.last.customType == ISMChatMediaType.DealComplete.value{
+            }else if conversationDetail?.conversationDetails?.customType == "CLOSED" || self.realmManager.messages.last?.last?.customType == ISMChatMediaType.DealComplete.value{
             }else{
                 if isGroup == true {
                     if let members = conversationDetail?.conversationDetails?.members,
