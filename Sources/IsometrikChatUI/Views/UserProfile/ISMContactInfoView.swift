@@ -206,6 +206,11 @@ struct ISMContactInfoView: View {
                 }
             }
         }
+        .fullScreenCover(isPresented: $showEdit, content: {
+            NavigationStack{
+                ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID)
+            }
+        })
         .navigationBarItems(leading: navBarLeadingBtn, trailing: navBarTrailingBtn) // Set navigation bar items
         // Navigation links for various views can be added here
         .onChange(of: selectedMember, { _, _ in
@@ -553,13 +558,19 @@ struct ISMContactInfoView: View {
     var navBarTrailingBtn: some View {
         VStack {
             if isGroup == true {
-                NavigationLink {
-                    ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID)
+                Button {
+                    showEdit = true
                 } label: {
                     Text("Edit")
                         .font(appearance.fonts.messageListMessageText)
                         .foregroundColor(appearance.colorPalette.userProfileEditText)
                 }
+
+//                NavigationLink {
+//                    ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID)
+//                } label: {
+//                    
+//                }
             } else {
                 Text("") // Placeholder for non-group case
             }
