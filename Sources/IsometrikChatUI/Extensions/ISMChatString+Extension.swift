@@ -9,7 +9,7 @@ import UIKit
 import SwiftUI
 extension String {
     
-    public func localized() -> String {
+    func localized() -> String {
         
         if let bundlePath = Bundle.module.path(forResource: "Localizable", ofType: "strings", inDirectory: nil) {
             print("Localization file found at: \(bundlePath)")
