@@ -577,7 +577,7 @@ extension ISMMessageView{
                     }
                 }else{
                     
-                    let mediaName = "\(UUID()).jpg"
+                    let mediaName = "\(UUID()).png"
                     let mediaId = "\(UUID())"
                     //1. nill data if any
                     nilData()
@@ -598,7 +598,7 @@ extension ISMMessageView{
                             }
                         })
                     }else{
-                        chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: nil, document: nil, video: media.url, audio: nil, mediaName: mediaName) {  data, filename, size in
+                        chatViewModel.upload(messageKind: ISMChatHelper.checkMediaType(media: media.url), conversationId: self.conversationID ?? "", image: media.url, document: nil, video: nil, audio: nil, mediaName: mediaName) {  data, filename, size in
                             if let data = data {
                                 sendMediaMessage(messageKind: ISMChatHelper.checkMediaType(media: media.url), customType: ISMChatHelper.checkMediaCustomType(media: media.url), mediaId: mediaId, mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.thumbnailUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "", caption: media.caption)
                                 localIds.removeFirst()

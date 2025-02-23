@@ -46,7 +46,7 @@ extension ChatsViewModel{
                 mediaData = try! Data(contentsOf: image)
             }else if let image = image{
                 if let myImage = ISMChatHelper.compressImage(image: image){
-                    if let dataobj = myImage.jpegData(compressionQuality: 0.1){
+                    if let dataobj = myImage.pngData(){
                         mediaData = dataobj
                     }
                 }
@@ -68,15 +68,49 @@ extension ChatsViewModel{
         let endPoint = ISMChatMediaUploadEndpoint.messageMediaUpload
         let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: params)
         
+        // Add function to determine content type
+        func getContentType(messageKind: ISMChatMessageType, fileName: String) -> String {
+            let fileExtension = (fileName as NSString).pathExtension.lowercased()
+            
+            switch messageKind {
+            case .photo:
+                return "image/\(fileExtension)"
+            case .video:
+                return "video/\(fileExtension)"
+            case .audio:
+                return "audio/\(fileExtension)"
+            case .document:
+                switch fileExtension {
+                case "pdf":
+                    return "application/pdf"
+                case "doc", "docx":
+                    return "application/msword"
+                case "xls", "xlsx":
+                    return "application/vnd.ms-excel"
+                case "txt":
+                    return "text/plain"
+                default:
+                    return "application/octet-stream"
+                }
+            default:
+                return "application/octet-stream"
+            }
+        }
+
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatPresignedUrl, ISMChatNewAPIError>) in
             switch result{
             case .success(let data,_) :
                 if let url = data.presignedUrls?.first?.mediaPresignedUrl{
-                    AF.upload(mediaData, to: url, method: .put, headers: [:]).responseData { response in
+                    let contentType = getContentType(messageKind: messageKind, fileName: mediaName)
+                    let headers: HTTPHeaders = [
+                        "Content-Type": contentType
+                    ]
+
+                    AF.upload(mediaData, to: url, method: .put, headers: headers).responseData { response in
                         ISMChatHelper.print(response)
-                        if response.response?.statusCode == 200{
+                        if response.response?.statusCode == 200 {
                             completion(data.presignedUrls?.first, mediaName, mediaData.count)
-                        }else{
+                        } else {
                             ISMChatHelper.print("Error in Image upload")
                         }
                     }
@@ -111,7 +145,10 @@ extension ChatsViewModel{
             switch result{
             case .success(let data,_) :
                 if let url = data.presignedUrl, let urlData = image.pngData(){
-                    AF.upload(urlData, to: url, method: .put, headers: [:]).responseData { response in
+                    let headers: HTTPHeaders = [
+                        "Content-Type": "image/png"
+                    ]
+                    AF.upload(urlData, to: url, method: .put, headers: headers).responseData { response in
                         ISMChatHelper.print(response)
                         if response.response?.statusCode == 200{
                             completion(data.mediaUrl)
@@ -140,7 +177,10 @@ extension ChatsViewModel{
             switch result{
             case .success(let data,_) :
                 if let url = data.presignedUrl{
-                    AF.upload(mediaData, to: url, method: .put, headers: [:]).responseData { response in
+                    let headers: HTTPHeaders = [
+                        "Content-Type": "image/png"  // Assuming it's always a PNG, adjust if needed
+                    ]
+                    AF.upload(mediaData, to: url, method: .put, headers: headers).responseData { response in
                         ISMChatHelper.print(response)
                         if response.response?.statusCode == 200{
                             completion(data.mediaUrl)
