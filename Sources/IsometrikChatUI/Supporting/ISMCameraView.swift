@@ -10,6 +10,7 @@ import SwiftUI
 import AVFoundation
 import IsometrikChat
 import PencilKit
+import AVKit
 
 /// A SwiftUI view that provides camera capture functionality with photo and video capabilities
 struct CameraCaptureView: View {
@@ -41,8 +42,8 @@ struct CameraCaptureView: View {
 
     var body: some View {
         ZStack {
-            if let capturedURL = capturedURL{
-                if navigateToDraw == true{
+            if let capturedURL = capturedURL {
+                if navigateToDraw {
                     GeometryReader { geometry in
                         CanvasView(canvas: $canvas, imageData: $imageData, toolPicker:  $toolpicker, rect: geometry.size)
                             .frame(width: geometry.size.width, height: geometry.size.height)
@@ -50,15 +51,17 @@ struct CameraCaptureView: View {
                                 rect = CGRect(origin: .zero, size: geometry.size)
                             }
                     }
-                }else{
-                    if ISMChatHelper.isVideoString(media: capturedURL.absoluteString){
+                } else {
+                    if ISMChatHelper.isVideoString(media: capturedURL.absoluteString) {
                         ZStack {
                             // Video Player
                             GeometryReader { geometry in
-                                VideoPlayer(player: player)
-                                    .scaledToFill()
-                                    .frame(width: geometry.size.width, height: geometry.size.height)
-                                    .clipped()
+                                if let player = player {
+                                    VideoPlayer(player: player)
+                                        .scaledToFill()
+                                        .frame(width: geometry.size.width, height: geometry.size.height)
+                                        .clipped()
+                                }
                             }
                         }
                         .onAppear {
@@ -382,80 +385,6 @@ struct CameraPreview: UIViewControllerRepresentable {
     }
 }
 
-import AVFoundation
-import AVKit
-import SwiftUI
-
-
-
-// SwiftUI Wrapper for AVPlayerViewController
-//struct VideoPlayerView: UIViewControllerRepresentable {
-//    var videoURL: URL
-//
-//    func makeUIViewController(context: Context) -> VideoPlayerViewController {
-//        let viewController = VideoPlayerViewController()
-//        viewController.videoURL = videoURL
-//        return viewController
-//    }
-//
-//    func updateUIViewController(_ uiViewController: VideoPlayerViewController, context: Context) {
-//        // Update the controller if needed
-//    }
-//}
-
-//class VideoPlayerViewController: UIViewController {
-//    var player: AVPlayer?
-//    var playerLayer: AVPlayerLayer?
-//    var playerItem: AVPlayerItem?
-//    var playPauseButton: UIButton!
-//    var videoURL: URL!
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//        // Initialize AVPlayer with the video URL
-//        playerItem = AVPlayerItem(url: videoURL)
-//        player = AVPlayer(playerItem: playerItem)
-//
-//        // Initialize AVPlayerLayer and make it full screen
-//        playerLayer = AVPlayerLayer(player: player)
-//        playerLayer?.frame = view.bounds
-//        playerLayer?.videoGravity = .resizeAspect // Maintains aspect ratio, fits within bounds
-//        // Use `.resizeAspectFill` for filling the screen, which may crop parts of the video
-//        // playerLayer?.videoGravity = .resizeAspectFill
-//
-//        view.layer.addSublayer(playerLayer!)
-//
-//        // Set up the play/pause button
-//        playPauseButton = UIButton(type: .system)
-//        playPauseButton.frame = CGRect(x: 20, y: view.bounds.height - 60, width: 100, height: 40)
-//        playPauseButton.setTitle("Play", for: .normal)
-//        playPauseButton.addTarget(self, action: #selector(togglePlayPause), for: .touchUpInside)
-//        view.addSubview(playPauseButton)
-//
-//        // Play the video
-//        player?.play()
-//    }
-//
-//
-//    // Play/Pause button action
-//    @objc func togglePlayPause() {
-//        if player?.timeControlStatus == .playing {
-//            player?.pause()
-//            playPauseButton.setTitle("Play", for: .normal)
-//        } else {
-//            player?.play()
-//            playPauseButton.setTitle("Pause", for: .normal)
-//        }
-//    }
-//}
-
-
-
-
-// UIKit Camera Controller
-import UIKit
-import AVFoundation
 
 /// Main camera view controller handling camera operations
 class CameraViewController: UIViewController {
@@ -482,29 +411,32 @@ class CameraViewController: UIViewController {
     }
     
     var zoomLevel: CGFloat = 1.0 {
-            didSet {
-                guard let videoDevice = AVCaptureDevice.default(for: .video) else { return }
-                try? videoDevice.lockForConfiguration()
-                videoDevice.videoZoomFactor = max(1.0, min(zoomLevel, videoDevice.activeFormat.videoMaxZoomFactor))
-                videoDevice.unlockForConfiguration()
-            }
+        didSet {
+            guard let videoDevice = AVCaptureDevice.default(for: .video) else { return }
+            try? videoDevice.lockForConfiguration()
+            videoDevice.videoZoomFactor = max(1.0, min(zoomLevel, videoDevice.activeFormat.videoMaxZoomFactor))
+            videoDevice.unlockForConfiguration()
         }
+    }
 
+    // Serial queue for camera setup
+    private let cameraQueue = DispatchQueue(label: "com.isometrik.cameraQueue")
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        requestCameraPermission() // Request camera permission
         setupCamera()
         NotificationCenter.default.addObserver(forName: NSNotification.Name("ToggleFlash"), object: nil, queue: .main) { [weak self] notification in
-               guard let isFlashOn = notification.object as? Bool else { return }
-               self?.isFlashOn = isFlashOn
-               self?.toggleFlash(isOn: isFlashOn)
-           }
+            guard let isFlashOn = notification.object as? Bool else { return }
+            self?.isFlashOn = isFlashOn
+            self?.toggleFlash(isOn: isFlashOn)
+        }
     }
     
-    
     private func toggleFlash(isOn: Bool) {
-        guard let currentDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: currentCameraPosition) else {
-            print("Failed to access the current camera device.")
+        guard let currentDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: currentCameraPosition),
+              currentDevice.hasTorch else {
+            print("Failed to access the current camera device or torch not available.")
             return
         }
 
@@ -516,77 +448,83 @@ class CameraViewController: UIViewController {
             print("Error configuring torch: \(error)")
         }
     }
+    
 
     private func setupCamera() {
-            captureSession = AVCaptureSession()
-            captureSession.sessionPreset = .high
-            configureCamera(for: .back)
+        cameraQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.captureSession = AVCaptureSession()
+            self.captureSession.sessionPreset = .high
+            self.configureCamera(for: .back)
         }
+    }
 
-        private func configureCamera(for position: AVCaptureDevice.Position) {
-            captureSession.beginConfiguration()
+    private func configureCamera(for position: AVCaptureDevice.Position) {
+        cameraQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.captureSession.beginConfiguration()
 
             // Remove existing inputs and outputs
-            captureSession.inputs.forEach { captureSession.removeInput($0) }
-            captureSession.outputs.forEach { captureSession.removeOutput($0) }
+            self.captureSession.inputs.forEach { self.captureSession.removeInput($0) }
+            self.captureSession.outputs.forEach { self.captureSession.removeOutput($0) }
 
             // Add camera input
             guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position),
                   let videoInput = try? AVCaptureDeviceInput(device: camera) else {
                 print("Error: Could not configure camera for position \(position)")
-                captureSession.commitConfiguration()
+                self.captureSession.commitConfiguration()
                 return
             }
 
-            if captureSession.canAddInput(videoInput) {
-                captureSession.addInput(videoInput)
+            if self.captureSession.canAddInput(videoInput) {
+                self.captureSession.addInput(videoInput)
             }
 
             // Add audio input
             if let audioDevice = AVCaptureDevice.default(for: .audio),
                let audioInput = try? AVCaptureDeviceInput(device: audioDevice),
-               captureSession.canAddInput(audioInput) {
-                captureSession.addInput(audioInput)
+               self.captureSession.canAddInput(audioInput) {
+                self.captureSession.addInput(audioInput)
             }
 
             // Add photo output
-            photoOutput = AVCapturePhotoOutput()
-            if captureSession.canAddOutput(photoOutput) {
-                captureSession.addOutput(photoOutput)
+            self.photoOutput = AVCapturePhotoOutput()
+            if self.captureSession.canAddOutput(self.photoOutput) {
+                self.captureSession.addOutput(self.photoOutput)
             }
 
             // Add video output
-            videoOutput = AVCaptureMovieFileOutput()
-            if captureSession.canAddOutput(videoOutput) {
-                captureSession.addOutput(videoOutput)
+            self.videoOutput = AVCaptureMovieFileOutput()
+            if self.captureSession.canAddOutput(self.videoOutput) {
+                self.captureSession.addOutput(self.videoOutput)
             }
 
             // Configure preview layer
-            if previewLayer == nil {
-                previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-                previewLayer.videoGravity = .resizeAspectFill
-                previewLayer.frame = view.bounds
-                view.layer.addSublayer(previewLayer)
+            if self.previewLayer == nil {
+                self.previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+                self.previewLayer.videoGravity = .resizeAspectFill
+                self.view.layer.addSublayer(self.previewLayer)
             }
 
-            captureSession.commitConfiguration()
-            captureSession.startRunning()
+            self.captureSession.commitConfiguration()
+            self.captureSession.startRunning()
         }
+    }
     
     private func getCamera(with position: AVCaptureDevice.Position) -> AVCaptureDevice? {
-            return AVCaptureDevice.devices(for: .video).first(where: { $0.position == position })
-        }
+        return AVCaptureDevice.devices(for: .video).first(where: { $0.position == position })
+    }
     
     private func startRecording() {
-            let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mov")
-            videoOutput.startRecording(to: outputURL, recordingDelegate: self)
-        }
+        let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mov")
+        videoOutput.startRecording(to: outputURL, recordingDelegate: self)
+    }
 
-        private func stopRecording() {
-            if let videoOutput = videoOutput{
-                videoOutput.stopRecording()
-            }
+    private func stopRecording() {
+        if let videoOutput = videoOutput{
+            videoOutput.stopRecording()
         }
+    }
 
     /// Captures a photo
     func capturePhoto() {
@@ -606,7 +544,42 @@ class CameraViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        // Safely unwrap previewLayer
+        guard let previewLayer = previewLayer else {
+            self.previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+            self.previewLayer.videoGravity = .resizeAspectFill
+            self.view.layer.addSublayer(self.previewLayer)
+            previewLayer.frame = view.bounds
+            return
+        }
+        
+        // Set the frame of the preview layer
         previewLayer.frame = view.bounds
+    }
+
+    /// Requests camera permission from the user
+    private func requestCameraPermission() {
+        let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
+        switch cameraAuthorizationStatus {
+        case .authorized:
+            // Camera access is already granted
+            break
+        case .notDetermined:
+            // Request access
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                if granted {
+                    // Access granted
+                } else {
+                    // Access denied
+                }
+            }
+        case .denied, .restricted:
+            // Access denied or restricted
+            break
+        @unknown default:
+            break
+        }
     }
 }
 
