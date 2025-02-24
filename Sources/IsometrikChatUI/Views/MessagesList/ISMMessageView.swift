@@ -800,7 +800,8 @@ public struct ISMMessageView: View {
             let index = attachments.firstIndex { $0.messageId == currentMediaId } ?? 0
             ISMChatMediaViewer(viewModel: ISMChatMediaViewerViewModel(attachments: attachments, index: index)) {
                 stateViewModel.navigateToMediaSlider = false
-            }.onAppear {
+            }
+            .onDisappear{
                 self.navigateToMediaSliderId = ""
             }
         }

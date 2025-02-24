@@ -419,9 +419,6 @@ class CameraViewController: UIViewController {
         }
     }
 
-    // Serial queue for camera setup
-    private let cameraQueue = DispatchQueue(label: "com.isometrik.cameraQueue")
-
     override func viewDidLoad() {
         super.viewDidLoad()
         requestCameraPermission() // Request camera permission
@@ -451,17 +448,13 @@ class CameraViewController: UIViewController {
     
 
     private func setupCamera() {
-        cameraQueue.async { [weak self] in
-            guard let self = self else { return }
-            self.captureSession = AVCaptureSession()
-            self.captureSession.sessionPreset = .high
-            self.configureCamera(for: .back)
-        }
+        captureSession = AVCaptureSession()
+        captureSession.sessionPreset = .high
+        configureCamera(for: .back)
     }
 
     private func configureCamera(for position: AVCaptureDevice.Position) {
-        cameraQueue.async { [weak self] in
-            guard let self = self else { return }
+        
             self.captureSession.beginConfiguration()
 
             // Remove existing inputs and outputs
@@ -501,14 +494,16 @@ class CameraViewController: UIViewController {
 
             // Configure preview layer
             if self.previewLayer == nil {
-                self.previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
-                self.previewLayer.videoGravity = .resizeAspectFill
-                self.view.layer.addSublayer(self.previewLayer)
+                previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+                previewLayer?.videoGravity = .resizeAspectFill
+                if let layer = previewLayer {
+                    self.view.layer.addSublayer(layer)
+                }
             }
 
             self.captureSession.commitConfiguration()
             self.captureSession.startRunning()
-        }
+        
     }
     
     private func getCamera(with position: AVCaptureDevice.Position) -> AVCaptureDevice? {
@@ -545,17 +540,17 @@ class CameraViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        // Safely unwrap previewLayer
-        guard let previewLayer = previewLayer else {
-            self.previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
-            self.previewLayer.videoGravity = .resizeAspectFill
-            self.view.layer.addSublayer(self.previewLayer)
-            previewLayer.frame = view.bounds
-            return
+        // Safely unwrap previewLayer or create if nil
+        if previewLayer == nil {
+            previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+            previewLayer?.videoGravity = .resizeAspectFill
+            if let layer = previewLayer {
+                self.view.layer.addSublayer(layer)
+                layer.frame = view.bounds
+            }
+        } else {
+            previewLayer?.frame = view.bounds
         }
-        
-        // Set the frame of the preview layer
-        previewLayer.frame = view.bounds
     }
 
     /// Requests camera permission from the user
