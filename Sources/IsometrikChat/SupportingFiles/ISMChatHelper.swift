@@ -261,7 +261,7 @@ public class ISMChatHelper: NSObject {
         }
     }
     
-    public class func getPaymentStatus(myUserId: String,opponentId : String, metaData: MetaDataDB?, sentAt: Double) -> ISMChatPaymentRequestStatus {
+    public class func getPaymentStatus(myUserId: String,opponentId : String, metaData: ISMChatMetaDataDB?, sentAt: Double) -> ISMChatPaymentRequestStatus {
         // Retrieve the member from paymentRequestedMembers matching myUserId
         guard let paymentRequestedMembers = metaData?.paymentRequestedMembers else {
             return .ActiveRequest // Default status if no members are found

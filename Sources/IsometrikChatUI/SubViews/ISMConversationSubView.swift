@@ -15,7 +15,7 @@ struct ISMConversationSubView: View {
     //MARK:  - PROPERTIES
     
     /// The conversation database model containing chat details
-    let chat : ConversationDB
+    let chat : ISMChatConversationDB
     /// Flag indicating if there are unread messages
     let hasUnreadCount : Bool
     /// UI appearance configuration for the chat SDK

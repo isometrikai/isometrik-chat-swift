@@ -1402,13 +1402,13 @@ struct ISMMessageSubView: View {
                                     }
                                     
                                     VStack(alignment: .trailing,spacing: 5){
-                                        PaymentRequestUI(status: ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "", opponentId: opponentDeatil.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt), isReceived: self.isReceived,message: self.message) {
-                                            //view details
-                                            viewDetailsForPaymentRequest = self.message
-                                        } declineRequest: {
-                                            //decline request
-                                            declinePaymentRequest = self.message
-                                        }
+//                                        PaymentRequestUI(status: ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "", opponentId: opponentDeatil.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt), isReceived: self.isReceived,message: self.message) {
+//                                            //view details
+//                                            viewDetailsForPaymentRequest = self.message
+//                                        } declineRequest: {
+//                                            //decline request
+//                                            declinePaymentRequest = self.message
+//                                        }
                                         dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
                                     }//:ZStack
                                     .frame(width: 280)

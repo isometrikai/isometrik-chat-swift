@@ -18,8 +18,7 @@ public class ConversationViewModel : NSObject ,ObservableObject{
     
     //MARK:  - PROPERTIES
     @Published public var searchedText = ""
-    @Published public var debounceSearchedText = ""
-
+    @Published public var debounceSearchedText = ""    
     
     @Published public var conversations : [ISMChatConversationsDetail] = []
     @Published public var userData : ISMChatUser?

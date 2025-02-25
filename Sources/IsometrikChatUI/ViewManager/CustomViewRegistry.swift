@@ -68,7 +68,7 @@ public protocol CustomConversationListCellViewProvider {
     associatedtype ContentView: View
     
     /// Parses conversation data into the required view data model
-    static func parseData(_ data: ConversationDB) -> ViewData?
+    static func parseData(_ data: ISMChatConversationDB) -> ViewData?
     /// Creates a SwiftUI view for the conversation list cell
     static func createView(data: ViewData) -> ContentView
 }
@@ -79,7 +79,7 @@ public class CustomConversationListCellViewRegistry {
     public static let shared = CustomConversationListCellViewRegistry()
     
     /// Storage for the default view builder
-    private var defaultViewBuilder: ((ConversationDB) -> AnyView)?
+    private var defaultViewBuilder: ((ISMChatConversationDB) -> AnyView)?
     
     public func register<Provider: CustomConversationListCellViewProvider>(
         view: Provider.Type
@@ -92,7 +92,7 @@ public class CustomConversationListCellViewRegistry {
         }
     }
     
-    public func view(for message: ConversationDB) -> AnyView {
+    public func view(for message: ISMChatConversationDB) -> AnyView {
         if let defaultBuilder = defaultViewBuilder {
             return defaultBuilder(message)
         }

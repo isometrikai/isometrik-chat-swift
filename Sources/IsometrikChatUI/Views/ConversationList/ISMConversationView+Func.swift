@@ -51,18 +51,19 @@ extension ISMConversationView{
     /// Retrieves the list of conversations and updates the view model accordingly.
     func getConversationList(){
         viewModel.getChatList(search: "") { data in
-            self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: data?.conversations ?? [], query: ""))
-            realmManager.manageConversationList(arr: viewModel.getConversation())
-            if ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
-                getOtherChatCountUpdate()
-            }
-            if ISMChatSdk.getInstance().getFramework() == .UIKit && ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
-                getBroadcastList()
-                
-                let chatcount = realmManager.getConversationCount()
-                let Info : [String: Int] = ["count": chatcount]
-                NotificationCenter.default.post(name: NSNotification.updateChatCount, object: nil, userInfo: Info)
-            }
+            self.dbManager.manageConversationList(arr: data?.conversations ?? [])
+//            self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: data?.conversations ?? [], query: ""))
+//            realmManager.manageConversationList(arr: viewModel.getConversation())
+//            if ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
+//                getOtherChatCountUpdate()
+//            }
+//            if ISMChatSdk.getInstance().getFramework() == .UIKit && ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
+//                getBroadcastList()
+//                
+//                let chatcount = realmManager.getConversationCount()
+//                let Info : [String: Int] = ["count": chatcount]
+//                NotificationCenter.default.post(name: NSNotification.updateChatCount, object: nil, userInfo: Info)
+//            }
         }
     }
     

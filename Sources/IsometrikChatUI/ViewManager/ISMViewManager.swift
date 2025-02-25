@@ -18,8 +18,11 @@ public class ISMViewManager{
     /// Creates and returns a conversation list view
     /// - Parameter delegate: Optional delegate to handle conversation view events
     /// - Returns: A SwiftUI view displaying the list of conversations
+    ///
+    @Environment(\.modelContext) private var modelContext
+
     public func conversationList(delegete : ISMConversationViewDelegate? = nil) -> some View {
-        return ISMConversationView(delegate: delegete)
+        return ISMConversationView(delegate: delegete, modelContext: modelContext)
     }
     
     /// Creates and returns a message list view for a specific conversation
@@ -67,9 +70,9 @@ public class ISMViewManager{
     /// Creates and returns a view for other types of conversations
     /// - Parameter delegate: Optional delegate to handle other conversation list events
     /// - Returns: A SwiftUI view displaying the list of other conversations
-    public func otherconversationList(delegete : OtherConversationListViewDelegate? = nil) -> some View {
-        return OtherConversationListView(delegate: delegete)
-    }
+//    public func otherconversationList(delegete : OtherConversationListViewDelegate? = nil) -> some View {
+//        return OtherConversationListView(delegate: delegete)
+//    }
     
     /// Creates and returns a broadcast list view
     /// - Parameter delegate: Optional delegate to handle broadcast list events

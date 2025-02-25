@@ -161,6 +161,7 @@ public struct ISMChatLastMessage : Codable{
     public var customType : String?
     public var action : String?
     public var metaData : ISMChatMetaData?
+    public var metaDataJson : String?
     public var deliveredTo : [ISMChatMessageDeliveryStatus]? = []
     public var readBy : [ISMChatMessageDeliveryStatus]? = []
     public var conversationTitle : String?
@@ -194,6 +195,22 @@ public struct ISMChatLastMessage : Codable{
         messageId = try? container.decode(String.self, forKey: .messageId)
         customType = try? container.decode(String.self, forKey: .customType)
         action = try? container.decode(String.self, forKey: .action)
+        // Extract raw JSON string for metaData
+        if let rawMetaData = try? container.decodeIfPresent(AnyCodable.self, forKey: .metaData) {
+            let encoder = JSONEncoder()
+            if let rawData = try? encoder.encode(rawMetaData),
+               let jsonString = String(data: rawData, encoding: .utf8) {
+                metaDataJson = jsonString
+            }
+        } else {
+            do {
+                let rawMetaData = try container.decode(AnyCodable.self, forKey: .metaData)
+                print("Decoded rawMetaData: \(rawMetaData)")
+            } catch {
+                print("Failed to decode metaData: \(error)")
+            }
+            metaDataJson = nil
+        }
         metaData = try? container.decode(ISMChatMetaData.self, forKey: .metaData)
         deliveredTo = try? container.decode([ISMChatMessageDeliveryStatus].self, forKey: .deliveredTo)
         readBy = try? container.decode([ISMChatMessageDeliveryStatus].self, forKey: .readBy)
