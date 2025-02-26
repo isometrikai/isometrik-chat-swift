@@ -81,7 +81,7 @@ public struct ISMMessageView: View {
     @State var textFieldtxt : String = ""
     
     @State var conversationID : String?
-    public let opponenDetail : UserDB?
+    public let opponenDetail : ISMChatUserDB?
     public var myUserId : String?
     public var myAppUserId : String?
     public let isGroup : Bool?
@@ -151,8 +151,8 @@ public struct ISMMessageView: View {
     @State var navigateToLocationDetail : ISMChatLocationData = ISMChatLocationData()
     
     
-    @State var updateMessage : MessagesDB = MessagesDB()
-    @State var forwardMessageSelectedToShow : MessagesDB = MessagesDB()
+    @State var updateMessage : ISMChatMessagesDB?
+    @State var forwardMessageSelectedToShow : ISMChatMessagesDB?
     
     @State var selectedUserToMention : String?
     
@@ -168,7 +168,7 @@ public struct ISMMessageView: View {
     @State var sentRecationToMessageId : String = ""
     // call
     
-    @State var parentMsgToScroll : MessagesDB? =  nil
+    @State var parentMsgToScroll : ISMChatMessagesDB? =  nil
     
     
     
@@ -186,12 +186,12 @@ public struct ISMMessageView: View {
     
 //    @State var navigateToExternalUserListToAddInGroup : Bool = false
     
-    @State var navigateToProductLink : MessagesDB = MessagesDB()
-    @State var navigateToSocialLink : MessagesDB = MessagesDB()
-    @State var navigateToCollectionLink : MessagesDB = MessagesDB()
-    @State var viewDetailsForPaymentRequest : MessagesDB = MessagesDB()
-    @State var declinePaymentRequest : MessagesDB = MessagesDB()
-    @State var showInviteeListInDineInRequest : MessagesDB = MessagesDB()
+    @State var navigateToProductLink : ISMChatMessagesDB?
+    @State var navigateToSocialLink : ISMChatMessagesDB?
+    @State var navigateToCollectionLink : ISMChatMessagesDB?
+    @State var viewDetailsForPaymentRequest : ISMChatMessagesDB?
+    @State var declinePaymentRequest : ISMChatMessagesDB?
+    @State var showInviteeListInDineInRequest : ISMChatMessagesDB?
     @State var navigateToChatList : Bool = false
     
     @State var declineReasonOption : String? = nil

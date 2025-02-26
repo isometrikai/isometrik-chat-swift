@@ -17,7 +17,7 @@ extension ISMConversationView{
         // Check if the action is a member leaving the conversation
         if messageInfo.action == ISMChatActionType.memberLeave.value{
             // Update member count in local database
-            realmManager.updateMemberCount(convId: messageInfo.conversationId ?? "", inc: false, dec: true, count: 1)
+            dbManager.updateMemberCount(convId: messageInfo.conversationId ?? "", inc: false, dec: true, count: 1)
             // Check if notifications are allowed and if the meeting ID is nil
             if onConversationList == true && myUserData?.allowNotification == true && messageInfo.meetingId == nil{
                 // Set a local notification for the member leaving
@@ -26,7 +26,7 @@ extension ISMConversationView{
         }else if  messageInfo.action == ISMChatActionType.membersRemove.value{
             // Update member count in local database
             if messageInfo.meetingId == nil{
-                realmManager.updateMemberCount(convId: messageInfo.conversationId ?? "", inc: false, dec: true, count: 1)
+                dbManager.updateMemberCount(convId: messageInfo.conversationId ?? "", inc: false, dec: true, count: 1)
                 if onConversationList == true{
                     // Determine the member's name for the notification
                     let memberName = messageInfo.members?.first?.memberId == myUserData?.userId ? ConstantStrings.you.lowercased() : messageInfo.members?.first?.memberName
@@ -39,7 +39,7 @@ extension ISMConversationView{
         }else if messageInfo.action == ISMChatActionType.membersAdd.value{
             // Update member count in local database
             if messageInfo.meetingId == nil{
-                realmManager.updateMemberCount(convId: messageInfo.conversationId ?? "", inc: true, dec: false, count: 1)
+                dbManager.updateMemberCount(convId: messageInfo.conversationId ?? "", inc: true, dec: false, count: 1)
                 if onConversationList == true{
                     // Determine the member's name for the notification
                     let memberName = messageInfo.members?.first?.memberId == myUserData?.userId ? ConstantStrings.you.lowercased() : messageInfo.members?.first?.memberName
@@ -52,7 +52,7 @@ extension ISMConversationView{
         }else if messageInfo.action == ISMChatActionType.conversationTitleUpdated.value{
             // Update conversation title in local database
             if onConversationList == true{
-                realmManager.changeGroupName(conversationId: messageInfo.conversationId ?? "", conversationTitle: messageInfo.conversationTitle ?? "")
+                dbManager.changeGroupName(conversationId: messageInfo.conversationId ?? "", conversationTitle: messageInfo.conversationTitle ?? "")
                 if myUserData?.allowNotification == true{
                     // Set a local notification for the title change
                     ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.conversationTitle ?? "")", body: "\(messageInfo.userName ?? "") changed group name", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? ""])
@@ -61,7 +61,7 @@ extension ISMConversationView{
         }else if messageInfo.action == ISMChatActionType.conversationImageUpdated.value{
             // Update conversation image in local database
             if onConversationList == true{
-                realmManager.changeGroupIcon(conversationId: messageInfo.conversationId ?? "", conversationIcon: messageInfo.conversationImageUrl ?? "")
+                dbManager.changeGroupIcon(conversationId: messageInfo.conversationId ?? "", conversationIcon: messageInfo.conversationImageUrl ?? "")
                 if myUserData?.allowNotification == true{
                     // Set a local notification for the image change
                     ISMChatLocalNotificationManager.setNotification(1, of: .seconds, repeats: false, title: "\(messageInfo.conversationTitle ?? "")", body: "\(messageInfo.userName ?? "") changed group icon", userInfo: ["senderId": messageInfo.senderId ?? "","senderName" : messageInfo.senderName ?? "","conversationId" : messageInfo.conversationId ?? "","body" : messageInfo.notificationBody ?? "","userIdentifier" : messageInfo.senderIdentifier ?? ""])
@@ -75,11 +75,11 @@ extension ISMConversationView{
     func messageDeleteForAll(messageInfo: ISMChatMessageDelivered) {
         if let messageIds = messageInfo.messageIds {
             for message in messageIds {
-                realmManager.updateMessageAsDeleted(conId: messageInfo.conversationId ?? "", messageId: message)
+//                realmManager.updateMessageAsDeleted(conId: messageInfo.conversationId ?? "", messageId: message)
             }
             // Also update last message if its deleted for everyone
             if messageIds.contains(where: { messageId in
-                realmManager.conversations.contains { conversation in
+                dbManager.fetchAllConversations().contains { conversation in
                     if let lastMessageId = conversation.lastMessageDetails?.messageId {
                         return messageId == lastMessageId
                     }
@@ -100,7 +100,7 @@ extension ISMConversationView{
                 
                 let msg = ISMChatLastMessage(sentAt: messageInfo.sentAt,senderName: messageInfo.senderName,senderIdentifier: messageInfo.senderIdentifier,senderId: messageInfo.senderId,conversationId: messageInfo.conversationId,body: messageInfo.body ?? "",messageId: messageInfo.messageId,deliveredToUser: messageInfo.userId,timeStamp: messageInfo.sentAt,customType: messageInfo.customType,messageDeleted: true, action: messageInfo.action, userId: messageInfo.userId, initiatorId: messageInfo.initiatorId, memberName: messageInfo.memberName, initiatorName: messageInfo.initiatorName, memberId: messageInfo.memberId, userName: messageInfo.userName,members: membersArray,userIdentifier: messageInfo.userIdentifier,userProfileImageUrl: messageInfo.userProfileImageUrl)
                 
-                self.realmManager.updateLastmsg(conId: messageInfo.conversationId ?? "", msg: msg)
+                self.dbManager.updateLastmsg(conId: messageInfo.conversationId ?? "", msg: msg)
             }
         }
     }
@@ -111,15 +111,15 @@ extension ISMConversationView{
         if myUserData?.userId != messageInfo.initiatorId{
             let msg = ISMChatLastMessage(sentAt: messageInfo.sentAt,conversationId: messageInfo.conversationId, body: nil, messageId: messageInfo.messageId, deliveredToUser: messageInfo.opponentId, timeStamp: messageInfo.sentAt, action: messageInfo.action, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName,initiatorIdentifier: messageInfo.initiatorIdentifier)
             
-            self.realmManager.updateLastmsg(conId: messageInfo.conversationId ?? "", msg: msg)
+            self.dbManager.updateLastmsg(conId: messageInfo.conversationId ?? "", msg: msg)
             
             if messageInfo.action == ISMChatActionType.conversationCreated.value{
-                self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 0)
+                self.dbManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 0)
             }else{
-                self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 1)
+                self.dbManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 1)
             }
             
-            self.realmManager.getAllConversations()
+//            self.realmManager.getAllConversations()
             //added code to take user at top
             self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: viewModel.conversations, query: query))
         }
@@ -139,14 +139,14 @@ extension ISMConversationView{
         if myUserData?.userId != messageInfo.senderId{
             if messageInfo.action != ISMChatActionType.conversationCreated.value{
                 // Update unread count
-                let obj = self.realmManager.conversations.first(where: {$0.conversationId == messageInfo.conversationId ?? ""})
+                let obj = dbManager.fetchAllConversations().first(where: {$0.conversationId == messageInfo.conversationId ?? ""})
                 if obj == nil{
-                    self.realmManager.undodeleteConversation(convID: messageInfo.conversationId ?? "")
+                    self.dbManager.undodeleteConversation(convID: messageInfo.conversationId ?? "")
                     self.getConversationList()
                 }
             }
             
-            self.realmManager.getAllConversations()
+//            self.realmManager.getAllConversations()
             if conversationData.first?.conversationId != messageInfo.conversationId{
                 //added code to take user at top
                 self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: viewModel.conversations, query: query))
@@ -162,29 +162,33 @@ extension ISMConversationView{
     /// Updates the typing status for a conversation.
     /// - Parameter obj: Information about the typing event.
     func typingStatus(obj: ISMChatTypingEvent) {
-        self.realmManager.changeTypingStatus(convId: obj.conversationId ?? "", status: true)
+        self.dbManager.changeTypingStatus(convId: obj.conversationId ?? "", status: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.realmManager.changeTypingStatus(convId: obj.conversationId ?? "", status: false)
+            self.dbManager.changeTypingStatus(convId: obj.conversationId ?? "", status: false)
         }
     }
     
     /// Handles local notifications for a specific conversation.
     /// - Parameter conversationId: The ID of the conversation for which to handle notifications.
-    func handleLocalNotification(conversationId : String){
+    func handleLocalNotification(conversationId: String) {
         conversationIdForNotification = conversationId
-        let conversation = realmManager.conversations.first { data in
-            data.conversationId == conversationIdForNotification
+
+        // Fetch conversation once and use it
+        guard let conversation = dbManager.fetchAllConversations().first(where: { $0.conversationId == conversationId }) else {
+            return
         }
-        // Update unread count, for grp only
-        let obj = self.realmManager.conversations.first(where: {$0.conversationId == conversationId})
-        if obj?.isGroup == true {
-            self.realmManager.updateUnreadCountThroughConId(conId: conversationId , count: 1)
+
+        // Update unread count if it's a group
+        if conversation.isGroup {
+            dbManager.updateUnreadCountThroughConId(conId: conversationId, count: 1)
         }
-        if let isgroup = conversation?.isGroup{
-            isGroupFromNotification = isgroup
-        }
-        groupTitleFromNotification = conversation?.conversationTitle
-        opponentDetailforNotification = conversation?.opponentDetails
+
+        // Assign values safely
+        isGroupFromNotification = conversation.isGroup
+        groupTitleFromNotification = conversation.conversationTitle
+        opponentDetailforNotification = conversation.opponentDetails
+        
+        // Trigger navigation
         navigateToMessageViewFromLocalNotification = true
     }
 }

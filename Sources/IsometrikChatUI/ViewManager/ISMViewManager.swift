@@ -42,7 +42,7 @@ public class ISMViewManager{
     public func messageList(
         conversationViewModel: ConversationViewModel,
         conversationId: String,
-        user: UserDB? = nil,
+        user: ISMChatUserDB? = nil,
         isGroup: Bool,
         fromBroadCastFlow: Bool,
         groupCastId: String,

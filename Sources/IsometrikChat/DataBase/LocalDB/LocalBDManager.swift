@@ -12,22 +12,96 @@ public class LocalDBManager {
     
     
     public var modelContext: ModelContext
-
+    public var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
+    
     public init(modelContext: ModelContext) {
         self.modelContext = modelContext
     }
-
-    // 🔄 Fetch All Products
+    
+    // 🔄 Fetch All Conversations
     public func fetchAllConversations() -> [ISMChatConversationDB] {
         do {
-            let descriptor = FetchDescriptor<ISMChatConversationDB>()
-            return try modelContext.fetch(descriptor)
+            let descriptor = FetchDescriptor<ISMChatConversationDB>(sortBy: [SortDescriptor(\.updatedAt, order: .reverse)])
+            var conversations = try modelContext.fetch(descriptor).filter { !$0.isDelete }
+            
+            // Sort by lastMessageSentAt in descending order
+            conversations.sort { $0.lastMessageSentAt > $1.lastMessageSentAt }
+            
+            // Remove broadcast list from conversation list
+            let filteredConversations = conversations.filter { conversation in
+                !(conversation.opponentDetails?.userId == nil &&
+                  conversation.opponentDetails?.userName == nil &&
+                  conversation.isGroup == false)
+            }
+            
+            return filteredConversations
         } catch {
             print("Fetch Error: \(error)")
             return []
         }
     }
-
+    
+    // 🔄 Fetch All Conversations Count
+    public func fetchConversationCount() -> Int {
+        return fetchAllConversations().count
+    }
+    
+    // 🔄 Fetch Other Conversations
+    public func fetchOtherConversations() -> [ISMChatConversationDB] {
+        do {
+            let descriptor = FetchDescriptor<ISMChatConversationDB>()
+            let allConversations = try modelContext.fetch(descriptor)
+            
+            return allConversations.filter { conversation in
+                guard conversation.createdBy != userData?.userId else { return false }
+                
+                if let userProfileType = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userProfileType {
+                    if userProfileType == ISMChatUserProfileType.Bussiness.value {
+                        if let metaData = conversation.opponentDetails?.metaData,
+                           let conversationMetaData = conversation.metaData,
+                           metaData.userType == 1,
+                           conversationMetaData.chatStatus == ISMChatStatus.Reject.value {
+                            return true
+                        }
+                    } else if userProfileType == ISMChatUserProfileType.Influencer.value {
+                        if let metaData = conversation.opponentDetails?.metaData,
+                           let conversationMetaData = conversation.metaData,
+                           metaData.userType == 1,
+                           metaData.isStarUser != true,
+                           conversationMetaData.chatStatus == ISMChatStatus.Reject.value {
+                            return true
+                        }
+                    }
+                }
+                return false
+            }
+        } catch {
+            print("Fetch Error: \(error)")
+            return []
+        }
+    }
+    
+    // 🔄 Fetch Other Conversations Count
+    public func fetchOtherConversationCount() -> Int {
+        return fetchOtherConversations().count
+    }
+    
+    // 🔄 Fetch Primary Conversations
+    public func fetchPrimaryConversations() -> [ISMChatConversationDB] {
+        let allConversations = (try? modelContext.fetch(FetchDescriptor<ISMChatConversationDB>())) ?? []
+        let otherConversations = fetchOtherConversations()
+        return allConversations.filter { conversation in
+            !otherConversations.contains(where: { $0.id == conversation.id })
+        }
+    }
+    
+    // 🔄 Fetch Primary Conversations Count
+    public func fetchPrimaryConversationCount() -> Int {
+        return fetchPrimaryConversations().count
+    }
+    
+    
+    // Manage Conversation List
     public func manageConversationList(arr: [ISMChatConversationsDetail]) {
         for obj in arr {
             let descriptor = FetchDescriptor<ISMChatConversationDB>(
@@ -35,7 +109,7 @@ public class LocalDBManager {
             )
             do {
                 let existingConversations = try modelContext.fetch(descriptor)
-
+                
                 if existingConversations.isEmpty {
                     // ✅ Add New Conversation
                     addConversation(obj: arr, modelContext: modelContext)
@@ -43,17 +117,16 @@ public class LocalDBManager {
                     // 🔄 Update if not deleted
                     updateConversation(existing: existing, obj: obj, modelContext: modelContext)
                 }
-
+                
             } catch {
                 print("SwiftData Error: \(error)")
             }
         }
     }
-
-
     
-    //MARK: - Add conversation locally
-
+    
+    
+    // ✅ Add New Conversation
     public func addConversation(obj: [ISMChatConversationsDetail], modelContext: ModelContext) {
         for value in obj {
             let userMataData = ISMChatUserMetaDataDB(
@@ -248,10 +321,10 @@ public class LocalDBManager {
                 metaData: ISMChatConversationMetaData(chatStatus: value.metaData?.chatStatus ?? "", membersIds: value.metaData?.membersIds ?? []),
                 metaDataJson: value.metaDataJson,
                 lastInputText: "")
-
+            
             modelContext.insert(conversation)
         }
-
+        
         do {
             try modelContext.save()
             fetchAllConversations()  // Fetch after saving
@@ -259,9 +332,9 @@ public class LocalDBManager {
             print("Error saving to SwiftData: \(error.localizedDescription)")
         }
     }
-
     
-    //MARK: - update convertion if already exist in local db
+    
+    // 🔄 Update if not deleted
     public func updateConversation(existing: ISMChatConversationDB, obj: ISMChatConversationsDetail, modelContext: ModelContext) {
         existing.updatedAt = obj.lastMessageDetails?.updatedAt ?? existing.updatedAt
         existing.unreadMessagesCount = obj.unreadMessagesCount ?? existing.unreadMessagesCount
@@ -271,26 +344,217 @@ public class LocalDBManager {
         existing.conversationImageUrl = obj.conversationImageUrl ?? existing.conversationImageUrl
         existing.privateOneToOne = obj.privateOneToOne ?? existing.privateOneToOne
         existing.isGroup = obj.isGroup ?? existing.isGroup
-
+        
+        // Update Opponent Details
+        existing.opponentDetails = ISMChatUserDB(
+            userId: obj.opponentDetails?.userId ?? existing.opponentDetails?.userId ?? "",
+            userProfileImageUrl: obj.opponentDetails?.userProfileImageUrl ?? existing.opponentDetails?.userProfileImageUrl ?? "",
+            userName: obj.opponentDetails?.userName ?? existing.opponentDetails?.userName ?? "",
+            userIdentifier: obj.opponentDetails?.userIdentifier ?? existing.opponentDetails?.userIdentifier ?? "",
+            online: obj.opponentDetails?.online ?? existing.opponentDetails?.online ?? false,
+            lastSeen: obj.opponentDetails?.lastSeen ?? existing.opponentDetails?.lastSeen ?? 0,
+            metaData: existing.opponentDetails?.metaData
+        )
+        
+        // Update Last Message Metadata
+        var deliveredToValue: [ISMChatMessageDeliveryStatusDB] = []
+        if let deliveredTo = obj.lastMessageDetails?.deliveredTo {
+            for member in deliveredTo {
+                deliveredToValue.append(ISMChatMessageDeliveryStatusDB(userId: member.userId, timestamp: member.timestamp))
+            }
+        }
+        
+        var readByValue: [ISMChatMessageDeliveryStatusDB] = []
+        if let readBy = obj.lastMessageDetails?.readBy {
+            for member in readBy {
+                readByValue.append(ISMChatMessageDeliveryStatusDB(userId: member.userId, timestamp: member.timestamp))
+            }
+        }
+        
+        var membersValue: [ISMChatLastMessageMemberDB] = []
+        if let members = obj.lastMessageDetails?.members {
+            for member in members {
+                membersValue.append(ISMChatLastMessageMemberDB(
+                    memberProfileImageUrl: member.memberProfileImageUrl,
+                    memberName: member.memberName,
+                    memberIdentifier: member.memberIdentifier,
+                    memberId: member.memberId
+                ))
+            }
+        }
+        
+        var callDurationsValue: [ISMChatMeetingDuration] = []
+        if let calls = obj.lastMessageDetails?.callDurations {
+            for call in calls {
+                callDurationsValue.append(ISMChatMeetingDuration(memberId: call.memberId, durationInMilliseconds: call.durationInMilliseconds))
+            }
+        }
+        
+        existing.lastMessageDetails = ISMChatLastMessageDB(
+            sentAt: obj.lastMessageDetails?.sentAt,
+            updatedAt: obj.lastMessageDetails?.updatedAt,
+            senderName: obj.lastMessageDetails?.senderName,
+            senderIdentifier: obj.lastMessageDetails?.senderIdentifier,
+            senderId: obj.lastMessageDetails?.senderId,
+            conversationId: obj.lastMessageDetails?.conversationId,
+            body: obj.lastMessageDetails?.body,
+            messageId: obj.lastMessageDetails?.messageId,
+            customType: obj.lastMessageDetails?.customType,
+            action: obj.lastMessageDetails?.action,
+            metaData: existing.lastMessageDetails?.metaData,
+            metaDataJsonString: obj.lastMessageDetails?.metaDataJson,
+            deliveredTo: deliveredToValue,
+            readBy: readByValue,
+            msgSyncStatus: existing.lastMessageDetails?.msgSyncStatus ?? "",
+            reactionType: obj.lastMessageDetails?.reactionType ?? "",
+            userId: obj.lastMessageDetails?.userId ?? "",
+            userIdentifier: obj.lastMessageDetails?.userIdentifier,
+            userName: obj.lastMessageDetails?.userName,
+            userProfileImageUrl: obj.lastMessageDetails?.userProfileImageUrl,
+            members: membersValue,
+            memberName: obj.lastMessageDetails?.memberName ?? "",
+            memberId: obj.lastMessageDetails?.memberId ?? "",
+            messageDeleted: obj.lastMessageDetails?.messageDeleted ?? false,
+            initiatorName: obj.lastMessageDetails?.initiatorName ?? "",
+            initiatorId: obj.lastMessageDetails?.initiatorId,
+            initiatorIdentifier: obj.lastMessageDetails?.initiatorIdentifier,
+            deletedMessage: false,
+            meetingId: obj.lastMessageDetails?.meetingId,
+            missedByMembers: obj.lastMessageDetails?.missedByMembers ?? [],
+            callDurations: callDurationsValue
+        )
+        
         do {
-            try modelContext.save()  // 💾 Save changes to SwiftData
+            try modelContext.save()
             print("Conversation updated successfully")
         } catch {
             print("Error updating conversation: \(error.localizedDescription)")
         }
     }
-
-    // 🗑️ Delete All Products (Optional for syncing)
+    
+    // 🗑️ Delete All Conversations (Optional for syncing)
     public func deleteAllConversations() {
         let products = fetchAllConversations()
         for product in products {
             modelContext.delete(product)
         }
-
+        
         do {
             try modelContext.save()
         } catch {
             print("Delete Error: \(error)")
         }
     }
+    
+    // 🗑️ Delete All Conversations (Optional for syncing)
+    public func hardDeleteAll() {
+        do {
+            let descriptor = FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.isDelete == true })
+            let objectsToDelete = try modelContext.fetch(descriptor)
+            
+            guard !objectsToDelete.isEmpty else { return }
+            
+            for obj in objectsToDelete {
+                modelContext.delete(obj)
+            }
+        } catch {
+            print("Error deleting conversations: \(error)")
+        }
+    }
+    
+    // Update Last Message Of Conversation
+    public func updateLastmsg(conId: String, msg: ISMChatLastMessage) {
+        do {
+            let descriptor = FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == conId && !$0.isDelete })
+            let taskToUpdate = try modelContext.fetch(descriptor)
+            
+            guard let conversation = taskToUpdate.first else { return }
+            
+            conversation.lastMessageSentAt = Int(msg.sentAt ?? 0)
+            
+            conversation.lastMessageDetails?.sentAt = msg.sentAt
+            conversation.lastMessageDetails?.updatedAt = msg.updatedAt
+            conversation.lastMessageDetails?.senderName = msg.senderName
+            conversation.lastMessageDetails?.senderIdentifier = msg.senderIdentifier
+            conversation.lastMessageDetails?.senderId = msg.senderId
+            conversation.lastMessageDetails?.conversationId = msg.conversationId
+            conversation.lastMessageDetails?.body = msg.body
+            conversation.lastMessageDetails?.messageId = msg.messageId
+            conversation.lastMessageDetails?.customType = msg.customType
+            conversation.lastMessageDetails?.action = msg.action
+            conversation.lastMessageDetails?.messageDeleted = msg.messageDeleted ?? false
+            conversation.lastMessageDetails?.deletedMessage = msg.messageDeleted ?? false
+            conversation.lastMessageDetails?.initiatorId = msg.initiatorId
+            conversation.lastMessageDetails?.initiatorName = msg.initiatorName
+            conversation.lastMessageDetails?.initiatorIdentifier = msg.initiatorIdentifier
+            conversation.lastMessageDetails?.memberId = msg.memberId ?? ""
+            conversation.lastMessageDetails?.memberName = msg.memberName ?? ""
+            conversation.lastMessageDetails?.userId = msg.userId ?? ""
+            conversation.lastMessageDetails?.userName = msg.userName
+            conversation.lastMessageDetails?.userIdentifier = msg.userIdentifier
+            conversation.lastMessageDetails?.userProfileImageUrl = msg.userProfileImageUrl
+            conversation.lastMessageDetails?.reactionType = msg.reactionType ?? ""
+            conversation.lastMessageDetails?.readBy.removeAll()
+            conversation.lastMessageDetails?.deliveredTo.removeAll()
+            
+            conversation.lastMessageDetails?.meetingId = msg.meetingId ?? ""
+            
+            if let duration = msg.callDurations {
+                conversation.lastMessageDetails?.callDurations = duration.map { x in
+                    let value = ISMChatMeetingDuration()
+                    value.memberId = x.memberId
+                    value.durationInMilliseconds = x.durationInMilliseconds
+                    return value
+                }
+            }
+            
+            if let missedByMembers = msg.missedByMembers {
+                conversation.lastMessageDetails?.missedByMembers = missedByMembers
+            }
+            
+        } catch {
+            print("Error updating last message: \(error)")
+        }
+    }
+    
+    // Update Unread Count in Conversation List
+    public func updateUnreadCountThroughConId(conId: String, count: Int, reset: Bool = false) {
+        do {
+            if let conversation = try modelContext.fetch(FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == conId && !$0.isDelete })).first {
+                conversation.unreadMessagesCount = reset ? 0 : (conversation.unreadMessagesCount + count)
+                try modelContext.save()
+            }
+        } catch {
+            print("Failed to update unread count: \(error)")
+        }
+    }
+    
+    // Change Typing Status in Conversation List
+    public func changeTypingStatus(convId: String, status: Bool) {
+        do {
+            if let conversation = try modelContext.fetch(FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == convId && !$0.isDelete })).first {
+                conversation.typing = status
+                try modelContext.save()
+            }
+        } catch {
+            print("Failed to update typing status: \(error)")
+        }
+    }
+    
+    // Undo Delete Conversation
+    public func undodeleteConversation(convID: String) {
+        do {
+            let descriptor = FetchDescriptor<ISMChatConversationDB>(
+                predicate: #Predicate { $0.conversationId == convID && $0.isDelete == true }
+            )
+            
+            if let conversation = try modelContext.fetch(descriptor).first {
+                conversation.isDelete = false
+                try modelContext.save()
+            }
+        } catch {
+            print("Error restoring conversation \(convID): \(error)")
+        }
+    }
+    
 }

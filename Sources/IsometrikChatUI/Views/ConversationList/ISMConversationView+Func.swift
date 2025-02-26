@@ -14,8 +14,8 @@ extension ISMConversationView{
     /// Determines if more data should be loaded based on the last conversation.
     /// - Parameter item: The conversation item to check.
     /// - Returns: A boolean indicating whether to load more data.
-    func shouldLoadMoreData(_ item: ConversationDB) -> Bool {
-        guard let lastItem = realmManager.getConversation().last else { return false }
+    func shouldLoadMoreData(_ item: ISMChatConversationDB) -> Bool {
+        guard let lastItem = dbManager.fetchAllConversations().last else { return false }
         return item.conversationId == lastItem.conversationId
     }
     
@@ -43,7 +43,7 @@ extension ISMConversationView{
     
     /// Updates the count of other conversations and posts a notification.
     func getOtherChatCountUpdate(){
-        let count = realmManager.getOtherConversationCount()
+        let count = dbManager.fetchOtherConversationCount()
         let otherConversationCount : [String: Int] = ["count": count]
         NotificationCenter.default.post(name: NSNotification.refreshOtherChatCount, object: nil, userInfo: otherConversationCount)
     }
@@ -52,92 +52,89 @@ extension ISMConversationView{
     func getConversationList(){
         viewModel.getChatList(search: "") { data in
             self.dbManager.manageConversationList(arr: data?.conversations ?? [])
-//            self.viewModel.updateConversationObj(conversations: viewModel.getSortedFilteredChats(conversation: data?.conversations ?? [], query: ""))
-//            realmManager.manageConversationList(arr: viewModel.getConversation())
-//            if ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
-//                getOtherChatCountUpdate()
-//            }
-//            if ISMChatSdk.getInstance().getFramework() == .UIKit && ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
+            if ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
+                getOtherChatCountUpdate()
+            }
+            if ISMChatSdk.getInstance().getFramework() == .UIKit && ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
 //                getBroadcastList()
-//                
-//                let chatcount = realmManager.getConversationCount()
-//                let Info : [String: Int] = ["count": chatcount]
-//                NotificationCenter.default.post(name: NSNotification.updateChatCount, object: nil, userInfo: Info)
-//            }
-        }
-    }
-    
-    /// Fetches the broadcast list and updates the realm manager with the retrieved data.
-    func getBroadcastList(){
-        chatViewModel.getBroadCastList { data in
-            if let groupcast = data?.groupcasts{
-                realmManager.manageBroadCastList(arr: groupcast)
-                
-                let count = realmManager.getBroadCastsCount()
-                let Info : [String: Int] = ["count": count]
-                NotificationCenter.default.post(name: NSNotification.updateBroadCastCount, object: nil, userInfo: Info)
+                let chatcount = dbManager.fetchConversationCount()
+                let Info : [String: Int] = ["count": chatcount]
+                NotificationCenter.default.post(name: NSNotification.updateChatCount, object: nil, userInfo: Info)
             }
         }
     }
     
-    /// Deletes a conversation and its associated messages and media.
-    /// - Parameter conversationId: The ID of the conversation to delete.
-    func deleteConversation(conversationId: String) {
-        viewModel.deleteConversation(conversationId: conversationId) {
-            realmManager.deleteConversation(convID: conversationId)
-            realmManager.deleteMessagesThroughConvId(convID: conversationId)
-            realmManager.deleteMediaThroughConversationId(convID: conversationId)
-            DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
-                self.viewModel.resetdata()
-                self.viewModel.clearMessages()
-                realmManager.getAllConversations()
-            })
-        }
-    }
-    
-    /// Clears the messages of a conversation without deleting it.
-    /// - Parameter conversationId: The ID of the conversation to clear.
-    func clearConversation(conversationId : String){
-        viewModel.clearChat(conversationId: conversationId) {
-            self.realmManager.clearMessages()
-            DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
-                self.realmManager.clearMessages(convID: conversationId)
-                self.viewModel.resetdata()
-                self.viewModel.clearMessages()
-                realmManager.getAllConversations()
-            })
-        }
-    }
-    
-    /// Exits a group conversation and deletes its associated data.
-    /// - Parameter conversationId: The ID of the group conversation to exit.
-    func exitGroup(conversationId : String){
-        chatViewModel.exitGroup(conversationId: conversationId) {
-            realmManager.deleteConversation(convID: conversationId)
-            realmManager.deleteMessagesThroughConvId(convID: conversationId)
-            realmManager.deleteMediaThroughConversationId(convID: conversationId)
-            DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
-                self.viewModel.resetdata()
-                self.viewModel.clearMessages()
-                realmManager.getAllConversations()
-            })
-        }
-    }
-    
-    /// Searches for conversations based on a query and updates the conversation list.
-    func searchInConversationList() {
-        let conversation = realmManager.storeConv
-        realmManager.conversations = conversation.filter { conversation in
-            // Convert query to lowercase for case-insensitive search
-            let lowercasedQuery = query.lowercased()
-            
-            // Check opponent's username for the query (case-insensitive)
-            let createdByUserNameCondition = conversation.opponentDetails?.userName?.lowercased().contains(lowercasedQuery) ?? false
-            
-            // Check conversation title for the query (case-insensitive)
-            let conversationTitleCondition = conversation.conversationTitle.lowercased().contains(lowercasedQuery)
-            
-            return (createdByUserNameCondition || conversationTitleCondition)
-        }
-    }
+    /// Fetches the broadcast list and updates the realm manager with the retrieved data.
+//    func getBroadcastList(){
+//        chatViewModel.getBroadCastList { data in
+//            if let groupcast = data?.groupcasts{
+//                realmManager.manageBroadCastList(arr: groupcast)
+//                
+//                let count = realmManager.getBroadCastsCount()
+//                let Info : [String: Int] = ["count": count]
+//                NotificationCenter.default.post(name: NSNotification.updateBroadCastCount, object: nil, userInfo: Info)
+//            }
+//        }
+//    }
+//    
+//    /// Deletes a conversation and its associated messages and media.
+//    /// - Parameter conversationId: The ID of the conversation to delete.
+//    func deleteConversation(conversationId: String) {
+//        viewModel.deleteConversation(conversationId: conversationId) {
+//            realmManager.deleteConversation(convID: conversationId)
+//            realmManager.deleteMessagesThroughConvId(convID: conversationId)
+//            realmManager.deleteMediaThroughConversationId(convID: conversationId)
+//            DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
+//                self.viewModel.resetdata()
+//                self.viewModel.clearMessages()
+//                realmManager.getAllConversations()
+//            })
+//        }
+//    }
+//    
+//    /// Clears the messages of a conversation without deleting it.
+//    /// - Parameter conversationId: The ID of the conversation to clear.
+//    func clearConversation(conversationId : String){
+//        viewModel.clearChat(conversationId: conversationId) {
+//            self.realmManager.clearMessages()
+//            DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
+//                self.realmManager.clearMessages(convID: conversationId)
+//                self.viewModel.resetdata()
+//                self.viewModel.clearMessages()
+//                realmManager.getAllConversations()
+//            })
+//        }
+//    }
+//    
+//    /// Exits a group conversation and deletes its associated data.
+//    /// - Parameter conversationId: The ID of the group conversation to exit.
+//    func exitGroup(conversationId : String){
+//        chatViewModel.exitGroup(conversationId: conversationId) {
+//            realmManager.deleteConversation(convID: conversationId)
+//            realmManager.deleteMessagesThroughConvId(convID: conversationId)
+//            realmManager.deleteMediaThroughConversationId(convID: conversationId)
+//            DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
+//                self.viewModel.resetdata()
+//                self.viewModel.clearMessages()
+//                realmManager.getAllConversations()
+//            })
+//        }
+//    }
+//    
+//    /// Searches for conversations based on a query and updates the conversation list.
+//    func searchInConversationList() {
+//        let conversation = realmManager.storeConv
+//        realmManager.conversations = conversation.filter { conversation in
+//            // Convert query to lowercase for case-insensitive search
+//            let lowercasedQuery = query.lowercased()
+//            
+//            // Check opponent's username for the query (case-insensitive)
+//            let createdByUserNameCondition = conversation.opponentDetails?.userName?.lowercased().contains(lowercasedQuery) ?? false
+//            
+//            // Check conversation title for the query (case-insensitive)
+//            let conversationTitleCondition = conversation.conversationTitle.lowercased().contains(lowercasedQuery)
+//            
+//            return (createdByUserNameCondition || conversationTitleCondition)
+//        }
+//    }
 }
