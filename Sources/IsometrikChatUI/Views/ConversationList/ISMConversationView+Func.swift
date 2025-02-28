@@ -14,21 +14,21 @@ extension ISMConversationView{
     /// Determines if more data should be loaded based on the last conversation.
     /// - Parameter item: The conversation item to check.
     /// - Returns: A boolean indicating whether to load more data.
-    func shouldLoadMoreData(_ item: ISMChatConversationDB) -> Bool {
-        guard let lastItem = dbManager.fetchAllConversations().last else { return false }
-        return item.conversationId == lastItem.conversationId
-    }
+//    func shouldLoadMoreData(_ item: ISMChatConversationDB) -> Bool {
+//        guard let lastItem = dbManager.fetchAllConversations().last else { return false }
+//        return item.conversationId == lastItem.conversationId
+//    }
     
     /// Loads more conversation data if the current count is a multiple of 20.
-    func loadMoreData() {
-        guard viewModel.conversations.count % 20 == 0 else {
-            return
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            print("call api of pagination again")
-            getConversationList()
-        }
-    }
+//    func loadMoreData() {
+//        guard viewModel.conversations.count % 20 == 0 else {
+//            return
+//        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//            print("call api of pagination again")
+//            getConversationList()
+//        }
+//    }
     
     /// Fetches user data and updates the view model with the retrieved information.
     /// - Parameter completion: A closure that returns the user ID.
@@ -42,27 +42,27 @@ extension ISMConversationView{
     }
     
     /// Updates the count of other conversations and posts a notification.
-    func getOtherChatCountUpdate(){
-        let count = dbManager.fetchOtherConversationCount()
-        let otherConversationCount : [String: Int] = ["count": count]
-        NotificationCenter.default.post(name: NSNotification.refreshOtherChatCount, object: nil, userInfo: otherConversationCount)
-    }
-    
+//    func getOtherChatCountUpdate(){
+//        let count = dbManager.fetchOtherConversationCount()
+//        let otherConversationCount : [String: Int] = ["count": count]
+//        NotificationCenter.default.post(name: NSNotification.refreshOtherChatCount, object: nil, userInfo: otherConversationCount)
+//    }
+//    
     /// Retrieves the list of conversations and updates the view model accordingly.
-    func getConversationList(){
-        viewModel.getChatList(search: "") { data in
-            self.dbManager.manageConversationList(arr: data?.conversations ?? [])
-            if ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
-                getOtherChatCountUpdate()
-            }
-            if ISMChatSdk.getInstance().getFramework() == .UIKit && ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
-//                getBroadcastList()
-                let chatcount = dbManager.fetchConversationCount()
-                let Info : [String: Int] = ["count": chatcount]
-                NotificationCenter.default.post(name: NSNotification.updateChatCount, object: nil, userInfo: Info)
-            }
-        }
-    }
+//    func getConversationList(){
+//        viewModel.getChatList(search: "") { data in
+//            self.dbManager.manageConversationList(arr: data?.conversations ?? [])
+//            if ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
+//                getOtherChatCountUpdate()
+//            }
+//            if ISMChatSdk.getInstance().getFramework() == .UIKit && ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
+////                getBroadcastList()
+//                let chatcount = dbManager.fetchConversationCount()
+//                let Info : [String: Int] = ["count": chatcount]
+//                NotificationCenter.default.post(name: NSNotification.updateChatCount, object: nil, userInfo: Info)
+//            }
+//        }
+//    }
     
     /// Fetches the broadcast list and updates the realm manager with the retrieved data.
 //    func getBroadcastList(){

@@ -146,6 +146,299 @@ public struct ISMChatConversationsDetail : Identifiable, Codable{
     }
 }
 
+public extension ISMChatConversationsDetail {
+    public func toConversationDB() -> ISMChatConversationDB {
+        // Extract required properties or provide defaults
+        let conversationIdValue = conversationId ?? ""
+        let updatedAtValue = Double(lastMessageSentAt ?? 0)
+        let unreadMessagesCountValue = unreadMessagesCount ?? 0
+        let membersCountValue = membersCount ?? 0
+        let lastMessageSentAtValue = lastMessageSentAt ?? 0
+        let createdAtValue = createdAt ?? 0.0
+        let modeValue = customType ?? ""
+        let conversationTitleValue = conversationTitle ?? ""
+        let conversationImageUrlValue = conversationImageUrl ?? ""
+        let createdByValue = createdBy ?? ""
+        let createdByUserNameValue = createdByUserName ?? ""
+        let privateOneToOneValue = privateOneToOne ?? false
+        let isGroupValue = isGroup ?? false
+        let typingValue = typing ?? false
+        
+        // Build user IDs array from members and opponent
+        var userIdsArray: [String] = []
+        if let userId = opponentDetails?.userId, !userId.isEmpty {
+            userIdsArray.append(userId)
+        }
+        
+        if let members = members {
+            for member in members {
+                if let userId = member.userId, !userId.isEmpty, !userIdsArray.contains(userId) {
+                    userIdsArray.append(userId)
+                }
+            }
+        }
+        
+        // Create opponent details only if source exists
+        let opponentDetailsDB: ISMChatUserDB? = opponentDetails.map { opponent in
+            let opponentUserMetaData = ISMChatUserMetaDataDB(
+                userId: opponent.metaData?.userId ?? "",
+                userType: opponent.metaData?.userType ?? 0,
+                isStarUser: opponent.metaData?.isStarUser ?? false,
+                userTypeString: opponent.metaData?.userTypeString ?? ""
+            )
+            
+            return ISMChatUserDB(
+                userId: opponent.userId ?? "",
+                userProfileImageUrl: opponent.userProfileImageUrl ?? "",
+                userName: opponent.userName ?? "",
+                userIdentifier: opponent.userIdentifier ?? "",
+                online: opponent.online ?? false,
+                lastSeen: opponent.lastSeen ?? 0,
+                metaData: opponentUserMetaData
+            )
+        }
+        
+        // Create config only if source exists
+        let configDB: ISMChatConfigDB? = config.map { sourceConfig in
+            ISMChatConfigDB(
+                typingEvents: sourceConfig.typingEvents ?? false,
+                readEvents: sourceConfig.readEvents ?? false,
+                pushNotifications: sourceConfig.pushNotifications ?? false
+            )
+        }
+        
+        // Process last message details
+        let lastMessageDetailDB: ISMChatLastMessageDB? = lastMessageDetails.map { lastMsg in
+            // Process delivered to status
+            var deliveredToValue: [ISMChatMessageDeliveryStatusDB] = []
+            if let members = lastMsg.deliveredTo {
+                for member in members {
+                    let status = ISMChatMessageDeliveryStatusDB(
+                        userId: member.userId,
+                        timestamp: member.timestamp
+                    )
+                    deliveredToValue.append(status)
+                }
+            }
+            
+            // Process read by status
+            var readByValue: [ISMChatMessageDeliveryStatusDB] = []
+            if let members = lastMsg.readBy {
+                for member in members {
+                    let status = ISMChatMessageDeliveryStatusDB(
+                        userId: member.userId,
+                        timestamp: member.timestamp
+                    )
+                    readByValue.append(status)
+                }
+            }
+            
+            // Process members
+            var membersValue: [ISMChatLastMessageMemberDB] = []
+            if let members = lastMsg.members {
+                for member in members {
+                    let memberDB = ISMChatLastMessageMemberDB(
+                        memberProfileImageUrl: member.memberProfileImageUrl,
+                        memberName: member.memberName,
+                        memberIdentifier: member.memberIdentifier,
+                        memberId: member.memberId
+                    )
+                    membersValue.append(memberDB)
+                }
+            }
+            
+            // Process call durations
+            var callDurationsValue: [ISMChatMeetingDuration] = []
+            if let calls = lastMsg.callDurations {
+                for call in calls {
+                    let duration = ISMChatMeetingDuration(
+                        memberId: call.memberId,
+                        durationInMilliseconds: call.durationInMilliseconds
+                    )
+                    callDurationsValue.append(duration)
+                }
+            }
+            
+            // Process contacts
+            var contactsValue: [ISMChatContactDB] = []
+            if let contacts = lastMsg.metaData?.contacts {
+                for contact in contacts {
+                    let contactDB = ISMChatContactDB(
+                        contactName: contact.contactName,
+                        contactIdentifier: contact.contactIdentifier,
+                        contactImageUrl: contact.contactImageUrl
+                    )
+                    contactsValue.append(contactDB)
+                }
+            }
+            
+            // Process payment request members
+            var paymentRequestMembersValue: [ISMChatPaymentRequestMembersDB] = []
+            if let members = lastMsg.metaData?.paymentRequestedMembers {
+                for member in members {
+                    let memberDB = ISMChatPaymentRequestMembersDB(
+                        userId: member.userId,
+                        userName: member.userName,
+                        status: member.status,
+                        statusText: member.statusText,
+                        appUserId: member.appUserId,
+                        userProfileImage: member.userProfileImage,
+                        declineReason: member.declineReason
+                    )
+                    paymentRequestMembersValue.append(memberDB)
+                }
+            }
+            
+            // Process invite members
+            var inviteMembersValue: [ISMChatPaymentRequestMembersDB] = []
+            if let members = lastMsg.metaData?.inviteMembers {
+                for member in members {
+                    let memberDB = ISMChatPaymentRequestMembersDB(
+                        userId: member.userId,
+                        userName: member.userName,
+                        status: member.status,
+                        statusText: member.statusText,
+                        appUserId: member.appUserId,
+                        userProfileImage: member.userProfileImage,
+                        declineReason: member.declineReason
+                    )
+                    inviteMembersValue.append(memberDB)
+                }
+            }
+            
+            // Create last message metadata
+            let lastMessageMetaData = ISMChatMetaDataDB(
+                locationAddress: lastMsg.metaData?.locationAddress,
+                replyMessage: lastMsg.metaData?.replyMessage != nil ? ISMChatReplyMessageDB(
+                    parentMessageId: lastMsg.metaData?.replyMessage?.parentMessageId,
+                    parentMessageBody: lastMsg.metaData?.replyMessage?.parentMessageBody,
+                    parentMessageUserId: lastMsg.metaData?.replyMessage?.parentMessageUserId,
+                    parentMessageUserName: lastMsg.metaData?.replyMessage?.parentMessageUserName,
+                    parentMessageMessageType: lastMsg.metaData?.replyMessage?.parentMessageMessageType,
+                    parentMessageAttachmentUrl: lastMsg.metaData?.replyMessage?.parentMessageAttachmentUrl,
+                    parentMessageInitiator: lastMsg.metaData?.replyMessage?.parentMessageInitiator,
+                    parentMessagecaptionMessage: lastMsg.metaData?.replyMessage?.parentMessagecaptionMessage
+                ) : nil,
+                contacts: contactsValue,
+                captionMessage: lastMsg.metaData?.captionMessage,
+                isBroadCastMessage: lastMsg.metaData?.isBroadCastMessage,
+                post: lastMsg.metaData?.post != nil ? ISMChatPostDB(
+                    postId: lastMsg.metaData?.post?.postId,
+                    postUrl: lastMsg.metaData?.post?.postUrl
+                ) : nil,
+                product: lastMsg.metaData?.product != nil ? ISMChatProductDB(
+                    productId: lastMsg.metaData?.product?.productId,
+                    productUrl: lastMsg.metaData?.product?.productUrl,
+                    productCategoryId: lastMsg.metaData?.product?.productCategoryId
+                ) : nil,
+                storeName: lastMsg.metaData?.storeName,
+                productName: lastMsg.metaData?.productName,
+                bestPrice: lastMsg.metaData?.bestPrice,
+                scratchPrice: lastMsg.metaData?.scratchPrice,
+                url: lastMsg.metaData?.url,
+                parentProductId: lastMsg.metaData?.parentProductId,
+                childProductId: lastMsg.metaData?.childProductId,
+                entityType: lastMsg.metaData?.entityType,
+                productImage: lastMsg.metaData?.productImage,
+                thumbnailUrl: lastMsg.metaData?.thumbnailUrl,
+                Description: lastMsg.metaData?.description,
+                isVideoPost: lastMsg.metaData?.isVideoPost,
+                socialPostId: lastMsg.metaData?.socialPostId,
+                collectionTitle: lastMsg.metaData?.collectionTitle,
+                collectionDescription: lastMsg.metaData?.collectionDescription,
+                productCount: lastMsg.metaData?.productCount,
+                collectionImage: lastMsg.metaData?.collectionImage,
+                collectionId: lastMsg.metaData?.collectionId,
+                paymentRequestId: lastMsg.metaData?.paymentRequestId,
+                orderId: lastMsg.metaData?.orderId,
+                paymentRequestedMembers: paymentRequestMembersValue,
+                requestAPaymentExpiryTime: lastMsg.metaData?.requestAPaymentExpiryTime,
+                currencyCode: lastMsg.metaData?.currencyCode,
+                amount: lastMsg.metaData?.amount,
+                inviteTitle: lastMsg.metaData?.inviteTitle,
+                inviteTimestamp: lastMsg.metaData?.inviteTimestamp,
+                inviteRescheduledTimestamp: lastMsg.metaData?.inviteRescheduledTimestamp,
+                inviteLocation: lastMsg.metaData?.inviteLocation != nil ? ISMChatLocationDB(
+                    name: lastMsg.metaData?.inviteLocation?.name,
+                    latitude: lastMsg.metaData?.inviteLocation?.latitude,
+                    longitude: lastMsg.metaData?.inviteLocation?.longitude
+                ) : nil,
+                inviteMembers: inviteMembersValue,
+                groupCastId: lastMsg.metaData?.groupCastId,
+                status: lastMsg.metaData?.status
+            )
+            
+            return ISMChatLastMessageDB(
+                sentAt: lastMsg.sentAt ?? 0,
+                updatedAt: lastMsg.updatedAt ?? 0,
+                senderName: lastMsg.senderName ?? "",
+                senderIdentifier: lastMsg.senderIdentifier ?? "",
+                senderId: lastMsg.senderId ?? "",
+                conversationId: lastMsg.conversationId ?? "",
+                body: lastMsg.body ?? "",
+                messageId: lastMsg.messageId ?? "",
+                customType: lastMsg.customType ?? "",
+                action: lastMsg.action ?? "",
+                metaData: lastMessageMetaData,
+                metaDataJsonString: lastMsg.metaDataJson ?? "",
+                deliveredTo: deliveredToValue,
+                readBy: readByValue,
+                msgSyncStatus: "",
+                reactionType: lastMsg.reactionType ?? "",
+                userId: lastMsg.userId ?? "",
+                userIdentifier: lastMsg.userIdentifier ?? "",
+                userName: lastMsg.userName ?? "",
+                userProfileImageUrl: lastMsg.userProfileImageUrl ?? "",
+                members: membersValue,
+                memberName: lastMsg.memberName ?? "",
+                memberId: lastMsg.memberId ?? "",
+                messageDeleted: lastMsg.messageDeleted ?? false,
+                initiatorName: lastMsg.initiatorName ?? "",
+                initiatorId: lastMsg.initiatorId ?? "",
+                initiatorIdentifier: lastMsg.initiatorIdentifier ?? "",
+                deletedMessage: false,
+                meetingId: lastMsg.meetingId ?? "",
+                missedByMembers: lastMsg.missedByMembers ?? [],
+                callDurations: callDurationsValue
+            )
+        }
+        
+        // Create conversation metadata
+        let conversationMetaData = ISMChatConversationMetaData(
+            chatStatus: metaData?.chatStatus ?? "",
+            membersIds: metaData?.membersIds ?? []
+        )
+        
+        // Create and return the DB model
+        return ISMChatConversationDB(
+            conversationId: conversationIdValue,
+            updatedAt: updatedAtValue,
+            unreadMessagesCount: unreadMessagesCountValue,
+            membersCount: membersCountValue,
+            lastMessageSentAt: lastMessageSentAtValue,
+            createdAt: createdAtValue,
+            mode: modeValue,
+            conversationTitle: conversationTitleValue,
+            conversationImageUrl: conversationImageUrlValue,
+            createdBy: createdByValue,
+            createdByUserName: createdByUserNameValue,
+            privateOneToOne: privateOneToOneValue,
+            messagingDisabled: false, // Default value as it doesn't exist in the source model
+            isGroup: isGroupValue,
+            typing: typingValue,
+            isDelete: false, // Default value as it doesn't exist in the source model
+            userIds: userIdsArray, // Use populated user IDs array
+            opponentDetails: opponentDetailsDB,
+            config: configDB,
+            lastMessageDetails: lastMessageDetailDB,
+            deletedMessage: false, // Default value as it doesn't exist in the source model
+            metaData: conversationMetaData,
+            metaDataJson: metaDataJson,
+            lastInputText: nil // Default value as it doesn't exist in the source model
+        )
+    }
+}
+
 public struct ISMChatLastMessage : Codable{
     public var sentAt : Double?
     public var updatedAt : Double?

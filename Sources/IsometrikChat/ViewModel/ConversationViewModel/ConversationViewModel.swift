@@ -85,6 +85,8 @@ public class ConversationViewModel : NSObject ,ObservableObject{
             case .failure(let error) :
                 self.moreDataAvailableForChatList = false
                 ISMChatHelper.print("Get Chat Api failed -----> \(String(describing: error))")
+                // Add this line to call completion with nil in case of failure
+                completion(nil)
             }
         }
     }

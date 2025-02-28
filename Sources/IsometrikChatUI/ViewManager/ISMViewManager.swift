@@ -18,11 +18,9 @@ public class ISMViewManager{
     /// Creates and returns a conversation list view
     /// - Parameter delegate: Optional delegate to handle conversation view events
     /// - Returns: A SwiftUI view displaying the list of conversations
-    ///
-    @Environment(\.modelContext) private var modelContext
 
     public func conversationList(delegete : ISMConversationViewDelegate? = nil) -> some View {
-        return ISMConversationView(delegate: delegete, modelContext: modelContext)
+        return ISMConversationView(delegate: delegete)
     }
     
     /// Creates and returns a message list view for a specific conversation
@@ -39,33 +37,33 @@ public class ISMViewManager{
     ///   - myIsometrikUserId: Current user's Isometrik platform ID
     ///   - myAppUserId: Current user's app-specific ID
     /// - Returns: A SwiftUI view displaying the message list
-    public func messageList(
-        conversationViewModel: ConversationViewModel,
-        conversationId: String,
-        user: ISMChatUserDB? = nil,
-        isGroup: Bool,
-        fromBroadCastFlow: Bool,
-        groupCastId: String,
-        groupConversationTitle: String,
-        groupImage: String,
-        delegate: ISMMessageViewDelegate? = nil,
-        myIsometrikUserId: String,
-        myAppUserId: String
-    ) -> some View {
-        return ISMMessageView(
-            conversationViewModel: conversationViewModel,
-            conversationID: conversationId,
-            opponenDetail: user,
-            myUserId: myIsometrikUserId,
-            myAppUserId: myAppUserId,
-            isGroup: isGroup,
-            fromBroadCastFlow: fromBroadCastFlow,
-            groupCastId: groupCastId,
-            groupConversationTitle: groupConversationTitle,
-            groupImage: groupImage,
-            delegate: delegate
-        )
-    }
+//    public func messageList(
+//        conversationViewModel: ConversationViewModel,
+//        conversationId: String,
+//        user: ISMChatUserDB? = nil,
+//        isGroup: Bool,
+//        fromBroadCastFlow: Bool,
+//        groupCastId: String,
+//        groupConversationTitle: String,
+//        groupImage: String,
+//        delegate: ISMMessageViewDelegate? = nil,
+//        myIsometrikUserId: String,
+//        myAppUserId: String
+//    ) -> some View {
+//        return ISMMessageView(
+//            conversationViewModel: conversationViewModel,
+//            conversationID: conversationId,
+//            opponenDetail: user,
+//            myUserId: myIsometrikUserId,
+//            myAppUserId: myAppUserId,
+//            isGroup: isGroup,
+//            fromBroadCastFlow: fromBroadCastFlow,
+//            groupCastId: groupCastId,
+//            groupConversationTitle: groupConversationTitle,
+//            groupImage: groupImage,
+//            delegate: delegate
+//        )
+//    }
     
     /// Creates and returns a view for other types of conversations
     /// - Parameter delegate: Optional delegate to handle other conversation list events

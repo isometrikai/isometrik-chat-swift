@@ -8,7 +8,7 @@
 import SwiftData
 import Foundation
 
-extension LocalDBManager{
+extension LocalStorageManager{
     public func updateMemberCount(convId: String, inc: Bool, dec: Bool, count: Int) {
         do {
             let descriptor = FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == convId && !$0.isDelete })

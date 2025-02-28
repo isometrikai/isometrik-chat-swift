@@ -58,7 +58,7 @@ public struct ISMConversationView : View {
     
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     var myUserData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
-     var hideNavigationBar = ISMChatSdkUI.getInstance().getChatProperties().hideNavigationBarForConversationList
+    var hideNavigationBar = ISMChatSdkUI.getInstance().getChatProperties().hideNavigationBarForConversationList
     
     public var delegate : ISMConversationViewDelegate? = nil
     @State public var showMenuForConversationType : Bool = false
@@ -69,12 +69,10 @@ public struct ISMConversationView : View {
     @State var path = NavigationPath()
     @State var offset = CGSize.zero
     
-    @Environment(\.modelContext) private var modelContext
-    let dbManager: LocalDBManager
+    @StateObject var viewModelNew = ConversationsViewModel()
     
-    public init(delegate : ISMConversationViewDelegate? = nil,modelContext: ModelContext){
+    public init(delegate : ISMConversationViewDelegate? = nil){
         self.delegate = delegate
-        self.dbManager = LocalDBManager(modelContext: modelContext)
     }
     
     
@@ -86,11 +84,11 @@ public struct ISMConversationView : View {
                 appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all) // Background color
                 VStack {
                     // Show placeholder if no conversations are available
-                    if shouldShowPlaceholder {
-                        Spacer()
-                        showPlaceholderView
-                        Spacer()
-                    } else {
+//                    if shouldShowPlaceholder {
+//                        Spacer()
+//                        showPlaceholderView
+//                        Spacer()
+//                    } else {
                         // Search bar for filtering conversations
                         if ISMChatSdk.getInstance().getFramework() == .UIKit {
                             CustomSearchBar(searchText:  $query, isDisabled: ISMChatSdkUI.getInstance().getChatProperties().onTapOfSearchBarOpenNewScreen == true)
@@ -103,14 +101,14 @@ public struct ISMConversationView : View {
                                 }
                         }
                         // Show placeholder if no conversation data is available
-                        if conversationData.count == 0 {
-                            Spacer()
-                            showPlaceholderView
-                            Spacer()
-                        } else {
+//                        if conversationData.count == 0 {
+//                            Spacer()
+//                            showPlaceholderView
+//                            Spacer()
+//                        } else {
                             conversationListView // Display the list of conversations
-                        }
-                    }
+//                        }
+//                    }
                 }
 //                .onChange(of: query, {_ , newValue in
 //                    if newValue == "" {
@@ -186,9 +184,9 @@ public struct ISMConversationView : View {
                     removeObservers()
                     NotificationCenter.default.removeObserver(self)
                 }
-                if ISMChatSdkUI.getInstance().getChatProperties().createConversationFromChatList == true{
-                    createConversationButton
-                }
+//                if ISMChatSdkUI.getInstance().getChatProperties().createConversationFromChatList == true{
+//                    createConversationButton
+//                }
             }
         }//:NavigationView
         .confirmationDialog("", isPresented: $showMenuForConversationType, titleVisibility: .hidden) {
@@ -233,9 +231,12 @@ public struct ISMConversationView : View {
 //        self.viewModel.resetdata()
 //        self.viewModel.clearMessages()
 //        realmManager.getAllConversations()
-        dbManager.hardDeleteAll()
-        self.getConversationList()
+//        dbManager.hardDeleteAll()
+//        self.getConversationList()
 //        self.realmManager.hardDeleteMsgs()
+        Task {
+            await viewModelNew.loadConversations()
+        }
         if !networkMonitor.isConnected {
             showingNoInternetAlert = true
         }
@@ -243,12 +244,12 @@ public struct ISMConversationView : View {
         }
     }
 
-    private var shouldShowPlaceholder: Bool {
-        // Determine if the placeholder should be shown based on conversation count and search query
-        let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
-        let conversationCount = isOtherConversationList ? dbManager.fetchPrimaryConversationCount() : dbManager.fetchConversationCount()
-        return conversationCount == 0 && query.isEmpty
-    }
+//    private var shouldShowPlaceholder: Bool {
+//        // Determine if the placeholder should be shown based on conversation count and search query
+//        let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
+//        let conversationCount = isOtherConversationList ? dbManager.fetchPrimaryConversationCount() : dbManager.fetchConversationCount()
+//        return conversationCount == 0 && query.isEmpty
+//    }
 
     private var showPlaceholderView: some View {
         // View to display when there are no conversations
@@ -274,7 +275,7 @@ public struct ISMConversationView : View {
     private var conversationListView: some View {
         // View to display the list of conversations
         List {
-            ForEach(conversationData) { data in
+            ForEach(viewModelNew.conversations) { data in
                 VStack(spacing: 0) {
                     // Button to navigate to the selected conversation
                     if ISMChatSdk.getInstance().getFramework() == .UIKit {
@@ -290,16 +291,17 @@ public struct ISMConversationView : View {
                     } else {
                         // SwiftUI navigation link for conversation
                         ZStack {
+//                            Text(data.opponentDetails?.userName ?? "")
                             conversationSubView(for: data)
                                 .onAppear {
                                     handlePagination(for: data)
                                 }
-                            NavigationLink(destination: messageView(for: data)) {
-                                EmptyView()
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                            .frame(width: 0)
-                            .opacity(0)
+//                            NavigationLink(destination: messageView(for: data)) {
+//                                EmptyView()
+//                            }
+//                            .buttonStyle(PlainButtonStyle())
+//                            .frame(width: 0)
+//                            .opacity(0)
                         }
                     }
                     
@@ -334,59 +336,59 @@ public struct ISMConversationView : View {
         .autocorrectionDisabled(true)
         .refreshable {
             viewModel.resetdata() // Reset view model data on refresh
-            getConversationList() // Fetch updated conversation list
+//            getConversationList() // Fetch updated conversation list
         }
     }
     
     
-    private var createConversationButton : some View{
-        VStack{
-            //create conversation button
-            if ISMChatSdk.getInstance().getFramework() == .UIKit{
-                if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == true && conversationData.count > 0{
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            Button(action: {
-                                showMenuForConversationType.toggle()
-                            }, label: {
-                                appearance.images.addConversation
-                                    .resizable()
-                                    .frame(width: 58, height: 58)
-                            })
-                            .padding()
-                        }
-                    }
-                }else if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == false{
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            Button(action: {
-                                showMenuForConversationType.toggle()
-                            }, label: {
-                                appearance.images.addConversation
-                                    .resizable()
-                                    .frame(width: 58, height: 58)
-                            })
-                            .padding()
-                        }
-                    }
-                }
-            }else{
-                ISMCreateConversationButtonView(navigate: $createChat,showOfflinePopUp: $showingNoInternetAlert)
-            }
-        }
-    }
+//    private var createConversationButton : some View{
+//        VStack{
+//            //create conversation button
+//            if ISMChatSdk.getInstance().getFramework() == .UIKit{
+//                if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == true && conversationData.count > 0{
+//                    VStack {
+//                        Spacer()
+//                        HStack {
+//                            Spacer()
+//                            Button(action: {
+//                                showMenuForConversationType.toggle()
+//                            }, label: {
+//                                appearance.images.addConversation
+//                                    .resizable()
+//                                    .frame(width: 58, height: 58)
+//                            })
+//                            .padding()
+//                        }
+//                    }
+//                }else if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == false{
+//                    VStack {
+//                        Spacer()
+//                        HStack {
+//                            Spacer()
+//                            Button(action: {
+//                                showMenuForConversationType.toggle()
+//                            }, label: {
+//                                appearance.images.addConversation
+//                                    .resizable()
+//                                    .frame(width: 58, height: 58)
+//                            })
+//                            .padding()
+//                        }
+//                    }
+//                }
+//            }else{
+//                ISMCreateConversationButtonView(navigate: $createChat,showOfflinePopUp: $showingNoInternetAlert)
+//            }
+//        }
+//    }
 
     // MARK: - Helper Methods
 
 
-    var conversationData: [ISMChatConversationDB] {
-        let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
-        return isOtherConversationList ? dbManager.fetchPrimaryConversations() : dbManager.fetchAllConversations()
-    }
+//    var conversationData: [ISMChatConversationDB] {
+//        let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
+//        return isOtherConversationList ? dbManager.fetchPrimaryConversations() : dbManager.fetchAllConversations()
+//    }
 
     private func navigateToMessageList(for data: ConversationDB) {
         // Navigate to the message list for the selected conversation
@@ -413,9 +415,9 @@ public struct ISMConversationView : View {
     }
 
     private func handlePagination(for data: ISMChatConversationDB) {
-        if shouldLoadMoreData(data) {
-            loadMoreData()
-        }
+//        if shouldLoadMoreData(data) {
+//            loadMoreData()
+//        }
     }
 
 //    private func handleDelete(offsets: IndexSet) {
@@ -425,7 +427,7 @@ public struct ISMConversationView : View {
 //        }
 //    }
 
-    private func messageView(for data: ISMChatConversationDB) -> some View {
+    private func messageView(for data: ConversationDB) -> some View {
         ISMMessageView(
             conversationViewModel: viewModel,
             conversationID: data.lastMessageDetails?.conversationId,
@@ -517,122 +519,122 @@ extension ISMConversationView{
         for notificationType in notificationTypes {
             NotificationCenter.default.publisher(for: notificationType)
                 .sink { notification in
-                    handleNotification(notification, type: notificationType)
+//                    handleNotification(notification, type: notificationType)
                 }
                 .store(in: &cancellables)
         }
     }
 
-    private func handleNotification(_ notification: Notification, type: Notification.Name) {
-        // Handle the notification based on its type
-        switch type {
-        case ISMChatMQTTNotificationType.mqttConversationCreated.name:
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatCreateConversation else {
-                return
-            }
-            ISMChatHelper.print("CREATE CONVERSATION ----------------->\(messageInfo)")
-            self.viewModel.resetdata()
-            self.getConversationList()
-            
-        case ISMChatMQTTNotificationType.mqttUpdateUser.name:
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
-                return
-            }
-            ISMChatHelper.print("USER UPDATED ----------------->\(messageInfo)")
-            if ISMChatSdk.sharedInstance.getFramework() == .SwiftUI{
-                self.getuserData { _ in
-                }
-            }
-        case ISMChatMQTTNotificationType.mqttMessageNewReceived.name:
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
-                return
-            }
-            ISMChatHelper.print("MESSAGE RECEIVED IN CONVERSATION LIST----------------->\(messageInfo)")
-            self.msgReceived(messageInfo: messageInfo)
-        case ISMChatMQTTNotificationType.mqttTypingEvent.name:
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatTypingEvent else {
-                return
-            }
-            ISMChatHelper.print("TYPING EVENT----------------->\(messageInfo)")
-            if onConversationList == true && myUserData?.userId != messageInfo.userId{
-                self.typingStatus(obj: messageInfo)
-            }
-        case ISMChatMQTTNotificationType.mqttMessageDeleteForAll.name:
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
-                return
-            }
-            ISMChatHelper.print("MESSAGE DELETE FOR ALL ----------------->\(messageInfo)")
-            messageDeleteForAll(messageInfo: messageInfo)
-//            realmManager.getAllConversations()
-        case  ISMChatMQTTNotificationType.mqttClearConversation.name:
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
-                return
-            }
-            ISMChatHelper.print("clear conversation ----------------->\(messageInfo)")
-            self.viewModel.resetdata()
-            self.getConversationList()
-        case NSNotification.mqttUpdateReadStatus:
-            self.viewModel.resetdata()
-            self.viewModel.clearMessages()
-//            realmManager.getAllConversations()
-        case NSNotification.mqttUnreadCountReset:
-            if let conversationId = notification.userInfo?["conversationId"] as? String{
-//                realmManager.updateUnreadCountThroughConId(conId: conversationId,count: 0,reset:true)
-                self.viewModel.resetdata()
-                self.viewModel.clearMessages()
-//                realmManager.getAllConversations()
-            }
-        case ISMChatMQTTNotificationType.mqttUserBlockConversation.name:
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatUserBlockAndUnblock else {
-                return
-            }
-            ISMChatHelper.print("USER BLOCKED ----------------->\(messageInfo)")
-            blockUnblockUserEvent(messageInfo: messageInfo)
-        case ISMChatMQTTNotificationType.mqttUserUnblockConversation.name:
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatUserBlockAndUnblock else {
-                return
-            }
-            ISMChatHelper.print("USER UNBLOCKED ----------------->\(messageInfo)")
-            blockUnblockUserEvent(messageInfo: messageInfo)
-        case NSNotification.localNotification:
-            if let conversationId = notification.userInfo?["conversationId"] as? String, let messageId = notification.userInfo?["messageId"] as? String{
-                handleLocalNotification(conversationId: conversationId)
-                chatViewModel.deliveredMessageIndicator(conversationId: conversationId, messageId: messageId) { _ in
-                }
-            }
-        case ISMChatMQTTNotificationType.mqttAddReaction.name:
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatReactions else {
-                return
-            }
-            
-            ISMChatHelper.print("Add Reaction ----------------->\(messageInfo)")
-            reactionUpdate(messageInfo: messageInfo)
-        case ISMChatMQTTNotificationType.mqttRemoveReaction.name:
-            guard let messageInfo = notification.userInfo?["data"] as? ISMChatReactions else {
-                return
-            }
-            ISMChatHelper.print("Remove Reaction ----------------->\(messageInfo)")
-            reactionUpdate(messageInfo: messageInfo)
-        case NSNotification.refreshConvList:
-            self.viewModel.resetdata()
-            self.getConversationList()
-        case NSNotification.refrestConversationListLocally:
-            self.viewModel.resetdata()
-            self.viewModel.clearMessages()
-//            realmManager.getAllConversations()
-        case ISMChatMQTTNotificationType.mqttMeetingEnded.name:
-            guard let messageInfo = notification.userInfo?["data"] as? ISMMeeting else {
-                return
-            }
-            ISMChatHelper.print("Meeting ended----------------->\(messageInfo)")
-            if onConversationList == true{
-                self.viewModel.resetdata()
-                self.getConversationList()
-            }
-        default:
-            break
-        }
-    }
+//    private func handleNotification(_ notification: Notification, type: Notification.Name) {
+//        // Handle the notification based on its type
+//        switch type {
+//        case ISMChatMQTTNotificationType.mqttConversationCreated.name:
+//            guard let messageInfo = notification.userInfo?["data"] as? ISMChatCreateConversation else {
+//                return
+//            }
+//            ISMChatHelper.print("CREATE CONVERSATION ----------------->\(messageInfo)")
+//            self.viewModel.resetdata()
+//            self.getConversationList()
+//            
+//        case ISMChatMQTTNotificationType.mqttUpdateUser.name:
+//            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
+//                return
+//            }
+//            ISMChatHelper.print("USER UPDATED ----------------->\(messageInfo)")
+//            if ISMChatSdk.sharedInstance.getFramework() == .SwiftUI{
+//                self.getuserData { _ in
+//                }
+//            }
+//        case ISMChatMQTTNotificationType.mqttMessageNewReceived.name:
+//            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
+//                return
+//            }
+//            ISMChatHelper.print("MESSAGE RECEIVED IN CONVERSATION LIST----------------->\(messageInfo)")
+//            self.msgReceived(messageInfo: messageInfo)
+//        case ISMChatMQTTNotificationType.mqttTypingEvent.name:
+//            guard let messageInfo = notification.userInfo?["data"] as? ISMChatTypingEvent else {
+//                return
+//            }
+//            ISMChatHelper.print("TYPING EVENT----------------->\(messageInfo)")
+//            if onConversationList == true && myUserData?.userId != messageInfo.userId{
+//                self.typingStatus(obj: messageInfo)
+//            }
+//        case ISMChatMQTTNotificationType.mqttMessageDeleteForAll.name:
+//            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
+//                return
+//            }
+//            ISMChatHelper.print("MESSAGE DELETE FOR ALL ----------------->\(messageInfo)")
+//            messageDeleteForAll(messageInfo: messageInfo)
+////            realmManager.getAllConversations()
+//        case  ISMChatMQTTNotificationType.mqttClearConversation.name:
+//            guard let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered else {
+//                return
+//            }
+//            ISMChatHelper.print("clear conversation ----------------->\(messageInfo)")
+//            self.viewModel.resetdata()
+//            self.getConversationList()
+//        case NSNotification.mqttUpdateReadStatus:
+//            self.viewModel.resetdata()
+//            self.viewModel.clearMessages()
+////            realmManager.getAllConversations()
+//        case NSNotification.mqttUnreadCountReset:
+//            if let conversationId = notification.userInfo?["conversationId"] as? String{
+////                realmManager.updateUnreadCountThroughConId(conId: conversationId,count: 0,reset:true)
+//                self.viewModel.resetdata()
+//                self.viewModel.clearMessages()
+////                realmManager.getAllConversations()
+//            }
+//        case ISMChatMQTTNotificationType.mqttUserBlockConversation.name:
+//            guard let messageInfo = notification.userInfo?["data"] as? ISMChatUserBlockAndUnblock else {
+//                return
+//            }
+//            ISMChatHelper.print("USER BLOCKED ----------------->\(messageInfo)")
+//            blockUnblockUserEvent(messageInfo: messageInfo)
+//        case ISMChatMQTTNotificationType.mqttUserUnblockConversation.name:
+//            guard let messageInfo = notification.userInfo?["data"] as? ISMChatUserBlockAndUnblock else {
+//                return
+//            }
+//            ISMChatHelper.print("USER UNBLOCKED ----------------->\(messageInfo)")
+//            blockUnblockUserEvent(messageInfo: messageInfo)
+//        case NSNotification.localNotification:
+//            if let conversationId = notification.userInfo?["conversationId"] as? String, let messageId = notification.userInfo?["messageId"] as? String{
+//                handleLocalNotification(conversationId: conversationId)
+//                chatViewModel.deliveredMessageIndicator(conversationId: conversationId, messageId: messageId) { _ in
+//                }
+//            }
+//        case ISMChatMQTTNotificationType.mqttAddReaction.name:
+//            guard let messageInfo = notification.userInfo?["data"] as? ISMChatReactions else {
+//                return
+//            }
+//            
+//            ISMChatHelper.print("Add Reaction ----------------->\(messageInfo)")
+//            reactionUpdate(messageInfo: messageInfo)
+//        case ISMChatMQTTNotificationType.mqttRemoveReaction.name:
+//            guard let messageInfo = notification.userInfo?["data"] as? ISMChatReactions else {
+//                return
+//            }
+//            ISMChatHelper.print("Remove Reaction ----------------->\(messageInfo)")
+//            reactionUpdate(messageInfo: messageInfo)
+//        case NSNotification.refreshConvList:
+//            self.viewModel.resetdata()
+//            self.getConversationList()
+//        case NSNotification.refrestConversationListLocally:
+//            self.viewModel.resetdata()
+//            self.viewModel.clearMessages()
+////            realmManager.getAllConversations()
+//        case ISMChatMQTTNotificationType.mqttMeetingEnded.name:
+//            guard let messageInfo = notification.userInfo?["data"] as? ISMMeeting else {
+//                return
+//            }
+//            ISMChatHelper.print("Meeting ended----------------->\(messageInfo)")
+//            if onConversationList == true{
+//                self.viewModel.resetdata()
+//                self.getConversationList()
+//            }
+//        default:
+//            break
+//        }
+//    }
 
     private func removeObservers() {
         // Cancel all observers
