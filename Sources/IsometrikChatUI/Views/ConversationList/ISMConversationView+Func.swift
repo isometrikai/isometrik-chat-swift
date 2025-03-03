@@ -14,21 +14,21 @@ extension ISMConversationView{
     /// Determines if more data should be loaded based on the last conversation.
     /// - Parameter item: The conversation item to check.
     /// - Returns: A boolean indicating whether to load more data.
-//    func shouldLoadMoreData(_ item: ISMChatConversationDB) -> Bool {
-//        guard let lastItem = dbManager.fetchAllConversations().last else { return false }
-//        return item.conversationId == lastItem.conversationId
-//    }
+    func shouldLoadMoreData(_ item: ISMChatConversationDB) -> Bool {
+        guard let lastItem = viewModelNew.conversations.last else { return false }
+        return item.conversationId == lastItem.conversationId
+    }
     
     /// Loads more conversation data if the current count is a multiple of 20.
-//    func loadMoreData() {
-//        guard viewModel.conversations.count % 20 == 0 else {
-//            return
-//        }
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//            print("call api of pagination again")
-//            getConversationList()
-//        }
-//    }
+    func loadMoreData() {
+        guard viewModel.conversations.count % 20 == 0 else {
+            return
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            print("call api of pagination again")
+            getConversations()
+        }
+    }
     
     /// Fetches user data and updates the view model with the retrieved information.
     /// - Parameter completion: A closure that returns the user ID.
@@ -42,12 +42,32 @@ extension ISMConversationView{
     }
     
     /// Updates the count of other conversations and posts a notification.
-//    func getOtherChatCountUpdate(){
-//        let count = dbManager.fetchOtherConversationCount()
-//        let otherConversationCount : [String: Int] = ["count": count]
-//        NotificationCenter.default.post(name: NSNotification.refreshOtherChatCount, object: nil, userInfo: otherConversationCount)
-//    }
-//    
+    func getOtherChatCountUpdate(){
+        let count = viewModelNew.otherConversations.count
+        let otherConversationCount : [String: Int] = ["count": count]
+        NotificationCenter.default.post(name: NSNotification.refreshOtherChatCount, object: nil, userInfo: otherConversationCount)
+    }
+    
+    func getConversations(){
+        Task {
+            await viewModelNew.loadConversations()
+        }
+    }
+    
+    func getConversationList(){
+        getConversations()
+        if ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
+            getOtherChatCountUpdate()
+        }
+//        if ISMChatSdk.getInstance().getFramework() == .UIKit && ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
+            //                getBroadcastList()
+//        }
+        let chatcount = viewModelNew.conversations.count
+        let Info : [String: Int] = ["count": chatcount]
+        NotificationCenter.default.post(name: NSNotification.updateChatCount, object: nil, userInfo: Info)
+    }
+    
+//
     /// Retrieves the list of conversations and updates the view model accordingly.
 //    func getConversationList(){
 //        viewModel.getChatList(search: "") { data in
@@ -79,7 +99,10 @@ extension ISMConversationView{
 //    
 //    /// Deletes a conversation and its associated messages and media.
 //    /// - Parameter conversationId: The ID of the conversation to delete.
-//    func deleteConversation(conversationId: String) {
+    func deleteConversation(conversationId: String) {
+        Task {
+            await viewModelNew.deleteConversations(id: conversationId)
+        }
 //        viewModel.deleteConversation(conversationId: conversationId) {
 //            realmManager.deleteConversation(convID: conversationId)
 //            realmManager.deleteMessagesThroughConvId(convID: conversationId)
@@ -90,11 +113,11 @@ extension ISMConversationView{
 //                realmManager.getAllConversations()
 //            })
 //        }
-//    }
-//    
-//    /// Clears the messages of a conversation without deleting it.
-//    /// - Parameter conversationId: The ID of the conversation to clear.
-//    func clearConversation(conversationId : String){
+    }
+    
+    /// Clears the messages of a conversation without deleting it.
+    /// - Parameter conversationId: The ID of the conversation to clear.
+    func clearConversation(conversationId : String){
 //        viewModel.clearChat(conversationId: conversationId) {
 //            self.realmManager.clearMessages()
 //            DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
@@ -104,7 +127,7 @@ extension ISMConversationView{
 //                realmManager.getAllConversations()
 //            })
 //        }
-//    }
+    }
 //    
 //    /// Exits a group conversation and deletes its associated data.
 //    /// - Parameter conversationId: The ID of the group conversation to exit.

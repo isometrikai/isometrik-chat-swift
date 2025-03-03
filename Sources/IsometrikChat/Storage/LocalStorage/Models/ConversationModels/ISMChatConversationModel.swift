@@ -11,7 +11,7 @@ import Foundation
 
 @Model
 public class ISMChatConversationDB: Identifiable {
-    @Attribute(.unique) public var conversationId: String
+    @Attribute(.unique) public var conversationId: String?
     public var updatedAt: Double
     public var unreadMessagesCount: Int
     public var membersCount: Int

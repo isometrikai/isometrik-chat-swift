@@ -17,5 +17,5 @@ public class ConfigurationService {
     static public let shared = ConfigurationService()
     public init() {}
     
-    public var storageMode: StorageMode = .remote
+    public var storageMode: StorageMode = .hybrid
 }

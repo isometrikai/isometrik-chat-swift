@@ -12,23 +12,25 @@ import SwiftUI
 public class LocalStorageManager: ChatStorageManager {
     public func saveConversation(_ conversations: [ISMChatConversationDB]) async throws {
         for obj in conversations {
-            let descriptor = FetchDescriptor<ISMChatConversationDB>(
-                predicate: #Predicate { $0.conversationId == (obj.conversationId ?? "") }
-            )
-            do {
-                let existingConversations = try modelContext.fetch(descriptor)
-                
-                if existingConversations.isEmpty {
-                    // ✅ Add New Conversation
-                    modelContext.insert(obj)
-                    try modelContext.save()
-                } else if let existing = existingConversations.first, !existing.isDelete {
-                    // 🔄 Update if not deleted
-                    try modelContext.save()
+            if let conversationId = obj.conversationId {
+                let descriptor = FetchDescriptor<ISMChatConversationDB>(
+                    predicate: #Predicate { $0.conversationId == conversationId }
+                )
+                do {
+                    let existingConversations = try modelContext.fetch(descriptor)
+                    
+                    if existingConversations.isEmpty {
+                        // ✅ Add New Conversation
+                        modelContext.insert(obj)
+                        try modelContext.save()
+                    } else if let existing = existingConversations.first, !existing.isDelete {
+                        // 🔄 Update if not deleted
+                        try modelContext.save()
+                    }
+                    
+                } catch {
+                    print("SwiftData Error: \(error)")
                 }
-                
-            } catch {
-                print("SwiftData Error: \(error)")
             }
         }
     }
@@ -53,6 +55,31 @@ public class LocalStorageManager: ChatStorageManager {
             print("Fetch Error: \(error)")
             return []
         }
+    }
+    
+    public func deleteConversation(id: String) async throws {
+//        realmManager.deleteConversation(convID: conversationId)
+//        realmManager.deleteMessagesThroughConvId(convID: conversationId)
+//        realmManager.deleteMediaThroughConversationId(convID: conversationId)
+            let descriptor = FetchDescriptor<ISMChatConversationDB>(
+                predicate: #Predicate { $0.conversationId == id }
+            )
+            
+            do {
+                let conversationsToDelete = try modelContext.fetch(descriptor)
+                guard let conversation = conversationsToDelete.first else { return }
+
+                try modelContext.transaction {
+                    conversation.isDelete = true
+                }
+            } catch {
+                print("Error deleting conversation \(id) in SwiftData: \(error)")
+            }
+
+    }
+    
+    public func clearConversation(id: String) async throws {
+        
     }
     
     

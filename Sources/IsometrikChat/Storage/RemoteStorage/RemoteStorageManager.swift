@@ -22,6 +22,7 @@ public class RemoteStorageManager: ChatStorageManager {
         return try await withCheckedThrowingContinuation { continuation in
             conversationViewModel.getChatList(passSkip: true, search: "") { conversations in
                 if let conversations = conversations {
+                    self.conversationViewModel.conversations = conversations.conversations ?? []
                     // Create an array to hold the converted DB models
                     var convertedConversations: [ISMChatConversationDB] = []
                     
@@ -42,4 +43,13 @@ public class RemoteStorageManager: ChatStorageManager {
         }
     }
     
+    public func deleteConversation(id: String) async throws {
+        conversationViewModel.deleteConversation(conversationId: id) {
+        }
+    }
+    
+    public func clearConversation(id: String) async throws {
+        conversationViewModel.clearChat(conversationId: id) {
+        }
+    }
 }

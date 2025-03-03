@@ -37,4 +37,19 @@ public class HybridStorageManager: ChatStorageManager {
         
     }
     
+    public func deleteConversation(id: String) async throws {
+        do {
+            // Fetch from remote and sync
+            try await remoteStorageManager.deleteConversation(id: id)
+            try await localStorageManager.deleteConversation(id: id)
+        } catch {
+            print("Error delete conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func clearConversation(id: String) async throws {
+        
+    }
+    
 }

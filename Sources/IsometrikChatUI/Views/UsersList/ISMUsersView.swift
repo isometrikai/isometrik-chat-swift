@@ -31,7 +31,7 @@ public struct ISMUsersView: View {
     @State public var showBroadCastOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.BroadCastConversation)
     
     // Environment object for managing Realm database
-    @EnvironmentObject public var realmManager : RealmManager
+//    @EnvironmentObject public var realmManager : RealmManager
     // State flags for navigation to create group or broadcast
     @State public var navigatetoCreatGroup : Bool = false
     @State public var navigatetoCreatBroadCast : Bool = false
@@ -114,7 +114,7 @@ public struct ISMUsersView: View {
                                                     // Button to select a user
                                                     Button {
                                                         // Set selected user and conversation ID
-                                                        self.selectedUserconversationId = realmManager.getConversationId(opponentUserId: value.userId ?? "", myUserId: ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId ?? "")
+//                                                        self.selectedUserconversationId = realmManager.getConversationId(opponentUserId: value.userId ?? "", myUserId: ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId ?? "")
                                                         let data = UserDB()
                                                         data.userId = value.userId
                                                         data.online = value.online
@@ -153,12 +153,12 @@ public struct ISMUsersView: View {
                     }
                 }//:VStack
                 // Navigation destinations for creating group and broadcast conversations
-                .navigationDestination(isPresented: $navigatetoCreatGroup, destination: {
-                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.viewModel, selectUserFor: .Group, groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
-                })
-                .navigationDestination(isPresented: $navigatetoCreatBroadCast, destination: {
-                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.viewModel, selectUserFor: .BroadCast, groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
-                })
+//                .navigationDestination(isPresented: $navigatetoCreatGroup, destination: {
+//                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.viewModel, selectUserFor: .Group, groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
+//                })
+//                .navigationDestination(isPresented: $navigatetoCreatBroadCast, destination: {
+//                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.viewModel, selectUserFor: .BroadCast, groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
+//                })
                 .searchable(text: $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always))
                 .onChange(of: viewModel.debounceSearchedText, { _, _ in
                     // Reset user data and fetch users on search text change

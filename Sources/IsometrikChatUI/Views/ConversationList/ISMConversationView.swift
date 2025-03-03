@@ -33,7 +33,7 @@ public struct ISMConversationView : View {
     @State public var navigateToBroadcastList = false // Flag for navigating to broadcast list
     @State public var showOptionView = false // Flag to show options view
     @State public var showDeleteOptions : Bool = false // Flag to show delete options
-    @State public var selectedForDelete : ConversationDB? // Selected conversation for deletion
+    @State public var selectedForDelete : ISMChatConversationDB? // Selected conversation for deletion
     @State public var selectedUserToNavigate : UserDB = UserDB() // User selected for navigation
     @State public var selectedUserConversationId : String = "" // ID of the selected user's conversation
     @State public var navigatetoSelectedUser : Bool = false // Flag to navigate to selected user
@@ -84,11 +84,11 @@ public struct ISMConversationView : View {
                 appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all) // Background color
                 VStack {
                     // Show placeholder if no conversations are available
-//                    if shouldShowPlaceholder {
-//                        Spacer()
-//                        showPlaceholderView
-//                        Spacer()
-//                    } else {
+                    if shouldShowPlaceholder {
+                        Spacer()
+                        showPlaceholderView
+                        Spacer()
+                    } else {
                         // Search bar for filtering conversations
                         if ISMChatSdk.getInstance().getFramework() == .UIKit {
                             CustomSearchBar(searchText:  $query, isDisabled: ISMChatSdkUI.getInstance().getChatProperties().onTapOfSearchBarOpenNewScreen == true)
@@ -101,14 +101,14 @@ public struct ISMConversationView : View {
                                 }
                         }
                         // Show placeholder if no conversation data is available
-//                        if conversationData.count == 0 {
-//                            Spacer()
-//                            showPlaceholderView
-//                            Spacer()
-//                        } else {
+                        if conversationData.count == 0 {
+                            Spacer()
+                            showPlaceholderView
+                            Spacer()
+                        } else {
                             conversationListView // Display the list of conversations
-//                        }
-//                    }
+                        }
+                    }
                 }
 //                .onChange(of: query, {_ , newValue in
 //                    if newValue == "" {
@@ -124,11 +124,11 @@ public struct ISMConversationView : View {
                         createChat = false
                     }
                 })
-//                .sheet(isPresented: $createChat, content: {
-//                    //create chat flow
-//                    ISMUsersView(viewModel: self.viewModel, selectedUser: $selectedUserToNavigate, selectedUserconversationId: $selectedUserConversationId,groupCastIdToNavigate: $groupCastIdToNavigate)
+                .sheet(isPresented: $createChat, content: {
+                    //create chat flow
+                    ISMUsersView(viewModel: self.viewModel, selectedUser: $selectedUserToNavigate, selectedUserconversationId: $selectedUserConversationId,groupCastIdToNavigate: $groupCastIdToNavigate)
 //                        .environmentObject(realmManager)
-//                })
+                })
 //                .fullScreenCover(isPresented: $showProfile, content: {
 //                    // profile of user
 //                    ISMProfileView(viewModel: viewModel)
@@ -158,7 +158,7 @@ public struct ISMConversationView : View {
                         if selectedForDelete?.isGroup == true{
 //                            self.exitGroup(conversationId: self.selectedForDelete?.conversationId ?? "")
                         }else{
-//                            self.deleteConversation(conversationId: self.selectedForDelete?.conversationId ?? "")
+                            self.deleteConversation(conversationId: self.selectedForDelete?.conversationId ?? "")
                         }
                     }
                 }
@@ -184,9 +184,9 @@ public struct ISMConversationView : View {
                     removeObservers()
                     NotificationCenter.default.removeObserver(self)
                 }
-//                if ISMChatSdkUI.getInstance().getChatProperties().createConversationFromChatList == true{
-//                    createConversationButton
-//                }
+                if ISMChatSdkUI.getInstance().getChatProperties().createConversationFromChatList == true{
+                    createConversationButton
+                }
             }
         }//:NavigationView
         .confirmationDialog("", isPresented: $showMenuForConversationType, titleVisibility: .hidden) {
@@ -234,9 +234,7 @@ public struct ISMConversationView : View {
 //        dbManager.hardDeleteAll()
 //        self.getConversationList()
 //        self.realmManager.hardDeleteMsgs()
-        Task {
-            await viewModelNew.loadConversations()
-        }
+        getConversationList()
         if !networkMonitor.isConnected {
             showingNoInternetAlert = true
         }
@@ -244,12 +242,12 @@ public struct ISMConversationView : View {
         }
     }
 
-//    private var shouldShowPlaceholder: Bool {
-//        // Determine if the placeholder should be shown based on conversation count and search query
-//        let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
-//        let conversationCount = isOtherConversationList ? dbManager.fetchPrimaryConversationCount() : dbManager.fetchConversationCount()
-//        return conversationCount == 0 && query.isEmpty
-//    }
+    private var shouldShowPlaceholder: Bool {
+        // Determine if the placeholder should be shown based on conversation count and search query
+        let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
+        let conversationCount = isOtherConversationList ? self.viewModelNew.primaryConversations.count : self.viewModelNew.conversations.count
+        return conversationCount == 0 && query.isEmpty
+    }
 
     private var showPlaceholderView: some View {
         // View to display when there are no conversations
@@ -275,7 +273,7 @@ public struct ISMConversationView : View {
     private var conversationListView: some View {
         // View to display the list of conversations
         List {
-            ForEach(viewModelNew.conversations) { data in
+            ForEach(conversationData) { data in
                 VStack(spacing: 0) {
                     // Button to navigate to the selected conversation
                     if ISMChatSdk.getInstance().getFramework() == .UIKit {
@@ -291,7 +289,6 @@ public struct ISMConversationView : View {
                     } else {
                         // SwiftUI navigation link for conversation
                         ZStack {
-//                            Text(data.opponentDetails?.userName ?? "")
                             conversationSubView(for: data)
                                 .onAppear {
                                     handlePagination(for: data)
@@ -315,80 +312,82 @@ public struct ISMConversationView : View {
                 .listRowInsets(EdgeInsets())
                 .listRowSeparator(.hidden)
             }
-//            .onDelete(perform: handleDelete)
+            .onDelete(perform: handleDelete)
             .listRowBackground(Color.clear)
         }
-        .gesture(DragGesture().onChanged { value in
-            // Handle drag gesture for navigation
-            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-            offset = value.translation
-        }.onEnded { value in
-            offset = .zero
-            ISMChatHelper.print("value ",value.translation.width)
-            let direction = self.detectDirection(value: value) // Detect swipe direction
-            if direction == .right {
-                self.delegate?.navigateToPreviousScreen() // Navigate back on right swipe
-            }
-        })
         .listStyle(.plain)
         .keyboardType(.default)
         .textContentType(.oneTimeCode)
         .autocorrectionDisabled(true)
         .refreshable {
             viewModel.resetdata() // Reset view model data on refresh
-//            getConversationList() // Fetch updated conversation list
+            getConversationList() // Fetch updated conversation list
         }
+        .simultaneousGesture(
+            DragGesture()
+                .onChanged { value in
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    offset = value.translation
+                }
+                .onEnded { value in
+                    offset = .zero
+                    let direction = self.detectDirection(value: value)
+                    if direction == .right {
+                        self.delegate?.navigateToPreviousScreen()
+                    }
+                }
+        )
     }
     
     
-//    private var createConversationButton : some View{
-//        VStack{
-//            //create conversation button
-//            if ISMChatSdk.getInstance().getFramework() == .UIKit{
-//                if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == true && conversationData.count > 0{
-//                    VStack {
-//                        Spacer()
-//                        HStack {
-//                            Spacer()
-//                            Button(action: {
-//                                showMenuForConversationType.toggle()
-//                            }, label: {
-//                                appearance.images.addConversation
-//                                    .resizable()
-//                                    .frame(width: 58, height: 58)
-//                            })
-//                            .padding()
-//                        }
-//                    }
-//                }else if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == false{
-//                    VStack {
-//                        Spacer()
-//                        HStack {
-//                            Spacer()
-//                            Button(action: {
-//                                showMenuForConversationType.toggle()
-//                            }, label: {
-//                                appearance.images.addConversation
-//                                    .resizable()
-//                                    .frame(width: 58, height: 58)
-//                            })
-//                            .padding()
-//                        }
-//                    }
-//                }
-//            }else{
-//                ISMCreateConversationButtonView(navigate: $createChat,showOfflinePopUp: $showingNoInternetAlert)
-//            }
-//        }
-//    }
+    private var createConversationButton : some View{
+        VStack{
+            //create conversation button
+            if ISMChatSdk.getInstance().getFramework() == .UIKit{
+                if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == true && conversationData.count > 0{
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                showMenuForConversationType.toggle()
+                            }, label: {
+                                appearance.images.addConversation
+                                    .resizable()
+                                    .frame(width: 58, height: 58)
+                            })
+                            .padding()
+                        }
+                    }
+                }else if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == false{
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                showMenuForConversationType.toggle()
+                            }, label: {
+                                appearance.images.addConversation
+                                    .resizable()
+                                    .frame(width: 58, height: 58)
+                            })
+                            .padding()
+                        }
+                    }
+                }
+            }else{
+                ISMCreateConversationButtonView(navigate: $createChat,showOfflinePopUp: $showingNoInternetAlert)
+            }
+        }
+    }
 
     // MARK: - Helper Methods
 
 
-//    var conversationData: [ISMChatConversationDB] {
-//        let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
-//        return isOtherConversationList ? dbManager.fetchPrimaryConversations() : dbManager.fetchAllConversations()
-//    }
+    var conversationData: [ISMChatConversationDB] {
+        let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
+        return isOtherConversationList ? viewModelNew.primaryConversations : viewModelNew.conversations
+    }
 
     private func navigateToMessageList(for data: ConversationDB) {
         // Navigate to the message list for the selected conversation
@@ -415,17 +414,18 @@ public struct ISMConversationView : View {
     }
 
     private func handlePagination(for data: ISMChatConversationDB) {
-//        if shouldLoadMoreData(data) {
-//            loadMoreData()
-//        }
+        if shouldLoadMoreData(data) {
+            loadMoreData()
+        }
     }
 
-//    private func handleDelete(offsets: IndexSet) {
-//        for row in offsets {
-//            showDeleteOptions = true
-//            selectedForDelete = realmManager.conversations[row]
-//        }
-//    }
+    private func handleDelete(offsets: IndexSet) {
+        for row in offsets {
+            showDeleteOptions = true
+            let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
+            selectedForDelete = isOtherConversationList ? self.viewModelNew.primaryConversations[row] : self.viewModelNew.conversations[row]
+        }
+    }
 
     private func messageView(for data: ConversationDB) -> some View {
         ISMMessageView(
@@ -446,52 +446,6 @@ public struct ISMConversationView : View {
         }
     }
 }
-
-
-//actor MessageQueue {
-//    private var queue: [ISMChatMessageDelivered] = []
-//    private var isProcessing = false
-//    private var lastProcessedMessageId: String?
-//    private var lastProcessingTime: Date = .distantPast
-//    private let processingInterval: TimeInterval = 0.5
-//    
-//    func enqueue(_ message: ISMChatMessageDelivered, handler: @escaping (ISMChatMessageDelivered) -> Void) async {
-//        // Check for duplicate messages
-//        guard message.messageId != lastProcessedMessageId else { return }
-//        lastProcessedMessageId = message.messageId
-//        
-//        // Check processing interval
-//        let now = Date()
-//        guard now.timeIntervalSince(lastProcessingTime) >= processingInterval else { return }
-//        lastProcessingTime = now
-//        
-//        queue.append(message)
-//        if !isProcessing {
-//            await processQueue(handler: handler)
-//        }
-//    }
-//    
-//    private func processQueue(handler: @escaping (ISMChatMessageDelivered) -> Void) async {
-//        guard !isProcessing else { return }
-//        isProcessing = true
-//        
-//        while !queue.isEmpty {
-//            let messagesToProcess = Array(queue.prefix(10))
-//            queue.removeFirst(min(10, queue.count))
-//            
-//            await MainActor.run {
-//                messagesToProcess.forEach { message in
-//                    handler(message)
-//                }
-//            }
-//            
-//            try? await Task.sleep(nanoseconds: 100_000_000) // 100ms delay
-//        }
-//        
-//        isProcessing = false
-//    }
-//}
-
 
 extension ISMConversationView{
     private func addNotificationObservers() {

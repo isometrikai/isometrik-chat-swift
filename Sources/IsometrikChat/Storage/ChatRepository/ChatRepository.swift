@@ -35,4 +35,12 @@ public class ChatRepository {
     public func fetchConversations() async throws -> [ISMChatConversationDB] {
         return try await activeStorageManager.fetchConversations()
     }
+    
+    public func deleteConversation(id: String)  async throws{
+        return try await activeStorageManager.deleteConversation(id: id)
+    }
+    
+    public func clearConversation(id: String)  async throws{
+        return try await activeStorageManager.clearConversation(id: id)
+    }
 }
