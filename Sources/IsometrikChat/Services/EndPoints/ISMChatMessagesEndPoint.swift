@@ -22,7 +22,12 @@ enum ISMChatMessagesEndpoint : ISMChatURLConvertible {
     case markMessageStatusRead
     
     var baseURL: URL {
-        return URL(string:ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.origin ?? "")!
+        let defaultURL = URL(string: "https://apis.isometrik.ai")! // ✅ Force unwrapping is safe here since the URL is valid.
+        if let origin = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.origin,
+           let validURL = URL(string: origin) {
+            return validURL
+        }
+        return defaultURL
     }
     
     var path: String {

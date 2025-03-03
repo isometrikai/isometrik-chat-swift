@@ -20,7 +20,12 @@ public enum ISMChatUsersEndpoint : ISMChatURLConvertible {
     case unBlockUser
     
     var baseURL: URL {
-        return URL(string:ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.origin ?? "")!
+        let defaultURL = URL(string: "https://apis.isometrik.ai")! // ✅ Force unwrapping is safe here since the URL is valid.
+        if let origin = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().projectConfig.origin,
+           let validURL = URL(string: origin) {
+            return validURL
+        }
+        return defaultURL
     }
     
     var path: String {
