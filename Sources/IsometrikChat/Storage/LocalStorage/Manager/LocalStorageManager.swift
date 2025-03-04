@@ -38,7 +38,7 @@ public class LocalStorageManager: ChatStorageManager {
     public func fetchConversations() async throws -> [ISMChatConversationDB] {
         do {
             let descriptor = FetchDescriptor<ISMChatConversationDB>(sortBy: [SortDescriptor(\.updatedAt, order: .reverse)])
-            var conversations = try modelContext.fetch(descriptor).filter { !$0.isDelete }
+            var conversations = try modelContext.fetch(descriptor)
             
             // Sort by lastMessageSentAt in descending order
             conversations.sort { $0.lastMessageSentAt > $1.lastMessageSentAt }
@@ -58,24 +58,20 @@ public class LocalStorageManager: ChatStorageManager {
     }
     
     public func deleteConversation(id: String) async throws {
-//        realmManager.deleteConversation(convID: conversationId)
-//        realmManager.deleteMessagesThroughConvId(convID: conversationId)
-//        realmManager.deleteMediaThroughConversationId(convID: conversationId)
+        await MainActor.run {
             let descriptor = FetchDescriptor<ISMChatConversationDB>(
                 predicate: #Predicate { $0.conversationId == id }
             )
-            
+
             do {
                 let conversationsToDelete = try modelContext.fetch(descriptor)
                 guard let conversation = conversationsToDelete.first else { return }
 
-                try modelContext.transaction {
-                    conversation.isDelete = true
-                }
+                modelContext.delete(conversation) // Directly delete the conversation
             } catch {
                 print("Error deleting conversation \(id) in SwiftData: \(error)")
             }
-
+        }
     }
     
     public func clearConversation(id: String) async throws {

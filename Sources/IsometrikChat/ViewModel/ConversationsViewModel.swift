@@ -39,7 +39,18 @@ public class ConversationsViewModel: ObservableObject {
     
     public func deleteConversations(id: String) async {
         do {
-            let fetchedConversations = try await chatRepository.deleteConversation(id: id)
+            // Ensure delete completes before fetching conversations
+            try await chatRepository.deleteConversation(id: id)
+
+            // Fetch updated conversations list
+            let fetchedConversations = try await chatRepository.fetchConversations()
+
+            // Update UI on main thread
+            await MainActor.run {
+                self.conversations = fetchedConversations
+                self.otherConversations = self.getOtherConversation()
+                self.primaryConversations = self.getPrimaryConversation()
+            }
         } catch {
             print("Error loading conversations: \(error)")
         }

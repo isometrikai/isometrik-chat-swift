@@ -37,6 +37,7 @@ public class RemoteStorageManager: ChatStorageManager {
                     
                     continuation.resume(returning: convertedConversations)
                 } else {
+                    self.conversationViewModel.conversations = []
                     continuation.resume(throwing: NSError(domain: "ChatError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch conversations"]))
                 }
             }

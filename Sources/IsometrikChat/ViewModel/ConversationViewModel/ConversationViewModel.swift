@@ -72,9 +72,9 @@ public class ConversationViewModel : NSObject ,ObservableObject{
     //MARK: - Get Conversations List
     public func getChatList(passSkip: Bool? = true ,search : String?,completion:@escaping(ISMChatConversations?)->()){
         var skipNew = 0
-        if passSkip == true{
-            skipNew = self.conversations.count
-        }
+//        if passSkip == true{
+//            skipNew = self.conversations.count
+//        }
         let endPoint = ISMChatConversationEndpoint.getconversationList(includeConversationStatusMessagesInUnreadMessagesCount: false, skip: skipNew, searchTag: search ?? "")
         let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
         
