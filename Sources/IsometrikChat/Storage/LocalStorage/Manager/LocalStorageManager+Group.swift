@@ -11,7 +11,7 @@ import Foundation
 extension LocalStorageManager{
     public func updateMemberCount(convId: String, inc: Bool, dec: Bool, count: Int) {
         do {
-            let descriptor = FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == convId && !$0.isDelete })
+            let descriptor = FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == convId})
             let listToUpdate = try modelContext.fetch(descriptor)
             
             guard let conversation = listToUpdate.first else { return }
@@ -30,7 +30,7 @@ extension LocalStorageManager{
 
     public func changeGroupName(conversationId: String, conversationTitle: String) {
         do {
-            let descriptor = FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == conversationId && !$0.isDelete })
+            let descriptor = FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == conversationId})
             let taskToUpdate = try modelContext.fetch(descriptor)
             
             guard let conversation = taskToUpdate.first else { return }
@@ -44,7 +44,7 @@ extension LocalStorageManager{
 
     public func changeGroupIcon(conversationId: String, conversationIcon: String) {
         do {
-            let descriptor = FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == conversationId && !$0.isDelete })
+            let descriptor = FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == conversationId})
             let taskToUpdate = try modelContext.fetch(descriptor)
             
             guard let conversation = taskToUpdate.first else { return }

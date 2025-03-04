@@ -26,7 +26,6 @@ public class ISMChatConversationDB: Identifiable {
     public var messagingDisabled: Bool
     public var isGroup: Bool
     public var typing : Bool = false
-    public var isDelete : Bool = false
     public var userIds : [String] = []
     @Relationship(deleteRule: .cascade) public var opponentDetails : ISMChatUserDB?
     @Relationship(deleteRule: .cascade) public var config : ISMChatConfigDB?
@@ -36,7 +35,7 @@ public class ISMChatConversationDB: Identifiable {
     public var metaDataJson : String?
     public var lastInputText : String?
 
-    public init(conversationId: String, updatedAt: Double, unreadMessagesCount: Int, membersCount: Int, lastMessageSentAt: Int, createdAt: Double, mode: String, conversationTitle: String, conversationImageUrl: String, createdBy: String, createdByUserName: String, privateOneToOne: Bool, messagingDisabled: Bool, isGroup: Bool, typing: Bool, isDelete: Bool, userIds: [String], opponentDetails: ISMChatUserDB? = nil, config: ISMChatConfigDB? = nil, lastMessageDetails: ISMChatLastMessageDB? = nil, deletedMessage: Bool, metaData: ISMChatConversationMetaData? = nil, metaDataJson: String? = nil, lastInputText: String? = nil) {
+    public init(conversationId: String, updatedAt: Double, unreadMessagesCount: Int, membersCount: Int, lastMessageSentAt: Int, createdAt: Double, mode: String, conversationTitle: String, conversationImageUrl: String, createdBy: String, createdByUserName: String, privateOneToOne: Bool, messagingDisabled: Bool, isGroup: Bool, typing: Bool, userIds: [String], opponentDetails: ISMChatUserDB? = nil, config: ISMChatConfigDB? = nil, lastMessageDetails: ISMChatLastMessageDB? = nil, deletedMessage: Bool, metaData: ISMChatConversationMetaData? = nil, metaDataJson: String? = nil, lastInputText: String? = nil) {
         self.conversationId = conversationId
         self.updatedAt = updatedAt
         self.unreadMessagesCount = unreadMessagesCount
@@ -52,7 +51,6 @@ public class ISMChatConversationDB: Identifiable {
         self.messagingDisabled = messagingDisabled
         self.isGroup = isGroup
         self.typing = typing
-        self.isDelete = isDelete
         self.userIds = userIds
         self.opponentDetails = opponentDetails
         self.config = config

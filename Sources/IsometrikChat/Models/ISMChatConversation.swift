@@ -426,7 +426,6 @@ public extension ISMChatConversationsDetail {
             messagingDisabled: false, // Default value as it doesn't exist in the source model
             isGroup: isGroupValue,
             typing: typingValue,
-            isDelete: false, // Default value as it doesn't exist in the source model
             userIds: userIdsArray, // Use populated user IDs array
             opponentDetails: opponentDetailsDB,
             config: configDB,

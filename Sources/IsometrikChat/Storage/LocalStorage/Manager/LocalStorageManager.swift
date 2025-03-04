@@ -23,7 +23,7 @@ public class LocalStorageManager: ChatStorageManager {
                         // ✅ Add New Conversation
                         modelContext.insert(obj)
                         try modelContext.save()
-                    } else if let existing = existingConversations.first, !existing.isDelete {
+                    } else if let existing = existingConversations.first {
                         // 🔄 Update if not deleted
                         try modelContext.save()
                     }
@@ -476,25 +476,25 @@ public class LocalStorageManager: ChatStorageManager {
 //    }
     
     // 🗑️ Delete All Conversations (Optional for syncing)
-    public func hardDeleteAll() {
-        do {
-            let descriptor = FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.isDelete == true })
-            let objectsToDelete = try modelContext.fetch(descriptor)
-            
-            guard !objectsToDelete.isEmpty else { return }
-            
-            for obj in objectsToDelete {
-                modelContext.delete(obj)
-            }
-        } catch {
-            print("Error deleting conversations: \(error)")
-        }
-    }
+//    public func hardDeleteAll() {
+//        do {
+//            let descriptor = FetchDescriptor<ISMChatConversationDB>
+//            let objectsToDelete = try modelContext.fetch(descriptor)
+//            
+//            guard !objectsToDelete.isEmpty else { return }
+//            
+//            for obj in objectsToDelete {
+//                modelContext.delete(obj)
+//            }
+//        } catch {
+//            print("Error deleting conversations: \(error)")
+//        }
+//    }
     
     // Update Last Message Of Conversation
     public func updateLastmsg(conId: String, msg: ISMChatLastMessage) {
         do {
-            let descriptor = FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == conId && !$0.isDelete })
+            let descriptor = FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == conId})
             let taskToUpdate = try modelContext.fetch(descriptor)
             
             guard let conversation = taskToUpdate.first else { return }
@@ -549,7 +549,7 @@ public class LocalStorageManager: ChatStorageManager {
     // Update Unread Count in Conversation List
     public func updateUnreadCountThroughConId(conId: String, count: Int, reset: Bool = false) {
         do {
-            if let conversation = try modelContext.fetch(FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == conId && !$0.isDelete })).first {
+            if let conversation = try modelContext.fetch(FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == conId })).first {
                 conversation.unreadMessagesCount = reset ? 0 : (conversation.unreadMessagesCount + count)
                 try modelContext.save()
             }
@@ -561,7 +561,7 @@ public class LocalStorageManager: ChatStorageManager {
     // Change Typing Status in Conversation List
     public func changeTypingStatus(convId: String, status: Bool) {
         do {
-            if let conversation = try modelContext.fetch(FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == convId && !$0.isDelete })).first {
+            if let conversation = try modelContext.fetch(FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == convId })).first {
                 conversation.typing = status
                 try modelContext.save()
             }
@@ -571,19 +571,19 @@ public class LocalStorageManager: ChatStorageManager {
     }
     
     // Undo Delete Conversation
-    public func undodeleteConversation(convID: String) {
-        do {
-            let descriptor = FetchDescriptor<ISMChatConversationDB>(
-                predicate: #Predicate { $0.conversationId == convID && $0.isDelete == true }
-            )
-            
-            if let conversation = try modelContext.fetch(descriptor).first {
-                conversation.isDelete = false
-                try modelContext.save()
-            }
-        } catch {
-            print("Error restoring conversation \(convID): \(error)")
-        }
-    }
+//    public func undodeleteConversation(convID: String) {
+//        do {
+//            let descriptor = FetchDescriptor<ISMChatConversationDB>(
+//                predicate: #Predicate { $0.conversationId == convID && $0.isDelete == true }
+//            )
+//            
+//            if let conversation = try modelContext.fetch(descriptor).first {
+//                conversation.isDelete = false
+//                try modelContext.save()
+//            }
+//        } catch {
+//            print("Error restoring conversation \(convID): \(error)")
+//        }
+//    }
     
 }
