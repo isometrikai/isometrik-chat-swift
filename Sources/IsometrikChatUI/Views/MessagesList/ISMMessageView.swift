@@ -47,7 +47,7 @@ public struct ISMMessageView: View {
     @ObservedObject public var stateViewModel = UIStateViewModel()
     
     // Environment objects for managing realm and network state
-    @EnvironmentObject public var realmManager: RealmManager
+//    @EnvironmentObject public var realmManager: RealmManager
     @EnvironmentObject public var networkMonitor: NetworkMonitor
     
     // Various properties related to chat features, appearance, and user data
@@ -81,7 +81,7 @@ public struct ISMMessageView: View {
     @State var textFieldtxt : String = ""
     
     @State var conversationID : String?
-    public let opponenDetail : UserDB?
+    public let opponenDetail : ISMChatUserDB?
     public var myUserId : String?
     public var myAppUserId : String?
     public let isGroup : Bool?
@@ -212,20 +212,20 @@ public struct ISMMessageView: View {
                         }
                     }
                     if let conversationDetail = conversationDetail{
-                        CustomMessageViewHeaderRegistry.shared.view(for: conversationDetail, messages: self.realmManager.allMessages ?? [])
+//                        CustomMessageViewHeaderRegistry.shared.view(for: conversationDetail, messages: self.realmManager.allMessages ?? [])
                     }
                     ZStack{
                         GeometryReader{ reader in
                             if let image = ISMChatSdkUI.getInstance().getAppAppearance().appearance.messageListBackgroundImage ,!image.isEmpty{
                                 ScrollView{
                                     ScrollViewReader{ scrollReader in
-                                        getMessagesView(scrollReader: scrollReader, viewWidth: reader.size.width)
-                                            .padding(.horizontal)
+//                                        getMessagesView(scrollReader: scrollReader, viewWidth: reader.size.width)
+//                                            .padding(.horizontal)
                                     }
                                 }.modifier(BackgroundImage())
                                     .coordinateSpace(name: "scroll")
                                     .coordinateSpace(name: "pullToRefresh")
-                                    .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
+//                                    .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
                                     .gesture(
                                         DragGesture()
                                             .onChanged { value in
@@ -247,13 +247,13 @@ public struct ISMMessageView: View {
                             }else{
                                 ScrollView{
                                     ScrollViewReader{ scrollReader in
-                                        getMessagesView(scrollReader: scrollReader, viewWidth: reader.size.width)
-                                            .padding(.horizontal)
+//                                        getMessagesView(scrollReader: scrollReader, viewWidth: reader.size.width)
+//                                            .padding(.horizontal)
                                     }
                                 }
                                 .coordinateSpace(name: "scroll")
                                 .coordinateSpace(name: "pullToRefresh")
-                                .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
+//                                .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
                                 .gesture(DragGesture().onChanged { value in
                                     // Calculate the velocity
                                     let velocity = value.predictedEndTranslation.height - value.translation.height
@@ -277,17 +277,17 @@ public struct ISMMessageView: View {
                             }
                         }.padding(.bottom,5)
                         //No Message View
-                        if realmManager.allMessages?.count == 0 || realmManager.messages.count == 0{
-                            //
-                            if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true{
-                                appearance.placeholders.messageListPlaceholder
-                            }else{
-                                appearance.images.noMessagePlaceholder
-                                    .resizable()
-                                    .frame(width: 206, height: 144, alignment: .center)
-                            }
-                            
-                        }
+//                        if realmManager.allMessages?.count == 0 || realmManager.messages.count == 0{
+//                            //
+//                            if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true{
+//                                appearance.placeholders.messageListPlaceholder
+//                            }else{
+//                                appearance.images.noMessagePlaceholder
+//                                    .resizable()
+//                                    .frame(width: 206, height: 144, alignment: .center)
+//                            }
+//                            
+//                        }
                     }.onTapGesture {
                         stateViewModel.showActionSheet = false
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
@@ -295,20 +295,20 @@ public struct ISMMessageView: View {
                     if stateViewModel.showActionSheet == true{
                         attachmentsView().padding(.horizontal,10)
                     }
-                    bottomView()
+//                    bottomView()
                 }//VStack
                 .onAppear {
                     OnMessageList = true
                     setupOnAppear()
                     stateViewModel.navigateToImageEditor = false
                     addNotificationObservers()
-                    if fromBroadCastFlow == true{
-                        reloadBroadCastMessages()
-                    }else{
-                        getConversationDetail()
-                        reload()
-                    }
-                    self.textFieldtxt = self.realmManager.getLastInputTextInConversation(conversationId: self.conversationID ?? "")
+//                    if fromBroadCastFlow == true{
+//                        reloadBroadCastMessages()
+//                    }else{
+//                        getConversationDetail()
+//                        reload()
+//                    }
+//                    self.textFieldtxt = self.realmManager.getLastInputTextInConversation(conversationId: self.conversationID ?? "")
                 }
                 .onDisappear{
                     OnMessageList = false
@@ -588,21 +588,21 @@ public struct ISMMessageView: View {
                 }
             }
         })
-        .sheet(isPresented: $stateViewModel.showCustomMenu, content: {
-            ISMCustomMenu(
-                clearChatAction: {
-                    stateViewModel.showCustomMenu = false
-                    stateViewModel.showClearChatPopup = true
-                },
-                blockUserAction: {
-                    stateViewModel.showCustomMenu = false
-                    stateViewModel.showBlockUserPopup = true
-                },
-                initiatorId: realmManager.messages.last?.last?.initiatorId,
-                messagingDisabled: self.conversationDetail?.conversationDetails?.messagingDisabled)
-            .presentationDetents([.fraction(0.25)])
-            .presentationDragIndicator(.visible)
-        })
+//        .sheet(isPresented: $stateViewModel.showCustomMenu, content: {
+//            ISMCustomMenu(
+//                clearChatAction: {
+//                    stateViewModel.showCustomMenu = false
+//                    stateViewModel.showClearChatPopup = true
+//                },
+//                blockUserAction: {
+//                    stateViewModel.showCustomMenu = false
+//                    stateViewModel.showBlockUserPopup = true
+//                },
+//                initiatorId: realmManager.messages.last?.last?.initiatorId,
+//                messagingDisabled: self.conversationDetail?.conversationDetails?.messagingDisabled)
+//            .presentationDetents([.fraction(0.25)])
+//            .presentationDragIndicator(.visible)
+//        })
         .sheet(isPresented: $stateViewModel.showInviteeDineInPopUp, content: {
             InviteeListPopUpView(message: showInviteeListInDineInRequest) {
                 showInviteeListInDineInRequest = MessagesDB()
@@ -678,47 +678,47 @@ public struct ISMMessageView: View {
             .presentationDragIndicator(.visible)
         })
         
-        .sheet(isPresented: $stateViewModel.showBlockUserPopup, content: {
-            var unBlock = self.conversationDetail?.conversationDetails?.messagingDisabled == true && realmManager.messages.last?.last?.initiatorId == userData?.userId
-            var attributedText: AttributedString {
-                var string = ""
-                var range = ""
-                if unBlock{
-                    string = "Are you sure you want to UnBlock \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?"
-                    range = "UnBlock \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")"
-                }else{
-                    string = "Are you sure you want to Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?"
-                    range = "Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")"
-                }
-                var attributedString = AttributedString(string)
-                
-                // Style "clear chat"
-                if let range = attributedString.range(of: range) {
-                    attributedString[range].foregroundColor = Color(hex: "#454745")
-                    attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
-                }
-                
-                return attributedString
-            }
-            ConfirmationPopup(
-                title: unBlock ?  "UnBlock User?" : "Block User?",
-                message: attributedText,
-                confirmButtonTitle: unBlock ? "UnBlock" : "Block",
-                cancelButtonTitle: "Cancel",
-                confirmAction: {
-                    blockChatFromUser(block: !unBlock)
-                    stateViewModel.showBlockUserPopup = false
-                },
-                cancelAction: {
-                    stateViewModel.showBlockUserPopup = false
-                },
-                popUpType: .Menu,
-                isPresented: $stateViewModel.showBlockUserPopup,
-                showCrossButton: false
-            )
-            .presentationDetents([.fraction(0.3)])
-            .presentationDragIndicator(.visible)
-        })
+//        .sheet(isPresented: $stateViewModel.showBlockUserPopup, content: {
+//            var unBlock = self.conversationDetail?.conversationDetails?.messagingDisabled == true && realmManager.messages.last?.last?.initiatorId == userData?.userId
+//            var attributedText: AttributedString {
+//                var string = ""
+//                var range = ""
+//                if unBlock{
+//                    string = "Are you sure you want to UnBlock \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?"
+//                    range = "UnBlock \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")"
+//                }else{
+//                    string = "Are you sure you want to Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?"
+//                    range = "Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")"
+//                }
+//                var attributedString = AttributedString(string)
+//                
+//                // Style "clear chat"
+//                if let range = attributedString.range(of: range) {
+//                    attributedString[range].foregroundColor = Color(hex: "#454745")
+//                    attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
+//                }
+//                
+//                return attributedString
+//            }
+//            ConfirmationPopup(
+//                title: unBlock ?  "UnBlock User?" : "Block User?",
+//                message: attributedText,
+//                confirmButtonTitle: unBlock ? "UnBlock" : "Block",
+//                cancelButtonTitle: "Cancel",
+//                confirmAction: {
+//                    blockChatFromUser(block: !unBlock)
+//                    stateViewModel.showBlockUserPopup = false
+//                },
+//                cancelAction: {
+//                    stateViewModel.showBlockUserPopup = false
+//                },
+//                popUpType: .Menu,
+//                isPresented: $stateViewModel.showBlockUserPopup,
+//                showCrossButton: false
+//            )
+//            .presentationDetents([.fraction(0.3)])
+//            .presentationDragIndicator(.visible)
+//        })
         .sheet(isPresented: $stateViewModel.showDeleteSingleMessage, content:{
             var attributedText: AttributedString {
                 var attributedString = AttributedString("Are you sure you want to permanently delete this message?")
@@ -781,10 +781,10 @@ public struct ISMMessageView: View {
         .sheet(isPresented: self.$stateViewModel.showVideoPicker) {
             ISMMediaPicker(isPresented: self.$stateViewModel.showVideoPicker, sendMedias: $mediaSelectedFromPicker,opponenetName: isGroup == true ? (self.conversationDetail?.conversationDetails?.conversationTitle ?? "" ) : (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""),mediaCaption: $mediaCaption,sendMediaToMessage: $stateViewModel.sendMedia)
         }
-        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToChatList: $navigateToChatList).environmentObject(RealmManager.shared)
-            .onAppear {
-                OnMessageList = false
-            }, isActive: $stateViewModel.navigateToUserProfile))
+//        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToChatList: $navigateToChatList).environmentObject(RealmManager.shared)
+//            .onAppear {
+//                OnMessageList = false
+//            }, isActive: $stateViewModel.navigateToUserProfile))
 //        .fullScreenCover(isPresented: $stateViewModel.navigateToUserProfile, onDismiss: {
 //            stateViewModel.navigateToUserProfile = false
 //        }, content: {
@@ -793,17 +793,17 @@ public struct ISMMessageView: View {
 //                    OnMessageList = false
 //                }
 //        })
-        .fullScreenCover(isPresented: $stateViewModel.navigateToMediaSlider) {
-            let attachments = self.realmManager.medias ?? []
-            let currentMediaId = navigateToMediaSliderId
-            //reset value
-            let index = attachments.firstIndex { $0.messageId == currentMediaId } ?? 0
-            ISMChatMediaViewer(viewModel: ISMChatMediaViewerViewModel(attachments: attachments, index: index)) {
-                stateViewModel.navigateToMediaSlider = false
-            }.onAppear {
-                self.navigateToMediaSliderId = ""
-            }
-        }
+//        .fullScreenCover(isPresented: $stateViewModel.navigateToMediaSlider) {
+//            let attachments = self.realmManager.medias ?? []
+//            let currentMediaId = navigateToMediaSliderId
+//            //reset value
+//            let index = attachments.firstIndex { $0.messageId == currentMediaId } ?? 0
+//            ISMChatMediaViewer(viewModel: ISMChatMediaViewerViewModel(attachments: attachments, index: index)) {
+//                stateViewModel.navigateToMediaSlider = false
+//            }.onAppear {
+//                self.navigateToMediaSliderId = ""
+//            }
+//        }
         .navigationDestination(isPresented: $stateViewModel.movetoForwardList, destination: {
             ISMForwardToContactView(viewModel : self.chatViewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage)
         })
@@ -859,7 +859,7 @@ public struct ISMMessageView: View {
         }
         .onLoad {
             OnMessageList = true
-            self.realmManager.clearMessages()
+//            self.realmManager.clearMessages()
             self.getMessages()
             //added this from on appear
             
@@ -867,11 +867,11 @@ public struct ISMMessageView: View {
             if chatFeatures.contains(.audiocall) == true || chatFeatures.contains(.videocall) == true || chatFeatures.contains(.audio) == true{
                 checkAudioPermission()
             }
-            realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
-            realmManager.fetchFiles(conId: self.conversationID ?? "")
-            realmManager.fetchLinks(conId: self.conversationID ?? "")
-            
-            realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
+//            realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
+//            realmManager.fetchFiles(conId: self.conversationID ?? "")
+//            realmManager.fetchLinks(conId: self.conversationID ?? "")
+//            
+//            realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
             let data : [String: Any] = ["conversationId" : self.conversationID ?? ""]
             NotificationCenter.default.post(name: NSNotification.mqttUnreadCountReset, object: nil, userInfo: data)
             
@@ -879,9 +879,9 @@ public struct ISMMessageView: View {
                 stateViewModel.showingNoInternetAlert = true
             }
             //fix to don't show scroll to Bottom button when message count is zero
-            if realmManager.allMessages?.count == 0{
-                stateViewModel.showScrollToBottomView = false
-            }
+//            if realmManager.allMessages?.count == 0{
+//                stateViewModel.showScrollToBottomView = false
+//            }
             stateViewModel.onLoad = true
             forwardMessageSelected.removeAll()
         }
@@ -896,57 +896,57 @@ public struct ISMMessageView: View {
         OnMessageList = false
     }
     
-    func bottomView() -> some View{
-        HStack {
-            if !networkMonitor.isConnected {
-                toolBarView()
-                //in some apps if booking is closed then we can't messsage
-            }else if conversationDetail?.conversationDetails?.customType == "CLOSED" || self.realmManager.messages.last?.last?.customType == ISMChatMediaType.DealComplete.value{
-            }else{
-                if isGroup == true {
-                    if let members = conversationDetail?.conversationDetails?.members,
-                       !members.contains(where: { $0.userId == userData?.userId }) {
-                        NoLongerMemberToolBar()
-                    } else {
-                        toolBarView()
-                    }
-                } else {
-                    let chatProperties = ISMChatSdkUI.getInstance().getChatProperties()
-                    if chatProperties.otherConversationList && showOptionToAllow() {
-                        acceptRejectView()
-                    } else {
-                        toolBarView()
-                    }
-                }
-            }
-        }
-    }
+//    func bottomView() -> some View{
+//        HStack {
+//            if !networkMonitor.isConnected {
+//                toolBarView()
+//                //in some apps if booking is closed then we can't messsage
+//            }else if conversationDetail?.conversationDetails?.customType == "CLOSED" || self.realmManager.messages.last?.last?.customType == ISMChatMediaType.DealComplete.value{
+//            }else{
+//                if isGroup == true {
+//                    if let members = conversationDetail?.conversationDetails?.members,
+//                       !members.contains(where: { $0.userId == userData?.userId }) {
+//                        NoLongerMemberToolBar()
+//                    } else {
+//                        toolBarView()
+//                    }
+//                } else {
+//                    let chatProperties = ISMChatSdkUI.getInstance().getChatProperties()
+//                    if chatProperties.otherConversationList && showOptionToAllow() {
+//                        acceptRejectView()
+//                    } else {
+//                        toolBarView()
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     
     //MARK: - CONFIGURE
     
     //locally getting messages here
     func getMessages() {
-        realmManager.getMsgsThroughConversationId(conversationId: self.conversationID ?? "")
-        self.realmManager.messages = chatViewModel.getSectionMessage(for: self.realmManager.allMessages ?? [])
-        parentMessageIdToScroll = ""
-        parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+//        realmManager.getMsgsThroughConversationId(conversationId: self.conversationID ?? "")
+//        self.realmManager.messages = chatViewModel.getSectionMessage(for: self.realmManager.allMessages ?? [])
+//        parentMessageIdToScroll = ""
+//        parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
     }
     
     
     //checking if we are allowed to send message or not
-    func isMessagingEnabled() -> Bool{
-        if self.conversationDetail?.conversationDetails?.messagingDisabled == true{
-            if realmManager.messages.last?.last?.initiatorId != userData?.userId{
-                stateViewModel.uAreBlock = true
-            }else{
-                stateViewModel.showUnblockPopUp = true
-            }
-            return false
-        }else{
-            return true
-        }
-    }
+//    func isMessagingEnabled() -> Bool{
+//        if self.conversationDetail?.conversationDetails?.messagingDisabled == true{
+//            if realmManager.messages.last?.last?.initiatorId != userData?.userId{
+//                stateViewModel.uAreBlock = true
+//            }else{
+//                stateViewModel.showUnblockPopUp = true
+//            }
+//            return false
+//        }else{
+//            return true
+//        }
+//    }
     
     //conversation Detail Api
     func getConversationDetail(){
@@ -973,7 +973,7 @@ public struct ISMMessageView: View {
                         mentionUsers.append(contentsOf: filteredMembers)
                     }
                     if self.isGroup == true{
-                        realmManager.updateMemberCount(convId: (self.conversationID ?? ""), inc: false, dec: false, count: (data?.conversationDetails?.membersCount ?? 0))
+//                        realmManager.updateMemberCount(convId: (self.conversationID ?? ""), inc: false, dec: false, count: (data?.conversationDetails?.membersCount ?? 0))
                     }
                 }
 //                reload()
@@ -981,77 +981,77 @@ public struct ISMMessageView: View {
         }
     }
     
-    func reloadBroadCastMessages(){
-        self.realmManager.getMsgsThroughConversationId(conversationId: self.conversationID ?? "")
-        parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
-        var lastSent = Int(self.realmManager.messages.last?.last?.sentAt ?? 0.0).description
-        //GET ALL MESSAGES IN CONVERSTION API
-        if self.realmManager.allMessages?.count == 0 {
-            lastSent = ""
-        }
-        if let groupCastId = groupCastId, !groupCastId.isEmpty{
-            chatViewModel.getBroadCastMessages(groupcastId: groupCastId, lastMessageTimestamp: lastSent) { msg in
-                if let msg = msg {
-                    self.chatViewModel.allMessages = msg.messages
-                    self.chatViewModel.allMessages = self.chatViewModel.allMessages?.filter { message in
-                        return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
-                    }
-                    self.realmManager.manageMessagesList(arr: self.chatViewModel.allMessages ?? [])
-                    parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
-                    self.getMessages()
-                    realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
-                    realmManager.fetchFiles(conId: self.conversationID ?? "")
-                    realmManager.fetchLinks(conId: self.conversationID ?? "")
-                }
-                //only call read api when there are any new msg in conversation
-                if networkMonitor.isConnected{
-                    chatViewModel.markMessagesAsRead(conversationId: self.conversationID ?? "")
-                }
-                self.sendLocalMsg()
-            }
-        }
-    }
-    
-    func reload(){
-        self.realmManager.getMsgsThroughConversationId(conversationId: self.conversationID ?? "")
-        parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
-        var lastSent = String(Int(self.realmManager.messages.last?.last?.sentAt ?? 0)) //self.realmManager.getlastMessageSentForConversation(conversationId: self.conversationID ?? "")
-        //GET ALL MESSAGES IN CONVERSTION API
-        if self.realmManager.allMessages?.count == 0 {
-            lastSent = ""
-        }
-        if let conversationID = conversationID , !conversationID.isEmpty{
-            chatViewModel.getMessages(conversationId: conversationID ,lastMessageTimestamp: lastSent) { msg in
-                if let msg = msg {
-                    self.chatViewModel.allMessages = msg.messages
-                    self.chatViewModel.allMessages = self.chatViewModel.allMessages?.filter { message in
-                        if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
-                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated" && message.action != ISMChatActionType.conversationCreated.value
-                        }else if isGroup == false {
-                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
-                        } else {
-                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
-                        }
-                    }
-                    self.realmManager.manageMessagesList(arr: self.chatViewModel.allMessages ?? [])
-                    parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
-                    self.getMessages()
-                    realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
-                    realmManager.fetchFiles(conId: self.conversationID ?? "")
-                    realmManager.fetchLinks(conId: self.conversationID ?? "")
-                }
+//    func reloadBroadCastMessages(){
+//        self.realmManager.getMsgsThroughConversationId(conversationId: self.conversationID ?? "")
+//        parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+//        var lastSent = Int(self.realmManager.messages.last?.last?.sentAt ?? 0.0).description
+//        //GET ALL MESSAGES IN CONVERSTION API
+//        if self.realmManager.allMessages?.count == 0 {
+//            lastSent = ""
+//        }
+//        if let groupCastId = groupCastId, !groupCastId.isEmpty{
+//            chatViewModel.getBroadCastMessages(groupcastId: groupCastId, lastMessageTimestamp: lastSent) { msg in
+//                if let msg = msg {
+//                    self.chatViewModel.allMessages = msg.messages
+//                    self.chatViewModel.allMessages = self.chatViewModel.allMessages?.filter { message in
+//                        return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
+//                    }
+//                    self.realmManager.manageMessagesList(arr: self.chatViewModel.allMessages ?? [])
+//                    parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+//                    self.getMessages()
+//                    realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
+//                    realmManager.fetchFiles(conId: self.conversationID ?? "")
+//                    realmManager.fetchLinks(conId: self.conversationID ?? "")
+//                }
 //                //only call read api when there are any new msg in conversation
 //                if networkMonitor.isConnected{
-//                    viewModel.markMessagesAsRead(conversationId: self.conversationID ?? "")
+//                    chatViewModel.markMessagesAsRead(conversationId: self.conversationID ?? "")
 //                }
-                self.sendLocalMsg()
-            }
-        }
-        //unread count is not getting updated
-        if networkMonitor.isConnected{
-            chatViewModel.markMessagesAsRead(conversationId: self.conversationID ?? "")
-        }
-    }
+//                self.sendLocalMsg()
+//            }
+//        }
+//    }
+    
+//    func reload(){
+//        self.realmManager.getMsgsThroughConversationId(conversationId: self.conversationID ?? "")
+//        parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+//        var lastSent = String(Int(self.realmManager.messages.last?.last?.sentAt ?? 0)) //self.realmManager.getlastMessageSentForConversation(conversationId: self.conversationID ?? "")
+//        //GET ALL MESSAGES IN CONVERSTION API
+//        if self.realmManager.allMessages?.count == 0 {
+//            lastSent = ""
+//        }
+//        if let conversationID = conversationID , !conversationID.isEmpty{
+//            chatViewModel.getMessages(conversationId: conversationID ,lastMessageTimestamp: lastSent) { msg in
+//                if let msg = msg {
+//                    self.chatViewModel.allMessages = msg.messages
+//                    self.chatViewModel.allMessages = self.chatViewModel.allMessages?.filter { message in
+//                        if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
+//                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated" && message.action != ISMChatActionType.conversationCreated.value
+//                        }else if isGroup == false {
+//                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
+//                        } else {
+//                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
+//                        }
+//                    }
+//                    self.realmManager.manageMessagesList(arr: self.chatViewModel.allMessages ?? [])
+//                    parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+//                    self.getMessages()
+//                    realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
+//                    realmManager.fetchFiles(conId: self.conversationID ?? "")
+//                    realmManager.fetchLinks(conId: self.conversationID ?? "")
+//                }
+////                //only call read api when there are any new msg in conversation
+////                if networkMonitor.isConnected{
+////                    viewModel.markMessagesAsRead(conversationId: self.conversationID ?? "")
+////                }
+//                self.sendLocalMsg()
+//            }
+//        }
+//        //unread count is not getting updated
+//        if networkMonitor.isConnected{
+//            chatViewModel.markMessagesAsRead(conversationId: self.conversationID ?? "")
+//        }
+//    }
     
     //MARK: - SCROLL TO LAST MESSAGE
     
@@ -1105,37 +1105,37 @@ extension ISMMessageView{
         case ISMChatMQTTNotificationType.mqttUserBlockConversation.name:
             if let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered {
                 ISMChatHelper.print("USER BLOCKED ----------------->\(messageInfo)")
-                messageReceived(messageInfo: messageInfo)
+//                messageReceived(messageInfo: messageInfo)
                 getConversationDetail()
             }
             
         case ISMChatMQTTNotificationType.mqttUserUnblockConversation.name:
             if let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered {
                 ISMChatHelper.print("USER UNBLOCKED ----------------->\(messageInfo)")
-                messageReceived(messageInfo: messageInfo)
+//                messageReceived(messageInfo: messageInfo)
                 getConversationDetail()
             }
         case ISMChatMQTTNotificationType.mqttMessageNewReceived.name:
             if let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered{
                 ISMChatHelper.print("MESSAGE RECEIVED----------------->\(messageInfo)")
-                messageReceived(messageInfo: messageInfo)
-                actionOnMessageDelivered(messageInfo: messageInfo)
+//                messageReceived(messageInfo: messageInfo)
+//                actionOnMessageDelivered(messageInfo: messageInfo)
             }
         case ISMChatMQTTNotificationType.mqttTypingEvent.name:
             if let messageInfo = notification.userInfo?["data"] as? ISMChatTypingEvent {
                 ISMChatHelper.print("TYPING EVENT----------------->\(messageInfo)")
                 if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId != messageInfo.userId && OnMessageList == true{
-                    userTyping(messageInfo: messageInfo)
+//                    userTyping(messageInfo: messageInfo)
                 }
             }
         case ISMChatMQTTNotificationType.mqttMeetingEnded.name:
             if let messageInfo = notification.userInfo?["data"] as? ISMMeeting {
                 ISMChatHelper.print("Meeting ended----------------->\(messageInfo)")
-                if messageInfo.conversationId == self.conversationID{
-                    if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
-                        addMeeting(messageInfo: messageInfo)
-                    }
-                }
+//                if messageInfo.conversationId == self.conversationID{
+//                    if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+//                        addMeeting(messageInfo: messageInfo)
+//                    }
+//                }
             }
         case NSNotification.refrestMessagesListLocally:
             getMessages()
@@ -1146,16 +1146,16 @@ extension ISMMessageView{
                 return
             }
             ISMChatHelper.print("Group Actions----------------->\(messageInfo)")
-            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
-                groupAction(messageInfo: messageInfo)
-                //local notification
-                sendLocalNotification(messageInfo: messageInfo)
-                //action if required
-                actionOnMessageDelivered(messageInfo: messageInfo)
-            }
+//            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+//                groupAction(messageInfo: messageInfo)
+//                //local notification
+//                sendLocalNotification(messageInfo: messageInfo)
+//                //action if required
+//                actionOnMessageDelivered(messageInfo: messageInfo)
+//            }
         case NSNotification.memberAddAndRemove:
             self.getConversationDetail()
-            self.reload()
+//            self.reload()
         default:
             break
         }

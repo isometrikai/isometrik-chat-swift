@@ -10,6 +10,42 @@ import Foundation
 import SwiftUI
 
 public class LocalStorageManager: ChatStorageManager {
+    
+    
+    public var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
+    public let modelContainer: ModelContainer
+    public let modelContext: ModelContext
+    
+    public init() throws {
+        let schema = Schema([ISMChatConversationDB.self, ISMChatMessagesDB.self])
+        let modelConfiguration = ModelConfiguration(schema: schema)
+        self.modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+        self.modelContext = ModelContext(modelContainer)
+    }
+    
+    
+    public func fetchConversations() async throws -> [ISMChatConversationDB] {
+        do {
+            let descriptor = FetchDescriptor<ISMChatConversationDB>(sortBy: [SortDescriptor(\.updatedAt, order: .reverse)])
+            var conversations = try modelContext.fetch(descriptor)
+            
+            // Sort by lastMessageSentAt in descending order
+            conversations.sort { $0.lastMessageSentAt > $1.lastMessageSentAt }
+            
+            // Remove broadcast list from conversation list
+            let filteredConversations = conversations.filter { conversation in
+                !(conversation.opponentDetails?.userId == nil &&
+                  conversation.opponentDetails?.userName == nil &&
+                  conversation.isGroup == false)
+            }
+            
+            return filteredConversations
+        } catch {
+            print("Fetch Error: \(error)")
+            return []
+        }
+    }
+    
     public func saveConversation(_ conversations: [ISMChatConversationDB]) async throws {
         for obj in conversations {
             if let conversationId = obj.conversationId {
@@ -35,28 +71,6 @@ public class LocalStorageManager: ChatStorageManager {
         }
     }
     
-    public func fetchConversations() async throws -> [ISMChatConversationDB] {
-        do {
-            let descriptor = FetchDescriptor<ISMChatConversationDB>(sortBy: [SortDescriptor(\.updatedAt, order: .reverse)])
-            var conversations = try modelContext.fetch(descriptor)
-            
-            // Sort by lastMessageSentAt in descending order
-            conversations.sort { $0.lastMessageSentAt > $1.lastMessageSentAt }
-            
-            // Remove broadcast list from conversation list
-            let filteredConversations = conversations.filter { conversation in
-                !(conversation.opponentDetails?.userId == nil &&
-                  conversation.opponentDetails?.userName == nil &&
-                  conversation.isGroup == false)
-            }
-            
-            return filteredConversations
-        } catch {
-            print("Fetch Error: \(error)")
-            return []
-        }
-    }
-    
     public func deleteConversation(id: String) async throws {
         await MainActor.run {
             let descriptor = FetchDescriptor<ISMChatConversationDB>(
@@ -78,17 +92,22 @@ public class LocalStorageManager: ChatStorageManager {
         
     }
     
-    
-    public var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
-    public let modelContainer: ModelContainer
-    public let modelContext: ModelContext
-    
-    public init() throws {
-        let schema = Schema([ISMChatConversationDB.self, ISMChatMessagesDB.self])
-        let modelConfiguration = ModelConfiguration(schema: schema)
-        self.modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
-        self.modelContext = ModelContext(modelContainer)
+    public func fetchMessages(conversationId: String) async throws -> [ISMChatMessagesDB] {
+        do {
+            let descriptor = FetchDescriptor<ISMChatMessagesDB>(
+                predicate: #Predicate { $0.conversationId == conversationId }
+            )
+            let messages = try modelContext.fetch(descriptor)
+            return messages
+        } catch {
+            print("Fetch Messages Error: \(error)")
+            return []
+        }
     }
+
+    
+    
+    
     
     
     

@@ -96,7 +96,7 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
   
     
     //MARK: - create conversation
-    public func createConversation(user : UserDB,chatStatus : String? = nil,metaData : [String : Any]? = nil,completion:@escaping(ISMChatCreateConversationResponse?,ISMChatNewAPIError?)->()){
+    public func createConversation(user : ISMChatUserDB,chatStatus : String? = nil,metaData : [String : Any]? = nil,completion:@escaping(ISMChatCreateConversationResponse?,ISMChatNewAPIError?)->()){
         var body : [String : Any]
         var memberIds : [String] = []
         memberIds.append(ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId ?? "")

@@ -293,12 +293,12 @@ public struct ISMConversationView : View {
                                 .onAppear {
                                     handlePagination(for: data)
                                 }
-//                            NavigationLink(destination: messageView(for: data)) {
-//                                EmptyView()
-//                            }
-//                            .buttonStyle(PlainButtonStyle())
-//                            .frame(width: 0)
-//                            .opacity(0)
+                            NavigationLink(destination: messageView(for: data)) {
+                                EmptyView()
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            .frame(width: 0)
+                            .opacity(0)
                         }
                     }
                     
@@ -427,7 +427,7 @@ public struct ISMConversationView : View {
         }
     }
 
-    private func messageView(for data: ConversationDB) -> some View {
+    private func messageView(for data: ISMChatConversationDB) -> some View {
         ISMMessageView(
             conversationViewModel: viewModel,
             conversationID: data.lastMessageDetails?.conversationId,

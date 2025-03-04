@@ -243,17 +243,7 @@ private extension ISMForwardToContactView {
 
             for newUser in selections {
                 conversationGroup.enter()
-                let user = UserDB()
-                user.userProfileImageUrl = newUser.userProfileImageUrl
-                user.userName = newUser.userName
-                user.userIdentifier = newUser.userIdentifier
-                user.userId = newUser.userId
-                let metaDataValue = UserMetaDataDB()
-                metaDataValue.userId = newUser.metaData?.userId
-                metaDataValue.userType = newUser.metaData?.userType
-                metaDataValue.userTypeString = newUser.metaData?.userTypeString
-                metaDataValue.isStarUser = newUser.metaData?.isStarUser
-                user.metaData = metaDataValue
+                let user = ISMChatUserDB(userId: newUser.userId ?? "", userProfileImageUrl: newUser.userProfileImageUrl ?? "", userName: newUser.userName ?? "", userIdentifier: newUser.userIdentifier ?? "", online: newUser.online ?? false, lastSeen: newUser.lastSeen ?? 0, metaData: ISMChatUserMetaDataDB(userId: newUser.metaData?.userId ?? "", userType: newUser.metaData?.userType ?? 0, isStarUser: newUser.metaData?.isStarUser ?? false, userTypeString: newUser.metaData?.userTypeString ?? ""))
 
                 viewModel.createConversation(user: user) { data,_  in
                     guard let conversationId = data?.conversationId else {

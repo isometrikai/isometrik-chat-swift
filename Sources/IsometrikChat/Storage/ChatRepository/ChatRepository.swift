@@ -36,11 +36,19 @@ public class ChatRepository {
         return try await activeStorageManager.fetchConversations()
     }
     
+    public func saveConversation(_ conversations: [ISMChatConversationDB]) async throws{
+        return try await activeStorageManager.saveConversation(conversations)
+    }
+    
     public func deleteConversation(id: String)  async throws{
         return try await activeStorageManager.deleteConversation(id: id)
     }
     
     public func clearConversation(id: String)  async throws{
         return try await activeStorageManager.clearConversation(id: id)
+    }
+    
+    public func fetchMessages(conversationId: String) async throws -> [ISMChatMessagesDB] {
+        return try await activeStorageManager.fetchMessages(conversationId: conversationId)
     }
 }

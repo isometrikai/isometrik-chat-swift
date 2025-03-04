@@ -13,6 +13,9 @@ public class ConversationsViewModel: ObservableObject {
     @Published public var conversations: [ISMChatConversationDB] = []
     @Published public var primaryConversations: [ISMChatConversationDB] = []
     @Published public var otherConversations: [ISMChatConversationDB] = [] //other conversations are those who other normal user or start User send me message for first time so i can accept or decline chat
+    
+    @Published public var allMessages : [ISMChatMessagesDB] = []
+    @Published public var messages : [[ISMChatMessagesDB]] = []
     public var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
     public let chatRepository: ChatRepository
     
@@ -98,5 +101,40 @@ public class ConversationsViewModel: ObservableObject {
             }
         }
         return filteredOutConversations
+    }
+    
+    public func loadMessages(conversationId : String) async {
+        do {
+            let fetchedMessages = try await chatRepository.fetchMessages(conversationId: conversationId)
+            DispatchQueue.main.async {
+                self.allMessages = fetchedMessages
+                self.messages = self.getSectionMessage(for: fetchedMessages)
+            }
+        } catch {
+            print("Error loading conversations: \(error)")
+        }
+    }
+    
+    public func getSectionMessage(for chat : [ISMChatMessagesDB]) -> [[ISMChatMessagesDB]] {
+        var res = [[ISMChatMessagesDB]]()
+        let groupedMessages = Dictionary(grouping: chat) { (element) -> Date in
+            
+            //timestamp
+            let timeStamp = element.sentAt
+            let unixTimeStamp: Double = Double(timeStamp ) / 1000.0
+            let dateFormatt = DateFormatter()
+            dateFormatt.dateFormat = "dd/MM/yyy"
+            //conver to string
+            let strDate = dateFormatt.string(from: Date(timeIntervalSince1970: unixTimeStamp) as Date)
+            //str to date
+            return dateFormatt.date(from: strDate) ?? Date()
+        }
+        let sortedKeys = groupedMessages.keys.sorted()
+        sortedKeys.forEach { (key) in
+            var values = groupedMessages[key]
+            values?.sort { Double($0.sentAt ) / 1000.0 < Double($1.sentAt ) / 1000.0 }
+            res.append(values ?? [])
+        }
+        return res
     }
 }

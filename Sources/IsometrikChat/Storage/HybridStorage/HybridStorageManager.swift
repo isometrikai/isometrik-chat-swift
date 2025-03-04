@@ -52,4 +52,7 @@ public class HybridStorageManager: ChatStorageManager {
         
     }
     
+    public func fetchMessages(conversationId: String) async throws -> [ISMChatMessagesDB] {
+        return []
+    }
 }

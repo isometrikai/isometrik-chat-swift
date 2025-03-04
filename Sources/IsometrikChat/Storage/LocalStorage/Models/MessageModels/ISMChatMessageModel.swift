@@ -13,24 +13,24 @@ public class ISMChatMessagesDB {
     @Attribute(.unique) public var messageId: String
     
     public var sentAt : Double = 0
-    public var senderInfo : ISMChatUserDB?
+    @Relationship(deleteRule: .cascade) public var senderInfo : ISMChatUserDB?
     public var body : String = ""
     public var userName : String = ""
     public var userIdentifier : String = ""
     public var userId : String = ""
     public var userProfileImageUrl : String = ""
-    public var mentionedUsers : [ISMChatMentionedUserDB]
+    @Relationship(deleteRule: .cascade) public var mentionedUsers : [ISMChatMentionedUserDB]
     public var deliveredToAll : Bool = false
     public var readByAll : Bool = false
     public var customType : String = ""
     public var action : String = ""
-    public var readBy : [ISMChatMessageDeliveryStatusDB]
-    public var deliveredTo  : [ISMChatMessageDeliveryStatusDB]
+    @Relationship(deleteRule: .cascade) public var readBy : [ISMChatMessageDeliveryStatusDB]
+    @Relationship(deleteRule: .cascade) public var deliveredTo  : [ISMChatMessageDeliveryStatusDB]
     public var messageType : Int = -1
     public var parentMessageId : String = ""
-    public var metaData : ISMChatMetaDataDB?
+    @Relationship(deleteRule: .cascade) public var metaData : ISMChatMetaDataDB?
     public var metaDataJsonString : String?
-    public var attachments : [ISMChatAttachmentDB]
+    @Relationship(deleteRule: .cascade) public var attachments : [ISMChatAttachmentDB]
     public var initiatorIdentifier : String = ""
     public var initiatorId : String = ""
     public var initiatorName : String = ""
@@ -39,22 +39,22 @@ public class ISMChatMessagesDB {
     public var placeName : String = ""
     public var reactionType : String = ""
     public var reactionsCount : Int?
-    public var isDelete : Bool = false
-    public var members : [ISMChatLastMessageMemberDB]
+    @Relationship(deleteRule: .cascade) public var members : [ISMChatLastMessageMemberDB]
     public var deletedMessage : Bool = false
     public var memberName : String = ""
     public var memberId : String = ""
     public var memberIdentifier : String = ""
     public var messageUpdated : Bool = false
-    public var reactions : [ISMChatReactionDB]
+    @Relationship(deleteRule: .cascade) public var reactions : [ISMChatReactionDB]
     public var missedByMembers : [String]
     public var meetingId  : String?
-    public var callDurations : [ISMChatMeetingDuration]
+    @Relationship(deleteRule: .cascade) public var callDurations : [ISMChatMeetingDuration]
     public var audioOnly : Bool = false
     public var autoTerminate : Bool = false
-    public var config : ISMChatMeetingConfig?
+    @Relationship(deleteRule: .cascade) public var config : ISMChatMeetingConfig?
     public var groupcastId : String?
-    public init(messageId: String, sentAt: Double, senderInfo: ISMChatUserDB? = nil, body: String, userName: String, userIdentifier: String, userId: String, userProfileImageUrl: String, mentionedUsers: [ISMChatMentionedUserDB], deliveredToAll: Bool, readByAll: Bool, customType: String, action: String, readBy: [ISMChatMessageDeliveryStatusDB], deliveredTo: [ISMChatMessageDeliveryStatusDB], messageType: Int, parentMessageId: String, metaData: ISMChatMetaDataDB? = nil, metaDataJsonString: String? = nil, attachments: [ISMChatAttachmentDB], initiatorIdentifier: String, initiatorId: String, initiatorName: String, conversationId: String, msgSyncStatus: String, placeName: String, reactionType: String, reactionsCount: Int? = nil, isDelete: Bool, members: [ISMChatLastMessageMemberDB], deletedMessage: Bool, memberName: String, memberId: String, memberIdentifier: String, messageUpdated: Bool, reactions: [ISMChatReactionDB], missedByMembers: [String], meetingId: String? = nil, callDurations: [ISMChatMeetingDuration], audioOnly: Bool, autoTerminate: Bool, config: ISMChatMeetingConfig? = nil, groupcastId: String? = nil) {
+    @Relationship(deleteRule: .nullify) public var conversation: ISMChatConversationDB?
+    public init(messageId: String, sentAt: Double, senderInfo: ISMChatUserDB? = nil, body: String, userName: String, userIdentifier: String, userId: String, userProfileImageUrl: String, mentionedUsers: [ISMChatMentionedUserDB], deliveredToAll: Bool, readByAll: Bool, customType: String, action: String, readBy: [ISMChatMessageDeliveryStatusDB], deliveredTo: [ISMChatMessageDeliveryStatusDB], messageType: Int, parentMessageId: String, metaData: ISMChatMetaDataDB? = nil, metaDataJsonString: String? = nil, attachments: [ISMChatAttachmentDB], initiatorIdentifier: String, initiatorId: String, initiatorName: String, conversationId: String, msgSyncStatus: String, placeName: String, reactionType: String, reactionsCount: Int? = nil, members: [ISMChatLastMessageMemberDB], deletedMessage: Bool, memberName: String, memberId: String, memberIdentifier: String, messageUpdated: Bool, reactions: [ISMChatReactionDB], missedByMembers: [String], meetingId: String? = nil, callDurations: [ISMChatMeetingDuration], audioOnly: Bool, autoTerminate: Bool, config: ISMChatMeetingConfig? = nil, groupcastId: String? = nil) {
         self.messageId = messageId
         self.sentAt = sentAt
         self.senderInfo = senderInfo
@@ -83,7 +83,6 @@ public class ISMChatMessagesDB {
         self.placeName = placeName
         self.reactionType = reactionType
         self.reactionsCount = reactionsCount
-        self.isDelete = isDelete
         self.members = members
         self.deletedMessage = deletedMessage
         self.memberName = memberName

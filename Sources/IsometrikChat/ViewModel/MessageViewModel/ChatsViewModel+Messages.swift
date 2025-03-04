@@ -123,7 +123,7 @@ extension ChatsViewModel{
         }
     }
     
-    public func shareInviteResponse(user: UserDB,customType: String,body: String,notificationBody: String,metaData : [String : Any],searchTags : [String],completion:@escaping(String)->()){
+    public func shareInviteResponse(user: ISMChatUserDB,customType: String,body: String,notificationBody: String,metaData : [String : Any],searchTags : [String],completion:@escaping(String)->()){
         self.createConversation(user: user,chatStatus: ISMChatStatus.Reject.value) { response,error  in
             self.sendCustomMessage(conversationId:  response?.conversationId ?? "", body: body, customType: customType, notificationBody: notificationBody, metaDataValue: metaData, searchTags: searchTags) { messageId in
                 completion(messageId)
@@ -131,7 +131,7 @@ extension ChatsViewModel{
         }
     }
     
-    public func sharePost(user: UserDB,postId : String,postURL : String,postCaption : String,completion:@escaping()->()){
+    public func sharePost(user: ISMChatUserDB,postId : String,postURL : String,postCaption : String,completion:@escaping()->()){
         self.createConversation(user: user,chatStatus: ISMChatStatus.Reject.value) { response,error  in
             self.sendMessage(messageKind: .post, customType: ISMChatMediaType.Post.value, conversationId: response?.conversationId ?? "", message: postURL, fileName: "", fileSize: nil, mediaId: nil,caption: postCaption,postId: postId) { _, _ in
                 completion()
@@ -139,7 +139,7 @@ extension ChatsViewModel{
         }
     }
     
-    public func shareProduct(user: UserDB,productId : String,productUrl : String,productCaption : String,productCategoryId : String,completion:@escaping(Bool)->()){
+    public func shareProduct(user: ISMChatUserDB,productId : String,productUrl : String,productCaption : String,productCategoryId : String,completion:@escaping(Bool)->()){
         self.createConversation(user: user,chatStatus: ISMChatStatus.Reject.value) { response,error  in
             if let error = error{
                 completion(false)
@@ -407,7 +407,7 @@ extension ChatsViewModel{
         }
     }
     
-    public func forwardToMutipleUsers(users : [UserDB],messages : [MessagesDB],completion:@escaping()->()){
+    public func forwardToMutipleUsers(users : [ISMChatUserDB],messages : [MessagesDB],completion:@escaping()->()){
         var newConversationIds: [String] = []
         
         DispatchQueue.global(qos: .userInitiated).async {

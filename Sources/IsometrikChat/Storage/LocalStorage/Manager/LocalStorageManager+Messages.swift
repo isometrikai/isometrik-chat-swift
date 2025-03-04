@@ -11,7 +11,7 @@ import Foundation
 extension LocalStorageManager{
     public func fetchAllMessages() -> [ISMChatMessagesDB] {
         do {
-            let descriptor = FetchDescriptor<ISMChatMessagesDB>(predicate: #Predicate {!$0.isDelete})
+            let descriptor = FetchDescriptor<ISMChatMessagesDB>()
             let messages = try modelContext.fetch(descriptor)
             return messages
         } catch {
@@ -22,7 +22,7 @@ extension LocalStorageManager{
     
     public func fetchAllMessagesToShowInList() -> [[ISMChatMessagesDB]] {
         do {
-            let descriptor = FetchDescriptor<ISMChatMessagesDB>(predicate: #Predicate {!$0.isDelete})
+            let descriptor = FetchDescriptor<ISMChatMessagesDB>()
             let messages = try modelContext.fetch(descriptor)
             
             var res = [[ISMChatMessagesDB]]()

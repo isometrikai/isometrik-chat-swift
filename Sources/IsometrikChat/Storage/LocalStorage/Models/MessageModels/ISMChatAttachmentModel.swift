@@ -25,8 +25,7 @@ public class ISMChatAttachmentDB {
     public var title : String = ""
     public var address : String = ""
     public var caption : String = ""
-    public init(id: UUID, attachmentType: Int, extensions: String, mediaId: String, mediaUrl: String, mimeType: String, name: String, size: Int, thumbnailUrl: String, latitude: Double, longitude: Double, title: String, address: String, caption: String) {
-        self.id = id
+    public init(attachmentType: Int, extensions: String, mediaId: String, mediaUrl: String, mimeType: String, name: String, size: Int, thumbnailUrl: String, latitude: Double, longitude: Double, title: String, address: String, caption: String) {
         self.attachmentType = attachmentType
         self.extensions = extensions
         self.mediaId = mediaId

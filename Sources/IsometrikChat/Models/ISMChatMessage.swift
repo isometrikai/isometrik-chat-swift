@@ -144,6 +144,235 @@ public struct ISMChatMessage : Codable,Identifiable{
     public init(){
         
     }
+    private func createSenderInfo() -> ISMChatUserDB {
+        return ISMChatUserDB(
+            userId: self.senderInfo?.userId ?? "",
+            userProfileImageUrl: self.senderInfo?.userProfileImageUrl ?? "",
+            userName: self.senderInfo?.userName ?? "",
+            userIdentifier: self.senderInfo?.userIdentifier ?? "",
+            online: self.senderInfo?.online ?? false,
+            lastSeen: self.senderInfo?.lastSeen ?? 0,
+            metaData: ISMChatUserMetaDataDB(
+                userId: self.senderInfo?.metaData?.userId ?? "",
+                userType: self.senderInfo?.metaData?.userType ?? 0,
+                isStarUser: self.senderInfo?.metaData?.isStarUser ?? false,
+                userTypeString: self.senderInfo?.metaData?.userTypeString ?? ""
+            )
+        )
+    }
+
+    private func createMentionedUsers() -> [ISMChatMentionedUserDB] {
+        return self.mentionedUsers?.map {
+            ISMChatMentionedUserDB(
+                wordCount: $0.wordCount ?? 0,
+                userId: $0.userId ?? "",
+                order: $0.order ?? 0
+            )
+        } ?? []
+    }
+
+    private func createDeliveryStatus(for members: [ISMChatUserStatus]?) -> [ISMChatMessageDeliveryStatusDB] {
+        return members?.map {
+            ISMChatMessageDeliveryStatusDB(userId: $0.userId, timestamp: $0.timestamp)
+        } ?? []
+    }
+
+    private func createContacts() -> [ISMChatContactDB] {
+        return self.metaData?.contacts?.map {
+            ISMChatContactDB(
+                contactName: $0.contactName,
+                contactIdentifier: $0.contactIdentifier,
+                contactImageUrl: $0.contactImageUrl
+            )
+        } ?? []
+    }
+
+    private func createPaymentRequestMembers() -> [ISMChatPaymentRequestMembersDB] {
+        return self.metaData?.paymentRequestedMembers?.map {
+            ISMChatPaymentRequestMembersDB(
+                userId: $0.userId,
+                userName: $0.userName,
+                status: $0.status,
+                statusText: $0.statusText,
+                appUserId: $0.appUserId,
+                userProfileImage: $0.userProfileImage,
+                declineReason: $0.declineReason
+            )
+        } ?? []
+    }
+
+    private func createInviteMembers() -> [ISMChatPaymentRequestMembersDB] {
+        return self.metaData?.inviteMembers?.map {
+            ISMChatPaymentRequestMembersDB(
+                userId: $0.userId,
+                userName: $0.userName,
+                status: $0.status,
+                statusText: $0.statusText,
+                appUserId: $0.appUserId,
+                userProfileImage: $0.userProfileImage,
+                declineReason: $0.declineReason
+            )
+        } ?? []
+    }
+
+    private func createMetaData(contacts: [ISMChatContactDB], paymentRequestMembers: [ISMChatPaymentRequestMembersDB], inviteMembers: [ISMChatPaymentRequestMembersDB]) -> ISMChatMetaDataDB {
+        return ISMChatMetaDataDB(
+            locationAddress: self.metaData?.locationAddress,
+            contacts: contacts,
+            captionMessage: self.metaData?.captionMessage,
+            isBroadCastMessage: self.metaData?.isBroadCastMessage,
+            product: self.metaData?.product != nil ? ISMChatProductDB(
+                productId: self.metaData?.product?.productId,
+                productUrl: self.metaData?.product?.productUrl,
+                productCategoryId: self.metaData?.product?.productCategoryId
+            ) : nil,
+            paymentRequestedMembers: paymentRequestMembers, inviteMembers: inviteMembers
+        )
+    }
+
+    private func createMembers() -> [ISMChatLastMessageMemberDB] {
+        return self.members?.map {
+            ISMChatLastMessageMemberDB(
+                memberProfileImageUrl: $0.memberProfileImageUrl,
+                memberName: $0.memberName,
+                memberIdentifier: $0.memberIdentifier,
+                memberId: $0.memberId
+            )
+        } ?? []
+    }
+
+    private func createAttachments() -> [ISMChatAttachmentDB] {
+        return self.attachments?.map {
+            ISMChatAttachmentDB(
+                attachmentType: $0.attachmentType ?? 0,
+                extensions: $0.extensions ?? "",
+                mediaId: $0.mediaId ?? "",
+                mediaUrl: $0.mediaUrl ?? "",
+                mimeType: $0.mimeType ?? "",
+                name: $0.name ?? "",
+                size: $0.size ?? 0,
+                thumbnailUrl: $0.thumbnailUrl ?? "",
+                latitude: $0.latitude ?? 0,
+                longitude: $0.longitude ?? 0,
+                title: $0.title ?? "",
+                address: $0.address ?? "",
+                caption: $0.caption ?? ""
+            )
+        } ?? []
+    }
+
+    private func createReactions() -> [ISMChatReactionDB] {
+        return self.reactions?.compactMap { (key, users) -> ISMChatReactionDB? in
+            return users.isEmpty ? nil : ISMChatReactionDB(reactionType: key, users: users)
+        } ?? []
+    }
+
+    private func createCallDurations() -> [ISMChatMeetingDuration] {
+        return self.callDurations?.map {
+            ISMChatMeetingDuration(memberId: $0.memberId ?? "", durationInMilliseconds: $0.durationInMilliseconds ?? 0)
+        } ?? []
+    }
+    
+    public func toMessageDB() -> ISMChatMessagesDB {
+        let senderInfo = createSenderInfo()
+        let mentionedUsers = createMentionedUsers()
+        let deliveredToValue = createDeliveryStatus(for: self.deliveredTo)
+        let readByValue = createDeliveryStatus(for: self.readBy)
+        let contactsValue = createContacts()
+        let paymentRequestMembersValue = createPaymentRequestMembers()
+        let inviteMembersValue = createInviteMembers()
+        let metaData = createMetaData(contacts: contactsValue, paymentRequestMembers: paymentRequestMembersValue, inviteMembers: inviteMembersValue)
+        let membersValue = createMembers()
+        let attachmentValue = createAttachments()
+        let reactionsValue = createReactions()
+        let callDurationValue = createCallDurations()
+        let config = ISMChatMeetingConfig(pushNotifications: self.config?.pushNotifications)
+        
+        let messageId = self.messageId ?? ""
+        let sentAt = self.sentAt ?? 0
+        let body = self.body ?? ""
+        let userName = self.userName ?? ""
+        let userIdentifier = self.userIdentifier ?? ""
+        let userId = self.userId ?? ""
+        let userProfileImageUrl = self.senderInfo?.userProfileImageUrl ?? ""
+        let deliveredToAll = self.deliveredToAll ?? false
+        let readByAll = self.readByAll ?? false
+        let customType = self.customType ?? ""
+        let action = self.action ?? ""
+        let readBy = readByValue
+        let deliveredTo = deliveredToValue
+        let messageType = self.messageType ?? 0
+        let parentMessageId = self.parentMessageId ?? ""
+        let metaDataJsonString = self.metaDataJsonString ?? ""
+        let attachments = attachmentValue
+        let initiatorIdentifier = self.initiatorIdentifier ?? ""
+        let initiatorId = self.initiatorId ?? ""
+        let initiatorName = self.initiatorName ?? ""
+        let conversationId = self.conversationId ?? ""
+        let msgSyncStatus = ""
+        let placeName = ""
+        let reactionType = ""
+        let reactionsCount = self.reactions?.count
+        let members = membersValue
+        let deletedMessage = false
+        let memberName = self.memberName ?? ""
+        let memberId = self.memberId ?? ""
+        let memberIdentifier = self.memberIdentifier ?? ""
+        let messageUpdated = self.messageUpdated ?? false
+        let reactions = reactionsValue
+        let missedByMembers = self.missedByMembers ?? []
+        let meetingId = self.meetingId ?? ""
+        let callDurations = callDurationValue
+        let audioOnly = self.audioOnly ?? false
+        let autoTerminate = self.autoTerminate ?? false
+        let groupcastId = self.groupcastId
+
+        return ISMChatMessagesDB(
+            messageId: messageId,
+            sentAt: sentAt,
+            senderInfo: senderInfo,
+            body: body,
+            userName: userName,
+            userIdentifier: userIdentifier,
+            userId: userId,
+            userProfileImageUrl: userProfileImageUrl,
+            mentionedUsers: mentionedUsers,
+            deliveredToAll: deliveredToAll,
+            readByAll: readByAll,
+            customType: customType,
+            action: action,
+            readBy: readBy,
+            deliveredTo: deliveredTo,
+            messageType: messageType,
+            parentMessageId: parentMessageId,
+            metaData: metaData,
+            metaDataJsonString: metaDataJsonString,
+            attachments: attachments,
+            initiatorIdentifier: initiatorIdentifier,
+            initiatorId: initiatorId,
+            initiatorName: initiatorName,
+            conversationId: conversationId,
+            msgSyncStatus: msgSyncStatus,
+            placeName: placeName,
+            reactionType: reactionType,
+            reactionsCount: reactionsCount,
+            members: members,
+            deletedMessage: deletedMessage,
+            memberName: memberName,
+            memberId: memberId,
+            memberIdentifier: memberIdentifier,
+            messageUpdated: messageUpdated,
+            reactions: reactions,
+            missedByMembers: missedByMembers,
+            meetingId: meetingId,
+            callDurations: callDurations,
+            audioOnly: audioOnly,
+            autoTerminate: autoTerminate,
+            config: config,
+            groupcastId: groupcastId
+        )
+    }
+
 }
 
 public struct ISMChatUserStatus : Codable{

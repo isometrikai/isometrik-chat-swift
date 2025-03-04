@@ -81,20 +81,20 @@ extension ISMMessageView{
     //MARK: - SCROLL TO BOTTOM MESSAGE
     
     /// Returns a button that scrolls to the bottom of the message list.
-    func scrollToBottomButton() -> some View {
-        return Button(action: {
-            parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
-        }, label: {
-            appearance.images.scrollToBottomArrow
-                .resizable()
-                .frame(width: 32, height: 32)
-                .padding()
-        })
-        .shadow(color: Color.black.opacity(0.3),
-                radius: 3,
-                x: 3,
-                y: 3)
-    }
+//    func scrollToBottomButton() -> some View {
+//        return Button(action: {
+//            parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
+//        }, label: {
+//            appearance.images.scrollToBottomArrow
+//                .resizable()
+//                .frame(width: 32, height: 32)
+//                .padding()
+//        })
+//        .shadow(color: Color.black.opacity(0.3),
+//                radius: 3,
+//                x: 3,
+//                y: 3)
+//    }
     
     //MARK: - NAVIGATION LEADING BUTTON
     
@@ -115,7 +115,7 @@ extension ISMMessageView{
     
     /// Saves the last input text if it has not been sent.
     func saveMyLastInputTextIfNotSent(){
-        self.realmManager.saveLastInputTextInConversation(text: textFieldtxt, conversationId: self.conversationID ?? "")
+//        self.realmManager.saveLastInputTextInConversation(text: textFieldtxt, conversationId: self.conversationID ?? "")
     }
     
     /// Returns a view for the back button with appropriate actions based on the state.
@@ -395,9 +395,9 @@ extension ISMMessageView{
 
                         }else{
                             Menu {
-                                if realmManager.allMessages?.count != 0 || realmManager.messages.count != 0{
-                                    clearChatButton()
-                                }
+//                                if realmManager.allMessages?.count != 0 || realmManager.messages.count != 0{
+//                                    clearChatButton()
+//                                }
                                 if isGroup == false{
                                     blockUserButton()
                                 }
@@ -460,24 +460,24 @@ extension ISMMessageView{
     func blockUserButton() -> some View{
         Button {
             if self.conversationDetail != nil{
-                if isMessagingEnabled(){
-                    stateViewModel.blockThisChat = true
-                }
+//                if isMessagingEnabled(){
+//                    stateViewModel.blockThisChat = true
+//                }
             }else{
                 self.createConversation { _ in
-                    if isMessagingEnabled(){
-                        stateViewModel.blockThisChat = true
-                    }
+//                    if isMessagingEnabled(){
+//                        stateViewModel.blockThisChat = true
+//                    }
                 }
             }
         } label: {
             HStack(spacing: 10){
                 appearance.images.blockIcon
-                if self.conversationDetail?.conversationDetails?.messagingDisabled == true && realmManager.messages.last?.last?.initiatorId == userData?.userId{
-                    Text("UnBlock User")
-                }else{
-                    Text("Block User")
-                }
+//                if self.conversationDetail?.conversationDetails?.messagingDisabled == true && realmManager.messages.last?.last?.initiatorId == userData?.userId{
+//                    Text("UnBlock User")
+//                }else{
+//                    Text("Block User")
+//                }
             }
         }
     }

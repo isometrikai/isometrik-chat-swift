@@ -17,7 +17,7 @@ public protocol ChatStorageManager {
 //    func updateConversation(_ conversation: ISMChatConversationDB) async throws
     
     // Message operations
-//    func fetchMessages(conversationId: String) async throws -> [ISMChatMessagesDB]
+    func fetchMessages(conversationId: String) async throws -> [ISMChatMessagesDB]
 //    func saveMessage(_ message: ISMChatMessagesDB) async throws
 //    func deleteMessage(id: String) async throws
 //    func updateMessage(_ message: ISMChatMessagesDB) async throws
