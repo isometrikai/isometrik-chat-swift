@@ -1,0 +1,164 @@
+/* 
+  Localizable.strings
+  IsometrikChat
+
+  Created by My Book on 18/02/25.
+  
+*/
+"chats" = "Çatlar";
+"newChat" = "Täze çat ";
+"tapHereForMoreInfo" = "doly maglumatlar üçin şu ýere basyň";
+"today" = "Şu gün";
+"endToEndEncryptedMessage" = "Habarlar soňuna çenli şifrlenýär. Bu çatdan 
+daşary hiç kim olary okap bilmez.";
+"typeAMessage" = "Habar ýazyň";
+"youDeletedThisMessage" = "Bu habary pozduňyz.";
+"thisMessageWasDeleted" = "Bu habar pozuldy.";
+"sendTo" = "Ibermek";
+"maxShareLimit" = "Diňe 5 çatlar bilen paýlaşyp bilersiňiz.";
+"messageForwarded" = "Habar ugradyldy";
+"readBy" = "OKALDY";
+"deliveredTo" = "UGRADYLAN";
+"read" = "Okamak";
+"delivered" = "Ugradylan";
+"messageInfo" = "Habar barada maglumatlar";
+"messageCopied" = "Habar göçürildi";
+"unblockContact" = "Habar ugratmak üçin kontakty blokdan çykaryň";
+
+// General UI and Errors
+"ok" = "OK";
+"noInternetMessage" = "Internet birikmäňiz işlemeýän ýaly. Tor sazlamalaryňyzy barlaň we Wi-Fi toruna ýa-da öýjükli maglumatlara birikdirilendigiňize göz ýetiriň.";
+"call" = "Jaň etmek";
+"cancel" = "Ýatyrmak";
+"voiceCall" = "Ses jaňy";
+"videoCall" = "Wideo jaň";
+"andOthers" = ", we başgalar";
+"actionNotAllowedBlocked" = "Herekede rugsat berilmedi, ulanyjy sizi eýýäm bloklady";
+"clearAllMessages" = "Ähli habarlary arassalamak";
+"thisChat" = "bu çat";
+"emptyChatWarning" = "Bu çat boş bolar, ýöne çat sanawyňyzda galar.";
+
+// Decline/Confirmation Actions
+"blockedUserWarning" = "Bloklanan ulanyjy indi size habar iberip bilmez.";
+"declineRequest" = "Haýyşy ret etmelimi?";
+"declinePaymentRequestWarning" = "Töleg haýyşyny ret etmek isleýäňizmi?";
+"declineRequestButton" = "Haýyşy ret etmek";
+"deleteMessage" = "Habary pozmak";
+"deleteMessageWarning" = "Bu habary hemişelik pozmak isleýäňizmi?";
+"deleteForEveryone" = "Hemmeler üçin pozmak";
+"deleteForMe" = "Meniň üçin pozmak";
+"unblock" = "Blokdan çykarmak";
+"blocked" = "Bloklandy";
+"unblocked" = "Blokdan çykaryldy";
+
+// Audio Permission
+"audioPermissionRequired" = "Ses rugsady talap edilýär";
+"microphoneAccessMessage" = "Ses ýazmak üçin mifrafonyňyz elýeter bolmaly. Sazlamalarda açyň.";
+"openSettings" = "Sazlamalary açmak";
+
+// Chat Group Strings
+"groupMemberRestriction" = "Bu topara habar iberip bilmeýaňiz, sebäbi siz indi agza däl.";
+"youBlockedUser" = "Bu ulanyjyny blokladyňyz";
+"youAreBlocked" = "Siz bloklanan";
+"youUnblockedUser" = "Bu ulanyjyny blokdan çykardyňyz";
+"youAreUnblocked" = "Siz blokdan çykaryldyňyz";
+"changedGroupTitle" = "bu toparyň adyny üýtgetdi";
+"changedGroupImage" = "bu toparyň suratyny üýtgetdi";
+"createdGroup" = "topar döretdi";
+"userLeft" = "Siz çykdyňyz";
+"updatedNotificationSetting" = "Habarnama sazlamalaryny täzelediňiz";
+
+// Message Requests
+"messageRequestInfo" = "Kabul etseňiz, ikiňizem habarlary okanyňyz ýaly maglumatlary görip bilersiňiz.";
+"acceptMessageRequest" = "Habar ibermek haýyşyny Kabul etmek";
+"reject" = "Ret etmek";
+"accept" = "Kabul etmek";
+"openChatMessage" = "Kim ýazýany barada goşmaça maglumat almak üçin çady açyň. Kabul etýänçäňiz, siziň görendigiňizi bilmezler.";
+"noOtherChatsFound" = "Başga çatlar tapylmady!";
+"newBroadcast" = "Täze ýaýlym";
+"newGroup" = "Täze topar";
+"enterGroupName" = "Toparyň adyny giriziň.";
+"conversationCreated" = "Söhbetdeşlik döredildi"
+
+// Chat Location
+"shareLocation" = "Lokasiýany paýlaşmak";
+"useMyCurrentLocation" = "Häzirki lokasiýany ulanmak";
+"useThisLocation" = "Bu lokasiýany ulanmak";
+"openInMaps" = "Kartada açmak";
+"sendLocation" = "Lokasiýany ibermek";
+"permissionDenied" = "Rugsat ret edildi";
+"enablePermissionMessage" = "Programma sazlamalarynda rugsady açyň";
+"goToSettings" = "Sazlamalara geçmek";
+"sendCurrentLocation" = "Häzirki lokasiýaňyzy ibermek";
+"accurateTo5Meters" = "5 metre çenli takyk";
+"nearbyPlaces" = "TÖWEREGINDÄKI ÝERLER";
+"openInGoogleMaps" = "Google Map-da açmak";
+
+// Chat Group View
+"writeGroupName" = "Toparyňyzyň adyny ýazyň";
+"editGroup" = "Topary üýtgetmek";
+"remove" = "Aýyrmak";
+"groupNameEmptyWarning" = "Toparyň ady boş bolup bilmez";
+"makeGroupAdmin" = "Toparyň Administratory etmek";
+"dismissAsAdmin" = "Administrator wezipesinden aýyrmak";
+"searchMembers" = "Agzalary gözlemek";
+"removeFromGroup" = "Topardan aýyrmak";
+
+// Chat Interface Actions
+"forward" = "Ugratmak";
+"reply" = "Jogap bermek";
+"copy" = "Göçürmek";
+"edit" = "Üýtgetmek";
+"info" = "Info";
+"delete" = "Pozmak";
+"block" = "Blokirlemek";
+
+// Chat Status
+"online" = "onlaýn";
+"offline" = "Oflaýn";
+"typing" = "ýazýar...";
+"isTyping" = "ýazýar...";
+"lastSeen" = "Soňky gezek";
+
+// Error Messages
+"error" = "Ýalňyşlyk";
+"noInternetConnection" = "Internet birikmesi ýok";
+"failedToSendMessage" = "Habary iberip bolmady";
+"pleaseTryAgain" = "Gaýtadan synanyşyň";
+
+// Chat Management
+"clearChat" = "Taryhy arassalamak";
+"blockUser" = "Ulanyjyny blokirlemek";
+"clearChatConfirmation" = "Çady arassalamalymy?";
+"clearChatWarning" = "Çady arassalamak isleýäňizmi? Herekedi yzyna gaýtaryp bolmaz.";
+"yesClear" = "Hawa, arassala";
+"blockUserConfirmation" = "Ulanyjyny blokirlemelimi?";
+"blockConfirmation" = "Blokirlemek isleýäňizmi?";
+
+// Chat Attachment
+"camera" = "Kamera";
+"gallery" = "Galereýa";
+"document" = "Resminama";
+"location" = "Lokasiýa";
+"contact" = "Kontakt";
+"sticker" = "Stiker";
+
+// Chat Contact Info
+"viewProfile" = "Profili görmek";
+"mediaLinksAndDocs" = "Media, Salgylar we Resminamalar";
+"deleteChat" = "Çady pozmak";
+"enterNameAndProfilePic" = "Adyňyzy giriziň we islege görä profil suratyny goşuň";
+"enterName" = "Adyňyzy giriziň";
+"email" = "Elektron poçta";
+"enterEmail" = "Elektron poçtaňyzy giriziň";
+"about" = "Goşmaça maglumat";
+"editProfile" = "Profili üýtgetmek";
+"emailEmptyWarning" = "Elektron poçta boş bolup bilmez";
+"usernameEmptyWarning" = "Ulanyjy ady boş bolup bilmez";
+"logout" = "Çykmak";
+"lastSeenLabel" = "Soňky gezek";
+"notifications" = "Habarnamalar";
+
+// Chat Reaction
+"reacted" = "reaksiýa berdi";
+"toAMessage" = "Habaryňyza";

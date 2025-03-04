@@ -1,0 +1,162 @@
+/* 
+  Localizable.strings
+  IsometrikChat
+
+  Created by My Book on 18/02/25.
+  
+*/
+// General Chat Strings
+"chats" = "Czaty";
+"newChat" = "Nowy czat";
+"tapHereForMoreInfo" = "dotknij tutaj, aby uzyskać więcej informacji";
+"today" = "Dzisiaj";
+"endToEndEncryptedMessage" = "Wiadomości są szyfrowane od końca do końca. Nikt poza tym czatem nie może ich odczytać.";
+"typeAMessage" = "Wpisz wiadomość";
+"youDeletedThisMessage" = "Usunąłeś tę wiadomość.";
+"thisMessageWasDeleted" = "Ta wiadomość została usunięta.";
+"sendTo" = "Wyślij do";
+"maxShareLimit" = "Możesz udostępnić maksymalnie 5 czatów.";
+"messageForwarded" = "Wiadomość przekazana";
+"readBy" = "PRZECZYTANE PRZEZ";
+"deliveredTo" = "DOSTARCZONE DO";
+"read" = "Przeczytane";
+"delivered" = "Dostarczone";
+"messageInfo" = "Informacje o wiadomości";
+"messageCopied" = "Wiadomość skopiowana";
+"unblockContact" = "Odblokuj kontakt, aby wysłać wiadomość";
+
+// General UI and Errors
+"ok" = "OK";
+"noInternetMessage" = "Ooops! Wygląda na to, że Twoje połączenie internetowe nie działa. Sprawdź ustawienia sieci i upewnij się, że jesteś połączony z Wi-Fi lub danymi komórkowymi.";
+"call" = "Połączenie";
+"cancel" = "Anuluj";
+"voiceCall" = "Połączenie głosowe";
+"videoCall" = "Połączenie wideo";
+"andOthers" = ", i inni";
+"actionNotAllowedBlocked" = "Działanie niedozwolone, użytkownik już Cię zablokował";
+"clearAllMessages" = "Wyczyść wszystkie wiadomości z";
+"thisChat" = "tego czatu";
+"emptyChatWarning" = "Ten czat będzie pusty, ale pozostanie na Twojej liście czatów.";
+
+// Decline/Confirmation Actions
+"blockedUserWarning" = "Zablokowany użytkownik nie będzie już mógł wysyłać Ci wiadomości.";
+"declineRequest" = "Odrzucić prośbę?";
+"declinePaymentRequestWarning" = "Czy na pewno chcesz odrzucić prośbę o płatność?";
+"declineRequestButton" = "Odrzuć prośbę";
+"deleteMessage" = "Usuń wiadomość";
+"deleteMessageWarning" = "Czy na pewno chcesz trwale usunąć tę wiadomość?";
+"deleteForEveryone" = "Usuń dla wszystkich";
+"deleteForMe" = "Usuń dla mnie";
+"unblock" = "Odblokuj";
+"blocked" = "Zablokowany";
+"unblocked" = "Odblokowany";
+
+// Audio Permission
+"audioPermissionRequired" = "Wymagane uprawnienia do mikrofonu";
+"microphoneAccessMessage" = "Potrzebujemy dostępu do Twojego mikrofonu, aby nagrywać dźwięk. Włącz go w Ustawieniach.";
+"openSettings" = "Otwórz ustawienia";
+
+// Chat Group Strings
+"groupMemberRestriction" = "Nie możesz wysyłać wiadomości do tej grupy, ponieważ nie jesteś już jej członkiem.";
+"youBlockedUser" = "Zablokowałeś tego użytkownika";
+"youAreBlocked" = "Zostałeś zablokowany";
+"youUnblockedUser" = "Odblokowałeś tego użytkownika";
+"youAreUnblocked" = "Zostałeś odblokowany";
+"changedGroupTitle" = "zmienił tytuł tej grupy";
+"changedGroupImage" = "zmienił obraz grupy";
+"createdGroup" = "utworzył grupę";
+"userLeft" = "Opuszczono grupę";
+"updatedNotificationSetting" = "Zaktualizowałeś ustawienia powiadomień";
+
+// Message Requests
+"messageRequestInfo" = "Jeśli zaakceptujesz, oboje będziecie mogli zobaczyć, kiedy przeczytaliście wiadomości.";
+"acceptMessageRequest" = "Zaakceptuj prośbę o wiadomość od";
+"reject" = "Odrzuć";
+"accept" = "Zaakceptuj";
+"openChatMessage" = "Otwórz czat, aby uzyskać więcej informacji o nadawcy. Nie będą wiedzieć, że zobaczyłeś to, dopóki nie zaakceptujesz.";
+"noOtherChatsFound" = "Nie znaleziono innych czatów!";
+"newBroadcast" = "Nowa transmisja";
+"newGroup" = "Nowa grupa";
+"enterGroupName" = "Wpisz nazwę grupy.";
+"conversationCreated" = "Rozmowa utworzona";
+
+// Chat Location
+"shareLocation" = "Udostępnij lokalizację";
+"useMyCurrentLocation" = "Użyj mojej bieżącej lokalizacji";
+"useThisLocation" = "Użyj tej lokalizacji";
+"openInMaps" = "Otwórz w Mapach";
+"sendLocation" = "Wyślij lokalizację";
+"permissionDenied" = "Brak uprawnień";
+"enablePermissionMessage" = "Włącz uprawnienia w ustawieniach aplikacji";
+"goToSettings" = "Przejdź do ustawień";
+"sendCurrentLocation" = "Wyślij swoją bieżącą lokalizację";
+"accurateTo5Meters" = "Dokładność do 5 metrów";
+"nearbyPlaces" = "BLISKIE MIEJSCA";
+"openInGoogleMaps" = "Otwórz w Google Maps";
+
+// Chat Group View
+"writeGroupName" = "Wpisz nazwę grupy";
+"editGroup" = "Edytuj grupę";
+"remove" = "Usuń";
+"groupNameEmptyWarning" = "Nazwa grupy nie może być pusta";
+"makeGroupAdmin" = "Uczyń administratorem grupy";
+"dismissAsAdmin" = "Usuń jako administratora";
+"searchMembers" = "Wyszukaj członków";
+"removeFromGroup" = "Usuń z grupy";
+
+// Chat Interface Actions
+"forward" = "Prześlij dalej";
+"reply" = "Odpowiedz";
+"copy" = "Kopiuj";
+"edit" = "Edytuj";
+"info" = "Informacje";
+"delete" = "Usuń";
+"block" = "Zablokuj";
+
+// Chat Status
+"online" = "Online";
+"offline" = "Offline";
+"typing" = "pisze...";
+"isTyping" = "pisze...";
+"lastSeen" = "Ostatnio widziany";
+
+// Error Messages
+"error" = "Błąd";
+"noInternetConnection" = "Brak połączenia z internetem";
+"failedToSendMessage" = "Nie udało się wysłać wiadomości";
+"pleaseTryAgain" = "Spróbuj ponownie";
+
+// Chat Management
+"clearChat" = "Wyczyść historię";
+"blockUser" = "Zablokuj użytkownika";
+"clearChatConfirmation" = "Wyczyścić czat?";
+"clearChatWarning" = "Czy na pewno chcesz wyczyścić czat? Ta operacja jest nieodwracalna.";
+"yesClear" = "Tak, wyczyść";
+"blockUserConfirmation" = "Zablokować użytkownika?";
+"blockConfirmation" = "Czy na pewno chcesz zablokować?";
+
+// Chat Attachment
+"camera" = "Aparat";
+"gallery" = "Galeria";
+"document" = "Dokument";
+"location" = "Lokalizacja";
+"contact" = "Kontakt";
+"sticker" = "Naklejka";
+
+// Chat Contact Info
+"viewProfile" = "Zobacz profil";
+"mediaLinksAndDocs" = "Media, linki i dokumenty";
+"deleteChat" = "Usuń czat";
+"enterNameAndProfilePic" = "Wpisz swoje imię i dodaj opcjonalne zdjęcie profilowe";
+"enterName" = "Wpisz imię";
+"email" = "Email";
+"enterEmail" = "Wpisz email";
+"about" = "O mnie";
+"editProfile" = "Edytuj profil";
+"logout" = "Wyloguj";
+"lastSeenLabel" = "Ostatnio widziany";
+"notifications" = "Powiadomienia";
+
+// Chat Reaction
+"reacted" = "Zareagował";
+"toAMessage" = "na wiadomość";
