@@ -1,0 +1,165 @@
+/* 
+  Localizable.strings
+  IsometrikChat
+
+  Created by My Book on 18/02/25.
+  
+*/
+// General Chat Strings
+"chats" = "Чаты";
+"newChat" = "Новый чат";
+"tapHereForMoreInfo" = "Нажмите здесь для получения дополнительной информации";
+"today" = "Сегодня";
+"endToEndEncryptedMessage" = "Сообщения зашифрованы сквозным шифрованием. Никто  
+за пределами этого чата не может их прочитать.";
+"typeAMessage" = "Введите сообщение";
+"youDeletedThisMessage" = "Вы удалили это сообщение.";
+"thisMessageWasDeleted" = "Это сообщение было удалено.";
+"sendTo" = "Отправить";
+"maxShareLimit" = "Вы можете поделиться только с пятью чатами.";
+"messageForwarded" = "Сообщение переслано";
+"readBy" = "ПРОЧИТАНО";
+"deliveredTo" = "ДОСТАВЛЕНО";
+"read" = "Прочитать";
+"delivered" = "Доставлено";
+"messageInfo" = "Информация о сообщении";
+"messageCopied" = "Сообщение скопировано";
+"unblockContact" = ": Разблокируйте контакт, чтобы отправить сообщение";
+
+// General UI and Errors
+"ok" = "OK";
+"noInternetMessage" = "Ой! Кажется, ваше интернет-соединение в данный момент не работает. Пожалуйста, проверьте свои сетевые настройки и убедитесь, что вы подключены к Wi-Fi сети или сотовым данным.";
+"call" = "Звонить";
+"cancel" = "Отмена";
+"voiceCall" = "Голосовой вызов";
+"videoCall" = "Видеозвонок";
+"andOthers" = ", и другие";
+"actionNotAllowedBlocked" = "Действие не разрешено, пользователь уже заблокировал Вас";
+"clearAllMessages" = "Очистить все сообщения от";
+"thisChat" = "этот чат";
+"emptyChatWarning" = "Этот чат будет пустым, но останется в вашем списке чатов..";
+
+// Decline/Confirmation Actions
+"blockedUserWarning" = "Заблокированный пользователь больше не сможет отправлять вам сообщения.";
+"declineRequest" = "Отклонить запрос?";
+"declinePaymentRequestWarning" = "Вы уверены, что хотите отклонить запрос на оплату?";
+"declineRequestButton" = "Отклонить запрос";
+"deleteMessage" = "Удалить сообщение";
+"deleteMessageWarning" = "Вы уверены, что хотите навсегда удалить это сообщение??";
+"deleteForEveryone" = "Удалить для всех";
+"deleteForMe" = "Удалить для меня";
+"unblock" = "Разблокировать";
+"blocked" = "Заблокировано";
+"unblocked" = "Разблокирован";
+
+// Audio Permission
+"audioPermissionRequired" = "Требуется разрешение на аудио";
+"microphoneAccessMessage" = "Нам нужен доступ к вашему микрофону для записи звука. Включите его в Настройках.";
+"openSettings" = "Открыть Настройки";
+
+// Chat Group Strings
+"groupMemberRestriction" = "Вы не можете отправлять сообщения в эту группу, потому что вы больше не являетесь ее участником.";
+"youBlockedUser" = "Вы заблокировали этого пользователя";
+"youAreBlocked" = "Вы заблокированы";
+"youUnblockedUser" = "Вы разблокировали этого пользователя";
+"youAreUnblocked" = "Вы разблокированы";
+"changedGroupTitle" = "изменил(а) название этой группы";
+"changedGroupImage" = "изменил(а) изображение этой группы";
+"createdGroup" = "создал(а) группу";
+"userLeft" = "Вы вышли";
+"updatedNotificationSetting" = "Вы обновили настройки уведомлений";
+
+// Message Requests
+"messageRequestInfo" = "Если вы согласитесь, вы оба сможете видеть такую информацию, как когда вы прочитали сообщения.";
+"acceptMessageRequest" = "Принять запрос на сообщение от";
+"reject" = "Отклонить";
+"accept" = "Принять";
+"openChatMessage" = "Откройте чат, чтобы получить больше информации о том, кто вам пишет. Они не узнают, что вы это увидели, пока вы не примете.";
+"noOtherChatsFound" = "Других чатов не найдено!";
+"newBroadcast" = "Новая Трансляция";
+"newGroup" = "Новая Группа";
+"enterGroupName" = "Введите имя группы.";
+"conversationCreated" = "Разговор создан"
+
+// Chat Location
+"shareLocation" = "Поделиться местоположением";
+"useMyCurrentLocation" = "Использовать мое текущее местоположение";
+"useThisLocation" = "Использовать это местоположение";
+"openInMaps" = "Открыть в Картах";
+"sendLocation" = "Отправить местоположение";
+"permissionDenied" = "Доступ запрещен";
+"enablePermissionMessage" = "Пожалуйста, включите разрешение в настройках приложения.";
+"goToSettings" = "Перейти в Настройки";
+"sendCurrentLocation" = "Отправить ваше текущее местоположение";
+"accurateTo5Meters" = "Точность до 5 метров";
+"nearbyPlaces" = "МЕСТА ПОБЛИЗОСТИ";
+"openInGoogleMaps" = "Открыть на карте Google";
+
+// Chat Group View
+"writeGroupName" = "Напишите название вашей группы";
+"editGroup" = "Изменить Группу";
+"remove" = "Удалить";
+"groupNameEmptyWarning" = ": Название группы не может быть пустым";
+"makeGroupAdmin" = "Сделать Администратором группы";
+"dismissAsAdmin" = "Удалить с должности Администратора";
+"searchMembers" = "Найти участников";
+"removeFromGroup" = "Удалить из Группы";
+
+// Chat Interface Actions
+"forward" = "Переслать";
+"reply" = "Ответить";
+"copy" = "Копировать";
+"edit" = "Изменить";
+"info" = "Инфо";
+"delete" = "Удалить";
+"block" = "Блокировать";
+
+// Chat Status
+"online" = "онлайн";
+"offline" = "Оффлайн";
+"typing" = "печатает...";
+"isTyping" = "печатает...";
+"lastSeen" = "был(а)";
+
+// Error Messages
+"error" = "Ошибка";
+"noInternetConnection" = "Нет подключения к интернету";
+"failedToSendMessage" = "Не удалось отправить сообщение";
+"pleaseTryAgain" = "Пожалуйста, попробуйте еще раз";
+
+// Chat Management
+"clearChat" = "Очистить Историю";
+"blockUser" = "Заблокировать Пользователя";
+"clearChatConfirmation" = "Очистить чат?";
+"clearChatWarning" = "Вы уверены, что хотите очистить чат? Это действие нельзя отменить.";
+"yesClear" = "Да, очистить";
+"blockUserConfirmation" = "Заблокировать Пользователя?";
+"blockConfirmation" = ": Вы уверены, что хотите заблокировать?";
+
+// Chat Attachment
+"camera" = "Камера";
+"gallery" = "Галерея";
+"document" = "Документ";
+"location" = "Местоположение";
+"contact" = "Контакт";
+"sticker" = "Стикер";
+
+// Chat Contact Info
+"viewProfile" = "Просмотреть Профиль";
+"mediaLinksAndDocs" = "Медиа, ссылки и документы";
+"deleteChat" = "Удалить чат";
+"enterNameAndProfilePic" = "Введите свое имя и добавьте необязательное изображение профиля";
+"enterName" = "Введите имя";
+"email" = "Электронная почта";
+"enterEmail" = "Введите электронную почту";
+"about" = "Дополнительная информация";
+"editProfile" = "Изменить Профиль";
+"emailEmptyWarning" = "Электронная почта не может быть пустой";
+"usernameEmptyWarning" = "Имя пользователя не может быть пустым";
+"logout" = "Выйти";
+"lastSeenLabel" = "был(а)";
+"notifications" = "Уведомления";
+
+// Chat Reaction
+"reacted" = "Отреагировал(а)";
+"toAMessage" = "на сообщение";
