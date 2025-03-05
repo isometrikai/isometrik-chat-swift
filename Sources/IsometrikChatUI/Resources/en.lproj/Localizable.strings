@@ -1,164 +1,156 @@
-//
-//  Localizable.strings
-//  IsometrikChat
-//
-//  Created by My Book on 24/12/24.
-
-// General Chat Strings
-"chats" = "Chats";
-"newChat" = "New Chat";
-"tapHereForMoreInfo" = "tap here for more info";
-"today" = "Today";
-"endToEndEncryptedMessage" = "Messages are end to end encrypted. No one 
-outside of this chat can read to them.";
-"typeAMessage" = "Type a message";
-"youDeletedThisMessage" = "You deleted this message.";
-"thisMessageWasDeleted" = "This message was deleted.";
-"sendTo" = "Send To";
-"maxShareLimit" = "You can only share with up to 5 chats.";
-"messageForwarded" = "Message Forwarded";
-"readBy" = "READ BY";
-"deliveredTo" = "DELIVERED TO";
-"read" = "Read";
-"delivered" = "Delivered";
-"messageInfo" = "Message Info";
-"messageCopied" = "Message copied";
-"unblockContact" = "Unblock contact to send a message";
+"Chats" = "Chats";
+"New Chat" = "New Chat";
+"tap here for more info" = "tap here for more info";
+"Today" = "Today";
+"Messages are end to end encrypted. No one outside of this chat can read to them." = "Messages are end to end encrypted. No one outside of this chat can read to them.";
+"Type a message" = "Type a message";
+"You deleted this message." = "You deleted this message.";
+"This message was deleted." = "This message was deleted.";
+"Send To" = "Send To";
+"You can only share with up to 5 chats." = "You can only share with up to 5 chats.";
+"Message Forwarded" = "Message Forwarded";
+"READ BY" = "READ BY";
+"DELIVERED TO" = "DELIVERED TO";
+"Read" = "Read";
+"Delivered" = "Delivered";
+"Message Info" = "Message Info";
+"Message copied" = "Message copied";
+"Unblock contact to send a message" = "Unblock contact to send a message";
 
 // General UI and Errors
-"ok" = "OK";
-"noInternetMessage" = "Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.";
-"call" = "Call";
-"cancel" = "Cancel";
-"voiceCall" = "Voice Call";
-"videoCall" = "Video Call";
-"andOthers" = ", and others";
-"actionNotAllowedBlocked" = "Action not allowed, the user has already blocked You";
-"clearAllMessages" = "Clear all messages from";
-"thisChat" = "this chat";
-"emptyChatWarning" = "This chat will be empty but will remain in your chat list.";
+"OK" = "OK";
+"Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data." = "Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.";
+"Call" = "Call";
+"Cancel" = "Cancel";
+"Voice Call" = "Voice Call";
+"Video Call" = "Video Call";
+", and others" = ", and others";
+"Action not allowed, the user has already blocked You" = "Action not allowed, the user has already blocked You";
+"Clear all messages from" = "Clear all messages from";
+"This chat" = "this chat";
+"This chat will be empty but will remain in your chat list." = "This chat will be empty but will remain in your chat list.";
 
 // Decline/Confirmation Actions
-"blockedUserWarning" = "Blocked user will be no longer be able to send you messages.";
-"declineRequest" = "Decline Request?";
-"declinePaymentRequestWarning" = "Are you sure you want to decline payment request?";
-"declineRequestButton" = "Decline request";
-"deleteMessage" = "Delete Message";
-"deleteMessageWarning" = "Are you sure you want to permanently delete this message?";
-"deleteForEveryone" = "Delete for Everyone";
-"deleteForMe" = "Delete for Me";
-"unblock" = "Unblock";
-"blocked" = "Blocked";
-"unblocked" = "Unblocked";
+"Blocked user will be no longer be able to send you messages." = "Blocked user will be no longer be able to send you messages.";
+"Decline Request?" = "Decline Request?";
+"Are you sure you want to decline payment request?" = "Are you sure you want to decline payment request?";
+"Decline request" = "Decline request";
+"Delete Message" = "Delete Message";
+"Are you sure you want to permanently delete this message?" = "Are you sure you want to permanently delete this message?";
+"Delete for Everyone" = "Delete for Everyone";
+"Delete for Me" = "Delete for Me";
+"Unblock" = "Unblock";
+"Blocked" = "Blocked";
+"Unblocked" = "Unblocked";
 
 // Audio Permission
-"audioPermissionRequired" = "Audio Permission Required";
-"microphoneAccessMessage" = "We need access to your microphone for recording audio. Please enable it in Settings.";
-"openSettings" = "Open Settings";
+"Audio Permission Required" = "Audio Permission Required";
+"We need access to your microphone for recording audio. Please enable it in Settings." = "We need access to your microphone for recording audio. Please enable it in Settings.";
+"Open Settings" = "Open Settings";
 
 // Chat Group Strings
-"groupMemberRestriction" = "You can't send messages to this group because you're no longer a member.";
-"youBlockedUser" = "You blocked this user";
-"youAreBlocked" = "You are blocked";
-"youUnblockedUser" = "You unblocked this user";
-"youAreUnblocked" = "You are unblocked";
-"changedGroupTitle" = "changed this group title";
-"changedGroupImage" = "changed this group image";
-"createdGroup" = "created group";
-"userLeft" = "You has left";
-"updatedNotificationSetting" = "You updated notifications setting";
+"You can't send messages to this group because you're no longer a member." = "You can't send messages to this group because you're no longer a member.";
+"You blocked this user" = "You blocked this user";
+"You are blocked" = "You are blocked";
+"You unblocked this user" = "You unblocked this user";
+"You are unblocked" = "You are unblocked";
+"Changed this group title" = "Changed this group title";
+"Changed this group image" = "Changed this group image";
+"Created group" = "Created group";
+"You has left" = "You has left";
+"You updated notifications setting" = "You updated notifications setting";
 
 // Message Requests
-"messageRequestInfo" = "If you accept, you both can see information such as when you’ve read messages.";
-"acceptMessageRequest" = "Accept message request from";
-"reject" = "Reject";
-"accept" = "Accept";
-"openChatMessage" = "Open a chat to get more info about who’s messaging you. They won’t know that you’ve seen it until you accept.";
-"noOtherChatsFound" = "No other chats found!";
-"newBroadcast" = "New Broadcast";
-"newGroup" = "New Group";
-"enterGroupName" = "Enter Group Name.";
-"conversationCreated" = "Conversation created"
+"If you accept, you both can see information such as when you’ve read messages." = "If you accept, you both can see information such as when you’ve read messages.";
+"Accept message request from" = "Accept message request from";
+"Reject" = "Reject";
+"Accept" = "Accept";
+"Open a chat to get more info about who’s messaging you. They won’t know that you’ve seen it until you accept." = "Open a chat to get more info about who’s messaging you. They won’t know that you’ve seen it until you accept.";
+"No other chats found!" = "No other chats found!";
+"New Broadcast" = "New Broadcast";
+"New Group" = "New Group";
+"Enter Group Name." = "Enter Group Name.";
+"Conversation created" = "Conversation created";
 
 // Chat Location
-"shareLocation" = "Share Location";
-"useMyCurrentLocation" = "Use my current location";
-"useThisLocation" = "Use this location";
-"openInMaps" = "Open in Maps";
-"sendLocation" = "Send Location";
-"permissionDenied" = "Permission Denied";
-"enablePermissionMessage" = "Please Enable Permission in App Settings";
-"goToSettings" = "Go to Settings";
-"sendCurrentLocation" = "Send your current location";
-"accurateTo5Meters" = "Accurate to 5 meters";
-"nearbyPlaces" = "NEARBY PLACES";
-"openInGoogleMaps" = "Open in Google Map";
+"Share Location" = "Share Location";
+"Use my current location" = "Use my current location";
+"Use this location" = "Use this location";
+"Open in Maps" = "Open in Maps";
+"Send Location" = "Send Location";
+"Permission Denied" = "Permission Denied";
+"Please Enable Permission in App Settings" = "Please Enable Permission in App Settings";
+"Go to Settings" = "Go to Settings";
+"Send your current location" = "Send your current location";
+"Accurate to 5 meters" = "Accurate to 5 meters";
+"NEARBY PLACES" = "NEARBY PLACES";
+"Open in Google Map" = "Open in Google Map";
 
 // Chat Group View
-"writeGroupName" = "Write your group name";
-"editGroup" = "Edit Group";
-"remove" = "Remove";
-"groupNameEmptyWarning" = "Group name can't be empty";
-"makeGroupAdmin" = "Make Group Admin";
-"dismissAsAdmin" = "Dismiss as Admin";
-"searchMembers" = "Search members";
-"removeFromGroup" = "Remove from Group";
+"Write your group name" = "Write your group name";
+"Edit Group" = "Edit Group";
+"Remove" = "Remove";
+"Group name can't be empty" = "Group name can't be empty";
+"Make Group Admin" = "Make Group Admin";
+"Dismiss as Admin" = "Dismiss as Admin";
+"Search members" = "Search members";
+"Remove from Group" = "Remove from Group";
 
 // Chat Interface Actions
-"forward" = "Forward";
-"reply" = "Reply";
-"copy" = "Copy";
-"edit" = "Edit";
-"info" = "Info";
-"delete" = "Delete";
-"block" = "Block";
+"Forward" = "Forward";
+"Reply" = "Reply";
+"Copy" = "Copy";
+"Edit" = "Edit";
+"Info" = "Info";
+"Delete" = "Delete";
+"Block" = "Block";
 
 // Chat Status
-"online" = "online";
-"offline" = "Offline";
-"typing" = "typing...";
-"isTyping" = "is typing...";
-"lastSeen" = "Last seen";
+"Online" = "Online";
+"Offline" = "Offline";
+"Typing..." = "Typing...";
+"is typing..." = "is typing...";
+"Last seen" = "Last seen";
 
 // Error Messages
-"error" = "Error";
-"noInternetConnection" = "No internet connection";
-"failedToSendMessage" = "Failed to send message";
-"pleaseTryAgain" = "Please try again";
+"Error" = "Error";
+"No internet connection" = "No internet connection";
+"Failed to send message" = "Failed to send message";
+"Please try again" = "Please try again";
 
 // Chat Management
-"clearChat" = "Clear History";
-"blockUser" = "Block User";
-"clearChatConfirmation" = "Clear chat?";
-"clearChatWarning" = "Are you sure you want to clear chat? This action is undoable.";
-"yesClear" = "Yes, clear";
-"blockUserConfirmation" = "Block User?";
-"blockConfirmation" = "Are you sure you want to Block";
+"Clear History" = "Clear History";
+"Block User" = "Block User";
+"Clear chat?" = "Clear chat?";
+"Are you sure you want to clear chat? This action is undoable." = "Are you sure you want to clear chat? This action is undoable.";
+"Yes, clear" = "Yes, clear";
+"Block User?" = "Block User?";
+"Are you sure you want to Block" = "Are you sure you want to Block";
 
 // Chat Attachment
-"camera" = "Camera";
-"gallery" = "Gallery";
-"document" = "Document";
-"location" = "Location";
-"contact" = "Contact";
-"sticker" = "Sticker";
+"Camera" = "Camera";
+"Gallery" = "Gallery";
+"Document" = "Document";
+"Location" = "Location";
+"Contact" = "Contact";
+"Sticker" = "Sticker";
 
 // Chat Contact Info
-"viewProfile" = "View Profile";
-"mediaLinksAndDocs" = "Media, Links and Docs";
-"deleteChat" = "Delete Chat";
-"enterNameAndProfilePic" = "Enter your name and add an optional profile picture";
-"enterName" = "Enter name";
-"email" = "Email";
-"enterEmail" = "Enter email";
-"about" = "About";
-"editProfile" = "Edit Profile";
-"emailEmptyWarning" = "Email can't be empty";
-"usernameEmptyWarning" = "User name can't be empty";
-"logout" = "Logout";
-"lastSeenLabel" = "Last Seen";
-"notifications" = "Notifications";
+"View Profile" = "View Profile";
+"Media, Links and Docs" = "Media, Links and Docs";
+"Delete Chat" = "Delete Chat";
+"Enter your name and add an optional profile picture" = "Enter your name and add an optional profile picture";
+"Enter name" = "Enter name";
+"Email" = "Email";
+"Enter email" = "Enter email";
+"About" = "About";
+"Edit Profile" = "Edit Profile";
+"Email can't be empty" = "Email can't be empty";
+"User name can't be empty" = "User name can't be empty";
+"Logout" = "Logout";
+"Last Seen" = "Last Seen";
+"Notifications" = "Notifications";
 
 // Chat Reaction
-"reacted" = "Reacted";
-"toAMessage" = "to a message";
+"Reacted" = "Reacted";
+"to a message" = "to a message";

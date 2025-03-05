@@ -5,160 +5,150 @@
   Created by My Book on 18/02/25.
   
 */
-"chats" = "Çatlar";
-"newChat" = "Täze çat ";
-"tapHereForMoreInfo" = "doly maglumatlar üçin şu ýere basyň";
-"today" = "Şu gün";
-"endToEndEncryptedMessage" = "Habarlar soňuna çenli şifrlenýär. Bu çatdan 
-daşary hiç kim olary okap bilmez.";
-"typeAMessage" = "Habar ýazyň";
-"youDeletedThisMessage" = "Bu habary pozduňyz.";
-"thisMessageWasDeleted" = "Bu habar pozuldy.";
-"sendTo" = "Ibermek";
-"maxShareLimit" = "Diňe 5 çatlar bilen paýlaşyp bilersiňiz.";
-"messageForwarded" = "Habar ugradyldy";
-"readBy" = "OKALDY";
-"deliveredTo" = "UGRADYLAN";
-"read" = "Okamak";
-"delivered" = "Ugradylan";
-"messageInfo" = "Habar barada maglumatlar";
-"messageCopied" = "Habar göçürildi";
-"unblockContact" = "Habar ugratmak üçin kontakty blokdan çykaryň";
+"Chats" = "Sohbetler";
+"New Chat" = "Yeni Sohbet";
+"tap here for more info" = "Daha fazla bilgi için buraya dokunun";
+"Today" = "Bugün";
+"Messages are end to end encrypted. No one outside of this chat can read to them." = "Mesajlar uçtan uca şifrelenmiştir. Bu sohbetin dışındaki kimse onları okuyamaz.";
+"Type a message" = "Bir mesaj yaz";
+"You deleted this message." = "Bu mesajı sildiniz.";
+"This message was deleted." = "Bu mesaj silindi.";
+"Send To" = "Gönder";
+"You can only share with up to 5 chats." = "En fazla 5 sohbetle paylaşabilirsiniz.";
+"Message Forwarded" = "Mesaj İletildi";
+"READ BY" = "OKUYANLAR";
+"DELIVERED TO" = "TESLİM EDİLENLER";
+"Read" = "Okundu";
+"Delivered" = "Teslim Edildi";
+"Message Info" = "Mesaj Bilgisi";
+"Message copied" = "Mesaj kopyalandı";
+"Unblock contact to send a message" = "Mesaj göndermek için kişiyi engelden çıkarın";
 
-// General UI and Errors
-"ok" = "OK";
-"noInternetMessage" = "Internet birikmäňiz işlemeýän ýaly. Tor sazlamalaryňyzy barlaň we Wi-Fi toruna ýa-da öýjükli maglumatlara birikdirilendigiňize göz ýetiriň.";
-"call" = "Jaň etmek";
-"cancel" = "Ýatyrmak";
-"voiceCall" = "Ses jaňy";
-"videoCall" = "Wideo jaň";
-"andOthers" = ", we başgalar";
-"actionNotAllowedBlocked" = "Herekede rugsat berilmedi, ulanyjy sizi eýýäm bloklady";
-"clearAllMessages" = "Ähli habarlary arassalamak";
-"thisChat" = "bu çat";
-"emptyChatWarning" = "Bu çat boş bolar, ýöne çat sanawyňyzda galar.";
+// Genel UI ve Hatalar
+"OK" = "Tamam";
+"Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data." = "Oops! İnternet bağlantınız şu anda çalışmıyor gibi görünüyor. Lütfen ağ ayarlarınızı kontrol edin ve Wi-Fi veya mobil veriye bağlı olduğunuzdan emin olun.";
+"Call" = "Ara";
+"Cancel" = "İptal";
+"Voice Call" = "Sesli Arama";
+"Video Call" = "Görüntülü Arama";
+", and others" = ", ve diğerleri";
+"Action not allowed, the user has already blocked You" = "İşlem yapılamıyor, kullanıcı sizi engelledi";
+"Clear all messages from" = "Tüm mesajları temizle:";
+"This chat" = "Bu sohbet";
+"This chat will be empty but will remain in your chat list." = "Bu sohbet boş olacak ancak sohbet listenizde kalacaktır.";
 
-// Decline/Confirmation Actions
-"blockedUserWarning" = "Bloklanan ulanyjy indi size habar iberip bilmez.";
-"declineRequest" = "Haýyşy ret etmelimi?";
-"declinePaymentRequestWarning" = "Töleg haýyşyny ret etmek isleýäňizmi?";
-"declineRequestButton" = "Haýyşy ret etmek";
-"deleteMessage" = "Habary pozmak";
-"deleteMessageWarning" = "Bu habary hemişelik pozmak isleýäňizmi?";
-"deleteForEveryone" = "Hemmeler üçin pozmak";
-"deleteForMe" = "Meniň üçin pozmak";
-"unblock" = "Blokdan çykarmak";
-"blocked" = "Bloklandy";
-"unblocked" = "Blokdan çykaryldy";
+// Reddetme / Onaylama İşlemleri
+"Blocked user will be no longer be able to send you messages." = "Engellenen kullanıcı size artık mesaj gönderemez.";
+"Decline Request?" = "İsteği Reddet?";
+"Are you sure you want to decline payment request?" = "Ödeme isteğini reddetmek istediğinizden emin misiniz?";
+"Decline request" = "İsteği reddet";
+"Delete Message" = "Mesajı Sil";
+"Are you sure you want to permanently delete this message?" = "Bu mesajı kalıcı olarak silmek istediğinizden emin misiniz?";
+"Delete for Everyone" = "Herkes İçin Sil";
+"Delete for Me" = "Benim İçin Sil";
+"Unblock" = "Engeli Kaldır";
+"Blocked" = "Engellendi";
+"Unblocked" = "Engel Kaldırıldı";
 
-// Audio Permission
-"audioPermissionRequired" = "Ses rugsady talap edilýär";
-"microphoneAccessMessage" = "Ses ýazmak üçin mifrafonyňyz elýeter bolmaly. Sazlamalarda açyň.";
-"openSettings" = "Sazlamalary açmak";
+// Ses İzni
+"Audio Permission Required" = "Ses İzni Gerekli";
+"We need access to your microphone for recording audio. Please enable it in Settings." = "Ses kaydı yapmak için mikrofon erişimine ihtiyacımız var. Lütfen Ayarlardan etkinleştirin.";
+"Open Settings" = "Ayarları Aç";
 
-// Chat Group Strings
-"groupMemberRestriction" = "Bu topara habar iberip bilmeýaňiz, sebäbi siz indi agza däl.";
-"youBlockedUser" = "Bu ulanyjyny blokladyňyz";
-"youAreBlocked" = "Siz bloklanan";
-"youUnblockedUser" = "Bu ulanyjyny blokdan çykardyňyz";
-"youAreUnblocked" = "Siz blokdan çykaryldyňyz";
-"changedGroupTitle" = "bu toparyň adyny üýtgetdi";
-"changedGroupImage" = "bu toparyň suratyny üýtgetdi";
-"createdGroup" = "topar döretdi";
-"userLeft" = "Siz çykdyňyz";
-"updatedNotificationSetting" = "Habarnama sazlamalaryny täzelediňiz";
+// Sohbet Grubu Mesajları
+"You can't send messages to this group because you're no longer a member." = "Bu gruba mesaj gönderemezsiniz çünkü artık üye değilsiniz.";
+"You blocked this user" = "Bu kullanıcıyı engellediniz";
+"You are blocked" = "Engellendiniz";
+"You unblocked this user" = "Bu kullanıcının engelini kaldırdınız";
+"You are unblocked" = "Engeliniz kaldırıldı";
+"Changed this group title" = "Grup başlığını değiştirdi";
+"Changed this group image" = "Grup görselini değiştirdi";
+"Created group" = "Grup oluşturuldu";
+"You has left" = "Gruptan ayrıldınız";
+"You updated notifications setting" = "Bildirim ayarlarını güncellediniz";
 
-// Message Requests
-"messageRequestInfo" = "Kabul etseňiz, ikiňizem habarlary okanyňyz ýaly maglumatlary görip bilersiňiz.";
-"acceptMessageRequest" = "Habar ibermek haýyşyny Kabul etmek";
-"reject" = "Ret etmek";
-"accept" = "Kabul etmek";
-"openChatMessage" = "Kim ýazýany barada goşmaça maglumat almak üçin çady açyň. Kabul etýänçäňiz, siziň görendigiňizi bilmezler.";
-"noOtherChatsFound" = "Başga çatlar tapylmady!";
-"newBroadcast" = "Täze ýaýlym";
-"newGroup" = "Täze topar";
-"enterGroupName" = "Toparyň adyny giriziň.";
-"conversationCreated" = "Söhbetdeşlik döredildi"
+// Mesaj İstekleri
+"If you accept, you both can see information such as when you’ve read messages." = "Kabul ederseniz, her iki taraf da mesajları ne zaman okuduğunuzu görebilir.";
+"Accept message request from" = "Şu kişiden gelen mesaj isteğini kabul et:";
+"Reject" = "Reddet";
+"Accept" = "Kabul Et";
+"Open a chat to get more info about who’s messaging you. They won’t know that you’ve seen it until you accept." = "Size mesaj gönderen kişi hakkında daha fazla bilgi almak için sohbeti açın. Kabul edene kadar mesajı gördüğünüz bilinmeyecek.";
+"No other chats found!" = "Başka sohbet bulunamadı!";
+"New Broadcast" = "Yeni Yayın";
+"New Group" = "Yeni Grup";
+"Enter Group Name." = "Grup Adı Girin.";
+"Conversation created" = "Sohbet oluşturuldu";
 
-// Chat Location
-"shareLocation" = "Lokasiýany paýlaşmak";
-"useMyCurrentLocation" = "Häzirki lokasiýany ulanmak";
-"useThisLocation" = "Bu lokasiýany ulanmak";
-"openInMaps" = "Kartada açmak";
-"sendLocation" = "Lokasiýany ibermek";
-"permissionDenied" = "Rugsat ret edildi";
-"enablePermissionMessage" = "Programma sazlamalarynda rugsady açyň";
-"goToSettings" = "Sazlamalara geçmek";
-"sendCurrentLocation" = "Häzirki lokasiýaňyzy ibermek";
-"accurateTo5Meters" = "5 metre çenli takyk";
-"nearbyPlaces" = "TÖWEREGINDÄKI ÝERLER";
-"openInGoogleMaps" = "Google Map-da açmak";
+// Konum Paylaşımı
+"Share Location" = "Konum Paylaş";
+"Use my current location" = "Mevcut konumumu kullan";
+"Use this location" = "Bu konumu kullan";
+"Open in Maps" = "Haritalarda Aç";
+"Send Location" = "Konum Gönder";
+"Permission Denied" = "İzin Reddedildi";
+"Please Enable Permission in App Settings" = "Lütfen uygulama ayarlarından izni etkinleştirin";
+"Go to Settings" = "Ayarları Aç";
+"Send your current location" = "Mevcut konumunu gönder";
+"Accurate to 5 meters" = "5 metre hassasiyetinde";
+"NEARBY PLACES" = "YAKIN YERLER";
+"Open in Google Map" = "Google Haritalar'da Aç";
 
-// Chat Group View
-"writeGroupName" = "Toparyňyzyň adyny ýazyň";
-"editGroup" = "Topary üýtgetmek";
-"remove" = "Aýyrmak";
-"groupNameEmptyWarning" = "Toparyň ady boş bolup bilmez";
-"makeGroupAdmin" = "Toparyň Administratory etmek";
-"dismissAsAdmin" = "Administrator wezipesinden aýyrmak";
-"searchMembers" = "Agzalary gözlemek";
-"removeFromGroup" = "Topardan aýyrmak";
+// Sohbet Grubu Yönetimi
+"Write your group name" = "Grup adınızı yazın";
+"Edit Group" = "Grubu Düzenle";
+"Remove" = "Kaldır";
+"Group name can't be empty" = "Grup adı boş olamaz";
+"Make Group Admin" = "Grup Yöneticisi Yap";
+"Dismiss as Admin" = "Yöneticilikten Çıkar";
+"Search members" = "Üyeleri Ara";
+"Remove from Group" = "Gruptan Çıkar";
 
-// Chat Interface Actions
-"forward" = "Ugratmak";
-"reply" = "Jogap bermek";
-"copy" = "Göçürmek";
-"edit" = "Üýtgetmek";
-"info" = "Info";
-"delete" = "Pozmak";
-"block" = "Blokirlemek";
+// Sohbet Arayüzü İşlemleri
+"Forward" = "Yönlendir";
+"Reply" = "Yanıtla";
+"Copy" = "Kopyala";
+"Edit" = "Düzenle";
+"Info" = "Bilgi";
+"Delete" = "Sil";
+"Block" = "Engelle";
 
-// Chat Status
-"online" = "onlaýn";
-"offline" = "Oflaýn";
-"typing" = "ýazýar...";
-"isTyping" = "ýazýar...";
-"lastSeen" = "Soňky gezek";
+// Sohbet Durumu
+"Online" = "Çevrimiçi";
+"Offline" = "Çevrimdışı";
+"Typing..." = "Yazıyor...";
+"is typing..." = "yazıyor...";
+"Last seen" = "Son görülme";
 
-// Error Messages
-"error" = "Ýalňyşlyk";
-"noInternetConnection" = "Internet birikmesi ýok";
-"failedToSendMessage" = "Habary iberip bolmady";
-"pleaseTryAgain" = "Gaýtadan synanyşyň";
+// Hata Mesajları
+"Error" = "Hata";
+"No internet connection" = "İnternet bağlantısı yok";
+"Failed to send message" = "Mesaj gönderme başarısız";
+"Please try again" = "Lütfen tekrar deneyin";
 
-// Chat Management
-"clearChat" = "Taryhy arassalamak";
-"blockUser" = "Ulanyjyny blokirlemek";
-"clearChatConfirmation" = "Çady arassalamalymy?";
-"clearChatWarning" = "Çady arassalamak isleýäňizmi? Herekedi yzyna gaýtaryp bolmaz.";
-"yesClear" = "Hawa, arassala";
-"blockUserConfirmation" = "Ulanyjyny blokirlemelimi?";
-"blockConfirmation" = "Blokirlemek isleýäňizmi?";
+// Sohbet Yönetimi
+"Clear History" = "Geçmişi Temizle";
+"Block User" = "Kullanıcıyı Engelle";
+"Clear chat?" = "Sohbeti temizle?";
+"Are you sure you want to clear chat? This action is undoable." = "Sohbeti temizlemek istediğinizden emin misiniz? Bu işlem geri alınamaz.";
+"Yes, clear" = "Evet, temizle";
+"Block User?" = "Kullanıcıyı Engelle?";
+"Are you sure you want to Block" = "Engellemek istediğinize emin misiniz?";
 
-// Chat Attachment
-"camera" = "Kamera";
-"gallery" = "Galereýa";
-"document" = "Resminama";
-"location" = "Lokasiýa";
-"contact" = "Kontakt";
-"sticker" = "Stiker";
+// Sohbet Ekleri
+"Camera" = "Kamera";
+"Gallery" = "Galeri";
+"Document" = "Belge";
+"Location" = "Konum";
+"Contact" = "Kişi";
+"Sticker" = "Çıkartma";
 
-// Chat Contact Info
-"viewProfile" = "Profili görmek";
-"mediaLinksAndDocs" = "Media, Salgylar we Resminamalar";
-"deleteChat" = "Çady pozmak";
-"enterNameAndProfilePic" = "Adyňyzy giriziň we islege görä profil suratyny goşuň";
-"enterName" = "Adyňyzy giriziň";
-"email" = "Elektron poçta";
-"enterEmail" = "Elektron poçtaňyzy giriziň";
-"about" = "Goşmaça maglumat";
-"editProfile" = "Profili üýtgetmek";
-"emailEmptyWarning" = "Elektron poçta boş bolup bilmez";
-"usernameEmptyWarning" = "Ulanyjy ady boş bolup bilmez";
-"logout" = "Çykmak";
-"lastSeenLabel" = "Soňky gezek";
-"notifications" = "Habarnamalar";
+// Kullanıcı Bilgileri
+"View Profile" = "Profili Görüntüle";
+"Media, Links and Docs" = "Medya, Bağlantılar ve Belgeler";
+"Delete Chat" = "Sohbeti Sil";
+"Enter name" = "Adınızı girin";
+"Logout" = "Çıkış Yap";
 
-// Chat Reaction
-"reacted" = "reaksiýa berdi";
-"toAMessage" = "Habaryňyza";
+// Sohbet Tepkileri
+"Reacted" = "Tepki Verdi";
+"to a message" = "mesaja";

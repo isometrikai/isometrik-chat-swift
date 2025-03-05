@@ -10,24 +10,27 @@ import SwiftUI
 extension String {
     
     func localized() -> String {
-        
-        if let bundlePath = Bundle.module.path(forResource: "Localizable", ofType: "strings", inDirectory: nil) {
-            print("Localization file found at: \(bundlePath)")
-            let url = URL(fileURLWithPath: bundlePath)
-            if let content = try? String(contentsOf: url) {
-                print("Localization file content:\n\(content)")
-                let dict = parseLocalizableStrings(content: content)
-                return dict[self] ?? self
-            } else {
-                print("Could not read localization file.")
-                return self
-            }
-        } else {
+        let language = Utility.getLanguage().Code
+//        let language = ISMChatSdkUI.getInstance().preferredLanguage
+        guard let bundlePath = Bundle.module.path(forResource: language, ofType: "lproj"),
+              let localizationFilePath = Bundle(path: bundlePath)?.path(forResource: "Localizable", ofType: "strings") else {
             print("Localization file NOT found!")
             return self
         }
         
+        print("Localization file found at: \(localizationFilePath)")
+        
+        do {
+            let content = try String(contentsOfFile: localizationFilePath, encoding: .utf8)
+            print("Localization file content:\n\(content)")
+            let dict = parseLocalizableStrings(content: content)
+            return dict[self] ?? self
+        } catch {
+            print("Could not read localization file: \(error)")
+            return self
+        }
     }
+
     
     func parseLocalizableStrings(content: String) -> [String: String] {
         var localizedDict = [String: String]()

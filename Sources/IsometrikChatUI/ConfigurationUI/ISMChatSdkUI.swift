@@ -21,12 +21,15 @@ public class ISMChatSdkUI{
     
     public static var sharedInstance : ISMChatSdkUI!
     
+    public var preferredLanguage: String = Locale.current.language.languageCode?.identifier ?? "en"
+    
     public static func getInstance()-> ISMChatSdkUI{
         if sharedInstance == nil {
             sharedInstance = ISMChatSdkUI()
         }
         return sharedInstance
     }
+   
     
     public func getChatProperties() -> ISMChatPageProperties {
         if chatUIProperties == nil {
@@ -68,5 +71,9 @@ public class ISMChatSdkUI{
         
        //Appearance
         appAppearance = ISMChatAppearance(appearance: appearance ?? ISMAppearance())
+    }
+    
+    public func configureLocalization(languageCode: String) {
+        preferredLanguage = languageCode
     }
 }
