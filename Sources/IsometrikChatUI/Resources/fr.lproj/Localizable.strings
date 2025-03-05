@@ -5,157 +5,159 @@
 //  Created by My Book on 24/12/24.
 //
 
-// General Chat Strings
-"chats" = "Discussions";
-"newChat" = "Nouvelle discussion";
-"tapHereForMoreInfo" = "tapez ici pour plus d'infos";
-"today" = "Aujourd'hui";
-"endToEndEncryptedMessage" = "Les messages sont cryptés de bout en bout. Personne à l'extérieur de cette discussion ne peut les lire.";
-"typeAMessage" = "Tapez un message";
-"youDeletedThisMessage" = "Vous avez supprimé ce message.";
-"thisMessageWasDeleted" = "Ce message a été supprimé.";
-"sendTo" = "Envoyer à";
-"maxShareLimit" = "Vous ne pouvez partager qu'avec jusqu'à 5 discussions.";
-"messageForwarded" = "Message transféré";
-"readBy" = "LU PAR";
-"deliveredTo" = "LIVRÉ À";
-"read" = "Lu";
-"delivered" = "Livré";
-"messageInfo" = "Infos du message";
-"messageCopied" = "Message copié";
-"unblockContact" = "Débloquer le contact pour envoyer un message";
+"Chats" = "Chats";
+"New Chat" = "Nouvelle discussion";
+"tap here for more info" = "appuyez ici pour plus d'informations";
+"Today" = "Aujourd'hui";
+"Messages are end to end encrypted. No one outside of this chat can read to them." = "Les messages sont chiffrés de bout en bout. Personne en dehors de cette discussion ne peut les lire.";
+"Type a message" = "Tapez un message";
+"You deleted this message." = "Vous avez supprimé ce message.";
+"This message was deleted." = "Ce message a été supprimé.";
+"Send To" = "Envoyer à";
+"You can only share with up to 5 chats." = "Vous ne pouvez partager qu’avec jusqu'à 5 discussions.";
+"Message Forwarded" = "Message transféré";
+"READ BY" = "LU PAR";
+"DELIVERED TO" = "LIVRÉ À";
+"Read" = "Lu";
+"Delivered" = "Livré";
+"Message Info" = "Infos du message";
+"Message copied" = "Message copié";
+"Unblock contact to send a message" = "Débloquez le contact pour envoyer un message";
 
-// General UI and Errors
-"ok" = "OK";
-"noInternetMessage" = "Oups ! Il semble que votre connexion Internet ne fonctionne pas pour le moment. Veuillez vérifier vos paramètres réseau et assurez-vous que vous êtes connecté à un réseau Wi-Fi ou aux données mobiles.";
-"call" = "Appel";
-"cancel" = "Annuler";
-"voiceCall" = "Appel vocal";
-"videoCall" = "Appel vidéo";
-"andOthers" = ", et d'autres";
-"actionNotAllowedBlocked" = "Action non autorisée, l'utilisateur vous a déjà bloqué";
-"clearAllMessages" = "Effacer tous les messages de";
-"thisChat" = "cette discussion";
-"emptyChatWarning" = "Cette discussion sera vide mais restera dans votre liste de discussions.";
+// Interface générale et erreurs
+"OK" = "OK";
+"Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data." = "Oups ! Il semble que votre connexion Internet ne fonctionne pas actuellement. Vérifiez vos paramètres réseau et assurez-vous d'être connecté à un réseau Wi-Fi ou à des données mobiles.";
+"Call" = "Appel";
+"Cancel" = "Annuler";
+"Voice Call" = "Appel vocal";
+"Video Call" = "Appel vidéo";
+", and others" = ", et d'autres";
+"Action not allowed, the user has already blocked You" = "Action non autorisée, l'utilisateur vous a déjà bloqué";
+"Clear all messages from" = "Effacer tous les messages de";
+"This chat" = "cette discussion";
+"This chat will be empty but will remain in your chat list." = "Cette discussion sera vide mais restera dans votre liste.";
 
-// Decline/Confirmation Actions
-"blockedUserWarning" = "L'utilisateur bloqué ne pourra plus vous envoyer de messages.";
-"declineRequest" = "Refuser la demande ?";
-"declinePaymentRequestWarning" = "Êtes-vous sûr de vouloir refuser la demande de paiement ?";
-"declineRequestButton" = "Refuser la demande";
-"deleteMessage" = "Supprimer le message";
-"deleteMessageWarning" = "Êtes-vous sûr de vouloir supprimer ce message de façon permanente ?";
-"deleteForEveryone" = "Supprimer pour tout le monde";
-"deleteForMe" = "Supprimer pour moi";
-"unblock" = "Débloquer";
+// Actions de refus et de confirmation
+"Blocked user will be no longer be able to send you messages." = "L'utilisateur bloqué ne pourra plus vous envoyer de messages.";
+"Decline Request?" = "Refuser la demande ?";
+"Are you sure you want to decline payment request?" = "Êtes-vous sûr de vouloir refuser la demande de paiement ?";
+"Decline request" = "Refuser la demande";
+"Delete Message" = "Supprimer le message";
+"Are you sure you want to permanently delete this message?" = "Êtes-vous sûr de vouloir supprimer définitivement ce message ?";
+"Delete for Everyone" = "Supprimer pour tout le monde";
+"Delete for Me" = "Supprimer pour moi";
+"Unblock" = "Débloquer";
+"Blocked" = "Bloqué";
+"Unblocked" = "Débloqué";
 
-// Audio Permission
-"audioPermissionRequired" = "Permission audio requise";
-"microphoneAccessMessage" = "Nous avons besoin d'accéder à votre microphone pour enregistrer de l'audio. Veuillez l'activer dans les paramètres.";
-"openSettings" = "Ouvrir les paramètres";
+// Autorisation audio
+"Audio Permission Required" = "Autorisation audio requise";
+"We need access to your microphone for recording audio. Please enable it in Settings." = "Nous avons besoin d'accéder à votre microphone pour enregistrer l’audio. Veuillez l'activer dans les paramètres.";
+"Open Settings" = "Ouvrir les paramètres";
 
-// Chat Group Strings
-"groupMemberRestriction" = "Vous ne pouvez pas envoyer de messages à ce groupe car vous n'êtes plus membre.";
-"youBlockedUser" = "Vous avez bloqué cet utilisateur";
-"youAreBlocked" = "Vous êtes bloqué";
-"youUnblockedUser" = "Vous avez débloqué cet utilisateur";
-"youAreUnblocked" = "Vous êtes débloqué";
-"changedGroupTitle" = "a changé le titre de ce groupe";
-"changedGroupImage" = "a changé l'image du groupe";
-"createdGroup" = "a créé un groupe";
-"userLeft" = "Vous avez quitté";
-"updatedNotificationSetting" = "Vous avez mis à jour les paramètres de notification";
+// Discussions de groupe
+"You can't send messages to this group because you're no longer a member." = "Vous ne pouvez pas envoyer de messages à ce groupe car vous n'en êtes plus membre.";
+"You blocked this user" = "Vous avez bloqué cet utilisateur";
+"You are blocked" = "Vous êtes bloqué";
+"You unblocked this user" = "Vous avez débloqué cet utilisateur";
+"You are unblocked" = "Vous êtes débloqué";
+"Changed this group title" = "A changé le titre du groupe";
+"Changed this group image" = "A changé l’image du groupe";
+"Created group" = "Groupe créé";
+"You has left" = "Vous avez quitté";
+"You updated notifications setting" = "Vous avez mis à jour les paramètres de notification";
 
-// Message Requests
-"messageRequestInfo" = "Si vous acceptez, vous pourrez voir des informations telles que la date à laquelle vous avez lu les messages.";
-"acceptMessageRequest" = "Accepter la demande de message de";
-"reject" = "Rejeter";
-"accept" = "Accepter";
-"openChatMessage" = "Ouvrir une discussion pour obtenir plus d'infos sur la personne qui vous envoie un message. Ils ne sauront pas que vous l'avez vue jusqu'à ce que vous acceptiez.";
-"noOtherChatsFound" = "Aucune autre discussion trouvée !";
-"newBroadcast" = "Nouvelle diffusion";
-"newGroup" = "Nouveau groupe";
-"enterGroupName" = "Entrez le nom du groupe.";
+// Demandes de messages
+"If you accept, you both can see information such as when you’ve read messages." = "Si vous acceptez, vous pourrez voir des informations comme la lecture des messages.";
+"Accept message request from" = "Accepter la demande de message de";
+"Reject" = "Rejeter";
+"Accept" = "Accepter";
+"Open a chat to get more info about who’s messaging you. They won’t know that you’ve seen it until you accept." = "Ouvrez une discussion pour en savoir plus sur qui vous envoie un message. Ils ne sauront pas que vous l'avez vu avant d'accepter.";
+"No other chats found!" = "Aucune autre discussion trouvée !";
+"New Broadcast" = "Nouvelle diffusion";
+"New Group" = "Nouveau groupe";
+"Enter Group Name." = "Entrez le nom du groupe.";
+"Conversation created" = "Conversation créée";
 
-// Chat Location
-"shareLocation" = "Partager l'emplacement";
-"useMyCurrentLocation" = "Utiliser ma position actuelle";
-"useThisLocation" = "Utiliser cet emplacement";
-"openInMaps" = "Ouvrir dans Maps";
-"sendLocation" = "Envoyer l'emplacement";
-"permissionDenied" = "Permission refusée";
-"enablePermissionMessage" = "Veuillez activer la permission dans les paramètres de l'application";
-"goToSettings" = "Aller aux paramètres";
-"sendCurrentLocation" = "Envoyer votre position actuelle";
-"accurateTo5Meters" = "Précis à 5 mètres";
-"nearbyPlaces" = "LIEUX À PROXIMITÉ";
-"openInGoogleMaps" = "Ouvrir dans Google Maps";
+// Localisation
+"Share Location" = "Partager la localisation";
+"Use my current location" = "Utiliser ma localisation actuelle";
+"Use this location" = "Utiliser cet emplacement";
+"Open in Maps" = "Ouvrir dans Maps";
+"Send Location" = "Envoyer la localisation";
+"Permission Denied" = "Permission refusée";
+"Please Enable Permission in App Settings" = "Veuillez activer la permission dans les paramètres de l'application";
+"Go to Settings" = "Aller aux paramètres";
+"Send your current location" = "Envoyer votre position actuelle";
+"Accurate to 5 meters" = "Précis à 5 mètres";
+"NEARBY PLACES" = "LIEUX À PROXIMITÉ";
+"Open in Google Map" = "Ouvrir dans Google Maps";
 
-// Chat Group View
-"writeGroupName" = "Écrivez le nom de votre groupe";
-"editGroup" = "Modifier le groupe";
-"remove" = "Supprimer";
-"groupNameEmptyWarning" = "Le nom du groupe ne peut pas être vide";
-"makeGroupAdmin" = "Faire administrateur du groupe";
-"dismissAsAdmin" = "Retirer en tant qu'administrateur";
-"searchMembers" = "Rechercher des membres";
-"removeFromGroup" = "Retirer du groupe";
+// Gestion des discussions de groupe
+"Write your group name" = "Écrivez le nom de votre groupe";
+"Edit Group" = "Modifier le groupe";
+"Remove" = "Supprimer";
+"Group name can't be empty" = "Le nom du groupe ne peut pas être vide";
+"Make Group Admin" = "Nommer administrateur";
+"Dismiss as Admin" = "Rétrograder en membre";
+"Search members" = "Rechercher des membres";
+"Remove from Group" = "Retirer du groupe";
 
-// Chat Interface Actions
-"forward" = "Transférer";
-"reply" = "Répondre";
-"copy" = "Copier";
-"edit" = "Modifier";
-"info" = "Info";
-"delete" = "Supprimer";
-"block" = "Bloquer";
+// Actions de messagerie
+"Forward" = "Transférer";
+"Reply" = "Répondre";
+"Copy" = "Copier";
+"Edit" = "Modifier";
+"Info" = "Infos";
+"Delete" = "Supprimer";
+"Block" = "Bloquer";
 
-// Chat Status
-"online" = "en ligne";
-"offline" = "Hors ligne";
-"typing" = "tape...";
-"isTyping" = "est en train de taper...";
-"lastSeen" = "Vu pour la dernière fois";
+// Statut de discussion
+"Online" = "En ligne";
+"Offline" = "Hors ligne";
+"Typing..." = "En train d'écrire...";
+"is typing..." = "est en train d’écrire...";
+"Last seen" = "Vu pour la dernière fois";
 
-// Error Messages
-"error" = "Erreur";
-"noInternetConnection" = "Pas de connexion Internet";
-"failedToSendMessage" = "Échec de l'envoi du message";
-"pleaseTryAgain" = "Veuillez réessayer";
+// Messages d'erreur
+"Error" = "Erreur";
+"No internet connection" = "Pas de connexion Internet";
+"Failed to send message" = "Échec de l'envoi du message";
+"Please try again" = "Veuillez réessayer";
 
-// Chat Management
-"clearChat" = "Effacer l'historique";
-"blockUser" = "Bloquer l'utilisateur";
-"clearChatConfirmation" = "Effacer la discussion ?";
-"clearChatWarning" = "Êtes-vous sûr de vouloir effacer la discussion ? Cette action est irréversible.";
-"yesClear" = "Oui, effacer";
-"blockUserConfirmation" = "Bloquer l'utilisateur ?";
-"blockConfirmation" = "Êtes-vous sûr de vouloir bloquer";
+// Gestion des discussions
+"Clear History" = "Effacer l’historique";
+"Block User" = "Bloquer l'utilisateur";
+"Clear chat?" = "Effacer la discussion ?";
+"Are you sure you want to clear chat? This action is undoable." = "Êtes-vous sûr de vouloir effacer cette discussion ? Cette action est irréversible.";
+"Yes, clear" = "Oui, effacer";
+"Block User?" = "Bloquer l’utilisateur ?";
+"Are you sure you want to Block" = "Êtes-vous sûr de vouloir bloquer";
 
-// Chat Attachment
-"camera" = "Caméra";
-"gallery" = "Galerie";
-"document" = "Document";
-"location" = "Emplacement";
-"contact" = "Contact";
-"sticker" = "Autocollant";
+// Pièces jointes
+"Camera" = "Caméra";
+"Gallery" = "Galerie";
+"Document" = "Document";
+"Location" = "Localisation";
+"Contact" = "Contact";
+"Sticker" = "Autocollant";
 
-// Chat Contact Info
-"viewProfile" = "Voir le profil";
-"mediaLinksAndDocs" = "Médias, liens et documents";
-"deleteChat" = "Supprimer la discussion";
-"enterNameAndProfilePic" = "Entrez votre nom et ajoutez une photo de profil optionnelle";
-"enterName" = "Entrez le nom";
-"email" = "Email";
-"enterEmail" = "Entrez l'email";
-"about" = "À propos";
-"editProfile" = "Modifier le profil";
-"emailEmptyWarning" = "L'email ne peut pas être vide";
-"usernameEmptyWarning" = "Le nom d'utilisateur ne peut pas être vide";
-"logout" = "Se déconnecter";
-"lastSeenLabel" = "Vu pour la dernière fois";
-"notifications" = "Notifications";
+// Informations de contact
+"View Profile" = "Voir le profil";
+"Media, Links and Docs" = "Médias, liens et documents";
+"Delete Chat" = "Supprimer la discussion";
+"Enter your name and add an optional profile picture" = "Entrez votre nom et ajoutez une photo de profil facultative";
+"Enter name" = "Entrez votre nom";
+"Email" = "E-mail";
+"Enter email" = "Entrez l’e-mail";
+"About" = "À propos";
+"Edit Profile" = "Modifier le profil";
+"Email can't be empty" = "L’e-mail ne peut pas être vide";
+"User name can't be empty" = "Le nom d’utilisateur ne peut pas être vide";
+"Logout" = "Déconnexion";
+"Last Seen" = "Vu pour la dernière fois";
+"Notifications" = "Notifications";
 
-// Chat Reaction
-"reacted" = "A réagi";
-"toAMessage" = "à un message";
+// Réactions
+"Reacted" = "A réagi";
+"to a message" = "à un message";

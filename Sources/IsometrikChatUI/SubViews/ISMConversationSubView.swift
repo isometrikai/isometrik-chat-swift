@@ -93,7 +93,7 @@ struct ISMConversationSubView: View {
     func getMessageText() -> some View {
         HStack {
             if chat.typing == true{
-                Text("Typing...")
+                Text("Typing...".localized())
                     .foregroundColor(appearance.colorPalette.chatListUserMessage)
                     .font(appearance.fonts.chatListUserMessage)
                 
@@ -118,7 +118,7 @@ struct ISMConversationSubView: View {
                             .tint(appearance.colorPalette.chatListUserMessage)
                             .foregroundColor(appearance.colorPalette.chatListUserMessage)
                         
-                        Text(chat.lastMessageDetails?.senderId == userData?.userId ? "You deleted this message." : "This message was deleted")
+                        Text(chat.lastMessageDetails?.senderId == userData?.userId ? "You deleted this message.".localized() : "This message was deleted".localized())
                             .foregroundColor(appearance.colorPalette.chatListUserMessage)
                             .font(appearance.fonts.chatListUserMessage)
                             .padding(.trailing, 40)
@@ -128,21 +128,21 @@ struct ISMConversationSubView: View {
                     if let customType = chat.lastMessageDetails?.customType {
                         switch customType {
                         case ISMChatMediaType.Image.value:
-                            getLabel(text: "Image", image: "camera.fill")
+                            getLabel(text: "Image".localized(), image: "camera.fill")
                         case ISMChatMediaType.Video.value:
-                            getLabel(text: "Video", image: "video.fill")
+                            getLabel(text: "Video".localized(), image: "video.fill")
                         case ISMChatMediaType.File.value:
-                            getLabel(text: "Document", image: "doc.fill")
+                            getLabel(text: "Document".localized(), image: "doc.fill")
                         case ISMChatMediaType.Voice.value:
-                            getLabel(text: "Audio", image: "mic.fill")
+                            getLabel(text: "Audio".localized(), image: "mic.fill")
                         case ISMChatMediaType.Location.value:
-                            getLabel(text: "Location", image: "location.fill")
+                            getLabel(text: "Location".localized(), image: "location.fill")
                         case ISMChatMediaType.Contact.value:
-                            getLabel(text: "Contact", image: "person.crop.circle.fill")
+                            getLabel(text: "Contact".localized(), image: "person.crop.circle.fill")
                         case ISMChatMediaType.sticker.value:
-                            getLabel(text: "Sticker", image: "",isSticker: true)
+                            getLabel(text: "Sticker".localized(), image: "",isSticker: true)
                         case ISMChatMediaType.gif.value:
-                            getLabel(text: "Gif", image: "",isSticker: true)
+                            getLabel(text: "Gif".localized(), image: "",isSticker: true)
                         case ISMChatMediaType.AudioCall.value:
                             AudioCallUI()
                         case ISMChatMediaType.VideoCall.value:
@@ -151,9 +151,9 @@ struct ISMConversationSubView: View {
                             PaymentRequestUI()
                         case ISMChatMediaType.DineInInvite.value:
                             if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
-                                getLabel(hideImage: true,text: "You have sent an invitation", image: "")
+                                getLabel(hideImage: true,text: "You have sent an invitation".localized(), image: "")
                             }else{
-                                getLabel(hideImage: true,text: "Sent you an invitation", image: "")
+                                getLabel(hideImage: true,text: "Sent you an invitation".localized(), image: "")
                             }
                         default:
                             actionLabels()
@@ -279,7 +279,7 @@ struct ISMConversationSubView: View {
                     if chat.lastMessageDetails?.missedByMembers.count == 0{
                         callKitText(text1: "", text2: "Voice call", color: Color.green, outgoing: false, missedCall: false, addDot: false, image: "phone.arrow.up.right.fill")
                     }else{
-                        callKitText(text1: "", text2: "Missed voice call", color: Color.green, outgoing: false, missedCall: true, addDot: false, image: "phone.arrow.down.left.fill")
+                        callKitText(text1: "", text2: "Missed voice call".localized(), color: Color.green, outgoing: false, missedCall: true, addDot: false, image: "phone.arrow.down.left.fill")
                     }
                 }
             }
@@ -290,18 +290,18 @@ struct ISMConversationSubView: View {
     func actionLabels() -> some View{
         HStack {
             if chat.lastMessageDetails?.action == ISMChatActionType.conversationCreated.value{
-                getLabel(text: "Conversation created", image: "person.fill")
+                getLabel(text: "Conversation created".localized(), image: "person.fill")
             }else if chat.lastMessageDetails?.action == ISMChatActionType.userBlock.value || chat.lastMessageDetails?.action == ISMChatActionType.userBlockConversation.value{
                 if ISMChatSdkUI.getInstance().getChatProperties().dontShowBlockedStatusinConversationList == true{
                     Text("")
                 }else{
-                    getLabel(text: "Blocked", image: "circle.slash")
+                    getLabel(text: "Blocked".localized(), image: "circle.slash")
                 }
             }else if chat.lastMessageDetails?.action == ISMChatActionType.userUnblock.value || chat.lastMessageDetails?.action == ISMChatActionType.userUnblockConversation.value{
                 if ISMChatSdkUI.getInstance().getChatProperties().dontShowBlockedStatusinConversationList == true{
                     Text("")
                 }else{
-                    getLabel(text: "Unblocked", image: "circle.slash")
+                    getLabel(text: "Unblocked".localized(), image: "circle.slash")
                 }
             }else if chat.lastMessageDetails?.action == ISMChatActionType.reactionAdd.value{
                 let emoji = ISMChatHelper.getEmoji(valueString: chat.lastMessageDetails?.reactionType ?? "")
@@ -323,36 +323,36 @@ struct ISMConversationSubView: View {
             }
             else if chat.lastMessageDetails?.action == ISMChatActionType.addAdmin.value{
                 if chat.lastMessageDetails?.memberId == userData?.userId{
-                    getLabel(hideImage: true,text: "Added you as an admin", image: "",isReaction : true)
+                    getLabel(hideImage: true,text: "Added you as an admin".localized(), image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: "Added \(chat.lastMessageDetails?.memberName ?? "") as an admin", image: "",isReaction : true)
                 }
             }else if chat.lastMessageDetails?.action == ISMChatActionType.removeAdmin.value{
                 if chat.lastMessageDetails?.memberId == userData?.userId{
-                    getLabel(hideImage: true,text: "Removed you as an admin", image: "",isReaction : true)
+                    getLabel(hideImage: true,text: "Removed you as an admin".localized(), image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: "Removed \(chat.lastMessageDetails?.memberName ?? "") as an admin", image: "",isReaction : true)
                 }
             }else if chat.lastMessageDetails?.action == ISMChatActionType.membersRemove.value{
                 if chat.lastMessageDetails?.members.first?.memberId == userData?.userId{
-                    getLabel(hideImage: true,text: "Removed you", image: "",isReaction : true)
+                    getLabel(hideImage: true,text: "Removed you".localized(), image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: "Removed \(chat.lastMessageDetails?.members.first?.memberName?.capitalizingFirstLetter() ?? "")", image: "",isReaction : true)
                 }
             }else if chat.lastMessageDetails?.action == ISMChatActionType.membersAdd.value{
                 if chat.lastMessageDetails?.members.first?.memberId == userData?.userId{
-                    getLabel(hideImage: true,text: "Added you", image: "",isReaction : true)
+                    getLabel(hideImage: true,text: "Added you".localized(), image: "",isReaction : true)
                 }else{
                     getLabel(hideImage: true,text: "Added \(chat.lastMessageDetails?.members.first?.memberName ?? "")", image: "",isReaction : true)
                 }
             }else if chat.lastMessageDetails?.action == ISMChatActionType.conversationTitleUpdated.value{
-                getLabel(hideImage: true,text: "Changed this group title", image: "",isReaction : true)
+                getLabel(hideImage: true,text: "Changed this group title".localized(), image: "",isReaction : true)
             }
             else if chat.lastMessageDetails?.action == ISMChatActionType.clearConversation.value{
                 getLabel(hideImage: true,text: "", image: "",isReaction : true)
             }
             else if chat.lastMessageDetails?.action == ISMChatActionType.conversationImageUpdated.value{
-                getLabel(hideImage: true,text: "Changed this group image", image: "",isReaction : true)
+                getLabel(hideImage: true,text: "Changed this group image".localized(), image: "",isReaction : true)
             }else if chat.lastMessageDetails?.action == ISMChatActionType.messageDetailsUpdated.value{
                 if let body = chat.lastMessageDetails?.body {
                     getLabel(hideImage: true, text: body, image: "")

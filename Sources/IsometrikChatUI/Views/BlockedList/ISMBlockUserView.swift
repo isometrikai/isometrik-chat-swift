@@ -83,7 +83,7 @@ public struct ISMBlockUserView: View {
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         VStack {
-                            Text("Blocked")
+                            Text("Blocked".localized())
                                 .font(appearance.fonts.navigationBarTitle)
                                 .foregroundColor(appearance.colorPalette.navigationBarTitle)
                         }

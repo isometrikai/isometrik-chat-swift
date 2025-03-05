@@ -5,161 +5,145 @@
   Created by My Book on 18/02/25.
   
 */
-// General Chat Strings
-"chats" = "Чаты";
-"newChat" = "Новый чат";
-"tapHereForMoreInfo" = "Нажмите здесь для получения дополнительной информации";
-"today" = "Сегодня";
-"endToEndEncryptedMessage" = "Сообщения зашифрованы сквозным шифрованием. Никто  
-за пределами этого чата не может их прочитать.";
-"typeAMessage" = "Введите сообщение";
-"youDeletedThisMessage" = "Вы удалили это сообщение.";
-"thisMessageWasDeleted" = "Это сообщение было удалено.";
-"sendTo" = "Отправить";
-"maxShareLimit" = "Вы можете поделиться только с пятью чатами.";
-"messageForwarded" = "Сообщение переслано";
-"readBy" = "ПРОЧИТАНО";
-"deliveredTo" = "ДОСТАВЛЕНО";
-"read" = "Прочитать";
-"delivered" = "Доставлено";
-"messageInfo" = "Информация о сообщении";
-"messageCopied" = "Сообщение скопировано";
-"unblockContact" = ": Разблокируйте контакт, чтобы отправить сообщение";
+"Chats" = "Чаты";
+"New Chat" = "Новый чат";
+"tap here for more info" = "нажмите здесь для получения дополнительной информации";
+"Today" = "Сегодня";
+"Messages are end to end encrypted. No one outside of this chat can read to them." = "Сообщения зашифрованы от конца до конца. Никто за пределами этого чата не может их прочитать.";
+"Type a message" = "Введите сообщение";
+"You deleted this message." = "Вы удалили это сообщение.";
+"This message was deleted." = "Это сообщение было удалено.";
+"Send To" = "Отправить";
+"You can only share with up to 5 chats." = "Вы можете поделиться не более чем с 5 чатами.";
+"Message Forwarded" = "Сообщение переслано";
+"READ BY" = "ПРОЧИТАНО";
+"DELIVERED TO" = "ДОСТАВЛЕНО";
+"Read" = "Прочитано";
+"Delivered" = "Доставлено";
+"Message Info" = "Информация о сообщении";
+"Message copied" = "Сообщение скопировано";
+"Unblock contact to send a message" = "Разблокируйте контакт, чтобы отправить сообщение";
 
 // General UI and Errors
-"ok" = "OK";
-"noInternetMessage" = "Ой! Кажется, ваше интернет-соединение в данный момент не работает. Пожалуйста, проверьте свои сетевые настройки и убедитесь, что вы подключены к Wi-Fi сети или сотовым данным.";
-"call" = "Звонить";
-"cancel" = "Отмена";
-"voiceCall" = "Голосовой вызов";
-"videoCall" = "Видеозвонок";
-"andOthers" = ", и другие";
-"actionNotAllowedBlocked" = "Действие не разрешено, пользователь уже заблокировал Вас";
-"clearAllMessages" = "Очистить все сообщения от";
-"thisChat" = "этот чат";
-"emptyChatWarning" = "Этот чат будет пустым, но останется в вашем списке чатов..";
+"OK" = "ОК";
+"Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data." = "Ой! Похоже, ваше интернет-соединение не работает. Проверьте настройки сети и убедитесь, что вы подключены к Wi-Fi или мобильному интернету.";
+"Call" = "Звонок";
+"Cancel" = "Отмена";
+"Voice Call" = "Голосовой звонок";
+"Video Call" = "Видеозвонок";
+", and others" = ", и другие";
+"Action not allowed, the user has already blocked You" = "Действие не разрешено, пользователь уже заблокировал вас";
+"Clear all messages from" = "Очистить все сообщения от";
+"This chat" = "этот чат";
+"This chat will be empty but will remain in your chat list." = "Этот чат будет пустым, но останется в вашем списке чатов.";
 
 // Decline/Confirmation Actions
-"blockedUserWarning" = "Заблокированный пользователь больше не сможет отправлять вам сообщения.";
-"declineRequest" = "Отклонить запрос?";
-"declinePaymentRequestWarning" = "Вы уверены, что хотите отклонить запрос на оплату?";
-"declineRequestButton" = "Отклонить запрос";
-"deleteMessage" = "Удалить сообщение";
-"deleteMessageWarning" = "Вы уверены, что хотите навсегда удалить это сообщение??";
-"deleteForEveryone" = "Удалить для всех";
-"deleteForMe" = "Удалить для меня";
-"unblock" = "Разблокировать";
-"blocked" = "Заблокировано";
-"unblocked" = "Разблокирован";
+"Blocked user will be no longer be able to send you messages." = "Заблокированный пользователь больше не сможет отправлять вам сообщения.";
+"Decline Request?" = "Отклонить запрос?";
+"Are you sure you want to decline payment request?" = "Вы уверены, что хотите отклонить запрос на оплату?";
+"Decline request" = "Отклонить запрос";
+"Delete Message" = "Удалить сообщение";
+"Are you sure you want to permanently delete this message?" = "Вы уверены, что хотите навсегда удалить это сообщение?";
+"Delete for Everyone" = "Удалить для всех";
+"Delete for Me" = "Удалить для меня";
+"Unblock" = "Разблокировать";
+"Blocked" = "Заблокирован";
+"Unblocked" = "Разблокирован";
 
 // Audio Permission
-"audioPermissionRequired" = "Требуется разрешение на аудио";
-"microphoneAccessMessage" = "Нам нужен доступ к вашему микрофону для записи звука. Включите его в Настройках.";
-"openSettings" = "Открыть Настройки";
+"Audio Permission Required" = "Требуется разрешение на аудио";
+"We need access to your microphone for recording audio. Please enable it in Settings." = "Нам нужен доступ к вашему микрофону для записи аудио. Пожалуйста, включите его в настройках.";
+"Open Settings" = "Открыть настройки";
 
 // Chat Group Strings
-"groupMemberRestriction" = "Вы не можете отправлять сообщения в эту группу, потому что вы больше не являетесь ее участником.";
-"youBlockedUser" = "Вы заблокировали этого пользователя";
-"youAreBlocked" = "Вы заблокированы";
-"youUnblockedUser" = "Вы разблокировали этого пользователя";
-"youAreUnblocked" = "Вы разблокированы";
-"changedGroupTitle" = "изменил(а) название этой группы";
-"changedGroupImage" = "изменил(а) изображение этой группы";
-"createdGroup" = "создал(а) группу";
-"userLeft" = "Вы вышли";
-"updatedNotificationSetting" = "Вы обновили настройки уведомлений";
+"You can't send messages to this group because you're no longer a member." = "Вы не можете отправлять сообщения в эту группу, так как больше не являетесь её участником.";
+"You blocked this user" = "Вы заблокировали этого пользователя";
+"You are blocked" = "Вы заблокированы";
+"You unblocked this user" = "Вы разблокировали этого пользователя";
+"You are unblocked" = "Вы разблокированы";
+"Changed this group title" = "Изменил название группы";
+"Changed this group image" = "Изменил изображение группы";
+"Created group" = "Создал группу";
+"You has left" = "Вы покинули группу";
+"You updated notifications setting" = "Вы обновили настройки уведомлений";
 
 // Message Requests
-"messageRequestInfo" = "Если вы согласитесь, вы оба сможете видеть такую информацию, как когда вы прочитали сообщения.";
-"acceptMessageRequest" = "Принять запрос на сообщение от";
-"reject" = "Отклонить";
-"accept" = "Принять";
-"openChatMessage" = "Откройте чат, чтобы получить больше информации о том, кто вам пишет. Они не узнают, что вы это увидели, пока вы не примете.";
-"noOtherChatsFound" = "Других чатов не найдено!";
-"newBroadcast" = "Новая Трансляция";
-"newGroup" = "Новая Группа";
-"enterGroupName" = "Введите имя группы.";
-"conversationCreated" = "Разговор создан"
+"If you accept, you both can see information such as when you’ve read messages." = "Если вы примете, вы оба сможете видеть информацию о том, когда были прочитаны сообщения.";
+"Accept message request from" = "Принять запрос на сообщение от";
+"Reject" = "Отклонить";
+"Accept" = "Принять";
+"Open a chat to get more info about who’s messaging you. They won’t know that you’ve seen it until you accept." = "Откройте чат, чтобы получить больше информации о том, кто вам пишет. Они не узнают, что вы видели сообщение, пока не примете его.";
+"No other chats found!" = "Другие чаты не найдены!";
+"New Broadcast" = "Новая трансляция";
+"New Group" = "Новая группа";
+"Enter Group Name." = "Введите название группы.";
+"Conversation created" = "Создана беседа";
 
 // Chat Location
-"shareLocation" = "Поделиться местоположением";
-"useMyCurrentLocation" = "Использовать мое текущее местоположение";
-"useThisLocation" = "Использовать это местоположение";
-"openInMaps" = "Открыть в Картах";
-"sendLocation" = "Отправить местоположение";
-"permissionDenied" = "Доступ запрещен";
-"enablePermissionMessage" = "Пожалуйста, включите разрешение в настройках приложения.";
-"goToSettings" = "Перейти в Настройки";
-"sendCurrentLocation" = "Отправить ваше текущее местоположение";
-"accurateTo5Meters" = "Точность до 5 метров";
-"nearbyPlaces" = "МЕСТА ПОБЛИЗОСТИ";
-"openInGoogleMaps" = "Открыть на карте Google";
-
-// Chat Group View
-"writeGroupName" = "Напишите название вашей группы";
-"editGroup" = "Изменить Группу";
-"remove" = "Удалить";
-"groupNameEmptyWarning" = ": Название группы не может быть пустым";
-"makeGroupAdmin" = "Сделать Администратором группы";
-"dismissAsAdmin" = "Удалить с должности Администратора";
-"searchMembers" = "Найти участников";
-"removeFromGroup" = "Удалить из Группы";
+"Share Location" = "Поделиться местоположением";
+"Use my current location" = "Использовать мое текущее местоположение";
+"Use this location" = "Использовать это местоположение";
+"Open in Maps" = "Открыть в картах";
+"Send Location" = "Отправить местоположение";
+"Permission Denied" = "Разрешение отклонено";
+"Please Enable Permission in App Settings" = "Пожалуйста, включите разрешение в настройках приложения";
+"Go to Settings" = "Перейти в настройки";
+"Send your current location" = "Отправить текущее местоположение";
+"Accurate to 5 meters" = "Точность до 5 метров";
+"NEARBY PLACES" = "БЛИЖАЙШИЕ МЕСТА";
+"Open in Google Map" = "Открыть в Google Картах";
 
 // Chat Interface Actions
-"forward" = "Переслать";
-"reply" = "Ответить";
-"copy" = "Копировать";
-"edit" = "Изменить";
-"info" = "Инфо";
-"delete" = "Удалить";
-"block" = "Блокировать";
+"Forward" = "Переслать";
+"Reply" = "Ответить";
+"Copy" = "Копировать";
+"Edit" = "Редактировать";
+"Info" = "Информация";
+"Delete" = "Удалить";
+"Block" = "Заблокировать";
 
 // Chat Status
-"online" = "онлайн";
-"offline" = "Оффлайн";
-"typing" = "печатает...";
-"isTyping" = "печатает...";
-"lastSeen" = "был(а)";
+"Online" = "В сети";
+"Offline" = "Не в сети";
+"Typing..." = "Печатает...";
+"is typing..." = "печатает...";
+"Last seen" = "Последний раз в сети";
 
 // Error Messages
-"error" = "Ошибка";
-"noInternetConnection" = "Нет подключения к интернету";
-"failedToSendMessage" = "Не удалось отправить сообщение";
-"pleaseTryAgain" = "Пожалуйста, попробуйте еще раз";
+"Error" = "Ошибка";
+"No internet connection" = "Нет интернет-соединения";
+"Failed to send message" = "Не удалось отправить сообщение";
+"Please try again" = "Пожалуйста, попробуйте снова";
 
 // Chat Management
-"clearChat" = "Очистить Историю";
-"blockUser" = "Заблокировать Пользователя";
-"clearChatConfirmation" = "Очистить чат?";
-"clearChatWarning" = "Вы уверены, что хотите очистить чат? Это действие нельзя отменить.";
-"yesClear" = "Да, очистить";
-"blockUserConfirmation" = "Заблокировать Пользователя?";
-"blockConfirmation" = ": Вы уверены, что хотите заблокировать?";
+"Clear History" = "Очистить историю";
+"Block User" = "Заблокировать пользователя";
+"Clear chat?" = "Очистить чат?";
+"Are you sure you want to clear chat? This action is undoable." = "Вы уверены, что хотите очистить чат? Это действие нельзя отменить.";
+"Yes, clear" = "Да, очистить";
+"Block User?" = "Заблокировать пользователя?";
+"Are you sure you want to Block" = "Вы уверены, что хотите заблокировать";
 
 // Chat Attachment
-"camera" = "Камера";
-"gallery" = "Галерея";
-"document" = "Документ";
-"location" = "Местоположение";
-"contact" = "Контакт";
-"sticker" = "Стикер";
+"Camera" = "Камера";
+"Gallery" = "Галерея";
+"Document" = "Документ";
+"Location" = "Местоположение";
+"Contact" = "Контакт";
+"Sticker" = "Стикер";
 
 // Chat Contact Info
-"viewProfile" = "Просмотреть Профиль";
-"mediaLinksAndDocs" = "Медиа, ссылки и документы";
-"deleteChat" = "Удалить чат";
-"enterNameAndProfilePic" = "Введите свое имя и добавьте необязательное изображение профиля";
-"enterName" = "Введите имя";
-"email" = "Электронная почта";
-"enterEmail" = "Введите электронную почту";
-"about" = "Дополнительная информация";
-"editProfile" = "Изменить Профиль";
-"emailEmptyWarning" = "Электронная почта не может быть пустой";
-"usernameEmptyWarning" = "Имя пользователя не может быть пустым";
-"logout" = "Выйти";
-"lastSeenLabel" = "был(а)";
-"notifications" = "Уведомления";
+"View Profile" = "Просмотр профиля";
+"Media, Links and Docs" = "Медиа, ссылки и документы";
+"Delete Chat" = "Удалить чат";
+"Enter your name and add an optional profile picture" = "Введите ваше имя и добавьте фото профиля (необязательно)";
+"Enter name" = "Введите имя";
+"Email" = "Электронная почта";
+"Enter email" = "Введите электронную почту";
+"About" = "О себе";
+"Edit Profile" = "Редактировать профиль";
+"Logout" = "Выйти";
 
 // Chat Reaction
-"reacted" = "Отреагировал(а)";
-"toAMessage" = "на сообщение";
+"Reacted" = "Отреагировал";
+"to a message" = "на сообщение";
