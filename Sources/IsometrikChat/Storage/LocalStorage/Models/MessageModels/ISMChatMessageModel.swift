@@ -10,7 +10,8 @@ import Foundation
 
 @Model
 public class ISMChatMessagesDB {
-    @Attribute(.unique) public var messageId: String
+    @Attribute(.unique) public var id: UUID = UUID()
+   public var messageId: String = ""
     
     public var sentAt : Double = 0
     @Relationship(deleteRule: .cascade) public var senderInfo : ISMChatUserDB?

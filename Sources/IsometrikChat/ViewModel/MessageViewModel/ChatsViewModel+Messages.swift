@@ -547,7 +547,7 @@ extension ChatsViewModel{
     }
     
     //MARK: - reply message
-    public func replyToMessage(customType : String,conversationId :  String,message : String,parentMessage : MessagesDB,completion:@escaping(String)->()){
+    public func replyToMessage(customType : String,conversationId :  String,message : String,parentMessage : ISMChatMessagesDB,completion:@escaping(String)->()){
         var body : [String : Any]
         let deviceId = UniqueIdentifierManager.shared.getUniqueIdentifier()
         var thumbnailUrl = ""

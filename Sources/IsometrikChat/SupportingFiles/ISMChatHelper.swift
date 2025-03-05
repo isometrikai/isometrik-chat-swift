@@ -60,7 +60,7 @@ public class ISMChatHelper: NSObject {
     }
     
     //MARK: - Check message delivery status
-    public class func checkMessageDeliveryType(message : MessagesDB,isGroup: Bool,memberCount:Int = 0,isOneToOneGroup : Bool) -> ISMChatMessageStatus{
+    public class func checkMessageDeliveryType(message : ISMChatMessagesDB,isGroup: Bool,memberCount:Int = 0,isOneToOneGroup : Bool) -> ISMChatMessageStatus{
         if isOneToOneGroup{
             //one to one group is same as single chat
             if message.deliveredToAll == true && message.readByAll == true{
@@ -167,7 +167,7 @@ public class ISMChatHelper: NSObject {
     }
     
     //MARK: - GET Message Type
-    public class func getMessageType(message : MessagesDB) -> ISMChatMessageType{
+    public class func getMessageType(message : ISMChatMessagesDB) -> ISMChatMessageType{
         if message.customType == ISMChatMediaType.Video.value{
             return .video
         }else if message.customType == ISMChatMediaType.Voice.value{

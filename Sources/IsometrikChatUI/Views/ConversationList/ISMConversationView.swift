@@ -437,7 +437,7 @@ public struct ISMConversationView : View {
             fromBroadCastFlow: false,
             groupCastId: "",
             groupConversationTitle: data.conversationTitle,
-            groupImage: data.conversationImageUrl
+            groupImage: data.conversationImageUrl, viewModelNew: self.viewModelNew
         )
 //        .environmentObject(realmManager)
         .onAppear {

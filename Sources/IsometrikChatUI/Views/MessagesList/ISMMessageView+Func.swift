@@ -333,41 +333,42 @@ extension ISMMessageView{
                     localIds.removeFirst()
                 }
             }
-        }else if selectedMsgToReply.body != "" {
+        }else if selectedMsgToReply != nil {
             //MARK: - REPLY MESSAGE
             let text = self.text.trimmingCharacters(in: .whitespacesAndNewlines)
             
-            let selectedMsgToReply = self.selectedMsgToReply
-            
-            
-            //1. nill data if any
-            nilData()
-            
-            //2. save message locally
-            var localIds = [String]()
-            let sentAt = Date().timeIntervalSince1970 * 1000
-//            let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: text, mentionUsers: [], fileName: "", fileUrl: "", messageType: .text,customType: .ReplyText, messageKind: .reply,parentMessage : selectedMsgToReply)
-//            localIds.append(id)
-            
-            //3. reply message api
-            chatViewModel.replyToMessage(customType: ISMChatMediaType.ReplyText.value, conversationId: self.conversationID ?? "", message: text, parentMessage: selectedMsgToReply) { messageId in
-                self.text = ""
-                
-                //4. update messageId locally
-//                realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId, conversationId: self.conversationID ?? "")
-                localIds.removeFirst()
+            if let selectedMsgToReply = self.selectedMsgToReply{
                 
                 
+                //1. nill data if any
+                nilData()
+                
+                //2. save message locally
+                var localIds = [String]()
+                let sentAt = Date().timeIntervalSince1970 * 1000
+                //            let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: text, mentionUsers: [], fileName: "", fileUrl: "", messageType: .text,customType: .ReplyText, messageKind: .reply,parentMessage : selectedMsgToReply)
+                //            localIds.append(id)
+                
+                //3. reply message api
+                chatViewModel.replyToMessage(customType: ISMChatMediaType.ReplyText.value, conversationId: self.conversationID ?? "", message: text, parentMessage: selectedMsgToReply) { messageId in
+                    self.text = ""
+                    
+                    //4. update messageId locally
+                    //                realmManager.updateMsgId(objectId: localIds.first ?? "", msgId: messageId, conversationId: self.conversationID ?? "")
+                    localIds.removeFirst()
+                    
+                    
+                }
             }
-        }else if updateMessage.body != ""{
+        }else if updateMessage != nil{
             //MARK: - UPDATE MESSAGE
             let text = self.text.trimmingCharacters(in: .whitespacesAndNewlines)
-            chatViewModel.updateMessage(messageId: updateMessage.messageId , conversationId: updateMessage.conversationId , message: text ) { messageID in
+            chatViewModel.updateMessage(messageId: updateMessage?.messageId ?? "", conversationId: updateMessage?.conversationId ?? "", message: text ) { messageID in
                 //update message locally
 //                realmManager.updateMessageBody(conversationId: updateMessage.conversationId, messageId: updateMessage.messageId, body: text)
 //                realmManager.updateLastMessageOnEdit(conversationId: updateMessage.conversationId, messageId: updateMessage.messageId, newBody: text)
                 self.text = ""
-                self.updateMessage = MessagesDB()
+                self.updateMessage = nil
                 
             }
         }else if stateViewModel.shareContact == true{
@@ -928,7 +929,7 @@ extension ISMMessageView{
         self.text = ""
         self.chatViewModel.audioUrl = nil
         self.selectedGIF = nil
-        self.selectedMsgToReply = MessagesDB()
+        self.selectedMsgToReply = nil
         self.selectedContactToShare.removeAll()
         self.cameraImageToUse = nil
         self.chatViewModel.isBusy = false
@@ -1066,7 +1067,7 @@ extension ISMMessageView{
     
     
     //MARK: - DELETE MESSAGE
-    func deleteMsgFromView(message:MessagesDB) {
+    func deleteMsgFromView(message:ISMChatMessagesDB) {
         if deleteMessage.contains(where: { msg in
             msg.messageId == message.messageId
         }) {
@@ -1077,7 +1078,7 @@ extension ISMMessageView{
     }
     
     //MARK: - FORWARD MESSAGE
-    func forwardMessageView(message:MessagesDB) {
+    func forwardMessageView(message:ISMChatMessagesDB) {
         if forwardMessageSelected.contains(where: { msg in
             msg.messageId == message.messageId
         }) {
@@ -1089,7 +1090,7 @@ extension ISMMessageView{
     
     
     //MARK: - SCROLL TO PARENT MESSAGE
-    func scrollToParentMessage(message : MessagesDB,scrollReader : ScrollViewProxy){
+    func scrollToParentMessage(message : ISMChatMessagesDB,scrollReader : ScrollViewProxy){
         if message.customType == ISMChatMediaType.ReplyText.value{
             if message.metaData?.replyMessage?.parentMessageId != ""{
 //                let id = getMatchingId(parentMessageId: message.metaData?.replyMessage?.parentMessageId ?? "",messages: realmManager.allMessages ?? [])
@@ -1100,7 +1101,7 @@ extension ISMMessageView{
         }
     }
     
-    func getMatchingId(parentMessageId: String,messages: [MessagesDB]) -> String {
+    func getMatchingId(parentMessageId: String,messages: [ISMChatMessagesDB]) -> String {
         let matchingMessage = messages.first(where: { $0.messageId == parentMessageId })
         return matchingMessage?.id.description ?? ""
     }

@@ -94,7 +94,7 @@ struct MentionUserList : View{
 
 struct ForwardMessageToolBar : View {
     @State var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    @Binding var forwardMessageSelected : [MessagesDB]
+    @Binding var forwardMessageSelected : [ISMChatMessagesDB]
     @Binding var movetoForwardList : Bool
     var navigateToForwardList : () -> ()
     var body: some View {
@@ -156,7 +156,7 @@ struct ForwardMessageToolBar : View {
 
 struct DelegateMessageToolBar : View {
     @State var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    @Binding var deleteMessage : [MessagesDB]
+    @Binding var deleteMessage : [ISMChatMessagesDB]
     @Binding var showDeleteActionSheet : Bool
     var body: some View {
         VStack{
@@ -184,7 +184,7 @@ struct DelegateMessageToolBar : View {
 
 struct BasicToolBarView : View {
     @Binding var textFieldtxt : String
-    @Binding var selectedMsgToReply : MessagesDB
+    @Binding var selectedMsgToReply : ISMChatMessagesDB
     @Binding var parentMessageIdToScroll : String
     @Binding var audioLocked : Bool
     @Binding var isClicked : Bool
@@ -201,11 +201,11 @@ struct BasicToolBarView : View {
     var body: some View {
         VStack(spacing: 0) {
             // Show reply toolbar if a message is selected
-            if ISMChatSdkUI.getInstance().getChatProperties().replyMessageInsideInputView == false{
-                if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
-                    ReplyToolBarView(selectedMsgToReply: $selectedMsgToReply)
-                }
-            }
+//            if ISMChatSdkUI.getInstance().getChatProperties().replyMessageInsideInputView == false{
+//                if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
+//                    ReplyToolBarView(selectedMsgToReply: $selectedMsgToReply)
+//                }
+//            }
             
             // Show link preview if the text is a valid URL
             if textFieldtxt.isValidURL && !ISMChatSdkUI.getInstance().getChatProperties().hideLinkPreview {
@@ -238,7 +238,7 @@ struct MainToolBarView : View {
     @Binding var showGifPicker : Bool
     @Binding var audioPermissionCheck :Bool
     @Binding var keyboardFocused : Bool
-    @Binding var selectedMsgToReply : MessagesDB
+    @Binding var selectedMsgToReply : ISMChatMessagesDB
     @EnvironmentObject var realmManager : RealmManager
     var conversationDetail : ISMChatConversationDetail?
     var onSendMessage : () -> ()
@@ -537,9 +537,9 @@ struct MainToolBarView : View {
             VStack{
                 
                 if ISMChatSdkUI.getInstance().getChatProperties().replyMessageInsideInputView == true{
-                    if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
-                        ReplyToolBarView(selectedMsgToReply: $selectedMsgToReply).cornerRadius(16).padding(.horizontal,5)
-                    }
+//                    if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
+//                        ReplyToolBarView(selectedMsgToReply: $selectedMsgToReply).cornerRadius(16).padding(.horizontal,5)
+//                    }
                 }
                 HStack(spacing: 5) {
                     // GIF Button (on left)
@@ -632,7 +632,7 @@ struct MainToolBarView : View {
 
 
 struct ReplyToolBarView : View {
-    @Binding var selectedMsgToReply : MessagesDB
+    @Binding var selectedMsgToReply : ISMChatMessagesDB
     @State var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @ObservedObject public var stateViewModel = UIStateViewModel()
     var body: some View {
@@ -815,7 +815,7 @@ struct ReplyToolBarView : View {
                     )
             }
             Button {
-                selectedMsgToReply = MessagesDB()
+//                selectedMsgToReply = MessagesDB()
             } label: {
                 appearance.images.cancelReplyMessageSelected
                     .resizable()

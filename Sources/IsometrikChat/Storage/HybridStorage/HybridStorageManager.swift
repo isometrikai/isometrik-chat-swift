@@ -53,6 +53,19 @@ public class HybridStorageManager: ChatStorageManager {
     }
     
     public func fetchMessages(conversationId: String) async throws -> [ISMChatMessagesDB] {
-        return []
+        do {
+            // Fetch from remote and sync
+            let remoteMessages = try await remoteStorageManager.fetchMessages(conversationId: conversationId)
+            try await localStorageManager.saveAllMessages(remoteMessages, conversationId: conversationId)
+            let localMessages = try await localStorageManager.fetchMessages(conversationId: conversationId)
+            return localMessages
+        } catch {
+            print("Error syncing with remote: \(error)")
+            throw error
+        }
+    }
+    
+    public func saveAllMessages(_ messages: [ISMChatMessagesDB], conversationId: String) async throws {
+        
     }
 }

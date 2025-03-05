@@ -47,7 +47,7 @@ extension ISMMessageView{
     //MARK: - MULTIPLE FORWARD MESSAGE BUTTON VIEW
     
     /// Returns a view for the forward message button based on selection state.
-    func multipleForwardMessageButtonView(message : MessagesDB) -> some View{
+    func multipleForwardMessageButtonView(message : ISMChatMessagesDB) -> some View{
         if forwardMessageSelected.contains(where: { msg in
             msg.messageId == message.messageId
         }){
@@ -64,7 +64,7 @@ extension ISMMessageView{
     //MARK: - MULTIPLE DELETE MESSAGE BUTTON VIEW
     
     /// Returns a view for the delete message button based on selection state.
-    func multipleDeleteMessageButtonView(message: MessagesDB) -> some View {
+    func multipleDeleteMessageButtonView(message: ISMChatMessagesDB) -> some View {
         if deleteMessage.contains(where: { msg in
             msg.messageId == message.messageId
         }) {

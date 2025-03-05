@@ -11,13 +11,12 @@ import SwiftUI
 
 public class LocalStorageManager: ChatStorageManager {
     
-    
     public var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
     public let modelContainer: ModelContainer
     public let modelContext: ModelContext
     
     public init() throws {
-        let schema = Schema([ISMChatConversationDB.self, ISMChatMessagesDB.self])
+        let schema = Schema([ISMChatConversationDB.self, ISMChatMessagesDB.self, ISMChatUserDB.self, ISMChatConfigDB.self,ISMChatLastMessageDB.self,ISMChatConversationMetaData.self,ISMChatMessagesDB.self,ISMChatUserMetaDataDB.self,ISMChatMetaDataDB.self,ISMChatMessageDeliveryStatusDB.self,ISMChatLastMessageMemberDB.self, ISMChatMeetingDuration.self,ISMChatMentionedUserDB.self,ISMChatAttachmentDB.self, ISMChatReactionDB.self,ISMChatMeetingConfig.self])
         let modelConfiguration = ModelConfiguration(schema: schema)
         self.modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
         self.modelContext = ModelContext(modelContainer)
@@ -104,6 +103,25 @@ public class LocalStorageManager: ChatStorageManager {
             return []
         }
     }
+    
+    public func saveAllMessages(_ messages: [ISMChatMessagesDB], conversationId: String) async throws {
+        do {
+            let descriptor = FetchDescriptor<ISMChatConversationDB>(
+                predicate: #Predicate { $0.conversationId == conversationId }
+            )
+
+            if let existingConversation = try modelContext.fetch(descriptor).first {
+                // ✅ Append all messages at once
+                existingConversation.messages.removeAll()
+                existingConversation.messages.append(contentsOf: messages)
+                try modelContext.save()
+            }
+        } catch {
+            print("SwiftData Save Error: \(error)")
+        }
+    }
+
+
 
     
     

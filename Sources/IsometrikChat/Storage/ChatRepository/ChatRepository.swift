@@ -51,4 +51,8 @@ public class ChatRepository {
     public func fetchMessages(conversationId: String) async throws -> [ISMChatMessagesDB] {
         return try await activeStorageManager.fetchMessages(conversationId: conversationId)
     }
+    
+    public func saveAllMessages(_ messages: [ISMChatMessagesDB], conversationId: String) async throws {
+        return try await activeStorageManager.saveAllMessages(messages, conversationId: conversationId)
+    }
 }

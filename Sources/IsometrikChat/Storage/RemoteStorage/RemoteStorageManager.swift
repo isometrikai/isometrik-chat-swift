@@ -81,5 +81,9 @@ public class RemoteStorageManager: ChatStorageManager {
             }
         }
     }
+    
+    public func saveAllMessages(_ messages: [ISMChatMessagesDB], conversationId: String) async throws {
+        
+    }
 
 }

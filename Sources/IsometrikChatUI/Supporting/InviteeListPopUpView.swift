@@ -17,7 +17,7 @@ struct InviteeListPopUpView: View {
     var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     /// The message database object containing invitee information
-    var message: MessagesDB
+    var message: ISMChatMessagesDB
     
     /// Closure to handle dismissal of the popup
     var cancel: () -> ()
