@@ -37,27 +37,34 @@ public class HybridStorageManager: ChatStorageManager {
         
     }
     
-    public func deleteConversation(id: String) async throws {
+    public func deleteConversation(conversationId: String) async throws {
         do {
             // Fetch from remote and sync
-            try await remoteStorageManager.deleteConversation(id: id)
-            try await localStorageManager.deleteConversation(id: id)
+            try await remoteStorageManager.deleteConversation(conversationId: conversationId)
+            try await localStorageManager.deleteConversation(conversationId: conversationId)
         } catch {
             print("Error delete conversation with hybrid: \(error)")
             throw error
         }
     }
     
-    public func clearConversation(id: String) async throws {
-        
-    }
-    
-    public func fetchMessages(conversationId: String) async throws -> [ISMChatMessagesDB] {
+    public func clearConversationMessages(conversationId: String) async throws {
         do {
             // Fetch from remote and sync
-            let remoteMessages = try await remoteStorageManager.fetchMessages(conversationId: conversationId)
+            try await remoteStorageManager.clearConversationMessages(conversationId: conversationId)
+            try await localStorageManager.clearConversationMessages(conversationId: conversationId)
+        } catch {
+            print("Error delete conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func fetchMessages(conversationId: String,lastMessageTimestamp: String) async throws -> [ISMChatMessagesDB] {
+        do {
+            // Fetch from remote and sync
+            let remoteMessages = try await remoteStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp)
             try await localStorageManager.saveAllMessages(remoteMessages, conversationId: conversationId)
-            let localMessages = try await localStorageManager.fetchMessages(conversationId: conversationId)
+            let localMessages = try await localStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp)
             return localMessages
         } catch {
             print("Error syncing with remote: \(error)")

@@ -14,11 +14,11 @@ public class ChatRepository {
     public let configurationService: ConfigurationService
     
     public init(localStorageManager: LocalStorageManager, remoteStorageManager: RemoteStorageManager, hybridStorageManager: HybridStorageManager, configurationService: ConfigurationService = .shared) {
-            self.localStorageManager = localStorageManager
-            self.remoteStorageManager = remoteStorageManager
-            self.hybridStorageManager = hybridStorageManager 
-            self.configurationService = configurationService
-        }
+        self.localStorageManager = localStorageManager
+        self.remoteStorageManager = remoteStorageManager
+        self.hybridStorageManager = hybridStorageManager
+        self.configurationService = configurationService
+    }
     
     public var activeStorageManager: ChatStorageManager {
         switch configurationService.storageMode {
@@ -40,16 +40,16 @@ public class ChatRepository {
         return try await activeStorageManager.saveConversation(conversations)
     }
     
-    public func deleteConversation(id: String)  async throws{
-        return try await activeStorageManager.deleteConversation(id: id)
+    public func deleteConversation(conversationId: String)  async throws{
+        return try await activeStorageManager.deleteConversation(conversationId: conversationId)
     }
     
-    public func clearConversation(id: String)  async throws{
-        return try await activeStorageManager.clearConversation(id: id)
+    func clearConversationMessages(conversationId: String) async throws{
+        return try await activeStorageManager.clearConversationMessages(conversationId: conversationId)
     }
     
-    public func fetchMessages(conversationId: String) async throws -> [ISMChatMessagesDB] {
-        return try await activeStorageManager.fetchMessages(conversationId: conversationId)
+    public func fetchMessages(conversationId: String,lastMessageTimestamp : String) async throws -> [ISMChatMessagesDB] {
+        return try await activeStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp)
     }
     
     public func saveAllMessages(_ messages: [ISMChatMessagesDB], conversationId: String) async throws {

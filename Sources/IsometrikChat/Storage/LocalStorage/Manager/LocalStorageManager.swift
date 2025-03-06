@@ -70,10 +70,10 @@ public class LocalStorageManager: ChatStorageManager {
         }
     }
     
-    public func deleteConversation(id: String) async throws {
+    public func deleteConversation(conversationId: String) async throws {
         await MainActor.run {
             let descriptor = FetchDescriptor<ISMChatConversationDB>(
-                predicate: #Predicate { $0.conversationId == id }
+                predicate: #Predicate { $0.conversationId == conversationId }
             )
 
             do {
@@ -82,16 +82,31 @@ public class LocalStorageManager: ChatStorageManager {
 
                 modelContext.delete(conversation) // Directly delete the conversation
             } catch {
-                print("Error deleting conversation \(id) in SwiftData: \(error)")
+                print("Error deleting conversation \(conversationId) in SwiftData: \(error)")
             }
         }
     }
     
-    public func clearConversation(id: String) async throws {
-        
+    public func clearConversationMessages(conversationId: String) async throws {
+        do {
+            let descriptor = FetchDescriptor<ISMChatConversationDB>(
+                predicate: #Predicate { $0.conversationId == conversationId }
+            )
+            
+            if let existingConversation = try modelContext.fetch(descriptor).first {
+                // Delete all messages using forEach
+                existingConversation.messages.forEach { modelContext.delete($0) }
+
+                // Save changes
+                try modelContext.save()
+            }
+        } catch {
+            print("SwiftData Delete Error: \(error)")
+        }
     }
+
     
-    public func fetchMessages(conversationId: String) async throws -> [ISMChatMessagesDB] {
+    public func fetchMessages(conversationId: String,lastMessageTimestamp: String) async throws -> [ISMChatMessagesDB] {
         do {
             let descriptor = FetchDescriptor<ISMChatMessagesDB>(
                 predicate: #Predicate { $0.conversationId == conversationId }
@@ -111,15 +126,21 @@ public class LocalStorageManager: ChatStorageManager {
             )
 
             if let existingConversation = try modelContext.fetch(descriptor).first {
-                // ✅ Append all messages at once
-                existingConversation.messages.removeAll()
-                existingConversation.messages.append(contentsOf: messages)
-                try modelContext.save()
+                let existingMessageIds = Set(existingConversation.messages.map { $0.messageId })
+
+                // ✅ Filter out messages that already exist
+                let newMessages = messages.filter { !existingMessageIds.contains($0.messageId) }
+
+                if !newMessages.isEmpty {
+                    existingConversation.messages.append(contentsOf: newMessages)
+                    try modelContext.save()
+                }
             }
         } catch {
             print("SwiftData Save Error: \(error)")
         }
     }
+
 
 
 

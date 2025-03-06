@@ -43,7 +43,7 @@ public class ConversationsViewModel: ObservableObject {
     public func deleteConversations(id: String) async {
         do {
             // Ensure delete completes before fetching conversations
-            try await chatRepository.deleteConversation(id: id)
+            try await chatRepository.deleteConversation(conversationId: id)
 
             // Fetch updated conversations list
             let fetchedConversations = try await chatRepository.fetchConversations()
@@ -53,6 +53,19 @@ public class ConversationsViewModel: ObservableObject {
                 self.conversations = fetchedConversations
                 self.otherConversations = self.getOtherConversation()
                 self.primaryConversations = self.getPrimaryConversation()
+            }
+        } catch {
+            print("Error loading conversations: \(error)")
+        }
+    }
+    
+    public func clearConversationMessages(id: String) async {
+        do {
+            // Ensure delete completes before fetching conversations
+            try await chatRepository.clearConversationMessages(conversationId: id)
+            await MainActor.run {
+                self.allMessages.removeAll()
+                self.messages.removeAll()
             }
         } catch {
             print("Error loading conversations: \(error)")
@@ -103,9 +116,9 @@ public class ConversationsViewModel: ObservableObject {
         return filteredOutConversations
     }
     
-    public func loadMessages(conversationId : String) async {
+    public func loadMessages(conversationId : String,lastMessageTimestamp: String) async {
         do {
-            let fetchedMessages = try await chatRepository.fetchMessages(conversationId: conversationId)
+            let fetchedMessages = try await chatRepository.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp)
             DispatchQueue.main.async {
                 self.allMessages = fetchedMessages
                 self.messages = self.getSectionMessage(for: fetchedMessages)
@@ -136,5 +149,13 @@ public class ConversationsViewModel: ObservableObject {
             res.append(values ?? [])
         }
         return res
+    }
+    
+    public func getSenderInfo(messageId: String) -> ISMChatUserDB? {
+        if let message = self.allMessages.first(where: { $0.messageId == messageId }) {
+            return message.senderInfo
+        }else{
+            return nil
+        }
     }
 }

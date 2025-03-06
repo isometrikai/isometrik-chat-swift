@@ -46,17 +46,17 @@ public class RemoteStorageManager: ChatStorageManager {
         
     }
     
-    public func deleteConversation(id: String) async throws {
-        conversationViewModel.deleteConversation(conversationId: id) {
+    public func deleteConversation(conversationId: String) async throws {
+        conversationViewModel.deleteConversation(conversationId: conversationId) {
         }
     }
     
-    public func clearConversation(id: String) async throws {
-        conversationViewModel.clearChat(conversationId: id) {
+    public func clearConversationMessages(conversationId: String) async throws {
+        conversationViewModel.clearChat(conversationId: conversationId) {
         }
     }
     
-    public func fetchMessages(conversationId: String) async throws -> [ISMChatMessagesDB] {
+    public func fetchMessages(conversationId: String,lastMessageTimestamp : String) async throws -> [ISMChatMessagesDB] {
         return try await withCheckedThrowingContinuation { continuation in
             messageViewModel.getMessages(conversationId: conversationId, lastMessageTimestamp: "") { messages in
                 if let messages = messages {
@@ -85,5 +85,5 @@ public class RemoteStorageManager: ChatStorageManager {
     public func saveAllMessages(_ messages: [ISMChatMessagesDB], conversationId: String) async throws {
         
     }
-
+    
 }

@@ -279,17 +279,17 @@ public struct ISMMessageView: View {
                             }
                         }.padding(.bottom,5)
                         //No Message View
-//                        if realmManager.allMessages?.count == 0 || realmManager.messages.count == 0{
-//                            //
-//                            if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true{
-//                                appearance.placeholders.messageListPlaceholder
-//                            }else{
-//                                appearance.images.noMessagePlaceholder
-//                                    .resizable()
-//                                    .frame(width: 206, height: 144, alignment: .center)
-//                            }
-//                            
-//                        }
+                        if viewModelNew.allMessages.count == 0 || viewModelNew.messages.count == 0{
+                            //
+                            if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true{
+                                appearance.placeholders.messageListPlaceholder
+                            }else{
+                                appearance.images.noMessagePlaceholder
+                                    .resizable()
+                                    .frame(width: 206, height: 144, alignment: .center)
+                            }
+                            
+                        }
                     }.onTapGesture {
                         stateViewModel.showActionSheet = false
                         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
@@ -304,12 +304,12 @@ public struct ISMMessageView: View {
                     setupOnAppear()
                     stateViewModel.navigateToImageEditor = false
                     addNotificationObservers()
-//                    if fromBroadCastFlow == true{
+                    if fromBroadCastFlow == true{
 //                        reloadBroadCastMessages()
-//                    }else{
-//                        getConversationDetail()
+                    }else{
+                        getConversationDetail()
 //                        reload()
-//                    }
+                    }
 //                    self.textFieldtxt = self.realmManager.getLastInputTextInConversation(conversationId: self.conversationID ?? "")
                 }
                 .onDisappear{
@@ -345,29 +345,29 @@ public struct ISMMessageView: View {
 //        .confirmationDialog("", isPresented: $stateViewModel.showDeleteActionSheet, titleVisibility: .hidden) {
 //            deleteActionSheetButtons()
 //        }
-//        .confirmationDialog("", isPresented: $stateViewModel.showUnblockPopUp) {
-//            unblockActionSheetButton()
-//        } message: {
-//            Text("Unblock contact to send a message")
-//        }
-//        .confirmationDialog("", isPresented: $stateViewModel.uAreBlock) {
-//        } message: {
-//            Text("Action not allowed, the user has already blocked You")
-//        }
-//        .confirmationDialog("", isPresented: $stateViewModel.clearThisChat) {
-//            Button("Delete", role: .destructive) {
-//                clearChat()
-//            }
-//        } message: {
-//            Text("Clear all messages from \(conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "this chat")? \n This chat will be empty but will remain in your chat list.")
-//        }
-//        .confirmationDialog("", isPresented: $stateViewModel.blockThisChat) {
-//            Button("Block", role: .destructive) {
-//                blockChatFromUser(block: true)
-//            }
-//        } message: {
-//            Text("Block \(conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")? \n Blocked user will be no longer be able to send you messages.")
-//        }
+        .confirmationDialog("", isPresented: $stateViewModel.showUnblockPopUp) {
+            unblockActionSheetButton()
+        } message: {
+            Text("Unblock contact to send a message")
+        }
+        .confirmationDialog("", isPresented: $stateViewModel.uAreBlock) {
+        } message: {
+            Text("Action not allowed, the user has already blocked You")
+        }
+        .confirmationDialog("", isPresented: $stateViewModel.clearThisChat) {
+            Button("Delete", role: .destructive) {
+                clearChat()
+            }
+        } message: {
+            Text("Clear all messages from \(conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "this chat")? \n This chat will be empty but will remain in your chat list.")
+        }
+        .confirmationDialog("", isPresented: $stateViewModel.blockThisChat) {
+            Button("Block", role: .destructive) {
+                blockChatFromUser(block: true)
+            }
+        } message: {
+            Text("Block \(conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")? \n Blocked user will be no longer be able to send you messages.")
+        }
 //        .onChange(of: chatViewModel.documentSelectedFromPicker, { _, _ in
 //            sendMessageIfDocumentSelected()
 //        })
@@ -891,7 +891,7 @@ public struct ISMMessageView: View {
     
     func getMessages(){
         Task {
-            await viewModelNew.loadMessages(conversationId: self.conversationID ?? "")
+            await viewModelNew.loadMessages(conversationId: self.conversationID ?? "", lastMessageTimestamp: viewModelNew.messages.last?.last?.messageId ?? "")
         }
     }
     

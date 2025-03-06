@@ -395,9 +395,9 @@ extension ISMMessageView{
 
                         }else{
                             Menu {
-//                                if realmManager.allMessages?.count != 0 || realmManager.messages.count != 0{
-//                                    clearChatButton()
-//                                }
+                                if viewModelNew.allMessages.count != 0 || viewModelNew.messages.count != 0{
+                                    clearChatButton()
+                                }
                                 if isGroup == false{
                                     blockUserButton()
                                 }

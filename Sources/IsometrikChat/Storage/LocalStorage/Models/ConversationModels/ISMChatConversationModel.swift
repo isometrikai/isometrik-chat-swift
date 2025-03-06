@@ -65,7 +65,8 @@ public class ISMChatConversationDB: Identifiable {
 
 @Model
 public class ISMChatUserDB {
-    @Attribute(.unique) public var userId: String
+    @Attribute(.unique) public var id: UUID = UUID()
+    public var userId: String?
     public var userProfileImageUrl : String?
     public var userName : String?
     public var userIdentifier : String?
@@ -73,7 +74,7 @@ public class ISMChatUserDB {
     public var lastSeen : Double?
     @Relationship(deleteRule: .cascade) public var metaData : ISMChatUserMetaDataDB?
     
-    public init(userId: String, userProfileImageUrl: String? = nil, userName: String? = nil, userIdentifier: String? = nil, online: Bool? = nil, lastSeen: Double? = nil, metaData: ISMChatUserMetaDataDB? = nil) {
+    public init(userId: String? = nil, userProfileImageUrl: String? = nil, userName: String? = nil, userIdentifier: String? = nil, online: Bool? = nil, lastSeen: Double? = nil, metaData: ISMChatUserMetaDataDB? = nil) {
         self.userId = userId
         self.userProfileImageUrl = userProfileImageUrl
         self.userName = userName
