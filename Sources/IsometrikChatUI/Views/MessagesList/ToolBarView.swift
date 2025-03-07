@@ -183,8 +183,9 @@ struct DelegateMessageToolBar : View {
 
 
 struct BasicToolBarView : View {
+    let lastMessage : ISMChatMessagesDB?
     @Binding var textFieldtxt : String
-    @Binding var selectedMsgToReply : ISMChatMessagesDB
+    @Binding var selectedMsgToReply : ISMChatMessagesDB?
     @Binding var parentMessageIdToScroll : String
     @Binding var audioLocked : Bool
     @Binding var isClicked : Bool
@@ -195,17 +196,16 @@ struct BasicToolBarView : View {
     @Binding var showGifPicker : Bool
     @Binding var audioPermissionCheck :Bool
     @Binding var keyboardFocused : Bool
-    @EnvironmentObject var realmManager : RealmManager
     @EnvironmentObject var chatViewModel : ChatsViewModel
     var onSendMessage : () -> ()
     var body: some View {
         VStack(spacing: 0) {
             // Show reply toolbar if a message is selected
-//            if ISMChatSdkUI.getInstance().getChatProperties().replyMessageInsideInputView == false{
-//                if !selectedMsgToReply.messageId.isEmpty || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
-//                    ReplyToolBarView(selectedMsgToReply: $selectedMsgToReply)
-//                }
-//            }
+            if ISMChatSdkUI.getInstance().getChatProperties().replyMessageInsideInputView == false{
+                if selectedMsgToReply != nil || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .AudioCall || ISMChatHelper.getMessageType(message: selectedMsgToReply) == .VideoCall {
+                    ReplyToolBarView(selectedMsgToReply: $selectedMsgToReply)
+                }
+            }
             
             // Show link preview if the text is a valid URL
             if textFieldtxt.isValidURL && !ISMChatSdkUI.getInstance().getChatProperties().hideLinkPreview {
@@ -214,10 +214,9 @@ struct BasicToolBarView : View {
             }
             
             // Main toolbar for sending messages
-            MainToolBarView(textFieldtxt: $textFieldtxt, parentMessageIdToScroll: $parentMessageIdToScroll, audioLocked: $audioLocked, isClicked: $isClicked,uAreBlock: $uAreBlock,showUnblockPopUp: $showUnblockPopUp,isShowingRedTimerStart: $isShowingRedTimerStart,showActionSheet: $showActionSheet,showGifPicker: $showGifPicker,audioPermissionCheck: $audioPermissionCheck, keyboardFocused: $keyboardFocused, selectedMsgToReply: $selectedMsgToReply, onSendMessage: {
+            MainToolBarView(textFieldtxt: $textFieldtxt, parentMessageIdToScroll: $parentMessageIdToScroll, audioLocked: $audioLocked, isClicked: $isClicked,uAreBlock: $uAreBlock,showUnblockPopUp: $showUnblockPopUp,isShowingRedTimerStart: $isShowingRedTimerStart,showActionSheet: $showActionSheet,showGifPicker: $showGifPicker,audioPermissionCheck: $audioPermissionCheck, keyboardFocused: $keyboardFocused, selectedMsgToReply: $selectedMsgToReply, lastMessage: self.lastMessage, onSendMessage: {
                 onSendMessage() // Trigger send message action
             })
-                .environmentObject(self.realmManager)
                 .environmentObject(self.chatViewModel)
         }
     }
@@ -238,9 +237,9 @@ struct MainToolBarView : View {
     @Binding var showGifPicker : Bool
     @Binding var audioPermissionCheck :Bool
     @Binding var keyboardFocused : Bool
-    @Binding var selectedMsgToReply : ISMChatMessagesDB
-    @EnvironmentObject var realmManager : RealmManager
+    @Binding var selectedMsgToReply : ISMChatMessagesDB?
     var conversationDetail : ISMChatConversationDetail?
+    let lastMessage : ISMChatMessagesDB?
     var onSendMessage : () -> ()
     var body: some View {
         HStack {
@@ -408,7 +407,7 @@ struct MainToolBarView : View {
     
     func isMessagingEnabled() -> Bool{
         if self.conversationDetail?.conversationDetails?.messagingDisabled == true{
-            if realmManager.messages.last?.last?.initiatorId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId{
+            if lastMessage?.initiatorId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId{
                 uAreBlock = true // User is blocked
             }else{
                 showUnblockPopUp = true // Show unblock popup
@@ -621,7 +620,7 @@ struct MainToolBarView : View {
     
     private func scrollToLastMessage() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-            if let lastMessageId = realmManager.messages.last?.last?.id.description {
+            if let lastMessageId = lastMessage?.id.description {
                 parentMessageIdToScroll = lastMessageId // Update parent message ID to scroll
             } else {
                 print("No last message found in Realm") // Log if no last message found
@@ -632,7 +631,7 @@ struct MainToolBarView : View {
 
 
 struct ReplyToolBarView : View {
-    @Binding var selectedMsgToReply : ISMChatMessagesDB
+    @Binding var selectedMsgToReply : ISMChatMessagesDB?
     @State var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @ObservedObject public var stateViewModel = UIStateViewModel()
     var body: some View {
@@ -642,15 +641,15 @@ struct ReplyToolBarView : View {
                 .foregroundColor(appearance.colorPalette.messageListReplyToolbarRectangle)
             VStack(alignment: .leading, spacing: 2) {
                 let myUserId = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId
-                Text((selectedMsgToReply.senderInfo?.userId ?? selectedMsgToReply.initiatorId) != myUserId ? "\(selectedMsgToReply.senderInfo?.userName ?? selectedMsgToReply.initiatorName)" : ConstantStrings.you)
+                Text((selectedMsgToReply?.senderInfo?.userId ?? selectedMsgToReply?.initiatorId) != myUserId ? "\(selectedMsgToReply?.senderInfo?.userName ?? selectedMsgToReply?.initiatorName)" : ConstantStrings.you)
                     .font(appearance.fonts.messageListReplyToolbarHeader)
                     .foregroundColor(appearance.colorPalette.messageListReplyToolbarHeader)
                 
-                let msg = selectedMsgToReply.body
+                let msg = selectedMsgToReply?.body
                 switch ISMChatHelper.getMessageType(message: selectedMsgToReply) {
                 case .video:
                     Label {
-                        Text(selectedMsgToReply.metaData?.captionMessage != nil ? (selectedMsgToReply.metaData?.captionMessage ?? "Video") : "Video")
+                        Text(selectedMsgToReply?.metaData?.captionMessage != nil ? (selectedMsgToReply?.metaData?.captionMessage ?? "Video") : "Video")
                             .font(appearance.fonts.messageListReplyToolbarDescription)
                             .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                             .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
@@ -662,7 +661,7 @@ struct ReplyToolBarView : View {
                     }
                 case .photo:
                     Label {
-                        Text(selectedMsgToReply.metaData?.captionMessage != nil ? (selectedMsgToReply.metaData?.captionMessage ?? "Photo") : "Photo")
+                        Text(selectedMsgToReply?.metaData?.captionMessage != nil ? (selectedMsgToReply?.metaData?.captionMessage ?? "Photo") : "Photo")
                             .font(appearance.fonts.messageListReplyToolbarDescription)
                             .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                             .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
@@ -684,7 +683,7 @@ struct ReplyToolBarView : View {
                     }
                 case .document:
                     Label {
-                        let str = URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? "")?.lastPathComponent.components(separatedBy: "_").last
+                        let str = URL(string: selectedMsgToReply?.attachments?.first?.mediaUrl ?? "")?.lastPathComponent.components(separatedBy: "_").last
                         Text(str ?? "Document")
                             .font(appearance.fonts.messageListReplyToolbarDescription)
                             .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
@@ -697,7 +696,7 @@ struct ReplyToolBarView : View {
                     }
                 case .location:
                     Label {
-                        let location = "\(selectedMsgToReply.attachments.first?.title ?? "Location") \(selectedMsgToReply.attachments.first?.address ?? "")"
+                        let location = "\(selectedMsgToReply?.attachments.first?.title ?? "Location") \(selectedMsgToReply?.attachments.first?.address ?? "")"
                         Text(location)
                             .font(appearance.fonts.messageListReplyToolbarDescription)
                             .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
@@ -708,15 +707,15 @@ struct ReplyToolBarView : View {
                     }
                 case .contact:
                     Label {
-                        if let count = selectedMsgToReply.metaData?.contacts.count{
+                        if let count = selectedMsgToReply?.metaData?.contacts.count{
                             if count == 1{
-                                let contactText = "\(selectedMsgToReply.metaData?.contacts.first?.contactName ?? "")"
+                                let contactText = "\(selectedMsgToReply?.metaData?.contacts.first?.contactName ?? "")"
                                 Text(contactText)
                                     .font(appearance.fonts.messageListReplyToolbarDescription)
                                     .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                                     .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                             }else{
-                                let contactText = "\(selectedMsgToReply.metaData?.contacts.first?.contactName ?? "") and \(count - 1) other contacts"
+                                let contactText = "\(selectedMsgToReply?.metaData?.contacts.first?.contactName ?? "") and \(count - 1) other contacts"
                                 Text(contactText)
                                     .font(appearance.fonts.messageListReplyToolbarDescription)
                                     .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
@@ -734,7 +733,7 @@ struct ReplyToolBarView : View {
                             .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                     }
                 case .sticker:
-                    AnimatedImage(url: URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? ""))
+                    AnimatedImage(url: URL(string: selectedMsgToReply?.attachments.first?.mediaUrl ?? ""))
                         .resizable()
                         .frame(width: 40, height: 40)
                 case .gif:
@@ -771,7 +770,7 @@ struct ReplyToolBarView : View {
                             .frame(width: 20, height: 15)
                     }
                 default:
-                    Text(msg)
+                    Text(msg ?? "")
                         .font(appearance.fonts.messageListReplyToolbarDescription)
                         .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                         .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
@@ -787,11 +786,11 @@ struct ReplyToolBarView : View {
             }
             Spacer()
             if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .photo{
-                ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply.attachments.first?.mediaUrl ?? "")
+                ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply?.attachments.first?.mediaUrl ?? "")
                     .frame(width: 40, height: 40, alignment: .center)
                     .cornerRadius(5)
             }else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .video{
-                ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply.attachments.first?.thumbnailUrl ?? "")
+                ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply?.attachments.first?.thumbnailUrl ?? "")
                     .frame(width: 40, height: 40, alignment: .center)
                     .cornerRadius(5)
             }else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .document{
@@ -801,7 +800,7 @@ struct ReplyToolBarView : View {
                     .frame(width: 40, height: 40, alignment: .center)
             }
             else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .gif{
-                AnimatedImage(url: URL(string: selectedMsgToReply.attachments.first?.mediaUrl ?? ""),isAnimating: $stateViewModel.isAnimating)
+                AnimatedImage(url: URL(string: selectedMsgToReply?.attachments.first?.mediaUrl ?? ""),isAnimating: $stateViewModel.isAnimating)
                     .resizable()
                     .frame(width: 45, height: 40)
                     .cornerRadius(5)

@@ -166,7 +166,39 @@ public class ISMChatLastMessageDB{
     public var missedByMembers : [String]
     @Relationship(deleteRule: .cascade) public var callDurations : [ISMChatMeetingDuration]
     
-    public init(sentAt: Double? = nil, updatedAt: Double? = nil, senderName: String? = nil, senderIdentifier: String? = nil, senderId: String? = nil, conversationId: String? = nil, body: String? = nil, messageId: String? = nil, customType: String? = nil, action: String? = nil, metaData: ISMChatMetaDataDB? = nil, metaDataJsonString: String? = nil, deliveredTo: [ISMChatMessageDeliveryStatusDB], readBy: [ISMChatMessageDeliveryStatusDB], msgSyncStatus: String, reactionType: String, userId: String, userIdentifier: String? = nil, userName: String? = nil, userProfileImageUrl: String? = nil, members: [ISMChatLastMessageMemberDB], memberName: String, memberId: String, messageDeleted: Bool, initiatorName: String? = nil, initiatorId: String? = nil, initiatorIdentifier: String? = nil, deletedMessage: Bool, meetingId: String? = nil, missedByMembers: [String], callDurations: [ISMChatMeetingDuration]) {
+    public init(
+        sentAt: Double? = nil,
+        updatedAt: Double? = nil,
+        senderName: String? = nil,
+        senderIdentifier: String? = nil,
+        senderId: String? = nil,
+        conversationId: String? = nil,
+        body: String? = nil,
+        messageId: String? = nil,
+        customType: String? = nil,
+        action: String? = nil,
+        metaData: ISMChatMetaDataDB? = nil,
+        metaDataJsonString: String? = nil,
+        deliveredTo: [ISMChatMessageDeliveryStatusDB]? = nil,
+        readBy: [ISMChatMessageDeliveryStatusDB]? = nil,
+        msgSyncStatus: String? = nil,
+        reactionType: String? = nil,
+        userId: String? = nil,
+        userIdentifier: String? = nil,
+        userName: String? = nil,
+        userProfileImageUrl: String? = nil,
+        members: [ISMChatLastMessageMemberDB]? = nil,
+        memberName: String? = nil,
+        memberId: String? = nil,
+        messageDeleted: Bool? = nil,
+        initiatorName: String? = nil,
+        initiatorId: String? = nil,
+        initiatorIdentifier: String? = nil,
+        deletedMessage: Bool? = nil,
+        meetingId: String? = nil,
+        missedByMembers: [String]? = nil,
+        callDurations: [ISMChatMeetingDuration]? = nil
+    ) {
         self.sentAt = sentAt
         self.updatedAt = updatedAt
         self.senderName = senderName
@@ -179,25 +211,25 @@ public class ISMChatLastMessageDB{
         self.action = action
         self.metaData = metaData
         self.metaDataJsonString = metaDataJsonString
-        self.deliveredTo = deliveredTo
-        self.readBy = readBy
-        self.msgSyncStatus = msgSyncStatus
-        self.reactionType = reactionType
-        self.userId = userId
+        self.deliveredTo = deliveredTo ?? []
+        self.readBy = readBy ?? []
+        self.msgSyncStatus = msgSyncStatus ?? ""
+        self.reactionType = reactionType ?? ""
+        self.userId = userId ?? ""
         self.userIdentifier = userIdentifier
         self.userName = userName
         self.userProfileImageUrl = userProfileImageUrl
-        self.members = members
-        self.memberName = memberName
-        self.memberId = memberId
-        self.messageDeleted = messageDeleted
+        self.members = members ?? []
+        self.memberName = memberName ?? ""
+        self.memberId = memberId ?? ""
+        self.messageDeleted = messageDeleted ?? false
         self.initiatorName = initiatorName
         self.initiatorId = initiatorId
         self.initiatorIdentifier = initiatorIdentifier
-        self.deletedMessage = deletedMessage
+        self.deletedMessage = deletedMessage ?? false
         self.meetingId = meetingId
-        self.missedByMembers = missedByMembers
-        self.callDurations = callDurations
+        self.missedByMembers = missedByMembers ?? []
+        self.callDurations = callDurations ?? []
     }
 }
 

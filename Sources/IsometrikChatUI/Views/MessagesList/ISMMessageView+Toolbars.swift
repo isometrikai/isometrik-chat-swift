@@ -29,7 +29,7 @@ extension ISMMessageView{
     }
     
     // Function to determine which toolbar to display based on the current state
-//    func toolBarView() -> some View {
+    func toolBarView() -> some View {
 //        Group {
 //            switch toolbarState {
 //            case .mention:
@@ -42,13 +42,14 @@ extension ISMMessageView{
 //            case .delete:
 //                DelegateMessageToolBar(deleteMessage: $deleteMessage,showDeleteActionSheet: $stateViewModel.showDeleteActionSheet)
 //            case .normal:
-//                BasicToolBarView(textFieldtxt: $textFieldtxt, selectedMsgToReply: $selectedMsgToReply, parentMessageIdToScroll: $parentMessageIdToScroll, audioLocked: $stateViewModel.audioLocked, isClicked: $stateViewModel.isClicked, uAreBlock: $stateViewModel.uAreBlock, showUnblockPopUp: $stateViewModel.showUnblockPopUp, isShowingRedTimerStart: $stateViewModel.isShowingRedTimerStart, showActionSheet: $stateViewModel.showActionSheet, showGifPicker: $stateViewModel.showGifPicker,audioPermissionCheck: $audioPermissionCheck,keyboardFocused: $stateViewModel.keyboardFocused) {
-//                    sendMessage(msgType: .text)
-//                }.environmentObject(self.realmManager)
-//                    .environmentObject(self.chatViewModel)
+        BasicToolBarView(lastMessage: self.viewModelNew.messages.last?.last, textFieldtxt: $textFieldtxt, selectedMsgToReply: $selectedMsgToReply, parentMessageIdToScroll: $parentMessageIdToScroll, audioLocked: $stateViewModel.audioLocked, isClicked: $stateViewModel.isClicked, uAreBlock: $stateViewModel.uAreBlock, showUnblockPopUp: $stateViewModel.showUnblockPopUp, isShowingRedTimerStart: $stateViewModel.isShowingRedTimerStart, showActionSheet: $stateViewModel.showActionSheet, showGifPicker: $stateViewModel.showGifPicker,audioPermissionCheck: $audioPermissionCheck,keyboardFocused: $stateViewModel.keyboardFocused) {
+                    sendMessage(msgType: .text)
+                }
+                    .environmentObject(self.chatViewModel)
 //            }
 //        }
-//    }
+    }
+    
     // Computed property to determine the current state of the toolbar
     var toolbarState: ToolbarState {
         if stateViewModel.showMentionList && isGroup == true && !filteredUsers.isEmpty { return .mention }

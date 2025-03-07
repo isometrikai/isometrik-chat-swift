@@ -25,19 +25,19 @@ public class ISMChatAttachmentDB {
     public var title : String = ""
     public var address : String = ""
     public var caption : String = ""
-    public init(attachmentType: Int, extensions: String, mediaId: String, mediaUrl: String, mimeType: String, name: String, size: Int, thumbnailUrl: String, latitude: Double, longitude: Double, title: String, address: String, caption: String) {
-        self.attachmentType = attachmentType
-        self.extensions = extensions
-        self.mediaId = mediaId
-        self.mediaUrl = mediaUrl
-        self.mimeType = mimeType
-        self.name = name
-        self.size = size
-        self.thumbnailUrl = thumbnailUrl
-        self.latitude = latitude
-        self.longitude = longitude
-        self.title = title
-        self.address = address
-        self.caption = caption
+    public init(attachmentType: Int? = nil, extensions: String? = nil, mediaId: String? = nil, mediaUrl: String? = nil, mimeType: String? = nil, name: String? = nil, size: Int? = nil, thumbnailUrl: String? = nil, latitude: Double? = nil, longitude: Double? = nil, title: String? = nil, address: String? = nil, caption: String? = nil) {
+        self.attachmentType = attachmentType ?? 0
+        self.extensions = extensions ?? ""
+        self.mediaId = mediaId ?? ""
+        self.mediaUrl = mediaUrl ?? ""
+        self.mimeType = mimeType ?? ""
+        self.name = name ?? ""
+        self.size = size ?? 0
+        self.thumbnailUrl = thumbnailUrl ?? ""
+        self.latitude = latitude ?? 0
+        self.longitude = longitude ?? 0
+        self.title = title ?? ""
+        self.address = address ?? ""
+        self.caption = caption ?? ""
     }
 }

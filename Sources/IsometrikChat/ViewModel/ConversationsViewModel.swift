@@ -27,6 +27,22 @@ public class ConversationsViewModel: ObservableObject {
         self.chatRepository = chatRepository
     }
     
+    public func createConversation(user : ISMChatUserDB) async -> String{
+        do {
+            let conversationId = try await chatRepository.createConversation(user: user, conversationId: "")
+            let fetchedConversations = try await chatRepository.fetchConversations()
+            DispatchQueue.main.async {
+                self.conversations = fetchedConversations
+                self.otherConversations = self.getOtherConversation()
+                self.primaryConversations = self.getPrimaryConversation()
+            }
+            return conversationId
+        } catch {
+            print("Error loading conversations: \(error)")
+            return ""
+        }
+    }
+    
     public func loadConversations() async {
         do {
             let fetchedConversations = try await chatRepository.fetchConversations()
@@ -151,11 +167,23 @@ public class ConversationsViewModel: ObservableObject {
         return res
     }
     
-    public func getSenderInfo(messageId: String) -> ISMChatUserDB? {
-        if let message = self.allMessages.first(where: { $0.messageId == messageId }) {
-            return message.senderInfo
-        }else{
-            return nil
+    public func saveMessages(conversationId : String,messages: [ISMChatMessagesDB]) async {
+        do {
+            let _ = try await chatRepository.saveAllMessages(messages, conversationId: conversationId)
+            DispatchQueue.main.async {
+                self.allMessages.append(contentsOf: messages)
+                self.messages = self.getSectionMessage(for: self.allMessages)
+            }
+        } catch {
+            print("Error loading conversations: \(error)")
+        }
+    }
+    
+    public func updateLastmsgInConversation(conversationId: String, lastmsg: ISMChatLastMessageDB) async{
+        do {
+            let _ = try await chatRepository.updateLastMessageInConversation(conversationId: conversationId, lastMessage: lastmsg)
+        } catch {
+            print("Error loading conversations: \(error)")
         }
     }
 }

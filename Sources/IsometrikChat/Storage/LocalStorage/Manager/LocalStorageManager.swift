@@ -23,6 +23,12 @@ public class LocalStorageManager: ChatStorageManager {
     }
     
     
+    public func createConversation(user : ISMChatUserDB,conversationId : String) async throws -> String {
+        return ""
+    }
+
+    
+    
     public func fetchConversations() async throws -> [ISMChatConversationDB] {
         do {
             let descriptor = FetchDescriptor<ISMChatConversationDB>(sortBy: [SortDescriptor(\.updatedAt, order: .reverse)])
@@ -104,6 +110,26 @@ public class LocalStorageManager: ChatStorageManager {
             print("SwiftData Delete Error: \(error)")
         }
     }
+    
+    public func updateLastMessageInConversation(conversationId: String, lastMessage: ISMChatLastMessageDB) async throws {
+        do {
+            let descriptor = FetchDescriptor<ISMChatConversationDB>(
+                predicate: #Predicate { $0.conversationId == conversationId }
+            )
+            
+            if let existingConversation = try modelContext.fetch(descriptor).first {
+                // Update the last message details
+                existingConversation.lastMessageDetails = lastMessage
+
+                // Save the changes
+                try modelContext.save()
+            }
+        } catch {
+            print("Error updating last message: \(error)")
+            throw error
+        }
+    }
+
 
     
     public func fetchMessages(conversationId: String,lastMessageTimestamp: String) async throws -> [ISMChatMessagesDB] {

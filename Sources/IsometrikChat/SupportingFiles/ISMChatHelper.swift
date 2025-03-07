@@ -75,9 +75,9 @@ public class ISMChatHelper: NSObject {
             }
         }else{
             if isGroup {
-                if (memberCount - 1) == message.readBy.count {
+                if (memberCount - 1) == message.readBy?.count {
                     return .BlueTick
-                }else if (memberCount - 1) == message.deliveredTo.count {
+                }else if (memberCount - 1) == message.deliveredTo?.count {
                     return .DoubleTick
                 }
                 if message.msgSyncStatus == ISMChatSyncStatus.Local.txt {
@@ -167,94 +167,94 @@ public class ISMChatHelper: NSObject {
     }
     
     //MARK: - GET Message Type
-    public class func getMessageType(message : ISMChatMessagesDB) -> ISMChatMessageType{
-        if message.customType == ISMChatMediaType.Video.value{
+    public class func getMessageType(message : ISMChatMessagesDB?) -> ISMChatMessageType{
+        if message?.customType == ISMChatMediaType.Video.value{
             return .video
-        }else if message.customType == ISMChatMediaType.Voice.value{
+        }else if message?.customType == ISMChatMediaType.Voice.value{
             return .audio
-        }else if message.customType == ISMChatMediaType.File.value{
+        }else if message?.customType == ISMChatMediaType.File.value{
             return .document
-        }else if message.customType == ISMChatMediaType.Image.value{
+        }else if message?.customType == ISMChatMediaType.Image.value{
             return .photo
-        }else if message.customType == ISMChatMediaType.Location.value{
+        }else if message?.customType == ISMChatMediaType.Location.value{
             return .location
-        }else if message.customType == ISMChatMediaType.Contact.value{
+        }else if message?.customType == ISMChatMediaType.Contact.value{
             return .contact
-        }else if message.customType == ISMChatMediaType.VideoCall.value{
+        }else if message?.customType == ISMChatMediaType.VideoCall.value{
             return .VideoCall
-        }else if message.customType == ISMChatMediaType.AudioCall.value{
+        }else if message?.customType == ISMChatMediaType.AudioCall.value{
             return .AudioCall
-        }else if message.customType == ISMChatMediaType.GroupCall.value{
+        }else if message?.customType == ISMChatMediaType.GroupCall.value{
             return .GroupCall
-        }else if message.customType == ISMChatMediaType.gif.value{
+        }else if message?.customType == ISMChatMediaType.gif.value{
             return .gif
-        }else if message.customType == ISMChatMediaType.sticker.value{
+        }else if message?.customType == ISMChatMediaType.sticker.value{
             return .sticker
-        }else if message.customType == ISMChatMediaType.Post.value{
+        }else if message?.customType == ISMChatMediaType.Post.value{
             return .post
-        }else if message.customType == ISMChatMediaType.Product.value{
+        }else if message?.customType == ISMChatMediaType.Product.value{
             return .Product
-        }else if message.customType == ISMChatMediaType.ProductLink.value{
+        }else if message?.customType == ISMChatMediaType.ProductLink.value{
             return .ProductLink
-        }else if message.customType == ISMChatMediaType.SocialLink.value{
+        }else if message?.customType == ISMChatMediaType.SocialLink.value{
             return .SocialLink
-        }else if message.customType == ISMChatMediaType.CollectionLink.value{
+        }else if message?.customType == ISMChatMediaType.CollectionLink.value{
             return .CollectionLink
-        }else if message.customType == ISMChatMediaType.PaymentRequest.value{
+        }else if message?.customType == ISMChatMediaType.PaymentRequest.value{
             return .paymentRequest
-        }else if message.customType == ISMChatMediaType.DineInInvite.value{
+        }else if message?.customType == ISMChatMediaType.DineInInvite.value{
             return .dineInInvite
-        }else if message.customType == ISMChatMediaType.DineInStatus.value{
+        }else if message?.customType == ISMChatMediaType.DineInStatus.value{
             return .dineInInviteStatus
-        }else if message.customType == ISMChatMediaType.ProfileShare.value{
+        }else if message?.customType == ISMChatMediaType.ProfileShare.value{
             return .ProfileShare
-        }else if message.customType == ISMChatMediaType.OfferSent.value{
+        }else if message?.customType == ISMChatMediaType.OfferSent.value{
             return .OfferSent
-        }else if message.customType == ISMChatMediaType.CounterOffer.value{
+        }else if message?.customType == ISMChatMediaType.CounterOffer.value{
             return .CounterOffer
-        }else if message.customType == ISMChatMediaType.EditOffer.value{
+        }else if message?.customType == ISMChatMediaType.EditOffer.value{
             return .EditOffer
-        }else if message.customType == ISMChatMediaType.AcceptOrder.value{
+        }else if message?.customType == ISMChatMediaType.AcceptOrder.value{
             return .AcceptOrder
-        }else if message.customType == ISMChatMediaType.CancelDeal.value{
+        }else if message?.customType == ISMChatMediaType.CancelDeal.value{
             return .CancelDeal
-        }else if message.customType == ISMChatMediaType.CancelOffer.value{
+        }else if message?.customType == ISMChatMediaType.CancelOffer.value{
             return .CancelOffer
-        }else if message.customType == ISMChatMediaType.BuyDirectRequest.value{
+        }else if message?.customType == ISMChatMediaType.BuyDirectRequest.value{
             return .BuyDirectRequest
-        }else if message.customType == ISMChatMediaType.AcceptBusyDirectRequest.value{
+        }else if message?.customType == ISMChatMediaType.AcceptBusyDirectRequest.value{
             return .AcceptBusyDirectRequest
-        }else if message.customType == ISMChatMediaType.CancelBuyDirectRequest.value{
+        }else if message?.customType == ISMChatMediaType.CancelBuyDirectRequest.value{
             return .CancelBuyDirectRequest
-        }else if message.customType == ISMChatMediaType.RejectBuyDirectRequest.value{
+        }else if message?.customType == ISMChatMediaType.RejectBuyDirectRequest.value{
             return .RejectBuyDirectRequest
-        }else if message.customType == ISMChatMediaType.PaymentEscrowed.value{
+        }else if message?.customType == ISMChatMediaType.PaymentEscrowed.value{
             return .PaymentEscrowed
-        }else if message.customType == ISMChatMediaType.DealComplete.value{
+        }else if message?.customType == ISMChatMediaType.DealComplete.value{
             return .DealComplete
         }
         else{
-            if message.action == ISMChatActionType.userBlock.value || message.action == ISMChatActionType.userBlockConversation.value{
+            if message?.action == ISMChatActionType.userBlock.value || message?.action == ISMChatActionType.userBlockConversation.value{
                 return .blockUser
-            }else if message.action == ISMChatActionType.userUnblock.value || message.action == ISMChatActionType.userUnblockConversation.value{
+            }else if message?.action == ISMChatActionType.userUnblock.value || message?.action == ISMChatActionType.userUnblockConversation.value{
                 return .unblockUser
-            }else if message.action == ISMChatActionType.conversationTitleUpdated.value{
+            }else if message?.action == ISMChatActionType.conversationTitleUpdated.value{
                 return .conversationTitleUpdate
-            }else if message.action == ISMChatActionType.conversationImageUpdated.value{
+            }else if message?.action == ISMChatActionType.conversationImageUpdated.value{
                 return .conversationImageUpdated
-            }else if message.action == ISMChatActionType.conversationCreated.value{
+            }else if message?.action == ISMChatActionType.conversationCreated.value{
                 return .conversationCreated
-            }else if message.action == ISMChatActionType.membersAdd.value{
+            }else if message?.action == ISMChatActionType.membersAdd.value{
                 return .membersAdd
-            }else if message.action == ISMChatActionType.memberLeave.value{
+            }else if message?.action == ISMChatActionType.memberLeave.value{
                 return .memberLeave
-            }else if message.action == ISMChatActionType.membersRemove.value{
+            }else if message?.action == ISMChatActionType.membersRemove.value{
                 return .membersRemove
-            }else if message.action == ISMChatActionType.addAdmin.value{
+            }else if message?.action == ISMChatActionType.addAdmin.value{
                 return .addAdmin
-            }else if message.action == ISMChatActionType.removeAdmin.value{
+            }else if message?.action == ISMChatActionType.removeAdmin.value{
                 return .removeAdmin
-            }else if message.action == ISMChatActionType.conversationSettingsUpdated.value{
+            }else if message?.action == ISMChatActionType.conversationSettingsUpdated.value{
                 return .conversationSettingsUpdated
             }
             return .text

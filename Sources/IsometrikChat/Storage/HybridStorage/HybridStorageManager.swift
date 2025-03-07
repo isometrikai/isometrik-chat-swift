@@ -20,6 +20,19 @@ public class HybridStorageManager: ChatStorageManager {
         self.remoteStorageManager = remoteStorageManager
     }
     
+    public func createConversation(user : ISMChatUserDB,conversationId : String) async throws -> String {
+        do {
+            // 1️⃣ Create conversation remotely and get the conversationId
+            let conversationIdFromApi = try await remoteStorageManager.createConversation(user: user, conversationId: conversationId)
+            return conversationIdFromApi
+        } catch {
+            print("Error syncing with remote: \(error)")
+            throw error
+        }
+    }
+
+    
+    
     public func fetchConversations() async throws -> [ISMChatConversationDB] {
         do {
             // Fetch from remote and sync
@@ -73,6 +86,20 @@ public class HybridStorageManager: ChatStorageManager {
     }
     
     public func saveAllMessages(_ messages: [ISMChatMessagesDB], conversationId: String) async throws {
-        
+        do {
+            try await localStorageManager.saveAllMessages(messages, conversationId: conversationId)
+        } catch {
+            print("Error saving messages in conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func updateLastMessageInConversation(conversationId : String, lastMessage : ISMChatLastMessageDB) async throws{
+        do {
+            try await localStorageManager.updateLastMessageInConversation(conversationId: conversationId, lastMessage: lastMessage)
+        } catch {
+            print("Error saving messages in conversation with hybrid: \(error)")
+            throw error
+        }
     }
 }

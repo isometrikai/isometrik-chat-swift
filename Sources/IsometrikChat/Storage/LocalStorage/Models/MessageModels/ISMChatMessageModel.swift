@@ -20,18 +20,18 @@ public class ISMChatMessagesDB {
     public var userIdentifier : String = ""
     public var userId : String = ""
     public var userProfileImageUrl : String = ""
-    @Relationship(deleteRule: .cascade) public var mentionedUsers : [ISMChatMentionedUserDB]
+    @Relationship(deleteRule: .cascade) public var mentionedUsers : [ISMChatMentionedUserDB]?
     public var deliveredToAll : Bool = false
     public var readByAll : Bool = false
     public var customType : String = ""
     public var action : String = ""
-    @Relationship(deleteRule: .cascade) public var readBy : [ISMChatMessageDeliveryStatusDB]
-    @Relationship(deleteRule: .cascade) public var deliveredTo  : [ISMChatMessageDeliveryStatusDB]
+    @Relationship(deleteRule: .cascade) public var readBy : [ISMChatMessageDeliveryStatusDB]?
+    @Relationship(deleteRule: .cascade) public var deliveredTo  : [ISMChatMessageDeliveryStatusDB]?
     public var messageType : Int = -1
     public var parentMessageId : String = ""
     @Relationship(deleteRule: .cascade) public var metaData : ISMChatMetaDataDB?
     public var metaDataJsonString : String?
-    @Relationship(deleteRule: .cascade) public var attachments : [ISMChatAttachmentDB]
+    @Relationship(deleteRule: .cascade) public var attachments : [ISMChatAttachmentDB]?
     public var initiatorIdentifier : String = ""
     public var initiatorId : String = ""
     public var initiatorName : String = ""
@@ -40,62 +40,105 @@ public class ISMChatMessagesDB {
     public var placeName : String = ""
     public var reactionType : String = ""
     public var reactionsCount : Int?
-    @Relationship(deleteRule: .cascade) public var members : [ISMChatLastMessageMemberDB]
+    @Relationship(deleteRule: .cascade) public var members : [ISMChatLastMessageMemberDB]?
     public var deletedMessage : Bool = false
     public var memberName : String = ""
     public var memberId : String = ""
     public var memberIdentifier : String = ""
     public var messageUpdated : Bool = false
-    @Relationship(deleteRule: .cascade) public var reactions : [ISMChatReactionDB]
+    @Relationship(deleteRule: .cascade) public var reactions : [ISMChatReactionDB]?
     public var missedByMembers : [String]
     public var meetingId  : String?
-    @Relationship(deleteRule: .cascade) public var callDurations : [ISMChatMeetingDuration]
+    @Relationship(deleteRule: .cascade) public var callDurations : [ISMChatMeetingDuration]?
     public var audioOnly : Bool = false
     public var autoTerminate : Bool = false
     @Relationship(deleteRule: .cascade) public var config : ISMChatMeetingConfig?
     public var groupcastId : String?
     @Relationship(deleteRule: .nullify) public var conversation: ISMChatConversationDB?
-    public init(messageId: String, sentAt: Double, senderInfo: ISMChatUserDB, body: String, userName: String, userIdentifier: String, userId: String, userProfileImageUrl: String, mentionedUsers: [ISMChatMentionedUserDB], deliveredToAll: Bool, readByAll: Bool, customType: String, action: String, readBy: [ISMChatMessageDeliveryStatusDB], deliveredTo: [ISMChatMessageDeliveryStatusDB], messageType: Int, parentMessageId: String, metaData: ISMChatMetaDataDB? = nil, metaDataJsonString: String? = nil, attachments: [ISMChatAttachmentDB], initiatorIdentifier: String, initiatorId: String, initiatorName: String, conversationId: String, msgSyncStatus: String, placeName: String, reactionType: String, reactionsCount: Int? = nil, members: [ISMChatLastMessageMemberDB], deletedMessage: Bool, memberName: String, memberId: String, memberIdentifier: String, messageUpdated: Bool, reactions: [ISMChatReactionDB], missedByMembers: [String], meetingId: String? = nil, callDurations: [ISMChatMeetingDuration], audioOnly: Bool, autoTerminate: Bool, config: ISMChatMeetingConfig? = nil, groupcastId: String? = nil) {
+    public init(
+        messageId: String,
+        sentAt: Double,
+        senderInfo: ISMChatUserDB? = nil,
+        body: String,
+        userName: String? = nil,
+        userIdentifier: String? = nil,
+        userId: String? = nil,
+        userProfileImageUrl: String? = nil,
+        mentionedUsers: [ISMChatMentionedUserDB]? = nil,
+        deliveredToAll: Bool? = nil,
+        readByAll: Bool? = nil,
+        customType: String,
+        action: String,
+        readBy: [ISMChatMessageDeliveryStatusDB]? = nil,
+        deliveredTo: [ISMChatMessageDeliveryStatusDB]? = nil,
+        messageType: Int? = nil,
+        parentMessageId: String? = nil,
+        metaData: ISMChatMetaDataDB? = nil,
+        metaDataJsonString: String? = nil,
+        attachments: [ISMChatAttachmentDB]? = nil,
+        initiatorIdentifier: String? = nil,
+        initiatorId: String? = nil,
+        initiatorName: String? = nil,
+        conversationId: String,
+        msgSyncStatus: String? = nil,
+        placeName: String? = nil,
+        reactionType: String? = nil,
+        reactionsCount: Int? = nil,
+        members: [ISMChatLastMessageMemberDB]? = nil,
+        deletedMessage: Bool? = nil,
+        memberName: String? = nil,
+        memberId: String? = nil,
+        memberIdentifier: String? = nil,
+        messageUpdated: Bool? = nil,
+        reactions: [ISMChatReactionDB]? = nil,
+        missedByMembers: [String]? = nil,
+        meetingId: String? = nil,
+        callDurations: [ISMChatMeetingDuration]? = nil,
+        audioOnly: Bool? = nil,
+        autoTerminate: Bool? = nil,
+        config: ISMChatMeetingConfig? = nil,
+        groupcastId: String? = nil
+    ) {
         self.messageId = messageId
         self.sentAt = sentAt
         self.senderInfo = senderInfo
         self.body = body
-        self.userName = userName
-        self.userIdentifier = userIdentifier
-        self.userId = userId
-        self.userProfileImageUrl = userProfileImageUrl
+        self.userName = userName ?? ""
+        self.userIdentifier = userIdentifier ?? ""
+        self.userId = userId ?? ""
+        self.userProfileImageUrl = userProfileImageUrl ?? ""
         self.mentionedUsers = mentionedUsers
-        self.deliveredToAll = deliveredToAll
-        self.readByAll = readByAll
+        self.deliveredToAll = deliveredToAll ?? false
+        self.readByAll = readByAll ?? false
         self.customType = customType
         self.action = action
         self.readBy = readBy
         self.deliveredTo = deliveredTo
-        self.messageType = messageType
-        self.parentMessageId = parentMessageId
+        self.messageType = messageType ?? 0
+        self.parentMessageId = parentMessageId ?? ""
         self.metaData = metaData
         self.metaDataJsonString = metaDataJsonString
         self.attachments = attachments
-        self.initiatorIdentifier = initiatorIdentifier
-        self.initiatorId = initiatorId
-        self.initiatorName = initiatorName
+        self.initiatorIdentifier = initiatorIdentifier ?? ""
+        self.initiatorId = initiatorId ?? ""
+        self.initiatorName = initiatorName ?? ""
         self.conversationId = conversationId
-        self.msgSyncStatus = msgSyncStatus
-        self.placeName = placeName
-        self.reactionType = reactionType
+        self.msgSyncStatus = msgSyncStatus ?? ""
+        self.placeName = placeName ?? ""
+        self.reactionType = reactionType ?? ""
         self.reactionsCount = reactionsCount
         self.members = members
-        self.deletedMessage = deletedMessage
-        self.memberName = memberName
-        self.memberId = memberId
-        self.memberIdentifier = memberIdentifier
-        self.messageUpdated = messageUpdated
+        self.deletedMessage = deletedMessage ?? false
+        self.memberName = memberName ?? ""
+        self.memberId = memberId ?? ""
+        self.memberIdentifier = memberIdentifier ?? ""
+        self.messageUpdated = messageUpdated ?? false
         self.reactions = reactions
-        self.missedByMembers = missedByMembers
+        self.missedByMembers = missedByMembers ?? []
         self.meetingId = meetingId
         self.callDurations = callDurations
-        self.audioOnly = audioOnly
-        self.autoTerminate = autoTerminate
+        self.audioOnly = audioOnly ?? false
+        self.autoTerminate = autoTerminate ?? false
         self.config = config
         self.groupcastId = groupcastId
     }

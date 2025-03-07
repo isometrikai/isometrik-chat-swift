@@ -61,11 +61,11 @@ extension ISMMessageView{
         case .conversationCreated:
             grpHeader(action: .conversationCreated, userName: message.userId == userData?.userId ? ConstantStrings.you : message.userName, senderId: message.initiatorId, isGroup: conversationDetail?.conversationDetails?.isGroup)
         case .membersAdd:
-            grpHeader(action: .membersAdd, userName: message.userId == userData?.userId ? ConstantStrings.you : message.userName, senderId: message.initiatorId, member: message.members.last?.memberName ?? "", memberId: message.members.last?.memberIdentifier ?? "")
+            grpHeader(action: .membersAdd, userName: message.userId == userData?.userId ? ConstantStrings.you : message.userName, senderId: message.initiatorId, member: message.members?.last?.memberName ?? "", memberId: message.members?.last?.memberIdentifier ?? "")
         case .memberLeave:
-            grpHeader(action: .memberLeave, userName: message.userId == userData?.userId ? ConstantStrings.you : message.userName, senderId: message.initiatorId, member: message.members.last?.memberName ?? "", memberId: message.members.last?.memberIdentifier ?? "")
+            grpHeader(action: .memberLeave, userName: message.userId == userData?.userId ? ConstantStrings.you : message.userName, senderId: message.initiatorId, member: message.members?.last?.memberName ?? "", memberId: message.members?.last?.memberIdentifier ?? "")
         case .membersRemove:
-            grpHeader(action: .membersRemove, userName: message.userId == userData?.userId ? ConstantStrings.you : message.userName, senderId: message.initiatorId, member: message.members.last?.memberName ?? "", memberId: message.members.last?.memberIdentifier ?? "")
+            grpHeader(action: .membersRemove, userName: message.userId == userData?.userId ? ConstantStrings.you : message.userName, senderId: message.initiatorId, member: message.members?.last?.memberName ?? "", memberId: message.members?.last?.memberIdentifier ?? "")
         case .addAdmin:
             grpHeader(action: .addAdmin, userName: message.initiatorId == userData?.userId ? ConstantStrings.you : message.initiatorName, senderId: message.initiatorId, member: message.memberId == userData?.userId ? ConstantStrings.you.lowercased() : message.memberName)
         case .removeAdmin:

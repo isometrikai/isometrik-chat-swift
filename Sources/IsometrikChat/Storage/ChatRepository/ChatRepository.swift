@@ -31,6 +31,10 @@ public class ChatRepository {
         }
     }
     
+    public func createConversation(user : ISMChatUserDB,conversationId : String) async throws -> String{
+        return try await activeStorageManager.createConversation(user: user, conversationId: conversationId)
+    }
+    
     // Delegate all operations to the active storage manager
     public func fetchConversations() async throws -> [ISMChatConversationDB] {
         return try await activeStorageManager.fetchConversations()
@@ -44,8 +48,12 @@ public class ChatRepository {
         return try await activeStorageManager.deleteConversation(conversationId: conversationId)
     }
     
-    func clearConversationMessages(conversationId: String) async throws{
+    public func clearConversationMessages(conversationId: String) async throws{
         return try await activeStorageManager.clearConversationMessages(conversationId: conversationId)
+    }
+    
+    public func updateLastMessageInConversation(conversationId : String, lastMessage : ISMChatLastMessageDB) async throws{
+        return try await activeStorageManager.updateLastMessageInConversation(conversationId: conversationId, lastMessage: lastMessage)
     }
     
     public func fetchMessages(conversationId: String,lastMessageTimestamp : String) async throws -> [ISMChatMessagesDB] {

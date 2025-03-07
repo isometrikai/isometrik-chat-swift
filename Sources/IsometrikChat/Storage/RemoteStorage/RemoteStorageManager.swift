@@ -15,6 +15,21 @@ public class RemoteStorageManager: ChatStorageManager {
     public init(){}
    
     
+    public func createConversation(user : ISMChatUserDB,conversationId : String) async throws -> String {
+        return try await withCheckedThrowingContinuation { continuation in
+            messageViewModel.createConversation(user: user, chatStatus: ISMChatStatus.Reject.value) { response, error in
+                if let error = error {
+                    continuation.resume(throwing: error) // Handle the error
+                } else if let conversationId = response?.conversationId {
+                    continuation.resume(returning: conversationId) // Return the conversation ID
+                } else {
+                    continuation.resume(throwing: NSError(domain: "CreateConversationError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unknown error occurred"]))
+                }
+            }
+        }
+    }
+    
+    
     // Implement all protocol methods using API calls
     public func fetchConversations() async throws -> [ISMChatConversationDB] {
         return try await withCheckedThrowingContinuation { continuation in
@@ -54,6 +69,10 @@ public class RemoteStorageManager: ChatStorageManager {
     public func clearConversationMessages(conversationId: String) async throws {
         conversationViewModel.clearChat(conversationId: conversationId) {
         }
+    }
+    
+    public func updateLastMessageInConversation(conversationId : String, lastMessage : ISMChatLastMessageDB) async throws{
+        
     }
     
     public func fetchMessages(conversationId: String,lastMessageTimestamp : String) async throws -> [ISMChatMessagesDB] {

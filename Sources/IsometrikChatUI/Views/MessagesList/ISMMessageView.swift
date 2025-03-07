@@ -297,7 +297,7 @@ public struct ISMMessageView: View {
                     if stateViewModel.showActionSheet == true{
                         attachmentsView().padding(.horizontal,10)
                     }
-//                    bottomView()
+                    bottomView()
                 }//VStack
                 .onAppear {
                     OnMessageList = true
@@ -904,31 +904,31 @@ public struct ISMMessageView: View {
         OnMessageList = false
     }
     
-//    func bottomView() -> some View{
-//        HStack {
-//            if !networkMonitor.isConnected {
-//                toolBarView()
-//                //in some apps if booking is closed then we can't messsage
-//            }else if conversationDetail?.conversationDetails?.customType == "CLOSED" || self.realmManager.messages.last?.last?.customType == ISMChatMediaType.DealComplete.value{
-//            }else{
-//                if isGroup == true {
-//                    if let members = conversationDetail?.conversationDetails?.members,
-//                       !members.contains(where: { $0.userId == userData?.userId }) {
-//                        NoLongerMemberToolBar()
-//                    } else {
-//                        toolBarView()
-//                    }
-//                } else {
-//                    let chatProperties = ISMChatSdkUI.getInstance().getChatProperties()
-//                    if chatProperties.otherConversationList && showOptionToAllow() {
-//                        acceptRejectView()
-//                    } else {
-//                        toolBarView()
-//                    }
-//                }
-//            }
-//        }
-//    }
+    func bottomView() -> some View{
+        HStack {
+            if !networkMonitor.isConnected {
+                toolBarView()
+                //in some apps if booking is closed then we can't messsage
+            }else if conversationDetail?.conversationDetails?.customType == "CLOSED" || self.viewModelNew.messages.last?.last?.customType == ISMChatMediaType.DealComplete.value{
+            }else{
+                if isGroup == true {
+                    if let members = conversationDetail?.conversationDetails?.members,
+                       !members.contains(where: { $0.userId == userData?.userId }) {
+                        NoLongerMemberToolBar()
+                    } else {
+                        toolBarView()
+                    }
+                } else {
+                    let chatProperties = ISMChatSdkUI.getInstance().getChatProperties()
+                    if chatProperties.otherConversationList && showOptionToAllow() {
+                        acceptRejectView()
+                    } else {
+                        toolBarView()
+                    }
+                }
+            }
+        }
+    }
     
     
     //MARK: - CONFIGURE
@@ -943,18 +943,18 @@ public struct ISMMessageView: View {
     
     
     //checking if we are allowed to send message or not
-//    func isMessagingEnabled() -> Bool{
-//        if self.conversationDetail?.conversationDetails?.messagingDisabled == true{
-//            if realmManager.messages.last?.last?.initiatorId != userData?.userId{
-//                stateViewModel.uAreBlock = true
-//            }else{
-//                stateViewModel.showUnblockPopUp = true
-//            }
-//            return false
-//        }else{
-//            return true
-//        }
-//    }
+    func isMessagingEnabled() -> Bool{
+        if self.conversationDetail?.conversationDetails?.messagingDisabled == true{
+            if viewModelNew.messages.last?.last?.initiatorId != userData?.userId{
+                stateViewModel.uAreBlock = true
+            }else{
+                stateViewModel.showUnblockPopUp = true
+            }
+            return false
+        }else{
+            return true
+        }
+    }
     
     //conversation Detail Api
     func getConversationDetail(){

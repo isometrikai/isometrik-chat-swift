@@ -552,11 +552,11 @@ extension ChatsViewModel{
         let deviceId = UniqueIdentifierManager.shared.getUniqueIdentifier()
         var thumbnailUrl = ""
         if parentMessage.customType == ISMChatMediaType.Video.value{
-            thumbnailUrl = parentMessage.attachments.first?.thumbnailUrl ?? ""
+            thumbnailUrl = parentMessage.attachments?.first?.thumbnailUrl ?? ""
         }else if parentMessage.customType == ISMChatMediaType.Location.value{
             thumbnailUrl = parentMessage.body
         }else{
-            thumbnailUrl = parentMessage.attachments.first?.mediaUrl ?? ""
+            thumbnailUrl = parentMessage.attachments?.first?.mediaUrl ?? ""
         }
         let replyMessageData : [String : Any] = ["parentMessageBody" : parentMessage.body,
                                                  "parentMessageUserId" : parentMessage.senderInfo?.userId ?? "",

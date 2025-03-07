@@ -12,7 +12,7 @@ import SwiftData
 public class ISMChatMetaDataDB{
     public var locationAddress : String?
     @Relationship(deleteRule: .cascade) public var replyMessage : ISMChatReplyMessageDB?
-    @Relationship(deleteRule: .cascade) public var contacts : [ISMChatContactDB]
+    @Relationship(deleteRule: .cascade) public var contacts : [ISMChatContactDB]?
     public var captionMessage : String?
     public var isBroadCastMessage : Bool?
     @Relationship(deleteRule: .cascade) public var post : ISMChatPostDB?
@@ -46,7 +46,7 @@ public class ISMChatMetaDataDB{
     //payment
     public var paymentRequestId : String?
     public var orderId : String?
-    @Relationship(deleteRule: .cascade) public var paymentRequestedMembers : [ISMChatPaymentRequestMembersDB]
+    @Relationship(deleteRule: .cascade) public var paymentRequestedMembers : [ISMChatPaymentRequestMembersDB]?
     public var requestAPaymentExpiryTime : Int?
     public var currencyCode : String?
     public var amount : Double?
@@ -56,11 +56,11 @@ public class ISMChatMetaDataDB{
     public var inviteTimestamp : Double?
     public var inviteRescheduledTimestamp : Double?
     @Relationship(deleteRule: .cascade) public var inviteLocation : ISMChatLocationDB?
-    @Relationship(deleteRule: .cascade) public var inviteMembers : [ISMChatPaymentRequestMembersDB]
+    @Relationship(deleteRule: .cascade) public var inviteMembers : [ISMChatPaymentRequestMembersDB]?
     public var groupCastId : String?
     public var status : Int?
     
-    public init(locationAddress: String? = nil, replyMessage: ISMChatReplyMessageDB? = nil, contacts: [ISMChatContactDB], captionMessage: String? = nil, isBroadCastMessage: Bool? = nil, post: ISMChatPostDB? = nil, product: ISMChatProductDB? = nil, storeName: String? = nil, productName: String? = nil, bestPrice: Double? = nil, scratchPrice: Double? = nil, url: String? = nil, parentProductId: String? = nil, childProductId: String? = nil, entityType: String? = nil, productImage: String? = nil, thumbnailUrl: String? = nil, Description: String? = nil, isVideoPost: Bool? = nil, socialPostId: String? = nil, collectionTitle: String? = nil, collectionDescription: String? = nil, productCount: Int? = nil, collectionImage: String? = nil, collectionId: String? = nil, paymentRequestId: String? = nil, orderId: String? = nil, paymentRequestedMembers: [ISMChatPaymentRequestMembersDB], requestAPaymentExpiryTime: Int? = nil, currencyCode: String? = nil, amount: Double? = nil, inviteTitle: String? = nil, inviteTimestamp: Double? = nil, inviteRescheduledTimestamp: Double? = nil, inviteLocation: ISMChatLocationDB? = nil, inviteMembers: [ISMChatPaymentRequestMembersDB], groupCastId: String? = nil, status: Int? = nil) {
+    public init(locationAddress: String? = nil, replyMessage: ISMChatReplyMessageDB? = nil, contacts: [ISMChatContactDB]? = nil, captionMessage: String? = nil, isBroadCastMessage: Bool? = nil, post: ISMChatPostDB? = nil, product: ISMChatProductDB? = nil, storeName: String? = nil, productName: String? = nil, bestPrice: Double? = nil, scratchPrice: Double? = nil, url: String? = nil, parentProductId: String? = nil, childProductId: String? = nil, entityType: String? = nil, productImage: String? = nil, thumbnailUrl: String? = nil, Description: String? = nil, isVideoPost: Bool? = nil, socialPostId: String? = nil, collectionTitle: String? = nil, collectionDescription: String? = nil, productCount: Int? = nil, collectionImage: String? = nil, collectionId: String? = nil, paymentRequestId: String? = nil, orderId: String? = nil, paymentRequestedMembers: [ISMChatPaymentRequestMembersDB]? = nil, requestAPaymentExpiryTime: Int? = nil, currencyCode: String? = nil, amount: Double? = nil, inviteTitle: String? = nil, inviteTimestamp: Double? = nil, inviteRescheduledTimestamp: Double? = nil, inviteLocation: ISMChatLocationDB? = nil, inviteMembers: [ISMChatPaymentRequestMembersDB]? = nil, groupCastId: String? = nil, status: Int? = nil) {
         self.locationAddress = locationAddress
         self.replyMessage = replyMessage
         self.contacts = contacts
