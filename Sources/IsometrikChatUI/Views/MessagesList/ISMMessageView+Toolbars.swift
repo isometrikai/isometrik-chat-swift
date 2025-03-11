@@ -43,7 +43,9 @@ extension ISMMessageView{
 //                DelegateMessageToolBar(deleteMessage: $deleteMessage,showDeleteActionSheet: $stateViewModel.showDeleteActionSheet)
 //            case .normal:
         BasicToolBarView(lastMessage: self.viewModelNew.messages.last?.last, textFieldtxt: $textFieldtxt, selectedMsgToReply: $selectedMsgToReply, parentMessageIdToScroll: $parentMessageIdToScroll, audioLocked: $stateViewModel.audioLocked, isClicked: $stateViewModel.isClicked, uAreBlock: $stateViewModel.uAreBlock, showUnblockPopUp: $stateViewModel.showUnblockPopUp, isShowingRedTimerStart: $stateViewModel.isShowingRedTimerStart, showActionSheet: $stateViewModel.showActionSheet, showGifPicker: $stateViewModel.showGifPicker,audioPermissionCheck: $audioPermissionCheck,keyboardFocused: $stateViewModel.keyboardFocused) {
-                    sendMessage(msgType: .text)
+            Task{
+                await sendMessage(msgType: .text)
+            }
                 }
                     .environmentObject(self.chatViewModel)
 //            }

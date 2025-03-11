@@ -696,7 +696,7 @@ struct ReplyToolBarView : View {
                     }
                 case .location:
                     Label {
-                        let location = "\(selectedMsgToReply?.attachments.first?.title ?? "Location") \(selectedMsgToReply?.attachments.first?.address ?? "")"
+                        let location = "\(selectedMsgToReply?.attachments?.first?.title ?? "Location") \(selectedMsgToReply?.attachments?.first?.address ?? "")"
                         Text(location)
                             .font(appearance.fonts.messageListReplyToolbarDescription)
                             .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
@@ -707,15 +707,15 @@ struct ReplyToolBarView : View {
                     }
                 case .contact:
                     Label {
-                        if let count = selectedMsgToReply?.metaData?.contacts.count{
+                        if let count = selectedMsgToReply?.metaData?.contacts?.count{
                             if count == 1{
-                                let contactText = "\(selectedMsgToReply?.metaData?.contacts.first?.contactName ?? "")"
+                                let contactText = "\(selectedMsgToReply?.metaData?.contacts?.first?.contactName ?? "")"
                                 Text(contactText)
                                     .font(appearance.fonts.messageListReplyToolbarDescription)
                                     .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                                     .transition(AnyTransition.opacity.animation(.easeInOut(duration:0.3)))
                             }else{
-                                let contactText = "\(selectedMsgToReply?.metaData?.contacts.first?.contactName ?? "") and \(count - 1) other contacts"
+                                let contactText = "\(selectedMsgToReply?.metaData?.contacts?.first?.contactName ?? "") and \(count - 1) other contacts"
                                 Text(contactText)
                                     .font(appearance.fonts.messageListReplyToolbarDescription)
                                     .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
@@ -733,7 +733,7 @@ struct ReplyToolBarView : View {
                             .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                     }
                 case .sticker:
-                    AnimatedImage(url: URL(string: selectedMsgToReply?.attachments.first?.mediaUrl ?? ""))
+                    AnimatedImage(url: URL(string: selectedMsgToReply?.attachments?.first?.mediaUrl ?? ""))
                         .resizable()
                         .frame(width: 40, height: 40)
                 case .gif:
@@ -786,11 +786,11 @@ struct ReplyToolBarView : View {
             }
             Spacer()
             if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .photo{
-                ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply?.attachments.first?.mediaUrl ?? "")
+                ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply?.attachments?.first?.mediaUrl ?? "")
                     .frame(width: 40, height: 40, alignment: .center)
                     .cornerRadius(5)
             }else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .video{
-                ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply?.attachments.first?.thumbnailUrl ?? "")
+                ISMChatImageCahcingManger.viewImage(url: selectedMsgToReply?.attachments?.first?.thumbnailUrl ?? "")
                     .frame(width: 40, height: 40, alignment: .center)
                     .cornerRadius(5)
             }else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .document{
@@ -800,7 +800,7 @@ struct ReplyToolBarView : View {
                     .frame(width: 40, height: 40, alignment: .center)
             }
             else if ISMChatHelper.getMessageType(message: selectedMsgToReply) == .gif{
-                AnimatedImage(url: URL(string: selectedMsgToReply?.attachments.first?.mediaUrl ?? ""),isAnimating: $stateViewModel.isAnimating)
+                AnimatedImage(url: URL(string: selectedMsgToReply?.attachments?.first?.mediaUrl ?? ""),isAnimating: $stateViewModel.isAnimating)
                     .resizable()
                     .frame(width: 45, height: 40)
                     .cornerRadius(5)

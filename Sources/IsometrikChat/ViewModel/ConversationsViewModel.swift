@@ -186,4 +186,37 @@ public class ConversationsViewModel: ObservableObject {
             print("Error loading conversations: \(error)")
         }
     }
+    
+    public func updateMessageId(objectId: UUID, msgId: String, conversationId: String, mediaUrl: String, thumbnailUrl: String, mediaSize: Int, mediaId: String) async {
+        do {
+            let _ = try await chatRepository.updateMsgId(objectId: objectId, msgId: msgId, conversationId: conversationId, mediaUrl: mediaUrl, thumbnailUrl: thumbnailUrl, mediaSize: mediaSize, mediaId: mediaId)
+        } catch {
+            print("Error updating message Id in conversations: \(error)")
+        }
+    }
+    
+    public func updateMessage(conversationId: String, messageId: String, body: String, metaData: ISMChatMetaDataDB? = nil, customType: String? = nil) async {
+        do {
+            let _ = try await chatRepository.updateMessage(conversationId: conversationId, messageId: messageId, body: body, metaData: metaData, customType: customType)
+        } catch {
+            print("Error updating message Id in conversations: \(error)")
+        }
+    }
+    
+    public func getPhotosAndVideosFromConversation(conversationId : String){
+        let predicate1 = NSPredicate(format: "customType == %@", ISMChatMediaType.Image.value)
+        let predicate2 = NSPredicate(format: "customType == %@", ISMChatMediaType.Video.value)
+        let predicate3 = NSPredicate(format: "customType == %@", ISMChatMediaType.gif.value)
+        
+        let predicateCompound = NSCompoundPredicate(type: .or, subpredicates: [predicate1, predicate2, predicate3])
+        
+        let mediaMessages = Array(
+            self.allMessages.objects(ISMChatMessagesDB.self)
+                .filter(NSPredicate(format: "conversationId == %@", conversationId))
+                .filter(predicateCompound)
+                .filter(NSPredicate(format: "isDelete == %@", NSNumber(value: false)))
+        )
+        
+        return mediaMessages
+    }
 }

@@ -24,7 +24,7 @@ public protocol ISMMessageViewDelegate{
     func externalBlockMechanism(appUserId : String,block: Bool)
     func navigateToBroadCastInfo(groupcastId : String,groupcastTitle : String,groupcastImage : String)
     func navigateToJobDetail(jobId : String)
-    func messageValidUrl(url : String,messageId : String,conversationId : String,completion:@escaping(ISMChatMessage)->())
+    func messageValidUrl(url : String,messageId : String,conversationId : String,completion:@escaping(ISMChatMessagesDB)->())
     func navigateToProductLink(childProductId : String,parentProductId : String, productName : String)
     func navigateToSocialLink(socialLinkId : String)
     func navigateToCollectionLink(collectionId : String,completeUrl: String)

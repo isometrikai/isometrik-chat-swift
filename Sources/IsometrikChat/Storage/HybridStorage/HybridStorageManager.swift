@@ -102,4 +102,23 @@ public class HybridStorageManager: ChatStorageManager {
             throw error
         }
     }
+    
+    public func updateMsgId(objectId: UUID, msgId: String, conversationId: String, mediaUrl: String, thumbnailUrl: String, mediaSize: Int, mediaId: String) async throws {
+        do {
+            try await localStorageManager.updateMsgId(objectId: objectId, msgId: msgId, conversationId: conversationId, mediaUrl: mediaUrl, thumbnailUrl: thumbnailUrl, mediaSize: mediaSize, mediaId: mediaId)
+        } catch {
+            print("Error saving messages in conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func updateMessage(conversationId: String, messageId: String, body: String, metaData: ISMChatMetaDataDB?, customType: String?) async throws {
+        do {
+            try await localStorageManager.updateMessage(conversationId: conversationId, messageId: messageId, body: body, metaData: metaData, customType: customType)
+        } catch {
+            print("Error saving messages in conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
 }

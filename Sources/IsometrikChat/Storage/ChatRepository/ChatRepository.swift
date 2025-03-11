@@ -63,4 +63,13 @@ public class ChatRepository {
     public func saveAllMessages(_ messages: [ISMChatMessagesDB], conversationId: String) async throws {
         return try await activeStorageManager.saveAllMessages(messages, conversationId: conversationId)
     }
+
+    public func updateMsgId(objectId: UUID, msgId: String, conversationId: String, mediaUrl: String, thumbnailUrl: String, mediaSize: Int, mediaId: String) async throws {
+        return try await activeStorageManager.updateMsgId(objectId: objectId, msgId: msgId, conversationId: conversationId, mediaUrl: mediaUrl, thumbnailUrl: thumbnailUrl, mediaSize: mediaSize, mediaId: mediaId)
+    }
+    
+    public func updateMessage(conversationId: String, messageId: String, body: String, metaData: ISMChatMetaDataDB?,customType : String?) async throws{
+        return try await activeStorageManager.updateMessage(conversationId: conversationId, messageId: messageId, body: body, metaData: metaData, customType: customType)
+    }
+
 }

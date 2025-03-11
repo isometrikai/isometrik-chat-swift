@@ -431,7 +431,7 @@ struct ISMConversationSubView: View {
                 return "\(chat.lastMessageDetails?.senderName ?? "") sent you a payment request"
             }
         } else if status == .Rejected {
-            if let otherUserName = self.chat.lastMessageDetails?.metaData?.paymentRequestedMembers.first(where: { $0.userId == userData?.userId && $0.status == 2 }) {
+            if let otherUserName = self.chat.lastMessageDetails?.metaData?.paymentRequestedMembers?.first(where: { $0.userId == userData?.userId && $0.status == 2 }) {
                 return "You declined the payment request"
             }else{
                 return "Declined the payment request"

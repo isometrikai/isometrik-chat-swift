@@ -35,6 +35,7 @@ public class ISMChatConversationDB: Identifiable {
     public var metaDataJson : String?
     public var lastInputText : String?
     @Relationship(deleteRule: .cascade) public var messages: [ISMChatMessagesDB] = []
+    @Relationship(deleteRule: .cascade) public var medias: [ISMChatMediaDB] = []
 
     public init(conversationId: String, updatedAt: Double, unreadMessagesCount: Int, membersCount: Int, lastMessageSentAt: Int, createdAt: Double, mode: String, conversationTitle: String, conversationImageUrl: String, createdBy: String, createdByUserName: String, privateOneToOne: Bool, messagingDisabled: Bool, isGroup: Bool, typing: Bool, userIds: [String], opponentDetails: ISMChatUserDB? = nil, config: ISMChatConfigDB? = nil, lastMessageDetails: ISMChatLastMessageDB? = nil, deletedMessage: Bool, metaData: ISMChatConversationMetaData? = nil, metaDataJson: String? = nil, lastInputText: String? = nil) {
         self.conversationId = conversationId

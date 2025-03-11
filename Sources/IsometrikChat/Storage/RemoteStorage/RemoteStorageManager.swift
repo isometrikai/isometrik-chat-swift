@@ -105,4 +105,12 @@ public class RemoteStorageManager: ChatStorageManager {
         
     }
     
+    public func updateMsgId(objectId: UUID, msgId: String, conversationId: String, mediaUrl: String, thumbnailUrl: String, mediaSize: Int, mediaId: String) async throws {
+        
+    }
+    
+    public func updateMessage(conversationId: String, messageId: String, body: String, metaData: ISMChatMetaDataDB?, customType: String?) async throws {
+        
+    }
+    
 }

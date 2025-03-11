@@ -100,6 +100,75 @@ public class ISMChatMetaDataDB{
         self.groupCastId = groupCastId
         self.status = status
     }
+    
+    func toDictionary() -> [String: Any] {
+        var dict: [String: Any] = [:]
+        
+        // Basic properties
+        dict["locationAddress"] = locationAddress
+        dict["captionMessage"] = captionMessage
+        dict["isBroadCastMessage"] = isBroadCastMessage
+        dict["storeName"] = storeName
+        dict["productName"] = productName
+        dict["bestPrice"] = bestPrice
+        dict["scratchPrice"] = scratchPrice
+        dict["url"] = url
+        dict["parentProductId"] = parentProductId
+        dict["childProductId"] = childProductId
+        dict["entityType"] = entityType
+        dict["productImage"] = productImage
+        dict["thumbnailUrl"] = thumbnailUrl
+        dict["DescriptionValue"] = DescriptionValue
+        dict["isVideoPost"] = isVideoPost
+        dict["socialPostId"] = socialPostId
+        dict["collectionTitle"] = collectionTitle
+        dict["collectionDescription"] = collectionDescription
+        dict["productCount"] = productCount
+        dict["collectionImage"] = collectionImage
+        dict["collectionId"] = collectionId
+        dict["paymentRequestId"] = paymentRequestId
+        dict["orderId"] = orderId
+        dict["requestAPaymentExpiryTime"] = requestAPaymentExpiryTime
+        dict["currencyCode"] = currencyCode
+        dict["amount"] = amount
+        dict["inviteTitle"] = inviteTitle
+        dict["inviteTimestamp"] = inviteTimestamp
+        dict["inviteRescheduledTimestamp"] = inviteRescheduledTimestamp
+        dict["groupCastId"] = groupCastId
+        dict["status"] = status
+        
+        // Handle Relationships by converting them to dictionary or array of dictionaries
+        if let replyMessage = replyMessage {
+            dict["replyMessage"] = replyMessage.toDictionary()
+        }
+        
+        if let contacts = contacts {
+            dict["contacts"] = contacts.map { $0.toDictionary() }
+        }
+        
+        if let post = post {
+            dict["post"] = post.toDictionary()
+        }
+        
+        if let product = product {
+            dict["product"] = product.toDictionary()
+        }
+        
+        if let paymentRequestedMembers = paymentRequestedMembers {
+            dict["paymentRequestedMembers"] = paymentRequestedMembers.map { $0.toDictionary() }
+        }
+        
+        if let inviteLocation = inviteLocation {
+            dict["inviteLocation"] = inviteLocation.toDictionary()
+        }
+        
+        if let inviteMembers = inviteMembers {
+            dict["inviteMembers"] = inviteMembers.map { $0.toDictionary() }
+        }
+        
+        return dict
+    }
+
 }
 
 @Model
@@ -111,6 +180,15 @@ public class ISMChatLocationDB{
         self.name = name
         self.latitude = latitude
         self.longitude = longitude
+    }
+    func toDictionary() -> [String: Any] {
+        var dict: [String: Any] = [:]
+
+        dict["name"] = name
+        dict["latitude"] = latitude
+        dict["longitude"] = longitude
+
+        return dict
     }
 }
 
@@ -132,6 +210,20 @@ public class ISMChatPaymentRequestMembersDB{
         self.userProfileImage = userProfileImage
         self.declineReason = declineReason
     }
+    func toDictionary() -> [String: Any] {
+        var dict: [String: Any] = [:]
+
+        dict["userId"] = userId
+        dict["userName"] = userName
+        dict["status"] = status
+        dict["statusText"] = statusText
+        dict["appUserId"] = appUserId
+        dict["userProfileImage"] = userProfileImage
+        dict["declineReason"] = declineReason
+
+        return dict
+    }
+
 }
 
 
@@ -142,6 +234,14 @@ public class ISMChatPostDB {
     public init(postId: String? = nil, postUrl: String? = nil) {
         self.postId = postId
         self.postUrl = postUrl
+    }
+    func toDictionary() -> [String: Any] {
+        var dict: [String: Any] = [:]
+
+        dict["postId"] = postId
+        dict["postUrl"] = postUrl
+
+        return dict
     }
 }
 
@@ -155,6 +255,15 @@ public class ISMChatProductDB{
         self.productUrl = productUrl
         self.productCategoryId = productCategoryId
     }
+    func toDictionary() -> [String: Any] {
+        var dict: [String: Any] = [:]
+
+        dict["productId"] = productId
+        dict["productUrl"] = productUrl
+        dict["productCategoryId"] = productCategoryId
+
+        return dict
+    }
 }
 
 @Model
@@ -166,6 +275,15 @@ public class ISMChatContactDB{
         self.contactName = contactName
         self.contactIdentifier = contactIdentifier
         self.contactImageUrl = contactImageUrl
+    }
+    func toDictionary() -> [String: Any] {
+        var dict: [String: Any] = [:]
+
+        dict["contactName"] = contactName
+        dict["contactIdentifier"] = contactIdentifier
+        dict["contactImageUrl"] = contactImageUrl
+
+        return dict
     }
 }
 
@@ -189,4 +307,20 @@ public class ISMChatReplyMessageDB {
         self.parentMessageInitiator = parentMessageInitiator
         self.parentMessagecaptionMessage = parentMessagecaptionMessage
     }
+    
+    func toDictionary() -> [String: Any] {
+        var dict: [String: Any] = [:]
+        
+        dict["parentMessageId"] = parentMessageId
+        dict["parentMessageBody"] = parentMessageBody
+        dict["parentMessageUserId"] = parentMessageUserId
+        dict["parentMessageUserName"] = parentMessageUserName
+        dict["parentMessageMessageType"] = parentMessageMessageType
+        dict["parentMessageAttachmentUrl"] = parentMessageAttachmentUrl
+        dict["parentMessageInitiator"] = parentMessageInitiator
+        dict["parentMessagecaptionMessage"] = parentMessagecaptionMessage
+
+        return dict
+    }
+
 }

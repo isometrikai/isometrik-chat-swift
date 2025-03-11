@@ -167,6 +167,243 @@ public class LocalStorageManager: ChatStorageManager {
         }
     }
 
+    
+    public func updateMsgId(objectId: UUID, msgId: String, conversationId: String, mediaUrl: String, thumbnailUrl: String, mediaSize: Int, mediaId: String) async throws {
+        do {
+            print("🔍 Searching for conversation with ID: \(conversationId)")
+            
+            // Fetch the conversation first
+            if let conversation = try modelContext.fetch(FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == conversationId })).first {
+                
+                print("✅ Conversation found! Checking messages...")
+                
+                // Ensure messages exist in the conversation
+                if !conversation.messages.isEmpty {
+                    print("📌 Found \(conversation.messages.count) messages in the conversation.")
+
+                    // Look for the message with the given objectId
+                    if let message = conversation.messages.first(where: { $0.id == objectId }) {
+                        print("✅ Found message with objectId: \(objectId)")
+
+                        // Update message fields
+                        message.messageId = msgId
+                        message.msgSyncStatus = ISMChatSyncStatus.Synch.txt
+                        
+                        if !mediaUrl.isEmpty {
+                            message.attachments?.first?.mediaUrl = mediaUrl
+                        }
+                        if !thumbnailUrl.isEmpty {
+                            message.attachments?.first?.thumbnailUrl = thumbnailUrl
+                        }
+                        if mediaSize != 0 {
+                            message.attachments?.first?.size = mediaSize
+                        }
+                        if !mediaId.isEmpty {
+                            message.attachments?.first?.mediaId = mediaId
+                        }
+                        
+                        // Update last message details in conversation
+                        conversation.lastMessageDetails?.msgSyncStatus = ISMChatSyncStatus.Synch.txt
+                        conversation.lastMessageDetails?.messageId = msgId
+                        
+                        // Save changes
+                        try modelContext.save()
+                        print("✅ Message updated successfully!")
+                        
+                    } else {
+                        print("❌ No message found with objectId: \(objectId)")
+                    }
+                } else {
+                    print("❌ No messages found in this conversation.")
+                }
+            } else {
+                print("❌ No conversation found with ID: \(conversationId)")
+            }
+        } catch {
+            print("🚨 Error updating message: \(error.localizedDescription)")
+        }
+    }
+
+    public func updateMessage(conversationId: String, messageId: String, body: String, metaData: ISMChatMetaDataDB?, customType: String?) async throws {
+        do {
+            // Fetch conversation using conversationId
+            if let conversation = try modelContext.fetch(FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == conversationId })).first {
+                
+                print("✅ Conversation found for ID: \(conversationId), checking messages...")
+                
+                // Ensure messages exist
+                if !conversation.messages.isEmpty {
+                    // Find the message with the given messageId
+                    if let messageToUpdate = conversation.messages.first(where: { $0.messageId == messageId }) {
+                        
+                        print("✅ Found message with messageId: \(messageId), updating...")
+                        
+                        // Update body and messageUpdated flag
+                        messageToUpdate.body = body
+                        messageToUpdate.messageUpdated = true
+                        
+                        // Update customType if provided
+                        if let customType = customType, !customType.isEmpty {
+                            messageToUpdate.customType = customType
+                        }
+                        
+                        if let metaData = metaData{
+                            // Update metadata
+                            let metadataValue = ISMChatMetaDataDB()
+                            metadataValue.locationAddress = metaData.locationAddress
+                            metadataValue.captionMessage = metaData.captionMessage
+                            metadataValue.isBroadCastMessage = metaData.isBroadCastMessage
+                            metadataValue.storeName = metaData.storeName
+                            metadataValue.productName = metaData.productName
+                            metadataValue.bestPrice = metaData.bestPrice
+                            metadataValue.scratchPrice = metaData.scratchPrice
+                            metadataValue.url = metaData.url
+                            metadataValue.parentProductId = metaData.parentProductId
+                            metadataValue.childProductId = metaData.childProductId
+                            metadataValue.entityType = metaData.entityType
+                            metadataValue.productImage = metaData.productImage
+                            metadataValue.thumbnailUrl = metaData.thumbnailUrl
+                            metadataValue.DescriptionValue = metaData.DescriptionValue
+                            metadataValue.isVideoPost = metaData.isVideoPost
+                            metadataValue.socialPostId = metaData.socialPostId
+                            metadataValue.collectionTitle = metaData.collectionTitle
+                            metadataValue.collectionDescription = metaData.collectionDescription
+                            metadataValue.productCount = metaData.productCount
+                            metadataValue.collectionImage = metaData.collectionImage
+                            metadataValue.collectionId = metaData.collectionId
+                            metadataValue.paymentRequestId = metaData.paymentRequestId
+                            metadataValue.orderId = metaData.orderId
+                            metadataValue.requestAPaymentExpiryTime = metaData.requestAPaymentExpiryTime
+                            metadataValue.currencyCode = metaData.currencyCode
+                            metadataValue.amount = metaData.amount
+                            
+                            if let members = metaData.paymentRequestedMembers {
+                                metadataValue.paymentRequestedMembers = members.map { member in
+                                    let paymentRequestMembersDB = ISMChatPaymentRequestMembersDB()
+                                    paymentRequestMembersDB.userId = member.userId
+                                    paymentRequestMembersDB.userName = member.userName
+                                    paymentRequestMembersDB.status = member.status
+                                    paymentRequestMembersDB.statusText = member.statusText
+                                    paymentRequestMembersDB.appUserId = member.appUserId
+                                    return paymentRequestMembersDB
+                                }
+                            }
+                            
+                            metadataValue.inviteTitle = metaData.inviteTitle
+                            metadataValue.status = metaData.status
+                            metadataValue.inviteTimestamp = metaData.inviteTimestamp
+                            metadataValue.inviteRescheduledTimestamp = metaData.inviteRescheduledTimestamp
+                            metadataValue.groupCastId = metaData.groupCastId
+                            
+                            if let location = metaData.inviteLocation {
+                                let locationDB = ISMChatLocationDB()
+                                locationDB.name = location.name
+                                locationDB.latitude = location.latitude
+                                locationDB.longitude = location.longitude
+                                metadataValue.inviteLocation = locationDB
+                            }
+                            
+                            if let inviteMembers = metaData.inviteMembers {
+                                metadataValue.inviteMembers = inviteMembers.map { member in
+                                    let membersDB = ISMChatPaymentRequestMembersDB()
+                                    membersDB.userId = member.userId
+                                    membersDB.userName = member.userName
+                                    membersDB.status = member.status
+                                    membersDB.statusText = member.statusText
+                                    membersDB.appUserId = member.appUserId
+                                    membersDB.userProfileImage = member.userProfileImage
+                                    membersDB.declineReason = member.declineReason
+                                    return membersDB
+                                }
+                            }
+                            
+                            if let replyMessage = metaData.replyMessage {
+                                let replyMessageDB = ISMChatReplyMessageDB()
+                                replyMessageDB.parentMessageId = replyMessage.parentMessageId
+                                replyMessageDB.parentMessageBody = replyMessage.parentMessageBody
+                                replyMessageDB.parentMessageUserId = replyMessage.parentMessageUserId
+                                replyMessageDB.parentMessageUserName = replyMessage.parentMessageUserName
+                                replyMessageDB.parentMessageMessageType = replyMessage.parentMessageMessageType
+                                replyMessageDB.parentMessageAttachmentUrl = replyMessage.parentMessageAttachmentUrl
+                                replyMessageDB.parentMessageInitiator = replyMessage.parentMessageInitiator
+                                replyMessageDB.parentMessagecaptionMessage = replyMessage.parentMessagecaptionMessage
+                                metadataValue.replyMessage = replyMessageDB
+                            }
+                            
+                            if let contacts = metaData.contacts {
+                                metadataValue.contacts = contacts.map { contact in
+                                    let contactDB = ISMChatContactDB()
+                                    contactDB.contactName = contact.contactName
+                                    contactDB.contactIdentifier = contact.contactIdentifier
+                                    contactDB.contactImageUrl = contact.contactImageUrl
+                                    return contactDB
+                                }
+                            }
+                            
+                            if let post = metaData.post {
+                                let postDB = ISMChatPostDB()
+                                postDB.postId = post.postId
+                                postDB.postUrl = post.postUrl
+                                metadataValue.post = postDB
+                            }
+                            
+                            if let product = metaData.product {
+                                let productDB = ISMChatProductDB()
+                                productDB.productId = product.productId
+                                productDB.productUrl = product.productUrl
+                                productDB.productCategoryId = product.productCategoryId
+                                metadataValue.product = productDB
+                            }
+                            
+                            messageToUpdate.metaData = metadataValue
+                            
+                            
+                            // Convert metadata to JSON and store
+                            do {
+                                let jsonData = try JSONSerialization.data(withJSONObject: metaData.toDictionary(), options: [])
+                                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                                    messageToUpdate.metaDataJsonString = jsonString
+                                }
+                            } catch {
+                                print("Failed to convert metaData to JSON: \(error.localizedDescription)")
+                            }
+                            
+                        }
+                        
+                        // if updated message is edited then it should also update simultanously
+                        if conversation.lastMessageDetails?.messageId == messageId {
+                            print("✅ Edited message is the last message in the conversation. Updating last message details...")
+                            conversation.lastMessageDetails?.body = body
+                            
+                            if let customType = customType, !customType.isEmpty {
+                                conversation.lastMessageDetails?.customType = customType
+                            }
+                            
+                            if let metaData = metaData {
+                                conversation.lastMessageDetails?.metaData = metaData
+                            }
+                        }
+                        
+                        // Save changes
+                        try modelContext.save()
+                        print("✅ Message successfully updated!")
+                        
+                    } else {
+                        print("❌ No message found with messageId: \(messageId)")
+                    }
+                } else {
+                    print("❌ No messages found in this conversation.")
+                }
+            } else {
+                print("❌ No conversation found with ID: \(conversationId)")
+            }
+        } catch {
+            print("🚨 Error updating message: \(error.localizedDescription)")
+        }
+    }
+
+
+    
 
 
 

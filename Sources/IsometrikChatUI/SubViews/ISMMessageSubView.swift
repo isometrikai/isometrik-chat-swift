@@ -271,7 +271,7 @@ struct ISMMessageSubView: View {
                                         dateAndStatusView(onImage: false)
                                     }
                                 }
-                                if message.reactions.count > 0{
+                                if message.reactions?.count ?? 0 > 0{
                                     reactionsView()
                                 }
                             }//:ZStack
@@ -1648,7 +1648,7 @@ struct ISMMessageSubView: View {
 //            
 //        }).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
 //        .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser,navigateToSocialProfileId: $navigateToSocialProfileId, navigateToExternalUserListToAddInGroup: $navigateToExternalUserListToAddInGroup).environmentObject(self.realmManager), isActive: $navigateToInfo))
-        .padding(.bottom, (message.reactions.count > 0) ? 20 : 0)
+        .padding(.bottom, (message.reactions?.count ?? 0 > 0) ? 20 : 0)
         .frame(maxWidth: .infinity, alignment: isReceived ? .leading : .trailing)
         .multilineTextAlignment(.leading) // Aligning the text based on message type
         
@@ -2066,7 +2066,7 @@ struct ISMMessageSubView: View {
                     }
                 }else if message.metaData?.replyMessage?.parentMessageMessageType == ISMChatMediaType.File.value{
                     Label {
-                        let str = URL(string: message.attachments.first?.mediaUrl ?? "")?.lastPathComponent.components(separatedBy: "_").last
+                        let str = URL(string: message.attachments?.first?.mediaUrl ?? "")?.lastPathComponent.components(separatedBy: "_").last
                         Text(str ?? "Document")
                             .foregroundColor(appearance.colorPalette.messageListReplyToolbarDescription)
                             .font(appearance.fonts.messageListReplyToolbarDescription)
@@ -2210,7 +2210,7 @@ struct ISMMessageSubView: View {
 
         if message.initiatorId == userData?.userId {
             if message.missedByMembers.count == 0 {
-                if let duration = message.callDurations.first(where: { $0.memberId == userData?.userId }) {
+                if let duration = message.callDurations?.first(where: { $0.memberId == userData?.userId }) {
                     let durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
                     if messageType == .AudioCall {
                         imageAsset = ImageAsset(image: appearance.images.audioOutgoing, title: "Voice Call", durationText: durationText)
@@ -2229,7 +2229,7 @@ struct ISMMessageSubView: View {
             }
         } else {
             if message.missedByMembers.count == 0 {
-                if let duration = message.callDurations.first(where: { $0.memberId == userData?.userId }) {
+                if let duration = message.callDurations?.first(where: { $0.memberId == userData?.userId }) {
                     let durationText = duration.durationInMilliseconds?.millisecondsToTime() ?? ""
                     if messageType == .AudioCall {
                         imageAsset = ImageAsset(image: appearance.images.audioIncoming, title: "Voice Call", durationText: durationText)
@@ -2285,7 +2285,7 @@ struct ISMMessageSubView: View {
             showReactionsDetail = true
         } label: {
             HStack(spacing : 5){
-                ForEach(message.reactions) { rec in
+                ForEach(message.reactions ?? []) { rec in
                     HStack(spacing: 1){
                         Text(ISMChatHelper.getEmoji(valueString: rec.reactionType))
                             .font(appearance.fonts.messageListreactionCount)
@@ -2323,12 +2323,12 @@ struct ISMMessageSubView: View {
     
     func messageInfo(msg : ISMChatMessagesDB,isReceived : Bool) -> some View{
         VStack(alignment: isReceived ? .leading : .trailing){
-            if let readAt = msg.readBy.first?.timestamp{
+            if let readAt = msg.readBy?.first?.timestamp{
                 Text("Read \(NSDate().descriptiveStringMessageInfo(time: readAt))")
                     .font(appearance.fonts.messageListMessageTime)
                     .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTimeReceived :  appearance.colorPalette.messageListMessageTimeSend)
             }
-            if let deliveredAt = msg.deliveredTo.first?.timestamp{
+            if let deliveredAt = msg.deliveredTo?.first?.timestamp{
                 Text("Delivered \(NSDate().descriptiveStringMessageInfo(time: deliveredAt))")
                     .font(appearance.fonts.messageListMessageTime)
                     .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTimeReceived :  appearance.colorPalette.messageListMessageTimeSend)
@@ -2746,7 +2746,7 @@ struct PaymentRequestUI: View {
             // Payment Amount
             VStack(spacing: 8) {
                 if status == .Accepted || status == .PayedByOther{
-                    if let otherUserName = message.metaData?.paymentRequestedMembers.first(where: { $0.userId != userData?.userId && $0.status == 1 }) {
+                    if let otherUserName = message.metaData?.paymentRequestedMembers?.first(where: { $0.userId != userData?.userId && $0.status == 1 }) {
                         Text("Paid by \(otherUserName.userName ?? "Unknown User")")
                             .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
                             .foregroundColor((status == .Rejected || status == .Expired) ? Color(hex: "#6A6C6A") : Color(hex: "#121511"))
@@ -2795,7 +2795,7 @@ struct PaymentRequestUI: View {
                         .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
                         .foregroundColor(Color(hex: "#3A341C")).padding(.bottom,16)
                 } else if status == .Rejected {
-                    if let otherUserName = message.metaData?.paymentRequestedMembers.first(where: { $0.userId == userData?.userId && $0.status == 2 }) {
+                    if let otherUserName = message.metaData?.paymentRequestedMembers?.first(where: { $0.userId == userData?.userId && $0.status == 2 }) {
                         Text("You declined the payment request")
                             .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
                             .foregroundColor(Color(hex: "#6A6C6A")).padding(.bottom,16)
