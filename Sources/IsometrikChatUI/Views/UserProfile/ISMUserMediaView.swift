@@ -73,17 +73,17 @@ struct ISMUserMediaView: View {
                     }
                 }
             }
-            .fullScreenCover(isPresented: $navigateToMediaSlider) {
-                // Full screen cover for media viewer
-                let attachments = self.realmManager.medias ?? [] // Get media attachments
-                let currentMediaId = navigateToMediaSliderId // Current media ID
-                let index = attachments.firstIndex { $0.messageId == currentMediaId } ?? 0 // Find index of current media
-                ISMChatMediaViewer(viewModel: ISMChatMediaViewerViewModel(attachments: attachments, index: index)) {
-                    navigateToMediaSlider = false // Dismiss media viewer
-                }.onAppear {
-                    self.navigateToMediaSliderId = "" // Reset media ID on appear
-                }
-            }
+//            .fullScreenCover(isPresented: $navigateToMediaSlider) {
+//                // Full screen cover for media viewer
+//                let attachments = self.viewModelNew.medias ?? [] // Get media attachments
+//                let currentMediaId = navigateToMediaSliderId // Current media ID
+//                let index = attachments.firstIndex { $0.messageId == currentMediaId } ?? 0 // Find index of current media
+//                ISMChatMediaViewer(viewModel: ISMChatMediaViewerViewModel(attachments: attachments, index: index)) {
+//                    navigateToMediaSlider = false // Dismiss media viewer
+//                }.onAppear {
+//                    self.navigateToMediaSliderId = "" // Reset media ID on appear
+//                }
+//            }
         }
         .onAppear {
             setupGroupedMedia() // Setup grouped media on appear

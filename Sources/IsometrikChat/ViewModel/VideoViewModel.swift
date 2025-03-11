@@ -11,7 +11,7 @@ import Combine
 
 public class ISMChatVideoViewModel: ObservableObject {
 
-    @Published public var attachment: MediaDB
+    @Published public var attachment: ISMChatMediaDB
     @Published public var player: AVPlayer?
 
     @Published public var isPlaying = false
@@ -20,7 +20,7 @@ public class ISMChatVideoViewModel: ObservableObject {
     private var subscriptions = Set<AnyCancellable>()
     @Published public var status: AVPlayer.Status = .unknown
 
-    public init(attachment: MediaDB) {
+    public init(attachment: ISMChatMediaDB) {
         self.attachment = attachment
     }
 

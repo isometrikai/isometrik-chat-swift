@@ -16,6 +16,10 @@ public class ConversationsViewModel: ObservableObject {
     
     @Published public var allMessages : [ISMChatMessagesDB] = []
     @Published public var messages : [[ISMChatMessagesDB]] = []
+    @Published public var medias : [ISMChatMediaDB] = []
+    @Published public var files : [ISMChatMediaDB] = []
+    @Published public var links : [ISMChatMessagesDB] = []
+    
     public var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
     public let chatRepository: ChatRepository
     
@@ -132,6 +136,14 @@ public class ConversationsViewModel: ObservableObject {
         return filteredOutConversations
     }
     
+    public func updateUnreadCountThroughConversation(conversationId: String, count: Int, reset: Bool?) async {
+        do {
+            try await chatRepository.updateUnreadCountThroughConversation(conversationId: conversationId, count: count, reset: reset)
+        } catch {
+            print("Error loading conversations: \(error)")
+        }
+    }
+    
     public func loadMessages(conversationId : String,lastMessageTimestamp: String) async {
         do {
             let fetchedMessages = try await chatRepository.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp)
@@ -190,6 +202,41 @@ public class ConversationsViewModel: ObservableObject {
     public func updateMessageId(objectId: UUID, msgId: String, conversationId: String, mediaUrl: String, thumbnailUrl: String, mediaSize: Int, mediaId: String) async {
         do {
             let _ = try await chatRepository.updateMsgId(objectId: objectId, msgId: msgId, conversationId: conversationId, mediaUrl: mediaUrl, thumbnailUrl: thumbnailUrl, mediaSize: mediaSize, mediaId: mediaId)
+            if let index = allMessages.firstIndex(where: { $0.id == objectId }) {
+                allMessages[index].messageId = msgId
+                if !mediaUrl.isEmpty{
+                    allMessages[index].attachments?.first?.mediaUrl = mediaUrl
+                }
+                if !thumbnailUrl.isEmpty{
+                    allMessages[index].attachments?.first?.thumbnailUrl = thumbnailUrl
+                }
+                if mediaSize > 0{
+                    allMessages[index].attachments?.first?.size = mediaSize
+                }
+                if !mediaId.isEmpty{
+                    allMessages[index].attachments?.first?.mediaId = mediaId
+                }
+            }
+            
+            // ✅ Manually update messages array (2D Array)
+            for (sectionIndex, section) in messages.enumerated() {
+                if let messageIndex = section.firstIndex(where: { $0.id == objectId }) {
+                    messages[sectionIndex][messageIndex].messageId = msgId
+                    if !mediaUrl.isEmpty{
+                        messages[sectionIndex][messageIndex].attachments?.first?.mediaUrl = mediaUrl
+                    }
+                    if !thumbnailUrl.isEmpty{
+                        messages[sectionIndex][messageIndex].attachments?.first?.thumbnailUrl = thumbnailUrl
+                    }
+                    if mediaSize > 0{
+                        messages[sectionIndex][messageIndex].attachments?.first?.size = mediaSize
+                    }
+                    if !mediaId.isEmpty{
+                        messages[sectionIndex][messageIndex].attachments?.first?.mediaId = mediaId
+                    }
+                    break // No need to continue searching once updated
+                }
+            }
         } catch {
             print("Error updating message Id in conversations: \(error)")
         }
@@ -203,20 +250,44 @@ public class ConversationsViewModel: ObservableObject {
         }
     }
     
-    public func getPhotosAndVideosFromConversation(conversationId : String){
-        let predicate1 = NSPredicate(format: "customType == %@", ISMChatMediaType.Image.value)
-        let predicate2 = NSPredicate(format: "customType == %@", ISMChatMediaType.Video.value)
-        let predicate3 = NSPredicate(format: "customType == %@", ISMChatMediaType.gif.value)
-        
-        let predicateCompound = NSCompoundPredicate(type: .or, subpredicates: [predicate1, predicate2, predicate3])
-        
-        let mediaMessages = Array(
-            self.allMessages.objects(ISMChatMessagesDB.self)
-                .filter(NSPredicate(format: "conversationId == %@", conversationId))
-                .filter(predicateCompound)
-                .filter(NSPredicate(format: "isDelete == %@", NSNumber(value: false)))
-        )
-        
-        return mediaMessages
+    public func saveMedia(arr: [ISMChatAttachmentDB],conversationId: String,customType: String,sentAt: Double,messageId: String,userName: String) async {
+        do {
+            let _ = try await chatRepository.saveMedia(arr: arr, conversationId: conversationId, customType: customType, sentAt: sentAt, messageId: messageId, userName: userName)
+        } catch {
+            print("Error saving media in conversations: \(error)")
+        }
+    }
+    
+    public func fetchPhotosAndVideos(conversationId : String) async{
+        do {
+            let medias = try await chatRepository.fetchPhotosAndVideos(conversationId: conversationId)
+            DispatchQueue.main.async {
+                self.medias = medias
+            }
+        } catch {
+            print("Error saving media in conversations: \(error)")
+        }
+    }
+    
+    public func fetchFiles(conversationId : String) async{
+        do {
+            let files = try await chatRepository.fetchFiles(conversationId: conversationId)
+            DispatchQueue.main.async {
+                self.files = files
+            }
+        } catch {
+            print("Error saving media in conversations: \(error)")
+        }
+    }
+    
+    public func fetchLinks(conversationId : String) async{
+        do {
+            let links = try await chatRepository.fetchLinks(conversationId: conversationId)
+            DispatchQueue.main.async {
+                self.links = links
+            }
+        } catch {
+            print("Error saving media in conversations: \(error)")
+        }
     }
 }

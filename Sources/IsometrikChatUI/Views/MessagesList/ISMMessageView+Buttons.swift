@@ -81,20 +81,20 @@ extension ISMMessageView{
     //MARK: - SCROLL TO BOTTOM MESSAGE
     
     /// Returns a button that scrolls to the bottom of the message list.
-//    func scrollToBottomButton() -> some View {
-//        return Button(action: {
-//            parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
-//        }, label: {
-//            appearance.images.scrollToBottomArrow
-//                .resizable()
-//                .frame(width: 32, height: 32)
-//                .padding()
-//        })
-//        .shadow(color: Color.black.opacity(0.3),
-//                radius: 3,
-//                x: 3,
-//                y: 3)
-//    }
+    func scrollToBottomButton() -> some View {
+        return Button(action: {
+            parentMessageIdToScroll = self.viewModelNew.messages.last?.last?.id.description ?? ""
+        }, label: {
+            appearance.images.scrollToBottomArrow
+                .resizable()
+                .frame(width: 32, height: 32)
+                .padding()
+        })
+        .shadow(color: Color.black.opacity(0.3),
+                radius: 3,
+                x: 3,
+                y: 3)
+    }
     
     //MARK: - NAVIGATION LEADING BUTTON
     

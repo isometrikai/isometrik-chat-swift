@@ -227,7 +227,7 @@ public struct ISMMessageView: View {
                                 }.modifier(BackgroundImage())
                                     .coordinateSpace(name: "scroll")
                                     .coordinateSpace(name: "pullToRefresh")
-//                                    .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
+                                    .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
                                     .gesture(
                                         DragGesture()
                                             .onChanged { value in
@@ -255,7 +255,7 @@ public struct ISMMessageView: View {
                                 }
                                 .coordinateSpace(name: "scroll")
                                 .coordinateSpace(name: "pullToRefresh")
-//                                .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
+                                .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
                                 .gesture(DragGesture().onChanged { value in
                                     // Calculate the velocity
                                     let velocity = value.predictedEndTranslation.height - value.translation.height
@@ -368,14 +368,14 @@ public struct ISMMessageView: View {
         } message: {
             Text("Block \(conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")? \n Blocked user will be no longer be able to send you messages.")
         }
-//        .onChange(of: chatViewModel.documentSelectedFromPicker, { _, _ in
-//            sendMessageIfDocumentSelected()
-//        })
-//        .onChange(of: navigateToDocumentUrl, { _, _ in
-//            if navigateToDocumentUrl != ""{
-//                stateViewModel.navigateToDocumentViewer = true
-//            }
-//        })
+        .onChange(of: chatViewModel.documentSelectedFromPicker, { _, _ in
+            sendMessageIfDocumentSelected()
+        })
+        .onChange(of: navigateToDocumentUrl, { _, _ in
+            if navigateToDocumentUrl != ""{
+                stateViewModel.navigateToDocumentViewer = true
+            }
+        })
 //        .onChange(of: navigateToChatList, { _, _ in
 //            if navigateToChatList == true{
 //                OndisappearOnBack()
@@ -443,11 +443,11 @@ public struct ISMMessageView: View {
 //                stateViewModel.showDeclinePaymentRequestPopUp = true
 //            }
 //        }
-//        .onChange(of: navigateToMediaSliderId, { _, _ in
-//            if !navigateToMediaSliderId.isEmpty{
-//                stateViewModel.navigateToMediaSlider = true
-//            }
-//        })
+        .onChange(of: navigateToMediaSliderId, { _, _ in
+            if !navigateToMediaSliderId.isEmpty{
+                stateViewModel.navigateToMediaSlider = true
+            }
+        })
 //        .onChange(of: showInviteeListInDineInRequest.messageId, { _, _ in
 //            if !showInviteeListInDineInRequest.messageId.isEmpty{
 //                stateViewModel.showInviteeDineInPopUp = true
@@ -497,11 +497,13 @@ public struct ISMMessageView: View {
 //                stateViewModel.showCallPopUp = true
 //            }
 //        })
-//        .onChange(of: cameraImageToUse, { _, _ in
-//            if cameraImageToUse != nil {
-//                sendMessage(msgType: .photo)
-//            }
-//        })
+        .onChange(of: cameraImageToUse, { _, _ in
+            if cameraImageToUse != nil {
+                Task{
+                    await sendMessage(msgType: .photo)
+                }
+            }
+        })
 //        .onChange(of: chatViewModel.audioUrl, { _, _ in
 //            sendMessageIfAudioUrl()
 //        })
@@ -517,12 +519,12 @@ public struct ISMMessageView: View {
 //                sendMessageIfGif()
 //            }
 //        })
-//        .onChange(of: stateViewModel.sendMedia, { _, _ in
-//            if stateViewModel.sendMedia == true{
-//                stateViewModel.sendMedia = false
-//                sendMessageIfUploadMedia()
-//            }
-//        })
+        .onChange(of: stateViewModel.sendMedia, { _, _ in
+            if stateViewModel.sendMedia == true{
+                stateViewModel.sendMedia = false
+                sendMessageIfUploadMedia()
+            }
+        })
 //        .onChange(of: updateMessage.body, { _, _ in
 //            self.textFieldtxt = updateMessage.body
 //            stateViewModel.keyboardFocused = true
@@ -765,24 +767,25 @@ public struct ISMMessageView: View {
 //            .presentationDetents([.fraction(0.3)])
 //            .presentationDragIndicator(.visible)
 //        })
-//        .fullScreenCover(isPresented: $stateViewModel.showSheet){
-//            if selectedSheetIndex == 0 {
-//                CameraCaptureView(isShown: $stateViewModel.showSheet, sendUrl: $cameraImageToUse)
-////                ISMCameraView(media : $cameraImageToUse, isShown: $stateViewModel.showSheet, uploadMedia: $stateViewModel.uploadMedia,mediaType: .both)
-//            } else if selectedSheetIndex == 1 {
-//                DocumentPicker(documents: $chatViewModel.documentSelectedFromPicker, isShown: self.$stateViewModel.showSheet)
-//            } else{
-//                ISMShareContactList(dissmiss: $stateViewModel.showSheet , selectedContact: self.$selectedContactToShare, shareContact: $stateViewModel.shareContact)
-//            }
-//        }.fullScreenCover(isPresented: $stateViewModel.showLocationSharing, content: {
-//                ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId, placeName: $placeName, address: $placeAddress)
-//        })
-//        .fullScreenCover(isPresented: $stateViewModel.navigateToDocumentViewer, content: {
-//            ISMDocumentViewer(url: navigateToDocumentUrl)
-//        })
-//        .sheet(isPresented: self.$stateViewModel.showVideoPicker) {
-//            ISMMediaPicker(isPresented: self.$stateViewModel.showVideoPicker, sendMedias: $mediaSelectedFromPicker,opponenetName: isGroup == true ? (self.conversationDetail?.conversationDetails?.conversationTitle ?? "" ) : (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""),mediaCaption: $mediaCaption,sendMediaToMessage: $stateViewModel.sendMedia)
-//        }
+        .fullScreenCover(isPresented: $stateViewModel.showSheet){
+            if selectedSheetIndex == 0 {
+                CameraCaptureView(isShown: $stateViewModel.showSheet, sendUrl: $cameraImageToUse)
+//                ISMCameraView(media : $cameraImageToUse, isShown: $stateViewModel.showSheet, uploadMedia: $stateViewModel.uploadMedia,mediaType: .both)
+            } else if selectedSheetIndex == 1 {
+                DocumentPicker(documents: $chatViewModel.documentSelectedFromPicker, isShown: self.$stateViewModel.showSheet)
+            } else{
+                ISMShareContactList(dissmiss: $stateViewModel.showSheet , selectedContact: self.$selectedContactToShare, shareContact: $stateViewModel.shareContact)
+            }
+        }
+        .fullScreenCover(isPresented: $stateViewModel.showLocationSharing, content: {
+                ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId, placeName: $placeName, address: $placeAddress)
+        })
+        .fullScreenCover(isPresented: $stateViewModel.navigateToDocumentViewer, content: {
+            ISMDocumentViewer(url: navigateToDocumentUrl)
+        })
+        .sheet(isPresented: self.$stateViewModel.showVideoPicker) {
+            ISMMediaPicker(isPresented: self.$stateViewModel.showVideoPicker, sendMedias: $mediaSelectedFromPicker,opponenetName: isGroup == true ? (self.conversationDetail?.conversationDetails?.conversationTitle ?? "" ) : (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""),mediaCaption: $mediaCaption,sendMediaToMessage: $stateViewModel.sendMedia)
+        }
 //        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToChatList: $navigateToChatList).environmentObject(RealmManager.shared)
 //            .onAppear {
 //                OnMessageList = false
@@ -795,17 +798,17 @@ public struct ISMMessageView: View {
 //                    OnMessageList = false
 //                }
 //        })
-//        .fullScreenCover(isPresented: $stateViewModel.navigateToMediaSlider) {
-//            let attachments = self.realmManager.medias ?? []
-//            let currentMediaId = navigateToMediaSliderId
-//            //reset value
-//            let index = attachments.firstIndex { $0.messageId == currentMediaId } ?? 0
-//            ISMChatMediaViewer(viewModel: ISMChatMediaViewerViewModel(attachments: attachments, index: index)) {
-//                stateViewModel.navigateToMediaSlider = false
-//            }.onAppear {
-//                self.navigateToMediaSliderId = ""
-//            }
-//        }
+        .fullScreenCover(isPresented: $stateViewModel.navigateToMediaSlider) {
+            let attachments = self.viewModelNew.medias ?? []
+            let currentMediaId = navigateToMediaSliderId
+            //reset value
+            let index = attachments.firstIndex { $0.messageId == currentMediaId } ?? 0
+            ISMChatMediaViewer(viewModel: ISMChatMediaViewerViewModel(attachments: attachments, index: index)) {
+                stateViewModel.navigateToMediaSlider = false
+            }.onAppear {
+                self.navigateToMediaSliderId = ""
+            }
+        }
 //        .navigationDestination(isPresented: $stateViewModel.movetoForwardList, destination: {
 //            ISMForwardToContactView(viewModel : self.chatViewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage)
 //        })
@@ -861,29 +864,19 @@ public struct ISMMessageView: View {
 //        }
         .onLoad {
             OnMessageList = true
-//            self.realmManager.clearMessages()
             self.getMessages()
-            //added this from on appear
-            
-            
             if chatFeatures.contains(.audiocall) == true || chatFeatures.contains(.videocall) == true || chatFeatures.contains(.audio) == true{
                 checkAudioPermission()
             }
-//            realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
-//            realmManager.fetchFiles(conId: self.conversationID ?? "")
-//            realmManager.fetchLinks(conId: self.conversationID ?? "")
-//            
-//            realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
             let data : [String: Any] = ["conversationId" : self.conversationID ?? ""]
             NotificationCenter.default.post(name: NSNotification.mqttUnreadCountReset, object: nil, userInfo: data)
-            
             if !networkMonitor.isConnected {
                 stateViewModel.showingNoInternetAlert = true
             }
             //fix to don't show scroll to Bottom button when message count is zero
-//            if realmManager.allMessages?.count == 0{
-//                stateViewModel.showScrollToBottomView = false
-//            }
+            if viewModelNew.allMessages.count == 0{
+                stateViewModel.showScrollToBottomView = false
+            }
             stateViewModel.onLoad = true
             forwardMessageSelected.removeAll()
         }
@@ -892,6 +885,12 @@ public struct ISMMessageView: View {
     func getMessages(){
         Task {
             await viewModelNew.loadMessages(conversationId: self.conversationID ?? "", lastMessageTimestamp: viewModelNew.messages.last?.last?.messageId ?? "")
+            // scroll to last message
+            parentMessageIdToScroll = self.viewModelNew.messages.last?.last?.id.description ?? ""
+            await viewModelNew.fetchPhotosAndVideos(conversationId: self.conversationID ?? "")
+            await viewModelNew.fetchFiles(conversationId: self.conversationID ?? "")
+            await viewModelNew.fetchLinks(conversationId: self.conversationID ?? "")
+            await viewModelNew.updateUnreadCountThroughConversation(conversationId: self.conversationID ?? "", count: 0, reset: true)
         }
     }
     

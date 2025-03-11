@@ -16,7 +16,7 @@ struct ISMChatMediaView : View {
     @EnvironmentObject var mediaPagesViewModel: ISMChatMediaViewerViewModel
     
     /// The media attachment data to be displayed
-    let attachment: MediaDB
+    let attachment: ISMChatMediaDB
     
     var body: some View {
         // Determine the type of media and display appropriate view

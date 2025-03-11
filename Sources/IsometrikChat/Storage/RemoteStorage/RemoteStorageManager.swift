@@ -74,6 +74,9 @@ public class RemoteStorageManager: ChatStorageManager {
     public func updateLastMessageInConversation(conversationId : String, lastMessage : ISMChatLastMessageDB) async throws{
         
     }
+    public func updateUnreadCountThroughConversation(conversationId: String, count: Int, reset: Bool?) async throws {
+       
+    }
     
     public func fetchMessages(conversationId: String,lastMessageTimestamp : String) async throws -> [ISMChatMessagesDB] {
         return try await withCheckedThrowingContinuation { continuation in
@@ -110,6 +113,26 @@ public class RemoteStorageManager: ChatStorageManager {
     }
     
     public func updateMessage(conversationId: String, messageId: String, body: String, metaData: ISMChatMetaDataDB?, customType: String?) async throws {
+        
+    }
+    
+    public func saveMedia(arr: [ISMChatAttachmentDB], conversationId: String, customType: String, sentAt: Double, messageId: String, userName: String) async throws {
+        
+    }
+    
+    public func fetchPhotosAndVideos(conversationId: String) async throws -> [ISMChatMediaDB] {
+        return []
+    }
+    
+    public func fetchFiles(conversationId: String) async throws -> [ISMChatMediaDB] {
+        return []
+    }
+    
+    public func fetchLinks(conversationId: String) async throws -> [ISMChatMessagesDB] {
+        return []
+    }
+    
+    public func deleteMedia(conversationId: String, messageId: String) async throws {
         
     }
     

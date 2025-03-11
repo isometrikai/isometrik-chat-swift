@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 public class ISMChatMediaViewerViewModel: ObservableObject {
-    public var attachments: [MediaDB]
+    public var attachments: [ISMChatMediaDB]
     @Published public var index: Int
 
     @Published public var showMinis = true
@@ -21,7 +21,7 @@ public class ISMChatMediaViewerViewModel: ObservableObject {
     @Published public var toggleVideoPlaying = {}
     @Published public var toggleVideoMuted = {}
 
-    public init(attachments: [MediaDB], index: Int) {
+    public init(attachments: [ISMChatMediaDB], index: Int) {
         self.attachments = attachments
         self.index = index
     }

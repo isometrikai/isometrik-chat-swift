@@ -412,347 +412,347 @@ struct ISMMessageSubView: View {
 //                        }
 //                        
 //                        //MARK: - Photo Message View
-//                    case .photo:
-//                        HStack(alignment: .bottom){
-//                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                //When its group show member avatar in message
-//                                inGroupUserAvatarView()
-//                            }
-//                            ZStack(alignment: .bottomTrailing){
-//                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
-//                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                        //when its group show member name in message
-//                                        inGroupUserName()
-//                                    }
-//                                    
-//                                    //                                NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
-//                                    //                                {
-//                                    if appearance.messageBubbleType == .BubbleWithTail{
-//                                        VStack(alignment: .trailing,spacing: 5){
-//                                            if message.messageType == 1{
-//                                                forwardedView()
-//                                            }
-//                                            
-//                                            Button {
-//                                                navigateToMediaSliderId = message.messageId
-//                                            } label: {
-//                                                ZStack(alignment: .bottomTrailing){
-//                                                    ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 16)
-//                                                        .overlay(
-//                                                            LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-//                                                                .frame(width: 250, height: 300)
-//                                                                .mask(
-//                                                                    RoundedRectangle(cornerRadius: 16)
-//                                                                        .fill(Color.white)
-//                                                                )
-//                                                        )
-//                                                    
-//                                                }
-//                                            }
-//                                            
-//                                            dateAndStatusView(onImage: false)
-//                                                .padding(.bottom,5)
-//                                                .padding(.trailing,5)
-//                                        }
-//                                        
-//                                    }else{
-//                                        
-//                                        
-//                                        VStack(alignment: .trailing,spacing: 5){
-//                                            if message.messageType == 1{
-//                                                forwardedView()
-//                                            }
-//                                            
-//                                            Button {
-//                                                navigateToMediaSliderId = message.messageId
-//                                            } label: {
-//                                                ZStack(alignment: .bottomTrailing){
-//                                                    ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
-//                                                        .overlay(
-//                                                            LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-//                                                                .frame(width: 250, height: 300)
-//                                                                .mask(
-//                                                                    RoundedRectangle(cornerRadius: 5)
-//                                                                        .fill(Color.white)
-//                                                                )
-//                                                        )
-//                                                    if appearance.timeInsideBubble == true{
-//                                                        if message.metaData?.captionMessage == nil{
-//                                                            dateAndStatusView(onImage: true)
-//                                                                .padding(.bottom,5)
-//                                                                .padding(.trailing,5)
-//                                                        }
-//                                                    }
-//                                                }
-//                                            }
-//                                            
-//                                            
-//                                            if let caption = message.metaData?.captionMessage, !caption.isEmpty{
-//                                                Text(caption)
-//                                                    .font(appearance.fonts.messageListMessageText)
-//                                                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-//                                                
-//                                                if appearance.timeInsideBubble == true{
-//                                                    dateAndStatusView(onImage: false)
-//                                                        .padding(.bottom,5)
-//                                                        .padding(.trailing,5)
-//                                                }
-//                                                
-//                                            }
-//                                        }//:ZStack
-//                                        .padding(5)
-//                                        .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-//                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-//                                        .overlay(
-//                                            appearance.messageBubbleType == .BubbleWithOutTail ?
-//                                            AnyView(
-//                                                UnevenRoundedRectangle(
-//                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-//                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-//                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-//                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-//                                                    style: .circular
-//                                                )
-//                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-//                                            ) : AnyView(EmptyView())
-//                                        )
-//                                        //                                }
-//                                        if appearance.timeInsideBubble == false{
-//                                            dateAndStatusView(onImage: false)
-//                                                .padding(.bottom,5)
-//                                                .padding(.trailing,5)
-//                                        }
-//                                    }
-//                                }
-//                                
-//                                if message.reactions.count > 0{
-//                                    reactionsView()
-//                                }
-//                            }.padding(.vertical,2)
-//                        }
-//                        
-//                        //MARK: - Video Message View
-//                    case .video:
-//                        HStack(alignment: .bottom){
-//                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                //When its group show member avatar in message
-//                                inGroupUserAvatarView()
-//                            }
-//                            ZStack(alignment: .bottomTrailing){
-//                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
-//                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                        //when its group show member name in message
-//                                        inGroupUserName()
-//                                    }
-//                                    
-//                                    
-//                                    //                                NavigationLink(destination: MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager)){
-//                                    VStack(alignment: .trailing,spacing : 5){
-//                                        if message.messageType == 1{
-//                                            forwardedView()
-//                                        }
-//                                        
-//                                        Button {
-//                                            navigateToMediaSliderId = message.messageId
-//                                        } label: {
-//                                            ZStack(alignment: .center){
-//                                                if let thumbnailUrl = message.attachments.first?.thumbnailUrl,
-//                                                   thumbnailUrl.contains(".mp4") {
-//                                                    if let image = ISMChatHelper.getThumbnailImage(url: thumbnailUrl){
-//                                                        Image(uiImage: image)
-//                                                            .scaledToFill()
-//                                                            .frame(width: 250, height: 300)
-//                                                            .cornerRadius(5)
-//                                                    }else{
-//                                                        // Display the thumbnail image for non-videos
-//                                                        ZStack(alignment: .bottomTrailing){
-//                                                            ISMImageViewer(url:  message.attachments.first?.thumbnailUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
-//                                                                .overlay(
-//                                                                    LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-//                                                                        .frame(width: 250, height: 300)
-//                                                                        .mask(
-//                                                                            RoundedRectangle(cornerRadius: 5)
-//                                                                                .fill(Color.white)
-//                                                                        )
-//                                                                )
-//                                                            if message.metaData?.captionMessage == nil{
-//                                                                dateAndStatusView(onImage: true)
-//                                                                    .padding(.bottom,5)
-//                                                                    .padding(.trailing,5)
-//                                                            }
-//                                                        }
-//                                                    }
-//                                                } else {
-//                                                    // Display the thumbnail image for non-videos
-//                                                    ZStack(alignment: .bottomTrailing){
-//                                                        ISMImageViewer(url: message.attachments.first?.thumbnailUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
-//                                                            .overlay(
-//                                                                LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-//                                                                    .frame(width: 250, height: 300)
-//                                                                    .mask(
-//                                                                        RoundedRectangle(cornerRadius: 5)
-//                                                                            .fill(Color.white)
-//                                                                    )
-//                                                            )
-//                                                        if appearance.timeInsideBubble == true{
-//                                                            if message.metaData?.captionMessage == nil{
-//                                                                dateAndStatusView(onImage: true)
-//                                                                    .padding(.bottom,5)
-//                                                                    .padding(.trailing,5)
-//                                                            }
-//                                                        }
-//                                                    }
-//                                                }
-//                                                appearance.images.playVideo
-//                                                    .resizable()
-//                                                    .frame(width: 48,height: 48)
-//                                                
-//                                            }
-//                                        }
-//                                        
-//                                        
-//                                        
-//                                        if let caption = message.metaData?.captionMessage, !caption.isEmpty{
-//                                            Text(caption)
-//                                                .font(appearance.fonts.messageListMessageText)
-//                                                .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-//                                            
-//                                            if appearance.timeInsideBubble == true{
-//                                                dateAndStatusView(onImage: false)
-//                                                    .padding(.bottom,5)
-//                                                    .padding(.trailing,5)
-//                                            }
-//                                        }
-//                                        
-//                                    }.padding(5)
-//                                        .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-//                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-//                                        .overlay(
-//                                            appearance.messageBubbleType == .BubbleWithOutTail ?
-//                                            AnyView(
-//                                                UnevenRoundedRectangle(
-//                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-//                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-//                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-//                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-//                                                    style: .circular
-//                                                )
-//                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-//                                            ) : AnyView(EmptyView())
-//                                        )
-//                                    //                                }//:NavigationLink
-//                                    //                                }
-//                                    if appearance.timeInsideBubble == false{
-//                                        dateAndStatusView(onImage: false)
-//                                            .padding(.bottom,5)
-//                                            .padding(.trailing,5)
-//                                    }
-//                                }
-//                                if message.reactions.count > 0{
-//                                    reactionsView()
-//                                }
-//                            }.padding(.vertical, 2)
-//                        }
-//                        
-//                        //MARK: - Video Message View
-//                    case .document:
-//                        HStack(alignment: .bottom){
-//                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                //When its group show member avatar in message
-//                                inGroupUserAvatarView()
-//                            }
-//                            ZStack(alignment: .bottomTrailing){
-//                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
-//                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                        //when its group show member name in message
-//                                        inGroupUserName()
-//                                    }
-//                                    if let documentUrl = URL(string: message.attachments.first?.mediaUrl ?? ""){
-//                                        let urlExtension = ISMChatHelper.getExtensionFromURL(url: documentUrl)
-//                                        let fileName = ISMChatHelper.getFileNameFromURL(url: documentUrl)
-//                                        Button(action: {
-//                                            navigateToDocumentUrl = message.attachments.first?.mediaUrl ?? ""
-//                                        }, label: {
-//                                            ZStack{
-//                                                VStack(alignment: .trailing, spacing: 5){
-//                                                    if message.messageType == 1{
-//                                                        forwardedView()
-//                                                    }
-//                                                    
-//                                                    if ISMChatSdkUI.getInstance().getChatProperties().hideDocumentPreview == true{
-//                                                        HStack{
-//                                                            appearance.images.pdfLogo
-//                                                                .resizable()
-//                                                                .aspectRatio(contentMode: .fit)
-//                                                                .frame(width: appearance.imagesSize.documentIcon.width, height: appearance.imagesSize.documentIcon.height)
-//                                                            
-//                                                            Text(fileName)
-//                                                                .font(appearance.fonts.messageListMessageText)
-//                                                                .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-//                                                                .fixedSize(horizontal: false, vertical: true)
-//                                                            
-//                                                            Spacer()
-//                                                        }.padding(.leading,5).padding(.top,5)
-//                                                    }else{
-//                                                        HStack(alignment: .center, spacing: 5){
-//                                                            if let urlExtension = urlExtension{
-//                                                                if urlExtension.contains(".jpg") ||  urlExtension.contains(".png"){
-//                                                                    ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
-//                                                                    
-//                                                                }else{
-//                                                                    if urlExtension == "pdf" {
-//                                                                        ISMPDFMessageView(pdfURL: documentUrl, fileName: fileName)
-//                                                                    } else {
-//                                                                        appearance.images.pdfLogo
-//                                                                            .resizable()
-//                                                                            .aspectRatio(contentMode: .fit)
-//                                                                            .frame(width: appearance.imagesSize.documentIcon.width, height: appearance.imagesSize.documentIcon.height)
-//                                                                        
-//                                                                        Text(fileName)
-//                                                                            .font(appearance.fonts.messageListMessageText)
-//                                                                            .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-//                                                                            .fixedSize(horizontal: false, vertical: true)
-//                                                                        
-//                                                                        Spacer()
-//                                                                    }
-//                                                                }
-//                                                            }
-//                                                        }
-//                                                    }
-//                                                    if appearance.timeInsideBubble == true{
-//                                                        dateAndStatusView(onImage: false)
-//                                                            .padding(.bottom,(message.reactions.count > 0) ? 5 : 0).padding(.trailing,3)
-//                                                    }
-//                                                }//:VStack
-//                                                .frame(width: 250)
-//                                                .padding(5)
-//                                                .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-//                                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-//                                                .overlay(
-//                                                    appearance.messageBubbleType == .BubbleWithOutTail ?
-//                                                    AnyView(
-//                                                        UnevenRoundedRectangle(
-//                                                            topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-//                                                            bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-//                                                            bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-//                                                            topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-//                                                            style: .circular
-//                                                        )
-//                                                        .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-//                                                    ) : AnyView(EmptyView())
-//                                                )
-//                                            }//:ZStack
-//                                        })
-//                                    }
-//                                    if appearance.timeInsideBubble == false{
-//                                        dateAndStatusView(onImage: false)
-//                                    }
-//                                }
-//                                if message.reactions.count > 0{
-//                                    reactionsView()
-//                                }
-//                            }.padding(.vertical,2)
-//                        }
+                    case .photo:
+                        HStack(alignment: .bottom){
+                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                //When its group show member avatar in message
+                                inGroupUserAvatarView()
+                            }
+                            ZStack(alignment: .bottomTrailing){
+                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                        //when its group show member name in message
+                                        inGroupUserName()
+                                    }
+                                    
+                                    //                                NavigationLink(destination:  MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager))
+                                    //                                {
+                                    if appearance.messageBubbleType == .BubbleWithTail{
+                                        VStack(alignment: .trailing,spacing: 5){
+                                            if message.messageType == 1{
+                                                forwardedView()
+                                            }
+                                            
+                                            Button {
+                                                navigateToMediaSliderId = message.messageId
+                                            } label: {
+                                                ZStack(alignment: .bottomTrailing){
+                                                    ISMImageViewer(url: message.attachments?.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 16)
+                                                        .overlay(
+                                                            LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                                                                .frame(width: 250, height: 300)
+                                                                .mask(
+                                                                    RoundedRectangle(cornerRadius: 16)
+                                                                        .fill(Color.white)
+                                                                )
+                                                        )
+                                                    
+                                                }
+                                            }
+                                            
+                                            dateAndStatusView(onImage: false)
+                                                .padding(.bottom,5)
+                                                .padding(.trailing,5)
+                                        }
+                                        
+                                    }else{
+                                        
+                                        
+                                        VStack(alignment: .trailing,spacing: 5){
+                                            if message.messageType == 1{
+                                                forwardedView()
+                                            }
+                                            
+                                            Button {
+                                                navigateToMediaSliderId = message.messageId
+                                            } label: {
+                                                ZStack(alignment: .bottomTrailing){
+                                                    ISMImageViewer(url: message.attachments?.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
+                                                        .overlay(
+                                                            LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                                                                .frame(width: 250, height: 300)
+                                                                .mask(
+                                                                    RoundedRectangle(cornerRadius: 5)
+                                                                        .fill(Color.white)
+                                                                )
+                                                        )
+                                                    if appearance.timeInsideBubble == true{
+                                                        if message.metaData?.captionMessage == nil{
+                                                            dateAndStatusView(onImage: true)
+                                                                .padding(.bottom,5)
+                                                                .padding(.trailing,5)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            
+                                            
+                                            if let caption = message.metaData?.captionMessage, !caption.isEmpty{
+                                                Text(caption)
+                                                    .font(appearance.fonts.messageListMessageText)
+                                                    .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                
+                                                if appearance.timeInsideBubble == true{
+                                                    dateAndStatusView(onImage: false)
+                                                        .padding(.bottom,5)
+                                                        .padding(.trailing,5)
+                                                }
+                                                
+                                            }
+                                        }//:ZStack
+                                        .padding(5)
+                                        .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                        .overlay(
+                                            appearance.messageBubbleType == .BubbleWithOutTail ?
+                                            AnyView(
+                                                UnevenRoundedRectangle(
+                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                    style: .circular
+                                                )
+                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                            ) : AnyView(EmptyView())
+                                        )
+                                        //                                }
+                                        if appearance.timeInsideBubble == false{
+                                            dateAndStatusView(onImage: false)
+                                                .padding(.bottom,5)
+                                                .padding(.trailing,5)
+                                        }
+                                    }
+                                }
+                                
+                                if message.reactions?.count ?? 0 > 0{
+                                    reactionsView()
+                                }
+                            }.padding(.vertical,2)
+                        }
+                        
+                        //MARK: - Video Message View
+                    case .video:
+                        HStack(alignment: .bottom){
+                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                //When its group show member avatar in message
+                                inGroupUserAvatarView()
+                            }
+                            ZStack(alignment: .bottomTrailing){
+                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                        //when its group show member name in message
+                                        inGroupUserName()
+                                    }
+                                    
+                                    
+                                    //                                NavigationLink(destination: MediaSliderView(messageId: message.messageId).environmentObject(self.realmManager)){
+                                    VStack(alignment: .trailing,spacing : 5){
+                                        if message.messageType == 1{
+                                            forwardedView()
+                                        }
+                                        
+                                        Button {
+                                            navigateToMediaSliderId = message.messageId
+                                        } label: {
+                                            ZStack(alignment: .center){
+                                                if let thumbnailUrl = message.attachments?.first?.thumbnailUrl,
+                                                   thumbnailUrl.contains(".mp4") {
+                                                    if let image = ISMChatHelper.getThumbnailImage(url: thumbnailUrl){
+                                                        Image(uiImage: image)
+                                                            .scaledToFill()
+                                                            .frame(width: 250, height: 300)
+                                                            .cornerRadius(5)
+                                                    }else{
+                                                        // Display the thumbnail image for non-videos
+                                                        ZStack(alignment: .bottomTrailing){
+                                                            ISMImageViewer(url:  message.attachments?.first?.thumbnailUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
+                                                                .overlay(
+                                                                    LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                                                                        .frame(width: 250, height: 300)
+                                                                        .mask(
+                                                                            RoundedRectangle(cornerRadius: 5)
+                                                                                .fill(Color.white)
+                                                                        )
+                                                                )
+                                                            if message.metaData?.captionMessage == nil{
+                                                                dateAndStatusView(onImage: true)
+                                                                    .padding(.bottom,5)
+                                                                    .padding(.trailing,5)
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
+                                                    // Display the thumbnail image for non-videos
+                                                    ZStack(alignment: .bottomTrailing){
+                                                        ISMImageViewer(url: message.attachments?.first?.thumbnailUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
+                                                            .overlay(
+                                                                LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                                                                    .frame(width: 250, height: 300)
+                                                                    .mask(
+                                                                        RoundedRectangle(cornerRadius: 5)
+                                                                            .fill(Color.white)
+                                                                    )
+                                                            )
+                                                        if appearance.timeInsideBubble == true{
+                                                            if message.metaData?.captionMessage == nil{
+                                                                dateAndStatusView(onImage: true)
+                                                                    .padding(.bottom,5)
+                                                                    .padding(.trailing,5)
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                appearance.images.playVideo
+                                                    .resizable()
+                                                    .frame(width: 48,height: 48)
+                                                
+                                            }
+                                        }
+                                        
+                                        
+                                        
+                                        if let caption = message.metaData?.captionMessage, !caption.isEmpty{
+                                            Text(caption)
+                                                .font(appearance.fonts.messageListMessageText)
+                                                .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                            
+                                            if appearance.timeInsideBubble == true{
+                                                dateAndStatusView(onImage: false)
+                                                    .padding(.bottom,5)
+                                                    .padding(.trailing,5)
+                                            }
+                                        }
+                                        
+                                    }.padding(5)
+                                        .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                        .overlay(
+                                            appearance.messageBubbleType == .BubbleWithOutTail ?
+                                            AnyView(
+                                                UnevenRoundedRectangle(
+                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                    style: .circular
+                                                )
+                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                            ) : AnyView(EmptyView())
+                                        )
+                                    //                                }//:NavigationLink
+                                    //                                }
+                                    if appearance.timeInsideBubble == false{
+                                        dateAndStatusView(onImage: false)
+                                            .padding(.bottom,5)
+                                            .padding(.trailing,5)
+                                    }
+                                }
+                                if message.reactions?.count ?? 0 > 0{
+                                    reactionsView()
+                                }
+                            }.padding(.vertical, 2)
+                        }
+                        
+                        //MARK: - Video Message View
+                    case .document:
+                        HStack(alignment: .bottom){
+                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                //When its group show member avatar in message
+                                inGroupUserAvatarView()
+                            }
+                            ZStack(alignment: .bottomTrailing){
+                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                        //when its group show member name in message
+                                        inGroupUserName()
+                                    }
+                                    if let documentUrl = URL(string: message.attachments?.first?.mediaUrl ?? ""){
+                                        let urlExtension = ISMChatHelper.getExtensionFromURL(url: documentUrl)
+                                        let fileName = ISMChatHelper.getFileNameFromURL(url: documentUrl)
+                                        Button(action: {
+                                            navigateToDocumentUrl = message.attachments?.first?.mediaUrl ?? ""
+                                        }, label: {
+                                            ZStack{
+                                                VStack(alignment: .trailing, spacing: 5){
+                                                    if message.messageType == 1{
+                                                        forwardedView()
+                                                    }
+                                                    
+                                                    if ISMChatSdkUI.getInstance().getChatProperties().hideDocumentPreview == true{
+                                                        HStack{
+                                                            appearance.images.pdfLogo
+                                                                .resizable()
+                                                                .aspectRatio(contentMode: .fit)
+                                                                .frame(width: appearance.imagesSize.documentIcon.width, height: appearance.imagesSize.documentIcon.height)
+                                                            
+                                                            Text(fileName)
+                                                                .font(appearance.fonts.messageListMessageText)
+                                                                .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                                .fixedSize(horizontal: false, vertical: true)
+                                                            
+                                                            Spacer()
+                                                        }.padding(.leading,5).padding(.top,5)
+                                                    }else{
+                                                        HStack(alignment: .center, spacing: 5){
+                                                            if let urlExtension = urlExtension{
+                                                                if urlExtension.contains(".jpg") ||  urlExtension.contains(".png"){
+                                                                    ISMImageViewer(url: message.attachments?.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
+                                                                    
+                                                                }else{
+                                                                    if urlExtension == "pdf" {
+                                                                        ISMPDFMessageView(pdfURL: documentUrl, fileName: fileName)
+                                                                    } else {
+                                                                        appearance.images.pdfLogo
+                                                                            .resizable()
+                                                                            .aspectRatio(contentMode: .fit)
+                                                                            .frame(width: appearance.imagesSize.documentIcon.width, height: appearance.imagesSize.documentIcon.height)
+                                                                        
+                                                                        Text(fileName)
+                                                                            .font(appearance.fonts.messageListMessageText)
+                                                                            .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                                            .fixedSize(horizontal: false, vertical: true)
+                                                                        
+                                                                        Spacer()
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    if appearance.timeInsideBubble == true{
+                                                        dateAndStatusView(onImage: false)
+                                                            .padding(.bottom,(message.reactions?.count ?? 0 > 0) ? 5 : 0).padding(.trailing,3)
+                                                    }
+                                                }//:VStack
+                                                .frame(width: 250)
+                                                .padding(5)
+                                                .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                                .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                                .overlay(
+                                                    appearance.messageBubbleType == .BubbleWithOutTail ?
+                                                    AnyView(
+                                                        UnevenRoundedRectangle(
+                                                            topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                            bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                            bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                            topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                            style: .circular
+                                                        )
+                                                        .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                                    ) : AnyView(EmptyView())
+                                                )
+                                            }//:ZStack
+                                        })
+                                    }
+                                    if appearance.timeInsideBubble == false{
+                                        dateAndStatusView(onImage: false)
+                                    }
+                                }
+                                if message.reactions?.count ?? 0 > 0{
+                                    reactionsView()
+                                }
+                            }.padding(.vertical,2)
+                        }
 //                        
 //                        //MARK: - Location Message View
 //                    case .location:

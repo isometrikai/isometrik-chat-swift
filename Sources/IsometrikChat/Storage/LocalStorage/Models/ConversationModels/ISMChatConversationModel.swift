@@ -166,6 +166,7 @@ public class ISMChatLastMessageDB{
     public var meetingId : String?
     public var missedByMembers : [String]
     @Relationship(deleteRule: .cascade) public var callDurations : [ISMChatMeetingDuration]
+    @Relationship(inverse: \ISMChatConversationDB.lastMessageDetails) public weak var conversation: ISMChatConversationDB?
     
     public init(
         sentAt: Double? = nil,

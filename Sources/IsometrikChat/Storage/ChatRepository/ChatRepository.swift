@@ -56,6 +56,10 @@ public class ChatRepository {
         return try await activeStorageManager.updateLastMessageInConversation(conversationId: conversationId, lastMessage: lastMessage)
     }
     
+    public func updateUnreadCountThroughConversation(conversationId: String, count: Int, reset: Bool?) async throws{
+        return try await activeStorageManager.updateUnreadCountThroughConversation(conversationId: conversationId, count: count, reset: reset)
+    }
+    
     public func fetchMessages(conversationId: String,lastMessageTimestamp : String) async throws -> [ISMChatMessagesDB] {
         return try await activeStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp)
     }
@@ -71,5 +75,24 @@ public class ChatRepository {
     public func updateMessage(conversationId: String, messageId: String, body: String, metaData: ISMChatMetaDataDB?,customType : String?) async throws{
         return try await activeStorageManager.updateMessage(conversationId: conversationId, messageId: messageId, body: body, metaData: metaData, customType: customType)
     }
+    
+    public func saveMedia(arr: [ISMChatAttachmentDB], conversationId: String, customType: String, sentAt: Double, messageId: String, userName: String) async throws {
+        return try await activeStorageManager.saveMedia(arr: arr, conversationId: conversationId, customType: customType, sentAt: sentAt, messageId: messageId, userName: userName)
+    }
+    
+    public func fetchPhotosAndVideos(conversationId: String) async throws -> [ISMChatMediaDB] {
+        return try await activeStorageManager.fetchPhotosAndVideos(conversationId: conversationId)
+    }
+    
+    public func fetchFiles(conversationId: String) async throws -> [ISMChatMediaDB] {
+        return try await activeStorageManager.fetchFiles(conversationId: conversationId)
+    }
+    
+    public func fetchLinks(conversationId: String) async throws -> [ISMChatMessagesDB] {
+        return try await activeStorageManager.fetchLinks(conversationId: conversationId)
+    }
 
+    public func deleteMedia(conversationId: String, messageId: String) async throws{
+        return try await activeStorageManager.deleteMedia(conversationId: conversationId, messageId: messageId)
+    }
 }

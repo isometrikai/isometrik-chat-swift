@@ -28,8 +28,7 @@ public class ISMChatMediaDB{
      public var caption : String = ""
      public var isDelete : Bool = false
     
-    public init(id: UUID, conversationId: String, groupcastId: String, attachmentType: Int, extensions: String, mediaId: String, mediaUrl: String, mimeType: String, name: String, size: Int, thumbnailUrl: String, customType: String, sentAt: Double, messageId: String, userName: String, caption: String, isDelete: Bool) {
-        self.id = id
+    public init(conversationId: String, groupcastId: String, attachmentType: Int, extensions: String, mediaId: String, mediaUrl: String, mimeType: String, name: String, size: Int, thumbnailUrl: String, customType: String, sentAt: Double, messageId: String, userName: String, caption: String, isDelete: Bool) {
         self.conversationId = conversationId
         self.groupcastId = groupcastId
         self.attachmentType = attachmentType

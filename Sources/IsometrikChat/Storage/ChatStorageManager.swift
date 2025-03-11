@@ -16,6 +16,7 @@ public protocol ChatStorageManager {
     func deleteConversation(conversationId: String) async throws
     func clearConversationMessages(conversationId: String) async throws
     func updateLastMessageInConversation(conversationId : String, lastMessage : ISMChatLastMessageDB) async throws
+    func updateUnreadCountThroughConversation(conversationId: String, count: Int, reset: Bool?) async throws
 //    func updateConversation(_ conversation: ISMChatConversationDB) async throws
     
     // Message operations
@@ -26,4 +27,12 @@ public protocol ChatStorageManager {
 
 //    func deleteMessage(id: String) async throws
 //    func updateMessage(_ message: ISMChatMessagesDB) async throws
+    
+    
+    //Media operations
+    func saveMedia(arr: [ISMChatAttachmentDB],conversationId: String,customType: String,sentAt: Double,messageId: String,userName: String) async throws
+    func fetchPhotosAndVideos(conversationId: String) async throws -> [ISMChatMediaDB]
+    func fetchFiles(conversationId: String) async throws -> [ISMChatMediaDB]
+    func fetchLinks(conversationId: String) async throws -> [ISMChatMessagesDB]
+    func deleteMedia(conversationId: String, messageId: String) async throws
 }

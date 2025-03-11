@@ -72,11 +72,27 @@ public class HybridStorageManager: ChatStorageManager {
         }
     }
     
+    public func updateUnreadCountThroughConversation(conversationId: String, count: Int, reset: Bool?) async throws {
+        do {
+            try await localStorageManager.updateUnreadCountThroughConversation(conversationId: conversationId, count: count, reset: reset)
+        } catch {
+            print("Error updating unread count with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    
     public func fetchMessages(conversationId: String,lastMessageTimestamp: String) async throws -> [ISMChatMessagesDB] {
         do {
             // Fetch from remote and sync
             let remoteMessages = try await remoteStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp)
             try await localStorageManager.saveAllMessages(remoteMessages, conversationId: conversationId)
+            // saving media simultanously in conversation
+            for value in remoteMessages{
+                if (value.attachments?.count ?? 0) > 0 ,!value.messageId.isEmpty{
+                    try await  localStorageManager.saveMedia(arr: value.attachments ?? [], conversationId: conversationId, customType: value.customType ?? "", sentAt: value.sentAt ?? 0, messageId: value.messageId ?? "", userName: value.senderInfo?.userName ?? "")
+                }
+            }
             let localMessages = try await localStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp)
             return localMessages
         } catch {
@@ -116,7 +132,55 @@ public class HybridStorageManager: ChatStorageManager {
         do {
             try await localStorageManager.updateMessage(conversationId: conversationId, messageId: messageId, body: body, metaData: metaData, customType: customType)
         } catch {
-            print("Error saving messages in conversation with hybrid: \(error)")
+            print("Error updating messages in conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func saveMedia(arr: [ISMChatAttachmentDB], conversationId: String, customType: String, sentAt: Double, messageId: String, userName: String) async throws {
+        do {
+            try await localStorageManager.saveMedia(arr: arr, conversationId: conversationId, customType: customType, sentAt: sentAt, messageId: messageId, userName: userName)
+        } catch {
+            print("Error updating messages in conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func fetchPhotosAndVideos(conversationId: String) async throws -> [ISMChatMediaDB] {
+        do {
+            let media = try await localStorageManager.fetchPhotosAndVideos(conversationId: conversationId)
+            return media
+        } catch {
+            print("Error updating messages in conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func fetchFiles(conversationId: String) async throws -> [ISMChatMediaDB] {
+        do {
+            let files = try await localStorageManager.fetchFiles(conversationId: conversationId)
+            return files
+        } catch {
+            print("Error updating messages in conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func fetchLinks(conversationId: String) async throws -> [ISMChatMessagesDB] {
+        do {
+            let links = try await localStorageManager.fetchLinks(conversationId: conversationId)
+            return links
+        } catch {
+            print("Error updating messages in conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func deleteMedia(conversationId: String, messageId: String) async throws {
+        do {
+            try await localStorageManager.deleteMedia(conversationId: conversationId, messageId: messageId)
+        } catch {
+            print("Error updating messages in conversation with hybrid: \(error)")
             throw error
         }
     }

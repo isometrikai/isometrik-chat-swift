@@ -15,10 +15,10 @@ struct ISMChatAttachmentCell: View {
     // MARK: - Properties
     
     /// The media attachment to be displayed
-    let attachment: MediaDB
+    let attachment: ISMChatMediaDB
     
     /// Callback closure triggered when the attachment is tapped
-    let onTap: (MediaDB) -> Void
+    let onTap: (ISMChatMediaDB) -> Void
     
     /// UI appearance configuration for the chat SDK
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance

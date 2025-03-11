@@ -31,11 +31,10 @@ public class LocalStorageManager: ChatStorageManager {
     
     public func fetchConversations() async throws -> [ISMChatConversationDB] {
         do {
-            let descriptor = FetchDescriptor<ISMChatConversationDB>(sortBy: [SortDescriptor(\.updatedAt, order: .reverse)])
+            let descriptor = FetchDescriptor<ISMChatConversationDB>(
+                sortBy: [SortDescriptor(\.lastMessageDetails?.sentAt, order: .reverse)] // ✅ Direct sorting by lastMessageSentAt
+            )
             var conversations = try modelContext.fetch(descriptor)
-            
-            // Sort by lastMessageSentAt in descending order
-            conversations.sort { $0.lastMessageSentAt > $1.lastMessageSentAt }
             
             // Remove broadcast list from conversation list
             let filteredConversations = conversations.filter { conversation in
@@ -46,7 +45,7 @@ public class LocalStorageManager: ChatStorageManager {
             
             return filteredConversations
         } catch {
-            print("Fetch Error: \(error)")
+            print("❌ Fetch Error: \(error)")
             return []
         }
     }
@@ -403,7 +402,166 @@ public class LocalStorageManager: ChatStorageManager {
     }
 
 
+    public func saveMedia(arr: [ISMChatAttachmentDB], conversationId: String, customType: String, sentAt: Double, messageId: String, userName: String) async throws {
+            
+            // Step 1: Find conversation using conversationId
+            let conversationFetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+                predicate: #Predicate { $0.conversationId == conversationId }
+            )
+            
+            do {
+                let conversations = try modelContext.fetch(conversationFetchDescriptor)
+                
+                guard let conversation = conversations.first else {
+                    print("❌ No conversation found for ID: \(conversationId)")
+                    return
+                }
+                
+                // Step 2: Check if messageId is already in the conversation's media array
+                if conversation.medias.contains(where: { $0.messageId == messageId }) {
+                    print("✅ Media already exists for messageId: \(messageId), skipping insert.")
+                    return
+                }
+
+                // Step 3: Save new media
+                for value in arr {
+                    let newMedia = ISMChatMediaDB(
+                        conversationId: conversationId,
+                        groupcastId: "",
+                        attachmentType: value.attachmentType ?? 0,
+                        extensions: value.extensions ?? "",
+                        mediaId: value.mediaId ?? "",
+                        mediaUrl: value.mediaUrl ?? "",
+                        mimeType: value.mimeType ?? "",
+                        name: value.name ?? "",
+                        size: value.size ?? 0,
+                        thumbnailUrl: value.thumbnailUrl ?? "",
+                        customType: customType,
+                        sentAt: sentAt,
+                        messageId: messageId,
+                        userName: userName,
+                        caption: "",
+                        isDelete: false
+                    )
+                    
+                    modelContext.insert(newMedia)
+                    
+                    // Step 4: Add media to the conversation's media array
+                    conversation.medias.append(newMedia)
+                }
+                try modelContext.save()
+            } catch {
+                print("❌ Error fetching conversation: \(error.localizedDescription)")
+            }
+    }
     
+    public func fetchPhotosAndVideos(conversationId: String) async throws -> [ISMChatMediaDB] {
+        let conversationFetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId }
+        )
+        
+        do {
+            let conversations = try modelContext.fetch(conversationFetchDescriptor)
+            
+            guard let conversation = conversations.first else {
+                print("❌ No conversation found for ID: \(conversationId)")
+                return []
+            }
+            
+            // Filter medias for photos and videos
+            let filteredMedia = conversation.medias.filter { media in
+                media.customType == ISMChatMediaType.Image.value ||
+                media.customType == ISMChatMediaType.Video.value ||
+                media.customType == ISMChatMediaType.gif.value
+            }.filter { !$0.isDelete }
+            
+            // Assign to the property
+            return filteredMedia
+            print("✅ Found \(filteredMedia.count) media items.")
+        } catch {
+            print("❌ Error fetching media: \(error.localizedDescription)")
+            return []
+        }
+    }
+    
+    public func fetchFiles(conversationId: String) async throws -> [ISMChatMediaDB] {
+        let conversationFetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId }
+        )
+        
+        do {
+            let conversations = try modelContext.fetch(conversationFetchDescriptor)
+            
+            guard let conversation = conversations.first else {
+                print("❌ No conversation found for ID: \(conversationId)")
+                return []
+            }
+            
+            // Filter medias for photos and videos
+            let filteredFiles = conversation.medias.filter { media in
+                media.customType == ISMChatMediaType.File.value
+            }.filter { !$0.isDelete }
+            
+            // Assign to the property
+            return filteredFiles
+            print("✅ Found \(filteredFiles.count) media items.")
+        } catch {
+            print("❌ Error fetching media: \(error.localizedDescription)")
+            return []
+        }
+    }
+    
+    public func fetchLinks(conversationId: String) async throws -> [ISMChatMessagesDB] {
+        let messagesFetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId }
+        )
+        
+        do {
+            let conversations = try modelContext.fetch(messagesFetchDescriptor)
+            
+            guard let conversation = conversations.first else {
+                print("❌ No conversation found for ID: \(conversationId)")
+                return []
+            }
+            
+            // Filter messages containing "www" or "https" and exclude "map"
+            let filteredMessages = conversation.messages.filter { message in
+                message.body.isValidURL && !message.body.contains("map")
+            }
+            
+            print("✅ Found \(filteredMessages.count) links.")
+            return filteredMessages
+        } catch {
+            print("❌ Error fetching links: \(error.localizedDescription)")
+            return []
+        }
+    }
+    
+    public func deleteMedia(conversationId: String, messageId: String) async {
+        let conversationFetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId }
+        )
+        
+        do {
+            let conversations = try modelContext.fetch(conversationFetchDescriptor)
+            
+            guard let conversation = conversations.first else {
+                print("❌ No conversation found for ID: \(conversationId)")
+                return
+            }
+            
+            // Find the media entry with the given messageId
+            if let mediaToDelete = conversation.medias.first(where: { $0.messageId == messageId }) {
+                modelContext.delete(mediaToDelete)
+                print("✅ Media deleted successfully.")
+            } else {
+                print("❌ No media found for messageId: \(messageId)")
+            }
+            
+        } catch {
+            print("❌ Error deleting media: \(error.localizedDescription)")
+        }
+    }
 
 
 
@@ -868,10 +1026,10 @@ public class LocalStorageManager: ChatStorageManager {
     }
     
     // Update Unread Count in Conversation List
-    public func updateUnreadCountThroughConId(conId: String, count: Int, reset: Bool = false) {
+    public func updateUnreadCountThroughConversation(conversationId: String, count: Int, reset: Bool?) async throws {
         do {
-            if let conversation = try modelContext.fetch(FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == conId })).first {
-                conversation.unreadMessagesCount = reset ? 0 : (conversation.unreadMessagesCount + count)
+            if let conversation = try modelContext.fetch(FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == conversationId })).first {
+                conversation.unreadMessagesCount = reset == true ? 0 : (conversation.unreadMessagesCount + count)
                 try modelContext.save()
             }
         } catch {
