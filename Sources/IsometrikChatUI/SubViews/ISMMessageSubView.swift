@@ -78,8 +78,8 @@ struct ISMMessageSubView: View {
 //    @EnvironmentObject var realmManager : RealmManager
     @ObservedObject var viewModel = ChatsViewModel()
     @Environment(\.viewController) public var viewControllerHolder: UIViewController?
-    @Binding var postIdToNavigate : String
-    @Binding var productIdToNavigate : ProductDB
+    @Binding var postIdToNavigate : String?
+    @Binding var productIdToNavigate : ISMChatProductDB?
     
     @Binding var navigateToSocialProfileId : String
     @Binding var navigateToExternalUserListToAddInGroup : Bool
@@ -1133,462 +1133,463 @@ struct ISMMessageSubView: View {
                             }.padding(.vertical,2)
                         }
 //                        //MARK: - Post Message View
-//                    case .post:
-//                        HStack(alignment: .bottom){
-//                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                //When its group show member avatar in message
-//                                inGroupUserAvatarView()
-//                            }
-//                            ZStack(alignment: .bottomTrailing){
-//                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
-//                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                        //when its group show member name in message
-//                                        inGroupUserName()
-//                                    }
-//                                    
-//                                    VStack(alignment: .trailing,spacing: 5){
-//                                        Button {
-//                                            postIdToNavigate = message.metaData?.post?.postId ?? ""
-//                                        } label: {
-//                                            postButtonView(isPost: true)
-//                                            
-//                                        }.padding(.trailing,5)
-//                                            .frame(width: 135)
-//                                        
-//                                    }//:ZStack
-//                                    .padding(5)
-//                                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-//                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-//                                    .overlay(
-//                                        appearance.messageBubbleType == .BubbleWithOutTail ?
-//                                        AnyView(
-//                                            UnevenRoundedRectangle(
-//                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-//                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-//                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-//                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-//                                                style: .circular
-//                                            )
-//                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-//                                        ) : AnyView(EmptyView())
-//                                    )
-//                                    if appearance.timeInsideBubble == false{
-//                                        dateAndStatusView(onImage: false)
-//                                            .padding(.bottom,5)
-//                                            .padding(.trailing,5)
-//                                    }
-//                                }
-//                                
-//                                if message.reactions.count > 0{
-//                                    reactionsView()
-//                                }
-//                            }.padding(.vertical,2)
-//                        }
-//                    case .Product:
-//                        HStack(alignment: .bottom){
-//                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                //When its group show member avatar in message
-//                                inGroupUserAvatarView()
-//                            }
-//                            ZStack(alignment: .bottomTrailing){
-//                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
-//                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                        //when its group show member name in message
-//                                        inGroupUserName()
-//                                    }
-//                                    
-//                                    VStack(alignment: .trailing,spacing: 5){
-//                                        if let product = message.metaData?.product?.productId{
-//                                            Button {
-//                                                productIdToNavigate = message.metaData?.product ?? ProductDB()
-//                                            } label: {
-//                                                postButtonView(isPost: false)
-//                                            }
-//                                        }else{
-//                                            //it will act same as productLink
-//                                            productLinkView(message: message)
-//                                                .onTapGesture {
-//                                                    navigateToProductLink = message
-//                                                }
-//                                        }
-//                                    }//:ZStack
-//                                    .padding(5)
-//                                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-//                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-//                                    .overlay(
-//                                        appearance.messageBubbleType == .BubbleWithOutTail ?
-//                                        AnyView(
-//                                            UnevenRoundedRectangle(
-//                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-//                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-//                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-//                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-//                                                style: .circular
-//                                            )
-//                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-//                                        ) : AnyView(EmptyView())
-//                                    )
-//                                    if appearance.timeInsideBubble == false{
-//                                        dateAndStatusView(onImage: false)
-//                                            .padding(.bottom,5)
-//                                            .padding(.trailing,5)
-//                                    }
-//                                }
-//                                
-//                                if message.reactions.count > 0{
-//                                    reactionsView()
-//                                }
-//                            }.padding(.vertical,2)
-//                        }
-//                    case .ProductLink:
-//                        HStack(alignment: .bottom){
-//                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                //When its group show member avatar in message
-//                                inGroupUserAvatarView()
-//                            }
-//                            ZStack(alignment: .bottomTrailing){
-//                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
-//                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                        //when its group show member name in message
-//                                        inGroupUserName()
-//                                    }
-//                                    
-//                                    VStack(alignment: .trailing,spacing: 5){
-//                                        
-//                                        productLinkView(message: message)
-//                                            .onTapGesture {
-//                                                navigateToProductLink = message
-//                                            }
-//                                    }
-//                                    .frame(width: 258)
-//                                    .padding(5)
-//                                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-//                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-//                                    .overlay(
-//                                        appearance.messageBubbleType == .BubbleWithOutTail ?
-//                                        AnyView(
-//                                            UnevenRoundedRectangle(
-//                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-//                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-//                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-//                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-//                                                style: .circular
-//                                            )
-//                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-//                                        ) : AnyView(EmptyView())
-//                                    )
-//                                    if appearance.timeInsideBubble == false{
-//                                        dateAndStatusView(onImage: false)
-//                                            .padding(.bottom,5)
-//                                            .padding(.trailing,5)
-//                                    }
-//                                }
-//                                
-//                                if message.reactions.count > 0{
-//                                    reactionsView()
-//                                }
-//                            }.padding(.vertical,2)
-//                        }
-//                    case .SocialLink:
-//                        HStack(alignment: .bottom){
-//                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                //When its group show member avatar in message
-//                                inGroupUserAvatarView()
-//                            }
-//                            ZStack(alignment: .bottomTrailing){
-//                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
-//                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                        //when its group show member name in message
-//                                        inGroupUserName()
-//                                    }
-//                                    
-//                                    VStack(alignment: .trailing,spacing: 5){
-//                                        
-//                                        socialLinkView(message: message)
-//                                            .onTapGesture {
-//                                                navigateToSocialLink = message
-//                                            }.padding(.trailing,5)
-//                                        
-//                                    }//:ZStack
-//                                    .frame(width: 258)
-//                                    .padding(5)
-//                                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-//                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-//                                    .overlay(
-//                                        appearance.messageBubbleType == .BubbleWithOutTail ?
-//                                        AnyView(
-//                                            UnevenRoundedRectangle(
-//                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-//                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-//                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-//                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-//                                                style: .circular
-//                                            )
-//                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-//                                        ) : AnyView(EmptyView())
-//                                    )
-//                                    if appearance.timeInsideBubble == false{
-//                                        dateAndStatusView(onImage: false)
-//                                            .padding(.bottom,5)
-//                                            .padding(.trailing,5)
-//                                    }
-//                                }
-//                                
-//                                if message.reactions.count > 0{
-//                                    reactionsView()
-//                                }
-//                            }.padding(.vertical,2)
-//                        }
-//                    case .CollectionLink:
-//                        HStack(alignment: .bottom){
-//                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                //When its group show member avatar in message
-//                                inGroupUserAvatarView()
-//                            }
-//                            ZStack(alignment: .bottomTrailing){
-//                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
-//                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                        //when its group show member name in message
-//                                        inGroupUserName()
-//                                    }
-//                                    
-//                                    VStack(alignment: .trailing,spacing: 5){
-//                                        collectionLinkView(message: message)
-//                                            .onTapGesture {
-//                                                navigateToCollectionLink = message
-//                                            }.padding(.trailing,5)
-//                                        
-//                                    }//:ZStack
-//                                    .frame(width: 258)
-//                                    .padding(5)
-//                                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-//                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-//                                    .overlay(
-//                                        appearance.messageBubbleType == .BubbleWithOutTail ?
-//                                        AnyView(
-//                                            UnevenRoundedRectangle(
-//                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-//                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-//                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-//                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-//                                                style: .circular
-//                                            )
-//                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-//                                        ) : AnyView(EmptyView())
-//                                    )
-//                                    if appearance.timeInsideBubble == false{
-//                                        dateAndStatusView(onImage: false)
-//                                            .padding(.bottom,5)
-//                                            .padding(.trailing,5)
-//                                    }
-//                                }
-//                                
-//                                if message.reactions.count > 0{
-//                                    reactionsView()
-//                                }
-//                            }.padding(.vertical,2)
-//                        }
-//                    case .paymentRequest:
-//                        HStack(alignment: .bottom){
-//                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                //When its group show member avatar in message
-//                                inGroupUserAvatarView()
-//                            }
-//                            ZStack(alignment: .bottomTrailing){
-//                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
-//                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                        //when its group show member name in message
-//                                        inGroupUserName()
-//                                    }
-//                                    
-//                                    VStack(alignment: .trailing,spacing: 5){
-////                                        PaymentRequestUI(status: ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "", opponentId: opponentDeatil.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt), isReceived: self.isReceived,message: self.message) {
-////                                            //view details
-////                                            viewDetailsForPaymentRequest = self.message
-////                                        } declineRequest: {
-////                                            //decline request
-////                                            declinePaymentRequest = self.message
-////                                        }
-//                                        dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
-//                                    }//:ZStack
-//                                    .frame(width: 280)
-//                                    .background(Color(hex: "#F5F5F2"))
-//                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-//                                    .overlay(
-//                                        appearance.messageBubbleType == .BubbleWithOutTail ?
-//                                        AnyView(
-//                                            UnevenRoundedRectangle(
-//                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-//                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-//                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-//                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-//                                                style: .circular
-//                                            )
-//                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-//                                        ) : AnyView(EmptyView())
-//                                    )
-//                                    if appearance.timeInsideBubble == false{
-//                                        dateAndStatusView(onImage: false)
-//                                            .padding(.bottom,5)
-//                                            .padding(.trailing,5)
-//                                    }
-//                                }
-//                                
-//                                if message.reactions.count > 0{
-//                                    reactionsView()
-//                                }
-//                            }.padding(.vertical,2)
-//                        }
-//                    case .dineInInvite:
-//                        HStack(alignment: .bottom){
-//                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                //When its group show member avatar in message
-//                                inGroupUserAvatarView()
-//                            }
-//                            ZStack(alignment: .bottomTrailing){
-//                                let status = ISMChatHelper.getDineInStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt)
-//                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
-//                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                        //when its group show member name in message
-//                                        inGroupUserName()
-//                                    }
-//                                    
-//                                    VStack(alignment: .trailing,spacing: 5){
-//                                        DineInRequestUI(status: status, isReceived: self.isReceived, message: self.message) {
-//                                            viewDetailsForPaymentRequest = self.message
-//                                        } declineRequest: {
-//                                            declinePaymentRequest = self.message
-//                                        } showInvitee: {
-//                                            showInviteeListInDineInRequest = self.message
-//                                        }
-//                                        dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
-//                                    }//:ZStack
-//                                    .frame(width: 303)
-//                                    .background(Color(hex: "#F5F5F2"))
-//                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-//                                    .overlay(
-//                                        appearance.messageBubbleType == .BubbleWithOutTail ?
-//                                        AnyView(
-//                                            UnevenRoundedRectangle(
-//                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-//                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-//                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-//                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-//                                                style: .circular
-//                                            )
-//                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-//                                        ) : AnyView(EmptyView())
-//                                    )
-//                                    if appearance.timeInsideBubble == false{
-//                                        dateAndStatusView(onImage: false)
-//                                            .padding(.bottom,5)
-//                                            .padding(.trailing,5)
-//                                    }
-//                                    if status == .Rejected || status == .Accepted{
-//                                        Text("Your response is sent to \(self.message.senderInfo?.userName ?? "")")
-//                                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
-//                                            .foregroundColor(Color(hex: "#6A6C6A"))
-//                                    }
-//                                }
-//                                
-//                                if message.reactions.count > 0{
-//                                    reactionsView()
-//                                }
-//                            }.padding(.vertical,5)
-//                        }
-//                    case .dineInInviteStatus:
-//                        if isReceived == true{
-//                            HStack(alignment: .bottom){
-//                                if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                    //When its group show member avatar in message
-//                                    inGroupUserAvatarView()
-//                                }
-//                                ZStack(alignment: .bottomTrailing){
-//                                    VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
-//                                        if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                            //when its group show member name in message
-//                                            inGroupUserName()
-//                                        }
-//                                        
-//                                        VStack(alignment: .trailing,spacing: 5){
-//                                            DineInStatusUI(status: ISMChatHelper.getDineUserStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData), isReceived: self.isReceived, message: self.message)
-//                                            dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
-//                                        }//:ZStack
-//                                        .frame(width: 303)
-//                                        .background(Color(hex: "#F5F5F2"))
-//                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-//                                        .overlay(
-//                                            appearance.messageBubbleType == .BubbleWithOutTail ?
-//                                            AnyView(
-//                                                UnevenRoundedRectangle(
-//                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-//                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-//                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-//                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-//                                                    style: .circular
-//                                                )
-//                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-//                                            ) : AnyView(EmptyView())
-//                                        )
-//                                        if appearance.timeInsideBubble == false{
-//                                            dateAndStatusView(onImage: false)
-//                                                .padding(.bottom,5)
-//                                                .padding(.trailing,5)
-//                                        }
-//                                    }
-//                                    
-//                                    if message.reactions.count > 0{
-//                                        reactionsView()
-//                                    }
-//                                }.padding(.vertical,2)
-//                            }
-//                        }else{
-//                            EmptyView()
-//                        }
-//                    case .ProfileShare:
-//                        HStack(alignment: .bottom){
-//                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                //When its group show member avatar in message
-//                                inGroupUserAvatarView()
-//                            }
-//                            ZStack(alignment: .bottomTrailing){
-//                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
-//                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                        //when its group show member name in message
-//                                        inGroupUserName()
-//                                    }
-//                                    
-//                                    VStack(alignment: .trailing,spacing: 5){
-//                                        CustomMessageBubbleViewRegistry.shared.view(for: self.message)
-//                                            .padding(.trailing,5)
-//                                    }//:ZStack
-//                                    .frame(width: 287)
-//                                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-//                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-//                                    .overlay(
-//                                        appearance.messageBubbleType == .BubbleWithOutTail ?
-//                                        AnyView(
-//                                            UnevenRoundedRectangle(
-//                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-//                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-//                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-//                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-//                                                style: .circular
-//                                            )
-//                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-//                                        ) : AnyView(EmptyView())
-//                                    )
-//                                    if appearance.timeInsideBubble == false{
-//                                        dateAndStatusView(onImage: false)
-//                                            .padding(.bottom,5)
-//                                            .padding(.trailing,5)
-//                                    }
-//                                }
-//                            }.padding(.vertical,2)
-//                        }
+                    case .post:
+                        HStack(alignment: .bottom){
+                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                //When its group show member avatar in message
+                                inGroupUserAvatarView()
+                            }
+                            ZStack(alignment: .bottomTrailing){
+                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                        //when its group show member name in message
+                                        inGroupUserName()
+                                    }
+                                    
+                                    VStack(alignment: .trailing,spacing: 5){
+                                        Button {
+                                            postIdToNavigate = message.metaData?.post?.postId ?? ""
+                                        } label: {
+                                            postButtonView(isPost: true)
+                                            
+                                        }.padding(.trailing,5)
+                                            .frame(width: 135)
+                                        
+                                    }//:ZStack
+                                    .padding(5)
+                                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                    .overlay(
+                                        appearance.messageBubbleType == .BubbleWithOutTail ?
+                                        AnyView(
+                                            UnevenRoundedRectangle(
+                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                style: .circular
+                                            )
+                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                        ) : AnyView(EmptyView())
+                                    )
+                                    if appearance.timeInsideBubble == false{
+                                        dateAndStatusView(onImage: false)
+                                            .padding(.bottom,5)
+                                            .padding(.trailing,5)
+                                    }
+                                }
+                                
+                                if message.reactions?.count ?? 0 > 0{
+                                    reactionsView()
+                                }
+                            }.padding(.vertical,2)
+                        }
+                    case .Product:
+                        HStack(alignment: .bottom){
+                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                //When its group show member avatar in message
+                                inGroupUserAvatarView()
+                            }
+                            ZStack(alignment: .bottomTrailing){
+                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                        //when its group show member name in message
+                                        inGroupUserName()
+                                    }
+                                    
+                                    VStack(alignment: .trailing,spacing: 5){
+                                        if let product = message.metaData?.product?.productId{
+                                            Button {
+                                                if let product = message.metaData?.product{
+                                                    productIdToNavigate = product
+                                                }
+                                            } label: {
+                                                postButtonView(isPost: false)
+                                            }
+                                        }else{
+//                                            it will act same as productLink
+                                            productLinkView(message: message)
+                                                .onTapGesture {
+                                                    navigateToProductLink = message
+                                                }
+                                        }
+                                    }//:ZStack
+                                    .padding(5)
+                                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                    .overlay(
+                                        appearance.messageBubbleType == .BubbleWithOutTail ?
+                                        AnyView(
+                                            UnevenRoundedRectangle(
+                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                style: .circular
+                                            )
+                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                        ) : AnyView(EmptyView())
+                                    )
+                                    if appearance.timeInsideBubble == false{
+                                        dateAndStatusView(onImage: false)
+                                            .padding(.bottom,5)
+                                            .padding(.trailing,5)
+                                    }
+                                }
+                                
+                                if message.reactions?.count ?? 0 > 0{
+                                    reactionsView()
+                                }
+                            }.padding(.vertical,2)
+                        }
+                    case .ProductLink:
+                        HStack(alignment: .bottom){
+                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                //When its group show member avatar in message
+                                inGroupUserAvatarView()
+                            }
+                            ZStack(alignment: .bottomTrailing){
+                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                        //when its group show member name in message
+                                        inGroupUserName()
+                                    }
+                                    
+                                    VStack(alignment: .trailing,spacing: 5){
+                                        
+                                        productLinkView(message: message)
+                                            .onTapGesture {
+                                                navigateToProductLink = message
+                                            }
+                                    }
+                                    .frame(width: 258)
+                                    .padding(5)
+                                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                    .overlay(
+                                        appearance.messageBubbleType == .BubbleWithOutTail ?
+                                        AnyView(
+                                            UnevenRoundedRectangle(
+                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                style: .circular
+                                            )
+                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                        ) : AnyView(EmptyView())
+                                    )
+                                    if appearance.timeInsideBubble == false{
+                                        dateAndStatusView(onImage: false)
+                                            .padding(.bottom,5)
+                                            .padding(.trailing,5)
+                                    }
+                                }
+                                
+                                if message.reactions?.count ?? 0 > 0{
+                                    reactionsView()
+                                }
+                            }.padding(.vertical,2)
+                        }
+                    case .SocialLink:
+                        HStack(alignment: .bottom){
+                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                //When its group show member avatar in message
+                                inGroupUserAvatarView()
+                            }
+                            ZStack(alignment: .bottomTrailing){
+                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                        //when its group show member name in message
+                                        inGroupUserName()
+                                    }
+                                    
+                                    VStack(alignment: .trailing,spacing: 5){
+                                        
+                                        socialLinkView(message: message)
+                                            .onTapGesture {
+                                                navigateToSocialLink = message
+                                            }.padding(.trailing,5)
+                                        
+                                    }//:ZStack
+                                    .frame(width: 258)
+                                    .padding(5)
+                                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                    .overlay(
+                                        appearance.messageBubbleType == .BubbleWithOutTail ?
+                                        AnyView(
+                                            UnevenRoundedRectangle(
+                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                style: .circular
+                                            )
+                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                        ) : AnyView(EmptyView())
+                                    )
+                                    if appearance.timeInsideBubble == false{
+                                        dateAndStatusView(onImage: false)
+                                            .padding(.bottom,5)
+                                            .padding(.trailing,5)
+                                    }
+                                }
+                                
+                                if message.reactions?.count ?? 0 > 0{
+                                    reactionsView()
+                                }
+                            }.padding(.vertical,2)
+                        }
+                    case .CollectionLink:
+                        HStack(alignment: .bottom){
+                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                //When its group show member avatar in message
+                                inGroupUserAvatarView()
+                            }
+                            ZStack(alignment: .bottomTrailing){
+                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                        //when its group show member name in message
+                                        inGroupUserName()
+                                    }
+                                    
+                                    VStack(alignment: .trailing,spacing: 5){
+                                        collectionLinkView(message: message)
+                                            .onTapGesture {
+                                                navigateToCollectionLink = message
+                                            }.padding(.trailing,5)
+                                        
+                                    }//:ZStack
+                                    .frame(width: 258)
+                                    .padding(5)
+                                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                    .overlay(
+                                        appearance.messageBubbleType == .BubbleWithOutTail ?
+                                        AnyView(
+                                            UnevenRoundedRectangle(
+                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                style: .circular
+                                            )
+                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                        ) : AnyView(EmptyView())
+                                    )
+                                    if appearance.timeInsideBubble == false{
+                                        dateAndStatusView(onImage: false)
+                                            .padding(.bottom,5)
+                                            .padding(.trailing,5)
+                                    }
+                                }
+                                
+                                if message.reactions?.count ?? 0 > 0{
+                                    reactionsView()
+                                }
+                            }.padding(.vertical,2)
+                        }
+                    case .paymentRequest:
+                        HStack(alignment: .bottom){
+                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                //When its group show member avatar in message
+                                inGroupUserAvatarView()
+                            }
+                            ZStack(alignment: .bottomTrailing){
+                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                        //when its group show member name in message
+                                        inGroupUserName()
+                                    }
+                                    
+                                    VStack(alignment: .trailing,spacing: 5){
+                                        PaymentRequestUI(status: ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "", opponentId: opponentDeatil.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt), isReceived: self.isReceived,message: self.message) {
+                                            //view details
+                                            viewDetailsForPaymentRequest = self.message
+                                        } declineRequest: {
+                                            //decline request
+                                            declinePaymentRequest = self.message
+                                        }
+                                        dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
+                                    }//:ZStack
+                                    .frame(width: 280)
+                                    .background(Color(hex: "#F5F5F2"))
+                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                    .overlay(
+                                        appearance.messageBubbleType == .BubbleWithOutTail ?
+                                        AnyView(
+                                            UnevenRoundedRectangle(
+                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                style: .circular
+                                            )
+                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                        ) : AnyView(EmptyView())
+                                    )
+                                    if appearance.timeInsideBubble == false{
+                                        dateAndStatusView(onImage: false)
+                                            .padding(.bottom,5)
+                                            .padding(.trailing,5)
+                                    }
+                                }
+                                
+                                if message.reactions?.count ?? 0 > 0{
+                                    reactionsView()
+                                }
+                            }.padding(.vertical,2)
+                        }
+                    case .dineInInvite:
+                        HStack(alignment: .bottom){
+                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                //When its group show member avatar in message
+                                inGroupUserAvatarView()
+                            }
+                            ZStack(alignment: .bottomTrailing){
+                                let status = ISMChatHelper.getDineInStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt)
+                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                        //when its group show member name in message
+                                        inGroupUserName()
+                                    }
+                                    
+                                    VStack(alignment: .trailing,spacing: 5){
+                                        DineInRequestUI(status: status, isReceived: self.isReceived, message: self.message) {
+                                            viewDetailsForPaymentRequest = self.message
+                                        } declineRequest: {
+                                            declinePaymentRequest = self.message
+                                        } showInvitee: {
+                                            showInviteeListInDineInRequest = self.message
+                                        }
+                                        dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
+                                    }//:ZStack
+                                    .frame(width: 303)
+                                    .background(Color(hex: "#F5F5F2"))
+                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                    .overlay(
+                                        appearance.messageBubbleType == .BubbleWithOutTail ?
+                                        AnyView(
+                                            UnevenRoundedRectangle(
+                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                style: .circular
+                                            )
+                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                        ) : AnyView(EmptyView())
+                                    )
+                                    if appearance.timeInsideBubble == false{
+                                        dateAndStatusView(onImage: false)
+                                            .padding(.bottom,5)
+                                            .padding(.trailing,5)
+                                    }
+                                    if status == .Rejected || status == .Accepted{
+                                        Text("Your response is sent to \(self.message.senderInfo?.userName ?? "")")
+                                            .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
+                                            .foregroundColor(Color(hex: "#6A6C6A"))
+                                    }
+                                }
+                                
+                                if message.reactions?.count ?? 0 > 0{
+                                    reactionsView()
+                                }
+                            }.padding(.vertical,5)
+                        }
+                    case .dineInInviteStatus:
+                        if isReceived == true{
+                            HStack(alignment: .bottom){
+                                if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                    //When its group show member avatar in message
+                                    inGroupUserAvatarView()
+                                }
+                                ZStack(alignment: .bottomTrailing){
+                                    VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                        if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                            //when its group show member name in message
+                                            inGroupUserName()
+                                        }
+                                        
+                                        VStack(alignment: .trailing,spacing: 5){
+                                            DineInStatusUI(status: ISMChatHelper.getDineUserStatus(myUserId: userData?.userId ?? "", metaData: self.message.metaData), isReceived: self.isReceived, message: self.message)
+                                            dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
+                                        }//:ZStack
+                                        .frame(width: 303)
+                                        .background(Color(hex: "#F5F5F2"))
+                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                        .overlay(
+                                            appearance.messageBubbleType == .BubbleWithOutTail ?
+                                            AnyView(
+                                                UnevenRoundedRectangle(
+                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                    style: .circular
+                                                )
+                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                            ) : AnyView(EmptyView())
+                                        )
+                                        if appearance.timeInsideBubble == false{
+                                            dateAndStatusView(onImage: false)
+                                                .padding(.bottom,5)
+                                                .padding(.trailing,5)
+                                        }
+                                    }
+                                    
+                                    if message.reactions?.count ?? 0 > 0{
+                                        reactionsView()
+                                    }
+                                }.padding(.vertical,2)
+                            }
+                        }else{
+                            EmptyView()
+                        }
+                    case .ProfileShare:
+                        HStack(alignment: .bottom){
+                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                //When its group show member avatar in message
+                                inGroupUserAvatarView()
+                            }
+                            ZStack(alignment: .bottomTrailing){
+                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                        //when its group show member name in message
+                                        inGroupUserName()
+                                    }
+                                    
+                                    VStack(alignment: .trailing,spacing: 5){
+                                        CustomMessageBubbleViewRegistry.shared.view(for: self.message)
+                                            .padding(.trailing,5)
+                                    }//:ZStack
+                                    .frame(width: 287)
+                                    .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                    .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                    .overlay(
+                                        appearance.messageBubbleType == .BubbleWithOutTail ?
+                                        AnyView(
+                                            UnevenRoundedRectangle(
+                                                topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                style: .circular
+                                            )
+                                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                        ) : AnyView(EmptyView())
+                                    )
+                                    if appearance.timeInsideBubble == false{
+                                        dateAndStatusView(onImage: false)
+                                            .padding(.bottom,5)
+                                            .padding(.trailing,5)
+                                    }
+                                }
+                            }.padding(.vertical,2)
+                        }
                     default:
-                        Text("")
-//                        CustomMessageBubbleViewRegistry.shared.view(for: self.message)
+                        CustomMessageBubbleViewRegistry.shared.view(for: self.message)
                     }
                     
                 }

@@ -1250,7 +1250,7 @@ extension ISMMessageView{
     }
     
     //MARK: - FORWARD MESSAGE
-    func forwardMessageView(message:ISMChatMessagesDB) {
+    func forwardMessageView(message: ISMChatMessagesDB) {
         if forwardMessageSelected.contains(where: { msg in
             msg.messageId == message.messageId
         }) {

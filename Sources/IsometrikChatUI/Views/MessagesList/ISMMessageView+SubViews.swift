@@ -167,7 +167,15 @@ extension ISMMessageView{
                               navigateToMediaSliderId: $navigateToMediaSliderId, navigateToDocumentUrl: $navigateToDocumentUrl, deleteMessage: $deleteMessage,
                               message: message, 
                               postIdToNavigate: $postIdToNavigate,
-                              productIdToNavigate: $productIdToNavigate, navigateToSocialProfileId: $navigateToSocialProfileId, navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate, navigateToProductLink: $navigateToProductLink, navigateToSocialLink: $navigateToSocialLink, navigateToCollectionLink: $navigateToCollectionLink, viewDetailsForPaymentRequest: $viewDetailsForPaymentRequest, declinePaymentRequest: $declinePaymentRequest, showInviteeListInDineInRequest: $showInviteeListInDineInRequest)
+                              productIdToNavigate: $productIdToNavigate,
+                              navigateToSocialProfileId: $navigateToSocialProfileId,
+                              navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,
+                              navigateToProductLink: $navigateToProductLink,
+                              navigateToSocialLink: $navigateToSocialLink,
+                              navigateToCollectionLink: $navigateToCollectionLink,
+                              viewDetailsForPaymentRequest: $viewDetailsForPaymentRequest,
+                              declinePaymentRequest: $declinePaymentRequest,
+                              showInviteeListInDineInRequest: $showInviteeListInDineInRequest)
 //            .environmentObject(self.realmManager)
         }
     }

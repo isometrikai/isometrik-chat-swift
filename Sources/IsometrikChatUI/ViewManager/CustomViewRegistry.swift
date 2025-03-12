@@ -20,7 +20,7 @@ public protocol CustomMessageBubbleViewProvider {
     /// Parses raw message data into the required view data model
     /// - Parameter data: Raw message data from database
     /// - Returns: Optional parsed view data
-    static func parseData(_ data: MessagesDB) -> ViewData?
+    static func parseData(_ data: ISMChatMessagesDB) -> ViewData?
     
     /// Creates a SwiftUI view using the parsed data
     /// - Parameter data: Parsed view data
@@ -35,7 +35,7 @@ public class CustomMessageBubbleViewRegistry {
     public static let shared = CustomMessageBubbleViewRegistry()
     
     /// Dictionary storing view builders for different custom message types
-    private var viewBuilders: [String: (MessagesDB) -> AnyView] = [:]
+    private var viewBuilders: [String: (ISMChatMessagesDB) -> AnyView] = [:]
     
     /// Registers a custom view provider for a specific message type
     /// - Parameters:
@@ -56,7 +56,7 @@ public class CustomMessageBubbleViewRegistry {
     /// Retrieves the appropriate view for a given message
     /// - Parameter message: Message data from database
     /// - Returns: A type-erased SwiftUI view
-    public func view(for message: MessagesDB) -> AnyView {
+    public func view(for message: ISMChatMessagesDB) -> AnyView {
         return viewBuilders[message.customType]?(message) ??
         AnyView(Text(message.body ?? ""))
     }

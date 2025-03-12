@@ -172,8 +172,8 @@ public struct ISMMessageView: View {
     
     
     
-    @State var postIdToNavigate : String = ""
-    @State var productIdToNavigate = ProductDB()
+    @State var postIdToNavigate : String?
+    @State var productIdToNavigate : ISMChatProductDB? = nil
     
     
     public var delegate : ISMMessageViewDelegate?
@@ -570,14 +570,14 @@ public struct ISMMessageView: View {
 //            stateViewModel.showforwardMultipleMessage = true
 //            forwardMessageSelectedToShow = nil
 //        }
-//        .onChange(of: productIdToNavigate, { _, _ in
-//            if let productId = productIdToNavigate.productId, !productId.isEmpty{
-//                delegate?.navigateToProduct(
-//                    productId: productId,
-//                    productCategoryId: productIdToNavigate.productCategoryId ?? "")
-//                productIdToNavigate = ProductDB()
-//            }
-//        })
+        .onChange(of: productIdToNavigate?.productId, { _, _ in
+            if let productId = productIdToNavigate?.productId, !productId.isEmpty{
+                delegate?.navigateToProduct(
+                    productId: productId,
+                    productCategoryId: productIdToNavigate?.productCategoryId ?? "")
+                productIdToNavigate = nil
+            }
+        })
         .onChange(of: stateViewModel.shareContact, { _, _ in
             if !self.selectedContactToShare.isEmpty {
                 Task{
