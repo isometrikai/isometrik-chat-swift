@@ -34,10 +34,10 @@ struct ISMLocationSubView: View {
     
     /// Initializes the location view with message data
     /// - Parameter message: Message object containing location information
-    init(message: MessagesDB) {
+    init(message: ISMChatMessagesDB) {
         // Extract location coordinates from message attachments
-        if let latitude = message.attachments.first?.latitude, 
-           let longitude = message.attachments.first?.longitude {
+        if let latitude = message.attachments?.first?.latitude, 
+            let longitude = message.attachments?.first?.longitude {
             // Initialize marker at the specified coordinates
             self.markers = GMSMarker(position: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
             self.latitude = latitude

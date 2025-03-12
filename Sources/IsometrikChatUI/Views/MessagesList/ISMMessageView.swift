@@ -484,9 +484,9 @@ public struct ISMMessageView: View {
 //                }
 //            }
 //        })
-//        .onChange(of: navigateToLocationDetail.title, { _, _ in
-//            stateViewModel.navigateToLocation = true
-//        })
+        .onChange(of: navigateToLocationDetail.title, { _, _ in
+            stateViewModel.navigateToLocation = true
+        })
 //        .onChange(of: stateViewModel.audioCallToUser, { _, _ in
 //            if stateViewModel.audioCallToUser == true{
 //                stateViewModel.showCallPopUp = true
@@ -529,9 +529,9 @@ public struct ISMMessageView: View {
 //            self.textFieldtxt = updateMessage.body
 //            stateViewModel.keyboardFocused = true
 //        })
-//        .onChange(of: self.placeId, { _, _ in
-//            sendMessageIfPlaceId()
-//        })
+        .onChange(of: self.placeId, { _, _ in
+            sendMessageIfPlaceId()
+        })
 //        .onChange(of: stateViewModel.navigateToAddParticipantsInGroupViaDelegate, { _, _ in
 //            if stateViewModel.navigateToAddParticipantsInGroupViaDelegate == true{
 //                delegate?.navigateToAppMemberInGroup(
@@ -814,12 +814,12 @@ public struct ISMMessageView: View {
 //        .navigationDestination(isPresented: $stateViewModel.movetoForwardList, destination: {
 //            ISMForwardToContactView(viewModel : self.chatViewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage)
 //        })
-//        .fullScreenCover(isPresented: $stateViewModel.navigateToLocation) {
-//            ISMMapDetailView(data: navigateToLocationDetail)
-//                .onDisappear {
-//                    stateViewModel.navigateToLocation = false
-//                }
-//        }
+        .fullScreenCover(isPresented: $stateViewModel.navigateToLocation) {
+            ISMMapDetailView(data: navigateToLocationDetail)
+                .onDisappear {
+                    stateViewModel.navigateToLocation = false
+                }
+        }
         //        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
 //        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager),isActive: $stateViewModel.navigateToProfile))
         //        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))

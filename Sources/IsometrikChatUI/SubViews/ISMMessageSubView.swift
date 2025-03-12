@@ -755,91 +755,91 @@ struct ISMMessageSubView: View {
                         }
 //                        
 //                        //MARK: - Location Message View
-//                    case .location:
-//                        HStack(alignment: .bottom){
-//                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                //When its group show member avatar in message
-//                                inGroupUserAvatarView()
-//                            }
-//                            ZStack(alignment: .bottomTrailing){
-//                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
-//                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                        //when its group show member name in message
-//                                        inGroupUserName()
-//                                    }
-//                                    ZStack{
-//                                        VStack(alignment: .trailing, spacing: 5){
-//                                            if message.messageType == 1{
-//                                                forwardedView()
-//                                            }
-//                                            
-//                                            Button {
-//                                                let data = ISMChatLocationData(coordinate:
-//                                                                                CLLocationCoordinate2D(
-//                                                                                    latitude: message.attachments.first?.latitude ?? 0,
-//                                                                                    longitude: message.attachments.first?.longitude ?? 0),
-//                                                                               title: message.attachments.first?.title ?? "",
-//                                                                               completeAddress: message.attachments.first?.address ?? "")
-//                                                navigateToLocationDetail = data
-//                                            } label: {
-//                                                VStack(alignment: .trailing, spacing: 5){
-//                                                    ISMLocationSubView(message: message)
-//                                                        .cornerRadius(8)
-//                                                        .contentShape(Rectangle())
-//                                                        .allowsHitTesting(true)
-//                                                    
-//                                                    HStack{
-//                                                        Text(message.attachments.first?.title ?? "")
-//                                                            .font(appearance.fonts.locationMessageTitle)
-//                                                            .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-//                                                        Spacer()
-//                                                        
-//                                                    }
-//                                                    HStack{
-//                                                        Text(message.attachments.first?.address ?? "")
-//                                                            .multilineTextAlignment(.leading)
-//                                                            .font(appearance.fonts.locationMessageDescription)
-//                                                            .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
-//                                                        Spacer()
-//                                                    }
-//                                                }
-//                                            }
-//                                            
-//                                            if appearance.timeInsideBubble == true{
-//                                                dateAndStatusView(onImage: false)
-//                                                    .padding(.bottom,(message.reactions.count > 0) ? 5 : 0)
-//                                            }
-//                                        }//:VStack
-//                                        .frame(width: 250)
-//                                        .padding(5)
-//                                        .padding(.trailing,appearance.messageBubbleType == .BubbleWithTail ? 5 : 0)
-//                                        .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-//                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-//                                        .overlay(
-//                                            appearance.messageBubbleType == .BubbleWithOutTail ?
-//                                            AnyView(
-//                                                UnevenRoundedRectangle(
-//                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-//                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-//                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-//                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-//                                                    style: .circular
-//                                                )
-//                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-//                                            ) : AnyView(EmptyView())
-//                                        )
-//                                    }//:ZStack
-//                                    if appearance.timeInsideBubble == false{
-//                                        dateAndStatusView(onImage: false)
-//                                            .padding(.bottom,(message.reactions.count > 0) ? 5 : 0)
-//                                    }
-//                                }
-//                                if message.reactions.count > 0{
-//                                    reactionsView()
-//                                }
-//                            }
-//                            .padding(.vertical,2)
-//                        }
+                    case .location:
+                        HStack(alignment: .bottom){
+                            if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                //When its group show member avatar in message
+                                inGroupUserAvatarView()
+                            }
+                            ZStack(alignment: .bottomTrailing){
+                                VStack(alignment: isReceived ? .leading : .trailing, spacing: 2){
+                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                        //when its group show member name in message
+                                        inGroupUserName()
+                                    }
+                                    ZStack{
+                                        VStack(alignment: .trailing, spacing: 5){
+                                            if message.messageType == 1{
+                                                forwardedView()
+                                            }
+                                            
+                                            Button {
+                                                let data = ISMChatLocationData(coordinate:
+                                                                                CLLocationCoordinate2D(
+                                                                                    latitude: message.attachments?.first?.latitude ?? 0,
+                                                                                    longitude: message.attachments?.first?.longitude ?? 0),
+                                                                               title: message.attachments?.first?.title ?? "",
+                                                                               completeAddress: message.attachments?.first?.address ?? "")
+                                                navigateToLocationDetail = data
+                                            } label: {
+                                                VStack(alignment: .trailing, spacing: 5){
+                                                    ISMLocationSubView(message: message)
+                                                        .cornerRadius(8)
+                                                        .contentShape(Rectangle())
+                                                        .allowsHitTesting(true)
+                                                    
+                                                    HStack{
+                                                        Text(message.attachments?.first?.title ?? "")
+                                                            .font(appearance.fonts.locationMessageTitle)
+                                                            .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                        Spacer()
+                                                        
+                                                    }
+                                                    HStack{
+                                                        Text(message.attachments?.first?.address ?? "")
+                                                            .multilineTextAlignment(.leading)
+                                                            .font(appearance.fonts.locationMessageDescription)
+                                                            .foregroundColor(isReceived ? appearance.colorPalette.messageListMessageTextReceived :  appearance.colorPalette.messageListMessageTextSend)
+                                                        Spacer()
+                                                    }
+                                                }
+                                            }
+                                            
+                                            if appearance.timeInsideBubble == true{
+                                                dateAndStatusView(onImage: false)
+                                                    .padding(.bottom,(message.reactions?.count ?? 0 > 0) ? 5 : 0)
+                                            }
+                                        }//:VStack
+                                        .frame(width: 250)
+                                        .padding(5)
+                                        .padding(.trailing,appearance.messageBubbleType == .BubbleWithTail ? 5 : 0)
+                                        .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                        .overlay(
+                                            appearance.messageBubbleType == .BubbleWithOutTail ?
+                                            AnyView(
+                                                UnevenRoundedRectangle(
+                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                    style: .circular
+                                                )
+                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                            ) : AnyView(EmptyView())
+                                        )
+                                    }//:ZStack
+                                    if appearance.timeInsideBubble == false{
+                                        dateAndStatusView(onImage: false)
+                                            .padding(.bottom,(message.reactions?.count ?? 0 > 0) ? 5 : 0)
+                                    }
+                                }
+                                if message.reactions?.count ?? 0 > 0{
+                                    reactionsView()
+                                }
+                            }
+                            .padding(.vertical,2)
+                        }
 //                        
 //                        //MARK: - Audio Message View
 //                    case .audio:

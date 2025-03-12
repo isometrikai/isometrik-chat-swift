@@ -90,7 +90,7 @@ struct ISMLocationShareView: View {
                 }
                 
                 if isTextFieldFocused == false{
-                    mapView(coordinate: CLLocationCoordinate2D(latitude: locationManager.location?.coordinate.latitude ?? 0.0, longitude: locationManager.location?.coordinate.longitude ?? 0.0))
+                    MapViewComponent(coordinate: CLLocationCoordinate2D(latitude: locationManager.location?.coordinate.latitude ?? 0.0, longitude: locationManager.location?.coordinate.longitude ?? 0.0))
                         .frame(height: 300)
                     if chatproperties.shareOnlyCurrentLocation == false{
                         nearByPlacesListView()
@@ -156,11 +156,15 @@ struct ISMLocationShareView: View {
             }
             .onAppear {
                 // Settings
-                locationManager.requestWhenInUseAuthorization()
+                if locationManager.authorizationStatus == .notDetermined {
+                    locationManager.requestWhenInUseAuthorization()
+                }
                 getPlaces()
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                locationManager.requestWhenInUseAuthorization()
+                if locationManager.authorizationStatus == .notDetermined {
+                    locationManager.requestWhenInUseAuthorization()
+                }
                 getPlaces()
             }
             // Permission denied alert
@@ -245,29 +249,9 @@ struct ISMLocationShareView: View {
         .scrollContentBackground(.hidden)
     }
     
-    func mapView(coordinate : CLLocationCoordinate2D?) -> some View{
-        @State var camera: MapCameraPosition = .region(
-            MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: coordinate?.latitude ?? 0.0, longitude: coordinate?.longitude ?? 0.0),
-                span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
-            )
-        )
-        return ZStack(alignment: .bottomTrailing){
-            Map(position: $camera){
-                Annotation("", coordinate: coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)) {
-                    appearance.images.mapPinLogo
-                        .resizable()
-                        .frame(width: appearance.imagesSize.mapPinLogo.width,height: appearance.imagesSize.mapPinLogo.height)
-                        .scaledToFit()
-                }
-            }
-            appearance.images.mapDirection
-                .resizable()
-                .frame(width: 40, height: 40, alignment: .center)
-                .padding(.trailing,15)
-                .padding(.bottom,15)
-        }
-    }
+
+    
+
     
     func searchPlacesView() -> some View{
         VStack{
@@ -367,6 +351,45 @@ extension View {
     func hideKeyboard() {
         UIApplication.shared.sendAction(
             #selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+
+struct MapViewComponent: View {
+    @State private var camera: MapCameraPosition
+    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+
+    var coordinate: CLLocationCoordinate2D?
+
+    init(coordinate: CLLocationCoordinate2D?) {
+        _camera = State(initialValue: .region(
+            MKCoordinateRegion(
+                center: coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0),
+                span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
+            )
+        ))
+        self.coordinate = coordinate
+    }
+
+    var body: some View {
+        ZStack(alignment: .bottomTrailing) {
+            Map(position: $camera) {
+                Annotation("", coordinate: coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)) {
+                    appearance.images.mapPinLogo
+                        .resizable()
+                        .frame(
+                            width: appearance.imagesSize.mapPinLogo.width,
+                            height: appearance.imagesSize.mapPinLogo.height
+                        )
+                        .scaledToFit()
+                }
+            }
+
+            appearance.images.mapDirection
+                .resizable()
+                .frame(width: 40, height: 40, alignment: .center)
+                .padding(.trailing, 15)
+                .padding(.bottom, 15)
+        }
     }
 }
 
