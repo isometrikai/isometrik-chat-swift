@@ -74,7 +74,6 @@ struct CameraCaptureView: View {
                     }else{
                         GeometryReader { geometry in
                             ISMChatImageCahcingManger.viewImage(url: capturedURL.absoluteString ?? "")
-                                .resizable()
                                 .scaledToFit()
                                 .frame(width: geometry.size.width, height: geometry.size.height)
                                 .clipped()

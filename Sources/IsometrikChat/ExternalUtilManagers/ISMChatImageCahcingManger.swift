@@ -6,34 +6,33 @@
 //
 
 import SwiftUI
-import Kingfisher
-import Alamofire
+import SDWebImageSwiftUI
 
-public class ISMChatImageCahcingManger{
-
-    static public func networkImage(url: String, isProfileImage: Bool, size: CGSize? = nil,placeholderView : some View) -> KFImage {
-        return KFImage(URL(string: url))
-            .placeholder {
-                placeholderView
-            }
-            .onFailure { error in
-                // Show the placeholder when loading fails
-                if isProfileImage {
-                    placeholderView
-                } else {
-                    Image("loading")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                }
-            }
+public class ISMChatImageCahcingManger {
+    
+    /// Loads an image from a URL with a placeholder
+    static public func networkImage(url: String, isProfileImage: Bool, size: CGSize? = nil, placeholderView: some View) -> some View {
+        WebImage(url: URL(string: url))
             .resizable()
+            .indicator(.activity) // Show loading spinner
+            .transition(.fade) // Smooth fade-in effect
+            .scaledToFill()
+            .background(
+                AnyView(
+                    isProfileImage ? AnyView(placeholderView) :
+                        AnyView(Image("loading")
+                            .resizable()
+                            .frame(width: 20, height: 20))
+                )
+            )
     }
     
-    
-    
-    static public func viewImage(url: String)-> KFImage{
-        return KFImage(URL(string: url)).placeholder {
-            ProgressView()
-        }.resizable()
+    /// Loads an image from a URL with a default loading indicator
+    static public func viewImage(url: String) -> some View {
+        WebImage(url: URL(string: url))
+            .resizable()
+            .indicator(.activity)
+            .transition(.fade)
+            .scaledToFill()
     }
 }

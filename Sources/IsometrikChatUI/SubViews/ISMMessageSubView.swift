@@ -1750,7 +1750,6 @@ struct ISMMessageSubView: View {
                     // Product Image with Discount Label
                     ZStack(alignment: .topLeading) {
                         ISMChatImageCahcingManger.viewImage(url: message.metaData?.productImage ?? "")
-                            .resizable()
                             .scaledToFill()
                             .frame(width: 248, height: 192)
                             .clipped()
@@ -1860,7 +1859,6 @@ struct ISMMessageSubView: View {
         VStack(alignment: .leading) {
             HStack() {
                     ISMChatImageCahcingManger.viewImage(url: message.metaData?.collectionImage ?? "")
-                        .resizable()
                         .scaledToFill()
                         .background(Color.white)
                         .frame(width: 78,height: 78)
@@ -1925,10 +1923,9 @@ struct ISMMessageSubView: View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
                
-                    ISMChatImageCahcingManger.viewImage(url: message.metaData?.thumbnailUrl ?? "")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 248, height: 240)
+                ISMChatImageCahcingManger.viewImage(url: message.metaData?.thumbnailUrl ?? "")
+                    .scaledToFill()
+                    .frame(width: 248, height: 240)
                         .clipped()
                         .overlay {
                             if message.metaData?.isVideoPost == true{
