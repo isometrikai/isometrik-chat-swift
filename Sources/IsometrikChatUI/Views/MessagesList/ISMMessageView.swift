@@ -504,21 +504,21 @@ public struct ISMMessageView: View {
                 }
             }
         })
-//        .onChange(of: chatViewModel.audioUrl, { _, _ in
-//            sendMessageIfAudioUrl()
-//        })
-//        .onChange(of: stateViewModel.keyboardFocused, { _, _ in
-//            if stateViewModel.keyboardFocused == true{
-//                if conversationDetail != nil{
-//                    sendMessageTypingIndicator()
-//                }
-//            }
-//        })
-//        .onChange(of: selectedGIF, { _, _ in
-//            if let selectedGIF = selectedGIF{
-//                sendMessageIfGif()
-//            }
-//        })
+        .onChange(of: chatViewModel.audioUrl, { _, _ in
+            sendMessageIfAudioUrl()
+        })
+        .onChange(of: stateViewModel.keyboardFocused, { _, _ in
+            if stateViewModel.keyboardFocused == true{
+                if conversationDetail != nil{
+                    sendMessageTypingIndicator()
+                }
+            }
+        })
+        .onChange(of: selectedGIF, { _, _ in
+            if let selectedGIF = selectedGIF{
+                sendMessageIfGif()
+            }
+        })
         .onChange(of: stateViewModel.sendMedia, { _, _ in
             if stateViewModel.sendMedia == true{
                 stateViewModel.sendMedia = false
@@ -586,14 +586,14 @@ public struct ISMMessageView: View {
                 }
             }
         })
-//        .sheet(isPresented: $stateViewModel.showGifPicker, content: {
-//            ISMGiphyPicker { media in
-//                if let media = media{
-//                    selectedGIF = media
-//                    stateViewModel.showGifPicker = false
-//                }
-//            }
-//        })
+        .sheet(isPresented: $stateViewModel.showGifPicker, content: {
+            ISMGiphyPicker { media in
+                if let media = media{
+                    selectedGIF = media
+                    stateViewModel.showGifPicker = false
+                }
+            }
+        })
 //        .sheet(isPresented: $stateViewModel.showCustomMenu, content: {
 //            ISMCustomMenu(
 //                clearChatAction: {
