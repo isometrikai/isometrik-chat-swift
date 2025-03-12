@@ -14,7 +14,7 @@ import IsometrikChat
 struct ISMContactDetailView: View {
     
     //MARK: - PROPERTIES
-    let data : MetaDataDB // Holds the metadata for contacts
+    let data : ISMChatMetaDataDB // Holds the metadata for contacts
     @State private var presentContact : Bool = false // State variable to control the presentation of the contact saving view
     @Environment(\.presentationMode) var presentationMode // Environment variable to manage view presentation
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance // Appearance settings for UI
@@ -51,7 +51,7 @@ struct ISMContactDetailView: View {
             
             // List of contacts
             List{
-                ForEach(data.contacts, id: \.self) { index in
+                ForEach(data.contacts ?? [], id: \.self) { index in
                     ContactDetailCell(presentContact: $presentContact, index: index) // Display each contact in a cell
                 }.listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
@@ -149,7 +149,7 @@ struct ContactSavingView: View {
 struct ContactDetailCell : View {
     @Binding var presentContact : Bool // Binding to control the presentation of the contact saving view
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance // Appearance settings for UI
-    let index : ContactDB // Contact data for the cell
+    let index : ISMChatContactDB // Contact data for the cell
     var body: some View {
         VStack(spacing:0){
             Spacer()

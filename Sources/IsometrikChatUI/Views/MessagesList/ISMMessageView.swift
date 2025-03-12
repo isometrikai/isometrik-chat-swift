@@ -578,12 +578,14 @@ public struct ISMMessageView: View {
 //                productIdToNavigate = ProductDB()
 //            }
 //        })
-//        .onChange(of: stateViewModel.shareContact, { _, _ in
-//            if !self.selectedContactToShare.isEmpty {
-//                sendMessage(msgType: .contact)
-//                stateViewModel.shareContact = false
-//            }
-//        })
+        .onChange(of: stateViewModel.shareContact, { _, _ in
+            if !self.selectedContactToShare.isEmpty {
+                Task{
+                    await sendMessage(msgType: .contact)
+                    stateViewModel.shareContact = false
+                }
+            }
+        })
 //        .sheet(isPresented: $stateViewModel.showGifPicker, content: {
 //            ISMGiphyPicker { media in
 //                if let media = media{

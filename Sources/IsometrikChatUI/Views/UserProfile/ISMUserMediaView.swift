@@ -295,7 +295,6 @@ struct ISMUserMediaView: View {
             self.navigateToMediaSlider = true // Trigger navigation
         }, label: {
             ISMChatImageCahcingManger.viewImage(url: value.thumbnailUrl)
-                .resizable()
                 .scaledToFill()
                 .frame(width: ((UIScreen.main.bounds.width / 3) - 1), height: ((UIScreen.main.bounds.width / 3) - 1)) // Frame for video thumbnail
                 .clipped()
@@ -328,7 +327,6 @@ struct ISMUserMediaView: View {
             self.navigateToMediaSlider = true // Trigger navigation
         }, label: {
             ISMChatImageCahcingManger.viewImage(url: value.mediaUrl)
-                .resizable()
                 .scaledToFill()
                 .frame(width: ((UIScreen.main.bounds.width / 3) - 1), height: ((UIScreen.main.bounds.width / 3) - 1)) // Frame for image
                 .clipped()

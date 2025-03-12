@@ -61,7 +61,6 @@ struct ISMContactInfoView: View {
             if showFullScreenImage {
                 // Display full-screen image when tapped
                 ISMChatImageCahcingManger.viewImage(url: fullScreenImageURL ?? "")
-                    .resizable()
                     .scaledToFit()
             } else {
                 GeometryReader { geometry in
