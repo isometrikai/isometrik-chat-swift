@@ -1599,46 +1599,45 @@ struct ISMMessageSubView: View {
                     }
                     
                 }
-//                .simultaneousGesture(
-//                LongPressGesture(minimumDuration: 0.5).onEnded { _ in
-//                    let contextMenuVC = ISMCustomContextMenuViewController()
-//                    contextMenuVC.modalPresentationStyle = .overFullScreen
-//                    contextMenuVC.view.backgroundColor = .clear
-//                    
-//                    let hostingController = UIHostingController(rootView:
-//                        ISMCustomContextMenu(
-//                            conversationId: self.conversationId,
-//                            message: self.message,
-//                            viewWidth: self.viewWidth,
-//                            isGroup: self.isGroup ?? false,
-//                            isReceived: self.isReceived,
-//                            selectedMessageToReply: $selectedMessageToReply,
-//                            navigateToMessageInfo: $navigatetoMessageInfo,
-//                            showMessageInfoInsideMessage: $showMessageInfoInsideMessage,
-//                            forwardMessageSelected: $forwardMessageSelected,
-//                            updateMessage: $updateMessage,
-//                            messageCopied: $messageCopied,
-//                            navigateToDeletePopUp: $navigateToDeletePopUp,
-//                            selectedReaction: $selectedReaction,
-//                            sentRecationToMessageId: $sentRecationToMessageId,
-//                            deleteMessage: $deleteMessage,
-//                            fromBroadCastFlow: self.fromBroadCastFlow,
-//                            groupconversationMember: self.groupconversationMember
-//                        )
-//                        .environmentObject(self.realmManager)
-//                    )
-//                    
-//                    hostingController.view.backgroundColor = .clear
-//                    contextMenuVC.addChild(hostingController)
-//                    contextMenuVC.view.addSubview(hostingController.view)
-//                    hostingController.view.frame = contextMenuVC.view.bounds
-//                    hostingController.didMove(toParent: contextMenuVC)
-//                    
-//                    if self.message.customType != ISMChatMediaType.PaymentRequest.value || self.message.customType != ISMChatMediaType.DineInInvite.value || self.message.customType != ISMChatMediaType.DineInStatus.value{
-//                        self.viewControllerHolder?.present(contextMenuVC, animated: true)
-//                    }
-//                }
-//            )
+                .simultaneousGesture(
+                LongPressGesture(minimumDuration: 0.5).onEnded { _ in
+                    let contextMenuVC = ISMCustomContextMenuViewController()
+                    contextMenuVC.modalPresentationStyle = .overFullScreen
+                    contextMenuVC.view.backgroundColor = .clear
+                    
+                    let hostingController = UIHostingController(rootView:
+                        ISMCustomContextMenu(
+                            conversationId: self.conversationId,
+                            message: self.message,
+                            viewWidth: self.viewWidth,
+                            isGroup: self.isGroup ?? false,
+                            isReceived: self.isReceived,
+                            selectedMessageToReply: $selectedMessageToReply,
+                            navigateToMessageInfo: $navigatetoMessageInfo,
+                            showMessageInfoInsideMessage: $showMessageInfoInsideMessage,
+                            forwardMessageSelected: $forwardMessageSelected,
+                            updateMessage: $updateMessage,
+                            messageCopied: $messageCopied,
+                            navigateToDeletePopUp: $navigateToDeletePopUp,
+                            selectedReaction: $selectedReaction,
+                            sentRecationToMessageId: $sentRecationToMessageId,
+                            deleteMessage: $deleteMessage,
+                            fromBroadCastFlow: self.fromBroadCastFlow,
+                            groupconversationMember: self.groupconversationMember
+                        )
+                    )
+                    
+                    hostingController.view.backgroundColor = .clear
+                    contextMenuVC.addChild(hostingController)
+                    contextMenuVC.view.addSubview(hostingController.view)
+                    hostingController.view.frame = contextMenuVC.view.bounds
+                    hostingController.didMove(toParent: contextMenuVC)
+                    
+                    if self.message.customType != ISMChatMediaType.PaymentRequest.value || self.message.customType != ISMChatMediaType.DineInInvite.value || self.message.customType != ISMChatMediaType.DineInStatus.value{
+                        self.viewControllerHolder?.present(contextMenuVC, animated: true)
+                    }
+                }
+            )
             .allowsHitTesting(true)
             .contentShape(Rectangle())
         }

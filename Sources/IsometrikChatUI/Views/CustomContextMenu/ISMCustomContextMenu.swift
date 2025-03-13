@@ -24,13 +24,12 @@ struct ISMCustomContextMenu: View {
     
     @State var previousAudioRef: AudioPlayViewModel?
     let conversationId : String
-    let message : MessagesDB
+    let message : ISMChatMessagesDB
     let viewWidth : CGFloat
     var viewModel = ChatsViewModel()
     let isGroup : Bool
     let isReceived : Bool
     let pasteboard = UIPasteboard.general
-    @EnvironmentObject var realmManager : RealmManager
     
     @Environment(\.viewController) public var viewControllerHolder: UIViewController?
     
@@ -42,12 +41,12 @@ struct ISMCustomContextMenu: View {
     
     @State private var showReactionsOption = ISMChatSdkUI.getInstance().getChatProperties().features.contains(.reaction)
     
-    @Binding var selectedMessageToReply : MessagesDB
+    @Binding var selectedMessageToReply : ISMChatMessagesDB?
     @Binding var navigateToMessageInfo : Bool
     @Binding var showMessageInfoInsideMessage : Bool
 //    @Binding var showForward: Bool
-    @Binding var forwardMessageSelected : MessagesDB
-    @Binding var updateMessage : MessagesDB
+    @Binding var forwardMessageSelected : ISMChatMessagesDB?
+    @Binding var updateMessage : ISMChatMessagesDB?
     @Binding var messageCopied : Bool
     @State private var navigatetoMessageInfo : Bool = false
     @Binding var navigateToDeletePopUp : Bool
@@ -55,7 +54,7 @@ struct ISMCustomContextMenu: View {
     @State var emojiOptions: [ISMChatEmojiReaction] = ISMChatEmojiReaction.allCases
     @Binding var selectedReaction : String?
     @Binding var sentRecationToMessageId : String
-    @Binding var deleteMessage : [MessagesDB]
+    @Binding var deleteMessage : [ISMChatMessagesDB]
     
     let fromBroadCastFlow : Bool?
     
@@ -78,68 +77,67 @@ struct ISMCustomContextMenu: View {
                 Spacer()
                 
                 // Reactions grid - only shown for non-call messages that aren't deleted
-//                if showReactionsOption && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall && message.deletedMessage == false {
-//                    LazyVGrid(
-//                        columns: [GridItem(.adaptive(minimum: 35))],
-//                        spacing: 10
-//                    ) {
-//                        ForEach(emojiOptions, id: \.self) { item in
-//                            Button {
-//                                sentRecationToMessageId = self.message.messageId
-//                                selectedReaction = item.info.valueString
-//                                dismiss()
-//                            } label: {
-//                                Text(item.info.emoji)
-//                                    .font(Font.regular(size: 30))
-//                            }
-//                        }
-//                    }
-//                    .padding(10)
-//                    .background(Color.white)
-//                    .cornerRadius(8)
-//                    .padding(.horizontal,15)
-//                }
+                if showReactionsOption && ISMChatHelper.getMessageType(message: message) != .AudioCall && ISMChatHelper.getMessageType(message: message) != .VideoCall && message.deletedMessage == false {
+                    LazyVGrid(
+                        columns: [GridItem(.adaptive(minimum: 35))],
+                        spacing: 10
+                    ) {
+                        ForEach(emojiOptions, id: \.self) { item in
+                            Button {
+                                sentRecationToMessageId = self.message.messageId
+                                selectedReaction = item.info.valueString
+                                dismiss()
+                            } label: {
+                                Text(item.info.emoji)
+                                    .font(Font.regular(size: 30))
+                            }
+                        }
+                    }
+                    .padding(10)
+                    .background(Color.white)
+                    .cornerRadius(8)
+                    .padding(.horizontal,15)
+                }
                 
                 // Message info preview
-//                ISMMessageInfoSubView(previousAudioRef: $previousAudioRef, messageType: ISMChatHelper.getMessageType(message: message), message: message, viewWidth: viewWidth, isReceived: self.isReceived, messageDeliveredType: ISMChatHelper.checkMessageDeliveryType(message: message, isGroup: self.isGroup ,memberCount: realmManager.getMemberCount(convId: self.conversationId), isOneToOneGroup: ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup), conversationId: conversationId,isGroup: self.isGroup, groupconversationMember: [], fromBroadCastFlow: self.fromBroadCastFlow)
-//                    .padding(.horizontal,15)
-//                    .environmentObject(self.realmManager)
+                ISMMessageInfoSubView(previousAudioRef: $previousAudioRef, messageType: ISMChatHelper.getMessageType(message: message), message: message, viewWidth: viewWidth, isReceived: self.isReceived, messageDeliveredType: ISMChatHelper.checkMessageDeliveryType(message: message, isGroup: self.isGroup ,memberCount: /*realmManager.getMemberCount(convId: self.conversationId)*/0, isOneToOneGroup: ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup), conversationId: conversationId,isGroup: self.isGroup, groupconversationMember: [], fromBroadCastFlow: self.fromBroadCastFlow)
+                    .padding(.horizontal,15)
                 
-                // Context menu options list
-//                VStack {
-//                    ForEach(getContextMenuActions(), id: \.label) { action in
-//                        if action.condition {
-//                            Button {
-//                                action.action()
-//                            } label: {
-//                                HStack {
-//                                    Text(action.label)
-//                                        .font(appearance.fonts.contextMenuOptions)
-//                                        .foregroundColor(action.label == "Delete" ? Color(hex: "#DD3719") : Color.black)
-//                                    Spacer()
-//                                    action.icon
-//                                        .resizable()
-//                                        .aspectRatio(contentMode: .fit)
-//                                        .frame(
-//                                            width: getCustomWidth(action: action),
-//                                            height: getCustomHeight(action: action),
-//                                            alignment: .center
-//                                        )
-//                                }
-//                                .padding(.horizontal, 15)
-//                                .frame(height: 38)
-//                            }
-//                            .frame(height: 38)
-//                            Rectangle()
-//                                .fill(Color(hex: "#111111").opacity(0.25))
-//                                .frame(height: 0.5)
-//                        }
-//                    }
-//                }
-//                .background(Color.white)
-//                .cornerRadius(12)
-//                .frame(width: 228, alignment: .center)
-//                .padding(.horizontal, 15)
+//                 Context menu options list
+                VStack {
+                    ForEach(getContextMenuActions(), id: \.label) { action in
+                        if action.condition {
+                            Button {
+                                action.action()
+                            } label: {
+                                HStack {
+                                    Text(action.label)
+                                        .font(appearance.fonts.contextMenuOptions)
+                                        .foregroundColor(action.label == "Delete" ? Color(hex: "#DD3719") : Color.black)
+                                    Spacer()
+                                    action.icon
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(
+                                            width: getCustomWidth(action: action),
+                                            height: getCustomHeight(action: action),
+                                            alignment: .center
+                                        )
+                                }
+                                .padding(.horizontal, 15)
+                                .frame(height: 38)
+                            }
+                            .frame(height: 38)
+                            Rectangle()
+                                .fill(Color(hex: "#111111").opacity(0.25))
+                                .frame(height: 0.5)
+                        }
+                    }
+                }
+                .background(Color.white)
+                .cornerRadius(12)
+                .frame(width: 228, alignment: .center)
+                .padding(.horizontal, 15)
                 
                 Spacer()
 
@@ -333,86 +331,86 @@ struct ISMCustomContextMenu: View {
     }
     
     /// Builds the array of available context menu actions based on message type and permissions
-//    func getContextMenuActions() -> [ContextMenuAction] {
-//        return [
-//            // Reply option - available for non-broadcast, non-call, non-deleted messages
-//            ContextMenuAction(
-//                label: "Reply",
-//                icon: appearance.images.contextMenureply,
-//                condition: showReplyOption && fromBroadCastFlow != true &&
-//                           ISMChatHelper.getMessageType(message: message) != .AudioCall &&
-//                           ISMChatHelper.getMessageType(message: message) != .VideoCall &&
-//                           message.deletedMessage == false,
-//                action: {
-//                    selectedMessageToReply = message
-//                    dismiss()
-//                }
-//            ),
-//            ContextMenuAction(
-//                label: "Forward",
-//                icon: appearance.images.contextMenuforward,
-//                condition: showForwardOption &&
-//                           ISMChatHelper.getMessageType(message: message) != .AudioCall &&
-//                           ISMChatHelper.getMessageType(message: message) != .VideoCall &&
-//                           message.deletedMessage == false,
-//                action: {
-//                    forwardMessageSelected = message
-////                    showForward = true
-//                    dismiss()
-//                }
-//            ),
-//            ContextMenuAction(
-//                label: "Edit",
-//                icon: appearance.images.contextMenuedit,
-//                condition: showEditOption &&
-//                !isReceived &&
-//                ISMChatHelper.getMessageType(message: message) == .text &&
-//                fromBroadCastFlow != true &&
-//                message.deletedMessage == false && sentTimeLessThan15MinutesAgo(sentTime: message.sentAt) == true,
-//                action: {
-//                    updateMessage = message
-//                    dismiss()
-//                }
-//            ),
-//            ContextMenuAction(
-//                label: "Copy",
-//                icon: appearance.images.contextMenucopy,
-//                condition: ISMChatHelper.getMessageType(message: message) == .text &&
-//                           message.deletedMessage == false,
-//                action: {
-//                    pasteboard.string = message.body
-//                    messageCopied = true
-//                    dismiss()
-//                }
-//            ),
-//            ContextMenuAction(
-//                label: "Info",
-//                icon: appearance.images.contextMenuinfo,
-//                condition: !isReceived &&
-//                           ISMChatHelper.getMessageType(message: message) != .AudioCall &&
-//                           ISMChatHelper.getMessageType(message: message) != .VideoCall &&
-//                           message.deletedMessage == false ,
-//                action: {
-//                    if ISMChatSdkUI.getInstance().getChatProperties().messageInfoBelowMessage == false {
-//                        navigateToMessageInfo = true
-//                    } else {
-//                        showMessageInfoInsideMessage = true
-//                    }
-//                    dismiss()
-//                }
-//            ),
-//            ContextMenuAction(
-//                label: "Delete",
-//                icon: appearance.images.contextMenudelete,
-//                condition: true,
-//                action: {
-//                    deleteMessage.append(message)
-//                    navigateToDeletePopUp = true
-//                    dismiss()
-//                }
-//            )
-//        ]
-//    }
+    func getContextMenuActions() -> [ContextMenuAction] {
+        return [
+            // Reply option - available for non-broadcast, non-call, non-deleted messages
+            ContextMenuAction(
+                label: "Reply",
+                icon: appearance.images.contextMenureply,
+                condition: showReplyOption && fromBroadCastFlow != true &&
+                           ISMChatHelper.getMessageType(message: message) != .AudioCall &&
+                           ISMChatHelper.getMessageType(message: message) != .VideoCall &&
+                           message.deletedMessage == false,
+                action: {
+                    selectedMessageToReply = message
+                    dismiss()
+                }
+            ),
+            ContextMenuAction(
+                label: "Forward",
+                icon: appearance.images.contextMenuforward,
+                condition: showForwardOption &&
+                           ISMChatHelper.getMessageType(message: message) != .AudioCall &&
+                           ISMChatHelper.getMessageType(message: message) != .VideoCall &&
+                           message.deletedMessage == false,
+                action: {
+                    forwardMessageSelected = message
+//                    showForward = true
+                    dismiss()
+                }
+            ),
+            ContextMenuAction(
+                label: "Edit",
+                icon: appearance.images.contextMenuedit,
+                condition: showEditOption &&
+                !isReceived &&
+                ISMChatHelper.getMessageType(message: message) == .text &&
+                fromBroadCastFlow != true &&
+                message.deletedMessage == false && sentTimeLessThan15MinutesAgo(sentTime: message.sentAt) == true,
+                action: {
+                    updateMessage = message
+                    dismiss()
+                }
+            ),
+            ContextMenuAction(
+                label: "Copy",
+                icon: appearance.images.contextMenucopy,
+                condition: ISMChatHelper.getMessageType(message: message) == .text &&
+                           message.deletedMessage == false,
+                action: {
+                    pasteboard.string = message.body
+                    messageCopied = true
+                    dismiss()
+                }
+            ),
+            ContextMenuAction(
+                label: "Info",
+                icon: appearance.images.contextMenuinfo,
+                condition: !isReceived &&
+                           ISMChatHelper.getMessageType(message: message) != .AudioCall &&
+                           ISMChatHelper.getMessageType(message: message) != .VideoCall &&
+                           message.deletedMessage == false ,
+                action: {
+                    if ISMChatSdkUI.getInstance().getChatProperties().messageInfoBelowMessage == false {
+                        navigateToMessageInfo = true
+                    } else {
+                        showMessageInfoInsideMessage = true
+                    }
+                    dismiss()
+                }
+            ),
+            ContextMenuAction(
+                label: "Delete",
+                icon: appearance.images.contextMenudelete,
+                condition: true,
+                action: {
+                    deleteMessage.append(message)
+                    navigateToDeletePopUp = true
+                    dismiss()
+                }
+            )
+        ]
+    }
 
     /// Checks if a message was sent within the last 15 minutes
     /// Used to determine if editing is still allowed
