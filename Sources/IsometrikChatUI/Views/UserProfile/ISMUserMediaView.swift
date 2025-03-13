@@ -13,9 +13,8 @@ struct ISMUserMediaView: View {
     
     //MARK: - PROPERTIES
     @State public var selectIndex = 0 // Index to track selected media type (Media, Links, Docs)
-    @State public var groupMedia = [Date: [MediaDB]]() // Dictionary to group media by date
-    @State public var groupLink = [Date: [MessagesDB]]() // Dictionary to group links by date
-    @EnvironmentObject var realmManager: RealmManager // Environment object for managing Realm database
+    @State public var groupMedia = [Date: [ISMChatMediaDB]]() // Dictionary to group media by date
+    @State public var groupLink = [Date: [ISMChatMessagesDB]]() // Dictionary to group links by date
     
     public var viewModel = ChatsViewModel() // ViewModel for chat functionality
     public var columns: [GridItem] {
@@ -25,6 +24,7 @@ struct ISMUserMediaView: View {
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance // Appearance settings
     @State var navigateToMediaSlider : Bool = false // State to control navigation to media slider
     @State var navigateToMediaSliderId : String = "" // ID of the media to navigate to
+    @ObservedObject var viewModelNew: ConversationsViewModel
     
     //MARK: - BODY
     public var body: some View {
@@ -95,11 +95,11 @@ struct ISMUserMediaView: View {
     func handlePickerSelection(_ selection: Int) {
         switch selection {
         case 0:
-            groupMedia = groupedEpisodesByMonth(realmManager.medias ?? []) // Group media by month
+            groupMedia = groupedEpisodesByMonth(viewModelNew.medias ?? []) // Group media by month
         case 1:
-            groupLink = groupedLinkByMonth(realmManager.linksMedia ?? []) // Group links by month
+            groupLink = groupedLinkByMonth(viewModelNew.links ?? []) // Group links by month
         case 2:
-            groupMedia = groupedEpisodesByMonth(realmManager.filesMedia ?? []) // Group files by month
+            groupMedia = groupedEpisodesByMonth(viewModelNew.files ?? []) // Group files by month
         default:
             groupMedia.removeAll() // Clear media if selection is invalid
         }
@@ -107,17 +107,17 @@ struct ISMUserMediaView: View {
     
     // Setup grouped media initially
     func setupGroupedMedia() {
-        groupMedia = groupedEpisodesByMonth(realmManager.medias ?? []) // Group media by month
+        groupMedia = groupedEpisodesByMonth(viewModelNew.medias ?? []) // Group media by month
     }
     
     // Setup grouped links
     func setupGroupedLink() {
-        groupLink = groupedLinkByMonth(realmManager.linksMedia ?? []) // Group links by month
+        groupLink = groupedLinkByMonth(viewModelNew.links ?? []) // Group links by month
     }
     
     // Group episodes by month
-    func groupedEpisodesByMonth(_ episodes: [MediaDB]) -> [Date: [MediaDB]] {
-        let empty: [Date: [MediaDB]] = [:] // Empty dictionary for grouping
+    func groupedEpisodesByMonth(_ episodes: [ISMChatMediaDB]) -> [Date: [ISMChatMediaDB]] {
+        let empty: [Date: [ISMChatMediaDB]] = [:] // Empty dictionary for grouping
         
         return episodes.reduce(into: empty) { acc, cur in
             let date1 = Date(timeIntervalSince1970: (cur.sentAt / 1000)) // Convert timestamp to date
@@ -129,8 +129,8 @@ struct ISMUserMediaView: View {
     }
     
     // Group links by month
-    func groupedLinkByMonth(_ episodes: [MessagesDB]) -> [Date: [MessagesDB]] {
-        let empty: [Date: [MessagesDB]] = [:] // Empty dictionary for grouping
+    func groupedLinkByMonth(_ episodes: [ISMChatMessagesDB]) -> [Date: [ISMChatMessagesDB]] {
+        let empty: [Date: [ISMChatMessagesDB]] = [:] // Empty dictionary for grouping
         
         return episodes.reduce(into: empty) { acc, cur in
             let date1 = Date(timeIntervalSince1970: (cur.sentAt / 1000)) // Convert timestamp to date
@@ -210,7 +210,7 @@ struct ISMUserMediaView: View {
     }
     
     // Show media grid section
-    func showMediaGridSection(_ key: Date, _ contacts: [MediaDB]) -> some View {
+    func showMediaGridSection(_ key: Date, _ contacts: [ISMChatMediaDB]) -> some View {
         LazyVGrid(
             columns: selectIndex == 0 ? columns : [GridItem(.flexible(), spacing: 1, alignment: nil)], // Use different columns based on selection
             alignment: .center,
@@ -289,7 +289,7 @@ struct ISMUserMediaView: View {
     }
     
     // Show video view
-    func showVideoView(_ value: MediaDB) -> some View {
+    func showVideoView(_ value: ISMChatMediaDB) -> some View {
         Button(action: {
             self.navigateToMediaSliderId = value.messageId // Set media ID for navigation
             self.navigateToMediaSlider = true // Trigger navigation
@@ -308,7 +308,7 @@ struct ISMUserMediaView: View {
     }
     
     // Show GIF view
-    func showGifView(_ value: MediaDB) -> some View {
+    func showGifView(_ value: ISMChatMediaDB) -> some View {
         Button(action: {
             self.navigateToMediaSliderId = value.messageId // Set media ID for navigation
             self.navigateToMediaSlider = true // Trigger navigation
@@ -321,7 +321,7 @@ struct ISMUserMediaView: View {
     }
     
     // Show image view
-    func showImageView(_ value: MediaDB) -> some View {
+    func showImageView(_ value: ISMChatMediaDB) -> some View {
         Button(action: {
             self.navigateToMediaSliderId = value.messageId // Set media ID for navigation
             self.navigateToMediaSlider = true // Trigger navigation
@@ -334,7 +334,7 @@ struct ISMUserMediaView: View {
     }
     
     // Show file view
-    func showFileView(_ value: MediaDB) -> some View {
+    func showFileView(_ value: ISMChatMediaDB) -> some View {
         NavigationLink(
             destination: ISMDocumentViewer(url: value.mediaUrl) // Navigate to document viewer
         ) {

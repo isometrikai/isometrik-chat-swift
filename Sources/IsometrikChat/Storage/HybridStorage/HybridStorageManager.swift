@@ -185,4 +185,26 @@ public class HybridStorageManager: ChatStorageManager {
         }
     }
     
+    public func updateGroupTitle(title: String, conversationId: String) async throws {
+        do {
+            // Fetch from remote and sync
+            try await remoteStorageManager.updateGroupTitle(title: title, conversationId: conversationId)
+            try await localStorageManager.updateGroupTitle(title: title, conversationId: conversationId)
+        } catch {
+            print("Error delete conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func updateGroupImage(image: String, conversationId: String) async throws {
+        do {
+            // Fetch from remote and sync
+            try await remoteStorageManager.updateGroupImage(image: image, conversationId: conversationId)
+            try await localStorageManager.updateGroupImage(image: image, conversationId: conversationId)
+        } catch {
+            print("Error delete conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
 }

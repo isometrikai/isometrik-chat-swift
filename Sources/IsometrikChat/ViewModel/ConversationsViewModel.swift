@@ -82,11 +82,11 @@ public class ConversationsViewModel: ObservableObject {
     public func clearConversationMessages(id: String) async {
         do {
             // Ensure delete completes before fetching conversations
-            try await chatRepository.clearConversationMessages(conversationId: id)
             await MainActor.run {
                 self.allMessages.removeAll()
                 self.messages.removeAll()
             }
+            try await chatRepository.clearConversationMessages(conversationId: id)
         } catch {
             print("Error loading conversations: \(error)")
         }
@@ -148,8 +148,11 @@ public class ConversationsViewModel: ObservableObject {
         do {
             let fetchedMessages = try await chatRepository.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp)
             DispatchQueue.main.async {
-                self.allMessages = fetchedMessages
-                self.messages = self.getSectionMessage(for: fetchedMessages)
+                //i have filter some action type to not show in UI
+                self.allMessages = fetchedMessages.filter { message in
+                                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
+                                        }
+                self.messages = self.getSectionMessage(for: self.allMessages)
             }
         } catch {
             print("Error loading conversations: \(error)")
@@ -288,6 +291,22 @@ public class ConversationsViewModel: ObservableObject {
             }
         } catch {
             print("Error saving media in conversations: \(error)")
+        }
+    }
+    
+    public func updateGroupTitle(title: String, conversationId: String) async{
+        do {
+            try await chatRepository.updateGroupTitle(title: title, conversationId: conversationId)
+        } catch {
+            print("Error loading conversations: \(error)")
+        }
+    }
+    
+    public func updateGroupImage(image: String, conversationId: String) async{
+        do {
+            try await chatRepository.updateGroupImage(image: image, conversationId: conversationId)
+        } catch {
+            print("Error loading conversations: \(error)")
         }
     }
 }

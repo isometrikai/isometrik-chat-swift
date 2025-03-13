@@ -7,7 +7,7 @@
 
 import SwiftUI
 import AVKit
-import Kingfisher
+//import Kingfisher
 import IsometrikChat
 import ExyteMediaPicker
 

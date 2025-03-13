@@ -35,4 +35,9 @@ public protocol ChatStorageManager {
     func fetchFiles(conversationId: String) async throws -> [ISMChatMediaDB]
     func fetchLinks(conversationId: String) async throws -> [ISMChatMessagesDB]
     func deleteMedia(conversationId: String, messageId: String) async throws
+    
+    
+    //group operations
+    func updateGroupTitle(title : String, conversationId : String) async throws
+    func updateGroupImage(image : String, conversationId : String) async throws
 }

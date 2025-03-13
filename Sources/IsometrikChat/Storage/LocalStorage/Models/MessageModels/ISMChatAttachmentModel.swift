@@ -25,6 +25,7 @@ public class ISMChatAttachmentDB {
     public var title : String = ""
     public var address : String = ""
     public var caption : String = ""
+    @Relationship(deleteRule: .nullify) public var conversation: ISMChatMessagesDB?
     public init(attachmentType: Int? = nil, extensions: String? = nil, mediaId: String? = nil, mediaUrl: String? = nil, mimeType: String? = nil, name: String? = nil, size: Int? = nil, thumbnailUrl: String? = nil, latitude: Double? = nil, longitude: Double? = nil, title: String? = nil, address: String? = nil, caption: String? = nil) {
         self.attachmentType = attachmentType ?? 0
         self.extensions = extensions ?? ""

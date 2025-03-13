@@ -91,6 +91,8 @@ struct ISMMessageSubView: View {
     @Binding var declinePaymentRequest : ISMChatMessagesDB?
     @Binding var showInviteeListInDineInRequest : ISMChatMessagesDB?
     
+    @State private var imageUrl: String?
+    
     
     //MARK:  - BODY
     var body: some View {
@@ -467,7 +469,7 @@ struct ISMMessageSubView: View {
                                                 navigateToMediaSliderId = message.messageId
                                             } label: {
                                                 ZStack(alignment: .bottomTrailing){
-                                                    ISMImageViewer(url: message.attachments?.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
+                                                    ISMImageViewer(url: imageUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
                                                         .overlay(
                                                             LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                                                                 .frame(width: 250, height: 300)
@@ -482,6 +484,10 @@ struct ISMMessageSubView: View {
                                                                 .padding(.bottom,5)
                                                                 .padding(.trailing,5)
                                                         }
+                                                    }
+                                                }.task {
+                                                    if let attachment = message.attachments?.first {
+                                                        imageUrl = attachment.mediaUrl // Load asynchronously
                                                     }
                                                 }
                                             }

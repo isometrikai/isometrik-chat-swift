@@ -101,7 +101,10 @@ public class LocalStorageManager: ChatStorageManager {
             if let existingConversation = try modelContext.fetch(descriptor).first {
                 // Delete all messages using forEach
                 existingConversation.messages.forEach { modelContext.delete($0) }
-
+                //also clear last message 
+                existingConversation.lastMessageDetails?.body = nil
+                existingConversation.lastMessageDetails?.action = nil
+                existingConversation.lastMessageDetails?.customType = nil
                 // Save changes
                 try modelContext.save()
             }
@@ -564,6 +567,43 @@ public class LocalStorageManager: ChatStorageManager {
     }
 
 
+    
+    public func updateGroupTitle(title: String, conversationId: String) async throws {
+        let conversationFetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId }
+        )
+        do {
+            let conversations = try modelContext.fetch(conversationFetchDescriptor)
+            
+            guard let conversation = conversations.first else {
+                print("❌ No conversation found for ID: \(conversationId)")
+                return
+            }
+            
+            conversation.conversationTitle = title
+            try modelContext.save()
+        } catch {
+            print("❌ Error deleting media: \(error.localizedDescription)")
+        }
+    }
+    
+    public func updateGroupImage(image: String, conversationId: String) async throws {
+        let conversationFetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId }
+        )
+        do {
+            let conversations = try modelContext.fetch(conversationFetchDescriptor)
+            
+            guard let conversation = conversations.first else {
+                print("❌ No conversation found for ID: \(conversationId)")
+                return
+            }
+            conversation.conversationImageUrl = image
+            try modelContext.save()
+        } catch {
+            print("❌ Error deleting media: \(error.localizedDescription)")
+        }
+    }
 
     
     

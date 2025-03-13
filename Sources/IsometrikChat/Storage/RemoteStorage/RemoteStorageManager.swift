@@ -136,4 +136,15 @@ public class RemoteStorageManager: ChatStorageManager {
         
     }
     
+    public func updateGroupTitle(title: String, conversationId: String) async throws {
+        messageViewModel.updateGroupTitle(title: title, conversationId: conversationId ?? "") { _ in
+        }
+    }
+    
+    public func updateGroupImage(image: String, conversationId: String) async throws {
+        messageViewModel.updateGroupImage(image: image, conversationId: conversationId) { _ in
+            
+        }
+    }
+    
 }

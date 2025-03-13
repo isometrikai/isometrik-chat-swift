@@ -789,10 +789,10 @@ public struct ISMMessageView: View {
         .sheet(isPresented: self.$stateViewModel.showVideoPicker) {
             ISMMediaPicker(isPresented: self.$stateViewModel.showVideoPicker, sendMedias: $mediaSelectedFromPicker,opponenetName: isGroup == true ? (self.conversationDetail?.conversationDetails?.conversationTitle ?? "" ) : (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""),mediaCaption: $mediaCaption,sendMediaToMessage: $stateViewModel.sendMedia)
         }
-//        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToChatList: $navigateToChatList).environmentObject(RealmManager.shared)
-//            .onAppear {
-//                OnMessageList = false
-//            }, isActive: $stateViewModel.navigateToUserProfile))
+        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToChatList: $navigateToChatList,viewModelNew: self.viewModelNew)
+            .onAppear {
+                OnMessageList = false
+            }, isActive: $stateViewModel.navigateToUserProfile))
 //        .fullScreenCover(isPresented: $stateViewModel.navigateToUserProfile, onDismiss: {
 //            stateViewModel.navigateToUserProfile = false
 //        }, content: {

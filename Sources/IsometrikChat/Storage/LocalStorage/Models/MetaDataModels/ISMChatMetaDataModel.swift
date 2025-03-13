@@ -60,6 +60,10 @@ public class ISMChatMetaDataDB{
     public var groupCastId : String?
     public var status : Int?
     
+    // Parent
+    @Relationship(deleteRule: .nullify) var collection: ISMChatMessagesDB?
+        
+    
     public init(locationAddress: String? = nil, replyMessage: ISMChatReplyMessageDB? = nil, contacts: [ISMChatContactDB]? = nil, captionMessage: String? = nil, isBroadCastMessage: Bool? = nil, post: ISMChatPostDB? = nil, product: ISMChatProductDB? = nil, storeName: String? = nil, productName: String? = nil, bestPrice: Double? = nil, scratchPrice: Double? = nil, url: String? = nil, parentProductId: String? = nil, childProductId: String? = nil, entityType: String? = nil, productImage: String? = nil, thumbnailUrl: String? = nil, Description: String? = nil, isVideoPost: Bool? = nil, socialPostId: String? = nil, collectionTitle: String? = nil, collectionDescription: String? = nil, productCount: Int? = nil, collectionImage: String? = nil, collectionId: String? = nil, paymentRequestId: String? = nil, orderId: String? = nil, paymentRequestedMembers: [ISMChatPaymentRequestMembersDB]? = nil, requestAPaymentExpiryTime: Int? = nil, currencyCode: String? = nil, amount: Double? = nil, inviteTitle: String? = nil, inviteTimestamp: Double? = nil, inviteRescheduledTimestamp: Double? = nil, inviteLocation: ISMChatLocationDB? = nil, inviteMembers: [ISMChatPaymentRequestMembersDB]? = nil, groupCastId: String? = nil, status: Int? = nil) {
         self.locationAddress = locationAddress
         self.replyMessage = replyMessage

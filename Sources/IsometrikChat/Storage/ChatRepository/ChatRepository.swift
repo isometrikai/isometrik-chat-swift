@@ -95,4 +95,12 @@ public class ChatRepository {
     public func deleteMedia(conversationId: String, messageId: String) async throws{
         return try await activeStorageManager.deleteMedia(conversationId: conversationId, messageId: messageId)
     }
+    
+    public func updateGroupTitle(title : String, conversationId : String) async throws{
+        return try await activeStorageManager.updateGroupTitle(title: title, conversationId: conversationId)
+    }
+    
+    public func updateGroupImage(image : String, conversationId : String) async throws{
+        return try await activeStorageManager.updateGroupImage(image: image, conversationId: conversationId)
+    }
 }

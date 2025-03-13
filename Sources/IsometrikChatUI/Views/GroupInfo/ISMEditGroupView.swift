@@ -45,6 +45,7 @@ struct ISMEditGroupView: View {
     
     // Appearance configuration
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    @ObservedObject var viewModelNew: ConversationsViewModel
     
     //MARK: - BODY
     var body: some View {
@@ -201,15 +202,24 @@ struct ISMEditGroupView: View {
             if existingGroupName != groupName {
                 if let image = image.first {
                     // Update both name and image
-                    viewModel.updateGroupTitle(title: groupName, conversationId: conversationId ?? "") { _ in
+//                    viewModel.updateGroupTitle(title: groupName, conversationId: conversationId ?? "") { _ in
+//                        updategroupImage(image: image)
+//                    }
+                    Task{
+                        await viewModelNew.updateGroupTitle(title: groupName, conversationId: conversationId ?? "")
                         updategroupImage(image: image)
                     }
                 } else {
                     // Update name only
-                    viewModel.updateGroupTitle(title: groupName, conversationId: conversationId ?? "") { _ in
+                    Task{
+                        await viewModelNew.updateGroupTitle(title: groupName, conversationId: conversationId ?? "")
                         NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
                         presentationMode.wrappedValue.dismiss()
                     }
+//                    viewModel.updateGroupTitle(title: groupName, conversationId: conversationId ?? "") { _ in
+//                        NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
+//                        presentationMode.wrappedValue.dismiss()
+//                    }
                 }
             } else {
                 // Case 2: Only image has changed
@@ -229,7 +239,12 @@ struct ISMEditGroupView: View {
     /// Removes the group image and sets it back to default
     func removeImageInApi() {
         let defaultImage = "https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg"
-        viewModel.updateGroupImage(image: defaultImage, conversationId: conversationId ?? "") { _ in
+//        viewModel.updateGroupImage(image: defaultImage, conversationId: conversationId ?? "") { _ in
+//            NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
+//            presentationMode.wrappedValue.dismiss()
+//        }
+        Task{
+            await viewModelNew.updateGroupImage(image: defaultImage, conversationId: conversationId ?? "")
             NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
             presentationMode.wrappedValue.dismiss()
         }
@@ -240,10 +255,15 @@ struct ISMEditGroupView: View {
     func updategroupImageUrl(imageUrl: URL) {
         viewModel.uploadConversationUrl(url: imageUrl, conversationType: 0, newConversation: false, 
             conversationId: conversationId ?? "", conversationTitle: groupName) { value in
-            viewModel.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "") { _ in
+            Task{
+                await viewModelNew.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "")
                 NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
                 presentationMode.wrappedValue.dismiss()
             }
+//            viewModel.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "") { _ in
+//                NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
+//                presentationMode.wrappedValue.dismiss()
+//            }
         }
     }
     
@@ -252,10 +272,15 @@ struct ISMEditGroupView: View {
     func updategroupImage(image: UIImage) {
         viewModel.uploadConversationImage(image: image, conversationType: 0, newConversation: false,
             conversationId: conversationId ?? "", conversationTitle: groupName) { value in
-            viewModel.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "") { _ in
+            Task{
+                await viewModelNew.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "")
                 NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
                 presentationMode.wrappedValue.dismiss()
             }
+//            viewModel.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "") { _ in
+//                NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
+//                presentationMode.wrappedValue.dismiss()
+//            }
         }
     }
 }

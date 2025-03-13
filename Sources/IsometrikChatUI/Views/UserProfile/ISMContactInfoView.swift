@@ -20,7 +20,7 @@ struct ISMContactInfoView: View {
     var conversationViewModel = ConversationViewModel() // ViewModel for conversation management
     let conversationID : String? // ID of the current conversation
     @State var conversationDetail : ISMChatConversationDetail? // Details of the conversation
-    @EnvironmentObject var realmManager : RealmManager // Realm database manager
+//    @EnvironmentObject var realmManager : RealmManager // Realm database manager
     @State private var selectedOption : ISMChatContactInfo = .BlockUser // Selected contact option
     var viewModel = ChatsViewModel() // ViewModel for chat management
     let isGroup : Bool? // Flag to determine if the conversation is a group
@@ -53,6 +53,8 @@ struct ISMContactInfoView: View {
     @Binding var navigateToSocialProfileId : String
     @Binding var navigateToExternalUserListToAddInGroup : Bool
     @Binding var navigateToChatList : Bool
+    
+    @ObservedObject var viewModelNew: ConversationsViewModel
     
     //MARK:  - BODY
     var body: some View {
@@ -111,8 +113,7 @@ struct ISMContactInfoView: View {
                         // Section for media, links, and documents
                         Section {
                             NavigationLink {
-                                ISMUserMediaView(viewModel: viewModel)
-                                    .environmentObject(self.realmManager)
+                                ISMUserMediaView(viewModel: viewModel,viewModelNew: self.viewModelNew)
                             } label: {
                                 HStack {
                                     appearance.images.mediaIcon
@@ -123,7 +124,7 @@ struct ISMContactInfoView: View {
                                         .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                                     Spacer()
                                     // Count of media items
-                                    let count = ((realmManager.medias?.count ?? 0) + (realmManager.filesMedia?.count ?? 0) + (realmManager.linksMedia?.count ?? 0))
+                                    let count = viewModelNew.medias.count + viewModelNew.files.count + viewModelNew.links.count
                                     Text(count.description)
                                         .font(appearance.fonts.messageListMessageText)
                                         .foregroundColor(appearance.colorPalette.chatListUserMessage)
@@ -207,7 +208,7 @@ struct ISMContactInfoView: View {
         }
         .fullScreenCover(isPresented: $showEdit, content: {
             NavigationStack{
-                ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID)
+                ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID,viewModelNew: self.viewModelNew)
             }
         })
         .navigationBarItems(leading: navBarLeadingBtn, trailing: navBarTrailingBtn) // Set navigation bar items
@@ -224,7 +225,7 @@ struct ISMContactInfoView: View {
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.updateGroupInfo)) { _ in
             getConversationDetail {
                 // Update group image and name
-                realmManager.updateImageAndNameOfGroup(name: conversationDetail?.conversationDetails?.conversationTitle ?? "", image: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", convID: self.conversationID ?? "")
+//                realmManager.updateImageAndNameOfGroup(name: conversationDetail?.conversationDetails?.conversationTitle ?? "", image: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", convID: self.conversationID ?? "")
             }
         }
         // Navigation links for various views can be added here
@@ -348,31 +349,43 @@ struct ISMContactInfoView: View {
             }
         } else if selectedOption == .ClearChat {
             // Clear chat logic
-            conversationViewModel.clearChat(conversationId: conversationID ?? "") {
-                self.realmManager.clearMessages() // Clear messages from realm
+            Task{
+                await viewModelNew.clearConversationMessages(id: conversationID ?? "")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                    self.realmManager.clearMessages(convID: conversationID ?? "") // Clear messages for specific conversation
                     navigateToChatList = true // Navigate to chat list
                 })
             }
+//            conversationViewModel.clearChat(conversationId: conversationID ?? "") {
+//                self.realmManager.clearMessages() // Clear messages from realm
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+//                    self.realmManager.clearMessages(convID: conversationID ?? "") // Clear messages for specific conversation
+//                    navigateToChatList = true // Navigate to chat list
+//                })
+//            }
         } else if selectedOption == .DeleteUser {
             // Delete conversation logic
-            conversationViewModel.deleteConversation(conversationId: conversationID ?? "") {
+            Task{
+                await viewModelNew.deleteConversations(id: conversationID ?? "")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                    realmManager.deleteConversation(convID: conversationID ?? "") // Delete conversation from realm
-                    navigateToChatList = true // Navigate to chat list
+                    navigateToChatList = true
                 })
             }
+//            conversationViewModel.deleteConversation(conversationId: conversationID ?? "") {
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+//                    realmManager.deleteConversation(convID: conversationID ?? "") // Delete conversation from realm
+//                    navigateToChatList = true // Navigate to chat list
+//                })
+//            }
         } else if selectedOption == .ExitGroup {
             // Exit group logic
-            viewModel.exitGroup(conversationId: conversationID ?? "") {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
-                    realmManager.deleteConversation(convID: conversationID ?? "") // Delete conversation from realm
-                    realmManager.deleteMessagesThroughConvId(convID: conversationID ?? "") // Delete messages for conversation
-                    realmManager.deleteMediaThroughConversationId(convID: conversationID ?? "") // Delete media for conversation
-                    NavigationUtil.popToRootView() // Navigate back to root view
-                })
-            }
+//            viewModel.exitGroup(conversationId: conversationID ?? "") {
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+//                    realmManager.deleteConversation(convID: conversationID ?? "") // Delete conversation from realm
+//                    realmManager.deleteMessagesThroughConvId(convID: conversationID ?? "") // Delete messages for conversation
+//                    realmManager.deleteMediaThroughConversationId(convID: conversationID ?? "") // Delete media for conversation
+//                    NavigationUtil.popToRootView() // Navigate back to root view
+//                })
+//            }
         } else if selectedOption == .MuteNotification {
             // Mute notifications logic
             conversationViewModel.muteUnmuteNotification(conversationId: conversationID ?? "", pushNotifications: false) { _ in
