@@ -17,7 +17,7 @@ struct InviteeListPopUpView: View {
     var appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     
     /// The message database object containing invitee information
-    var message: ISMChatMessagesDB
+    var message: ISMChatMessagesDB?
     
     /// Closure to handle dismissal of the popup
     var cancel: () -> ()
@@ -57,7 +57,7 @@ struct InviteeListPopUpView: View {
         }
         
         // List of invitees
-        if let memebersInvited = message.metaData?.inviteMembers {
+        if let memebersInvited = message?.metaData?.inviteMembers {
             List {
                 ForEach(memebersInvited, id: \.self) { member in
                     // Individual member row

@@ -376,24 +376,24 @@ public struct ISMMessageView: View {
                 stateViewModel.navigateToDocumentViewer = true
             }
         })
-//        .onChange(of: navigateToChatList, { _, _ in
-//            if navigateToChatList == true{
-//                OndisappearOnBack()
-//                //dismiss
-//                delegate?.backButtonAction()
-//                presentationMode.wrappedValue.dismiss()
-//            }
-//        })
-//        .onChange(of: selectedReaction, { _, _ in
-//            if selectedReaction != nil{
-//                sendReaction()
-//            }
-//        })
-//        .onChange(of: audioPermissionCheck, { _, _ in
-//            if audioPermissionCheck == false{
-//                showPermissionDeniedAlert()
-//            }
-//        })
+        .onChange(of: navigateToChatList, { _, _ in
+            if navigateToChatList == true{
+                OndisappearOnBack()
+                //dismiss
+                delegate?.backButtonAction()
+                presentationMode.wrappedValue.dismiss()
+            }
+        })
+        .onChange(of: selectedReaction, { _, _ in
+            if selectedReaction != nil{
+                sendReaction()
+            }
+        })
+        .onChange(of: audioPermissionCheck, { _, _ in
+            if audioPermissionCheck == false{
+                showPermissionDeniedAlert()
+            }
+        })
 //        .onChange(of: navigateToProductLink.messageId) { _, _ in
 //            if !navigateToProductLink.messageId.isEmpty,let metaData = navigateToProductLink.metaData{
 //                let childProductId = metaData.childProductId ?? ""
@@ -438,65 +438,66 @@ public struct ISMMessageView: View {
 //                }
 //                viewDetailsForPaymentRequest = nil
 //            }
-//        }.onChange(of: declinePaymentRequest.messageId) { _, _ in
-//            if !declinePaymentRequest.messageId.isEmpty{
-//                stateViewModel.showDeclinePaymentRequestPopUp = true
-//            }
 //        }
+        .onChange(of: declinePaymentRequest?.messageId) { _, _ in
+            if let declinepayId = declinePaymentRequest?.messageId, !declinepayId.isEmpty{
+                stateViewModel.showDeclinePaymentRequestPopUp = true
+            }
+        }
         .onChange(of: navigateToMediaSliderId, { _, _ in
             if !navigateToMediaSliderId.isEmpty{
                 stateViewModel.navigateToMediaSlider = true
             }
         })
-//        .onChange(of: showInviteeListInDineInRequest.messageId, { _, _ in
-//            if !showInviteeListInDineInRequest.messageId.isEmpty{
-//                stateViewModel.showInviteeDineInPopUp = true
-//            }
-//        })
-//        .onChange(of: textFieldtxt, { _, newValue in
-//            // Update showMentionList based on conditions
-//            if newValue.last == "@" {
-//                DispatchQueue.main.async {
-//                    stateViewModel.showMentionList = true
-//                }
-//                
-//            } else if !newValue.contains("@") || newValue.isEmpty {
-//                DispatchQueue.main.async {
-//                    stateViewModel.showMentionList = false
-//                }
-//            }
-//        })
-//        .onChange(of: textFieldtxt, { _, _ in
-//            if isGroup == true{
-//                let filterUserName = getMentionedString(inputString: textFieldtxt)
-//                if !filterUserName.isEmpty {
-//                    filteredUsers = mentionUsers.filter { user in
-//                        let lowercasedUserName = (user.userName ?? "").lowercased()
-//                        return lowercasedUserName.contains(filterUserName.lowercased())
-//                    }
-//                    // If there are no matching users, set filteredUsers to an empty array
-//                    if filteredUsers.isEmpty {
-//                        filteredUsers = []
-//                        stateViewModel.showMentionList = false
-//                    }
-//                } else {
-//                    filteredUsers = mentionUsers
-//                }
-//            }
-//        })
+        .onChange(of: showInviteeListInDineInRequest?.messageId, { _, _ in
+            if let dineInRequest =  showInviteeListInDineInRequest?.messageId,!dineInRequest.isEmpty{
+                stateViewModel.showInviteeDineInPopUp = true
+            }
+        })
+        .onChange(of: textFieldtxt, { _, newValue in
+            // Update showMentionList based on conditions
+            if newValue.last == "@" {
+                DispatchQueue.main.async {
+                    stateViewModel.showMentionList = true
+                }
+                
+            } else if !newValue.contains("@") || newValue.isEmpty {
+                DispatchQueue.main.async {
+                    stateViewModel.showMentionList = false
+                }
+            }
+        })
+        .onChange(of: textFieldtxt, { _, _ in
+            if isGroup == true{
+                let filterUserName = getMentionedString(inputString: textFieldtxt)
+                if !filterUserName.isEmpty {
+                    filteredUsers = mentionUsers.filter { user in
+                        let lowercasedUserName = (user.userName ?? "").lowercased()
+                        return lowercasedUserName.contains(filterUserName.lowercased())
+                    }
+                    // If there are no matching users, set filteredUsers to an empty array
+                    if filteredUsers.isEmpty {
+                        filteredUsers = []
+                        stateViewModel.showMentionList = false
+                    }
+                } else {
+                    filteredUsers = mentionUsers
+                }
+            }
+        })
         .onChange(of: navigateToLocationDetail.title, { _, _ in
             stateViewModel.navigateToLocation = true
         })
-//        .onChange(of: stateViewModel.audioCallToUser, { _, _ in
-//            if stateViewModel.audioCallToUser == true{
-//                stateViewModel.showCallPopUp = true
-//            }
-//        })
-//        .onChange(of: stateViewModel.videoCallToUser, { _, _ in
-//            if stateViewModel.videoCallToUser == true{
-//                stateViewModel.showCallPopUp = true
-//            }
-//        })
+        .onChange(of: stateViewModel.audioCallToUser, { _, _ in
+            if stateViewModel.audioCallToUser == true{
+                stateViewModel.showCallPopUp = true
+            }
+        })
+        .onChange(of: stateViewModel.videoCallToUser, { _, _ in
+            if stateViewModel.videoCallToUser == true{
+                stateViewModel.showCallPopUp = true
+            }
+        })
         .onChange(of: cameraImageToUse, { _, _ in
             if cameraImageToUse != nil {
                 Task{
@@ -525,51 +526,51 @@ public struct ISMMessageView: View {
                 sendMessageIfUploadMedia()
             }
         })
-//        .onChange(of: updateMessage.body, { _, _ in
-//            self.textFieldtxt = updateMessage.body
-//            stateViewModel.keyboardFocused = true
-//        })
+        .onChange(of: updateMessage?.body, { _, _ in
+            self.textFieldtxt = updateMessage?.body ?? ""
+            stateViewModel.keyboardFocused = true
+        })
         .onChange(of: self.placeId, { _, _ in
             sendMessageIfPlaceId()
         })
-//        .onChange(of: stateViewModel.navigateToAddParticipantsInGroupViaDelegate, { _, _ in
-//            if stateViewModel.navigateToAddParticipantsInGroupViaDelegate == true{
-//                delegate?.navigateToAppMemberInGroup(
-//                    conversationId: self.conversationID ?? "",
-//                    groupMembers: self.conversationDetail?.conversationDetails?.members)
-//                stateViewModel.navigateToAddParticipantsInGroupViaDelegate = false
-//            }
-//        })
-//        .onChange(of: chatViewModel.timerValue, { _, _ in
-//            withAnimation {
-//                stateViewModel.isShowingRedTimerStart.toggle()
-//            }
-//        })
-//        .onChange(of: navigateToSocialProfileId, { _, _ in
-//            if !navigateToSocialProfileId.isEmpty {
-//                delegate?.navigateToAppProfile(
-//                    userId: navigateToSocialProfileId,
-//                    storeId: "",
-//                    userType: 0,
-//                    conversationID: self.conversationID ?? "")
-//                navigateToSocialProfileId = ""
-//            }
-//        })
-//        .onChange(of: postIdToNavigate, { _, _ in
-//            if !postIdToNavigate.isEmpty{
-//                delegate?.navigateToPost(
-//                    postId: postIdToNavigate
-//                )
-//                postIdToNavigate = ""
-//            }
-//        })
-//        .onChange(of: forwardMessageSelectedToShow) { oldValue, newValue in
-//            guard !newValue.messageId.isEmpty, newValue != oldValue else { return }
-//            
-//            self.forwardMessageView(message: newValue)
-//            stateViewModel.showforwardMultipleMessage = true
-//            forwardMessageSelectedToShow = nil
-//        }
+        .onChange(of: stateViewModel.navigateToAddParticipantsInGroupViaDelegate, { _, _ in
+            if stateViewModel.navigateToAddParticipantsInGroupViaDelegate == true{
+                delegate?.navigateToAppMemberInGroup(
+                    conversationId: self.conversationID ?? "",
+                    groupMembers: self.conversationDetail?.conversationDetails?.members)
+                stateViewModel.navigateToAddParticipantsInGroupViaDelegate = false
+            }
+        })
+        .onChange(of: chatViewModel.timerValue, { _, _ in
+            withAnimation {
+                stateViewModel.isShowingRedTimerStart.toggle()
+            }
+        })
+        .onChange(of: navigateToSocialProfileId, { _, _ in
+            if !navigateToSocialProfileId.isEmpty {
+                delegate?.navigateToAppProfile(
+                    userId: navigateToSocialProfileId,
+                    storeId: "",
+                    userType: 0,
+                    conversationID: self.conversationID ?? "")
+                navigateToSocialProfileId = ""
+            }
+        })
+        .onChange(of: postIdToNavigate) { _, _ in
+            if let postId = postIdToNavigate, !postId.isEmpty {
+                delegate?.navigateToPost(postId: postId)
+                postIdToNavigate = nil
+            }
+        }
+        .onChange(of: forwardMessageSelectedToShow?.messageId) { oldValue, newValue in
+            if let forwardMessage = forwardMessageSelectedToShow{
+                guard let newMessageId = newValue, !newMessageId.isEmpty, newMessageId != oldValue else { return }
+                
+                self.forwardMessageView(message: forwardMessage)
+                stateViewModel.showforwardMultipleMessage = true
+                forwardMessageSelectedToShow = nil
+            }
+        }
         .onChange(of: productIdToNavigate?.productId, { _, _ in
             if let productId = productIdToNavigate?.productId, !productId.isEmpty{
                 delegate?.navigateToProduct(
@@ -594,181 +595,181 @@ public struct ISMMessageView: View {
                 }
             }
         })
-//        .sheet(isPresented: $stateViewModel.showCustomMenu, content: {
-//            ISMCustomMenu(
-//                clearChatAction: {
-//                    stateViewModel.showCustomMenu = false
-//                    stateViewModel.showClearChatPopup = true
-//                },
-//                blockUserAction: {
-//                    stateViewModel.showCustomMenu = false
-//                    stateViewModel.showBlockUserPopup = true
-//                },
-//                initiatorId: realmManager.messages.last?.last?.initiatorId,
-//                messagingDisabled: self.conversationDetail?.conversationDetails?.messagingDisabled)
-//            .presentationDetents([.fraction(0.25)])
-//            .presentationDragIndicator(.visible)
-//        })
-//        .sheet(isPresented: $stateViewModel.showInviteeDineInPopUp, content: {
-//            InviteeListPopUpView(message: showInviteeListInDineInRequest) {
-//                showInviteeListInDineInRequest = nil
-//                stateViewModel.showInviteeDineInPopUp = false
-//            }.presentationDetents([.height(446)])
-//                    .presentationDragIndicator(.visible)
-//        })
-//        .sheet(isPresented: $stateViewModel.showDeclinePaymentRequestPopUp, content: {
-//            if declinePaymentRequest.customType == ISMChatMediaType.PaymentRequest.value{
-//                ConfirmationPopup(
-//                    title: "Decline Request?",
-//                    message: "Are you sure you want to decline payment request?",
-//                    confirmButtonTitle: "Decline request",
-//                    cancelButtonTitle: "Cancel",
-//                    confirmAction: {
-//                            let paymentRequestId = declinePaymentRequest.metaData?.paymentRequestId ?? ""
-//                            declinePaymentRequest = nil
-//                        self.delegate?.declinePaymentRequest(paymentRequestUserId: myAppUserId ?? "", paymentRequestId: paymentRequestId, completion: {
-//                            })
-//                            stateViewModel.showDeclinePaymentRequestPopUp = false
-//                    },
-//                    cancelAction: {
-//                        declinePaymentRequest = nil
-//                        stateViewModel.showDeclinePaymentRequestPopUp = false
-//                    },
-//                    popUpType: .Menu,
-//                    isPresented: $stateViewModel.showDeclinePaymentRequestPopUp,
-//                    showCrossButton: true
-//                )
-//                .presentationDetents([.fraction(0.3)])
-//                .presentationDragIndicator(.visible)
-//            }else{
-//                DeclineReasonPopUpView(selectedOption: $declineReasonOption){ reason in
-//                    self.delegate?.dineInInvite(inviteTitle: declinePaymentRequest.metaData?.inviteTitle ?? "", messageId: declinePaymentRequest.messageId ?? "", groupcastId: declinePaymentRequest.metaData?.groupCastId ?? "", reason: reason, createdByUserId: declinePaymentRequest.senderInfo?.userIdentifier ?? "", declineByUserId: self.myAppUserId ?? "", inviteStatus: 2, inviteSenderIsometricId: declinePaymentRequest.senderInfo?.userId ?? "")
-//                        declinePaymentRequest = nil
-//                        stateViewModel.showDeclinePaymentRequestPopUp = false
-//                } cancelAction: {
-//                    declinePaymentRequest = nil
-//                    stateViewModel.showDeclinePaymentRequestPopUp = false
-//                }.presentationDetents([.height(declineReasonOption == "Other" ?  619 : 446)])
-//                    .presentationDragIndicator(.visible)
-//            }
-//        })
-//        .sheet(isPresented: $stateViewModel.showClearChatPopup, content: {
-//            var attributedText: AttributedString {
-//                var attributedString = AttributedString("Are you sure you want to clear chat? This action is undoable.")
-//                
-//                // Style "clear chat"
-//                if let range = attributedString.range(of: "clear chat") {
-//                    attributedString[range].foregroundColor = Color(hex: "#454745")
-//                    attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
-//                }
-//                
-//                return attributedString
-//            }
-//            ConfirmationPopup(
-//                title: "Clear chat?",
-//                message: attributedText,
-//                confirmButtonTitle: "Yes, clear",
-//                cancelButtonTitle: "Cancel",
-//                confirmAction: {
-//                    clearChat()
-//                    stateViewModel.showClearChatPopup = false
-//                },
-//                cancelAction: {
-//                    stateViewModel.showClearChatPopup = false
-//                },
-//                popUpType: .Menu,
-//                isPresented: $stateViewModel.showClearChatPopup,
-//                showCrossButton: false
-//            )
-//            .presentationDetents([.fraction(0.3)])
-//            .presentationDragIndicator(.visible)
-//        })
+        .sheet(isPresented: $stateViewModel.showCustomMenu, content: {
+            ISMCustomMenu(
+                clearChatAction: {
+                    stateViewModel.showCustomMenu = false
+                    stateViewModel.showClearChatPopup = true
+                },
+                blockUserAction: {
+                    stateViewModel.showCustomMenu = false
+                    stateViewModel.showBlockUserPopup = true
+                },
+                initiatorId: viewModelNew.messages.last?.last?.initiatorId,
+                messagingDisabled: self.conversationDetail?.conversationDetails?.messagingDisabled)
+            .presentationDetents([.fraction(0.25)])
+            .presentationDragIndicator(.visible)
+        })
+        .sheet(isPresented: $stateViewModel.showInviteeDineInPopUp, content: {
+            InviteeListPopUpView(message: showInviteeListInDineInRequest) {
+                showInviteeListInDineInRequest = nil
+                stateViewModel.showInviteeDineInPopUp = false
+            }.presentationDetents([.height(446)])
+                    .presentationDragIndicator(.visible)
+        })
+        .sheet(isPresented: $stateViewModel.showDeclinePaymentRequestPopUp, content: {
+            if declinePaymentRequest?.customType == ISMChatMediaType.PaymentRequest.value{
+                ConfirmationPopup(
+                    title: "Decline Request?",
+                    message: "Are you sure you want to decline payment request?",
+                    confirmButtonTitle: "Decline request",
+                    cancelButtonTitle: "Cancel",
+                    confirmAction: {
+                            let paymentRequestId = declinePaymentRequest?.metaData?.paymentRequestId ?? ""
+                            declinePaymentRequest = nil
+                        self.delegate?.declinePaymentRequest(paymentRequestUserId: myAppUserId ?? "", paymentRequestId: paymentRequestId, completion: {
+                            })
+                            stateViewModel.showDeclinePaymentRequestPopUp = false
+                    },
+                    cancelAction: {
+                        declinePaymentRequest = nil
+                        stateViewModel.showDeclinePaymentRequestPopUp = false
+                    },
+                    popUpType: .Menu,
+                    isPresented: $stateViewModel.showDeclinePaymentRequestPopUp,
+                    showCrossButton: true
+                )
+                .presentationDetents([.fraction(0.3)])
+                .presentationDragIndicator(.visible)
+            }else{
+                DeclineReasonPopUpView(selectedOption: $declineReasonOption){ reason in
+                    self.delegate?.dineInInvite(inviteTitle: declinePaymentRequest?.metaData?.inviteTitle ?? "", messageId: declinePaymentRequest?.messageId ?? "", groupcastId: declinePaymentRequest?.metaData?.groupCastId ?? "", reason: reason, createdByUserId: declinePaymentRequest?.senderInfo?.userIdentifier ?? "", declineByUserId: self.myAppUserId ?? "", inviteStatus: 2, inviteSenderIsometricId: declinePaymentRequest?.senderInfo?.userId ?? "")
+                        declinePaymentRequest = nil
+                        stateViewModel.showDeclinePaymentRequestPopUp = false
+                } cancelAction: {
+                    declinePaymentRequest = nil
+                    stateViewModel.showDeclinePaymentRequestPopUp = false
+                }.presentationDetents([.height(declineReasonOption == "Other" ?  619 : 446)])
+                    .presentationDragIndicator(.visible)
+            }
+        })
+        .sheet(isPresented: $stateViewModel.showClearChatPopup, content: {
+            var attributedText: AttributedString {
+                var attributedString = AttributedString("Are you sure you want to clear chat? This action is undoable.")
+                
+                // Style "clear chat"
+                if let range = attributedString.range(of: "clear chat") {
+                    attributedString[range].foregroundColor = Color(hex: "#454745")
+                    attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
+                }
+                
+                return attributedString
+            }
+            ConfirmationPopup(
+                title: "Clear chat?",
+                message: attributedText,
+                confirmButtonTitle: "Yes, clear",
+                cancelButtonTitle: "Cancel",
+                confirmAction: {
+                    clearChat()
+                    stateViewModel.showClearChatPopup = false
+                },
+                cancelAction: {
+                    stateViewModel.showClearChatPopup = false
+                },
+                popUpType: .Menu,
+                isPresented: $stateViewModel.showClearChatPopup,
+                showCrossButton: false
+            )
+            .presentationDetents([.fraction(0.3)])
+            .presentationDragIndicator(.visible)
+        })
         
-//        .sheet(isPresented: $stateViewModel.showBlockUserPopup, content: {
-//            var unBlock = self.conversationDetail?.conversationDetails?.messagingDisabled == true && realmManager.messages.last?.last?.initiatorId == userData?.userId
-//            var attributedText: AttributedString {
-//                var string = ""
-//                var range = ""
-//                if unBlock{
-//                    string = "Are you sure you want to UnBlock \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?"
-//                    range = "UnBlock \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")"
-//                }else{
-//                    string = "Are you sure you want to Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?"
-//                    range = "Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")"
-//                }
-//                var attributedString = AttributedString(string)
-//                
-//                // Style "clear chat"
-//                if let range = attributedString.range(of: range) {
-//                    attributedString[range].foregroundColor = Color(hex: "#454745")
-//                    attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
-//                }
-//                
-//                return attributedString
-//            }
-//            ConfirmationPopup(
-//                title: unBlock ?  "UnBlock User?" : "Block User?",
-//                message: attributedText,
-//                confirmButtonTitle: unBlock ? "UnBlock" : "Block",
-//                cancelButtonTitle: "Cancel",
-//                confirmAction: {
-//                    blockChatFromUser(block: !unBlock)
-//                    stateViewModel.showBlockUserPopup = false
-//                },
-//                cancelAction: {
-//                    stateViewModel.showBlockUserPopup = false
-//                },
-//                popUpType: .Menu,
-//                isPresented: $stateViewModel.showBlockUserPopup,
-//                showCrossButton: false
-//            )
-//            .presentationDetents([.fraction(0.3)])
-//            .presentationDragIndicator(.visible)
-//        })
-//        .sheet(isPresented: $stateViewModel.showDeleteSingleMessage, content:{
-//            var attributedText: AttributedString {
-//                var attributedString = AttributedString("Are you sure you want to permanently delete this message?")
-//                
-//                // Style "clear chat"
-//                if let range = attributedString.range(of: "permanently delete") {
-//                    attributedString[range].foregroundColor = Color(hex: "#454745")
-//                    attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
-//                }
-//                
-//                return attributedString
-//            }
-//            ConfirmationPopup(
-//                title: "Delete Message",
-//                message: attributedText,
-//                confirmButtonTitle: "For everyone",
-//                cancelButtonTitle: "For me",
-//                confirmAction: {
-//                    stateViewModel.showBlockUserPopup = false
-//                    if let message = deleteMessage.first{
-//                        if getIsReceived(message: message) == true{
-//                            deleteMultipleMessages(otherUserMessage: true, type: .DeleteForYou)
-//                        }else{
-//                            deleteMultipleMessages(otherUserMessage: false, type: .DeleteForEveryone)
-//                        }
-//                    }
-//                },
-//                cancelAction: {
-//                    stateViewModel.showBlockUserPopup = false
-//                    if let message = deleteMessage.first{
-//                        if getIsReceived(message: message) == true{
-//                            deleteMultipleMessages(otherUserMessage: true, type: .DeleteForYou)
-//                        }else{
-//                            deleteMultipleMessages(otherUserMessage: false, type: .DeleteForYou)
-//                        }
-//                    }
-//                },
-//                popUpType: .Delete,
-//                isPresented: $stateViewModel.showDeleteSingleMessage,
-//                showCrossButton: true
-//            )
-//            .presentationDetents([.fraction(0.3)])
-//            .presentationDragIndicator(.visible)
-//        })
+        .sheet(isPresented: $stateViewModel.showBlockUserPopup, content: {
+            var unBlock = self.conversationDetail?.conversationDetails?.messagingDisabled == true && viewModelNew.messages.last?.last?.initiatorId == userData?.userId
+            var attributedText: AttributedString {
+                var string = ""
+                var range = ""
+                if unBlock{
+                    string = "Are you sure you want to UnBlock \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?"
+                    range = "UnBlock \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")"
+                }else{
+                    string = "Are you sure you want to Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?"
+                    range = "Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")"
+                }
+                var attributedString = AttributedString(string)
+                
+                // Style "clear chat"
+                if let range = attributedString.range(of: range) {
+                    attributedString[range].foregroundColor = Color(hex: "#454745")
+                    attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
+                }
+                
+                return attributedString
+            }
+            ConfirmationPopup(
+                title: unBlock ?  "UnBlock User?" : "Block User?",
+                message: attributedText,
+                confirmButtonTitle: unBlock ? "UnBlock" : "Block",
+                cancelButtonTitle: "Cancel",
+                confirmAction: {
+                    blockChatFromUser(block: !unBlock)
+                    stateViewModel.showBlockUserPopup = false
+                },
+                cancelAction: {
+                    stateViewModel.showBlockUserPopup = false
+                },
+                popUpType: .Menu,
+                isPresented: $stateViewModel.showBlockUserPopup,
+                showCrossButton: false
+            )
+            .presentationDetents([.fraction(0.3)])
+            .presentationDragIndicator(.visible)
+        })
+        .sheet(isPresented: $stateViewModel.showDeleteSingleMessage, content:{
+            var attributedText: AttributedString {
+                var attributedString = AttributedString("Are you sure you want to permanently delete this message?")
+                
+                // Style "clear chat"
+                if let range = attributedString.range(of: "permanently delete") {
+                    attributedString[range].foregroundColor = Color(hex: "#454745")
+                    attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
+                }
+                
+                return attributedString
+            }
+            ConfirmationPopup(
+                title: "Delete Message",
+                message: attributedText,
+                confirmButtonTitle: "For everyone",
+                cancelButtonTitle: "For me",
+                confirmAction: {
+                    stateViewModel.showBlockUserPopup = false
+                    if let message = deleteMessage.first{
+                        if getIsReceived(message: message) == true{
+                            deleteMultipleMessages(otherUserMessage: true, type: .DeleteForYou)
+                        }else{
+                            deleteMultipleMessages(otherUserMessage: false, type: .DeleteForEveryone)
+                        }
+                    }
+                },
+                cancelAction: {
+                    stateViewModel.showBlockUserPopup = false
+                    if let message = deleteMessage.first{
+                        if getIsReceived(message: message) == true{
+                            deleteMultipleMessages(otherUserMessage: true, type: .DeleteForYou)
+                        }else{
+                            deleteMultipleMessages(otherUserMessage: false, type: .DeleteForYou)
+                        }
+                    }
+                },
+                popUpType: .Delete,
+                isPresented: $stateViewModel.showDeleteSingleMessage,
+                showCrossButton: true
+            )
+            .presentationDetents([.fraction(0.3)])
+            .presentationDragIndicator(.visible)
+        })
         .fullScreenCover(isPresented: $stateViewModel.showSheet){
             if selectedSheetIndex == 0 {
                 CameraCaptureView(isShown: $stateViewModel.showSheet, sendUrl: $cameraImageToUse)
