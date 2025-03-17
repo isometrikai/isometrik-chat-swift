@@ -10,7 +10,6 @@ import Foundation
 import SwiftUI
 
 public class LocalStorageManager: ChatStorageManager {
-    
     public var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
     public let modelContainer: ModelContainer
     public let modelContext: ModelContext
@@ -375,7 +374,12 @@ public class LocalStorageManager: ChatStorageManager {
                         // if updated message is edited then it should also update simultanously
                         if conversation.lastMessageDetails?.messageId == messageId {
                             print("✅ Edited message is the last message in the conversation. Updating last message details...")
-                            conversation.lastMessageDetails?.body = body
+                            
+                            if let url = metaData?.url{
+                                conversation.lastMessageDetails?.body = url
+                            }else{
+                                conversation.lastMessageDetails?.body = body
+                            }
                             
                             if let customType = customType, !customType.isEmpty {
                                 conversation.lastMessageDetails?.customType = customType
@@ -568,7 +572,7 @@ public class LocalStorageManager: ChatStorageManager {
 
 
     
-    public func updateGroupTitle(title: String, conversationId: String) async throws {
+    public func updateGroupTitle(title: String, conversationId: String,localOnly : Bool) async throws {
         let conversationFetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
             predicate: #Predicate { $0.conversationId == conversationId }
         )
@@ -587,7 +591,7 @@ public class LocalStorageManager: ChatStorageManager {
         }
     }
     
-    public func updateGroupImage(image: String, conversationId: String) async throws {
+    public func updateGroupImage(image: String, conversationId: String,localOnly : Bool) async throws {
         let conversationFetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
             predicate: #Predicate { $0.conversationId == conversationId }
         )
@@ -606,10 +610,364 @@ public class LocalStorageManager: ChatStorageManager {
     }
 
     
+    public func getConversationIdFromUserId(opponentUserId: String, myUserId: String) async throws -> String {
+        let conversationFetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.opponentDetails?.userId == opponentUserId }
+        )
+        do {
+            let conversations = try modelContext.fetch(conversationFetchDescriptor)
+            
+            guard let conversation = conversations.first else {
+                print("❌ No conversation found for userID: \(opponentUserId)")
+                return ""
+            }
+            return conversation.conversationId ?? ""
+        } catch {
+            print("❌ Error getting conversation from userId : \(error.localizedDescription)")
+            return ""
+        }
+    }
+    
+    public func exitGroup(conversationId: String) async throws {
+        // same logic as delete
+    }
     
     
+    public func updateMemberCountInGroup(conversationId: String, inc: Bool, dec: Bool, count: Int) async throws {
+        let conversationFetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId }
+        )
+        do {
+            let conversations = try modelContext.fetch(conversationFetchDescriptor)
+            
+            guard let conversation = conversations.first else {
+                print("❌ No conversation found for ID: \(conversationId)")
+                return
+            }
+            if inc {
+                conversation.membersCount += 1
+            } else if dec {
+                conversation.membersCount -= 1
+            } else {
+                conversation.membersCount = count
+            }
+            try modelContext.save() // Save changes on the main thread
+        } catch {
+            print("❌ Error updating member count in group: \(error.localizedDescription)")
+            return
+        }
+    }
     
     
+    public func updateMessageAsDeletedLocally(conversationId: String, messageId: String) async throws {
+        let conversationFetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId }
+        )
+        do {
+            if let existingConversation = try modelContext.fetch(conversationFetchDescriptor).first {
+                if let messageIndex = existingConversation.messages.firstIndex(where: { $0.messageId == messageId }) {
+                    DispatchQueue.main.async {
+                        existingConversation.messages[messageIndex].deletedMessage = true
+                        try? self.modelContext.save() // Save only if an update happens
+                    }
+                }
+            }
+        } catch {
+            print("❌ Error updating message as deleted: \(error.localizedDescription)")
+        }
+    }
+    
+    public func addReactionToMessage(conversationId: String, messageId: String, reaction: String, userId: String) async throws {
+        let fetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId }
+        )
+        
+        do {
+            if let existingConversation = try modelContext.fetch(fetchDescriptor).first {
+                if let message = existingConversation.messages.first(where: { $0.messageId == messageId }) {
+                    await MainActor.run {
+                        if let existingReaction = message.reactions?.first(where: { $0.reactionType == reaction }) {
+                            // Only append userId if not already present
+                            if !existingReaction.users.contains(userId) {
+                                existingReaction.users.append(userId)
+                            }
+                        } else {
+                            // Ensure reactions array is initialized
+                            if message.reactions == nil {
+                                message.reactions = []
+                            }
+                            // Create a new reaction and add it to the message
+                            let newReaction = ISMChatReactionDB(reactionType: reaction, users: [userId])
+                            message.reactions?.append(newReaction)
+                        }
+                        
+                        // ✅ Save changes
+                        try? modelContext.save()
+                    }
+                }
+            }
+        } catch {
+            print("❌ Error adding reaction: \(error.localizedDescription)")
+        }
+    }
+    
+    public func removeReactionFromMessage(conversationId: String, messageId: String, reaction: String, userId: String) async throws {
+        let fetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId }
+        )
+        
+        do {
+            if let existingConversation = try modelContext.fetch(fetchDescriptor).first {
+                if let message = existingConversation.messages.first(where: { $0.messageId == messageId }) {
+                    await MainActor.run {
+                        if let existingReaction = message.reactions?.first(where: { $0.reactionType == reaction }) {
+                            // Check if user exists in this reaction
+                            if let userIndex = existingReaction.users.firstIndex(of: userId) {
+                                // Remove user from the reaction
+                                existingReaction.users.remove(at: userIndex)
+                                
+                                // If the reaction has no users left, remove it
+                                if existingReaction.users.isEmpty {
+                                    if let reactionIndex = message.reactions?.firstIndex(where: { $0.reactionType == reaction }) {
+                                        message.reactions?.remove(at: reactionIndex)
+                                    }
+                                }
+                                
+                                // ✅ Save changes
+                                try? modelContext.save()
+                            }
+                        }
+                    }
+                }
+            }
+        } catch {
+            print("❌ Error removing reaction: \(error.localizedDescription)")
+        }
+    }
+    
+    public func updateLastMsgAsDeliver(conversationId: String, messageId: String, userId: String, updatedAt: Double) async throws {
+        let fetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId}
+        )
+
+        do {
+            if let conversation = try modelContext.fetch(fetchDescriptor).first {
+                await MainActor.run {
+                    // Clear existing readBy and deliveredTo arrays
+                    conversation.lastMessageDetails?.readBy.removeAll()
+                    conversation.lastMessageDetails?.deliveredTo.removeAll()
+                    
+                    // Create a new delivery status object
+                    let deliverObj = ISMChatMessageDeliveryStatusDB(userId: userId, timestamp: updatedAt)
+                    
+                    // Append new delivery status
+                    conversation.lastMessageDetails?.deliveredTo.append(deliverObj)
+                    
+                    // ✅ Save changes
+                    try? modelContext.save()
+                }
+            }
+        } catch {
+            print("❌ Error updating last message delivery: \(error.localizedDescription)")
+        }
+    }
+    
+    public func addDeliveredToUser(conversationId: String, messageId: String, userId: String, updatedAt: Double) async throws {
+        let fetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId}
+        )
+
+        do {
+            if let conversation = try modelContext.fetch(fetchDescriptor).first {
+                if let message = conversation.messages.first(where: { $0.messageId == messageId }) {
+                    await MainActor.run {
+                        // Check if the user already exists in deliveredTo list
+                        if ((message.deliveredTo?.contains { $0.userId == userId }) == nil) {
+                            let deliverObj = ISMChatMessageDeliveryStatusDB(userId: userId, timestamp: updatedAt)
+                            message.deliveredTo?.append(deliverObj)
+                            
+                            // ✅ Save changes
+                            try? modelContext.save()
+                        }
+                    }
+                }
+            }
+        } catch {
+            print("❌ Error adding deliveredTo user: \(error.localizedDescription)")
+        }
+    }
+
+    
+    public func updateAllDeliveryStatus(conversationId: String) async throws {
+        let fetchDescriptor = FetchDescriptor<ISMChatMessagesDB>(
+            predicate: #Predicate { !$0.deliveredToAll && $0.conversationId == conversationId}
+        )
+
+        do {
+            let messagesToUpdate = try modelContext.fetch(fetchDescriptor)
+
+            await MainActor.run {
+                messagesToUpdate.forEach { $0.deliveredToAll = true }
+
+                // ✅ Save changes to persist updates
+                try? modelContext.save()
+            }
+        } catch {
+            print("❌ Error updating all delivery statuses: \(error.localizedDescription)")
+        }
+    }
+    
+    public func updateAllReadStatus(conversationId: String) async throws {
+        let fetchDescriptor = FetchDescriptor<ISMChatMessagesDB>(
+            predicate: #Predicate { $0.readByAll == false && $0.conversationId == conversationId}
+        )
+
+        do {
+            let messagesToUpdate = try modelContext.fetch(fetchDescriptor)
+            
+            await MainActor.run {
+                messagesToUpdate.forEach { message in
+                    message.deliveredToAll = true
+                    message.readByAll = true
+                }
+                
+                try? modelContext.save() // ✅ Save changes safely
+            }
+        } catch {
+            print("❌ Error updating all read statuses: \(error.localizedDescription)")
+        }
+    }
+    
+    public func updateDeliveredToInAllmsgs(conversationId: String, userId: String, updatedAt: Double) async throws {
+        let fetchDescriptor = FetchDescriptor<ISMChatMessagesDB>(
+            predicate: #Predicate { $0.conversationId == conversationId }
+        )
+
+        do {
+            let messagesToUpdate = try modelContext.fetch(fetchDescriptor)
+            
+            await MainActor.run {
+                let filteredMessages = messagesToUpdate.filter { message in
+                    !(message.deliveredTo?.contains(where: { $0.userId == userId }) ?? false)
+                }
+                
+                for message in filteredMessages {
+                    let deliverObj = ISMChatMessageDeliveryStatusDB(userId: userId, timestamp: updatedAt)
+                    message.deliveredTo?.append(deliverObj)
+                }
+                
+                try? modelContext.save() // ✅ Save changes safely
+            }
+        } catch {
+            print("❌ Error updating delivery status in all messages: \(error.localizedDescription)")
+        }
+    }
+    
+    public func updateReadByInAllMessages(conversationId: String, userId: String, updatedAt: Double) async throws {
+        let fetchDescriptor = FetchDescriptor<ISMChatMessagesDB>(
+            predicate: #Predicate { $0.conversationId == conversationId }
+        )
+
+        do {
+            let messagesToUpdate = try modelContext.fetch(fetchDescriptor)
+            
+            await MainActor.run {
+                let filteredMessages = messagesToUpdate.filter { message in
+                    !(message.readBy?.contains(where: { $0.userId == userId }) ?? false)
+                }
+                
+                for message in filteredMessages {
+                    let readByObj = ISMChatMessageDeliveryStatusDB(userId: userId, timestamp: updatedAt)
+                    message.readBy?.append(readByObj)
+                }
+                
+                try? modelContext.save() // ✅ Save changes safely
+            }
+        } catch {
+            print("❌ Error updating read status in all messages: \(error.localizedDescription)")
+        }
+    }
+
+
+
+    
+    public func addReadByUser(conversationId: String, messageId: String, userId: String, updatedAt: Double) async throws {
+        let fetchDescriptor = FetchDescriptor<ISMChatMessagesDB>(
+            predicate: #Predicate { $0.conversationId == conversationId && $0.messageId == messageId }
+        )
+
+        do {
+            if let message = try modelContext.fetch(fetchDescriptor).first {
+                await MainActor.run {
+                    if !(message.readBy?.contains { $0.userId == userId } ?? false) {
+                        let readStatus = ISMChatMessageDeliveryStatusDB(userId: userId, timestamp: updatedAt)
+                        message.readBy?.append(readStatus)
+                    }
+
+                    // ✅ Save changes to persist updates
+                    try? modelContext.save()
+                }
+            }
+        } catch {
+            print("❌ Error adding read-by user: \(error.localizedDescription)")
+        }
+    }
+
+    
+    public func updateDeliveryStatusThroughMsgId(conversationId: String, messageId: String) async throws {
+        let fetchDescriptor = FetchDescriptor<ISMChatMessagesDB>(
+            predicate: #Predicate { $0.conversationId == conversationId && $0.messageId == messageId}
+        )
+
+        do {
+            if let message = try modelContext.fetch(fetchDescriptor).first {
+                await MainActor.run {
+                    message.deliveredToAll = true
+                    try? modelContext.save() // ✅ Save the changes
+                }
+            }
+        } catch {
+            print("❌ Error updating delivery status: \(error.localizedDescription)")
+        }
+    }
+
+    public func updateReadStatusThroughMsgId(messageId: String) async throws {
+        let fetchDescriptor = FetchDescriptor<ISMChatMessagesDB>(
+            predicate: #Predicate { $0.messageId == messageId }
+        )
+
+        do {
+            if let message = try modelContext.fetch(fetchDescriptor).first {
+                await MainActor.run {
+                    message.readByAll = true
+                    try? modelContext.save() // ✅ Save the changes safely
+                }
+            }
+        } catch {
+            print("❌ Error updating read status: \(error.localizedDescription)")
+        }
+    }
+
+    public func updateLastMessageRead(conversationId: String, messageId: String, userId: String, updatedAt: Double) async throws {
+        let fetchDescriptor = FetchDescriptor<ISMChatLastMessageDB>(
+            predicate: #Predicate { $0.conversationId == conversationId }
+        )
+
+        do {
+            if let lastMessage = try modelContext.fetch(fetchDescriptor).first {
+                await MainActor.run {
+                    let deliveryStatus = ISMChatMessageDeliveryStatusDB(userId: userId, timestamp: updatedAt)
+                    lastMessage.readBy.append(deliveryStatus)
+                    
+                    try? modelContext.save() // ✅ Save changes safely
+                }
+            }
+        } catch {
+            print("❌ Error updating last message read status: \(error.localizedDescription)")
+        }
+    }
+
+
     
  
     
@@ -1078,9 +1436,9 @@ public class LocalStorageManager: ChatStorageManager {
     }
     
     // Change Typing Status in Conversation List
-    public func changeTypingStatus(convId: String, status: Bool) {
+    public func changeTypingStatus(conversationId : String, status: Bool) {
         do {
-            if let conversation = try modelContext.fetch(FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == convId })).first {
+            if let conversation = try modelContext.fetch(FetchDescriptor<ISMChatConversationDB>(predicate: #Predicate { $0.conversationId == conversationId })).first {
                 conversation.typing = status
                 try modelContext.save()
             }

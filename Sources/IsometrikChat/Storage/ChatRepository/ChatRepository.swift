@@ -96,11 +96,33 @@ public class ChatRepository {
         return try await activeStorageManager.deleteMedia(conversationId: conversationId, messageId: messageId)
     }
     
-    public func updateGroupTitle(title : String, conversationId : String) async throws{
-        return try await activeStorageManager.updateGroupTitle(title: title, conversationId: conversationId)
+    public func updateGroupTitle(title : String, conversationId : String,localOnly : Bool) async throws{
+        return try await activeStorageManager.updateGroupTitle(title: title, conversationId: conversationId, localOnly: localOnly)
     }
     
-    public func updateGroupImage(image : String, conversationId : String) async throws{
-        return try await activeStorageManager.updateGroupImage(image: image, conversationId: conversationId)
+    public func updateGroupImage(image : String, conversationId : String,localOnly : Bool) async throws{
+        return try await activeStorageManager.updateGroupImage(image: image, conversationId: conversationId, localOnly: localOnly)
     }
+    
+    public func getConversationIdFromUserId(opponentUserId : String,myUserId: String) async throws -> String{
+        return try await activeStorageManager.getConversationIdFromUserId(opponentUserId: opponentUserId, myUserId: myUserId)
+    }
+    
+    public func exitGroup(conversationId : String) async throws{
+        return try await activeStorageManager.exitGroup(conversationId: conversationId)
+    }
+
+    public func changeTypingStatus(conversationId: String, status: Bool) async throws{
+        return try await activeStorageManager.changeTypingStatus(conversationId: conversationId, status: status)
+    }
+    
+    public func updateMemberCountInGroup(conversationId: String, inc: Bool, dec: Bool, count: Int) async throws{
+        return try await activeStorageManager.updateMemberCountInGroup(conversationId: conversationId, inc: inc, dec: dec, count: count)
+    }
+    
+    
+    public func updateMessageAsDeletedLocally(conversationId: String,messageId: String) async throws{
+        return try await activeStorageManager.updateMessageAsDeletedLocally(conversationId: conversationId, messageId: messageId)
+    }
+    
 }

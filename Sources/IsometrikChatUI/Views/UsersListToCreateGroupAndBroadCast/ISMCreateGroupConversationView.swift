@@ -29,7 +29,6 @@ public struct ISMCreateGroupConversationView: View {
     public var selectUserFor : SelectUserFor = .Group
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     public let groupCastId : String?
-    @EnvironmentObject public var realmManager : RealmManager
     @Binding public var groupCastIdToNavigate : String
     
     //MARK:  - BODY

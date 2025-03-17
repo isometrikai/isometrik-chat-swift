@@ -20,7 +20,6 @@ public struct ISMProfileView: View {
     @ObservedObject public var viewModel = ConversationViewModel()
     @State public var showSheet = false
     @State public var image : [UIImage] = []
-    @EnvironmentObject public var realmManager : RealmManager
     @Environment(\.dismiss) public var dismiss
     @State public var isSwitchOn : Bool = true
     @State public var showLastSeen : Bool = true

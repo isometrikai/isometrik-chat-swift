@@ -24,7 +24,7 @@ public protocol ChatStorageManager {
     func saveAllMessages(_ messages: [ISMChatMessagesDB], conversationId: String) async throws
     func updateMsgId(objectId: UUID, msgId: String, conversationId: String, mediaUrl: String, thumbnailUrl: String, mediaSize: Int, mediaId: String) async throws
     func updateMessage(conversationId: String, messageId: String, body: String, metaData: ISMChatMetaDataDB?, customType: String?) async throws
-
+    func updateMessageAsDeletedLocally(conversationId: String,messageId: String) async throws
 //    func deleteMessage(id: String) async throws
 //    func updateMessage(_ message: ISMChatMessagesDB) async throws
     
@@ -38,6 +38,16 @@ public protocol ChatStorageManager {
     
     
     //group operations
-    func updateGroupTitle(title : String, conversationId : String) async throws
-    func updateGroupImage(image : String, conversationId : String) async throws
+    func updateGroupTitle(title : String, conversationId : String,localOnly : Bool) async throws
+    func updateGroupImage(image : String, conversationId : String,localOnly : Bool) async throws
+    
+    func getConversationIdFromUserId(opponentUserId : String,myUserId: String) async throws -> String
+    
+    
+    //group
+    func exitGroup(conversationId : String) async throws
+    func updateMemberCountInGroup(conversationId: String, inc: Bool, dec: Bool, count: Int) async throws
+    
+    //
+    func changeTypingStatus(conversationId: String, status: Bool) async throws
 }

@@ -20,7 +20,7 @@ public struct ISMUsersView: View {
     @ObservedObject public var viewModel = ConversationViewModel()
     
     // Binding properties for selected user and conversation ID
-    @Binding public var selectedUser : UserDB
+    @Binding public var selectedUser : ISMChatUserDB?
     @Binding public var selectedUserconversationId : String
 
     // State for creating a conversation response
@@ -29,15 +29,12 @@ public struct ISMUsersView: View {
     // State flags to show group and broadcast options based on chat properties
     @State public var showGroupOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.GroupConversation)
     @State public var showBroadCastOption = ISMChatSdkUI.getInstance().getChatProperties().conversationType.contains(.BroadCastConversation)
-    
-    // Environment object for managing Realm database
-//    @EnvironmentObject public var realmManager : RealmManager
-    // State flags for navigation to create group or broadcast
     @State public var navigatetoCreatGroup : Bool = false
     @State public var navigatetoCreatBroadCast : Bool = false
-    // Appearance settings for the chat UI
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @Binding public var groupCastIdToNavigate : String
+    
+    @ObservedObject var viewModelNew: ConversationsViewModel
     
     //MARK:  - LIFECYCLE
     public var body: some View {
@@ -114,18 +111,12 @@ public struct ISMUsersView: View {
                                                     // Button to select a user
                                                     Button {
                                                         // Set selected user and conversation ID
-//                                                        self.selectedUserconversationId = realmManager.getConversationId(opponentUserId: value.userId ?? "", myUserId: ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId ?? "")
-                                                        let data = UserDB()
-                                                        data.userId = value.userId
-                                                        data.online = value.online
-                                                        data.userProfileImageUrl = value.userProfileImageUrl
-                                                        data.userName = value.userName
-                                                        data.lastSeen = value.lastSeen
-                                                        data.userIdentifier = value.userIdentifier
-                                                        
-                                                        selectedUser = data
-                                                        
-                                                        dismiss() // Dismiss the view
+                                                        Task{
+                                                            self.selectedUserconversationId = await viewModelNew.getConversationIdFromUserId(opponentUserId: value.userId ?? "", myUserId: ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId ?? "")
+                                                            let data = ISMChatUserDB(userId: value.userId, userProfileImageUrl: value.userProfileImageUrl, userName: value.userName, userIdentifier: value.userIdentifier, online: value.online, lastSeen: value.lastSeen, metaData: nil)
+                                                            selectedUser = data
+                                                            dismiss() // Dismiss the view
+                                                        }
                                                         
                                                     } label: {
                                                     }
@@ -153,12 +144,12 @@ public struct ISMUsersView: View {
                     }
                 }//:VStack
                 // Navigation destinations for creating group and broadcast conversations
-//                .navigationDestination(isPresented: $navigatetoCreatGroup, destination: {
-//                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.viewModel, selectUserFor: .Group, groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
-//                })
-//                .navigationDestination(isPresented: $navigatetoCreatBroadCast, destination: {
-//                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.viewModel, selectUserFor: .BroadCast, groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
-//                })
+                .navigationDestination(isPresented: $navigatetoCreatGroup, destination: {
+                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.viewModel, selectUserFor: .Group, groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate)
+                })
+                .navigationDestination(isPresented: $navigatetoCreatBroadCast, destination: {
+                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.viewModel, selectUserFor: .BroadCast, groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate)
+                })
                 .searchable(text: $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always))
                 .onChange(of: viewModel.debounceSearchedText, { _, _ in
                     // Reset user data and fetch users on search text change

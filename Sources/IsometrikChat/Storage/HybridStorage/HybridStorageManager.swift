@@ -185,26 +185,79 @@ public class HybridStorageManager: ChatStorageManager {
         }
     }
     
-    public func updateGroupTitle(title: String, conversationId: String) async throws {
+    public func updateGroupTitle(title: String, conversationId: String,localOnly : Bool) async throws {
         do {
             // Fetch from remote and sync
-            try await remoteStorageManager.updateGroupTitle(title: title, conversationId: conversationId)
-            try await localStorageManager.updateGroupTitle(title: title, conversationId: conversationId)
+            if localOnly == false{
+                //if we need to just locally updatedata then no need to call remote apis
+                try await remoteStorageManager.updateGroupTitle(title: title, conversationId: conversationId, localOnly: localOnly)
+            }
+            try await localStorageManager.updateGroupTitle(title: title, conversationId: conversationId, localOnly: localOnly)
         } catch {
             print("Error delete conversation with hybrid: \(error)")
             throw error
         }
     }
     
-    public func updateGroupImage(image: String, conversationId: String) async throws {
+    public func updateGroupImage(image: String, conversationId: String,localOnly : Bool) async throws {
         do {
             // Fetch from remote and sync
-            try await remoteStorageManager.updateGroupImage(image: image, conversationId: conversationId)
-            try await localStorageManager.updateGroupImage(image: image, conversationId: conversationId)
+            if localOnly == false{
+                //if we need to just locally updatedata then no need to call remote apis
+                try await remoteStorageManager.updateGroupImage(image: image, conversationId: conversationId, localOnly: localOnly)
+            }
+            try await localStorageManager.updateGroupImage(image: image, conversationId: conversationId, localOnly: localOnly)
         } catch {
             print("Error delete conversation with hybrid: \(error)")
             throw error
         }
     }
     
+    public func getConversationIdFromUserId(opponentUserId: String, myUserId: String) async throws -> String {
+        do {
+            let conversationId = try await localStorageManager.getConversationIdFromUserId(opponentUserId: opponentUserId, myUserId: myUserId)
+            return conversationId
+        } catch {
+            print("Error delete conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func exitGroup(conversationId: String) async throws {
+        do {
+            // Fetch from remote and sync
+            try await remoteStorageManager.exitGroup(conversationId: conversationId)
+            try await localStorageManager.deleteConversation(conversationId: conversationId)
+        } catch {
+            print("Error delete conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func changeTypingStatus(conversationId: String, status: Bool) async throws {
+        do {
+            try await localStorageManager.changeTypingStatus(conversationId: conversationId, status: status)
+        } catch {
+            print("Error delete conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func updateMemberCountInGroup(conversationId: String, inc: Bool, dec: Bool, count: Int) async throws {
+        do {
+            try await localStorageManager.updateMemberCountInGroup(conversationId: conversationId, inc: inc, dec: dec, count: count)
+        } catch {
+            print("Error updating member count in group conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func updateMessageAsDeletedLocally(conversationId: String, messageId: String) async throws {
+        do {
+            try await localStorageManager.updateMessageAsDeletedLocally(conversationId: conversationId, messageId: messageId)
+        } catch {
+            print("Error updating member count in group conversation with hybrid: \(error)")
+            throw error
+        }
+    }
 }

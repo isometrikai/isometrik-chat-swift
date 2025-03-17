@@ -294,19 +294,61 @@ public class ConversationsViewModel: ObservableObject {
         }
     }
     
-    public func updateGroupTitle(title: String, conversationId: String) async{
+    public func updateGroupTitle(title: String, conversationId: String,localOnly : Bool) async{
         do {
-            try await chatRepository.updateGroupTitle(title: title, conversationId: conversationId)
+            try await chatRepository.updateGroupTitle(title: title, conversationId: conversationId, localOnly: localOnly)
         } catch {
             print("Error loading conversations: \(error)")
         }
     }
     
-    public func updateGroupImage(image: String, conversationId: String) async{
+    public func updateGroupImage(image: String, conversationId: String,localOnly : Bool) async{
         do {
-            try await chatRepository.updateGroupImage(image: image, conversationId: conversationId)
+            try await chatRepository.updateGroupImage(image: image, conversationId: conversationId, localOnly: localOnly)
         } catch {
             print("Error loading conversations: \(error)")
+        }
+    }
+    
+    public func getConversationIdFromUserId(opponentUserId : String,myUserId: String) async -> String{
+        do {
+            let conversationId = try await chatRepository.getConversationIdFromUserId(opponentUserId: opponentUserId, myUserId: myUserId)
+            return conversationId
+        } catch {
+            print("Unable to find conversationId: \(error)")
+            return ""
+        }
+    }
+    
+    public func exitGroup(conversationId: String) async{
+        do {
+            try await chatRepository.exitGroup(conversationId: conversationId)
+        } catch {
+            print("Unable exit group: \(error)")
+        }
+    }
+    
+    public func changeTypingStatus(conversationId: String, status: Bool) async{
+        do {
+            try await chatRepository.changeTypingStatus(conversationId: conversationId, status: status)
+        } catch {
+            print("Unable exit group: \(error)")
+        }
+    }
+    
+    public func updateMemberCountInGroup(conversationId: String, inc: Bool, dec: Bool, count: Int) async{
+        do {
+            try await chatRepository.updateMemberCountInGroup(conversationId: conversationId, inc: inc, dec: dec, count: count)
+        } catch {
+            print("Unable to update member count in group: \(error)")
+        }
+    }
+    
+    public func updateMessageAsDeletedLocally(conversationId: String,messageId: String) async{
+        do {
+            try await chatRepository.updateMessageAsDeletedLocally(conversationId: conversationId, messageId: messageId)
+        } catch {
+            print("Unable to update member count in group: \(error)")
         }
     }
 }

@@ -136,15 +136,36 @@ public class RemoteStorageManager: ChatStorageManager {
         
     }
     
-    public func updateGroupTitle(title: String, conversationId: String) async throws {
+    public func updateGroupTitle(title: String, conversationId: String,localOnly : Bool) async throws {
         messageViewModel.updateGroupTitle(title: title, conversationId: conversationId ?? "") { _ in
         }
     }
     
-    public func updateGroupImage(image: String, conversationId: String) async throws {
+    public func updateGroupImage(image: String, conversationId: String,localOnly : Bool) async throws {
         messageViewModel.updateGroupImage(image: image, conversationId: conversationId) { _ in
             
         }
+    }
+    
+    public func getConversationIdFromUserId(opponentUserId: String, myUserId: String) async throws -> String {
+        return ""
+    }
+    
+    public func exitGroup(conversationId: String) async throws {
+        messageViewModel.exitGroup(conversationId: conversationId) {
+        }
+    }
+    
+    public func changeTypingStatus(conversationId: String, status: Bool) async throws {
+        
+    }
+    
+    public func updateMemberCountInGroup(conversationId: String, inc: Bool, dec: Bool, count: Int) async throws {
+        
+    }
+    
+    public func updateMessageAsDeletedLocally(conversationId: String, messageId: String) async throws {
+        
     }
     
 }

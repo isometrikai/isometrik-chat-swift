@@ -206,13 +206,13 @@ struct ISMEditGroupView: View {
 //                        updategroupImage(image: image)
 //                    }
                     Task{
-                        await viewModelNew.updateGroupTitle(title: groupName, conversationId: conversationId ?? "")
+                        await viewModelNew.updateGroupTitle(title: groupName, conversationId: conversationId ?? "", localOnly: false)
                         updategroupImage(image: image)
                     }
                 } else {
                     // Update name only
                     Task{
-                        await viewModelNew.updateGroupTitle(title: groupName, conversationId: conversationId ?? "")
+                        await viewModelNew.updateGroupTitle(title: groupName, conversationId: conversationId ?? "", localOnly: false)
                         NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
                         presentationMode.wrappedValue.dismiss()
                     }
@@ -244,7 +244,7 @@ struct ISMEditGroupView: View {
 //            presentationMode.wrappedValue.dismiss()
 //        }
         Task{
-            await viewModelNew.updateGroupImage(image: defaultImage, conversationId: conversationId ?? "")
+            await viewModelNew.updateGroupImage(image: defaultImage, conversationId: conversationId ?? "", localOnly: false)
             NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
             presentationMode.wrappedValue.dismiss()
         }
@@ -256,7 +256,7 @@ struct ISMEditGroupView: View {
         viewModel.uploadConversationUrl(url: imageUrl, conversationType: 0, newConversation: false, 
             conversationId: conversationId ?? "", conversationTitle: groupName) { value in
             Task{
-                await viewModelNew.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "")
+                await viewModelNew.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "", localOnly: false)
                 NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
                 presentationMode.wrappedValue.dismiss()
             }
@@ -273,7 +273,7 @@ struct ISMEditGroupView: View {
         viewModel.uploadConversationImage(image: image, conversationType: 0, newConversation: false,
             conversationId: conversationId ?? "", conversationTitle: groupName) { value in
             Task{
-                await viewModelNew.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "")
+                await viewModelNew.updateGroupImage(image: value ?? "", conversationId: conversationId ?? "", localOnly: false)
                 NotificationCenter.default.post(name: NSNotification.updateGroupInfo, object: nil, userInfo: nil)
                 presentationMode.wrappedValue.dismiss()
             }

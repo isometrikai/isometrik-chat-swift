@@ -118,6 +118,9 @@ extension ISMConversationView{
     /// Clears the messages of a conversation without deleting it.
     /// - Parameter conversationId: The ID of the conversation to clear.
     func clearConversation(conversationId : String){
+        Task{
+            await viewModelNew.clearConversationMessages(id: conversationId)
+        }
 //        viewModel.clearChat(conversationId: conversationId) {
 //            self.realmManager.clearMessages()
 //            DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
@@ -131,7 +134,10 @@ extension ISMConversationView{
 //    
 //    /// Exits a group conversation and deletes its associated data.
 //    /// - Parameter conversationId: The ID of the group conversation to exit.
-//    func exitGroup(conversationId : String){
+    func exitGroup(conversationId : String){
+        Task{
+            await viewModelNew.exitGroup(conversationId: conversationId)
+        }
 //        chatViewModel.exitGroup(conversationId: conversationId) {
 //            realmManager.deleteConversation(convID: conversationId)
 //            realmManager.deleteMessagesThroughConvId(convID: conversationId)
@@ -142,7 +148,7 @@ extension ISMConversationView{
 //                realmManager.getAllConversations()
 //            })
 //        }
-//    }
+    }
 //    
 //    /// Searches for conversations based on a query and updates the conversation list.
 //    func searchInConversationList() {
