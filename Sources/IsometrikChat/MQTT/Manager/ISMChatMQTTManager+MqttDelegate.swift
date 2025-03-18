@@ -87,7 +87,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                 }
             }else{
                 //some times for broadcast messages action doesn't comes
-//                messageReceivedEvent(data: data)
+                messageReceivedEvent(data: data)
             }
         }
     }
@@ -320,8 +320,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                 }
             }
         case .mqttforward:
-//            messageReceivedEvent(data: data)
-            break
+            messageReceivedEvent(data: data)
         case .mqttmessageDetailsUpdated:
             messagedDetailUpdated(data: data)
         case .mqttAddReaction:
@@ -329,8 +328,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
         case .mqttRemoveReaction:
             reactionRemovedFromMessage(data: data)
         case .mqttChatMessageSent:
-//            messageReceivedEvent(data: data)
-            break
+            messageReceivedEvent(data: data)
         case .none:
             CallEventHandler.handleCallEvents(payload: message.payload)
             CallEventHandler.delegate = self
@@ -534,645 +532,397 @@ extension ISMChatMQTTManager{
                     )
                     try? await self.localStorageManager.updateMessage(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", body: messageInfo.details?.body ?? "", metaData: metaData, customType: messageInfo.details?.customType ?? "")
                 }
-//                self.realmManager.updateMessageBody(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", body: messageInfo.details?.body ?? "", metaData: messageInfo.details?.metaData ?? ISMChatMetaData(), customType: messageInfo.details?.customType ?? "")
-//                if let url = messageInfo.details?.metaData?.url{
-//                    self.realmManager.updateLastMessageOnEdit(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", newBody: url,metaData: messageInfo.details?.metaData ?? ISMChatMetaData())
-//                }else{
-//                    self.realmManager.updateLastMessageOnEdit(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", newBody: messageInfo.details?.body ?? "",metaData: messageInfo.details?.metaData ?? ISMChatMetaData())
-//                }
+                //                self.realmManager.updateMessageBody(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", body: messageInfo.details?.body ?? "", metaData: messageInfo.details?.metaData ?? ISMChatMetaData(), customType: messageInfo.details?.customType ?? "")
+                //                if let url = messageInfo.details?.metaData?.url{
+                //                    self.realmManager.updateLastMessageOnEdit(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", newBody: url,metaData: messageInfo.details?.metaData ?? ISMChatMetaData())
+                //                }else{
+                //                    self.realmManager.updateLastMessageOnEdit(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", newBody: messageInfo.details?.body ?? "",metaData: messageInfo.details?.metaData ?? ISMChatMetaData())
+                //                }
             case .failure(let error):
                 ISMChatHelper.print(error)
             }
         }
     }
     
-//    public func messageReceivedEvent(data : Data){
-//        self.messageReceived(data) { result in
-//            switch result{
-//            case .success(let messageInfo):
-//                
-//                if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId != messageInfo.senderId{
-//                    // added last message in realm
-//                    Task{
-//                        let membersArray = messageInfo.members?.map { member -> ISMChatLastMessageMemberDB in
-//                            var chatMember = ISMChatLastMessageMemberDB()
-//                            chatMember.memberId = member.memberId
-//                            chatMember.memberIdentifier = member.memberIdentifier
-//                            chatMember.memberName = member.memberName
-//                            chatMember.memberProfileImageUrl = member.memberProfileImageUrl
-//                            return chatMember
-//                        } ?? []
-//                        
-//                       let msg = ISMChatLastMessageDB(
-//                            sentAt: messageInfo.sentAt,
-//                            updatedAt: messageInfo.updatedAt ?? messageInfo.sentAt, // Default to sentAt if updatedAt is nil
-//                            senderName: messageInfo.senderName,
-//                            senderIdentifier: messageInfo.senderIdentifier,
-//                            senderId: messageInfo.senderId,
-//                            conversationId: messageInfo.conversationId,
-//                            body: messageInfo.body ?? "",
-//                            messageId: messageInfo.messageId,
-//                            customType: messageInfo.customType ?? "",
-//                            action: messageInfo.action ?? "",
-//                            userId: messageInfo.userId,
-//                            userIdentifier: messageInfo.userIdentifier,
-//                            userName: messageInfo.userName,
-//                            userProfileImageUrl: messageInfo.userProfileImageUrl ?? "",
-//                            members: membersArray, // Ensure `membersArray` is defined
-//                            memberName: messageInfo.memberName ?? "",
-//                            memberId: messageInfo.memberId ?? "",
-//                            messageDeleted: false,
-//                            initiatorName: messageInfo.initiatorName ?? "",
-//                            initiatorId: messageInfo.initiatorId ?? "",
-//                            initiatorIdentifier: messageInfo.initiatorIdentifier ?? "",
-//                            deletedMessage: false,
-//                            meetingId: messageInfo.meetingId ?? ""
-//                        )
-//                        
-//                        try? await self.localStorageManager.updateLastMessageInConversation(conversationId: messageInfo.conversationId ?? "", lastMessage: msg)
-//                        
-//                        
-//                        // added message in messagesdb
-//                        var contact : [ISMChatContactDB] = []
-//                        if let contacts = messageInfo.metaData?.contacts, contacts.count > 0{
-//                            for x in contacts{
-//                                var data = ISMChatContactDB()
-//                                data.contactIdentifier = x.contactIdentifier
-//                                data.contactImageUrl = x.contactImageUrl
-//                                data.contactName = x.contactName
-//                                contact.append(data)
-//                            }
-//                        }
-//                        
-//                        let replyMessageData = ISMChatReplyMessageDB(
-//                            parentMessageId: messageInfo.parentMessageId,
-//                            parentMessageBody: messageInfo.metaData?.replyMessage?.parentMessageBody,
-//                            parentMessageUserId: messageInfo.metaData?.replyMessage?.parentMessageUserId,
-//                            parentMessageUserName: messageInfo.metaData?.replyMessage?.parentMessageUserName,
-//                            parentMessageMessageType: messageInfo.metaData?.replyMessage?.parentMessageMessageType,
-//                            parentMessageAttachmentUrl: messageInfo.metaData?.replyMessage?.parentMessageAttachmentUrl,
-//                            parentMessageInitiator: messageInfo.metaData?.replyMessage?.parentMessageInitiator,
-//                            parentMessagecaptionMessage: messageInfo.metaData?.replyMessage?.parentMessagecaptionMessage)
-//                        
-//                        let postDetail = ISMChatPostDB(postId: messageInfo.metaData?.post?.postId, postUrl: messageInfo.metaData?.post?.postUrl)
-//                        let productDetail = ISMChatProductDB(productId: messageInfo.metaData?.product?.productId, productUrl: messageInfo.metaData?.product?.productUrl, productCategoryId: messageInfo.metaData?.product?.productCategoryId)
-//                        
-//                        
-//                        // added message in messagesdb
-//                        var paymentRequestedMembers : [ISMChatPaymentRequestMembersDB] = []
-//                        if let members = messageInfo.metaData?.paymentRequestedMembers, members.count > 0{
-//                            for x in members{
-//                                var data = ISMChatPaymentRequestMembersDB()
-//                                data.userId = x.userId
-//                                data.userName = x.userName
-//                                data.status = x.status
-//                                data.statusText = x.statusText
-//                                data.appUserId = x.appUserId
-//                                paymentRequestedMembers.append(data)
-//                            }
-//                        }
-//                        
-//                        let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")
-//                        
-//                        var bodyUpdated = messageInfo.body
-//                        var customType = messageInfo.customType
-//                        var metaData = ISMChatMetaDataDB(locationAddress: messageInfo.metaData?.locationAddress, replyMessage: replyMessageData, contacts: contact, captionMessage: messageInfo.metaData?.captionMessage, isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage, post: postDetail, product: productDetail, storeName: messageInfo.metaData?.storeName, productName: messageInfo.metaData?.productName, bestPrice:  messageInfo.metaData?.bestPrice, scratchPrice: messageInfo.metaData?.scratchPrice, url: messageInfo.metaData?.url, parentProductId: messageInfo.metaData?.parentProductId, childProductId: messageInfo.metaData?.childProductId, entityType: messageInfo.metaData?.entityType, productImage: messageInfo.metaData?.productImage, thumbnailUrl: messageInfo.metaData?.thumbnailUrl, Description: messageInfo.metaData?.description, isVideoPost: messageInfo.metaData?.isVideoPost, socialPostId: messageInfo.metaData?.socialPostId, collectionTitle: messageInfo.metaData?.collectionTitle, collectionDescription: messageInfo.metaData?.collectionDescription, productCount: messageInfo.metaData?.productCount, collectionImage: messageInfo.metaData?.collectionImage, collectionId: messageInfo.metaData?.collectionId, paymentRequestId: messageInfo.metaData?.paymentRequestId, orderId: messageInfo.metaData?.orderId, paymentRequestedMembers: paymentRequestedMembers, requestAPaymentExpiryTime: messageInfo.metaData?.requestAPaymentExpiryTime, currencyCode: messageInfo.metaData?.currencyCode, amount: messageInfo.metaData?.amount, inviteTitle: messageInfo.metaData?.inviteTitle, inviteTimestamp: messageInfo.metaData?.inviteTimestamp, inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp, inviteLocation:  messageInfo.metaData?.inviteLocation, inviteMembers: messageInfo.metaData?.inviteMembers, groupCastId: messageInfo.metaData?.groupCastId, status: messageInfo.metaData?.status)
-//                        
-//                        if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
-//                            bodyUpdated = messageInfo.details?.body
-//                            customType = messageInfo.details?.customType
-//                            
-//                            var paymentRequestedMembersDetails : [ISMChatPaymentRequestMembersDB] = []
-//                            if let members = messageInfo.details?.metaData?.paymentRequestedMembers, members.count > 0{
-//                                for x in members{
-//                                    var data = ISMChatPaymentRequestMembersDB()
-//                                    data.userId = x.userId
-//                                    data.userName = x.userName
-//                                    data.status = x.status
-//                                    data.statusText = x.statusText
-//                                    data.appUserId = x.appUserId
-//                                    paymentRequestedMembersDetails.append(data)
-//                                }
-//                            }
-//                            
-//                            
-//                           metaData = ISMChatMetaDataDB(storeName:  messageInfo.details?.metaData?.storeName,
-//                                                        productName:  messageInfo.details?.metaData?.productName,
-//                                                        bestPrice:   messageInfo.details?.metaData?.bestPrice,
-//                                                        scratchPrice:  messageInfo.details?.metaData?.scratchPrice,
-//                                                        url:  messageInfo.details?.metaData?.url,
-//                                                        parentProductId:  messageInfo.details?.metaData?.parentProductId,
-//                                                        childProductId:  messageInfo.details?.metaData?.childProductId,
-//                                                        entityType:  messageInfo.details?.metaData?.entityType,
-//                                                        productImage:  messageInfo.details?.metaData?.productImage,
-//                                                        thumbnailUrl:  messageInfo.details?.metaData?.thumbnailUrl,
-//                                                        Description:  messageInfo.details?.metaData?.description,
-//                                                        isVideoPost:  messageInfo.details?.metaData?.isVideoPost,
-//                                                        socialPostId:  messageInfo.details?.metaData?.socialPostId,
-//                                                        collectionTitle:  messageInfo.details?.metaData?.collectionTitle,
-//                                                        collectionDescription:  messageInfo.details?.metaData?.collectionDescription,
-//                                                        productCount:  messageInfo.details?.metaData?.productCount,
-//                                                        collectionImage:  messageInfo.details?.metaData?.collectionImage,
-//                                                        collectionId:  messageInfo.details?.metaData?.collectionId,
-//                                                        paymentRequestId:  messageInfo.details?.metaData?.paymentRequestId,
-//                                                        orderId:  messageInfo.details?.metaData?.orderId,
-//                                                        paymentRequestedMembers: paymentRequestedMembersDetails,
-//                                                        requestAPaymentExpiryTime:  messageInfo.details?.metaData?.requestAPaymentExpiryTime,
-//                                                        currencyCode:  messageInfo.details?.metaData?.currencyCode,
-//                                                        amount:  messageInfo.details?.metaData?.amount,
-//                                                        inviteTitle:  messageInfo.details?.metaData?.inviteTitle,
-//                                                        inviteTimestamp:  messageInfo.details?.metaData?.inviteTimestamp,
-//                                                        inviteRescheduledTimestamp:  messageInfo.details?.metaData?.inviteRescheduledTimestamp,
-//                                                        inviteLocation:   messageInfo.details?.metaData?.inviteLocation,
-//                                                        inviteMembers:  messageInfo.details?.metaData?.inviteMembers,
-//                                                        groupCastId:  messageInfo.details?.metaData?.groupCastId,
-//                                                        status:  messageInfo.details?.metaData?.status)
-////                            metaData = ISMChatMetaDataDB(
-////                                storeName: messageInfo.details?.metaData?.storeName,
-////                                productName: messageInfo.details?.metaData?.productName,
-////                                bestPrice: messageInfo.details?.metaData?.bestPrice,
-////                                scratchPrice: messageInfo.details?.metaData?.scratchPrice,
-////                                url: messageInfo.details?.metaData?.url,
-////                                parentProductId: messageInfo.details?.metaData?.parentProductId,
-////                                childProductId: messageInfo.details?.metaData?.childProductId,
-////                                entityType: messageInfo.details?.metaData?.entityType,
-////                                productImage: messageInfo.details?.metaData?.productImage,
-////                                thumbnailUrl: messageInfo.details?.metaData?.thumbnailUrl,
-////                                Description: messageInfo.details?.metaData?.description,
-////                                isVideoPost: messageInfo.details?.metaData?.isVideoPost,
-////                                socialPostId: messageInfo.details?.metaData?.socialPostId,
-////                                collectionTitle : messageInfo.details?.metaData?.collectionTitle,
-////                                collectionDescription : messageInfo.details?.metaData?.collectionDescription,
-////                                productCount : messageInfo.details?.metaData?.productCount,
-////                                collectionImage : messageInfo.details?.metaData?.collectionImage,
-////                                collectionId : messageInfo.details?.metaData?.collectionId,
-////                                paymentRequestId : messageInfo.details?.metaData?.paymentRequestId,
-////                                orderId : messageInfo.details?.metaData?.orderId,
-////                                paymentRequestedMembers : paymentRequestedMembersDetails,
-////                                requestAPaymentExpiryTime : messageInfo.details?.metaData?.requestAPaymentExpiryTime,
-////                                currencyCode : messageInfo.details?.metaData?.currencyCode,
-////                                amount : messageInfo.details?.metaData?.amount,
-////                                inviteTitle: messageInfo.metaData?.inviteTitle,
-////                                inviteTimestamp: messageInfo.metaData?.inviteTimestamp,
-////                                inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp,
-////                                inviteLocation: messageInfo.metaData?.inviteLocation,
-////                                inviteMembers: messageInfo.metaData?.inviteMembers,
-////                                groupCastId: messageInfo.metaData?.groupCastId,
-////                                status: messageInfo.metaData?.status
-////                            )
-//                            
-//                        }
-//                        
-//                        var mentionedUser: [ISMChatMentionedUserDB] = []
-//                        if let mentionedUsers = messageInfo.mentionedUsers {
-//                            for x in mentionedUsers {
-//                                let user = ISMChatMentionedUserDB(wordCount: x.wordCount, userId: x.userId, order: x.order)
-//                                mentionedUser.append(user)
-//                            }
-//                        }
-//                        
-//                        let message = ISMChatMessagesDB(
-//                            messageId: messageInfo.messageId,
-//                            sentAt: messageInfo.sentAt,
-//                            senderInfo: senderInfo, // Ensure senderInfo is defined properly
-//                            body: bodyUpdated, // Updated message body
-//                            userName: messageInfo.userName,
-//                            userIdentifier: messageInfo.userIdentifier ?? "",
-//                            userId: messageInfo.userId,
-//                            userProfileImageUrl: messageInfo.userProfileImageUrl ?? "",
-//                            mentionedUsers: mentionedUser ?? [],
-//                            deliveredToAll: messageInfo.deliveredToAll ?? false,
-//                            readByAll: messageInfo.readByAll ?? false,
-//                            customType: messageInfo.customType ?? "",
-//                            action: messageInfo.action ?? "",
-//                            readBy: messageInfo.readBy ?? [],
-//                            deliveredTo: messageInfo.deliveredTo ?? [],
-//                            messageType: messageInfo.messageType ?? 0,
-//                            parentMessageId: messageInfo.parentMessageId ?? "",
-//                            metaData: messageInfo.metaData,
-//                            metaDataJsonString: messageInfo.metaDataJsonString ?? "",
-//                            attachments: messageInfo.attachments ?? [],
-//                            initiatorIdentifier: messageInfo.initiatorIdentifier ?? "",
-//                            initiatorId: messageInfo.initiatorId ?? "",
-//                            initiatorName: messageInfo.initiatorName ?? "",
-//                            conversationId: messageInfo.conversationId,
-//                            msgSyncStatus: messageInfo.msgSyncStatus ?? "",
-//                            placeName: messageInfo.placeName ?? "",
-//                            reactionType: messageInfo.reactionType ?? "",
-//                            reactionsCount: messageInfo.reactionsCount ?? 0,
-//                            members: membersArray, // Ensure membersArray is populated
-//                            deletedMessage: messageInfo.deletedMessage ?? false,
-//                            memberName: messageInfo.memberName ?? "",
-//                            memberId: messageInfo.memberId ?? "",
-//                            memberIdentifier: messageInfo.memberIdentifier ?? "",
-//                            messageUpdated: messageInfo.messageUpdated ?? false,
-//                            reactions: messageInfo.reactions ?? [],
-//                            missedByMembers: messageInfo.missedByMembers ?? [],
-//                            meetingId: messageInfo.meetingId ?? "",
-//                            callDurations: messageInfo.callDurations ?? [],
-//                            audioOnly: messageInfo.audioOnly ?? false,
-//                            autoTerminate: messageInfo.autoTerminate ?? false,
-//                            config: messageInfo.config,
-//                            groupcastId: messageInfo.groupcastId ?? ""
-//                        )
-//                        
-//                        try? await self.localStorageManager.saveAllMessages([message], conversationId: messageInfo.conversationId ?? "")
-////                        DispatchQueue.main.async {
-////                            self.realmManager.saveMessage(obj: [message])
-////                        }
-//                        
-//                        let viewModel = ChatsViewModel()
-//                        if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
-//                            viewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
-//                                ISMChatHelper.print("Message marked delivered")
-//                            }
-//                        }
-//                        
-//                        //add unread count
-//                        if messageInfo.action == ISMChatActionType.conversationCreated.value{
-//                            try? await self.localStorageManager.updateUnreadCountThroughConversation(conversationId: messageInfo.conversationId ?? "", count: 0, reset: false)
-////                            self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 0)
-//                        }else{
-//                            try? await self.localStorageManager.updateUnreadCountThroughConversation(conversationId: messageInfo.conversationId ?? "", count: 1, reset: false)
-////                            self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 1)
-//                        }
-//                    }
-//                    }
-//                else{
-//                        // there are lots of messages send by logged in user from app or backend we need to save those too in realm
-//                        //this is when you share social link, productlink and collectionlink from app, and then when u go to chat this will scroll to last message --> only saving my own message here for custom type, productLink,sociallink,collectionlink
-//                        if (messageInfo.customType == ISMChatMediaType.ProductLink.value || messageInfo.customType == ISMChatMediaType.SocialLink.value || messageInfo.customType == ISMChatMediaType.CollectionLink.value) && messageInfo.metaData?.isSharedFromApp == true{
-//                            var contact : [ISMChatContactDB] = []
-//                            if let contacts = messageInfo.metaData?.contacts, contacts.count > 0{
-//                                for x in contacts{
-//                                    var data = ISMChatContactDB()
-//                                    data.contactIdentifier = x.contactIdentifier
-//                                    data.contactImageUrl = x.contactImageUrl
-//                                    data.contactName = x.contactName
-//                                    contact.append(data)
-//                                }
-//                            }
-//                            
-//                            let replyMessageData = ISMChatReplyMessageDB(
-//                                parentMessageId: messageInfo.parentMessageId,
-//                                parentMessageBody: messageInfo.metaData?.replyMessage?.parentMessageBody,
-//                                parentMessageUserId: messageInfo.metaData?.replyMessage?.parentMessageUserId,
-//                                parentMessageUserName: messageInfo.metaData?.replyMessage?.parentMessageUserName,
-//                                parentMessageMessageType: messageInfo.metaData?.replyMessage?.parentMessageMessageType,
-//                                parentMessageAttachmentUrl: messageInfo.metaData?.replyMessage?.parentMessageAttachmentUrl,
-//                                parentMessageInitiator: messageInfo.metaData?.replyMessage?.parentMessageInitiator,
-//                                parentMessagecaptionMessage: messageInfo.metaData?.replyMessage?.parentMessagecaptionMessage)
-//                            
-//                            let postDetail = ISMChatPostDB(postId: messageInfo.metaData?.post?.postId, postUrl: messageInfo.metaData?.post?.postUrl)
-//                            let productDetail = ISMChatProductDB(productId: messageInfo.metaData?.product?.productId, productUrl: messageInfo.metaData?.product?.productUrl, productCategoryId: messageInfo.metaData?.product?.productCategoryId)
-//                            
-//                            
-//                            
-//                            
-//                            let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")
-//                            
-//                            //add members in Message
-//                            var membersArray : [ISMChatMemberAdded] = []
-//                            if let members = messageInfo.members{
-//                                for x in members{
-//                                    var member = ISMChatMemberAdded()
-//                                    member.memberId = x.memberId
-//                                    member.memberIdentifier = x.memberIdentifier
-//                                    member.memberName = x.memberName
-//                                    member.memberProfileImageUrl = x.memberProfileImageUrl
-//                                    membersArray.append(member)
-//                                }
-//                            }
-//                            
-//                            // added message in messagesdb
-//                            var paymentRequestedMembers : [ISMChatPaymentRequestMembersDB] = []
-//                            if let members = messageInfo.metaData?.paymentRequestedMembers, members.count > 0{
-//                                for x in members{
-//                                    var data = ISMChatPaymentRequestMembersDB()
-//                                    data.userId = x.userId
-//                                    data.userName = x.userName
-//                                    data.status = x.status
-//                                    data.statusText = x.statusText
-//                                    data.appUserId = x.appUserId
-//                                    paymentRequestedMembers.append(data)
-//                                }
-//                            }
-//                            
-//                            var bodyUpdated = messageInfo.body
-//                            var customType = messageInfo.customType
-//                            var metaData = ISMChatMetaData(
-//                                replyMessage: replyMessageData,
-//                                locationAddress: messageInfo.metaData?.locationAddress,
-//                                contacts: contact,
-//                                captionMessage: messageInfo.metaData?.captionMessage,
-//                                isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage,
-//                                post: postDetail,
-//                                product: productDetail,
-//                                storeName: messageInfo.metaData?.storeName,
-//                                productName: messageInfo.metaData?.productName,
-//                                bestPrice: messageInfo.metaData?.bestPrice,
-//                                scratchPrice: messageInfo.metaData?.scratchPrice,
-//                                url: messageInfo.metaData?.url,
-//                                parentProductId: messageInfo.metaData?.parentProductId,
-//                                childProductId: messageInfo.metaData?.childProductId,
-//                                entityType: messageInfo.metaData?.entityType,
-//                                productImage: messageInfo.metaData?.productImage,
-//                                thumbnailUrl: messageInfo.metaData?.thumbnailUrl,
-//                                description: messageInfo.metaData?.description,
-//                                isVideoPost: messageInfo.metaData?.isVideoPost,
-//                                socialPostId: messageInfo.metaData?.socialPostId,
-//                                collectionTitle : messageInfo.metaData?.collectionTitle,
-//                                collectionDescription : messageInfo.metaData?.collectionDescription,
-//                                productCount : messageInfo.metaData?.productCount,
-//                                collectionImage : messageInfo.metaData?.collectionImage,
-//                                collectionId : messageInfo.metaData?.collectionId,
-//                                paymentRequestId : messageInfo.metaData?.paymentRequestId,
-//                                orderId : messageInfo.metaData?.orderId,
-//                                paymentRequestedMembers: paymentRequestedMembers,
-//                                requestAPaymentExpiryTime : messageInfo.metaData?.requestAPaymentExpiryTime,
-//                                currencyCode : messageInfo.metaData?.currencyCode,
-//                                amount : messageInfo.metaData?.amount,
-//                                inviteTitle: messageInfo.metaData?.inviteTitle,
-//                                inviteTimestamp: messageInfo.metaData?.inviteTimestamp,
-//                                inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp,
-//                                inviteLocation: messageInfo.metaData?.inviteLocation,
-//                                inviteMembers: messageInfo.metaData?.inviteMembers,
-//                                groupCastId: messageInfo.metaData?.groupCastId,
-//                                status: messageInfo.metaData?.status
-//                            )
-//                            
-//                            if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
-//                                bodyUpdated = messageInfo.details?.body
-//                                customType = messageInfo.details?.customType
-//                                
-//                                var paymentRequestedMembersDetails : [PaymentRequestedMembers] = []
-//                                if let members = messageInfo.details?.metaData?.paymentRequestedMembers, members.count > 0{
-//                                    for x in members{
-//                                        var data = PaymentRequestedMembers()
-//                                        data.userId = x.userId
-//                                        data.userName = x.userName
-//                                        data.status = x.status
-//                                        data.statusText = x.statusText
-//                                        data.appUserId = x.appUserId
-//                                        paymentRequestedMembersDetails.append(data)
-//                                    }
-//                                }
-//                                
-//                                metaData = ISMChatMetaData(
-//                                    storeName: messageInfo.details?.metaData?.storeName,
-//                                    productName: messageInfo.details?.metaData?.productName,
-//                                    bestPrice: messageInfo.details?.metaData?.bestPrice,
-//                                    scratchPrice: messageInfo.details?.metaData?.scratchPrice,
-//                                    url: messageInfo.details?.metaData?.url,
-//                                    parentProductId: messageInfo.details?.metaData?.parentProductId,
-//                                    childProductId: messageInfo.details?.metaData?.childProductId,
-//                                    entityType: messageInfo.details?.metaData?.entityType,
-//                                    productImage: messageInfo.details?.metaData?.productImage,
-//                                    thumbnailUrl: messageInfo.details?.metaData?.thumbnailUrl,
-//                                    description: messageInfo.details?.metaData?.description,
-//                                    isVideoPost: messageInfo.details?.metaData?.isVideoPost,
-//                                    socialPostId: messageInfo.details?.metaData?.socialPostId,
-//                                    collectionTitle : messageInfo.details?.metaData?.collectionTitle,
-//                                    collectionDescription : messageInfo.details?.metaData?.collectionDescription,
-//                                    productCount : messageInfo.details?.metaData?.productCount,
-//                                    collectionImage : messageInfo.details?.metaData?.collectionImage,
-//                                    collectionId : messageInfo.details?.metaData?.collectionId,
-//                                    paymentRequestId : messageInfo.details?.metaData?.paymentRequestId,
-//                                    orderId : messageInfo.details?.metaData?.orderId,
-//                                    paymentRequestedMembers : paymentRequestedMembersDetails,
-//                                    requestAPaymentExpiryTime : messageInfo.details?.metaData?.requestAPaymentExpiryTime,
-//                                    currencyCode : messageInfo.details?.metaData?.currencyCode,
-//                                    amount : messageInfo.details?.metaData?.amount,
-//                                    inviteTitle: messageInfo.metaData?.inviteTitle,
-//                                    inviteTimestamp: messageInfo.metaData?.inviteTimestamp,
-//                                    inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp,
-//                                    inviteLocation: messageInfo.metaData?.inviteLocation,
-//                                    inviteMembers: messageInfo.metaData?.inviteMembers,
-//                                    groupCastId: messageInfo.metaData?.groupCastId,
-//                                    status: messageInfo.metaData?.status
-//                                )
-//                            }
-//                            
-//                            var mentionedUser : [ISMChatMentionedUser] = []
-//                            if messageInfo.mentionedUsers != nil{
-//                                for x in mentionedUser{
-//                                    let user = ISMChatMentionedUser(wordCount: x.wordCount, userId: x.userId, order: x.order)
-//                                    mentionedUser.append(user)
-//                                }
-//                            }
-//                            
-//                            let message = ISMChatMessage(sentAt: messageInfo.sentAt,body: bodyUpdated, messageId: messageInfo.messageId,mentionedUsers: mentionedUser,metaData : metaData,metaDataJsonString: messageInfo.metaDataJson, customType: customType,action: messageInfo.action, attachment: messageInfo.attachments,conversationId: messageInfo.conversationId, userId: messageInfo.userId, userName: messageInfo.userName, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, memberName: messageInfo.memberName, memberId: messageInfo.memberId, memberIdentifier: messageInfo.memberIdentifier,senderInfo: senderInfo,members: membersArray,reactions: messageInfo.reactions)
-//                            
-//                            DispatchQueue.main.async {
-//                                self.realmManager.saveMessage(obj: [message])
-//                            }
-//                        }else if messageInfo.metaData?.isSharedFromApp == true{
-//                            // there are lots of messages send by logged in user from backend we need to save those too in realm
-//                            var contact : [ISMChatContactMetaData] = []
-//                            if let contacts = messageInfo.metaData?.contacts, contacts.count > 0{
-//                                for x in contacts{
-//                                    var data = ISMChatContactMetaData()
-//                                    data.contactIdentifier = x.contactIdentifier
-//                                    data.contactImageData = x.contactImageData
-//                                    data.contactImageUrl = x.contactImageUrl
-//                                    data.contactName = x.contactName
-//                                    contact.append(data)
-//                                }
-//                            }
-//                            
-//                            let replyMessageData = ISMChatReplyMessageMetaData(
-//                                parentMessageId: messageInfo.parentMessageId,
-//                                parentMessageBody: messageInfo.metaData?.replyMessage?.parentMessageBody,
-//                                parentMessageUserId: messageInfo.metaData?.replyMessage?.parentMessageUserId,
-//                                parentMessageUserName: messageInfo.metaData?.replyMessage?.parentMessageUserName,
-//                                parentMessageMessageType: messageInfo.metaData?.replyMessage?.parentMessageMessageType,
-//                                parentMessageAttachmentUrl: messageInfo.metaData?.replyMessage?.parentMessageAttachmentUrl,
-//                                parentMessageInitiator: messageInfo.metaData?.replyMessage?.parentMessageInitiator,
-//                                parentMessagecaptionMessage: messageInfo.metaData?.replyMessage?.parentMessagecaptionMessage)
-//                            
-//                            let postDetail = ISMChatPostMetaData(postId: messageInfo.metaData?.post?.postId, postUrl: messageInfo.metaData?.post?.postUrl)
-//                            let productDetail = ISMChatProductMetaData(productId: messageInfo.metaData?.product?.productId, productUrl: messageInfo.metaData?.product?.productUrl, productCategoryId: messageInfo.metaData?.product?.productCategoryId)
-//                            
-//                            
-//                            
-//                            
-//                            let senderInfo = ISMChatUser(userId: messageInfo.senderId, userName: messageInfo.senderName, userIdentifier: messageInfo.senderIdentifier, userProfileImage: "")
-//                            
-//                            //add members in Message
-//                            var membersArray : [ISMChatMemberAdded] = []
-//                            if let members = messageInfo.members{
-//                                for x in members{
-//                                    var member = ISMChatMemberAdded()
-//                                    member.memberId = x.memberId
-//                                    member.memberIdentifier = x.memberIdentifier
-//                                    member.memberName = x.memberName
-//                                    member.memberProfileImageUrl = x.memberProfileImageUrl
-//                                    membersArray.append(member)
-//                                }
-//                            }
-//                            
-//                            // added message in messagesdb
-//                            var paymentRequestedMembers : [PaymentRequestedMembers] = []
-//                            if let members = messageInfo.metaData?.paymentRequestedMembers, members.count > 0{
-//                                for x in members{
-//                                    var data = PaymentRequestedMembers()
-//                                    data.userId = x.userId
-//                                    data.userName = x.userName
-//                                    data.status = x.status
-//                                    data.statusText = x.statusText
-//                                    data.appUserId = x.appUserId
-//                                    paymentRequestedMembers.append(data)
-//                                }
-//                            }
-//                            
-//                            var bodyUpdated = messageInfo.body
-//                            var customType = messageInfo.customType
-//                            var metaData = ISMChatMetaData(
-//                                replyMessage: replyMessageData,
-//                                locationAddress: messageInfo.metaData?.locationAddress,
-//                                contacts: contact,
-//                                captionMessage: messageInfo.metaData?.captionMessage,
-//                                isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage,
-//                                post: postDetail,
-//                                product: productDetail,
-//                                storeName: messageInfo.metaData?.storeName,
-//                                productName: messageInfo.metaData?.productName,
-//                                bestPrice: messageInfo.metaData?.bestPrice,
-//                                scratchPrice: messageInfo.metaData?.scratchPrice,
-//                                url: messageInfo.metaData?.url,
-//                                parentProductId: messageInfo.metaData?.parentProductId,
-//                                childProductId: messageInfo.metaData?.childProductId,
-//                                entityType: messageInfo.metaData?.entityType,
-//                                productImage: messageInfo.metaData?.productImage,
-//                                thumbnailUrl: messageInfo.metaData?.thumbnailUrl,
-//                                description: messageInfo.metaData?.description,
-//                                isVideoPost: messageInfo.metaData?.isVideoPost,
-//                                socialPostId: messageInfo.metaData?.socialPostId,
-//                                collectionTitle : messageInfo.metaData?.collectionTitle,
-//                                collectionDescription : messageInfo.metaData?.collectionDescription,
-//                                productCount : messageInfo.metaData?.productCount,
-//                                collectionImage : messageInfo.metaData?.collectionImage,
-//                                collectionId : messageInfo.metaData?.collectionId,
-//                                paymentRequestId : messageInfo.metaData?.paymentRequestId,
-//                                orderId : messageInfo.metaData?.orderId,
-//                                paymentRequestedMembers: paymentRequestedMembers,
-//                                requestAPaymentExpiryTime : messageInfo.metaData?.requestAPaymentExpiryTime,
-//                                currencyCode : messageInfo.metaData?.currencyCode,
-//                                amount : messageInfo.metaData?.amount,
-//                                inviteTitle: messageInfo.metaData?.inviteTitle,
-//                                inviteTimestamp: messageInfo.metaData?.inviteTimestamp,
-//                                inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp,
-//                                inviteLocation: messageInfo.metaData?.inviteLocation,
-//                                inviteMembers: messageInfo.metaData?.inviteMembers,
-//                                groupCastId: messageInfo.metaData?.groupCastId,
-//                                status: messageInfo.metaData?.status
-//                            )
-//                            
-//                            if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
-//                                bodyUpdated = messageInfo.details?.body
-//                                customType = messageInfo.details?.customType
-//                                
-//                                var paymentRequestedMembersDetails : [PaymentRequestedMembers] = []
-//                                if let members = messageInfo.details?.metaData?.paymentRequestedMembers, members.count > 0{
-//                                    for x in members{
-//                                        var data = PaymentRequestedMembers()
-//                                        data.userId = x.userId
-//                                        data.userName = x.userName
-//                                        data.status = x.status
-//                                        data.statusText = x.statusText
-//                                        data.appUserId = x.appUserId
-//                                        paymentRequestedMembersDetails.append(data)
-//                                    }
-//                                }
-//                                
-//                                metaData = ISMChatMetaData(
-//                                    storeName: messageInfo.details?.metaData?.storeName,
-//                                    productName: messageInfo.details?.metaData?.productName,
-//                                    bestPrice: messageInfo.details?.metaData?.bestPrice,
-//                                    scratchPrice: messageInfo.details?.metaData?.scratchPrice,
-//                                    url: messageInfo.details?.metaData?.url,
-//                                    parentProductId: messageInfo.details?.metaData?.parentProductId,
-//                                    childProductId: messageInfo.details?.metaData?.childProductId,
-//                                    entityType: messageInfo.details?.metaData?.entityType,
-//                                    productImage: messageInfo.details?.metaData?.productImage,
-//                                    thumbnailUrl: messageInfo.details?.metaData?.thumbnailUrl,
-//                                    description: messageInfo.details?.metaData?.description,
-//                                    isVideoPost: messageInfo.details?.metaData?.isVideoPost,
-//                                    socialPostId: messageInfo.details?.metaData?.socialPostId,
-//                                    collectionTitle : messageInfo.details?.metaData?.collectionTitle,
-//                                    collectionDescription : messageInfo.details?.metaData?.collectionDescription,
-//                                    productCount : messageInfo.details?.metaData?.productCount,
-//                                    collectionImage : messageInfo.details?.metaData?.collectionImage,
-//                                    collectionId : messageInfo.details?.metaData?.collectionId,
-//                                    paymentRequestId : messageInfo.details?.metaData?.paymentRequestId,
-//                                    orderId : messageInfo.details?.metaData?.orderId,
-//                                    paymentRequestedMembers : paymentRequestedMembersDetails,
-//                                    requestAPaymentExpiryTime : messageInfo.details?.metaData?.requestAPaymentExpiryTime,
-//                                    currencyCode : messageInfo.details?.metaData?.currencyCode,
-//                                    amount : messageInfo.details?.metaData?.amount,
-//                                    inviteTitle: messageInfo.metaData?.inviteTitle,
-//                                    inviteTimestamp: messageInfo.metaData?.inviteTimestamp,
-//                                    inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp,
-//                                    inviteLocation: messageInfo.metaData?.inviteLocation,
-//                                    inviteMembers: messageInfo.metaData?.inviteMembers,
-//                                    groupCastId: messageInfo.metaData?.groupCastId,
-//                                    status: messageInfo.metaData?.status
-//                                )
-//                            }
-//                            
-//                            
-//                            var mentionedUser : [ISMChatMentionedUser] = []
-//                            if messageInfo.mentionedUsers != nil{
-//                                for x in mentionedUser{
-//                                    let user = ISMChatMentionedUser(wordCount: x.wordCount, userId: x.userId, order: x.order)
-//                                    mentionedUser.append(user)
-//                                }
-//                            }
-//                            
-//                            let message = ISMChatMessage(sentAt: messageInfo.sentAt,body: bodyUpdated, messageId: messageInfo.messageId,mentionedUsers: mentionedUser,metaData : metaData,metaDataJsonString: messageInfo.metaDataJson, customType: customType,action: messageInfo.action, attachment: messageInfo.attachments,conversationId: messageInfo.conversationId, userId: messageInfo.userId, userName: messageInfo.userName, initiatorId: messageInfo.initiatorId, initiatorName: messageInfo.initiatorName, memberName: messageInfo.memberName, memberId: messageInfo.memberId, memberIdentifier: messageInfo.memberIdentifier,senderInfo: senderInfo,members: membersArray,reactions: messageInfo.reactions)
-//                            
-//                            DispatchQueue.main.async {
-//                                self.realmManager.saveMessage(obj: [message])
-//                            }
-//                        }
-//                }
-//            
-//                
-////                if self.framework == .UIKit {
-//                    if UIApplication.shared.applicationState == .background {
-//                        UserDefaults.standard.setValue("app is in background and i got mqtt event", forKey: "Chatsdk_1")
-//                        DispatchQueue.global(qos: .background).async {
-//                            if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId {
-//                                self.whenInOtherScreen(messageInfo: messageInfo)
-//                            }
-//                        }
-//                    }else{
-//                        if let topViewController = UIApplication.topViewController() {
-//                            if let Chatvc = self.viewcontrollers?.conversationListViewController,
-//                               let Messagevc = self.viewcontrollers?.messagesListViewController {
-//                                
-//                                let isNotChatVC = !(topViewController.isKind(of: Chatvc))
-//                                let isNotMessageVC = !(topViewController.isKind(of: Messagevc))
-//                                
-//                                if isNotChatVC && isNotMessageVC {
-//                                    // Your code here
-//                                    if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId{
-//                                        self.whenInOtherScreen(messageInfo: messageInfo)
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-////                }
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-//                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": messageInfo,"error" : ""])
-//                    NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
-//                }
-//            case .failure(let error):
-//                NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
-//            }
-//        }
-//    }
+    public func messageReceivedEvent(data : Data){
+                self.messageReceived(data) { result in
+                    switch result{
+                    case .success(let messageInfo):
+        
+                        if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId != messageInfo.senderId{
+                            // added last message in realm
+                            Task{
+                                let membersArray = messageInfo.members?.map { member -> ISMChatLastMessageMemberDB in
+                                    var chatMember = ISMChatLastMessageMemberDB()
+                                    chatMember.memberId = member.memberId
+                                    chatMember.memberIdentifier = member.memberIdentifier
+                                    chatMember.memberName = member.memberName
+                                    chatMember.memberProfileImageUrl = member.memberProfileImageUrl
+                                    return chatMember
+                                } ?? []
+                                
+                                let msg = ISMChatLastMessageDB(
+                                    sentAt: messageInfo.sentAt,
+                                    updatedAt: messageInfo.updatedAt ?? messageInfo.sentAt, // Default to sentAt if updatedAt is nil
+                                    senderName: messageInfo.senderName,
+                                    senderIdentifier: messageInfo.senderIdentifier,
+                                    senderId: messageInfo.senderId,
+                                    conversationId: messageInfo.conversationId,
+                                    body: messageInfo.body ?? "",
+                                    messageId: messageInfo.messageId,
+                                    customType: messageInfo.customType ?? "",
+                                    action: messageInfo.action ?? "",
+                                    userId: messageInfo.userId,
+                                    userIdentifier: messageInfo.userIdentifier,
+                                    userName: messageInfo.userName,
+                                    userProfileImageUrl: messageInfo.userProfileImageUrl ?? "",
+                                    members: membersArray, // Ensure `membersArray` is defined
+                                    memberName: messageInfo.memberName ?? "",
+                                    memberId: messageInfo.memberId ?? "",
+                                    messageDeleted: false,
+                                    initiatorName: messageInfo.initiatorName ?? "",
+                                    initiatorId: messageInfo.initiatorId ?? "",
+                                    initiatorIdentifier: messageInfo.initiatorIdentifier ?? "",
+                                    deletedMessage: false,
+                                    meetingId: messageInfo.meetingId ?? ""
+                                )
+                                
+                                try? await self.localStorageManager.updateLastMessageInConversation(conversationId: messageInfo.conversationId ?? "", lastMessage: msg)
+                                
+                                
+                                var bodyUpdated = messageInfo.body
+                                var customType = messageInfo.customType
+                                var metaData = self.returnMetaData(parentMessageId: messageInfo.parentMessageId ??  "", metaData: messageInfo.metaData ?? ISMChatMetaData())
+                                //updated message
+                                if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
+                                    bodyUpdated = messageInfo.details?.body
+                                    customType = messageInfo.details?.customType
+                                    metaData = self.returnMetaData(parentMessageId: messageInfo.parentMessageId ??  "", metaData: messageInfo.details?.metaData ?? ISMChatMetaData())
+                                }
+                                
+                                var mentionedUser: [ISMChatMentionedUserDB] = []
+                                if let mentionedUsers = messageInfo.mentionedUsers {
+                                    for x in mentionedUsers {
+                                        let user = ISMChatMentionedUserDB(wordCount: x.wordCount, userId: x.userId, order: x.order)
+                                        mentionedUser.append(user)
+                                    }
+                                }
+                                
+                                let senderIndo = ISMChatUserDB(userId: messageInfo.senderId ?? "", userProfileImageUrl: messageInfo.senderProfileImageUrl ?? "", userName: messageInfo.senderName ?? "", userIdentifier: messageInfo.senderIdentifier ?? "", online: false, lastSeen: -1, metaData: nil)
+                                
+                                var reactionDBArray: [ISMChatReactionDB] = []
+                                if let reactionsDict = messageInfo.reactions {
+                                    reactionDBArray = reactionsDict.map { key, value in
+                                        ISMChatReactionDB(reactionType: key, users: value)
+                                    }
+                                }
+                                func createAttachments() -> [ISMChatAttachmentDB] {
+                                    return messageInfo.attachments?.map {
+                                        ISMChatAttachmentDB(
+                                            attachmentType: $0.attachmentType ?? 0,
+                                            extensions: $0.extensions ?? "",
+                                            mediaId: $0.mediaId ?? "",
+                                            mediaUrl: $0.mediaUrl ?? "",
+                                            mimeType: $0.mimeType ?? "",
+                                            name: $0.name ?? "",
+                                            size: $0.size ?? 0,
+                                            thumbnailUrl: $0.thumbnailUrl ?? "",
+                                            latitude: $0.latitude ?? 0,
+                                            longitude: $0.longitude ?? 0,
+                                            title: $0.title ?? "",
+                                            address: $0.address ?? "",
+                                            caption: $0.caption ?? ""
+                                        )
+                                    } ?? []
+                                }
+                                let message = ISMChatMessagesDB(
+                                    messageId: messageInfo.messageId ?? "",
+                                    sentAt: messageInfo.sentAt ?? 0,
+                                    senderInfo: senderIndo,
+                                    body: bodyUpdated ?? "", // Updated message body
+                                    userName: messageInfo.userName,
+                                    userIdentifier: messageInfo.userIdentifier ?? "",
+                                    userId: messageInfo.userId,
+                                    userProfileImageUrl: messageInfo.userProfileImageUrl ?? "",
+                                    mentionedUsers: mentionedUser ?? [],
+                                    deliveredToAll: false,
+                                    readByAll: false,
+                                    customType: messageInfo.customType ?? "",
+                                    action: messageInfo.action ?? "",
+                                    readBy: [],
+                                    deliveredTo: [],
+                                    messageType: 0,
+                                    parentMessageId: messageInfo.parentMessageId ?? "",
+                                    metaData: metaData,
+                                    metaDataJsonString: messageInfo.metaDataJson ?? "",
+                                    attachments:  createAttachments(),
+                                    initiatorIdentifier: messageInfo.initiatorIdentifier ?? "",
+                                    initiatorId: messageInfo.initiatorId ?? "",
+                                    initiatorName: messageInfo.initiatorName ?? "",
+                                    conversationId: messageInfo.conversationId ?? "",
+                                    members: membersArray, // Ensure membersArray is populated
+                                    deletedMessage: false,
+                                    memberName: messageInfo.memberName ?? "",
+                                    memberId: messageInfo.memberId ?? "",
+                                    memberIdentifier: messageInfo.memberIdentifier ?? "",
+                                    messageUpdated: false,
+                                    reactions: reactionDBArray,
+                                    meetingId: messageInfo.meetingId ?? ""
+                                )
+                                
+                                try? await self.localStorageManager.saveAllMessages([message], conversationId: messageInfo.conversationId ?? "")
+                                
+                                let viewModel = ChatsViewModel()
+                                if let converId = messageInfo.conversationId, let messId = messageInfo.messageId{
+                                    viewModel.deliveredMessageIndicator(conversationId: converId, messageId: messId) { _ in
+                                        ISMChatHelper.print("Message marked delivered")
+                                    }
+                                }
+                                
+                                //add unread count
+                                if messageInfo.action == ISMChatActionType.conversationCreated.value{
+                                    try? await self.localStorageManager.updateUnreadCountThroughConversation(conversationId: messageInfo.conversationId ?? "", count: 0, reset: false)
+                                }else{
+                                    try? await self.localStorageManager.updateUnreadCountThroughConversation(conversationId: messageInfo.conversationId ?? "", count: 1, reset: false)
+                                }
+                            }
+                        }
+                        else{
+                                // there are lots of messages send by logged in user from app or backend we need to save those too in swiftdata
+                                //this is when you share social link, productlink and collectionlink from app, and then when u go to chat this will scroll to last message --> only saving my own message here for custom type, productLink,sociallink,collectionlink
+                            if (messageInfo.customType == ISMChatMediaType.ProductLink.value || messageInfo.customType == ISMChatMediaType.SocialLink.value || messageInfo.customType == ISMChatMediaType.CollectionLink.value) && messageInfo.metaData?.isSharedFromApp == true{
+                                
+                                Task{
+                                
+                                var bodyUpdated = messageInfo.body
+                                var customType = messageInfo.customType
+                                var metaData = self.returnMetaData(parentMessageId: messageInfo.parentMessageId ?? "", metaData: messageInfo.metaData ?? ISMChatMetaData())
+                                
+                                if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
+                                    bodyUpdated = messageInfo.details?.body
+                                    customType = messageInfo.details?.customType
+                                    
+                                    metaData = self.returnMetaData(parentMessageId: messageInfo.parentMessageId ?? "", metaData: messageInfo.details?.metaData ?? ISMChatMetaData())
+                                }
+                                
+                                var mentionedUser: [ISMChatMentionedUserDB] = []
+                                if let mentionedUsers = messageInfo.mentionedUsers {
+                                    for x in mentionedUsers {
+                                        let user = ISMChatMentionedUserDB(wordCount: x.wordCount, userId: x.userId, order: x.order)
+                                        mentionedUser.append(user)
+                                    }
+                                }
+                                
+                                let senderIndo = ISMChatUserDB(userId: messageInfo.senderId ?? "", userProfileImageUrl: messageInfo.senderProfileImageUrl ?? "", userName: messageInfo.senderName ?? "", userIdentifier: messageInfo.senderIdentifier ?? "", online: false, lastSeen: -1, metaData: nil)
+                                
+                                var reactionDBArray: [ISMChatReactionDB] = []
+                                if let reactionsDict = messageInfo.reactions {
+                                    reactionDBArray = reactionsDict.map { key, value in
+                                        ISMChatReactionDB(reactionType: key, users: value)
+                                    }
+                                }
+                                func createAttachments() -> [ISMChatAttachmentDB] {
+                                    return messageInfo.attachments?.map {
+                                        ISMChatAttachmentDB(
+                                            attachmentType: $0.attachmentType ?? 0,
+                                            extensions: $0.extensions ?? "",
+                                            mediaId: $0.mediaId ?? "",
+                                            mediaUrl: $0.mediaUrl ?? "",
+                                            mimeType: $0.mimeType ?? "",
+                                            name: $0.name ?? "",
+                                            size: $0.size ?? 0,
+                                            thumbnailUrl: $0.thumbnailUrl ?? "",
+                                            latitude: $0.latitude ?? 0,
+                                            longitude: $0.longitude ?? 0,
+                                            title: $0.title ?? "",
+                                            address: $0.address ?? "",
+                                            caption: $0.caption ?? ""
+                                        )
+                                    } ?? []
+                                }
+                                
+                                let membersArray = messageInfo.members?.map { member -> ISMChatLastMessageMemberDB in
+                                    var chatMember = ISMChatLastMessageMemberDB()
+                                    chatMember.memberId = member.memberId
+                                    chatMember.memberIdentifier = member.memberIdentifier
+                                    chatMember.memberName = member.memberName
+                                    chatMember.memberProfileImageUrl = member.memberProfileImageUrl
+                                    return chatMember
+                                } ?? []
+                                
+                            
+                                let message = ISMChatMessagesDB(
+                                    messageId: messageInfo.messageId ?? "",
+                                    sentAt: messageInfo.sentAt ?? 0,
+                                    senderInfo: senderIndo,
+                                    body: bodyUpdated ?? "", // Updated message body
+                                    userName: messageInfo.userName,
+                                    userIdentifier: messageInfo.userIdentifier ?? "",
+                                    userId: messageInfo.userId,
+                                    userProfileImageUrl: messageInfo.userProfileImageUrl ?? "",
+                                    mentionedUsers: mentionedUser ?? [],
+                                    deliveredToAll: false,
+                                    readByAll: false,
+                                    customType: messageInfo.customType ?? "",
+                                    action: messageInfo.action ?? "",
+                                    readBy: [],
+                                    deliveredTo: [],
+                                    messageType: 0,
+                                    parentMessageId: messageInfo.parentMessageId ?? "",
+                                    metaData: metaData,
+                                    metaDataJsonString: messageInfo.metaDataJson ?? "",
+                                    attachments:  createAttachments(),
+                                    initiatorIdentifier: messageInfo.initiatorIdentifier ?? "",
+                                    initiatorId: messageInfo.initiatorId ?? "",
+                                    initiatorName: messageInfo.initiatorName ?? "",
+                                    conversationId: messageInfo.conversationId ?? "",
+                                    members: membersArray, // Ensure membersArray is populated
+                                    deletedMessage: false,
+                                    memberName: messageInfo.memberName ?? "",
+                                    memberId: messageInfo.memberId ?? "",
+                                    memberIdentifier: messageInfo.memberIdentifier ?? "",
+                                    messageUpdated: false,
+                                    reactions: reactionDBArray,
+                                    meetingId: messageInfo.meetingId ?? ""
+                                )
+                                
+                                try? await self.localStorageManager.saveAllMessages([message], conversationId: messageInfo.conversationId ?? "")
+                            }
+                                }else if messageInfo.metaData?.isSharedFromApp == true{
+                                    // there are lots of messages send by logged in user from backend we need to save those too in swiftdata
+                                    Task{
+                                        
+                                        var bodyUpdated = messageInfo.body
+                                        var customType = messageInfo.customType
+                                        var metaData = self.returnMetaData(parentMessageId: messageInfo.parentMessageId ?? "", metaData: messageInfo.metaData ??  ISMChatMetaData())
+                                        
+                                        if messageInfo.action == ISMChatActionType.messageDetailsUpdated.value ?? ""{
+                                            bodyUpdated = messageInfo.details?.body
+                                            customType = messageInfo.details?.customType
+                                            metaData = self.returnMetaData(parentMessageId: messageInfo.parentMessageId ?? "", metaData: messageInfo.details?.metaData ??  ISMChatMetaData())
+                                        }
+                                        
+                                        var mentionedUser: [ISMChatMentionedUserDB] = []
+                                        if let mentionedUsers = messageInfo.mentionedUsers {
+                                            for x in mentionedUsers {
+                                                let user = ISMChatMentionedUserDB(wordCount: x.wordCount, userId: x.userId, order: x.order)
+                                                mentionedUser.append(user)
+                                            }
+                                        }
+                                        
+                                        let senderIndo = ISMChatUserDB(userId: messageInfo.senderId ?? "", userProfileImageUrl: messageInfo.senderProfileImageUrl ?? "", userName: messageInfo.senderName ?? "", userIdentifier: messageInfo.senderIdentifier ?? "", online: false, lastSeen: -1, metaData: nil)
+                                        
+                                        var reactionDBArray: [ISMChatReactionDB] = []
+                                        if let reactionsDict = messageInfo.reactions {
+                                            reactionDBArray = reactionsDict.map { key, value in
+                                                ISMChatReactionDB(reactionType: key, users: value)
+                                            }
+                                        }
+                                        func createAttachments() -> [ISMChatAttachmentDB] {
+                                            return messageInfo.attachments?.map {
+                                                ISMChatAttachmentDB(
+                                                    attachmentType: $0.attachmentType ?? 0,
+                                                    extensions: $0.extensions ?? "",
+                                                    mediaId: $0.mediaId ?? "",
+                                                    mediaUrl: $0.mediaUrl ?? "",
+                                                    mimeType: $0.mimeType ?? "",
+                                                    name: $0.name ?? "",
+                                                    size: $0.size ?? 0,
+                                                    thumbnailUrl: $0.thumbnailUrl ?? "",
+                                                    latitude: $0.latitude ?? 0,
+                                                    longitude: $0.longitude ?? 0,
+                                                    title: $0.title ?? "",
+                                                    address: $0.address ?? "",
+                                                    caption: $0.caption ?? ""
+                                                )
+                                            } ?? []
+                                        }
+                                        
+                                        let membersArray = messageInfo.members?.map { member -> ISMChatLastMessageMemberDB in
+                                            var chatMember = ISMChatLastMessageMemberDB()
+                                            chatMember.memberId = member.memberId
+                                            chatMember.memberIdentifier = member.memberIdentifier
+                                            chatMember.memberName = member.memberName
+                                            chatMember.memberProfileImageUrl = member.memberProfileImageUrl
+                                            return chatMember
+                                        } ?? []
+                                        
+                                        
+                                        
+                                        let message = ISMChatMessagesDB(
+                                            messageId: messageInfo.messageId ?? "",
+                                            sentAt: messageInfo.sentAt ?? 0,
+                                            senderInfo: senderIndo,
+                                            body: bodyUpdated ?? "", // Updated message body
+                                            userName: messageInfo.userName,
+                                            userIdentifier: messageInfo.userIdentifier ?? "",
+                                            userId: messageInfo.userId,
+                                            userProfileImageUrl: messageInfo.userProfileImageUrl ?? "",
+                                            mentionedUsers: mentionedUser ?? [],
+                                            deliveredToAll: false,
+                                            readByAll: false,
+                                            customType: messageInfo.customType ?? "",
+                                            action: messageInfo.action ?? "",
+                                            readBy: [],
+                                            deliveredTo: [],
+                                            messageType: 0,
+                                            parentMessageId: messageInfo.parentMessageId ?? "",
+                                            metaData: metaData,
+                                            metaDataJsonString: messageInfo.metaDataJson ?? "",
+                                            attachments:  createAttachments(),
+                                            initiatorIdentifier: messageInfo.initiatorIdentifier ?? "",
+                                            initiatorId: messageInfo.initiatorId ?? "",
+                                            initiatorName: messageInfo.initiatorName ?? "",
+                                            conversationId: messageInfo.conversationId ?? "",
+                                            members: membersArray, // Ensure membersArray is populated
+                                            deletedMessage: false,
+                                            memberName: messageInfo.memberName ?? "",
+                                            memberId: messageInfo.memberId ?? "",
+                                            memberIdentifier: messageInfo.memberIdentifier ?? "",
+                                            messageUpdated: false,
+                                            reactions: reactionDBArray,
+                                            meetingId: messageInfo.meetingId ?? ""
+                                        )
+                                        
+                                        try? await self.localStorageManager.saveAllMessages([message], conversationId: messageInfo.conversationId ?? "")
+                                    }
+                                }
+                        }
+        
+        
+                            if UIApplication.shared.applicationState == .background {
+                                UserDefaults.standard.setValue("app is in background and i got mqtt event", forKey: "Chatsdk_1")
+                                DispatchQueue.global(qos: .background).async {
+                                    if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId {
+                                        self.whenInOtherScreen(messageInfo: messageInfo)
+                                    }
+                                }
+                            }else{
+                                if let topViewController = UIApplication.topViewController() {
+                                    if let Chatvc = self.viewcontrollers?.conversationListViewController,
+                                       let Messagevc = self.viewcontrollers?.messagesListViewController {
+        
+                                        let isNotChatVC = !(topViewController.isKind(of: Chatvc))
+                                        let isNotMessageVC = !(topViewController.isKind(of: Messagevc))
+        
+                                        if isNotChatVC && isNotMessageVC {
+                                            // Your code here
+                                            if messageInfo.senderId != ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId{
+                                                self.whenInOtherScreen(messageInfo: messageInfo)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": messageInfo,"error" : ""])
+                            NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
+                        }
+                    case .failure(let error):
+                        NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil,userInfo: ["data": "","error" : error])
+                    }
+                }
+    }
     
     public func whenInOtherScreen(messageInfo : ISMChatMessageDelivered){
         if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId != messageInfo.senderId{
@@ -1188,4 +938,99 @@ extension ISMChatMQTTManager{
             }
         }
     }
+    
+    public func returnMetaData(parentMessageId: String,metaData : ISMChatMetaData) -> ISMChatMetaDataDB{
+            var contact : [ISMChatContactDB] = []
+            if let contacts = metaData.contacts, contacts.count > 0{
+                for x in contacts{
+                    var data = ISMChatContactDB()
+                    data.contactIdentifier = x.contactIdentifier
+                    data.contactImageUrl = x.contactImageUrl
+                    data.contactName = x.contactName
+                    contact.append(data)
+                }
+            }
+            
+            let replyMessageData = ISMChatReplyMessageDB(
+                parentMessageId: parentMessageId,
+                parentMessageBody: metaData.replyMessage?.parentMessageBody,
+                parentMessageUserId: metaData.replyMessage?.parentMessageUserId,
+                parentMessageUserName: metaData.replyMessage?.parentMessageUserName,
+                parentMessageMessageType: metaData.replyMessage?.parentMessageMessageType,
+                parentMessageAttachmentUrl: metaData.replyMessage?.parentMessageAttachmentUrl,
+                parentMessageInitiator: metaData.replyMessage?.parentMessageInitiator,
+                parentMessagecaptionMessage: metaData.replyMessage?.parentMessagecaptionMessage)
+            
+            let postDetail = ISMChatPostDB(postId: metaData.post?.postId, postUrl: metaData.post?.postUrl)
+            let productDetail = ISMChatProductDB(productId: metaData.product?.productId, productUrl: metaData.product?.productUrl, productCategoryId: metaData.product?.productCategoryId)
+            
+            
+            // added message in messagesdb
+            var paymentRequestedMembers : [ISMChatPaymentRequestMembersDB] = []
+            if let members = metaData.paymentRequestedMembers, members.count > 0{
+                for x in members{
+                    var data = ISMChatPaymentRequestMembersDB()
+                    data.userId = x.userId
+                    data.userName = x.userName
+                    data.status = x.status
+                    data.statusText = x.statusText
+                    data.appUserId = x.appUserId
+                    paymentRequestedMembers.append(data)
+                }
+            }
+            
+            var inviteMembers : [ISMChatPaymentRequestMembersDB] = []
+            if let members = metaData.inviteMembers, members.count > 0{
+                for x in members{
+                    var data = ISMChatPaymentRequestMembersDB()
+                    data.userId = x.userId
+                    data.userName = x.userName
+                    data.status = x.status
+                    data.statusText = x.statusText
+                    data.appUserId = x.appUserId
+                    inviteMembers.append(data)
+                }
+            }
+            let location = ISMChatLocationDB(name: metaData.inviteLocation?.name ?? "", latitude: metaData.inviteLocation?.latitude ?? 0, longitude: metaData.inviteLocation?.longitude ?? 0)
+            return ISMChatMetaDataDB(
+                locationAddress: metaData.locationAddress ?? "",
+                replyMessage: replyMessageData,
+                contacts: contact,
+                captionMessage: metaData.captionMessage ?? "",
+                isBroadCastMessage: metaData.isBroadCastMessage ?? false,
+                post: postDetail,
+                product: productDetail,
+                storeName: metaData.storeName ?? "",
+                productName: metaData.productName,
+                bestPrice:  metaData.bestPrice,
+                scratchPrice: metaData.scratchPrice,
+                url: metaData.url,
+                parentProductId: metaData.parentProductId,
+                childProductId: metaData.childProductId,
+                entityType: metaData.entityType,
+                productImage: metaData.productImage,
+                thumbnailUrl: metaData.thumbnailUrl,
+                Description: metaData.description,
+                isVideoPost: metaData.isVideoPost,
+                socialPostId: metaData.socialPostId,
+                collectionTitle: metaData.collectionTitle,
+                collectionDescription: metaData.collectionDescription,
+                productCount: metaData.productCount,
+                collectionImage: metaData.collectionImage,
+                collectionId: metaData.collectionId,
+                paymentRequestId: metaData.paymentRequestId,
+                orderId: metaData.orderId,
+                paymentRequestedMembers: paymentRequestedMembers,
+                requestAPaymentExpiryTime: metaData.requestAPaymentExpiryTime,
+                currencyCode: metaData.currencyCode,
+                amount: metaData.amount,
+                inviteTitle: metaData.inviteTitle,
+                inviteTimestamp: metaData.inviteTimestamp,
+                inviteRescheduledTimestamp: metaData.inviteRescheduledTimestamp,
+                inviteLocation:  location,
+                inviteMembers: inviteMembers,
+                groupCastId: metaData.groupCastId,
+                status: metaData.status)
+    }
 }
+

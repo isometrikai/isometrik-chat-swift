@@ -447,7 +447,6 @@ public struct ISMConversationView : View {
             groupConversationTitle: data.conversationTitle,
             groupImage: data.conversationImageUrl, viewModelNew: self.viewModelNew
         )
-//        .environmentObject(realmManager)
         .onAppear {
             onConversationList = false
             query = ""

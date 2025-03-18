@@ -172,6 +172,8 @@ public class ISMChatMetaDataDB{
         
         return dict
     }
+    
+    public init(){}
 
 }
 

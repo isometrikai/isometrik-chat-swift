@@ -214,7 +214,7 @@ public struct ISMMessageView: View {
                         }
                     }
                     if let conversationDetail = conversationDetail{
-//                        CustomMessageViewHeaderRegistry.shared.view(for: conversationDetail, messages: self.realmManager.allMessages ?? [])
+                        CustomMessageViewHeaderRegistry.shared.view(for: conversationDetail, messages: self.viewModelNew.allMessages ?? [])
                     }
                     ZStack{
                         GeometryReader{ reader in

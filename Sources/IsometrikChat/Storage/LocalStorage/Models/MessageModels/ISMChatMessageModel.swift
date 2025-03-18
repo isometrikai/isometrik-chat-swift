@@ -14,7 +14,7 @@ public class ISMChatMessagesDB {
    public var messageId: String = ""
     
     public var sentAt : Double = 0
-    @Relationship(deleteRule: .cascade) public var senderInfo : ISMChatUserDB?
+    @Relationship(deleteRule: .nullify) public var senderInfo : ISMChatUserDB?
     public var body : String = ""
     public var userName : String = ""
     public var userIdentifier : String = ""

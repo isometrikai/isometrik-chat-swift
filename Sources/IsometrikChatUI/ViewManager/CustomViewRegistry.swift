@@ -106,7 +106,7 @@ public protocol CustomMessageViewHeaderProvider {
     associatedtype ContentView: View
     
     /// Parses conversation detail and messages into the required view data model
-    static func parseData(_ data: ISMChatConversationDetail, messages: [MessagesDB]) -> ViewData?
+    static func parseData(_ data: ISMChatConversationDetail, messages: [ISMChatMessagesDB]) -> ViewData?
     /// Creates a SwiftUI view for the message view header
     static func createView(data: ViewData) -> ContentView
 }
@@ -114,7 +114,7 @@ public protocol CustomMessageViewHeaderProvider {
 public class CustomMessageViewHeaderRegistry {
     public static let shared = CustomMessageViewHeaderRegistry()
     
-    private var defaultViewBuilder: ((ISMChatConversationDetail,[MessagesDB]) -> AnyView)?
+    private var defaultViewBuilder: ((ISMChatConversationDetail,[ISMChatMessagesDB]) -> AnyView)?
     
     public func register<Provider: CustomMessageViewHeaderProvider>(
         view: Provider.Type
@@ -127,7 +127,7 @@ public class CustomMessageViewHeaderRegistry {
         }
     }
     
-    public func view(for data: ISMChatConversationDetail,messages : [MessagesDB]) -> AnyView {
+    public func view(for data: ISMChatConversationDetail,messages : [ISMChatMessagesDB]) -> AnyView {
         if let defaultBuilder = defaultViewBuilder {
             return defaultBuilder(data, messages)
         }
