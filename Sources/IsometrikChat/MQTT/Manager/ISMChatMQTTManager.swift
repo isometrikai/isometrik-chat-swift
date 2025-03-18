@@ -26,13 +26,14 @@ open class ISMChatMQTTManager: NSObject{
     let maxReconnectAttempts = 5
     var reconnectAttempts = 0
     let reconnectInterval: TimeInterval = 5.0
-    var realmManager = RealmManager.shared
+    let localStorageManager: LocalStorageManager
     init(mqttConfiguration : ISMChatMqttConfig,projectConfiguration : ISMChatProjectConfig,userdata : ISMChatUserConfig,viewcontrollers : ISMChatViewController,framework : FrameworkType) {
         self.mqttConfiguration = mqttConfiguration
         self.projectConfiguration = projectConfiguration
         self.userData = userdata
         self.viewcontrollers = viewcontrollers
         self.framework = framework
+        self.localStorageManager = try! LocalStorageManager()
         super.init()
     }
     
