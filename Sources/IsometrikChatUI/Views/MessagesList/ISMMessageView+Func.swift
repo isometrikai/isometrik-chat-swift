@@ -1265,10 +1265,10 @@ extension ISMMessageView{
     func scrollToParentMessage(message : ISMChatMessagesDB,scrollReader : ScrollViewProxy){
         if message.customType == ISMChatMediaType.ReplyText.value{
             if message.metaData?.replyMessage?.parentMessageId != ""{
-//                let id = getMatchingId(parentMessageId: message.metaData?.replyMessage?.parentMessageId ?? "",messages: realmManager.allMessages ?? [])
-//                if id != ""{
-//                    scrollTo(messageId: id, anchor: .center, shouldAnimate: true, scrollReader: scrollReader)
-//                }
+                let id = getMatchingId(parentMessageId: message.metaData?.replyMessage?.parentMessageId ?? "",messages: self.viewModelNew.allMessages ?? [])
+                if id != ""{
+                    scrollTo(messageId: id, anchor: .center, shouldAnimate: true, scrollReader: scrollReader)
+                }
             }
         }
     }

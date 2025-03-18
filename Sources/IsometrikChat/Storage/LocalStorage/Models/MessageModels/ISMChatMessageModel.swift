@@ -59,7 +59,7 @@ public class ISMChatMessagesDB {
         messageId: String,
         sentAt: Double,
         senderInfo: ISMChatUserDB? = nil,
-        body: String,
+        body: String? = nil,
         userName: String? = nil,
         userIdentifier: String? = nil,
         userId: String? = nil,
@@ -67,7 +67,7 @@ public class ISMChatMessagesDB {
         mentionedUsers: [ISMChatMentionedUserDB]? = nil,
         deliveredToAll: Bool? = nil,
         readByAll: Bool? = nil,
-        customType: String,
+        customType: String? = nil,
         action: String,
         readBy: [ISMChatMessageDeliveryStatusDB]? = nil,
         deliveredTo: [ISMChatMessageDeliveryStatusDB]? = nil,
@@ -102,7 +102,7 @@ public class ISMChatMessagesDB {
         self.messageId = messageId
         self.sentAt = sentAt
         self.senderInfo = senderInfo
-        self.body = body
+        self.body = body ?? ""
         self.userName = userName ?? ""
         self.userIdentifier = userIdentifier ?? ""
         self.userId = userId ?? ""
@@ -110,7 +110,7 @@ public class ISMChatMessagesDB {
         self.mentionedUsers = mentionedUsers
         self.deliveredToAll = deliveredToAll ?? false
         self.readByAll = readByAll ?? false
-        self.customType = customType
+        self.customType = customType ?? ""
         self.action = action
         self.readBy = readBy
         self.deliveredTo = deliveredTo

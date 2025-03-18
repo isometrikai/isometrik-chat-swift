@@ -635,9 +635,9 @@ public struct ISMChatMetaData: Codable {
 }
 
 public struct LocationData : Codable{
-    var name : String?
-    var latitude: Double?
-    var longitude: Double?
+    public var name : String?
+    public var latitude: Double?
+    public var longitude: Double?
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try? container.decode(String.self, forKey: .name)
@@ -652,13 +652,13 @@ public struct LocationData : Codable{
 }
 
 public struct PaymentRequestedMembers : Codable{
-    var userId : String?
-    var userName : String?
-    var status : Int?
-    var statusText : String?
-    var appUserId : String?
-    var userProfileImage : String?
-    var declineReason : String?
+    public var userId : String?
+    public var userName : String?
+    public var status : Int?
+    public var statusText : String?
+    public var appUserId : String?
+    public var userProfileImage : String?
+    public var declineReason : String?
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         userId = try? container.decode(String.self, forKey: .userId)
