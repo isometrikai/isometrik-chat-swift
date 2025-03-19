@@ -46,7 +46,7 @@ extension ISMMessageView {
                 }
                 
                 // Fetch messages and update read status
-                self.getMessages()
+                self.fetchMessagesLocally()
                 if let converId = messageInfo.conversationId, let messId = messageInfo.messageId {
                     chatViewModel.readMessageIndicator(conversationId: converId, messageId: messId) { _ in
 //                        realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "", count: 0, reset: true)

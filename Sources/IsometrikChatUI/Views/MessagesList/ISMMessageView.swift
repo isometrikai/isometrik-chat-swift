@@ -92,6 +92,7 @@ public struct ISMMessageView: View {
     
     
     @State var selectedSheetIndex : Int = 0
+    @State var groupMemberCount : Int = 0
     
     
     @State var selectedContactToShare : [ISMChatPhoneContact] = []
@@ -310,7 +311,8 @@ public struct ISMMessageView: View {
                         getConversationDetail()
 //                        reload()
                     }
-//                    self.textFieldtxt = self.realmManager.getLastInputTextInConversation(conversationId: self.conversationID ?? "")
+                    //if there are any new messages in conversation, mark then as read
+                    self.chatViewModel.markMessagesAsRead(conversationId: self.conversationID ?? "")
                 }
                 .onDisappear{
                     OnMessageList = false
@@ -882,12 +884,28 @@ public struct ISMMessageView: View {
             }
             stateViewModel.onLoad = true
             forwardMessageSelected.removeAll()
+            Task{
+                await self.textFieldtxt = self.viewModelNew.getLastInputTextInConversation(conversationId: self.conversationID ?? "")
+                self.groupMemberCount = await self.viewModelNew.getMemberCount(conversationId: self.conversationID ?? "")
+            }
         }
     }
     
     func getMessages(){
         Task {
             await viewModelNew.loadMessages(conversationId: self.conversationID ?? "", lastMessageTimestamp: viewModelNew.messages.last?.last?.messageId ?? "")
+            // scroll to last message
+            parentMessageIdToScroll = self.viewModelNew.messages.last?.last?.id.description ?? ""
+            await viewModelNew.fetchPhotosAndVideos(conversationId: self.conversationID ?? "")
+            await viewModelNew.fetchFiles(conversationId: self.conversationID ?? "")
+            await viewModelNew.fetchLinks(conversationId: self.conversationID ?? "")
+            await viewModelNew.updateUnreadCountThroughConversation(conversationId: self.conversationID ?? "", count: 0, reset: true)
+        }
+    }
+    
+    func fetchMessagesLocally(){
+        Task{
+            await viewModelNew.loadMessagesLocallyToUpdateUI(conversationId: self.conversationID ?? "", lastMessageTimestamp: viewModelNew.messages.last?.last?.messageId ?? "")
             // scroll to last message
             parentMessageIdToScroll = self.viewModelNew.messages.last?.last?.id.description ?? ""
             await viewModelNew.fetchPhotosAndVideos(conversationId: self.conversationID ?? "")
@@ -1096,7 +1114,10 @@ extension ISMMessageView{
             NSNotification.refrestMessagesListLocally,
             NSNotification.updateGroupInfo,
             NSNotification.groupActions,
-            NSNotification.memberAddAndRemove
+            NSNotification.memberAddAndRemove,
+            ISMChatMQTTNotificationType.mqttMessageDelivered.name,
+            ISMChatMQTTNotificationType.mqttMessageRead.name,
+            ISMChatMQTTNotificationType.mqttMultipleMessageRead.name
         ]
         
         // Iterate over each notification type and add a subscriber
@@ -1115,40 +1136,42 @@ extension ISMMessageView{
         case ISMChatMQTTNotificationType.mqttUserBlockConversation.name:
             if let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered {
                 ISMChatHelper.print("USER BLOCKED ----------------->\(messageInfo)")
-//                messageReceived(messageInfo: messageInfo)
+                messageReceived(messageInfo: messageInfo)
                 getConversationDetail()
             }
             
         case ISMChatMQTTNotificationType.mqttUserUnblockConversation.name:
             if let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered {
                 ISMChatHelper.print("USER UNBLOCKED ----------------->\(messageInfo)")
-//                messageReceived(messageInfo: messageInfo)
+                messageReceived(messageInfo: messageInfo)
                 getConversationDetail()
             }
         case ISMChatMQTTNotificationType.mqttMessageNewReceived.name:
             if let messageInfo = notification.userInfo?["data"] as? ISMChatMessageDelivered{
                 ISMChatHelper.print("MESSAGE RECEIVED----------------->\(messageInfo)")
-//                messageReceived(messageInfo: messageInfo)
-//                actionOnMessageDelivered(messageInfo: messageInfo)
+                messageReceived(messageInfo: messageInfo)
+                actionOnMessageDelivered(messageInfo: messageInfo)
             }
         case ISMChatMQTTNotificationType.mqttTypingEvent.name:
             if let messageInfo = notification.userInfo?["data"] as? ISMChatTypingEvent {
                 ISMChatHelper.print("TYPING EVENT----------------->\(messageInfo)")
                 if ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig.userId != messageInfo.userId && OnMessageList == true{
-//                    userTyping(messageInfo: messageInfo)
+                    userTyping(messageInfo: messageInfo)
                 }
             }
         case ISMChatMQTTNotificationType.mqttMeetingEnded.name:
             if let messageInfo = notification.userInfo?["data"] as? ISMMeeting {
                 ISMChatHelper.print("Meeting ended----------------->\(messageInfo)")
-//                if messageInfo.conversationId == self.conversationID{
-//                    if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
-//                        addMeeting(messageInfo: messageInfo)
-//                    }
-//                }
+                if messageInfo.conversationId == self.conversationID{
+                    Task{
+                        if await !(self.viewModelNew.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                            addMeeting(messageInfo: messageInfo)
+                        }
+                    }
+                }
             }
         case NSNotification.refrestMessagesListLocally:
-            getMessages()
+            fetchMessagesLocally()
         case  NSNotification.updateGroupInfo:
             self.getConversationDetail()
         case NSNotification.groupActions:
@@ -1156,16 +1179,24 @@ extension ISMMessageView{
                 return
             }
             ISMChatHelper.print("Group Actions----------------->\(messageInfo)")
-//            if !(self.realmManager.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
-//                groupAction(messageInfo: messageInfo)
-//                //local notification
-//                sendLocalNotification(messageInfo: messageInfo)
-//                //action if required
-//                actionOnMessageDelivered(messageInfo: messageInfo)
-//            }
+            Task{
+                if await !(self.viewModelNew.doesMessageExistInMessagesDB(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "")){
+                    groupAction(messageInfo: messageInfo)
+                    //local notification
+                    sendLocalNotification(messageInfo: messageInfo)
+                    //action if required
+                    actionOnMessageDelivered(messageInfo: messageInfo)
+                }
+            }
         case NSNotification.memberAddAndRemove:
             self.getConversationDetail()
 //            self.reload()
+        case ISMChatMQTTNotificationType.mqttMessageRead.name:
+            self.fetchMessagesLocally()
+        case ISMChatMQTTNotificationType.mqttMessageDelivered.name:
+            self.fetchMessagesLocally()
+        case  ISMChatMQTTNotificationType.mqttMultipleMessageRead.name:
+            self.fetchMessagesLocally()
         default:
             break
         }

@@ -82,19 +82,26 @@ public class HybridStorageManager: ChatStorageManager {
     }
     
     
-    public func fetchMessages(conversationId: String,lastMessageTimestamp: String) async throws -> [ISMChatMessagesDB] {
+    public func fetchMessages(conversationId: String,lastMessageTimestamp: String,onlyLocal : Bool) async throws -> [ISMChatMessagesDB] {
         do {
-            // Fetch from remote and sync
-            let remoteMessages = try await remoteStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp)
-            try await localStorageManager.saveAllMessages(remoteMessages, conversationId: conversationId)
-            // saving media simultanously in conversation
-            for value in remoteMessages{
-                if (value.attachments?.count ?? 0) > 0 ,!value.messageId.isEmpty{
-                    try await  localStorageManager.saveMedia(arr: value.attachments ?? [], conversationId: conversationId, customType: value.customType ?? "", sentAt: value.sentAt ?? 0, messageId: value.messageId ?? "", userName: value.senderInfo?.userName ?? "")
+            
+            if onlyLocal == true{
+                //only fetch local messages
+                let localMessages = try await localStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal : onlyLocal)
+                return localMessages
+            }else{
+                // Fetch from remote and sync
+                let remoteMessages = try await remoteStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal : onlyLocal)
+                try await localStorageManager.saveAllMessages(remoteMessages, conversationId: conversationId)
+                // saving media simultanously in conversation
+                for value in remoteMessages{
+                    if (value.attachments?.count ?? 0) > 0 ,!value.messageId.isEmpty{
+                        try await  localStorageManager.saveMedia(arr: value.attachments ?? [], conversationId: conversationId, customType: value.customType ?? "", sentAt: value.sentAt ?? 0, messageId: value.messageId ?? "", userName: value.senderInfo?.userName ?? "")
+                    }
                 }
+                let localMessages = try await localStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal : onlyLocal)
+                return localMessages
             }
-            let localMessages = try await localStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp)
-            return localMessages
         } catch {
             print("Error syncing with remote: \(error)")
             throw error
@@ -257,6 +264,39 @@ public class HybridStorageManager: ChatStorageManager {
             try await localStorageManager.updateMessageAsDeletedLocally(conversationId: conversationId, messageId: messageId)
         } catch {
             print("Error updating member count in group conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func doesMessageExistInMessagesDB(conversationId: String, messageId: String) async throws -> Bool {
+        do {
+            let x = try await localStorageManager.doesMessageExistInMessagesDB(conversationId: conversationId, messageId: messageId)
+            return x
+        } catch {
+            print("Error updating member count in group conversation with hybrid: \(error)")
+            throw error
+        }
+    }
+    
+    public func getLastInputTextInConversation(conversationId: String) async throws -> String {
+        do {
+            let x = try await localStorageManager.getLastInputTextInConversation(conversationId: conversationId)
+            return x
+        } catch {
+            print("Error: \(error)")
+            throw error
+        }
+    }
+    
+    public func saveLastInputTextInConversation(text: String, conversationId: String) async throws {
+    }
+    
+    public func getMemberCount(conversationId: String) async throws -> Int {
+        do {
+            let x = try await localStorageManager.getMemberCount(conversationId: conversationId)
+            return x
+        } catch {
+            print("Error: \(error)")
             throw error
         }
     }

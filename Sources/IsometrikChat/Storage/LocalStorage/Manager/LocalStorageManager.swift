@@ -133,7 +133,7 @@ public class LocalStorageManager: ChatStorageManager {
 
 
     
-    public func fetchMessages(conversationId: String,lastMessageTimestamp: String) async throws -> [ISMChatMessagesDB] {
+    public func fetchMessages(conversationId: String,lastMessageTimestamp: String,onlyLocal : Bool) async throws -> [ISMChatMessagesDB] {
         do {
             let descriptor = FetchDescriptor<ISMChatMessagesDB>(
                 predicate: #Predicate { $0.conversationId == conversationId }
@@ -968,7 +968,71 @@ public class LocalStorageManager: ChatStorageManager {
     }
 
 
+    public func doesMessageExistInMessagesDB(conversationId: String, messageId: String) async throws -> Bool {
+        let fetchDescriptor = FetchDescriptor<ISMChatMessagesDB>(
+                predicate: #Predicate { $0.conversationId == conversationId && $0.messageId == messageId }
+            )
+            
+            do {
+                let results = try modelContext.fetch(fetchDescriptor)
+                return !results.isEmpty
+            } catch {
+                print("Failed to fetch messages: \(error)")
+                return false
+            }
+    }
     
+    public func getLastInputTextInConversation(conversationId: String) async throws -> String {
+        let fetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId}
+        )
+
+        do {
+            if let conversation = try modelContext.fetch(fetchDescriptor).first {
+                return conversation.lastInputText ?? ""
+            }else{
+                return ""
+            }
+        } catch {
+            print("❌ Error getting last input text: \(error.localizedDescription)")
+            return ""
+        }
+    }
+    
+    public func saveLastInputTextInConversation(text: String, conversationId: String) async throws {
+        let fetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId}
+        )
+
+        do {
+            if let conversation = try modelContext.fetch(fetchDescriptor).first {
+                await MainActor.run {
+                    conversation.lastInputText = text
+                    // ✅ Save changes
+                    try? modelContext.save()
+                }
+            }
+        } catch {
+            print("❌ Error updating last message delivery: \(error.localizedDescription)")
+        }
+    }
+    
+    public func getMemberCount(conversationId: String) async throws -> Int {
+        let fetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId}
+        )
+
+        do {
+            if let conversation = try modelContext.fetch(fetchDescriptor).first {
+                return conversation.membersCount
+            }else{
+                return -1
+            }
+        } catch {
+            print("❌ Error updating last message delivery: \(error.localizedDescription)")
+            return -1
+        }
+    }
  
     
     // 🔄 Fetch Other Conversations

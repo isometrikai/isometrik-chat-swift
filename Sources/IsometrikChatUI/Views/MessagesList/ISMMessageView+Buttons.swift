@@ -115,7 +115,9 @@ extension ISMMessageView{
     
     /// Saves the last input text if it has not been sent.
     func saveMyLastInputTextIfNotSent(){
-//        self.realmManager.saveLastInputTextInConversation(text: textFieldtxt, conversationId: self.conversationID ?? "")
+        Task{
+            await self.viewModelNew.saveLastInputTextInConversation(text: textFieldtxt, conversationId: self.conversationID ?? "")
+        }
     }
     
     /// Returns a view for the back button with appropriate actions based on the state.
@@ -460,24 +462,24 @@ extension ISMMessageView{
     func blockUserButton() -> some View{
         Button {
             if self.conversationDetail != nil{
-//                if isMessagingEnabled(){
-//                    stateViewModel.blockThisChat = true
-//                }
+                if isMessagingEnabled(){
+                    stateViewModel.blockThisChat = true
+                }
             }else{
                 self.createConversation { _ in
-//                    if isMessagingEnabled(){
-//                        stateViewModel.blockThisChat = true
-//                    }
+                    if isMessagingEnabled(){
+                        stateViewModel.blockThisChat = true
+                    }
                 }
             }
         } label: {
             HStack(spacing: 10){
                 appearance.images.blockIcon
-//                if self.conversationDetail?.conversationDetails?.messagingDisabled == true && realmManager.messages.last?.last?.initiatorId == userData?.userId{
-//                    Text("UnBlock User")
-//                }else{
-//                    Text("Block User")
-//                }
+                if self.conversationDetail?.conversationDetails?.messagingDisabled == true && viewModelNew.messages.last?.last?.initiatorId == userData?.userId{
+                    Text("UnBlock User")
+                }else{
+                    Text("Block User")
+                }
             }
         }
     }

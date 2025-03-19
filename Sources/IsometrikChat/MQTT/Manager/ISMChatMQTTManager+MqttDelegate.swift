@@ -121,6 +121,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                             try? await self.localStorageManager.updateLastMsgAsDeliver(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt:  messageInfo.updatedAt ?? 0)
                             try? await self.localStorageManager.addDeliveredToUser(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? -1)
                             try? await self.localStorageManager.updateAllDeliveryStatus(conversationId: messageInfo.conversationId ?? "")
+                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageDelivered.name, object: nil,userInfo: ["data": data,"error" : ""])
                         }
 //                        self.realmManager.updateLastmsgDeliver(conId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
 //                        self.realmManager.addDeliveredToUser(convId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? -1)
@@ -145,8 +146,8 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                         
 //                        self.realmManager.updateLastmsgRead(conId: messageInfo.conversationId ?? "",messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
                         NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
+                        NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageRead.name, object: nil,userInfo: ["data": data,"error" : ""])
                     }
-//                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageRead.name, object: nil,userInfo: ["data": data,"error" : ""])
                 case .failure(let error):
                     print("Error: \(error)")
                 }
@@ -178,6 +179,7 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                                            "updatedAt": messageInfo.updatedAt ?? 0
                                        ]
                             NotificationCenter.default.post(name: NSNotification.mqttUpdateReadStatus, object: nil, userInfo: dataNew)
+                            NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMultipleMessageRead.name, object: nil,userInfo: ["data": data,"error" : ""])
                         }
 //                        self.realmManager.updateLastmsgRead(conId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.sentAt ?? 00)
 //                        self.realmManager.updateAllReadStatus(conId: messageInfo.conversationId ?? "")

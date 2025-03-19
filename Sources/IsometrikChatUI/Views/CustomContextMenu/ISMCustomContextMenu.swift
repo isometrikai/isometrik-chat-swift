@@ -30,6 +30,7 @@ struct ISMCustomContextMenu: View {
     let isGroup : Bool
     let isReceived : Bool
     let pasteboard = UIPasteboard.general
+    let memberCount : Int
     
     @Environment(\.viewController) public var viewControllerHolder: UIViewController?
     
@@ -100,7 +101,7 @@ struct ISMCustomContextMenu: View {
                 }
                 
                 // Message info preview
-                ISMMessageInfoSubView(previousAudioRef: $previousAudioRef, messageType: ISMChatHelper.getMessageType(message: message), message: message, viewWidth: viewWidth, isReceived: self.isReceived, messageDeliveredType: ISMChatHelper.checkMessageDeliveryType(message: message, isGroup: self.isGroup ,memberCount: /*realmManager.getMemberCount(convId: self.conversationId)*/0, isOneToOneGroup: ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup), conversationId: conversationId,isGroup: self.isGroup, groupconversationMember: [], fromBroadCastFlow: self.fromBroadCastFlow)
+                ISMMessageInfoSubView(previousAudioRef: $previousAudioRef, messageType: ISMChatHelper.getMessageType(message: message), message: message, viewWidth: viewWidth, isReceived: self.isReceived, messageDeliveredType: ISMChatHelper.checkMessageDeliveryType(message: message, isGroup: self.isGroup ,memberCount: memberCount, isOneToOneGroup: ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup), conversationId: conversationId,isGroup: self.isGroup, groupconversationMember: [], fromBroadCastFlow: self.fromBroadCastFlow)
                     .padding(.horizontal,15)
                 
 //                 Context menu options list

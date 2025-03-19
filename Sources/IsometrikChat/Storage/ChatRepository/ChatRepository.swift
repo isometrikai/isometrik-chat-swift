@@ -60,8 +60,8 @@ public class ChatRepository {
         return try await activeStorageManager.updateUnreadCountThroughConversation(conversationId: conversationId, count: count, reset: reset)
     }
     
-    public func fetchMessages(conversationId: String,lastMessageTimestamp : String) async throws -> [ISMChatMessagesDB] {
-        return try await activeStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp)
+    public func fetchMessages(conversationId: String,lastMessageTimestamp : String,onlyLocal : Bool) async throws -> [ISMChatMessagesDB] {
+        return try await activeStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp, onlyLocal: onlyLocal)
     }
     
     public func saveAllMessages(_ messages: [ISMChatMessagesDB], conversationId: String) async throws {
@@ -116,13 +116,27 @@ public class ChatRepository {
         return try await activeStorageManager.changeTypingStatus(conversationId: conversationId, status: status)
     }
     
-    public func updateMemberCountInGroup(conversationId: String, inc: Bool, dec: Bool, count: Int) async throws{
-        return try await activeStorageManager.updateMemberCountInGroup(conversationId: conversationId, inc: inc, dec: dec, count: count)
-    }
-    
-    
     public func updateMessageAsDeletedLocally(conversationId: String,messageId: String) async throws{
         return try await activeStorageManager.updateMessageAsDeletedLocally(conversationId: conversationId, messageId: messageId)
     }
     
+    public func doesMessageExistInMessagesDB(conversationId: String,messageId: String) async throws -> Bool{
+        return try await activeStorageManager.doesMessageExistInMessagesDB(conversationId: conversationId, messageId: messageId)
+    }
+    
+    public func getLastInputTextInConversation(conversationId : String) async throws -> String{
+        return try await activeStorageManager.getLastInputTextInConversation(conversationId: conversationId)
+    }
+    
+    public func saveLastInputTextInConversation(text: String, conversationId: String) async throws{
+        return try await activeStorageManager.saveLastInputTextInConversation(text: text, conversationId: conversationId)
+    }
+    
+    public func getMemberCount(conversationId:String) async throws -> Int{
+        return try await activeStorageManager.getMemberCount(conversationId: conversationId)
+    }
+    
+    public func updateMemberCountInGroup(conversationId: String, inc: Bool, dec: Bool, count: Int) async throws{
+        return try await activeStorageManager.updateMemberCountInGroup(conversationId: conversationId, inc: inc, dec: dec, count: count)
+    }
 }

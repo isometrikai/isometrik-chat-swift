@@ -33,6 +33,7 @@ struct ISMMessageSubView: View {
     let pasteboard = UIPasteboard.general
     var isGroup : Bool?
     let fromBroadCastFlow : Bool?
+    let memberCount : Int?
     
    
     @Binding var navigateToDeletePopUp : Bool
@@ -1612,6 +1613,7 @@ struct ISMMessageSubView: View {
                             viewWidth: self.viewWidth,
                             isGroup: self.isGroup ?? false,
                             isReceived: self.isReceived,
+                            memberCount: self.memberCount ?? 0,
                             selectedMessageToReply: $selectedMessageToReply,
                             navigateToMessageInfo: $navigatetoMessageInfo,
                             showMessageInfoInsideMessage: $showMessageInfoInsideMessage,
@@ -1650,9 +1652,9 @@ struct ISMMessageSubView: View {
                 
             }
         }
-//        .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow, onClose: {
-//            
-//        }).environmentObject(self.realmManager), isActive: $navigatetoMessageInfo))
+        .background(NavigationLink("", destination: ISMMessageInfoView(conversationId: conversationId,message: message, viewWidth: 250,mediaType: .Image, isGroup: self.isGroup ?? false,memberCount: self.memberCount ?? 0, groupMember: self.groupconversationMember,fromBroadCastFlow: self.fromBroadCastFlow, onClose: {
+            
+        }), isActive: $navigatetoMessageInfo))
 //        .background(NavigationLink("", destination:  ISMContactInfoView(conversationID: "",viewModel:self.viewModel, isGroup: false,onlyInfo: true,selectedToShowInfo : self.navigatetoUser,navigateToSocialProfileId: $navigateToSocialProfileId, navigateToExternalUserListToAddInGroup: $navigateToExternalUserListToAddInGroup).environmentObject(self.realmManager), isActive: $navigateToInfo))
         .padding(.bottom, (message.reactions?.count ?? 0 > 0) ? 20 : 0)
         .frame(maxWidth: .infinity, alignment: isReceived ? .leading : .trailing)

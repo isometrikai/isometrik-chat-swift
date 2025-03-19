@@ -78,7 +78,7 @@ public class RemoteStorageManager: ChatStorageManager {
        
     }
     
-    public func fetchMessages(conversationId: String,lastMessageTimestamp : String) async throws -> [ISMChatMessagesDB] {
+    public func fetchMessages(conversationId: String,lastMessageTimestamp : String,onlyLocal : Bool) async throws -> [ISMChatMessagesDB] {
         return try await withCheckedThrowingContinuation { continuation in
             messageViewModel.getMessages(conversationId: conversationId, lastMessageTimestamp: "") { messages in
                 if let messages = messages {
@@ -164,8 +164,22 @@ public class RemoteStorageManager: ChatStorageManager {
         
     }
     
+    public func getMemberCount(conversationId: String) async throws -> Int {
+        return -1
+    }
+    
     public func updateMessageAsDeletedLocally(conversationId: String, messageId: String) async throws {
         
     }
+    public func doesMessageExistInMessagesDB(conversationId: String, messageId: String) async throws -> Bool {
+        return false
+    }
     
+    public func getLastInputTextInConversation(conversationId: String) async throws -> String {
+        return ""
+    }
+    
+    public func saveLastInputTextInConversation(text: String, conversationId: String) async throws {
+        
+    }
 }

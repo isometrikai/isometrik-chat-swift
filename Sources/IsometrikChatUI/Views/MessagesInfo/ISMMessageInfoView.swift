@@ -21,20 +21,20 @@ public struct ISMMessageInfoView: View {
     
     // Required message and conversation properties
     let conversationId : String
-    let message : MessagesDB
+    let message : ISMChatMessagesDB
     let viewWidth : CGFloat
     let mediaType : ISMChatMediaType
     var viewModel = ChatsViewModel()
     
     // Group chat properties
     let isGroup : Bool
+    let memberCount : Int
     let groupMember : [ISMChatGroupMember]
     let fromBroadCastFlow : Bool?
     
     // Message delivery tracking
     @State  var deliveredAt : Double?
     @State  var readAt : Double?
-    @EnvironmentObject var realmManager : RealmManager
     @State var deliveredUsers : [ISMChatUser]?
     @State var readUsers : [ISMChatUser]?
     
@@ -55,9 +55,8 @@ public struct ISMMessageInfoView: View {
                         Spacer()
                     }.padding(.top,15)
                     
-//                    ISMMessageInfoSubView(previousAudioRef: $previousAudioRef, messageType: ISMChatHelper.getMessageType(message: message), message: message, viewWidth: viewWidth, isReceived: false, messageDeliveredType: ISMChatHelper.checkMessageDeliveryType(message: message, isGroup: self.isGroup ,memberCount: realmManager.getMemberCount(convId: self.conversationId), isOneToOneGroup: ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup), conversationId: conversationId,isGroup: self.isGroup, groupconversationMember: groupMember, fromBroadCastFlow: self.fromBroadCastFlow)
-//                        .padding(.trailing,15)
-//                        .environmentObject(self.realmManager)
+                    ISMMessageInfoSubView(previousAudioRef: $previousAudioRef, messageType: ISMChatHelper.getMessageType(message: message), message: message, viewWidth: viewWidth, isReceived: false, messageDeliveredType: ISMChatHelper.checkMessageDeliveryType(message: message, isGroup: self.isGroup ,memberCount: memberCount, isOneToOneGroup: ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup), conversationId: conversationId,isGroup: self.isGroup, groupconversationMember: groupMember, fromBroadCastFlow: self.fromBroadCastFlow)
+                        .padding(.trailing,15)
                     
                 }.modifier(BackgroundImageMessageInfo())
                 List{
@@ -311,7 +310,7 @@ public struct ISMMessageInfoView: View {
     ///   - message: The message to display the header for
     ///   - color: Text color for the header
     ///   - font: Font to use for the header
-    func sectionHeader(firstMessage message : MessagesDB,color : Color,font : Font) -> some View{
+    func sectionHeader(firstMessage message : ISMChatMessagesDB,color : Color,font : Font) -> some View{
        let sentAt = message.sentAt
        let date = NSDate().descriptiveStringLastSeen(time: sentAt,isSectionHeader: true)
         return ZStack{

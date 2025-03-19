@@ -146,7 +146,22 @@ public class ConversationsViewModel: ObservableObject {
     
     public func loadMessages(conversationId : String,lastMessageTimestamp: String) async {
         do {
-            let fetchedMessages = try await chatRepository.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp)
+            let fetchedMessages = try await chatRepository.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal: false)
+            DispatchQueue.main.async {
+                //i have filter some action type to not show in UI
+                self.allMessages = fetchedMessages.filter { message in
+                                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
+                                        }
+                self.messages = self.getSectionMessage(for: self.allMessages)
+            }
+        } catch {
+            print("Error loading conversations: \(error)")
+        }
+    }
+    
+    public func loadMessagesLocallyToUpdateUI(conversationId : String,lastMessageTimestamp: String) async {
+        do {
+            let fetchedMessages = try await chatRepository.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal: true)
             DispatchQueue.main.async {
                 //i have filter some action type to not show in UI
                 self.allMessages = fetchedMessages.filter { message in
@@ -349,6 +364,44 @@ public class ConversationsViewModel: ObservableObject {
             try await chatRepository.updateMessageAsDeletedLocally(conversationId: conversationId, messageId: messageId)
         } catch {
             print("Unable to update member count in group: \(error)")
+        }
+    }
+    
+    public func doesMessageExistInMessagesDB(conversationId: String,messageId: String) async -> Bool{
+        do {
+           let x =  try await chatRepository.doesMessageExistInMessagesDB(conversationId: conversationId, messageId: messageId)
+            return x
+        } catch {
+            print("Unable to update member count in group: \(error)")
+            return false
+        }
+    }
+    
+    public func getLastInputTextInConversation(conversationId : String) async -> String{
+        do {
+            let x =  try await chatRepository.getLastInputTextInConversation(conversationId: conversationId)
+            return x
+        } catch {
+            print("Unable to get last input text : \(error)")
+            return ""
+        }
+    }
+    
+    public func saveLastInputTextInConversation(text: String, conversationId: String) async{
+        do {
+            try await chatRepository.saveLastInputTextInConversation(text: text, conversationId: conversationId)
+        } catch {
+            print("Unable to save last input text : \(error)")
+        }
+    }
+    
+    public func getMemberCount(conversationId:String) async -> Int{
+        do {
+            let x =  try await chatRepository.getMemberCount(conversationId: conversationId)
+            return x
+        } catch {
+            print("Unable to get last input text : \(error)")
+            return -1
         }
     }
 }
