@@ -1027,11 +1027,11 @@ public struct ISMMessageView: View {
                     self.chatViewModel.allMessages = msg.messages
                     self.chatViewModel.allMessages = self.chatViewModel.allMessages?.filter { message in
                         if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
-                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated" && message.action != ISMChatActionType.conversationCreated.value
+                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated" && message.action != ISMChatActionType.conversationCreated.value && message.action != "conversationDetailsUpdated"
                         }else if isGroup == false {
-                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
+                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated" && message.action != "conversationDetailsUpdated"
                         } else {
-                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
+                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated" && message.action != "conversationDetailsUpdated"
                         }
                     }
                     self.realmManager.manageMessagesList(arr: self.chatViewModel.allMessages ?? [])
