@@ -24,7 +24,7 @@ struct ISMForwardToContactView: View {
     @ObservedObject var conversationViewModel = ConversationViewModel()
     
     /// Messages to be forwarded
-    @Binding var messages: [MessagesDB]
+    @Binding var messages: [ISMChatMessagesDB]
     
     /// Array of selected usernames for display
     @State var selectedUser: [String] = []
@@ -271,7 +271,7 @@ private extension ISMForwardToContactView {
                         messageGroup.enter()
                         viewModel.forwardMessage(conversationIds: [conversationId],
                                                  message: singleMessage.body,
-                                                 attachments: singleMessage.customType == ISMChatMediaType.Text.value ? nil : singleMessage.attachments.first,
+                                                 attachments: singleMessage.customType == ISMChatMediaType.Text.value ? nil : singleMessage.attachments?.first,
                                                  customType: singleMessage.customType,
                                                  placeName: singleMessage.metaData?.locationAddress,
                                                  metaData: singleMessage.metaData ?? nil) {

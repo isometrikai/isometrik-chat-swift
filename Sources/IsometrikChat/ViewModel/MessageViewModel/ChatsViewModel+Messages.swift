@@ -407,7 +407,7 @@ extension ChatsViewModel{
         }
     }
     
-    public func forwardToMutipleUsers(users : [ISMChatUserDB],messages : [MessagesDB],completion:@escaping()->()){
+    public func forwardToMutipleUsers(users : [ISMChatUserDB],messages : [ISMChatMessagesDB],completion:@escaping()->()){
         var newConversationIds: [String] = []
         
         DispatchQueue.global(qos: .userInitiated).async {
@@ -438,7 +438,7 @@ extension ChatsViewModel{
                         messageGroup.enter()
                         self.forwardMessage(conversationIds: [conversationId],
                                                  message: singleMessage.body,
-                                                 attachments: singleMessage.customType == ISMChatMediaType.Text.value ? nil : singleMessage.attachments.first,
+                                            attachments: singleMessage.customType == ISMChatMediaType.Text.value ? nil : singleMessage.attachments?.first,
                                                  customType: singleMessage.customType,
                                                  placeName: singleMessage.metaData?.locationAddress,
                                                  metaData: singleMessage.metaData ?? nil) {
@@ -459,7 +459,7 @@ extension ChatsViewModel{
     
     
     //MARK: - forward message
-    public func forwardMessage(conversationIds : [String],message : String,attachments:AttachmentDB? ,customType : String,placeName : String? = nil,contactInfo: [ISMChatPhoneContact]? = [],metaData : MetaDataDB? = nil,completion:@escaping()->()){
+    public func forwardMessage(conversationIds : [String],message : String,attachments:ISMChatAttachmentDB? ,customType : String,placeName : String? = nil,contactInfo: [ISMChatPhoneContact]? = [],metaData : ISMChatMetaDataDB? = nil,completion:@escaping()->()){
         var body : [String : Any]
         var metaDataValue : [String : Any] = [:]
         let deviceId = UniqueIdentifierManager.shared.getUniqueIdentifier()
@@ -513,8 +513,8 @@ extension ChatsViewModel{
                 body["notificationBody"] = "👤 \(result.firstDisplayName ?? "") and \((result.count) - 1) other contact"
             }
             var contacts : [[String: Any]] = []
-            if let metaData = metaData{
-                for contact in metaData.contacts {
+            if let contactsValue = metaData?.contacts{
+                for contact in contactsValue {
                     let contactDictionary: [String: Any] = [
                         "contactName": contact.contactName ?? "",
                         "contactIdentifier": contact.contactIdentifier ?? "",

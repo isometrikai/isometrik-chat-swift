@@ -178,7 +178,7 @@ extension ISMMessageView{
                               navigateToCollectionLink: $navigateToCollectionLink,
                               viewDetailsForPaymentRequest: $viewDetailsForPaymentRequest,
                               declinePaymentRequest: $declinePaymentRequest,
-                              showInviteeListInDineInRequest: $showInviteeListInDineInRequest)
+                              showInviteeListInDineInRequest: $showInviteeListInDineInRequest, viewModelNew: self.viewModelNew)
 //            .environmentObject(self.realmManager)
         }
     }

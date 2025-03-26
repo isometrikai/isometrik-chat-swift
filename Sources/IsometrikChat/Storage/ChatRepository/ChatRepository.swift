@@ -139,4 +139,8 @@ public class ChatRepository {
     public func updateMemberCountInGroup(conversationId: String, inc: Bool, dec: Bool, count: Int) async throws{
         return try await activeStorageManager.updateMemberCountInGroup(conversationId: conversationId, inc: inc, dec: dec, count: count)
     }
+    
+    public func addLastMessageOnAddAndRemoveReaction(conversationId: String,action : String,emoji : String,userId: String) async throws{
+        return try await activeStorageManager.addLastMessageOnAddAndRemoveReaction(conversationId: conversationId, action: action, emoji: emoji, userId: userId)
+    }
 }

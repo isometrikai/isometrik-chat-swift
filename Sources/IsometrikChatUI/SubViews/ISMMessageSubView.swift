@@ -93,6 +93,7 @@ struct ISMMessageSubView: View {
     @Binding var showInviteeListInDineInRequest : ISMChatMessagesDB?
     
     @State private var imageUrl: String?
+    @ObservedObject var viewModelNew: ConversationsViewModel
     
     
     //MARK:  - BODY
@@ -1701,14 +1702,13 @@ struct ISMMessageSubView: View {
                 }
             }
         })
-//        .sheet(isPresented: $showReactionsDetail) {
-//            ISMReactionDetailView(message: self.message, groupconversationMember: self.groupconversationMember, isGroup: self.isGroup ?? false, opponentDeatil: self.opponentDeatil, showReactionDetail: $showReactionsDetail, reactionRemoved: $reactionRemoved)
-//                .environmentObject(self.realmManager)
-//                .presentationDetents(
-//                    [.medium, .large],
-//                    selection: $settingsDetent
-//                )
-//        }
+        .sheet(isPresented: $showReactionsDetail) {
+            ISMReactionDetailView(message: self.message, groupconversationMember: self.groupconversationMember, isGroup: self.isGroup ?? false, opponentDeatil: self.opponentDeatil, showReactionDetail: $showReactionsDetail, reactionRemoved: $reactionRemoved,viewModelNew: self.viewModelNew)
+                .presentationDetents(
+                    [.medium, .large],
+                    selection: $settingsDetent
+                )
+        }
         .onChange(of: reactionRemoved, { _, _ in
             if !reactionRemoved.isEmpty{
 //                realmManager.removeReactionFromMessage(conversationId: self.message.conversationId, messageId: self.message.messageId, reaction: reactionRemoved, userId: userData?.userId ?? "")

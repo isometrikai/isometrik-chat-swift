@@ -23,7 +23,6 @@ struct ISMChatBroadCastInfo: View {
     // View Models and Managers
     @ObservedObject var viewModel = ChatsViewModel()
     @ObservedObject var conversationviewModel = ConversationViewModel()
-    @EnvironmentObject var realmManager: RealmManager
     
     // UI Configuration
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
@@ -103,7 +102,7 @@ struct ISMChatBroadCastInfo: View {
             .navigationBarItems(leading : navBarLeadingBtn,trailing: trailingBarLeadingBtn)
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(isPresented: $navigatetoAddMember, destination: {
-                ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.conversationviewModel,selectUserFor: .AddMemberInBroadcast,groupCastId: self.groupcastId ?? "", groupCastIdToNavigate : $groupCastIdToNavigate).environmentObject(realmManager)
+                ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.conversationviewModel,selectUserFor: .AddMemberInBroadcast,groupCastId: self.groupcastId ?? "", groupCastIdToNavigate : $groupCastIdToNavigate)
             })
             .onAppear {
                 viewModel.getBroadMembers(groupcastId: self.groupcastId ?? "") { data in

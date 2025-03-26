@@ -30,7 +30,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToCollectionLink(collectionId : String,completeUrl: String)
     func backButtonAction()
     func navigateToShareContact(conversationId : String)
-    func viewDetailForPaymentRequest(orderId : String, paymentRequestId : String,isReceived : Bool,senderInfo : UserDB?,paymentRequestUserId : String)
+    func viewDetailForPaymentRequest(orderId : String, paymentRequestId : String,isReceived : Bool,senderInfo : ISMChatUserDB?,paymentRequestUserId : String)
     func declinePaymentRequest(paymentRequestUserId : String, paymentRequestId : String,completion:@escaping()->())
     func dineInInvite(inviteTitle : String,messageId : String, groupcastId : String,reason : String,createdByUserId : String,declineByUserId : String,inviteStatus : Int,inviteSenderIsometricId : String)
 }

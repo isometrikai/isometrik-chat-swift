@@ -404,4 +404,12 @@ public class ConversationsViewModel: ObservableObject {
             return -1
         }
     }
+    
+    public func addLastMessageOnAddAndRemoveReaction(conversationId: String,action : String,emoji : String,userId: String) async {
+        do {
+              try await chatRepository.addLastMessageOnAddAndRemoveReaction(conversationId: conversationId, action: action, emoji: emoji, userId: userId)
+        } catch {
+            print("Unable to add last message on add and remove reaction : \(error)")
+        }
+    }
 }

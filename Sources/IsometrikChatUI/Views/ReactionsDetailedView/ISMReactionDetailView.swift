@@ -12,7 +12,7 @@ import IsometrikChat
 struct ISMReactionDetailView: View {
     
     //MARK:  - PROPERTIES
-    let message : MessagesDB // The message object containing reaction data
+    let message : ISMChatMessagesDB // The message object containing reaction data
     let groupconversationMember : [ISMChatGroupMember] // Members of the group conversation
     let isGroup : Bool // Flag to determine if the conversation is a group chat
     let opponentDeatil : ISMChatUser // Details of the opponent user
@@ -21,8 +21,8 @@ struct ISMReactionDetailView: View {
     var viewModel = ChatsViewModel() // ViewModel for chat operations
     @Binding var showReactionDetail : Bool // Binding to control the visibility of the reaction detail view
     @Binding var reactionRemoved : String // Binding to track the removed reaction
-    @EnvironmentObject var realmManager : RealmManager // Environment object for managing Realm database
     var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig // User configuration data
+    @ObservedObject var viewModelNew: ConversationsViewModel
     
     //MARK:  - LIFECYCLE
     var body: some View {
@@ -36,7 +36,7 @@ struct ISMReactionDetailView: View {
                     }) {
                         VStack{
                             Spacer()
-                            let count = message.reactions.count // Count of total reactions
+                            let count = message.reactions?.count // Count of total reactions
                             Text("All \(count)")
                                 .foregroundColor(Color(hex: "#294566"))
                                 .font(Font.regular(size: 18))
@@ -54,11 +54,12 @@ struct ISMReactionDetailView: View {
                         } .frame(width: 50)
                     }
                     // Buttons for each reaction type
-                    ForEach(message.reactions.indices, id: \.self) { index in
+                    if let reactions = message.reactions{
+                    ForEach(reactions.indices, id: \.self) { index in
                         Button(action: {
                             selectedTab = index + 1 // Set selected tab to the corresponding reaction
                         }) {
-                            let emoji = ISMChatHelper.getEmoji(valueString: message.reactions[index].reactionType) // Get emoji for the reaction
+                            let emoji = ISMChatHelper.getEmoji(valueString: reactions[index].reactionType) // Get emoji for the reaction
                             VStack{
                                 Spacer()
                                 Text(emoji)
@@ -78,6 +79,7 @@ struct ISMReactionDetailView: View {
                             }.frame(width: 50)
                         }
                     }
+                }
                 }.frame(height: 50)
                     .padding()
             }
@@ -104,14 +106,16 @@ struct ISMReactionDetailView: View {
             } else {
                 List {
                     // List users who reacted with the selected reaction
-                    ForEach(Array(message.reactions[selectedTab - 1].users), id: \.self) { item in
-                        if isGroup == true{
-                            subViewForGroup(userId: item, reactionType: message.reactions[selectedTab - 1].reactionType)
-                        }else{
-                            subView(userId: item, profilePicture: item == userData?.userId ? (userData?.userProfileImage ?? "") : (opponentDeatil.userProfileImageUrl ?? ""),
-                                    userName: opponentDeatil.userName ?? "",
-                                    userIdentifier: opponentDeatil.userIdentifier ?? "",
-                                    reactionType: message.reactions[selectedTab - 1].reactionType)
+                    if let reactions = message.reactions{
+                        ForEach(Array(reactions[selectedTab - 1].users), id: \.self) { item in
+                            if isGroup == true{
+                                subViewForGroup(userId: item, reactionType: reactions[selectedTab - 1].reactionType)
+                            }else{
+                                subView(userId: item, profilePicture: item == userData?.userId ? (userData?.userProfileImage ?? "") : (opponentDeatil.userProfileImageUrl ?? ""),
+                                        userName: opponentDeatil.userName ?? "",
+                                        userIdentifier: opponentDeatil.userIdentifier ?? "",
+                                        reactionType: reactions[selectedTab - 1].reactionType)
+                            }
                         }
                     }
                 }.listStyle(.plain)
@@ -119,13 +123,15 @@ struct ISMReactionDetailView: View {
             Spacer()
         }.onAppear(perform: {
             // Populate allReactions dictionary when the view appears
-            for reaction in message.reactions {
-                let usersArray = Array(reaction.users) // Convert users set to array
-                if var users = allReactions[reaction.reactionType] {
-                    users.append(contentsOf: usersArray) // Append users to existing array
-                    allReactions[reaction.reactionType] = users
-                } else {
-                    allReactions[reaction.reactionType] = usersArray // Create new entry for the reaction type
+            if let reactions = message.reactions{
+                for reaction in reactions {
+                    let usersArray = Array(reaction.users) // Convert users set to array
+                    if var users = allReactions[reaction.reactionType] {
+                        users.append(contentsOf: usersArray) // Append users to existing array
+                        allReactions[reaction.reactionType] = users
+                    } else {
+                        allReactions[reaction.reactionType] = usersArray // Create new entry for the reaction type
+                    }
                 }
             }
         })
@@ -138,7 +144,10 @@ struct ISMReactionDetailView: View {
             reactionRemoved = reaction // Update the removed reaction
             showReactionDetail = false // Hide the reaction detail view
             // Log the action in the database
-            realmManager.addLastMessageOnAddAndRemoveReaction(conversationId: self.message.conversationId, action: ISMChatActionType.reactionRemove.value, emoji: reaction, userId: userData?.userId ?? "")
+//            realmManager.addLastMessageOnAddAndRemoveReaction(conversationId: self.message.conversationId, action: ISMChatActionType.reactionRemove.value, emoji: reaction, userId: userData?.userId ?? "")
+            Task{
+                await viewModelNew.addLastMessageOnAddAndRemoveReaction(conversationId: self.message.conversationId, action: ISMChatActionType.reactionRemove.value, emoji: reaction, userId: userData?.userId ?? "")
+            }
         }
     }
     

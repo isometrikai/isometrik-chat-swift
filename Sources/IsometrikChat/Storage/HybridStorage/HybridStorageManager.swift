@@ -300,4 +300,14 @@ public class HybridStorageManager: ChatStorageManager {
             throw error
         }
     }
+    
+    public func addLastMessageOnAddAndRemoveReaction(conversationId: String, action: String, emoji: String, userId: String) async throws {
+        do {
+            let x = try await localStorageManager.addLastMessageOnAddAndRemoveReaction(conversationId: conversationId, action: action, emoji: emoji, userId: userId)
+            return x
+        } catch {
+            print("Error: \(error)")
+            throw error
+        }
+    }
 }

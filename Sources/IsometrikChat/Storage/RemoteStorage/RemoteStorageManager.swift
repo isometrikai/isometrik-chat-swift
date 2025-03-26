@@ -182,4 +182,8 @@ public class RemoteStorageManager: ChatStorageManager {
     public func saveLastInputTextInConversation(text: String, conversationId: String) async throws {
         
     }
+    
+    public func addLastMessageOnAddAndRemoveReaction(conversationId: String, action: String, emoji: String, userId: String) async throws {
+        
+    }
 }

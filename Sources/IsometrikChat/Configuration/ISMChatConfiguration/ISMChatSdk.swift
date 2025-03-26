@@ -118,7 +118,7 @@ public class ISMChatSdk{
         //mqttSession
         let viewcontrollers = ISMChatViewController(conversationListViewController: conversationListViewControllerName, messagesListViewController: messagesListViewControllerName)
         
-        let realmManager = RealmManager.shared.openRealm(for: userConfig.userId)
+//        let realmManager = RealmManager.shared.openRealm(for: userConfig.userId)
         
         let mqttSession = ISMChatMQTTManager(mqttConfiguration: mqttConfiguration, projectConfiguration: projectConfiguration, userdata: userConfig,viewcontrollers: viewcontrollers,framework: self.hostFrameworksType)
         mqttSession.connect(clientId: userConfig.userId)
@@ -140,7 +140,8 @@ public class ISMChatSdk{
                 self.mqttSession?.unSubscribe()
             }
             //3. delete local data
-            RealmManager.shared.deleteRealm(for: userId)
+//            RealmManager.shared.deleteRealm(for: userId)
+            resetSwiftData()
             //4. For call
             IsometrikCall().clearSession()
             ISMCallManager.shared.invalidatePushKitAPNSDeviceToken(type: .voIP)
@@ -148,13 +149,30 @@ public class ISMChatSdk{
             self.chatInitialized = false
         }
     }
+
+    func resetSwiftData() {
+        guard let storeURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?.appendingPathComponent("ISMChatSdk.store") else {
+            return
+        }
+        
+        do {
+            if FileManager.default.fileExists(atPath: storeURL.path) {
+                try FileManager.default.removeItem(at: storeURL)
+                print("SwiftData storage deleted successfully.")
+            }
+        } catch {
+            print("Error deleting SwiftData storage: \(error)")
+        }
+    }
+
     
     public func onProfileSwitch(oldUserId : String,appConfig : ISMChatConfiguration, userConfig : ISMChatUserConfig,hostFrameworkType : FrameworkType,conversationListViewControllerName : UIViewController.Type?,messagesListViewControllerName : UIViewController.Type?){
         if mqttSession != nil {
             self.mqttSession?.unSubscribe()
         }
         //3. delete local data
-        RealmManager.shared.switchProfile(oldUserId: oldUserId, newUserId: userConfig.userId)
+        resetSwiftData()
+//        RealmManager.shared.switchProfile(oldUserId: oldUserId, newUserId: userConfig.userId)
         
         self.chatInitialized = nil
         

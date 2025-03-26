@@ -16,6 +16,12 @@ public class LocalStorageManager: ChatStorageManager {
     
     public init() throws {
         let schema = Schema([ISMChatConversationDB.self, ISMChatMessagesDB.self, ISMChatUserDB.self, ISMChatConfigDB.self,ISMChatLastMessageDB.self,ISMChatConversationMetaData.self,ISMChatMessagesDB.self,ISMChatUserMetaDataDB.self,ISMChatMetaDataDB.self,ISMChatMessageDeliveryStatusDB.self,ISMChatLastMessageMemberDB.self, ISMChatMeetingDuration.self,ISMChatMentionedUserDB.self,ISMChatAttachmentDB.self, ISMChatReactionDB.self,ISMChatMeetingConfig.self])
+        if let storeURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)
+            .first?.appendingPathComponent("ISMChatSdk.store"){
+            let modelConfiguration = ModelConfiguration(schema: schema, url: storeURL)
+        }else{
+            let modelConfiguration = ModelConfiguration(schema: schema)
+        }
         let modelConfiguration = ModelConfiguration(schema: schema)
         self.modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
         self.modelContext = ModelContext(modelContainer)
@@ -1031,6 +1037,23 @@ public class LocalStorageManager: ChatStorageManager {
         } catch {
             print("❌ Error updating last message delivery: \(error.localizedDescription)")
             return -1
+        }
+    }
+    
+    public func addLastMessageOnAddAndRemoveReaction(conversationId: String, action: String, emoji: String, userId: String) async throws {
+        let fetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
+            predicate: #Predicate { $0.conversationId == conversationId}
+        )
+
+        do {
+            if let conversation = try modelContext.fetch(fetchDescriptor).first {
+                conversation.lastMessageDetails?.action = action
+                conversation.lastMessageDetails?.reactionType = emoji
+                conversation.lastMessageDetails?.userId = userId
+                try? modelContext.save()
+            }
+        } catch {
+            print("❌ Error updating last message delivery: \(error.localizedDescription)")
         }
     }
  

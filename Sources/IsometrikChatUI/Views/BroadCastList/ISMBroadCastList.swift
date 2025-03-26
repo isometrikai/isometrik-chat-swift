@@ -33,9 +33,8 @@ public struct ISMBroadCastList: View {
     
     @ObservedObject public var viewModel = ChatsViewModel()
     @ObservedObject public var conversationviewModel = ConversationViewModel()
-//    @EnvironmentObject public var realmManager : RealmManager
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    @State public var navigateToBrocastDetail : BroadCastListDB?
+    @State public var navigateToBrocastDetail : ISMChatBroadCastDetail?
     @State public var navigateToBrocastInfo : Bool = false
     @State public var navigatetoCreatBroadCast : Bool = false
     @State public var navigatetoCreatGroup : Bool = false
@@ -51,9 +50,11 @@ public struct ISMBroadCastList: View {
     @State public var query = ""
     @State var allBroadCasts : [ISMChatBroadCastDetail]? = []
     @State var storeBroadCasts : [ISMChatBroadCastDetail]? = []
+    @ObservedObject var viewModelNew: ConversationsViewModel
     
-    public init(delegate : ISMBroadCastListDelegate? = nil){
+    public init(delegate : ISMBroadCastListDelegate? = nil,viewModelNew : ConversationsViewModel){
         self.delegate = delegate
+        self.viewModelNew = viewModelNew
     }
     
     //MARK:  - LIFECYCLE
@@ -83,7 +84,35 @@ public struct ISMBroadCastList: View {
             .refreshable {
                 getBroadcastList()
             }
-//            .background(NavigationLinksView())
+            .background(NavigationLink("", isActive: $navigateToBrocastInfo) {
+                ISMChatBroadCastInfo(
+                    broadcastTitle: navigateToBrocastDetail?.groupcastTitle ?? "",
+                    groupcastId: navigateToBrocastDetail?.groupcastId ?? ""
+                )
+            })
+            .background( NavigationLink("", isActive: $navigatetoCreatBroadCast) {
+                ISMCreateGroupConversationView(
+                    showSheetView: $navigatetoCreatGroup,
+                    viewModel: self.conversationviewModel,
+                    selectUserFor: .BroadCast,
+                    groupCastId: "",
+                    groupCastIdToNavigate: $groupCastIdToNavigate
+                )
+            })
+            .background(NavigationLink("", isActive: $navigateToMessageView) {
+                ISMMessageView(
+                    conversationViewModel: self.conversationviewModel,
+                    conversationID: self.navigateToGroupCastId ?? "",
+                    opponenDetail: nil,
+                    myUserId: "",
+                    isGroup: false,
+                    fromBroadCastFlow: true,
+                    groupCastId: self.navigateToGroupCastId ?? "",
+                    groupConversationTitle: navigateToGroupCastTitle ?? "",
+                    groupImage: nil, viewModelNew: self.viewModelNew
+                )
+                .environmentObject(networkMonitor)
+            })
             .navigationBarBackButtonHidden(true)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: navBarLeadingBtn, trailing: navBarTrailingBtn)
@@ -194,8 +223,8 @@ public struct ISMBroadCastList: View {
     private func BroadcastInfoButton(broadcast: ISMChatBroadCastDetail) -> some View {
         Button {
             if ISMChatSdk.getInstance().getFramework() == .SwiftUI {
-//                navigateToBrocastDetail = broadcast
-//                navigateToBrocastInfo = true
+                navigateToBrocastDetail = broadcast
+                navigateToBrocastInfo = true
             } else {
                 delegate?.navigateToBroadCastInfo(groupcastId: broadcast.groupcastId ?? "", groupcastTitle: broadcast.groupcastTitle ?? "", groupcastImage: broadcast.groupcastImageUrl ?? "")
             }
@@ -264,14 +293,13 @@ public struct ISMBroadCastList: View {
     }
     
    
-//    private func NavigationLinksView() -> some View {
+//    private func NavigationLinksView() -> some View{
 //        Group {
 //            NavigationLink("", isActive: $navigateToBrocastInfo) {
 //                ISMChatBroadCastInfo(
 //                    broadcastTitle: navigateToBrocastDetail?.groupcastTitle ?? "",
 //                    groupcastId: navigateToBrocastDetail?.groupcastId ?? ""
 //                )
-//                .environmentObject(realmManager)
 //            }
 //            
 //            NavigationLink("", isActive: $navigatetoCreatBroadCast) {
@@ -282,7 +310,6 @@ public struct ISMBroadCastList: View {
 //                    groupCastId: "",
 //                    groupCastIdToNavigate: $groupCastIdToNavigate
 //                )
-//                .environmentObject(realmManager)
 //            }
 //            
 //            NavigationLink("", isActive: $navigateToMessageView) {
@@ -297,7 +324,6 @@ public struct ISMBroadCastList: View {
 //                    groupConversationTitle: navigateToGroupCastTitle ?? "",
 //                    groupImage: nil
 //                )
-//                .environmentObject(realmManager)
 //                .environmentObject(networkMonitor)
 //            }
 //        }

@@ -296,27 +296,27 @@ public class ChatsViewModel : NSObject ,ObservableObject,AVAudioPlayerDelegate{
     }
 }
 
-extension ChatsViewModel{
-    public func getSectionMessage(for chat : [MessagesDB]) -> [[MessagesDB]] {
-        var res = [[MessagesDB]]()
-        let groupedMessages = Dictionary(grouping: chat) { (element) -> Date in
-            
-            //timestamp
-            let timeStamp = element.sentAt
-            let unixTimeStamp: Double = Double(timeStamp ) / 1000.0
-            let dateFormatt = DateFormatter()
-            dateFormatt.dateFormat = "dd/MM/yyy"
-            //conver to string
-            let strDate = dateFormatt.string(from: Date(timeIntervalSince1970: unixTimeStamp) as Date)
-            //str to date
-            return dateFormatt.date(from: strDate) ?? Date()
-        }
-        let sortedKeys = groupedMessages.keys.sorted()
-        sortedKeys.forEach { (key) in
-            var values = groupedMessages[key]
-            values?.sort { Double($0.sentAt ) / 1000.0 < Double($1.sentAt ) / 1000.0 }
-            res.append(values ?? [])
-        }
-        return res
-    }
-}
+//extension ChatsViewModel{
+//    public func getSectionMessage(for chat : [MessagesDB]) -> [[MessagesDB]] {
+//        var res = [[MessagesDB]]()
+//        let groupedMessages = Dictionary(grouping: chat) { (element) -> Date in
+//            
+//            //timestamp
+//            let timeStamp = element.sentAt
+//            let unixTimeStamp: Double = Double(timeStamp ) / 1000.0
+//            let dateFormatt = DateFormatter()
+//            dateFormatt.dateFormat = "dd/MM/yyy"
+//            //conver to string
+//            let strDate = dateFormatt.string(from: Date(timeIntervalSince1970: unixTimeStamp) as Date)
+//            //str to date
+//            return dateFormatt.date(from: strDate) ?? Date()
+//        }
+//        let sortedKeys = groupedMessages.keys.sorted()
+//        sortedKeys.forEach { (key) in
+//            var values = groupedMessages[key]
+//            values?.sort { Double($0.sentAt ) / 1000.0 < Double($1.sentAt ) / 1000.0 }
+//            res.append(values ?? [])
+//        }
+//        return res
+//    }
+//}

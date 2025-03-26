@@ -41,7 +41,7 @@ extension ISMConversationView {
             if showBroadCastOption == true {
                 // Navigation link to the broadcast lists view
                 NavigationLink {
-                    ISMBroadCastList()
+                    ISMBroadCastList(viewModelNew : self.viewModelNew)
                 } label: {
                     Label("Broadcast Lists", systemImage: "circle.slash")
                 }
