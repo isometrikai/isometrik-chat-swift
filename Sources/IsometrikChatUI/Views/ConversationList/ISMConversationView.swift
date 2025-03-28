@@ -69,10 +69,11 @@ public struct ISMConversationView : View {
     @State var path = NavigationPath()
     @State var offset = CGSize.zero
     
-    @StateObject var viewModelNew = ConversationsViewModel()
+    @ObservedObject var viewModelNew: ConversationsViewModel
     
-    public init(delegate : ISMConversationViewDelegate? = nil){
+    public init(delegate : ISMConversationViewDelegate? = nil,viewModelNew : ConversationsViewModel){
         self.delegate = delegate
+        self.viewModelNew  = viewModelNew
     }
     
     
@@ -181,6 +182,7 @@ public struct ISMConversationView : View {
 //                    ISMMessageView(conversationViewModel : self.viewModel,conversationID: "",opponenDetail: nil,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: true,groupCastId: self.groupCastIdToNavigate, groupConversationTitle: nil, groupImage: nil).environmentObject(realmManager).onAppear{onConversationList = false}
 //                }
                 .onAppear {
+                    getConversations()
                     addNotificationObservers()
                     onConversationList = true
                     self.viewModel.resetdata()
@@ -287,7 +289,7 @@ public struct ISMConversationView : View {
                     if ISMChatSdk.getInstance().getFramework() == .UIKit {
                         Button {
                             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-//                            navigateToMessageList(for: data) // Navigate to message list for selected conversation
+                            navigateToMessageList(for: data) // Navigate to message list for selected conversation
                         } label: {
                             conversationSubView(for: data) // Display conversation subview
                                 .onAppear {

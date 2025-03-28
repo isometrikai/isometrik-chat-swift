@@ -22,7 +22,7 @@ public class ISMViewManager{
     /// - Returns: A SwiftUI view displaying the list of conversations
 
     public func conversationList(delegete : ISMConversationViewDelegate? = nil) -> some View {
-        return ISMConversationView(delegate: delegete)
+        return ISMConversationView(delegate: delegete, viewModelNew: viewModelNew)
     }
     
     /// Creates and returns a message list view for a specific conversation
@@ -63,7 +63,7 @@ public class ISMViewManager{
             groupCastId: groupCastId,
             groupConversationTitle: groupConversationTitle,
             groupImage: groupImage,
-            delegate: delegate, viewModelNew: self.viewModelNew
+            delegate: delegate, viewModelNew: viewModelNew
         )
     }
     
