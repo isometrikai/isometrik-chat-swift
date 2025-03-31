@@ -428,7 +428,7 @@ extension ISMChatMQTTManager{
                 Task{
                     // Process contacts
                     var contactsValue: [ISMChatContactDB] = []
-                    if let contacts = messageInfo.metaData?.contacts {
+                    if let contacts = messageInfo.metaData?.contacts ?? messageInfo.details?.metaData?.contacts {
                         for contact in contacts {
                             let contactDB = ISMChatContactDB(
                                 contactName: contact.contactName,
@@ -441,7 +441,7 @@ extension ISMChatMQTTManager{
                     
                     // Process payment request members
                     var paymentRequestMembersValue: [ISMChatPaymentRequestMembersDB] = []
-                    if let members = messageInfo.metaData?.paymentRequestedMembers {
+                    if let members = messageInfo.metaData?.paymentRequestedMembers ?? messageInfo.details?.metaData?.paymentRequestedMembers {
                         for member in members {
                             let memberDB = ISMChatPaymentRequestMembersDB(
                                 userId: member.userId,
@@ -458,7 +458,7 @@ extension ISMChatMQTTManager{
                     
                     // Process invite members
                     var inviteMembersValue: [ISMChatPaymentRequestMembersDB] = []
-                    if let members = messageInfo.metaData?.inviteMembers {
+                    if let members = messageInfo.metaData?.inviteMembers ?? messageInfo.details?.metaData?.inviteMembers {
                         for member in members {
                             let memberDB = ISMChatPaymentRequestMembersDB(
                                 userId: member.userId,
@@ -473,64 +473,79 @@ extension ISMChatMQTTManager{
                         }
                     }
                     let metaData = ISMChatMetaDataDB(
-                        locationAddress: messageInfo.metaData?.locationAddress,
-                        replyMessage: messageInfo.metaData?.replyMessage != nil ? ISMChatReplyMessageDB(
-                            parentMessageId: messageInfo.metaData?.replyMessage?.parentMessageId,
-                            parentMessageBody: messageInfo.metaData?.replyMessage?.parentMessageBody,
-                            parentMessageUserId: messageInfo.metaData?.replyMessage?.parentMessageUserId,
-                            parentMessageUserName: messageInfo.metaData?.replyMessage?.parentMessageUserName,
-                            parentMessageMessageType: messageInfo.metaData?.replyMessage?.parentMessageMessageType,
-                            parentMessageAttachmentUrl: messageInfo.metaData?.replyMessage?.parentMessageAttachmentUrl,
-                            parentMessageInitiator: messageInfo.metaData?.replyMessage?.parentMessageInitiator,
-                            parentMessagecaptionMessage: messageInfo.metaData?.replyMessage?.parentMessagecaptionMessage
-                        ) : nil,
+                        locationAddress: messageInfo.metaData?.locationAddress ?? messageInfo.details?.metaData?.locationAddress,
+                        
+                        replyMessage: (messageInfo.metaData?.replyMessage ?? messageInfo.details?.metaData?.replyMessage).map {
+                            ISMChatReplyMessageDB(
+                                parentMessageId: $0.parentMessageId,
+                                parentMessageBody: $0.parentMessageBody,
+                                parentMessageUserId: $0.parentMessageUserId,
+                                parentMessageUserName: $0.parentMessageUserName,
+                                parentMessageMessageType: $0.parentMessageMessageType,
+                                parentMessageAttachmentUrl: $0.parentMessageAttachmentUrl,
+                                parentMessageInitiator: $0.parentMessageInitiator,
+                                parentMessagecaptionMessage: $0.parentMessagecaptionMessage
+                            )
+                        },
+                        
                         contacts: contactsValue,
-                        captionMessage: messageInfo.metaData?.captionMessage,
-                        isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage,
-                        post: messageInfo.metaData?.post != nil ? ISMChatPostDB(
-                            postId: messageInfo.metaData?.post?.postId,
-                            postUrl: messageInfo.metaData?.post?.postUrl
-                        ) : nil,
-                        product: messageInfo.metaData?.product != nil ? ISMChatProductDB(
-                            productId: messageInfo.metaData?.product?.productId,
-                            productUrl: messageInfo.metaData?.product?.productUrl,
-                            productCategoryId: messageInfo.metaData?.product?.productCategoryId
-                        ) : nil,
-                        storeName: messageInfo.metaData?.storeName,
-                        productName: messageInfo.metaData?.productName,
-                        bestPrice: messageInfo.metaData?.bestPrice,
-                        scratchPrice: messageInfo.metaData?.scratchPrice,
-                        url: messageInfo.metaData?.url,
-                        parentProductId: messageInfo.metaData?.parentProductId,
-                        childProductId: messageInfo.metaData?.childProductId,
-                        entityType: messageInfo.metaData?.entityType,
-                        productImage: messageInfo.metaData?.productImage,
-                        thumbnailUrl: messageInfo.metaData?.thumbnailUrl,
-                        Description: messageInfo.metaData?.description,
-                        isVideoPost: messageInfo.metaData?.isVideoPost,
-                        socialPostId: messageInfo.metaData?.socialPostId,
-                        collectionTitle: messageInfo.metaData?.collectionTitle,
-                        collectionDescription: messageInfo.metaData?.collectionDescription,
-                        productCount: messageInfo.metaData?.productCount,
-                        collectionImage: messageInfo.metaData?.collectionImage,
-                        collectionId: messageInfo.metaData?.collectionId,
-                        paymentRequestId: messageInfo.metaData?.paymentRequestId,
-                        orderId: messageInfo.metaData?.orderId,
+                        captionMessage: messageInfo.metaData?.captionMessage ?? messageInfo.details?.metaData?.captionMessage,
+                        isBroadCastMessage: messageInfo.metaData?.isBroadCastMessage ?? messageInfo.details?.metaData?.isBroadCastMessage,
+                        
+                        post: (messageInfo.metaData?.post ?? messageInfo.details?.metaData?.post).map {
+                            ISMChatPostDB(
+                                postId: $0.postId,
+                                postUrl: $0.postUrl
+                            )
+                        },
+                        
+                        product: (messageInfo.metaData?.product ?? messageInfo.details?.metaData?.product).map {
+                            ISMChatProductDB(
+                                productId: $0.productId,
+                                productUrl: $0.productUrl,
+                                productCategoryId: $0.productCategoryId
+                            )
+                        },
+                        
+                        storeName: messageInfo.metaData?.storeName ?? messageInfo.details?.metaData?.storeName,
+                        productName: messageInfo.metaData?.productName ?? messageInfo.details?.metaData?.productName,
+                        bestPrice: messageInfo.metaData?.bestPrice ?? messageInfo.details?.metaData?.bestPrice,
+                        scratchPrice: messageInfo.metaData?.scratchPrice ?? messageInfo.details?.metaData?.scratchPrice,
+                        url: messageInfo.metaData?.url ?? messageInfo.details?.metaData?.url,
+                        parentProductId: messageInfo.metaData?.parentProductId ?? messageInfo.details?.metaData?.parentProductId,
+                        childProductId: messageInfo.metaData?.childProductId ?? messageInfo.details?.metaData?.childProductId,
+                        entityType: messageInfo.metaData?.entityType ?? messageInfo.details?.metaData?.entityType,
+                        productImage: messageInfo.metaData?.productImage ?? messageInfo.details?.metaData?.productImage,
+                        thumbnailUrl: messageInfo.metaData?.thumbnailUrl ?? messageInfo.details?.metaData?.thumbnailUrl,
+                        Description: messageInfo.metaData?.description ?? messageInfo.details?.metaData?.description,
+                        isVideoPost: messageInfo.metaData?.isVideoPost ?? messageInfo.details?.metaData?.isVideoPost,
+                        socialPostId: messageInfo.metaData?.socialPostId ?? messageInfo.details?.metaData?.socialPostId,
+                        collectionTitle: messageInfo.metaData?.collectionTitle ?? messageInfo.details?.metaData?.collectionTitle,
+                        collectionDescription: messageInfo.metaData?.collectionDescription ?? messageInfo.details?.metaData?.collectionDescription,
+                        productCount: messageInfo.metaData?.productCount ?? messageInfo.details?.metaData?.productCount,
+                        collectionImage: messageInfo.metaData?.collectionImage ?? messageInfo.details?.metaData?.collectionImage,
+                        collectionId: messageInfo.metaData?.collectionId ?? messageInfo.details?.metaData?.collectionId,
+                        paymentRequestId: messageInfo.metaData?.paymentRequestId ?? messageInfo.details?.metaData?.paymentRequestId,
+                        orderId: messageInfo.metaData?.orderId ?? messageInfo.details?.metaData?.orderId,
                         paymentRequestedMembers: paymentRequestMembersValue,
-                        requestAPaymentExpiryTime: messageInfo.metaData?.requestAPaymentExpiryTime,
-                        currencyCode: messageInfo.metaData?.currencyCode,
-                        amount: messageInfo.metaData?.amount,
-                        inviteTitle: messageInfo.metaData?.inviteTitle,
-                        inviteTimestamp: messageInfo.metaData?.inviteTimestamp,
-                        inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp,
-                        inviteLocation: messageInfo.metaData?.inviteLocation != nil ? ISMChatLocationDB(
-                            name: messageInfo.metaData?.inviteLocation?.name,
-                            latitude: messageInfo.metaData?.inviteLocation?.latitude,
-                            longitude: messageInfo.metaData?.inviteLocation?.longitude
-                        ) : nil,
+                        requestAPaymentExpiryTime: messageInfo.metaData?.requestAPaymentExpiryTime ?? messageInfo.details?.metaData?.requestAPaymentExpiryTime,
+                        currencyCode: messageInfo.metaData?.currencyCode ?? messageInfo.details?.metaData?.currencyCode,
+                        amount: messageInfo.metaData?.amount ?? messageInfo.details?.metaData?.amount,
+                        inviteTitle: messageInfo.metaData?.inviteTitle ?? messageInfo.details?.metaData?.inviteTitle,
+                        inviteTimestamp: messageInfo.metaData?.inviteTimestamp ?? messageInfo.details?.metaData?.inviteTimestamp,
+                        inviteRescheduledTimestamp: messageInfo.metaData?.inviteRescheduledTimestamp ?? messageInfo.details?.metaData?.inviteRescheduledTimestamp,
+                        
+                        inviteLocation: (messageInfo.metaData?.inviteLocation ?? messageInfo.details?.metaData?.inviteLocation).map {
+                            ISMChatLocationDB(
+                                name: $0.name,
+                                latitude: $0.latitude,
+                                longitude: $0.longitude
+                            )
+                        },
+                        
                         inviteMembers: inviteMembersValue,
-                        groupCastId: messageInfo.metaData?.groupCastId,
-                        status: messageInfo.metaData?.status
+                        groupCastId: messageInfo.metaData?.groupCastId ?? messageInfo.details?.metaData?.groupCastId,
+                        status: messageInfo.metaData?.status ?? messageInfo.details?.metaData?.status
                     )
                     try? await self.localStorageManager.updateMessage(conversationId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", body: messageInfo.details?.body ?? "", metaData: metaData, customType: messageInfo.details?.customType ?? "")
                 }

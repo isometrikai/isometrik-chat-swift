@@ -178,17 +178,20 @@ public struct ISMChatMessage : Codable,Identifiable{
     }
 
     private func createContacts() -> [ISMChatContactDB] {
-        return self.metaData?.contacts?.map {
+        let contacts = self.metaData?.contacts ?? self.details?.metaData?.contacts ?? []
+        
+        return contacts.map {
             ISMChatContactDB(
                 contactName: $0.contactName,
                 contactIdentifier: $0.contactIdentifier,
                 contactImageUrl: $0.contactImageUrl
             )
-        } ?? []
+        }
     }
 
     private func createPaymentRequestMembers() -> [ISMChatPaymentRequestMembersDB] {
-        return self.metaData?.paymentRequestedMembers?.map {
+        let members = self.metaData?.paymentRequestedMembers ?? self.details?.metaData?.paymentRequestedMembers ?? []
+        return members.map {
             ISMChatPaymentRequestMembersDB(
                 userId: $0.userId,
                 userName: $0.userName,
@@ -198,11 +201,12 @@ public struct ISMChatMessage : Codable,Identifiable{
                 userProfileImage: $0.userProfileImage,
                 declineReason: $0.declineReason
             )
-        } ?? []
+        }
     }
 
     private func createInviteMembers() -> [ISMChatPaymentRequestMembersDB] {
-        return self.metaData?.inviteMembers?.map {
+        let members = self.metaData?.inviteMembers ?? self.details?.metaData?.inviteMembers ?? []
+        return members.map {
             ISMChatPaymentRequestMembersDB(
                 userId: $0.userId,
                 userName: $0.userName,
@@ -212,22 +216,65 @@ public struct ISMChatMessage : Codable,Identifiable{
                 userProfileImage: $0.userProfileImage,
                 declineReason: $0.declineReason
             )
-        } ?? []
+        }
     }
 
     private func createMetaData(contacts: [ISMChatContactDB], paymentRequestMembers: [ISMChatPaymentRequestMembersDB], inviteMembers: [ISMChatPaymentRequestMembersDB]) -> ISMChatMetaDataDB {
         return ISMChatMetaDataDB(
-            locationAddress: self.metaData?.locationAddress,
+            locationAddress: self.metaData?.locationAddress ?? self.details?.metaData?.locationAddress,
+            replyMessage: (self.metaData?.replyMessage ?? self.details?.metaData?.replyMessage)
+                .map {
+                    ISMChatReplyMessageDB(parentMessageId: $0.parentMessageId, parentMessageBody: $0.parentMessageBody, parentMessageUserId: $0.parentMessageUserId, parentMessageUserName: $0.parentMessageUserName, parentMessageMessageType: $0.parentMessageMessageType, parentMessageAttachmentUrl: $0.parentMessageAttachmentUrl, parentMessageInitiator: $0.parentMessageInitiator, parentMessagecaptionMessage: $0.parentMessagecaptionMessage)
+                },
             contacts: contacts,
-            captionMessage: self.metaData?.captionMessage,
-            isBroadCastMessage: self.metaData?.isBroadCastMessage,
-            product: self.metaData?.product != nil ? ISMChatProductDB(
-                productId: self.metaData?.product?.productId,
-                productUrl: self.metaData?.product?.productUrl,
-                productCategoryId: self.metaData?.product?.productCategoryId
-            ) : nil,
-            paymentRequestedMembers: paymentRequestMembers, inviteMembers: inviteMembers
-        )
+            captionMessage: self.metaData?.captionMessage ?? self.details?.metaData?.captionMessage,
+            isBroadCastMessage: self.metaData?.isBroadCastMessage ?? self.details?.metaData?.isBroadCastMessage,
+            post: (self.metaData?.post ?? self.details?.metaData?.post)
+                .map {
+                    ISMChatPostDB(postId: $0.postId, postUrl:  $0.postUrl)
+                },
+            product: (self.metaData?.product ?? self.details?.metaData?.product)
+                .map {
+                    ISMChatProductDB(
+                        productId: $0.productId,
+                        productUrl: $0.productUrl,
+                        productCategoryId: $0.productCategoryId
+                    )
+                },
+            storeName: self.metaData?.storeName ?? self.details?.metaData?.storeName,
+            productName: self.metaData?.productName ?? self.details?.metaData?.productName,
+            bestPrice: self.metaData?.bestPrice ?? self.details?.metaData?.bestPrice,
+            scratchPrice: self.metaData?.scratchPrice ?? self.details?.metaData?.scratchPrice,
+            url: self.metaData?.url ?? self.details?.metaData?.url,
+            parentProductId: self.metaData?.parentProductId ?? self.details?.metaData?.parentProductId,
+            childProductId: self.metaData?.childProductId ?? self.details?.metaData?.childProductId,
+            entityType: self.metaData?.entityType ?? self.details?.metaData?.entityType,
+            productImage: self.metaData?.productImage ?? self.details?.metaData?.productImage,
+            thumbnailUrl: self.metaData?.thumbnailUrl ?? self.details?.metaData?.thumbnailUrl,
+            Description: self.metaData?.description ?? self.details?.metaData?.description,
+            isVideoPost: self.metaData?.isVideoPost ?? self.details?.metaData?.isVideoPost,
+            socialPostId: self.metaData?.socialPostId ?? self.details?.metaData?.socialPostId,
+            collectionTitle: self.metaData?.collectionTitle ?? self.details?.metaData?.collectionTitle,
+            collectionDescription: self.metaData?.collectionDescription ?? self.details?.metaData?.collectionDescription,
+            productCount: self.metaData?.productCount ?? self.details?.metaData?.productCount,
+            collectionImage: self.metaData?.collectionImage ?? self.details?.metaData?.collectionImage,
+            collectionId: self.metaData?.collectionId ?? self.details?.metaData?.collectionId,
+            paymentRequestId: self.metaData?.paymentRequestId ?? self.details?.metaData?.paymentRequestId,
+            orderId: self.metaData?.orderId ?? self.details?.metaData?.orderId,
+            paymentRequestedMembers: paymentRequestMembers,
+            requestAPaymentExpiryTime: self.metaData?.requestAPaymentExpiryTime ?? self.details?.metaData?.requestAPaymentExpiryTime,
+            currencyCode: self.metaData?.currencyCode ?? self.details?.metaData?.currencyCode,
+            amount: self.metaData?.amount ?? self.details?.metaData?.amount,
+            inviteTitle: self.metaData?.inviteTitle ?? self.details?.metaData?.inviteTitle,
+            inviteTimestamp: self.metaData?.inviteTimestamp ?? self.details?.metaData?.inviteTimestamp,
+            inviteRescheduledTimestamp: self.metaData?.inviteRescheduledTimestamp ?? self.details?.metaData?.inviteRescheduledTimestamp,
+            inviteLocation: (self.metaData?.inviteLocation ?? self.details?.metaData?.inviteLocation)
+                .map {
+                    ISMChatLocationDB(name: $0.name, latitude: $0.latitude, longitude: $0.longitude)
+                },
+            inviteMembers: inviteMembers,
+            groupCastId: self.metaData?.groupCastId ?? self.details?.metaData?.groupCastId,
+            status: self.metaData?.status ?? self.details?.metaData?.status)
     }
 
     private func createMembers() -> [ISMChatLastMessageMemberDB] {
@@ -290,14 +337,14 @@ public struct ISMChatMessage : Codable,Identifiable{
         
         let messageId = self.messageId ?? ""
         let sentAt = self.sentAt ?? 0
-        let body = self.body ?? ""
+        let body = self.body ?? self.details?.body
         let userName = self.userName ?? ""
         let userIdentifier = self.userIdentifier ?? ""
         let userId = self.userId ?? ""
         let userProfileImageUrl = self.senderInfo?.userProfileImageUrl ?? ""
         let deliveredToAll = self.deliveredToAll ?? false
         let readByAll = self.readByAll ?? false
-        let customType = self.customType ?? ""
+        let customType = self.customType ?? self.details?.customType
         let action = self.action ?? ""
         let readBy = readByValue
         let deliveredTo = deliveredToValue
