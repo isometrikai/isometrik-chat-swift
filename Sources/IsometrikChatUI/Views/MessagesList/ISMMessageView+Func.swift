@@ -416,7 +416,7 @@ extension ISMMessageView{
             //2. save message locally
             var localIds = [String]()
             let sentAt = Date().timeIntervalSince1970 * 1000
-            let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: msg, mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: messageKind,customType: messageKind == .video ? .Video : .Image, messageKind: .normal)
+            let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: msg, mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: messageKind,customType: messageKind == .video ? .Video : .Image, messageKind: .normal,mediaCaption: cameraCaption)
             localIds.append(id)
             
             
@@ -427,7 +427,7 @@ extension ISMMessageView{
                     if ISMChatSdk.getInstance().checkuploadOnExternalCDN() == true{
                         self.delegate?.uploadOnExternalCDN(messageKind: .photo, mediaUrl: thumbnailUrl!, completion: { imageURL, _ in
                             self.delegate?.uploadOnExternalCDN(messageKind: .video, mediaUrl: videoUrl, completion: { videoUrl, mediaData in
-                                sendMediaMessage(messageKind: messageKind, customType: customType, mediaId: mediaId, mediaName: mediaName, mediaUrl: videoUrl, mediaData: mediaData, thubnailUrl: imageURL, sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
+                                sendMediaMessage(messageKind: messageKind, customType: customType, mediaId: mediaId, mediaName: mediaName, mediaUrl: videoUrl, mediaData: mediaData, thubnailUrl: imageURL, sentAt: sentAt, objectId: localIds.first ?? "", caption: cameraCaption)
                                 localIds.removeFirst()
                             })
                         })
@@ -436,7 +436,7 @@ extension ISMMessageView{
                         //upload video
                             chatViewModel.upload(messageKind: .video, conversationId: self.conversationID ?? "", image: nil, document: nil, video: videoUrl, audio: nil, mediaName: mediaName) {  data, filename, size in
                             if let dataValue = data {
-                                sendMediaMessage(messageKind: messageKind, customType: customType, mediaId: dataValue.mediaId ?? "", mediaName: filename, mediaUrl: data?.mediaUrl ?? "", mediaData: size, thubnailUrl: thumbnailmedia?.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
+                                sendMediaMessage(messageKind: messageKind, customType: customType, mediaId: dataValue.mediaId ?? "", mediaName: filename, mediaUrl: data?.mediaUrl ?? "", mediaData: size, thubnailUrl: thumbnailmedia?.mediaUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "", caption: cameraCaption)
                                 localIds.removeFirst()
                             }
                         }
@@ -446,13 +446,13 @@ extension ISMMessageView{
             }else{
                 if ISMChatSdk.getInstance().checkuploadOnExternalCDN() == true{
                     self.delegate?.uploadOnExternalCDN(messageKind: .photo, mediaUrl: cameraImage, completion: { imageURL, imageData in
-                        sendMediaMessage(messageKind: .photo, customType: ISMChatMediaType.Image.value, mediaId: mediaId, mediaName: mediaName, mediaUrl: imageURL, mediaData: imageData, thubnailUrl: imageURL, sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
+                        sendMediaMessage(messageKind: .photo, customType: ISMChatMediaType.Image.value, mediaId: mediaId, mediaName: mediaName, mediaUrl: imageURL, mediaData: imageData, thubnailUrl: imageURL, sentAt: sentAt, objectId: localIds.first ?? "", caption: cameraCaption)
                         localIds.removeFirst()
                     })
                 }else{
                     chatViewModel.upload(messageKind: .photo, conversationId: self.conversationID ?? "", image: cameraImage, document: nil, video: nil, audio: nil, mediaName: mediaName) {  data, filename, size in
                         if let data = data {
-                            sendMediaMessage(messageKind: .photo, customType: ISMChatMediaType.Image.value, mediaId: data.mediaId ?? "", mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.thumbnailUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
+                            sendMediaMessage(messageKind: .photo, customType: ISMChatMediaType.Image.value, mediaId: data.mediaId ?? "", mediaName: filename, mediaUrl: data.mediaUrl ?? "", mediaData: size, thubnailUrl: data.thumbnailUrl ?? "", sentAt: sentAt, objectId: localIds.first ?? "", caption: cameraCaption)
                             localIds.removeFirst()
                         }
                     }
