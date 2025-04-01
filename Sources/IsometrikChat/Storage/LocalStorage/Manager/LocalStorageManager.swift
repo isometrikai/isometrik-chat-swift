@@ -57,25 +57,27 @@ public class LocalStorageManager: ChatStorageManager {
     
     public func saveConversation(_ conversations: [ISMChatConversationDB]) async throws {
         for obj in conversations {
-            if let conversationId = obj.conversationId {
-                let descriptor = FetchDescriptor<ISMChatConversationDB>(
-                    predicate: #Predicate { $0.conversationId == conversationId }
-                )
-                do {
-                    let existingConversations = try modelContext.fetch(descriptor)
-                    
-                    if existingConversations.isEmpty {
-                        // ✅ Add New Conversation
-                        modelContext.insert(obj)
-                        try modelContext.save()
-                    } else if let existing = existingConversations.first {
-                        // 🔄 Update if not deleted
-                        try modelContext.save()
-                    }
-                    
-                } catch {
-                    print("SwiftData Error: \(error)")
+            guard let conversationId = obj.conversationId else { continue }
+            
+            let descriptor = FetchDescriptor<ISMChatConversationDB>(
+                predicate: #Predicate { $0.conversationId == conversationId }
+            )
+            
+            do {
+                let existingConversations = try modelContext.fetch(descriptor)
+                
+                if let existing = existingConversations.first {
+                    // 🔄 Update existing conversation properties
+                    existing.updatedAt = obj.updatedAt
+                    try modelContext.save()
+                } else {
+                    // ✅ Insert new conversation
+                    modelContext.insert(obj)
+                    try modelContext.save()
                 }
+                
+            } catch {
+                print("SwiftData Error: \(error)")
             }
         }
     }

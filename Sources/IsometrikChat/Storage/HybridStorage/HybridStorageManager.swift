@@ -35,10 +35,16 @@ public class HybridStorageManager: ChatStorageManager {
     
     public func fetchConversations() async throws -> [ISMChatConversationDB] {
         do {
-            // Fetch from remote and sync
             let remoteConversations = try await remoteStorageManager.fetchConversations()
-            try await localStorageManager.saveConversation(remoteConversations)
+
+            // Fetch local conversations once
             let localConversations = try await localStorageManager.fetchConversations()
+
+            // Sync only if there are new or updated conversations
+            if remoteConversations != localConversations {
+                try await localStorageManager.saveConversation(remoteConversations)
+            }
+
             return localConversations
         } catch {
             print("Error syncing with remote: \(error)")

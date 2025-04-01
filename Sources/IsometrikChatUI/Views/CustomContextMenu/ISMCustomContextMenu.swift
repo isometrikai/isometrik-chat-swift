@@ -369,8 +369,10 @@ struct ISMCustomContextMenu: View {
                 fromBroadCastFlow != true &&
                 message.deletedMessage == false && sentTimeLessThan15MinutesAgo(sentTime: message.sentAt) == true,
                 action: {
-                    updateMessage = message
-                    dismiss()
+                    DispatchQueue.main.async {
+                        updateMessage = message
+                        dismiss()
+                    }
                 }
             ),
             ContextMenuAction(
@@ -392,12 +394,14 @@ struct ISMCustomContextMenu: View {
                            ISMChatHelper.getMessageType(message: message) != .VideoCall &&
                            message.deletedMessage == false ,
                 action: {
-                    if ISMChatSdkUI.getInstance().getChatProperties().messageInfoBelowMessage == false {
-                        navigateToMessageInfo = true
-                    } else {
-                        showMessageInfoInsideMessage = true
+                    DispatchQueue.main.async {
+                        if ISMChatSdkUI.getInstance().getChatProperties().messageInfoBelowMessage == false {
+                            navigateToMessageInfo = true
+                        } else {
+                            showMessageInfoInsideMessage = true
+                        }
+                        dismiss()
                     }
-                    dismiss()
                 }
             ),
             ContextMenuAction(
