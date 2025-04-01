@@ -163,6 +163,7 @@ public struct ISMMessageView: View {
     
     //camera click
     @State var cameraImageToUse : URL?
+    @State var cameraCaption : String = ""
     
     //reaction
     @State var selectedReaction : String? = nil
@@ -774,7 +775,7 @@ public struct ISMMessageView: View {
         })
         .fullScreenCover(isPresented: $stateViewModel.showSheet){
             if selectedSheetIndex == 0 {
-                CameraCaptureView(isShown: $stateViewModel.showSheet, sendUrl: $cameraImageToUse)
+                CameraCaptureView(isShown: $stateViewModel.showSheet,textFieldtxt: $cameraCaption, sendUrl: $cameraImageToUse)
 //                ISMCameraView(media : $cameraImageToUse, isShown: $stateViewModel.showSheet, uploadMedia: $stateViewModel.uploadMedia,mediaType: .both)
             } else if selectedSheetIndex == 1 {
                 DocumentPicker(documents: $chatViewModel.documentSelectedFromPicker, isShown: self.$stateViewModel.showSheet)

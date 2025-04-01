@@ -25,7 +25,7 @@ struct CameraCaptureView: View {
     // Media handling state
     @Binding var isShown: Bool
     @State private var capturedURL: URL? = nil
-    @State var textFieldtxt: String = ""
+    @Binding var textFieldtxt: String
     @State private var player: AVPlayer?
     @Binding var sendUrl: URL?
     
