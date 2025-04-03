@@ -10,6 +10,7 @@ import Combine
 import SwiftUI
 
 public class ConversationsViewModel: ObservableObject {
+    @Published public var conversationData: [ISMChatConversationDB] = []
     @Published public var conversations: [ISMChatConversationDB] = []
     @Published public var primaryConversations: [ISMChatConversationDB] = []
     @Published public var otherConversations: [ISMChatConversationDB] = [] //other conversations are those who other normal user or start User send me message for first time so i can accept or decline chat
@@ -47,13 +48,29 @@ public class ConversationsViewModel: ObservableObject {
         }
     }
     
-    public func loadConversations() async {
+    public func loadConversations(showOtherList : Bool) async {
         do {
             let fetchedConversations = try await chatRepository.fetchConversations()
             DispatchQueue.main.async {
                 self.conversations = fetchedConversations
                 self.otherConversations = self.getOtherConversation()
                 self.primaryConversations = self.getPrimaryConversation()
+                self.conversationData =  showOtherList == true ? self.primaryConversations : self.conversations
+            }
+        } catch {
+            print("Error loading conversations: \(error)")
+        }
+    }
+    
+    public func loadConversationsLocal(showOtherList : Bool) async {
+        do {
+            let fetchedConversations = try await chatRepository.fetchConversations()
+            DispatchQueue.main.async {
+               
+                self.conversations = fetchedConversations
+                self.otherConversations = self.getOtherConversation()
+                self.primaryConversations = self.getPrimaryConversation()
+                self.conversationData =  showOtherList == true ? self.primaryConversations : self.conversations
             }
         } catch {
             print("Error loading conversations: \(error)")

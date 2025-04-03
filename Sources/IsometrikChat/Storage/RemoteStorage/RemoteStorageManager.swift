@@ -8,6 +8,10 @@
 import Foundation
 
 public class RemoteStorageManager: ChatStorageManager {
+    public func fetchConversationsLocal() async throws -> [ISMChatConversationDB] {
+        return []
+    }
+    
     
     
     public let conversationViewModel = ConversationViewModel()

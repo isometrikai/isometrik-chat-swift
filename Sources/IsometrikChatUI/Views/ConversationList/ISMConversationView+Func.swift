@@ -50,7 +50,13 @@ extension ISMConversationView{
     
     func getConversations(){
         Task {
-            await viewModelNew.loadConversations()
+            await viewModelNew.loadConversations(showOtherList: ISMChatSdkUI.getInstance().getChatProperties().otherConversationList)
+        }
+    }
+    
+    func getConversationLocally(){
+        Task {
+            await viewModelNew.loadConversationsLocal(showOtherList: ISMChatSdkUI.getInstance().getChatProperties().otherConversationList)
         }
     }
     

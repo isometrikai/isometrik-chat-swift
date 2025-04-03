@@ -10,6 +10,8 @@ import Foundation
 import SwiftUI
 
 public class HybridStorageManager: ChatStorageManager {
+   
+    
     
     
     private let localStorageManager: LocalStorageManager
@@ -37,15 +39,29 @@ public class HybridStorageManager: ChatStorageManager {
         do {
             let remoteConversations = try await remoteStorageManager.fetchConversations()
 
+            
+            try await localStorageManager.saveConversation(remoteConversations)
+            
             // Fetch local conversations once
             let localConversations = try await localStorageManager.fetchConversations()
+          
+            // 4️⃣ Return the latest local conversations
+            return  localConversations
 
-            // Sync only if there are new or updated conversations
-            if remoteConversations != localConversations {
-                try await localStorageManager.saveConversation(remoteConversations)
-            }
+        } catch {
+            print("Error syncing with remote: \(error)")
+            throw error
+        }
+    }
+    
+    public func fetchConversationsLocal() async throws -> [ISMChatConversationDB] {
+        do {
+            // Fetch local conversations once
+            let localConversations = try await localStorageManager.fetchConversations()
+          
+            //  Return the latest local conversations
+            return  localConversations
 
-            return localConversations
         } catch {
             print("Error syncing with remote: \(error)")
             throw error

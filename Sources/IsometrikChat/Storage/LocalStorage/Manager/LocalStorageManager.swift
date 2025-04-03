@@ -34,13 +34,12 @@ public class LocalStorageManager: ChatStorageManager {
 
     
     
-    public func fetchConversations() async throws -> [ISMChatConversationDB] {
+    public func fetchConversations() async throws  -> [ISMChatConversationDB] {
+        let descriptor = FetchDescriptor<ISMChatConversationDB>(
+            sortBy: [SortDescriptor(\.lastMessageDetails?.sentAt, order: .reverse)]
+        )
         do {
-            let descriptor = FetchDescriptor<ISMChatConversationDB>(
-                sortBy: [SortDescriptor(\.lastMessageDetails?.sentAt, order: .reverse)] // ✅ Direct sorting by lastMessageSentAt
-            )
-            var conversations = try modelContext.fetch(descriptor)
-            
+            let conversations = try modelContext.fetch(descriptor)
             // Remove broadcast list from conversation list
             let filteredConversations = conversations.filter { conversation in
                 !(conversation.opponentDetails?.userId == nil &&
@@ -55,24 +54,114 @@ public class LocalStorageManager: ChatStorageManager {
         }
     }
     
+    public func fetchConversationsLocal() async throws -> [ISMChatConversationDB] {
+        let descriptor = FetchDescriptor<ISMChatConversationDB>(
+            sortBy: [SortDescriptor(\.lastMessageDetails?.sentAt, order: .reverse)]
+        )
+        do {
+            let conversations = try modelContext.fetch(descriptor)
+            // Remove broadcast list from conversation list
+            let filteredConversations = conversations.filter { conversation in
+                !(conversation.opponentDetails?.userId == nil &&
+                  conversation.opponentDetails?.userName == nil &&
+                  conversation.isGroup == false)
+            }
+            
+            return filteredConversations
+        } catch {
+            print("❌ Fetch Error: \(error)")
+            return []
+        }
+    }
+    
+    @MainActor
     public func saveConversation(_ conversations: [ISMChatConversationDB]) async throws {
         for obj in conversations {
             guard let conversationId = obj.conversationId else { continue }
-            
+
             let descriptor = FetchDescriptor<ISMChatConversationDB>(
                 predicate: #Predicate { $0.conversationId == conversationId }
             )
-            
+
             do {
-                let existingConversations = try modelContext.fetch(descriptor)
-                
+                let existingConversations = try await modelContext.fetch(descriptor) // ✅ Now async-safe
+
                 if let existing = existingConversations.first {
-                    // 🔄 Update existing conversation properties
+                    // ✅ Update existing object instead of re-inserting
                     existing.updatedAt = obj.updatedAt
+//                    existing.lastMessageDetails = obj.lastMessageDetails
+//                    existing.lastMessageDetails?.body = obj.lastMessageDetails?.body
+//                    if let objLastMessage = obj.lastMessageDetails {
+//                        
+//                            let newLastMessage = ISMChatLastMessageDB(
+//                                sentAt: objLastMessage.sentAt,
+//                                updatedAt: objLastMessage.updatedAt,
+//                                senderName: objLastMessage.senderName,
+//                                senderIdentifier: objLastMessage.senderIdentifier,
+//                                senderId: objLastMessage.senderId,
+//                                conversationId: objLastMessage.conversationId,
+//                                body: objLastMessage.body,
+//                                messageId: objLastMessage.messageId,
+//                                customType: objLastMessage.customType,
+//                                action: objLastMessage.action,
+//                                metaData: objLastMessage.metaData,  // ⚠️ Make sure `metaData` is also from the same context
+//                                metaDataJsonString: objLastMessage.metaDataJsonString,
+//                                deliveredTo: objLastMessage.deliveredTo,  // ⚠️ Handle this separately if needed
+//                                readBy: objLastMessage.readBy,  // ⚠️ Handle this separately if needed
+//                                msgSyncStatus: objLastMessage.msgSyncStatus,
+//                                reactionType: objLastMessage.reactionType,
+//                                userId: objLastMessage.userId,
+//                                userIdentifier: objLastMessage.userIdentifier,
+//                                userName: objLastMessage.userName,
+//                                userProfileImageUrl: objLastMessage.userProfileImageUrl,
+//                                members: objLastMessage.members,  // ⚠️ Handle separately if needed
+//                                memberName: objLastMessage.memberName,
+//                                memberId: objLastMessage.memberId,
+//                                messageDeleted: objLastMessage.messageDeleted,
+//                                initiatorName: objLastMessage.initiatorName,
+//                                initiatorId: objLastMessage.initiatorId,
+//                                initiatorIdentifier: objLastMessage.initiatorIdentifier,
+//                                deletedMessage: objLastMessage.deletedMessage,
+//                                meetingId: objLastMessage.meetingId,
+//                                missedByMembers: objLastMessage.missedByMembers ?? [],
+//                                callDurations: objLastMessage.callDurations
+//                            )
+//                            
+//                            existing.lastMessageDetails = newLastMessage
+//                        
+//                        
+//                    } else {
+//                        existing.lastMessageDetails = nil
+//                    }
+                    existing.lastMessageSentAt = obj.lastMessageSentAt
                     try modelContext.save()
                 } else {
-                    // ✅ Insert new conversation
-                    modelContext.insert(obj)
+                    let newConversation = ISMChatConversationDB(
+                        conversationId: obj.conversationId ?? "",
+                                    updatedAt: obj.updatedAt,
+                                    unreadMessagesCount: obj.unreadMessagesCount,
+                                    membersCount: obj.membersCount,
+                                    lastMessageSentAt: obj.lastMessageSentAt,
+                                    createdAt: obj.createdAt,
+                                    mode: obj.mode,
+                                    conversationTitle: obj.conversationTitle,
+                                    conversationImageUrl: obj.conversationImageUrl,
+                                    createdBy: obj.createdBy,
+                                    createdByUserName: obj.createdByUserName,
+                                    privateOneToOne: obj.privateOneToOne,
+                                    messagingDisabled: obj.messagingDisabled,
+                                    isGroup: obj.isGroup,
+                                    typing: obj.typing,
+                                    userIds: obj.userIds,
+                                    opponentDetails: obj.opponentDetails,
+                                    config: obj.config,
+                                    lastMessageDetails: obj.lastMessageDetails,
+                                    deletedMessage: obj.deletedMessage,
+                                    metaData: obj.metaData,
+                                    metaDataJson: obj.metaDataJson,
+                                    lastInputText: obj.lastInputText
+                                )
+                        modelContext.insert(newConversation)
                     try modelContext.save()
                 }
                 
@@ -81,6 +170,7 @@ public class LocalStorageManager: ChatStorageManager {
             }
         }
     }
+
     
     public func deleteConversation(conversationId: String) async throws {
         await MainActor.run {
@@ -129,6 +219,7 @@ public class LocalStorageManager: ChatStorageManager {
             if let existingConversation = try modelContext.fetch(descriptor).first {
                 // Update the last message details
                 existingConversation.lastMessageDetails = lastMessage
+                existingConversation.lastMessageSentAt = Int(lastMessage.sentAt ?? 0)
 
                 // Save the changes
                 try modelContext.save()
@@ -417,7 +508,7 @@ public class LocalStorageManager: ChatStorageManager {
     }
 
 
-    public func saveMedia(arr: [ISMChatAttachmentDB], conversationId: String, customType: String, sentAt: Double, messageId: String, userName: String) async throws {
+    public func saveMedia(arr: [ISMChatAttachmentDB], conversationId: String, customType: String, sentAt: Double, messageId: String, userName: String)  {
             
             // Step 1: Find conversation using conversationId
             let conversationFetchDescriptor = FetchDescriptor<ISMChatConversationDB>(

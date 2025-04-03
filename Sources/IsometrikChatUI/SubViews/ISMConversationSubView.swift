@@ -230,7 +230,7 @@ struct ISMConversationSubView: View {
                 if chat.lastMessageDetails?.initiatorId == userData?.userId{
                     callKitText(text1: "", text2: "Video call", color: Color.green, outgoing: true, missedCall: false, addDot: false, image: "arrow.up.right.video.fill")
                 }else{
-                    if chat.lastMessageDetails?.missedByMembers.count == 0{
+                    if chat.lastMessageDetails?.missedByMembers?.count == 0{
                         callKitText(text1: "", text2: "Video call", color: Color.green, outgoing: false, missedCall: false, addDot: false, image: "arrow.up.right.video.fill")
                     }else{
                         callKitText(text1: "", text2: "Missed video call", color: Color.green, outgoing: false, missedCall: true, addDot: false, image: "arrow.down.left.video.fill")
@@ -241,7 +241,7 @@ struct ISMConversationSubView: View {
                 if chat.lastMessageDetails?.initiatorId == userData?.userId{
                     callKitText(text1: "", text2: "Video call", color: Color.green, outgoing: true, missedCall: false, addDot: false, image: "arrow.up.right.video.fill")
                 }else{
-                    if chat.lastMessageDetails?.missedByMembers.count == 0{
+                    if chat.lastMessageDetails?.missedByMembers?.count == 0{
                         callKitText(text1: "", text2: "Video call", color: Color.green, outgoing: false, missedCall: false, addDot: false, image: "arrow.up.right.video.fill")
                     }else{
                         callKitText(text1: "", text2: "Missed video call", color: Color.green, outgoing: false, missedCall: true, addDot: false, image: "arrow.down.left.video.fill")
@@ -265,7 +265,7 @@ struct ISMConversationSubView: View {
                 if chat.lastMessageDetails?.initiatorId == userData?.userId{
                     callKitText(text1: "", text2: "Voice call", color: Color.green, outgoing: true, missedCall: false, addDot: false, image: "phone.arrow.up.right.fill")
                 }else{
-                    if chat.lastMessageDetails?.missedByMembers.count == 0{
+                    if chat.lastMessageDetails?.missedByMembers?.count == 0{
                         callKitText(text1: "", text2: "Voice call", color: Color.green, outgoing: false, missedCall: false, addDot: false, image: "phone.arrow.up.right.fill")
                     }else{
                         callKitText(text1: "", text2: "Missed voice call", color: Color.green, outgoing: false, missedCall: true, addDot: false, image: "phone.arrow.down.left.fill")
@@ -276,7 +276,7 @@ struct ISMConversationSubView: View {
                 if chat.lastMessageDetails?.initiatorId == userData?.userId{
                     callKitText(text1: "", text2: "Voice call", color: Color.green, outgoing: true, missedCall: false, addDot: false, image: "phone.arrow.up.right.fill")
                 }else{
-                    if chat.lastMessageDetails?.missedByMembers.count == 0{
+                    if chat.lastMessageDetails?.missedByMembers?.count == 0{
                         callKitText(text1: "", text2: "Voice call", color: Color.green, outgoing: false, missedCall: false, addDot: false, image: "phone.arrow.up.right.fill")
                     }else{
                         callKitText(text1: "", text2: "Missed voice call", color: Color.green, outgoing: false, missedCall: true, addDot: false, image: "phone.arrow.down.left.fill")

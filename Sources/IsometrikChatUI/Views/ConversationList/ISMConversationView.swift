@@ -102,7 +102,7 @@ public struct ISMConversationView : View {
                                 }
                         }
                         // Show placeholder if no conversation data is available
-                        if conversationData.count == 0 {
+                        if viewModelNew.conversationData.count == 0 {
                             Spacer()
                             showPlaceholderView
                             Spacer()
@@ -182,7 +182,7 @@ public struct ISMConversationView : View {
 //                    ISMMessageView(conversationViewModel : self.viewModel,conversationID: "",opponenDetail: nil,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: true,groupCastId: self.groupCastIdToNavigate, groupConversationTitle: nil, groupImage: nil).environmentObject(realmManager).onAppear{onConversationList = false}
 //                }
                 .onAppear {
-                    getConversations()
+                    getConversationLocally()
                     addNotificationObservers()
                     onConversationList = true
                     self.viewModel.resetdata()
@@ -283,7 +283,7 @@ public struct ISMConversationView : View {
     private var conversationListView: some View {
         // View to display the list of conversations
         List {
-            ForEach(conversationData) { data in
+            ForEach(viewModelNew.conversationData) { data in
                 VStack(spacing: 0) {
                     // Button to navigate to the selected conversation
                     if ISMChatSdk.getInstance().getFramework() == .UIKit {
@@ -291,7 +291,8 @@ public struct ISMConversationView : View {
                             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                             navigateToMessageList(for: data) // Navigate to message list for selected conversation
                         } label: {
-                            conversationSubView(for: data) // Display conversation subview
+                            conversationSubView(for: data)
+                                .id(UUID())// Display conversation subview
                                 .onAppear {
                                     handlePagination(for: data) // Handle pagination for loading more data
                                 }
@@ -300,6 +301,7 @@ public struct ISMConversationView : View {
                         // SwiftUI navigation link for conversation
                         ZStack {
                             conversationSubView(for: data)
+                                .id(UUID())
                                 .onAppear {
                                     handlePagination(for: data)
                                 }
@@ -354,7 +356,7 @@ public struct ISMConversationView : View {
         VStack{
             //create conversation button
             if ISMChatSdk.getInstance().getFramework() == .UIKit{
-                if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == true && conversationData.count > 0{
+                if ISMChatSdkUI.getInstance().getChatProperties().dontShowCreateButtonTillNoConversation == true && viewModelNew.conversationData.count > 0{
                     VStack {
                         Spacer()
                         HStack {
@@ -394,10 +396,10 @@ public struct ISMConversationView : View {
     // MARK: - Helper Methods
 
 
-    var conversationData: [ISMChatConversationDB] {
-        let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
-        return isOtherConversationList ? viewModelNew.primaryConversations : viewModelNew.conversations
-    }
+//    var conversationData: [ISMChatConversationDB] {
+//        let isOtherConversationList = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList
+//        return isOtherConversationList ? viewModelNew.primaryConversations : viewModelNew.conversations
+//    }
 
     private func navigateToMessageList(for data: ISMChatConversationDB) {
         // Navigate to the message list for the selected conversation

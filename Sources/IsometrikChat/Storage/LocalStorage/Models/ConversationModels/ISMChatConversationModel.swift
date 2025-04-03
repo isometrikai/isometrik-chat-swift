@@ -75,6 +75,8 @@ public class ISMChatUserDB {
     public var lastSeen : Double?
     @Relationship(deleteRule: .cascade) public var metaData : ISMChatUserMetaDataDB?
     
+    @Relationship(deleteRule: .nullify) public var opponentDetails: ISMChatUserDB?
+    
     public init(userId: String? = nil, userProfileImageUrl: String? = nil, userName: String? = nil, userIdentifier: String? = nil, online: Bool? = nil, lastSeen: Double? = nil, metaData: ISMChatUserMetaDataDB? = nil) {
         self.userId = userId
         self.userProfileImageUrl = userProfileImageUrl
@@ -82,7 +84,7 @@ public class ISMChatUserDB {
         self.userIdentifier = userIdentifier
         self.online = online
         self.lastSeen = lastSeen
-        self.metaData = metaData
+        self.metaData = metaData ?? nil
     }
 }
 
@@ -164,7 +166,7 @@ public class ISMChatLastMessageDB{
     public var deletedMessage : Bool = false
     //callkit
     public var meetingId : String?
-    public var missedByMembers : [String]
+    public var missedByMembers : [String]?
     @Relationship(deleteRule: .cascade) public var callDurations : [ISMChatMeetingDuration]
     @Relationship(inverse: \ISMChatConversationDB.lastMessageDetails) public weak var conversation: ISMChatConversationDB?
     
@@ -260,9 +262,15 @@ public class ISMChatMeetingDuration{
 }
 
 @Model
-public class ISMChatMessageDeliveryStatusDB{
-    public var userId : String?
-    public var timestamp : Double?
+public class ISMChatMessageDeliveryStatusDB {
+    public var userId: String?
+    public var timestamp: Double?
+
+    // Add inverse relationships
+    @Relationship(inverse: \ISMChatLastMessageDB.deliveredTo) public weak var lastMessageDelivered: ISMChatLastMessageDB?
+    @Relationship(inverse: \ISMChatLastMessageDB.readBy) public weak var lastMessageRead: ISMChatLastMessageDB?
+    //added for crash: "Unable to resolve conflict: relationship \"deliveredTo\" (on entity \"ISMChatLastMessageDB\") does not have an inverse" An abort signal terminated the process. Such crashes often happen because of an uncaught exception or unrecoverable error or calling the abort() function.
+
     public init(userId: String? = nil, timestamp: Double? = nil) {
         self.userId = userId
         self.timestamp = timestamp

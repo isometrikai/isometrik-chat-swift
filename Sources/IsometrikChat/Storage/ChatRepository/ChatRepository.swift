@@ -40,6 +40,10 @@ public class ChatRepository {
         return try await activeStorageManager.fetchConversations()
     }
     
+    public func fetchConversationsLocal() async throws -> [ISMChatConversationDB] {
+        return try await activeStorageManager.fetchConversationsLocal()
+    }
+    
     public func saveConversation(_ conversations: [ISMChatConversationDB]) async throws{
         return try await activeStorageManager.saveConversation(conversations)
     }
