@@ -151,17 +151,9 @@ public class ISMChatSdk{
     }
 
     func resetSwiftData() {
-        guard let storeURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?.appendingPathComponent("ISMChatSdk.store") else {
-            return
-        }
-        
-        do {
-            if FileManager.default.fileExists(atPath: storeURL.path) {
-                try FileManager.default.removeItem(at: storeURL)
-                print("SwiftData storage deleted successfully.")
-            }
-        } catch {
-            print("Error deleting SwiftData storage: \(error)")
+        Task{
+            let conversationVM = ConversationsViewModel()
+            await conversationVM.deleteSwiftData()
         }
     }
 

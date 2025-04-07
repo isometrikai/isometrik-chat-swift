@@ -9,6 +9,8 @@ import Foundation
 import Combine
 
 public protocol ChatStorageManager {
+    
+    func deleteSwiftData() async throws
     // Conversation operations
     func createConversation(user : ISMChatUserDB,conversationId : String) async throws -> String //return conversationId
     func fetchConversations() async throws -> [ISMChatConversationDB]

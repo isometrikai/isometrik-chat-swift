@@ -66,7 +66,6 @@ public class ISMChatConversationDB: Identifiable {
 
 @Model
 public class ISMChatUserDB {
-    @Attribute(.unique) public var id: UUID = UUID()
     public var userId: String?
     public var userProfileImageUrl : String?
     public var userName : String?
@@ -90,7 +89,6 @@ public class ISMChatUserDB {
 
 @Model
 public class ISMChatUserMetaDataDB{
-    @Attribute(.unique) public var id: UUID = UUID()
     public var userId : String?
     public var userType : Int? //1 - normal user, 9 -  business user
     public var isStarUser : Bool? //check if usertype == 1 if for both normal user and influencer
@@ -119,11 +117,11 @@ public class ISMChatConversationMetaData {
 
 @Model
 public class ISMChatConfigDB {
-    @Attribute(.unique) public var id: UUID = UUID()
     
     public var typingEvents: Bool?
     public var readEvents: Bool?
     public var pushNotifications: Bool?
+    @Relationship(inverse: \ISMChatConversationDB.config) public var conversations: [ISMChatConversationDB] = []
 
     public init(typingEvents: Bool? = nil, readEvents: Bool? = nil, pushNotifications: Bool? = nil) {
         self.typingEvents = typingEvents
@@ -134,7 +132,6 @@ public class ISMChatConfigDB {
 
 @Model
 public class ISMChatLastMessageDB{
-    @Attribute(.unique) public var id: UUID = UUID()
     
     public var sentAt : Double?
     public var updatedAt : Double?
@@ -148,8 +145,8 @@ public class ISMChatLastMessageDB{
     public var action : String?
     @Relationship(deleteRule: .cascade) public var metaData : ISMChatMetaDataDB?
     public var metaDataJsonString : String?
-    @Relationship(deleteRule: .cascade) public var deliveredTo : [ISMChatMessageDeliveryStatusDB]
-    @Relationship(deleteRule: .cascade) public var readBy : [ISMChatMessageDeliveryStatusDB]
+    @Relationship(deleteRule: .cascade) public var deliveredTo : [ISMChatMessageDeliveryStatusDB] = []
+    @Relationship(deleteRule: .cascade) public var readBy : [ISMChatMessageDeliveryStatusDB] = []
     public var msgSyncStatus : String = ""
     public var reactionType : String = ""
     public var userId : String = ""
@@ -276,3 +273,7 @@ public class ISMChatMessageDeliveryStatusDB {
         self.timestamp = timestamp
     }
 }
+
+
+
+

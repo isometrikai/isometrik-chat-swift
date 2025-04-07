@@ -32,6 +32,14 @@ public class ConversationsViewModel: ObservableObject {
         self.chatRepository = chatRepository
     }
     
+    public func deleteSwiftData() async{
+        do {
+            try await chatRepository.deleteSwiftData()
+        } catch {
+            print("Error loading conversations: \(error)")
+        }
+    }
+    
     public func createConversation(user : ISMChatUserDB) async -> String{
         do {
             let conversationId = try await chatRepository.createConversation(user: user, conversationId: "")
@@ -64,7 +72,7 @@ public class ConversationsViewModel: ObservableObject {
     
     public func loadConversationsLocal(showOtherList : Bool) async {
         do {
-            let fetchedConversations = try await chatRepository.fetchConversations()
+            let fetchedConversations = try await chatRepository.fetchConversationsLocal()
             DispatchQueue.main.async {
                
                 self.conversations = fetchedConversations

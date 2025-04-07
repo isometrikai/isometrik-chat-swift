@@ -8,6 +8,10 @@
 import Foundation
 
 public class RemoteStorageManager: ChatStorageManager {
+    public func deleteSwiftData() async throws {
+        
+    }
+    
     public func fetchConversationsLocal() async throws -> [ISMChatConversationDB] {
         return []
     }

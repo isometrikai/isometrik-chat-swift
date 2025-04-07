@@ -31,6 +31,10 @@ public class ChatRepository {
         }
     }
     
+    public func deleteSwiftData() async throws{
+        return try await activeStorageManager.deleteSwiftData()
+    }
+    
     public func createConversation(user : ISMChatUserDB,conversationId : String) async throws -> String{
         return try await activeStorageManager.createConversation(user: user, conversationId: conversationId)
     }

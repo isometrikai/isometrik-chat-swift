@@ -14,12 +14,20 @@ public class HybridStorageManager: ChatStorageManager {
     
     
     
-    private let localStorageManager: LocalStorageManager
+    private var localStorageManager: LocalStorageManager
     private let remoteStorageManager: RemoteStorageManager
     
     public init(localStorageManager: LocalStorageManager, remoteStorageManager: RemoteStorageManager) {
         self.localStorageManager = localStorageManager
         self.remoteStorageManager = remoteStorageManager
+    }
+    
+    public func deleteSwiftData() async throws {
+        do {
+            try await localStorageManager.deleteSwiftData()
+        } catch {
+            print("Error syncing with remote: \(error)")
+        }
     }
     
     public func createConversation(user : ISMChatUserDB,conversationId : String) async throws -> String {

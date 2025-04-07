@@ -6,6 +6,7 @@
 //
 
 import SwiftData
+import CoreData
 import Foundation
 import SwiftUI
 
@@ -15,18 +16,45 @@ public class LocalStorageManager: ChatStorageManager {
     public let modelContext: ModelContext
     
     public init() throws {
-        let schema = Schema([ISMChatConversationDB.self, ISMChatMessagesDB.self, ISMChatUserDB.self, ISMChatConfigDB.self,ISMChatLastMessageDB.self,ISMChatConversationMetaData.self,ISMChatMessagesDB.self,ISMChatUserMetaDataDB.self,ISMChatMetaDataDB.self,ISMChatMessageDeliveryStatusDB.self,ISMChatLastMessageMemberDB.self, ISMChatMeetingDuration.self,ISMChatMentionedUserDB.self,ISMChatAttachmentDB.self, ISMChatReactionDB.self,ISMChatMeetingConfig.self])
-        if let storeURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)
-            .first?.appendingPathComponent("ISMChatSdk.store"){
-            let modelConfiguration = ModelConfiguration(schema: schema, url: storeURL)
-        }else{
-            let modelConfiguration = ModelConfiguration(schema: schema)
-        }
-        let modelConfiguration = ModelConfiguration(schema: schema)
+        let schema = Schema([
+            ISMChatConversationDB.self, ISMChatMessagesDB.self, ISMChatUserDB.self, ISMChatConfigDB.self,
+            ISMChatLastMessageDB.self, ISMChatConversationMetaData.self, ISMChatUserMetaDataDB.self,
+            ISMChatMetaDataDB.self, ISMChatMessageDeliveryStatusDB.self, ISMChatLastMessageMemberDB.self,
+            ISMChatMeetingDuration.self, ISMChatMentionedUserDB.self, ISMChatAttachmentDB.self,
+            ISMChatReactionDB.self, ISMChatMeetingConfig.self
+        ])
+        let modelConfiguration = ModelConfiguration(
+            "ISMChatSdk.store",
+            schema: schema,
+            isStoredInMemoryOnly: false,
+            allowsSave: true
+        )
         self.modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
         self.modelContext = ModelContext(modelContainer)
     }
     
+    
+    public func deleteSwiftData() async throws {
+        do {
+            try modelContext.delete(model: ISMChatConversationDB.self)
+            try modelContext.delete(model: ISMChatMessagesDB.self)
+            try modelContext.delete(model: ISMChatUserDB.self)
+            try modelContext.delete(model: ISMChatConfigDB.self)
+            try modelContext.delete(model: ISMChatLastMessageDB.self)
+            try modelContext.delete(model: ISMChatConversationMetaData.self)
+            try modelContext.delete(model: ISMChatUserMetaDataDB.self)
+            try modelContext.delete(model: ISMChatMessageDeliveryStatusDB.self)
+            try modelContext.delete(model: ISMChatLastMessageMemberDB.self)
+            try modelContext.delete(model: ISMChatMeetingDuration.self)
+            try modelContext.delete(model: ISMChatMentionedUserDB.self)
+            try modelContext.delete(model: ISMChatAttachmentDB.self)
+            try modelContext.delete(model: ISMChatReactionDB.self)
+            try modelContext.delete(model: ISMChatMeetingConfig.self)
+        } catch {
+            print("Failed to clear all data.")
+        }
+    }
+
     
     public func createConversation(user : ISMChatUserDB,conversationId : String) async throws -> String {
         return ""
@@ -136,6 +164,7 @@ public class LocalStorageManager: ChatStorageManager {
                     existing.lastMessageSentAt = obj.lastMessageSentAt
                     try modelContext.save()
                 } else {
+                    let opponentDetails = ISMChatUserDB(userId: obj.opponentDetails?.userId, userProfileImageUrl: obj.opponentDetails?.userProfileImageUrl, userName: obj.opponentDetails?.userName, userIdentifier: obj.opponentDetails?.userIdentifier, online: obj.opponentDetails?.online, lastSeen: obj.opponentDetails?.lastSeen, metaData: obj.opponentDetails?.metaData)
                     let newConversation = ISMChatConversationDB(
                         conversationId: obj.conversationId ?? "",
                                     updatedAt: obj.updatedAt,
@@ -153,7 +182,7 @@ public class LocalStorageManager: ChatStorageManager {
                                     isGroup: obj.isGroup,
                                     typing: obj.typing,
                                     userIds: obj.userIds,
-                                    opponentDetails: obj.opponentDetails,
+                                    opponentDetails: opponentDetails,
                                     config: obj.config,
                                     lastMessageDetails: obj.lastMessageDetails,
                                     deletedMessage: obj.deletedMessage,
@@ -188,6 +217,25 @@ public class LocalStorageManager: ChatStorageManager {
             }
         }
     }
+    
+    public func deleteAllConversations() async throws {
+        await MainActor.run {
+            let descriptor = FetchDescriptor<ISMChatConversationDB>()
+
+            do {
+                let allConversations = try modelContext.fetch(descriptor)
+
+                for conversation in allConversations {
+                    modelContext.delete(conversation)
+                }
+                modelContext.rollback()
+                print("✅ Deleted all conversations from SwiftData")
+            } catch {
+                print("❌ Error deleting all conversations: \(error)")
+            }
+        }
+    }
+
     
     public func clearConversationMessages(conversationId: String) async throws {
         do {
