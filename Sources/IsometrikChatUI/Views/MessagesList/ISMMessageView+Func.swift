@@ -254,14 +254,16 @@ extension ISMMessageView{
         if let user = self.opponenDetail{
             Task{
                 let conversationId = await viewModelNew.createConversation(user: user)
+                self.conversationID = conversationId
                 chatViewModel.getConversationDetail(conversationId: conversationId, isGroup: self.isGroup ?? false) { data in
                     self.conversationDetail = data
                 }
                 // added this message locally for end to end encryption
-                let sentAt = Date().timeIntervalSince1970 * 1000
-                let message = ISMChatMessagesDB(messageId: "", sentAt: sentAt, body: "", customType: "", action: ISMChatActionType.conversationCreated.value, conversationId: conversationId)
-                await viewModelNew.saveMessages(conversationId: conversationId, messages: [message])
+//                let sentAt = Date().timeIntervalSince1970 * 1000
+//                let message = ISMChatMessagesDB(messageId: "", sentAt: sentAt, body: "", customType: "", action: ISMChatActionType.conversationCreated.value, conversationId: conversationId)
+//                await viewModelNew.saveMessages(conversationId: conversationId, messages: [message])
                 NotificationCenter.default.post(name: NSNotification.refrestConversationListLocally, object: nil)
+                completion(true)
             }
             
 //            chatViewModel.createConversation(user: user, chatStatus: ISMChatStatus.Reject.value) { data,error  in

@@ -112,8 +112,8 @@ public class ChatRepository {
         return try await activeStorageManager.updateGroupImage(image: image, conversationId: conversationId, localOnly: localOnly)
     }
     
-    public func getConversationIdFromUserId(opponentUserId : String,myUserId: String) async throws -> String{
-        return try await activeStorageManager.getConversationIdFromUserId(opponentUserId: opponentUserId, myUserId: myUserId)
+    public func getConversationIdFromUserId(opponentUserId : String,myUserId: String) -> String{
+        return  activeStorageManager.getConversationIdFromUserId(opponentUserId: opponentUserId, myUserId: myUserId)
     }
     
     public func exitGroup(conversationId : String) async throws{

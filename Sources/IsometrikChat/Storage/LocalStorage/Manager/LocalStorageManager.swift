@@ -164,7 +164,10 @@ public class LocalStorageManager: ChatStorageManager {
                     existing.lastMessageSentAt = obj.lastMessageSentAt
                     try modelContext.save()
                 } else {
-                    let opponentDetails = ISMChatUserDB(userId: obj.opponentDetails?.userId, userProfileImageUrl: obj.opponentDetails?.userProfileImageUrl, userName: obj.opponentDetails?.userName, userIdentifier: obj.opponentDetails?.userIdentifier, online: obj.opponentDetails?.online, lastSeen: obj.opponentDetails?.lastSeen, metaData: obj.opponentDetails?.metaData)
+                    var opponentDetails = ISMChatUserDB()
+                    if let opponent = obj.opponentDetails{
+                        opponentDetails = ISMChatUserDB(userId: opponent.userId, userProfileImageUrl: opponent.userProfileImageUrl, userName: opponent.userName, userIdentifier: opponent.userIdentifier, online: opponent.online, lastSeen: opponent.lastSeen, metaData: opponent.metaData)
+                    }
                     let newConversation = ISMChatConversationDB(
                         conversationId: obj.conversationId ?? "",
                                     updatedAt: obj.updatedAt,
@@ -757,7 +760,7 @@ public class LocalStorageManager: ChatStorageManager {
     }
 
     
-    public func getConversationIdFromUserId(opponentUserId: String, myUserId: String) async throws -> String {
+    public func getConversationIdFromUserId(opponentUserId: String, myUserId: String) -> String {
         let conversationFetchDescriptor = FetchDescriptor<ISMChatConversationDB>(
             predicate: #Predicate { $0.opponentDetails?.userId == opponentUserId }
         )

@@ -74,7 +74,7 @@ public class ISMChatUserDB {
     public var lastSeen : Double?
     @Relationship(deleteRule: .cascade) public var metaData : ISMChatUserMetaDataDB?
     
-    @Relationship(deleteRule: .nullify) public var opponentDetails: ISMChatUserDB?
+//    @Relationship(deleteRule: .nullify) public var opponentDetails: ISMChatUserDB?
     
     public init(userId: String? = nil, userProfileImageUrl: String? = nil, userName: String? = nil, userIdentifier: String? = nil, online: Bool? = nil, lastSeen: Double? = nil, metaData: ISMChatUserMetaDataDB? = nil) {
         self.userId = userId

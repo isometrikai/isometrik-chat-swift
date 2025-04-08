@@ -350,9 +350,9 @@ public class ConversationsViewModel: ObservableObject {
         }
     }
     
-    public func getConversationIdFromUserId(opponentUserId : String,myUserId: String) async -> String{
+    public func getConversationIdFromUserId(opponentUserId : String,myUserId: String) -> String{
         do {
-            let conversationId = try await chatRepository.getConversationIdFromUserId(opponentUserId: opponentUserId, myUserId: myUserId)
+            let conversationId = chatRepository.getConversationIdFromUserId(opponentUserId: opponentUserId, myUserId: myUserId)
             return conversationId
         } catch {
             print("Unable to find conversationId: \(error)")

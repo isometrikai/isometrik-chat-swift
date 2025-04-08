@@ -46,7 +46,7 @@ public protocol ChatStorageManager {
     func updateGroupImage(image : String, conversationId : String,localOnly : Bool) async throws
     
     
-    func getConversationIdFromUserId(opponentUserId : String,myUserId: String) async throws -> String
+    func getConversationIdFromUserId(opponentUserId : String,myUserId: String) -> String
     
     
     //group

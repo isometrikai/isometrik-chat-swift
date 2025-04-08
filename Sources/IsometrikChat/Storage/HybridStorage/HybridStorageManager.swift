@@ -250,13 +250,13 @@ public class HybridStorageManager: ChatStorageManager {
         }
     }
     
-    public func getConversationIdFromUserId(opponentUserId: String, myUserId: String) async throws -> String {
+    public func getConversationIdFromUserId(opponentUserId: String, myUserId: String) -> String {
         do {
-            let conversationId = try await localStorageManager.getConversationIdFromUserId(opponentUserId: opponentUserId, myUserId: myUserId)
+            let conversationId =  localStorageManager.getConversationIdFromUserId(opponentUserId: opponentUserId, myUserId: myUserId)
             return conversationId
         } catch {
             print("Error delete conversation with hybrid: \(error)")
-            throw error
+            return ""
         }
     }
     

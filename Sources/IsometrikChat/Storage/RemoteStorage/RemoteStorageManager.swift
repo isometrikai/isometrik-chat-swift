@@ -155,7 +155,7 @@ public class RemoteStorageManager: ChatStorageManager {
         }
     }
     
-    public func getConversationIdFromUserId(opponentUserId: String, myUserId: String) async throws -> String {
+    public func getConversationIdFromUserId(opponentUserId: String, myUserId: String)  -> String {
         return ""
     }
     
