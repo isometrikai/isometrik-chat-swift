@@ -8,13 +8,7 @@
 import Foundation
 
 public class RemoteStorageManager: ChatStorageManager {
-    public func deleteSwiftData() async throws {
-        
-    }
-    
-    public func fetchConversationsLocal() async throws -> [ISMChatConversationDB] {
-        return []
-    }
+   
     
     
     
@@ -193,5 +187,17 @@ public class RemoteStorageManager: ChatStorageManager {
     
     public func addLastMessageOnAddAndRemoveReaction(conversationId: String, action: String, emoji: String, userId: String) async throws {
         
+    }
+    
+    public func addReactionToMessage(conversationId: String, messageId: String, reaction: String, userId: String) async throws {
+        
+    }
+    
+    public func deleteSwiftData() async throws {
+        
+    }
+    
+    public func fetchConversationsLocal() async throws -> [ISMChatConversationDB] {
+        return []
     }
 }

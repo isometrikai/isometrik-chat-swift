@@ -430,6 +430,14 @@ public class ConversationsViewModel: ObservableObject {
         }
     }
     
+    public func addReactionToMessage(conversationId: String, messageId: String, reaction: String, userId: String) async {
+        do {
+            try await chatRepository.addReactionToMessage(conversationId: conversationId, messageId: messageId, reaction: reaction, userId: userId)
+        } catch {
+            print("Unable to add last message on add and remove reaction : \(error)")
+        }
+    }
+    
     public func addLastMessageOnAddAndRemoveReaction(conversationId: String,action : String,emoji : String,userId: String) async {
         do {
               try await chatRepository.addLastMessageOnAddAndRemoveReaction(conversationId: conversationId, action: action, emoji: emoji, userId: userId)

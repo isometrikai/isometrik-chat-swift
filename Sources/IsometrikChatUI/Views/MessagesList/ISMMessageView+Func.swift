@@ -319,9 +319,11 @@ extension ISMMessageView{
         if let selectedReaction = selectedReaction{
             chatViewModel.sendReaction(conversationId: self.conversationID ?? "", messageId: self.sentRecationToMessageId, emojiReaction: selectedReaction) { _ in
                 //add my reactions here, and for other added in mqtt event
-//                realmManager.addReactionToMessage(conversationId: self.conversationID ?? "", messageId:  self.sentRecationToMessageId, reaction: selectedReaction, userId: userData?.userId ?? "")
-//                self.selectedReaction = nil
-//                realmManager.addLastMessageOnAddAndRemoveReaction(conversationId: self.conversationID ?? "", action: ISMChatActionType.reactionAdd.value, emoji: selectedReaction, userId: userData?.userId ?? "")
+                Task{
+                    await viewModelNew.addReactionToMessage(conversationId: self.conversationID ?? "", messageId:  self.sentRecationToMessageId, reaction: selectedReaction, userId: userData?.userId ?? "")
+                    self.selectedReaction = nil
+                    await viewModelNew.addLastMessageOnAddAndRemoveReaction(conversationId: self.conversationID ?? "", action: ISMChatActionType.reactionAdd.value, emoji: selectedReaction, userId: userData?.userId ?? "")
+                }
                 
             }
         }

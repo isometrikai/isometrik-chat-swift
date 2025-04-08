@@ -59,6 +59,8 @@ public protocol ChatStorageManager {
     func getLastInputTextInConversation(conversationId : String) async throws -> String
     func saveLastInputTextInConversation(text: String, conversationId: String) async throws
     
-    //
+    
+    //reaction
+    func addReactionToMessage(conversationId: String, messageId: String, reaction: String, userId: String) async throws
     func addLastMessageOnAddAndRemoveReaction(conversationId: String,action : String,emoji : String,userId: String) async throws
 }

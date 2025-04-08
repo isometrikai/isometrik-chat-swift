@@ -117,7 +117,7 @@ public class LocalStorageManager: ChatStorageManager {
                 if let existing = existingConversations.first {
                     // ✅ Update existing object instead of re-inserting
                     existing.updatedAt = obj.updatedAt
-//                    existing.lastMessageDetails = obj.lastMessageDetails
+                    existing.lastMessageDetails = obj.lastMessageDetails
 //                    existing.lastMessageDetails?.body = obj.lastMessageDetails?.body
 //                    if let objLastMessage = obj.lastMessageDetails {
 //                        

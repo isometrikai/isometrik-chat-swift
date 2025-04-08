@@ -331,10 +331,18 @@ public class HybridStorageManager: ChatStorageManager {
         }
     }
     
+    public func addReactionToMessage(conversationId: String, messageId: String, reaction: String, userId: String) async throws {
+        do {
+            try await localStorageManager.addReactionToMessage(conversationId: conversationId, messageId: messageId, reaction: reaction, userId: userId)
+        } catch {
+            print("Error: \(error)")
+            throw error
+        }
+    }
+    
     public func addLastMessageOnAddAndRemoveReaction(conversationId: String, action: String, emoji: String, userId: String) async throws {
         do {
-            let x = try await localStorageManager.addLastMessageOnAddAndRemoveReaction(conversationId: conversationId, action: action, emoji: emoji, userId: userId)
-            return x
+            try await localStorageManager.addLastMessageOnAddAndRemoveReaction(conversationId: conversationId, action: action, emoji: emoji, userId: userId)
         } catch {
             print("Error: \(error)")
             throw error
