@@ -45,6 +45,11 @@ public enum ISMChatMediaType : CaseIterable{
     case RejectBuyDirectRequest
     case PaymentEscrowed
     case DealComplete
+    //
+    case cheaper
+    case cheaperCancelOffer
+    case cheaperAcceptOffer
+    case cheaperEditOffer
     public var value : String{
         switch self {
         case .Text:
@@ -119,6 +124,14 @@ public enum ISMChatMediaType : CaseIterable{
             return "PAYMENT_ESCROWED"
         case .DealComplete:
             return "DEAL_COMPLETE"
+        case .cheaper:
+            return "CHEAPER"
+        case .cheaperCancelOffer:
+            return "CHEAPER_CANCEL_OFFER"
+        case .cheaperAcceptOffer:
+            return "CHEAPER_ACCEPT_OFFER"
+        case .cheaperEditOffer:
+            return "CHEAPER_EDIT_OFFER"
         }
     }
 }

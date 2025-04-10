@@ -232,6 +232,14 @@ public class ISMChatHelper: NSObject {
             return .PaymentEscrowed
         }else if message.customType == ISMChatMediaType.DealComplete.value{
             return .DealComplete
+        }else if message.customType == ISMChatMediaType.cheaper.value{
+            return .cheaper
+        }else if message.customType == ISMChatMediaType.cheaperCancelOffer.value{
+            return .cheaperCancelOffer
+        }else if message.customType == ISMChatMediaType.cheaperAcceptOffer.value{
+            return .cheaperAcceptOffer
+        }else if message.customType == ISMChatMediaType.cheaperEditOffer.value{
+            return .cheaperEditOffer
         }
         else{
             if message.action == ISMChatActionType.userBlock.value || message.action == ISMChatActionType.userBlockConversation.value{

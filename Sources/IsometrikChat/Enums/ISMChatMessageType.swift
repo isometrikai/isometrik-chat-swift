@@ -77,4 +77,9 @@ public enum ISMChatMessageType {
     case RejectBuyDirectRequest
     case PaymentEscrowed
     case DealComplete
+    
+    case cheaper
+    case cheaperCancelOffer
+    case cheaperAcceptOffer
+    case cheaperEditOffer
 }
