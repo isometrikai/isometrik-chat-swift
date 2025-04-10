@@ -83,8 +83,8 @@ public class LocalStorageManager: ChatStorageManager {
             }
 
             let sortedChats = filteredConversations.sorted {
-                guard let date1 = $0.lastMessageDetails?.updatedAt else {return false}
-                guard let date2 = $1.lastMessageDetails?.updatedAt else {return false}
+                guard let date1 = $0.lastMessageDetails?.sentAt else {return false}
+                guard let date2 = $1.lastMessageDetails?.sentAt else {return false}
                 return date1 > date2
             }
             return sortedChats
@@ -138,7 +138,7 @@ public class LocalStorageManager: ChatStorageManager {
                 if let existing = existingConversations.first {
                     // ✅ Update existing object instead of re-inserting
                     existing.updatedAt = obj.updatedAt
-                    existing.lastMessageDetails = obj.lastMessageDetails
+//                    existing.lastMessageDetails = obj.lastMessageDetails
 //                    existing.lastMessageDetails?.body = obj.lastMessageDetails?.body
 //                    if let objLastMessage = obj.lastMessageDetails {
 //                        

@@ -29,6 +29,7 @@ public struct ISMChatMessage : Codable,Identifiable{
     public var deliveredToAll : Bool?
     public var readByAll : Bool?
     public var customType : String?
+    public var createdBy : String?
     public var action : String?
     public var readBy : [ISMChatUserStatus]?
     public var deliveredTo  : [ISMChatUserStatus]?
@@ -69,6 +70,7 @@ public struct ISMChatMessage : Codable,Identifiable{
         deliveredToAll = try? container.decode(Bool.self, forKey: .deliveredToAll)
         readByAll = try? container.decode(Bool.self, forKey: .readByAll)
         customType = try? container.decode(String.self, forKey: .customType)
+        createdBy = try? container.decode(String.self, forKey: .createdBy)
         action = try? container.decode(String.self, forKey: .action)
         readBy = try? container.decode([ISMChatUserStatus].self, forKey: .readBy)
         deliveredTo = try? container.decode([ISMChatUserStatus].self, forKey: .deliveredTo)
@@ -109,7 +111,7 @@ public struct ISMChatMessage : Codable,Identifiable{
         config  = try? container.decode(ISMCallConfig.self, forKey: .config)
         details  = try? container.decode(ISMChatUpdateMessageDetail.self, forKey: .details)
     }
-    public init(sentAt : Double? = nil, body : String? = nil,messageId : String? = nil,mentionedUsers : [ISMChatMentionedUser]? = nil,metaData : ISMChatMetaData? = nil,metaDataJsonString : String? = nil,customType : String? = nil,initiatorIdentifier : String? = nil,action : String? = nil,attachment : [ISMChatAttachment]? = nil,conversationId : String? = nil,userId : String? = nil,userName : String? = nil,initiatorId : String? = nil,initiatorName : String? = nil,memberName : String? = nil,memberId : String? = nil, memberIdentifier : String? = nil,senderInfo : ISMChatUser? = nil,members : [ISMChatMemberAdded]? = nil,messageUpdated : Bool? = nil,reactions : [String: [String]]? = nil,missedByMembers : [String]? = nil,meetingId : String? = nil,callDurations : [ISMCallMeetingDuration]? = nil,audioOnly : Bool? = false,autoTerminate : Bool? = nil,config : ISMCallConfig? = nil,messageType : Int? = nil,details : ISMChatUpdateMessageDetail? = nil){
+    public init(sentAt : Double? = nil, body : String? = nil,messageId : String? = nil,mentionedUsers : [ISMChatMentionedUser]? = nil,metaData : ISMChatMetaData? = nil,metaDataJsonString : String? = nil,customType : String? = nil,createdBy : String? = nil,initiatorIdentifier : String? = nil,action : String? = nil,attachment : [ISMChatAttachment]? = nil,conversationId : String? = nil,userId : String? = nil,userName : String? = nil,initiatorId : String? = nil,initiatorName : String? = nil,memberName : String? = nil,memberId : String? = nil, memberIdentifier : String? = nil,senderInfo : ISMChatUser? = nil,members : [ISMChatMemberAdded]? = nil,messageUpdated : Bool? = nil,reactions : [String: [String]]? = nil,missedByMembers : [String]? = nil,meetingId : String? = nil,callDurations : [ISMCallMeetingDuration]? = nil,audioOnly : Bool? = false,autoTerminate : Bool? = nil,config : ISMCallConfig? = nil,messageType : Int? = nil,details : ISMChatUpdateMessageDetail? = nil){
         self.sentAt = sentAt
         self.body = body
         self.messageId = messageId
@@ -117,6 +119,7 @@ public struct ISMChatMessage : Codable,Identifiable{
         self.metaData = metaData
         self.metaDataJsonString = metaDataJsonString
         self.customType = customType
+        self.createdBy = createdBy
         self.action = action
         self.initiatorIdentifier = initiatorIdentifier
         self.attachments = attachment
@@ -345,6 +348,7 @@ public struct ISMChatMessage : Codable,Identifiable{
         let deliveredToAll = self.deliveredToAll ?? false
         let readByAll = self.readByAll ?? false
         let customType = self.customType ?? self.details?.customType
+        let createdBy = self.createdBy ?? ""
         let action = self.action ?? ""
         let readBy = readByValue
         let deliveredTo = deliveredToValue
@@ -387,6 +391,7 @@ public struct ISMChatMessage : Codable,Identifiable{
             deliveredToAll: deliveredToAll,
             readByAll: readByAll,
             customType: customType,
+            createdBy: createdBy,
             action: action,
             readBy: readBy,
             deliveredTo: deliveredTo,

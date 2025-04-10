@@ -20,6 +20,7 @@ public struct ISMChatMessageDelivered: Codable {
     public let metaData : ISMChatMetaData?
     public let metaDataJson : String?
     public let customType : String?
+    public let createdBy : String?
     public let userProfileImageUrl : String?
     public let userName : String?
     public let userIdentifier : String?
@@ -70,6 +71,7 @@ public struct ISMChatMessageDelivered: Codable {
         }()
         metaData = try? container.decodeIfPresent(ISMChatMetaData.self, forKey: .metaData)
         customType = try? container.decode(String.self, forKey: .customType)
+        createdBy = try? container.decode(String.self, forKey: .createdBy)
         userProfileImageUrl = try? container.decode(String.self, forKey: .userProfileImageUrl)
         userName = try? container.decode(String.self, forKey: .userName)
         userIdentifier = try? container.decode(String.self, forKey: .userIdentifier)
@@ -98,7 +100,7 @@ public struct ISMChatMessageDelivered: Codable {
         meetingId = try? container.decode(String.self, forKey: .meetingId)
     }
     
-    init(sentAt: Double? = nil, messageId: String? = nil, body: String? = nil, senderIdentifier: String? = nil, senderProfileImageUrl: String? = nil, conversationId: String? = nil, updatedAt: Double? = nil, senderName: String? = nil, senderId: String? = nil,metaDataJson: String? = nil, metaData: ISMChatMetaData? = nil, customType: String? = nil, userProfileImageUrl: String? = nil, userName: String? = nil, userIdentifier: String? = nil, userId: String? = nil, privateOneToOne: Bool? = nil, messageIds: [String]? = nil, action: String? = nil, attachments: [ISMChatAttachment]? = nil, parentMessageId: String? = nil, senderInfo: ISMChatSenderInfo? = nil, notificationBody: String? = nil, memberName: String? = nil, memberProfileImageUrl: String? = nil, memberIdentifier: String? = nil, memberId: String? = nil, initiatorProfileImageUrl: String? = nil, initiatorName: String? = nil, initiatorIdentifier: String? = nil, initiatorId: String? = nil, conversationTitle: String? = nil, conversationImageUrl: String? = nil, members: [ISMChatMembers]? = nil, details: ISMChatUpdateMessageDetail? = nil, mentionedUsers: [ISMChatMentionedUser]? = nil, reactions: [String : [String]]? = nil, meetingId: String? = nil) {
+    init(sentAt: Double? = nil, messageId: String? = nil, body: String? = nil, senderIdentifier: String? = nil, senderProfileImageUrl: String? = nil, conversationId: String? = nil, updatedAt: Double? = nil, senderName: String? = nil, senderId: String? = nil,metaDataJson: String? = nil, metaData: ISMChatMetaData? = nil, customType: String? = nil,createdBy: String? = nil, userProfileImageUrl: String? = nil, userName: String? = nil, userIdentifier: String? = nil, userId: String? = nil, privateOneToOne: Bool? = nil, messageIds: [String]? = nil, action: String? = nil, attachments: [ISMChatAttachment]? = nil, parentMessageId: String? = nil, senderInfo: ISMChatSenderInfo? = nil, notificationBody: String? = nil, memberName: String? = nil, memberProfileImageUrl: String? = nil, memberIdentifier: String? = nil, memberId: String? = nil, initiatorProfileImageUrl: String? = nil, initiatorName: String? = nil, initiatorIdentifier: String? = nil, initiatorId: String? = nil, conversationTitle: String? = nil, conversationImageUrl: String? = nil, members: [ISMChatMembers]? = nil, details: ISMChatUpdateMessageDetail? = nil, mentionedUsers: [ISMChatMentionedUser]? = nil, reactions: [String : [String]]? = nil, meetingId: String? = nil) {
         self.sentAt = sentAt
         self.messageId = messageId
         self.body = body
@@ -111,6 +113,7 @@ public struct ISMChatMessageDelivered: Codable {
         self.metaDataJson = metaDataJson
         self.metaData = metaData
         self.customType = customType
+        self.createdBy = createdBy
         self.userProfileImageUrl = userProfileImageUrl
         self.userName = userName
         self.userIdentifier = userIdentifier

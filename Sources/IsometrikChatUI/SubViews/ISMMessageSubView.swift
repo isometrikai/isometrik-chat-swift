@@ -964,105 +964,105 @@ struct ISMMessageSubView: View {
                             }
                             .padding(.vertical,2)
                         }
-//                        //MARK: - Video Call Message View
-//                    case .VideoCall:
-//                        HStack(alignment: .bottom){
-//                            ZStack(alignment: .bottomTrailing){
-//                                VStack(alignment: .leading, spacing: 2){
-//                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                        //when its group show member name in message
-//                                        inGroupUserName()
-//                                    }
-//                                    ZStack(alignment: .bottomTrailing){
-//                                        VStack{
-//                                            VStack(alignment: .trailing, spacing: 2){
-//                                                callView()
-//                                            }//:VStack
-//                                            .padding(4)
-//                                            .background(Color(hex: "#E8EFF9"))
-//                                            .cornerRadius(8)
-//                                        }
-//                                        .padding(8)
-//                                        .frame(width: 216, height: 59, alignment: .center)
-//                                        .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-//                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-//                                        .overlay(
-//                                            appearance.messageBubbleType == .BubbleWithOutTail ?
-//                                            AnyView(
-//                                                UnevenRoundedRectangle(
-//                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-//                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-//                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-//                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-//                                                    style: .circular
-//                                                )
-//                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-//                                            ) : AnyView(EmptyView())
-//                                        )
-//                                        .onTapGesture(perform: {
-//                                            if isReceived == true{
-//                                                videoCallToUser = true
-//                                            }
-//                                        })
-//                                    }//:ZStack
-//                                }
-//                                if message.reactions.count > 0{
-//                                    reactionsView()
-//                                }
-//                            }
-//                            .padding(.vertical,2)
-//                        }
+                        //MARK: - Video Call Message View
+                    case .VideoCall:
+                        HStack(alignment: .bottom){
+                            ZStack(alignment: .bottomTrailing){
+                                VStack(alignment: .leading, spacing: 2){
+                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                        //when its group show member name in message
+                                        inGroupUserName()
+                                    }
+                                    ZStack(alignment: .bottomTrailing){
+                                        VStack{
+                                            VStack(alignment: .trailing, spacing: 2){
+                                                callView()
+                                            }//:VStack
+                                            .padding(4)
+                                            .background(Color(hex: "#E8EFF9"))
+                                            .cornerRadius(8)
+                                        }
+                                        .padding(8)
+                                        .frame(width: 216, height: 59, alignment: .center)
+                                        .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                        .overlay(
+                                            appearance.messageBubbleType == .BubbleWithOutTail ?
+                                            AnyView(
+                                                UnevenRoundedRectangle(
+                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                    style: .circular
+                                                )
+                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                            ) : AnyView(EmptyView())
+                                        )
+                                        .onTapGesture(perform: {
+                                            if isReceived == true{
+                                                videoCallToUser = true
+                                            }
+                                        })
+                                    }//:ZStack
+                                }
+                                if message.reactions?.count ?? 0 > 0{
+                                    reactionsView()
+                                }
+                            }
+                            .padding(.vertical,2)
+                        }
 //                        
 //                        //MARK: - Audio Call Message View
-//                    case .AudioCall:
-//                        HStack(alignment: .bottom){
-//                            ZStack(alignment: .bottomTrailing){
-//                                VStack(alignment: .leading, spacing: 2){
-//                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
-//                                        //when its group show member name in message
-//                                        inGroupUserName()
-//                                    }
-//                                    ZStack(alignment: .bottomTrailing){
-//                                        VStack{
-//                                            VStack(alignment: .trailing, spacing: 2){
-//                                                callView()
-//                                                
-//                                            }//:VStack
-//                                            .padding(4)
-//                                            .background(Color(hex: "#E8EFF9"))
-//                                            .cornerRadius(8)
-//                                        }
-//                                        .padding(8)
-//                                        .frame(width: 216, height: 59, alignment: .center)
-//                                        .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
-//                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
-//                                        .overlay(
-//                                            appearance.messageBubbleType == .BubbleWithOutTail ?
-//                                            AnyView(
-//                                                UnevenRoundedRectangle(
-//                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
-//                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
-//                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
-//                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
-//                                                    style: .circular
-//                                                )
-//                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-//                                            ) : AnyView(EmptyView())
-//                                        )
-//                                        .onTapGesture(perform: {
-//                                            if isReceived == true{
-//                                                audioCallToUser = true
-//                                            }
-//                                        })
-//                                    }//:ZStack
-//                                }
-//                                if message.reactions.count > 0{
-//                                    reactionsView()
-//                                }
-//                            }
-//                            .padding(.vertical,2)
-//                        }
-//                        //MARK: - Gif Message View
+                    case .AudioCall:
+                        HStack(alignment: .bottom){
+                            ZStack(alignment: .bottomTrailing){
+                                VStack(alignment: .leading, spacing: 2){
+                                    if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{
+                                        //when its group show member name in message
+                                        inGroupUserName()
+                                    }
+                                    ZStack(alignment: .bottomTrailing){
+                                        VStack{
+                                            VStack(alignment: .trailing, spacing: 2){
+                                                callView()
+                                                
+                                            }//:VStack
+                                            .padding(4)
+                                            .background(Color(hex: "#E8EFF9"))
+                                            .cornerRadius(8)
+                                        }
+                                        .padding(8)
+                                        .frame(width: 216, height: 59, alignment: .center)
+                                        .background(isReceived ? appearance.colorPalette.messageListReceivedMessageBackgroundColor : appearance.colorPalette.messageListSendMessageBackgroundColor)
+                                        .clipShape(ChatBubbleType(cornerRadius: 8, corners: isReceived ? (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topRight] : [.topLeft,.topRight,.bottomRight]) : (appearance.messageBubbleTailPosition == .top ? [.bottomLeft,.bottomRight,.topLeft] : [.topLeft,.topRight,.bottomLeft]), bubbleType: appearance.messageBubbleType, direction: isReceived ? .left : .right))
+                                        .overlay(
+                                            appearance.messageBubbleType == .BubbleWithOutTail ?
+                                            AnyView(
+                                                UnevenRoundedRectangle(
+                                                    topLeadingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 0 : 8) : 8,
+                                                    bottomLeadingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 0 : 8) : 8,
+                                                    bottomTrailingRadius: appearance.messageBubbleTailPosition == .bottom ? (isReceived ? 8 : 0) : 8,
+                                                    topTrailingRadius: appearance.messageBubbleTailPosition == .top ? (isReceived ? 8 : 0) : 8,
+                                                    style: .circular
+                                                )
+                                                .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
+                                            ) : AnyView(EmptyView())
+                                        )
+                                        .onTapGesture(perform: {
+                                            if isReceived == true{
+                                                audioCallToUser = true
+                                            }
+                                        })
+                                    }//:ZStack
+                                }
+                                if message.reactions?.count ?? 0 > 0{
+                                    reactionsView()
+                                }
+                            }
+                            .padding(.vertical,2)
+                        }
+                        //MARK: - Gif Message View
                     case .gif:
                         HStack(alignment: .bottom){
                             if isGroup == true && isReceived == true && ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == false{

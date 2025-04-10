@@ -24,6 +24,7 @@ public class ISMChatMessagesDB {
     public var deliveredToAll : Bool = false
     public var readByAll : Bool = false
     public var customType : String = ""
+    public var createdBy : String = ""
     public var action : String = ""
     @Relationship(deleteRule: .cascade) public var readBy : [ISMChatMessageDeliveryStatusDB]?
     @Relationship(deleteRule: .cascade) public var deliveredTo  : [ISMChatMessageDeliveryStatusDB]?
@@ -68,6 +69,7 @@ public class ISMChatMessagesDB {
         deliveredToAll: Bool? = nil,
         readByAll: Bool? = nil,
         customType: String? = nil,
+        createdBy: String? = nil,
         action: String,
         readBy: [ISMChatMessageDeliveryStatusDB]? = nil,
         deliveredTo: [ISMChatMessageDeliveryStatusDB]? = nil,
@@ -111,6 +113,7 @@ public class ISMChatMessagesDB {
         self.deliveredToAll = deliveredToAll ?? false
         self.readByAll = readByAll ?? false
         self.customType = customType ?? ""
+        self.createdBy = createdBy ?? ""
         self.action = action
         self.readBy = readBy
         self.deliveredTo = deliveredTo
