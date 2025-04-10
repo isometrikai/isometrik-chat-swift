@@ -65,7 +65,7 @@ public class HybridStorageManager: ChatStorageManager {
     public func fetchConversationsLocal() async throws -> [ISMChatConversationDB] {
         do {
             // Fetch local conversations once
-            let localConversations = try await localStorageManager.fetchConversations()
+            let localConversations = try await localStorageManager.fetchConversationsLocal()
           
             //  Return the latest local conversations
             return  localConversations

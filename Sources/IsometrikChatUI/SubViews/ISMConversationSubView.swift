@@ -531,17 +531,27 @@ struct ISMConversationSubView: View {
     /// Shows message delivery status indicators (sent/delivered/read)
     /// If its not group, then we check 'DeliveredTo' count should be one and 'DeliveredTo' should contain userId, same we will check for read
     func messageDeliveryStatus() -> some View {
-        if chat.isGroup == false{
-            if (chat.lastMessageDetails?.deliveredTo.count == 1 && chat.lastMessageDetails?.deliveredTo.first?.userId != nil) && (chat.lastMessageDetails?.readBy.count == 1 && chat.lastMessageDetails?.readBy.first?.userId != nil) {
+        guard let lastMessage = chat.lastMessageDetails else {
+            return AnyView(EmptyView())
+        }
+
+        let deliveredToCount = lastMessage.deliveredTo.count
+        let readByCount = lastMessage.readBy.count
+        let deliveredToFirstUserId = lastMessage.deliveredTo.first?.userId
+        let readByFirstUserId = lastMessage.readBy.first?.userId
+
+        if !chat.isGroup {
+            if deliveredToCount == 1, deliveredToFirstUserId != nil,
+               readByCount == 1, readByFirstUserId != nil {
                 return AnyView(appearance.images.chatList_messageRead
                     .resizable()
                     .frame(width: appearance.imagesSize.messageRead.width, height: appearance.imagesSize.messageRead.height))
-            }else if (chat.lastMessageDetails?.deliveredTo.count == 1 && chat.lastMessageDetails?.deliveredTo.first?.userId != nil) && chat.lastMessageDetails?.readBy.count == 0{
+            } else if deliveredToCount == 1, deliveredToFirstUserId != nil, readByCount == 0 {
                 return AnyView(appearance.images.chatList_messageDelivered
                     .resizable()
                     .frame(width: appearance.imagesSize.messageDelivered.width, height: appearance.imagesSize.messageDelivered.height))
-            }else{
-                if chat.lastMessageDetails?.msgSyncStatus == ISMChatSyncStatus.Local.txt {
+            } else {
+                if lastMessage.msgSyncStatus == ISMChatSyncStatus.Local.txt {
                     return AnyView(appearance.images.chatList_messagePending
                         .resizable()
                         .frame(width: appearance.imagesSize.messagePending.width, height: appearance.imagesSize.messagePending.height))
@@ -550,11 +560,11 @@ struct ISMConversationSubView: View {
                     .resizable()
                     .frame(width: appearance.imagesSize.messageSend.width, height: appearance.imagesSize.messageSend.height))
             }
-        }else{
-            //write code for group after grp implementations
+        } else {
             return AnyView(EmptyView())
         }
     }
+
     /// Gets the sender name text for group chats
     func getSenderNameText() -> some View {
         if let messageDetails = chat.lastMessageDetails {

@@ -85,7 +85,7 @@ public class ISMChatMessagesDB {
         reactionType: String? = nil,
         reactionsCount: Int? = nil,
         members: [ISMChatLastMessageMemberDB]? = nil,
-        deletedMessage: Bool? = nil,
+        deletedMessage: Bool? = false,
         memberName: String? = nil,
         memberId: String? = nil,
         memberIdentifier: String? = nil,

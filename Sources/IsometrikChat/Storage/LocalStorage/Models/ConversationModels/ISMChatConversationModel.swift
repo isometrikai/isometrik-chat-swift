@@ -27,9 +27,9 @@ public class ISMChatConversationDB: Identifiable {
     public var isGroup: Bool
     public var typing : Bool = false
     public var userIds : [String] = []
-    @Relationship(deleteRule: .cascade) public var opponentDetails : ISMChatUserDB?
+    @Relationship(deleteRule: .nullify) public var opponentDetails : ISMChatUserDB?
     @Relationship(deleteRule: .cascade) public var config : ISMChatConfigDB?
-    @Relationship(deleteRule: .cascade) public var lastMessageDetails : ISMChatLastMessageDB?
+    @Relationship(deleteRule: .nullify) public var lastMessageDetails : ISMChatLastMessageDB?
     public var deletedMessage : Bool = false
     @Relationship(deleteRule: .cascade) public var metaData : ISMChatConversationMetaData?
     public var metaDataJson : String?
@@ -145,8 +145,8 @@ public class ISMChatLastMessageDB{
     public var action : String?
     @Relationship(deleteRule: .cascade) public var metaData : ISMChatMetaDataDB?
     public var metaDataJsonString : String?
-    @Relationship(deleteRule: .cascade) public var deliveredTo : [ISMChatMessageDeliveryStatusDB] = []
-    @Relationship(deleteRule: .cascade) public var readBy : [ISMChatMessageDeliveryStatusDB] = []
+    @Relationship(deleteRule: .nullify) public var deliveredTo : [ISMChatMessageDeliveryStatusDB] = []
+    @Relationship(deleteRule: .nullify) public var readBy : [ISMChatMessageDeliveryStatusDB] = []
     public var msgSyncStatus : String = ""
     public var reactionType : String = ""
     public var userId : String = ""
@@ -165,7 +165,6 @@ public class ISMChatLastMessageDB{
     public var meetingId : String?
     public var missedByMembers : [String]?
     @Relationship(deleteRule: .cascade) public var callDurations : [ISMChatMeetingDuration]
-    @Relationship(inverse: \ISMChatConversationDB.lastMessageDetails) public weak var conversation: ISMChatConversationDB?
     
     public init(
         sentAt: Double? = nil,
@@ -264,8 +263,8 @@ public class ISMChatMessageDeliveryStatusDB {
     public var timestamp: Double?
 
     // Add inverse relationships
-    @Relationship(inverse: \ISMChatLastMessageDB.deliveredTo) public weak var lastMessageDelivered: ISMChatLastMessageDB?
-    @Relationship(inverse: \ISMChatLastMessageDB.readBy) public weak var lastMessageRead: ISMChatLastMessageDB?
+//    @Relationship(inverse: \ISMChatLastMessageDB.deliveredTo) public weak var lastMessageDelivered: ISMChatLastMessageDB?
+//    @Relationship(inverse: \ISMChatLastMessageDB.readBy) public weak var lastMessageRead: ISMChatLastMessageDB?
     //added for crash: "Unable to resolve conflict: relationship \"deliveredTo\" (on entity \"ISMChatLastMessageDB\") does not have an inverse" An abort signal terminated the process. Such crashes often happen because of an uncaught exception or unrecoverable error or calling the abort() function.
 
     public init(userId: String? = nil, timestamp: Double? = nil) {

@@ -63,19 +63,31 @@ public class LocalStorageManager: ChatStorageManager {
     
     
     public func fetchConversations() async throws  -> [ISMChatConversationDB] {
-        let descriptor = FetchDescriptor<ISMChatConversationDB>(
-            sortBy: [SortDescriptor(\.lastMessageDetails?.sentAt, order: .reverse)]
-        )
+//        let descriptor = FetchDescriptor<ISMChatConversationDB>(
+//            sortBy: [SortDescriptor(\.lastMessageDetails?.sentAt, order: .reverse)]
+//        )
+        let descriptor = FetchDescriptor<ISMChatConversationDB>()
+
         do {
-            let conversations = try modelContext.fetch(descriptor)
+            let conversations: [ISMChatConversationDB] = try modelContext.fetch(descriptor)
+            
+
             // Remove broadcast list from conversation list
             let filteredConversations = conversations.filter { conversation in
-                !(conversation.opponentDetails?.userId == nil &&
-                  conversation.opponentDetails?.userName == nil &&
-                  conversation.isGroup == false)
+                guard let opponent = conversation.opponentDetails else {
+                    return false
+                }
+                return !(opponent.userId == nil &&
+                         opponent.userName == nil &&
+                         conversation.isGroup == false)
             }
-            
-            return filteredConversations
+
+            let sortedChats = filteredConversations.sorted {
+                guard let date1 = $0.lastMessageDetails?.updatedAt else {return false}
+                guard let date2 = $1.lastMessageDetails?.updatedAt else {return false}
+                return date1 > date2
+            }
+            return sortedChats
         } catch {
             print("❌ Fetch Error: \(error)")
             return []
@@ -83,19 +95,28 @@ public class LocalStorageManager: ChatStorageManager {
     }
     
     public func fetchConversationsLocal() async throws -> [ISMChatConversationDB] {
-        let descriptor = FetchDescriptor<ISMChatConversationDB>(
-            sortBy: [SortDescriptor(\.lastMessageDetails?.sentAt, order: .reverse)]
-        )
+        let descriptor = FetchDescriptor<ISMChatConversationDB>()
+
         do {
-            let conversations = try modelContext.fetch(descriptor)
+            let conversations: [ISMChatConversationDB] = try modelContext.fetch(descriptor)
+            
+
             // Remove broadcast list from conversation list
             let filteredConversations = conversations.filter { conversation in
-                !(conversation.opponentDetails?.userId == nil &&
-                  conversation.opponentDetails?.userName == nil &&
-                  conversation.isGroup == false)
+                guard let opponent = conversation.opponentDetails else {
+                    return false
+                }
+                return !(opponent.userId == nil &&
+                         opponent.userName == nil &&
+                         conversation.isGroup == false)
             }
-            
-            return filteredConversations
+
+            let sortedChats = filteredConversations.sorted {
+                guard let date1 = $0.lastMessageDetails?.updatedAt else {return false}
+                guard let date2 = $1.lastMessageDetails?.updatedAt else {return false}
+                return date1 > date2
+            }
+            return sortedChats
         } catch {
             print("❌ Fetch Error: \(error)")
             return []
