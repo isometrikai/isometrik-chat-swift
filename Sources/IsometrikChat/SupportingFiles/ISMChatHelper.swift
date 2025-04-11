@@ -238,8 +238,8 @@ public class ISMChatHelper: NSObject {
             return .cheaperCancelOffer
         }else if message.customType == ISMChatMediaType.cheaperAcceptOffer.value{
             return .cheaperAcceptOffer
-        }else if message.customType == ISMChatMediaType.cheaperEditOffer.value{
-            return .cheaperEditOffer
+        }else if message.customType == ISMChatMediaType.cheaperCounterOffer.value{
+            return .cheaperCounterOffer
         }
         else{
             if message.action == ISMChatActionType.userBlock.value || message.action == ISMChatActionType.userBlockConversation.value{

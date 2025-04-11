@@ -81,5 +81,5 @@ public enum ISMChatMessageType {
     case cheaper
     case cheaperCancelOffer
     case cheaperAcceptOffer
-    case cheaperEditOffer
+    case cheaperCounterOffer
 }
