@@ -190,13 +190,13 @@ extension ISMMessageView{
         }
         
         if message.customType == ISMChatMediaType.AudioCall.value || message.customType == ISMChatMediaType.VideoCall.value{
-            return message.createdBy != myUserId
+            return message.initiatorId != myUserId
         }else{
             guard let senderInfo = message.senderInfo else {
                 print("Warning: senderInfo is nil or invalid")
                 return false // Or handle it accordingly
             }
-            return senderInfo.userId != myUserId
+            return senderInfo.userId ?? message.initiatorId != myUserId
         }
     }
 
