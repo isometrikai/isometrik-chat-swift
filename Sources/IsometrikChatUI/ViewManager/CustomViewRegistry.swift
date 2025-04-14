@@ -20,7 +20,7 @@ public protocol CustomMessageBubbleViewProvider {
     /// Parses raw message data into the required view data model
     /// - Parameter data: Raw message data from database
     /// - Returns: Optional parsed view data
-    static func parseData(_ data: MessagesDB) -> ViewData?
+    static func parseData(_ details: ISMChatConversationDetail?,_ data: MessagesDB) -> ViewData?
     
     /// Creates a SwiftUI view using the parsed data
     /// - Parameter data: Parsed view data
@@ -35,8 +35,7 @@ public class CustomMessageBubbleViewRegistry {
     public static let shared = CustomMessageBubbleViewRegistry()
     
     /// Dictionary storing view builders for different custom message types
-    private var viewBuilders: [String: (MessagesDB) -> AnyView] = [:]
-    
+    private var viewBuilders: [String: (MessagesDB,ISMChatConversationDetail?) -> AnyView] = [:]
     /// Registers a custom view provider for a specific message type
     /// - Parameters:
     ///   - type: String identifier for the custom message type
@@ -45,8 +44,8 @@ public class CustomMessageBubbleViewRegistry {
         customType type: String,
         view: Provider.Type
     ) {
-        viewBuilders[type] = { message in
-            if let parsedData = Provider.parseData(message) {
+        viewBuilders[type] = { message, details in
+            if let parsedData = Provider.parseData(details, message) {
                 return AnyView(Provider.createView(data: parsedData))
             }
             return AnyView(Text("Unable to render custom view"))
@@ -56,8 +55,8 @@ public class CustomMessageBubbleViewRegistry {
     /// Retrieves the appropriate view for a given message
     /// - Parameter message: Message data from database
     /// - Returns: A type-erased SwiftUI view
-    public func view(for message: MessagesDB) -> AnyView {
-        return viewBuilders[message.customType]?(message) ??
+    public func view(for message: MessagesDB,details : ISMChatConversationDetail?) -> AnyView {
+        return viewBuilders[message.customType]?(message, details) ??
         AnyView(Text(message.body ?? ""))
     }
 }

@@ -135,6 +135,7 @@ extension ISMMessageView{
                               conversationId: self.conversationID ?? "",
                               groupconversationMember: self.conversationDetail?.conversationDetails?.members ?? [],
                               opponentDeatil: (self.conversationDetail?.conversationDetails?.opponentDetails ?? ISMChatUser()),
+                              conversationDetail: self.conversationDetail ?? nil,
                               isGroup:  self.isGroup,
                               fromBroadCastFlow: self.fromBroadCastFlow,
                               navigateToDeletePopUp: chatProperties.multipleSelectionOfMessageForDelete == true ? $stateViewModel.showDeleteMultipleMessage : $stateViewModel.showDeleteSingleMessage,

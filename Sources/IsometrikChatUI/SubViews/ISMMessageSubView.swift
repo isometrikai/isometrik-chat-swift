@@ -30,6 +30,7 @@ struct ISMMessageSubView: View {
     let conversationId : String
     let groupconversationMember : [ISMChatGroupMember]
     let opponentDeatil : ISMChatUser
+    var conversationDetail : ISMChatConversationDetail? = nil
     let pasteboard = UIPasteboard.general
     var isGroup : Bool?
     let fromBroadCastFlow : Bool?
@@ -1623,7 +1624,7 @@ struct ISMMessageSubView: View {
                                     }
                                     
                                     VStack(alignment: .trailing,spacing: 5){
-                                        CustomMessageBubbleViewRegistry.shared.view(for: self.message)
+                                        CustomMessageBubbleViewRegistry.shared.view(for: self.message, details: self.conversationDetail)
                                             .padding(.trailing,5)
                                     }//:ZStack
                                     .frame(width: 287)
@@ -1651,7 +1652,7 @@ struct ISMMessageSubView: View {
                             }.padding(.vertical,2)
                         }
                     default:
-                        CustomMessageBubbleViewRegistry.shared.view(for: self.message)
+                        CustomMessageBubbleViewRegistry.shared.view(for: self.message, details: self.conversationDetail)
                     }
                     
                 }.simultaneousGesture(
