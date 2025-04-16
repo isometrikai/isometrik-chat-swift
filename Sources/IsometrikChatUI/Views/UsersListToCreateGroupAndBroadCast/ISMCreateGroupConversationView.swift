@@ -33,9 +33,10 @@ public struct ISMCreateGroupConversationView: View {
     
     //MARK:  - BODY
     public var body: some View {
-        ZStack{
-            VStack {
-                ScrollViewReader { proxy in
+        NavigationStack{
+            ZStack{
+                VStack {
+                    //                ScrollViewReader { proxy in
                     List {
                         // Display header if users are selected
                         if userSelected.count > 0 {
@@ -53,7 +54,7 @@ public struct ISMCreateGroupConversationView: View {
                                         ZStack{
                                             HStack(spacing:5){
                                                 // User avatar and details
-                                                UserAvatarView(avatar: value.userProfileImageUrl ?? "", showOnlineIndicator: value.online ?? false,size: CGSize(width: 40, height: 40), userName: value.userName ?? "",font: .regular(size: 14))
+                                                //                                                UserAvatarView(avatar: value.userProfileImageUrl ?? "", showOnlineIndicator: value.online ?? false,size: CGSize(width: 40, height: 40), userName: value.userName ?? "",font: .regular(size: 14))
                                                 VStack(alignment: .leading, spacing: 5, content: {
                                                     Text(value.userName ?? "User")
                                                         .font(appearance.fonts.messageListMessageText)
@@ -121,27 +122,28 @@ public struct ISMCreateGroupConversationView: View {
                         }
                     }
                     .navigationBarItems(leading: navBarLeadingBtn, trailing: navBarTrailingBtn)
+                    //                }
+                }//:VStack
+                .onLoad {
+                    // Reset and fetch users on appear
+                    self.viewModel.resetGetUsersdata()
+                    getUsers()
                 }
-            }//:VStack
-            .onAppear {
-                // Reset and fetch users on appear
-                self.viewModel.resetGetUsersdata()
-                getUsers()
-            }
-            .refreshable {
-                refreshUsers()
-            }
-            .searchable(text: $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always))
-            .onChange(of: viewModel.debounceSearchedText, { _, _ in
-                // Handle search text changes
-                print("~~SEARCHING WITH DEBOUNCING \(viewModel.searchedText)")
-                self.viewModel.resetGetUsersdata()
-                getUsers()
-            })
-            .onDisappear {
-                // Clear search text on disappear
-                viewModel.searchedText = ""
-                viewModel.debounceSearchedText = ""
+                .refreshable {
+                    refreshUsers()
+                }
+                .searchable(text: $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always))
+                .onChange(of: viewModel.debounceSearchedText, { _, _ in
+                    // Handle search text changes
+                    print("~~SEARCHING WITH DEBOUNCING \(viewModel.searchedText)")
+                    self.viewModel.resetGetUsersdata()
+                    getUsers()
+                })
+                .onDisappear {
+                    // Clear search text on disappear
+                    viewModel.searchedText = ""
+                    viewModel.debounceSearchedText = ""
+                }
             }
         }
     }
@@ -262,11 +264,13 @@ public struct ISMCreateGroupConversationView: View {
         viewModel.apiCalling = true
         if selectUserFor == .AddMemberInBroadcast{
             viewModel.getBroadCastEligibleUsers(groupCastId : self.groupCastId ?? "",search: viewModel.searchedText) { data in
+                viewModel.apiCalling = false
                 viewModel.users.append(contentsOf: data?.groupcastEligibleMembers ?? [])
                 viewModel.usersSectionDictionary = viewModel.getSectionedDictionary(data: viewModel.users)
             }
         }else{
             viewModel.getUsers(search: viewModel.searchedText) { data in
+                viewModel.apiCalling = false
                 viewModel.users.append(contentsOf: data?.users ?? [])
                 viewModel.usersSectionDictionary = viewModel.getSectionedDictionary(data: viewModel.users)
             }

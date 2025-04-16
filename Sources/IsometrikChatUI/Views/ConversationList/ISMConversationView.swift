@@ -125,7 +125,7 @@ public struct ISMConversationView : View {
                         createChat = false
                     }
                 })
-                .sheet(isPresented: $createChat, content: {
+                .fullScreenCover(isPresented: $createChat, content: {
                     //create chat flow
                     ISMUsersView(viewModel: self.viewModel, selectedUser: $selectedUserToNavigate, selectedUserconversationId: $selectedUserConversationId,groupCastIdToNavigate: $groupCastIdToNavigate,viewModelNew: self.viewModelNew)
                 })

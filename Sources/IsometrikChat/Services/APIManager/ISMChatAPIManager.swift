@@ -75,131 +75,251 @@ extension ISMChatURLConvertible {
 struct ISMChatNewAPIManager {
     // Configuration
     private static let maxRetries = 3
-    private static let timeoutInterval: TimeInterval = 30
+    private static let timeoutInterval: TimeInterval = 60
     private static let retryDelay: TimeInterval = 2
     
-    static func sendRequest<T: Codable, R: Any>(
-        request: ISMChatAPIRequest<R>,
-        showLoader: Bool = true,
-        retryCount: Int = 0,
-        completion: @escaping (_ result: ISMChatResult<T, ISMChatNewAPIError>) -> Void
-    ) {
-        if showLoader {
-            DispatchQueue.main.async {
-                // ISMShowLoader.shared.startLoading()
-            }
-        }
+    static func sendRequest<T: Codable, R:Any>(request: ISMChatAPIRequest<R>, showLoader : Bool = true,cachePolicy :  NSURLRequest.CachePolicy = .returnCacheDataElseLoad, completion: @escaping (_ result : ISMChatResult<T, ISMChatNewAPIError>) -> Void) {
         
-        // Configure URL
-        var urlComponents = URLComponents(url: request.endPoint.baseURL.appendingPathComponent(request.endPoint.path),
-                                        resolvingAgainstBaseURL: true)
+//        if showLoader{
+//            Helper.addLoader()
+//        }
+        
+        var urlComponents = URLComponents(url: request.endPoint.baseURL.appendingPathComponent(request.endPoint.path), resolvingAgainstBaseURL: true)
         urlComponents?.queryItems = request.endPoint.queryParams?.map { URLQueryItem(name: $0.key, value: $0.value) }
         
         guard let url = urlComponents?.url else {
-            handleError(.invalidResponse, showLoader: showLoader, completion: completion)
+            completion(.failure(.invalidResponse))
             return
         }
         
-        // Configure URLRequest
         var urlRequest = URLRequest(url: url)
+//        urlRequest.cachePolicy = cachePolicy
         urlRequest.httpMethod = request.endPoint.method.rawValue
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.setValue("keep-alive", forHTTPHeaderField: "Connection")
-        urlRequest.timeoutInterval = timeoutInterval
         
-        // Add headers
+        // Set headers if provided
         request.endPoint.headers?.forEach { key, value in
             urlRequest.setValue(value, forHTTPHeaderField: key)
         }
         
-        // Add body if present
+
         if let requestBody = request.requestBody as? [String: Any] {
             do {
                 let jsonBody = try JSONSerialization.data(withJSONObject: requestBody, options: [])
                 urlRequest.httpBody = jsonBody
                 print("Request Body: \(String(data: jsonBody, encoding: .utf8) ?? "Unable to encode body")")
             } catch {
-                handleError(.invalidResponse, showLoader: showLoader, completion: completion)
+                completion(.failure(.invalidResponse))
                 return
             }
         }
         
-        // Create URLSession configuration
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = timeoutInterval
-        configuration.timeoutIntervalForResource = timeoutInterval
-        configuration.waitsForConnectivity = true
-        
-        let session = URLSession(configuration: configuration)
-        
-        let task = session.dataTask(with: urlRequest) { data, response, error in
+        let task = URLSession.shared.dataTask(with: urlRequest) { data, response, error in
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(.invalidResponse))
+//                Helper.hideLoader()
+                return
+            }
+            if let error = error {
+                completion(.failure(.decodingError(error)))
+                return
+            }
+            
+            
+            guard let data = data else {
+                completion(.failure(.invalidResponse))
+                return
+            }
+            
+            let errorMessage = String(data:data, encoding: .utf8)
+            
+             #if DEBUG
+                  print(JSON(data))
+            #endif
+            
             DispatchQueue.main.async {
-                // Handle network errors with retry logic
-                if let error = error as NSError? {
-                    // Network-related errors that warrant a retry
-                    let retryableErrors = [-1001, -1003, -1004, -1005, -1009]
-                    
-                    if retryableErrors.contains(error.code) && retryCount < maxRetries {
-                        print("Retrying request (attempt \(retryCount + 1) of \(maxRetries))")
-                        
-                        DispatchQueue.global().asyncAfter(deadline: .now() + retryDelay) {
-                            sendRequest(
-                                request: request,
-                                showLoader: showLoader,
-                                retryCount: retryCount + 1,
-                                completion: completion
-                            )
-                        }
-                        return
-                    }
-                    
-                    completion(.failure(.decodingError(error)))
-                    if showLoader {
-                        // ISMShowLoader.shared.stopLoading()
-                    }
-                    return
-                }
-                
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    handleError(.invalidResponse, showLoader: showLoader, completion: completion)
-                    return
-                }
-                
-                guard let data = data else {
-                    handleError(.invalidResponse, showLoader: showLoader, completion: completion)
-                    return
-                }
-                
-                print("Response Status Code: \(httpResponse.statusCode)")
-                print(JSON(data))
-                
-                switch httpResponse.statusCode {
+            switch httpResponse.statusCode {
+               
                 case 200, 201:
-                    do {
-                        let decoder = JSONDecoder()
-                        let responseObject = try decoder.decode(T.self, from: data)
-                        completion(.success(responseObject, nil))
-                    } catch {
-                        print("Decoding Error: \(error)")
-                        completion(.failure(.decodingError(error)))
+                do {
+                    let decoder = JSONDecoder()
+                    let responseObject = try decoder.decode(T.self, from: data)
+                    completion(.success(responseObject, nil))
+                } catch {
+                    print("Decoding Error: \(error)")
+                    completion(.failure(.decodingError(error)))
+                }
+//                case 404:
+//                completion(.failure(.noResultsFound(httpResponse.statusCode)))
+                    
+                case 401, 406 :
+                    DispatchQueue.main.async {
+//                        Utility.logOut()
                     }
-                case 404:
-                    completion(.failure(.httpError(httpResponse.statusCode)))
-                case 401, 406:
-                    // Handle refresh token
-                    handleTokenRefresh(request: request, completion: completion)
                 default:
-                    completion(.failure(.httpError(httpResponse.statusCode)))
+                // Handle the error messages and statuscode
+                print("error")
+//                do {
+//                    var errorObject = try JSONDecoder().decode(ISMLiveErrorMessage.self, from: data)
+//                    if let message = errorObject.message{
+//                        errorObject.error = message
+//                    }
+//                    completion(.failure(.httpError(httpResponse.statusCode, errorObject)))
+//                } catch {
+//                    completion(.failure(.noResultsFound(httpResponse.statusCode)))
+//                }
                 }
                 
-                if showLoader {
-                    // ISMShowLoader.shared.stopLoading()
-                }
+                
+//                if showLoader{
+//                    Helper.hideLoader()
+//                }
             }
         }
         
         task.resume()
     }
+    
+//    static func sendRequest<T: Codable, R: Any>(
+//        request: ISMChatAPIRequest<R>,
+//        showLoader: Bool = true,
+//        retryCount: Int = 0,
+//        completion: @escaping (_ result: ISMChatResult<T, ISMChatNewAPIError>) -> Void
+//    ) {
+//        if showLoader {
+//            DispatchQueue.main.async {
+//                // ISMShowLoader.shared.startLoading()
+//            }
+//        }
+//        
+//        // Configure URL
+//        var urlComponents = URLComponents(url: request.endPoint.baseURL.appendingPathComponent(request.endPoint.path),
+//                                        resolvingAgainstBaseURL: true)
+//        urlComponents?.queryItems = request.endPoint.queryParams?.map { URLQueryItem(name: $0.key, value: $0.value) }
+//        
+//        guard let url = urlComponents?.url else {
+//            handleError(.invalidResponse, showLoader: showLoader, completion: completion)
+//            return
+//        }
+//        
+//        // Configure URLRequest
+//        var urlRequest = URLRequest(url: url)
+//        urlRequest.httpMethod = request.endPoint.method.rawValue
+//        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//        urlRequest.setValue("keep-alive", forHTTPHeaderField: "Connection")
+//        urlRequest.timeoutInterval = timeoutInterval
+//        
+//        // Add headers
+//        request.endPoint.headers?.forEach { key, value in
+//            urlRequest.setValue(value, forHTTPHeaderField: key)
+//        }
+//        
+//        // Add body if present
+//        if let requestBody = request.requestBody as? [String: Any] {
+//            do {
+//                let jsonBody = try JSONSerialization.data(withJSONObject: requestBody, options: [])
+//                urlRequest.httpBody = jsonBody
+//                print("Request Body: \(String(data: jsonBody, encoding: .utf8) ?? "Unable to encode body")")
+//            } catch {
+//                handleError(.invalidResponse, showLoader: showLoader, completion: completion)
+//                return
+//            }
+//        }
+//        
+//        // Create URLSession configuration
+//        let configuration = URLSessionConfiguration.default
+//        configuration.timeoutIntervalForRequest = timeoutInterval
+//        configuration.timeoutIntervalForResource = timeoutInterval
+//        configuration.waitsForConnectivity = true
+//        
+//        let session = URLSession(configuration: configuration)
+//        
+//        let task = session.dataTask(with: urlRequest) { data, response, error in
+//            DispatchQueue.main.async {
+//                // Handle network errors with retry logic
+//                if let error = error as NSError? {
+//                    // Network-related errors that warrant a retry
+////                    let retryableErrors = [-1001, -1003, -1004, -1005, -1009]
+//                    
+//                    let retryableErrors: [URLError.Code] = [.timedOut, .cannotFindHost, .cannotConnectToHost, .networkConnectionLost, .notConnectedToInternet, .secureConnectionFailed]
+//
+//                    if let urlError = error as? URLError, retryableErrors.contains(urlError.code), retryCount < maxRetries {
+//                        // Retry
+//                        print("Retrying request (attempt \(retryCount + 1) of \(maxRetries))")
+//                        
+//                        DispatchQueue.global().asyncAfter(deadline: .now() + retryDelay) {
+//                            sendRequest(
+//                                request: request,
+//                                showLoader: showLoader,
+//                                retryCount: retryCount + 1,
+//                                completion: completion
+//                            )
+//                        }
+//                        return
+//                    }
+//
+//                    
+////                    if retryableErrors.contains(error.code) && retryCount < maxRetries {
+////                        print("Retrying request (attempt \(retryCount + 1) of \(maxRetries))")
+////                        
+////                        DispatchQueue.global().asyncAfter(deadline: .now() + retryDelay) {
+////                            sendRequest(
+////                                request: request,
+////                                showLoader: showLoader,
+////                                retryCount: retryCount + 1,
+////                                completion: completion
+////                            )
+////                        }
+////                        return
+////                    }
+//                    
+//                    completion(.failure(.decodingError(error)))
+//                    if showLoader {
+//                        // ISMShowLoader.shared.stopLoading()
+//                    }
+//                    return
+//                }
+//                
+//                guard let httpResponse = response as? HTTPURLResponse else {
+//                    handleError(.invalidResponse, showLoader: showLoader, completion: completion)
+//                    return
+//                }
+//                
+//                guard let data = data else {
+//                    handleError(.invalidResponse, showLoader: showLoader, completion: completion)
+//                    return
+//                }
+//                
+//                print("Response Status Code: \(httpResponse.statusCode)")
+//                print(JSON(data))
+//                
+//                switch httpResponse.statusCode {
+//                case 200, 201:
+//                    do {
+//                        let decoder = JSONDecoder()
+//                        let responseObject = try decoder.decode(T.self, from: data)
+//                        completion(.success(responseObject, nil))
+//                    } catch {
+//                        print("Decoding Error: \(error)")
+//                        completion(.failure(.decodingError(error)))
+//                    }
+//                case 404:
+//                    completion(.failure(.httpError(httpResponse.statusCode)))
+//                case 401, 406:
+//                    // Handle refresh token
+//                    handleTokenRefresh(request: request, completion: completion)
+//                default:
+//                    completion(.failure(.httpError(httpResponse.statusCode)))
+//                }
+//                
+//                if showLoader {
+//                    // ISMShowLoader.shared.stopLoading()
+//                }
+//            }
+//        }
+//        
+//        task.resume()
+//    }
     
     private static func handleError<T: Codable>(
         _ error: ISMChatNewAPIError,

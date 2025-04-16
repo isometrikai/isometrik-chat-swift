@@ -112,16 +112,16 @@ public class HybridStorageManager: ChatStorageManager {
     }
     
     
-    public func fetchMessages(conversationId: String,lastMessageTimestamp: String,onlyLocal : Bool) async throws -> [ISMChatMessagesDB] {
+    public func fetchMessages(fromBroadCastFlow: Bool,conversationId: String,lastMessageTimestamp: String,onlyLocal : Bool) async throws -> [ISMChatMessagesDB] {
         do {
             
             if onlyLocal == true{
                 //only fetch local messages
-                let localMessages = try await localStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal : onlyLocal)
+                let localMessages = try await localStorageManager.fetchMessages(fromBroadCastFlow: fromBroadCastFlow, conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal : onlyLocal)
                 return localMessages
             }else{
                 // Fetch from remote and sync
-                let remoteMessages = try await remoteStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal : onlyLocal)
+                let remoteMessages = try await remoteStorageManager.fetchMessages(fromBroadCastFlow: fromBroadCastFlow, conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal : onlyLocal)
                 try await localStorageManager.saveAllMessages(remoteMessages, conversationId: conversationId)
                 // saving media simultanously in conversation
                 for value in remoteMessages{
@@ -129,7 +129,7 @@ public class HybridStorageManager: ChatStorageManager {
                         try await  localStorageManager.saveMedia(arr: value.attachments ?? [], conversationId: conversationId, customType: value.customType ?? "", sentAt: value.sentAt ?? 0, messageId: value.messageId ?? "", userName: value.senderInfo?.userName ?? "")
                     }
                 }
-                let localMessages = try await localStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal : onlyLocal)
+                let localMessages = try await localStorageManager.fetchMessages(fromBroadCastFlow: fromBroadCastFlow, conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal : onlyLocal)
                 return localMessages
             }
         } catch {

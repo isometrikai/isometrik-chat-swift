@@ -169,9 +169,9 @@ public class ConversationsViewModel: ObservableObject {
         }
     }
     
-    public func loadMessages(conversationId : String,lastMessageTimestamp: String) async {
+    public func loadMessages(fromBroadCastFlow: Bool,conversationId : String,lastMessageTimestamp: String) async {
         do {
-            let fetchedMessages = try await chatRepository.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal: false)
+            let fetchedMessages = try await chatRepository.fetchMessages(fromBroadCastFlow: fromBroadCastFlow,conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal: false)
             DispatchQueue.main.async {
                 //i have filter some action type to not show in UI
                 self.allMessages = fetchedMessages.filter { message in
@@ -184,9 +184,9 @@ public class ConversationsViewModel: ObservableObject {
         }
     }
     
-    public func loadMessagesLocallyToUpdateUI(conversationId : String,lastMessageTimestamp: String) async {
+    public func loadMessagesLocallyToUpdateUI(fromBroadCastFlow: Bool,conversationId : String,lastMessageTimestamp: String) async {
         do {
-            let fetchedMessages = try await chatRepository.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal: true)
+            let fetchedMessages = try await chatRepository.fetchMessages(fromBroadCastFlow: fromBroadCastFlow,conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal: true)
             DispatchQueue.main.async {
                 //i have filter some action type to not show in UI
                 self.allMessages = fetchedMessages.filter { message in

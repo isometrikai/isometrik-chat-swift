@@ -104,7 +104,7 @@ extension ChatsViewModel{
             case .success(let data,_) :
                 completion(data)
             case .failure(let error) :
-                ISMChatHelper.print("delete broadcast Api fail -----> \(String(describing: error))")
+                ISMChatHelper.print("get broadcast Api fail -----> \(String(describing: error))")
             }
         }
     }

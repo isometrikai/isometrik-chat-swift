@@ -894,7 +894,7 @@ public struct ISMMessageView: View {
     
     func getMessages(){
         Task {
-            await viewModelNew.loadMessages(conversationId: self.conversationID ?? "", lastMessageTimestamp: viewModelNew.messages.last?.last?.messageId ?? "")
+            await viewModelNew.loadMessages(fromBroadCastFlow: self.fromBroadCastFlow ?? false, conversationId: self.conversationID ?? "", lastMessageTimestamp: viewModelNew.messages.last?.last?.messageId ?? "")
             // scroll to last message
             parentMessageIdToScroll = self.viewModelNew.messages.last?.last?.id.description ?? ""
             await viewModelNew.fetchPhotosAndVideos(conversationId: self.conversationID ?? "")
@@ -906,7 +906,7 @@ public struct ISMMessageView: View {
     
     func fetchMessagesLocally(){
         Task{
-            await viewModelNew.loadMessagesLocallyToUpdateUI(conversationId: self.conversationID ?? "", lastMessageTimestamp: viewModelNew.messages.last?.last?.messageId ?? "")
+            await viewModelNew.loadMessagesLocallyToUpdateUI(fromBroadCastFlow: self.fromBroadCastFlow ?? false,conversationId: self.conversationID ?? "", lastMessageTimestamp: viewModelNew.messages.last?.last?.messageId ?? "")
             // scroll to last message
             parentMessageIdToScroll = self.viewModelNew.messages.last?.last?.id.description ?? ""
             await viewModelNew.fetchPhotosAndVideos(conversationId: self.conversationID ?? "")

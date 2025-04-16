@@ -144,12 +144,22 @@ public struct ISMUsersView: View {
                     }
                 }//:VStack
                 // Navigation destinations for creating group and broadcast conversations
-                .navigationDestination(isPresented: $navigatetoCreatGroup, destination: {
+                .fullScreenCover(isPresented: $navigatetoCreatGroup, onDismiss: {
+                    self.dismiss
+                }, content: {
                     ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.viewModel, selectUserFor: .Group, groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate)
                 })
-                .navigationDestination(isPresented: $navigatetoCreatBroadCast, destination: {
-                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.viewModel, selectUserFor: .BroadCast, groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate)
-                })
+                    .fullScreenCover(isPresented: $navigatetoCreatBroadCast, onDismiss: {
+                        self.dismiss
+                    }, content: {
+                        ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.viewModel, selectUserFor: .BroadCast, groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate)
+                    })
+//                .navigationDestination(isPresented: $navigatetoCreatGroup, destination: {
+//                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.viewModel, selectUserFor: .Group, groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate)
+//                })
+//                .navigationDestination(isPresented: $navigatetoCreatBroadCast, destination: {
+//                    ISMCreateGroupConversationView(showSheetView : $navigatetoCreatGroup, viewModel: self.viewModel, selectUserFor: .BroadCast, groupCastId: "", groupCastIdToNavigate : $groupCastIdToNavigate)
+//                })
                 .searchable(text: $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always))
                 .onChange(of: viewModel.debounceSearchedText, { _, _ in
                     // Reset user data and fetch users on search text change
@@ -162,7 +172,7 @@ public struct ISMUsersView: View {
                     viewModel.searchedText = ""
                     viewModel.debounceSearchedText = ""
                 }
-                .onAppear {
+                .onLoad {
                     // Reset user data and fetch users on view appear
                     self.viewModel.resetGetUsersdata()
                     getUsers()
@@ -200,6 +210,7 @@ public struct ISMUsersView: View {
     func getUsers() {
         viewModel.apiCalling = true
         viewModel.getUsers(search: viewModel.searchedText) { data in
+            viewModel.apiCalling = false
             viewModel.users.append(contentsOf: data?.users ?? [])
             viewModel.usersSectionDictionary = viewModel.getSectionedDictionary(data: viewModel.users)
         }

@@ -68,8 +68,8 @@ public class ChatRepository {
         return try await activeStorageManager.updateUnreadCountThroughConversation(conversationId: conversationId, count: count, reset: reset)
     }
     
-    public func fetchMessages(conversationId: String,lastMessageTimestamp : String,onlyLocal : Bool) async throws -> [ISMChatMessagesDB] {
-        return try await activeStorageManager.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp, onlyLocal: onlyLocal)
+    public func fetchMessages(fromBroadCastFlow: Bool,conversationId: String,lastMessageTimestamp : String,onlyLocal : Bool) async throws -> [ISMChatMessagesDB] {
+        return try await activeStorageManager.fetchMessages(fromBroadCastFlow: fromBroadCastFlow,conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp, onlyLocal: onlyLocal)
     }
     
     public func saveAllMessages(_ messages: [ISMChatMessagesDB], conversationId: String) async throws {
