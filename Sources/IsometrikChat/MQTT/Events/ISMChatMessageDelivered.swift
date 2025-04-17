@@ -58,17 +58,21 @@ public struct ISMChatMessageDelivered: Codable {
         updatedAt = try? container.decode(Double.self, forKey: .updatedAt)
         senderName = try? container.decode(String.self, forKey: .senderName)
         senderId = try? container.decode(String.self, forKey: .senderId)
-        metaDataJson = {
-            guard let rawMetaData = try? container.decodeIfPresent(AnyCodable.self, forKey: .metaData) else {
-                return nil
-            }
+        if let rawMetaData = try? container.decodeIfPresent(AnyCodable.self, forKey: .metaData) {
             let encoder = JSONEncoder()
-            guard let rawData = try? encoder.encode(rawMetaData),
-                  let jsonString = String(data: rawData, encoding: .utf8) else {
-                return nil
+            if let rawData = try? encoder.encode(rawMetaData),
+               let jsonString = String(data: rawData, encoding: .utf8) {
+                metaDataJson = jsonString
             }
-            return jsonString
-        }()
+        } else {
+            do {
+                let rawMetaData = try container.decode(AnyCodable.self, forKey: .metaData)
+                print("Decoded rawMetaData: \(rawMetaData)")
+            } catch {
+                print("Failed to decode metaData: \(error)")
+            }
+            metaDataJson = nil
+        }
         metaData = try? container.decodeIfPresent(ISMChatMetaData.self, forKey: .metaData)
         customType = try? container.decode(String.self, forKey: .customType)
         userProfileImageUrl = try? container.decode(String.self, forKey: .userProfileImageUrl)
