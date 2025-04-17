@@ -59,14 +59,15 @@ public struct ISMChatMessageDelivered: Codable {
         senderName = try? container.decode(String.self, forKey: .senderName)
         senderId = try? container.decode(String.self, forKey: .senderId)
         metaDataJson = {
-            if let rawMetaData = try? container.decodeIfPresent(AnyCodable.self, forKey: .metaData) {
-                let encoder = JSONEncoder()
-                if let rawData = try? encoder.encode(rawMetaData),
-                   let jsonString = String(data: rawData, encoding: .utf8) {
-                    return jsonString
-                }
+            guard let rawMetaData = try? container.decodeIfPresent(AnyCodable.self, forKey: .metaData) else {
+                return nil
             }
-            return nil
+            let encoder = JSONEncoder()
+            guard let rawData = try? encoder.encode(rawMetaData),
+                  let jsonString = String(data: rawData, encoding: .utf8) else {
+                return nil
+            }
+            return jsonString
         }()
         metaData = try? container.decodeIfPresent(ISMChatMetaData.self, forKey: .metaData)
         customType = try? container.decode(String.self, forKey: .customType)
