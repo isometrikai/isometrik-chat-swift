@@ -81,55 +81,55 @@ public class RemoteStorageManager: ChatStorageManager {
        
     }
     
-    public func fetchMessages(fromBroadCastFlow: Bool,conversationId: String,lastMessageTimestamp : String,onlyLocal : Bool) async throws -> [ISMChatMessagesDB] {
-        if fromBroadCastFlow == true{
-            //get broadcast messages
-            return try await withCheckedThrowingContinuation { continuation in
-                messageViewModel.getBroadCastMessages(groupcastId: conversationId, lastMessageTimestamp: "") { messages in
-                    if let messages = messages {
-                        self.messageViewModel.allMessages = messages.messages ?? []
-                        
-                        // Create an array to hold the converted DB models
-                        var convertedMessages: [ISMChatMessagesDB] = []
-                        
-                        // Unwrap the messages array before iterating
-                        if let messageList = messages.messages {
-                            for message in messageList {
-                                let dbMessage = message.toMessageDB() // Assuming you have this function
-                                convertedMessages.append(dbMessage)
-                            }
+    public func fetchBroadCastMessages(conversationId: String,lastMessageTimestamp : String) async throws -> [ISMChatMessagesDB] {
+        //get broadcast messages
+        return try await withCheckedThrowingContinuation { continuation in
+            messageViewModel.getBroadCastMessages(groupcastId: conversationId, lastMessageTimestamp: "") { messages in
+                if let messages = messages {
+                    self.messageViewModel.allMessages = messages.messages ?? []
+                    
+                    // Create an array to hold the converted DB models
+                    var convertedMessages: [ISMChatMessagesDB] = []
+                    
+                    // Unwrap the messages array before iterating
+                    if let messageList = messages.messages {
+                        for message in messageList {
+                            let dbMessage = message.toMessageDB() // Assuming you have this function
+                            convertedMessages.append(dbMessage)
                         }
-                        
-                        continuation.resume(returning: convertedMessages)
-                    } else {
-                        self.messageViewModel.messages = []
-                        continuation.resume(throwing: NSError(domain: "ChatError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch messages"]))
                     }
+                    
+                    continuation.resume(returning: convertedMessages)
+                } else {
+                    self.messageViewModel.messages = []
+                    continuation.resume(throwing: NSError(domain: "ChatError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch messages"]))
                 }
             }
-        }else{
-            //get one to one messages
-            return try await withCheckedThrowingContinuation { continuation in
-                messageViewModel.getMessages(conversationId: conversationId, lastMessageTimestamp: "") { messages in
-                    if let messages = messages {
-                        self.messageViewModel.allMessages = messages.messages ?? []
-                        
-                        // Create an array to hold the converted DB models
-                        var convertedMessages: [ISMChatMessagesDB] = []
-                        
-                        // Unwrap the messages array before iterating
-                        if let messageList = messages.messages {
-                            for message in messageList {
-                                let dbMessage = message.toMessageDB() // Assuming you have this function
-                                convertedMessages.append(dbMessage)
-                            }
+        }
+    }
+    
+    public func fetchMessages(conversationId: String,lastMessageTimestamp : String,onlyLocal : Bool) async throws -> [ISMChatMessagesDB] {
+        //get one to one messages
+        return try await withCheckedThrowingContinuation { continuation in
+            messageViewModel.getMessages(conversationId: conversationId, lastMessageTimestamp: "") { messages in
+                if let messages = messages {
+                    self.messageViewModel.allMessages = messages.messages ?? []
+                    
+                    // Create an array to hold the converted DB models
+                    var convertedMessages: [ISMChatMessagesDB] = []
+                    
+                    // Unwrap the messages array before iterating
+                    if let messageList = messages.messages {
+                        for message in messageList {
+                            let dbMessage = message.toMessageDB() // Assuming you have this function
+                            convertedMessages.append(dbMessage)
                         }
-                        
-                        continuation.resume(returning: convertedMessages)
-                    } else {
-                        self.messageViewModel.messages = []
-                        continuation.resume(throwing: NSError(domain: "ChatError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch messages"]))
                     }
+                    
+                    continuation.resume(returning: convertedMessages)
+                } else {
+                    self.messageViewModel.messages = []
+                    continuation.resume(throwing: NSError(domain: "ChatError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch messages"]))
                 }
             }
         }

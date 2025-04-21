@@ -856,6 +856,7 @@ extension ISMMessageView{
             chatViewModel.sendMessage(messageKind: .contact, customType: ISMChatMediaType.Contact.value, conversationId: self.conversationID ?? "", message: "", fileName: nil, fileSize: nil, mediaId: nil,contactInfo: selectedContactToShare,isBroadCastMessage: true,groupcastId: self.groupCastId) { messageId, _ in
 //                reloadBroadCastMessages()
                 //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
+                getBroadCastMessages()
                 NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
                 
             }
@@ -890,6 +891,7 @@ extension ISMMessageView{
                                 chatViewModel.sendMessage(messageKind: messageKind, customType: customType, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,thumbnailUrl: thumbnailmedia?.mediaUrl,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_ in
 //                                    reloadBroadCastMessages()
                                     //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
+                                    getBroadCastMessages()
                                     NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
                                 }
                             }
@@ -902,6 +904,7 @@ extension ISMMessageView{
                         chatViewModel.sendMessage(messageKind: .photo, customType: ISMChatMediaType.Image.value, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_  in
 //                            reloadBroadCastMessages()
                             //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
+                            getBroadCastMessages()
                             NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
                         }
                     }
@@ -948,6 +951,7 @@ extension ISMMessageView{
                     chatViewModel.sendMessage(messageKind: messageKind, customType: customType.value, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_  in
 //                        reloadBroadCastMessages()
                         //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
+                        getBroadCastMessages()
                         NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
                     }
                 }
@@ -966,6 +970,7 @@ extension ISMMessageView{
                     chatViewModel.sendMessage(messageKind: .audio, customType: ISMChatMediaType.Voice.value, conversationId: self.conversationID ?? "", message: data.mediaUrl ?? "", fileName: filename, fileSize: size, mediaId: data.mediaId,isBroadCastMessage: true,groupcastId: self.groupCastId) {messageId,_ in
 //                        reloadBroadCastMessages()
                         //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
+                        getBroadCastMessages()
                         NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
                        
                         
@@ -996,6 +1001,7 @@ extension ISMMessageView{
                                         }
 //                                        reloadBroadCastMessages()
                                         //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
+                                        getBroadCastMessages()
                                         NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
                                     }
                                 }
@@ -1017,6 +1023,7 @@ extension ISMMessageView{
                                 }
 //                                reloadBroadCastMessages()
                                 //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
+                                getBroadCastMessages()
                                 NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
    
                             }
@@ -1036,6 +1043,7 @@ extension ISMMessageView{
             chatViewModel.sendMessage(messageKind: .location, customType: ISMChatMediaType.Location.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,latitude : latitude,longitude: longitude, placeName: name,placeAddress: placeAddress,isBroadCastMessage: true,groupcastId: self.groupCastId) { msgId,_ in
 //                reloadBroadCastMessages()
                 //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
+                getBroadCastMessages()
                 NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
                 
             }
@@ -1052,6 +1060,7 @@ extension ISMMessageView{
                 chatViewModel.sendMessage(messageKind: .text, customType: ISMChatMediaType.Text.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,isGroup: self.isGroup,groupMembers: self.mentionUsers,isBroadCastMessage: true,groupcastId: self.groupCastId) { msgId,_ in
 //                    reloadBroadCastMessages()
                     //first we will refresh conversation list from here,beoz what if we have send message to user which has not conversation with us, basically to refresh list
+                    getBroadCastMessages()
                     NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
                 
                 }

@@ -870,7 +870,13 @@ public struct ISMMessageView: View {
 //        }
         .onLoad {
             OnMessageList = true
-            self.getMessages()
+            self.viewModelNew.messages.removeAll()
+            self.viewModelNew.allMessages.removeAll()
+            if fromBroadCastFlow == true{
+                getBroadCastMessages()
+            }else{
+                self.getMessages()
+            }
             if chatFeatures.contains(.audiocall) == true || chatFeatures.contains(.videocall) == true || chatFeatures.contains(.audio) == true{
                 checkAudioPermission()
             }
@@ -889,6 +895,14 @@ public struct ISMMessageView: View {
                 await self.textFieldtxt = self.viewModelNew.getLastInputTextInConversation(conversationId: self.conversationID ?? "")
                 self.groupMemberCount = await self.viewModelNew.getMemberCount(conversationId: self.conversationID ?? "")
             }
+        }
+    }
+    
+    func getBroadCastMessages(){
+        Task {
+            await viewModelNew.loadMessages(fromBroadCastFlow: self.fromBroadCastFlow ?? false, conversationId: self.conversationID ?? "", lastMessageTimestamp: viewModelNew.messages.last?.last?.messageId ?? "")
+            // scroll to last message
+            parentMessageIdToScroll = self.viewModelNew.messages.last?.last?.id.description ?? ""
         }
     }
     

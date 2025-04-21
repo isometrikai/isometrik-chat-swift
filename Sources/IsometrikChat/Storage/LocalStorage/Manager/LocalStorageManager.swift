@@ -302,9 +302,17 @@ public class LocalStorageManager: ChatStorageManager {
         }
     }
 
+    public func fetchBroadCastMessages(conversationId: String,lastMessageTimestamp : String) async throws -> [ISMChatMessagesDB] {
+        do {
+            return []
+        } catch {
+            print("Fetch Messages Error: \(error)")
+            return []
+        }
+    }
 
     
-    public func fetchMessages(fromBroadCastFlow: Bool,conversationId: String,lastMessageTimestamp: String,onlyLocal : Bool) async throws -> [ISMChatMessagesDB] {
+    public func fetchMessages(conversationId: String,lastMessageTimestamp: String,onlyLocal : Bool) async throws -> [ISMChatMessagesDB] {
         do {
             let descriptor = FetchDescriptor<ISMChatMessagesDB>(
                 predicate: #Predicate { $0.conversationId == conversationId }

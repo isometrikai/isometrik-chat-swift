@@ -171,13 +171,24 @@ public class ConversationsViewModel: ObservableObject {
     
     public func loadMessages(fromBroadCastFlow: Bool,conversationId : String,lastMessageTimestamp: String) async {
         do {
-            let fetchedMessages = try await chatRepository.fetchMessages(fromBroadCastFlow: fromBroadCastFlow,conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal: false)
-            DispatchQueue.main.async {
-                //i have filter some action type to not show in UI
-                self.allMessages = fetchedMessages.filter { message in
-                                            return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
-                                        }
-                self.messages = self.getSectionMessage(for: self.allMessages)
+            if fromBroadCastFlow == true{
+                let fetchedMessages = try await chatRepository.fetchBroadCastMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp)
+                DispatchQueue.main.async {
+                    //i have filter some action type to not show in UI
+                    self.allMessages = fetchedMessages.filter { message in
+                        return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
+                    }
+                    self.messages = self.getSectionMessage(for: self.allMessages)
+                }
+            }else{
+                let fetchedMessages = try await chatRepository.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal: false)
+                DispatchQueue.main.async {
+                    //i have filter some action type to not show in UI
+                    self.allMessages = fetchedMessages.filter { message in
+                        return message.action != "clearConversation" && message.action != "deleteConversationLocally" && message.action != "reactionAdd" && message.action != "reactionRemove" && message.action != "messageDetailsUpdated" && message.action != "conversationSettingsUpdated" && message.action != "meetingCreated"
+                    }
+                    self.messages = self.getSectionMessage(for: self.allMessages)
+                }
             }
         } catch {
             print("Error loading conversations: \(error)")
@@ -186,7 +197,7 @@ public class ConversationsViewModel: ObservableObject {
     
     public func loadMessagesLocallyToUpdateUI(fromBroadCastFlow: Bool,conversationId : String,lastMessageTimestamp: String) async {
         do {
-            let fetchedMessages = try await chatRepository.fetchMessages(fromBroadCastFlow: fromBroadCastFlow,conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal: true)
+            let fetchedMessages = try await chatRepository.fetchMessages(conversationId: conversationId, lastMessageTimestamp: lastMessageTimestamp,onlyLocal: true)
             DispatchQueue.main.async {
                 //i have filter some action type to not show in UI
                 self.allMessages = fetchedMessages.filter { message in

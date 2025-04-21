@@ -23,7 +23,7 @@ public protocol ChatStorageManager {
 //    func updateConversation(_ conversation: ISMChatConversationDB) async throws
     
     // Message operations
-    func fetchMessages(fromBroadCastFlow: Bool,conversationId: String,lastMessageTimestamp : String,onlyLocal : Bool) async throws -> [ISMChatMessagesDB]
+    func fetchMessages(conversationId: String,lastMessageTimestamp : String,onlyLocal : Bool) async throws -> [ISMChatMessagesDB]
     func saveAllMessages(_ messages: [ISMChatMessagesDB], conversationId: String) async throws
     func updateMsgId(objectId: UUID, msgId: String, conversationId: String, mediaUrl: String, thumbnailUrl: String, mediaSize: Int, mediaId: String) async throws
     func updateMessage(conversationId: String, messageId: String, body: String, metaData: ISMChatMetaDataDB?, customType: String?) async throws
@@ -63,4 +63,8 @@ public protocol ChatStorageManager {
     //reaction
     func addReactionToMessage(conversationId: String, messageId: String, reaction: String, userId: String) async throws
     func addLastMessageOnAddAndRemoveReaction(conversationId: String,action : String,emoji : String,userId: String) async throws
+    
+    
+    //broadcast
+     func fetchBroadCastMessages(conversationId: String,lastMessageTimestamp : String) async throws -> [ISMChatMessagesDB]
 }
