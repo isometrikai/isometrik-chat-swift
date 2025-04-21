@@ -397,51 +397,76 @@ public struct ISMMessageView: View {
                 showPermissionDeniedAlert()
             }
         })
-//        .onChange(of: navigateToProductLink.messageId) { _, _ in
-//            if !navigateToProductLink.messageId.isEmpty,let metaData = navigateToProductLink.metaData{
-//                let childProductId = metaData.childProductId ?? ""
-//                let parentProductId = metaData.parentProductId ?? ""
-//                let productName = metaData.productName ?? ""
-//                self.delegate?.navigateToProductLink(
-//                    childProductId: childProductId,
-//                    parentProductId: parentProductId,
-//                    productName: productName
-//                )
-//                navigateToProductLink = nil
-//            }
-//        }
-//        .onChange(of: navigateToSocialLink.messageId) { _, _ in
-//            if !navigateToSocialLink.messageId.isEmpty{
-//                self.delegate?.navigateToSocialLink(
-//                    socialLinkId: navigateToSocialLink.metaData?.socialPostId ?? ""
-//                )
-//                navigateToSocialLink = nil
-//            }
-//        }
-//        .onChange(of: navigateToCollectionLink.messageId) { _, _ in
-//            if !navigateToCollectionLink.messageId.isEmpty{
-//                self.delegate?.navigateToCollectionLink(
-//                    collectionId: navigateToCollectionLink.metaData?.collectionId ?? "",
-//                    completeUrl: navigateToCollectionLink.metaData?.url ?? ""
-//                )
-//                navigateToCollectionLink = nil
-//            }
-//        }.onChange(of: viewDetailsForPaymentRequest.messageId) { _, _ in
-//            if !viewDetailsForPaymentRequest.messageId.isEmpty{
-//                if viewDetailsForPaymentRequest.customType == ISMChatMediaType.PaymentRequest.value{
-//                    self.delegate?.viewDetailForPaymentRequest(
-//                        orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "",
-//                        paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",
-//                        isReceived: getIsReceived(message: viewDetailsForPaymentRequest),
-//                        senderInfo: viewDetailsForPaymentRequest.senderInfo,
-//                        paymentRequestUserId: self.myAppUserId ?? ""
-//                    )
-//                }else{
-//                    self.delegate?.dineInInvite(inviteTitle: viewDetailsForPaymentRequest.metaData?.inviteTitle ?? "", messageId: viewDetailsForPaymentRequest.messageId ?? "", groupcastId: viewDetailsForPaymentRequest.metaData?.groupCastId ?? "", reason: "", createdByUserId: viewDetailsForPaymentRequest.senderInfo?.userIdentifier ?? "", declineByUserId: self.myAppUserId ?? "",inviteStatus: 1,inviteSenderIsometricId: viewDetailsForPaymentRequest.senderInfo?.userId ?? "" )
-//                }
-//                viewDetailsForPaymentRequest = nil
-//            }
-//        }
+        .onChange(of: navigateToProductLink) { newValue in
+            if let message = newValue,
+               !message.messageId.isEmpty,
+               let metaData = message.metaData {
+                
+                let childProductId = metaData.childProductId ?? ""
+                let parentProductId = metaData.parentProductId ?? ""
+                let productName = metaData.productName ?? ""
+
+                self.delegate?.navigateToProductLink(
+                    childProductId: childProductId,
+                    parentProductId: parentProductId,
+                    productName: productName
+                )
+                
+                // Reset after use
+                navigateToProductLink = nil
+            }
+        }
+        .onChange(of: navigateToSocialLink) { newValue in
+            if let link = newValue,
+               !link.messageId.isEmpty {
+                self.delegate?.navigateToSocialLink(
+                    socialLinkId: link.metaData?.socialPostId ?? ""
+                )
+                navigateToSocialLink = nil
+            }
+        }
+        // MARK: - Navigate to Collection Link
+        .onChange(of: navigateToCollectionLink) { newValue in
+            if let link = newValue,
+               !link.messageId.isEmpty {
+                self.delegate?.navigateToCollectionLink(
+                    collectionId: link.metaData?.collectionId ?? "",
+                    completeUrl: link.metaData?.url ?? ""
+                )
+                navigateToCollectionLink = nil
+            }
+        }
+
+        // MARK: - View Details for Payment Request or Dine-In Invite
+        .onChange(of: viewDetailsForPaymentRequest) { newValue in
+            if let request = newValue,
+               !request.messageId.isEmpty {
+
+                if request.customType == ISMChatMediaType.PaymentRequest.value {
+                    self.delegate?.viewDetailForPaymentRequest(
+                        orderId: request.metaData?.orderId ?? "",
+                        paymentRequestId: request.metaData?.paymentRequestId ?? "",
+                        isReceived: getIsReceived(message: request),
+                        senderInfo: request.senderInfo,
+                        paymentRequestUserId: self.myAppUserId ?? ""
+                    )
+                } else {
+                    self.delegate?.dineInInvite(
+                        inviteTitle: request.metaData?.inviteTitle ?? "",
+                        messageId: request.messageId ?? "",
+                        groupcastId: request.metaData?.groupCastId ?? "",
+                        reason: "",
+                        createdByUserId: request.senderInfo?.userIdentifier ?? "",
+                        declineByUserId: self.myAppUserId ?? "",
+                        inviteStatus: 1,
+                        inviteSenderIsometricId: request.senderInfo?.userId ?? ""
+                    )
+                }
+
+                viewDetailsForPaymentRequest = nil
+            }
+        }
+
         .onChange(of: declinePaymentRequest?.messageId) { _, _ in
             if let declinepayId = declinePaymentRequest?.messageId, !declinepayId.isEmpty{
                 stateViewModel.showDeclinePaymentRequestPopUp = true
@@ -827,47 +852,47 @@ public struct ISMMessageView: View {
         //        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
 //        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager),isActive: $stateViewModel.navigateToProfile))
         //        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))
-//        .onReceive(timer, perform: { firedDate in
-//            print("timer fired")
-//            timeElapsed = Int(firedDate.timeIntervalSince(startDate))
-//            if stateViewModel.executeRepeatly == true && fromBroadCastFlow != true{
-//                self.executeRepeatedly()
-//            }
-//        })
-//        .onReceive(onlinetimer, perform: { firedtime in
-//            if OnMessageList == true{
-//                print("online timer fired")
-//                timeElapsedForOnline = Int(firedtime.timeIntervalSince(startTimeForOnline))
-//                if stateViewModel.executeRepeatlyForOfflineMessage == true{
-//                    sendLocalMsg()
-//                }
-//            }
-//        })
-//        .alert("Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.", isPresented: $stateViewModel.showingNoInternetAlert) {
-//            Button("OK", role: .cancel) { }
-//        }
-//        .alert("Call \(self.opponenDetail?.userName ?? "")", isPresented: $stateViewModel.showCallPopUp) {
-//            Button("Cancel", role: .cancel) {
-//                if stateViewModel.audioCallToUser == true{
-//                    stateViewModel.audioCallToUser = false
-//                }
-//                if stateViewModel.videoCallToUser == true{
-//                    stateViewModel.videoCallToUser = false
-//                }
-//            }
-//            if stateViewModel.audioCallToUser {
-//                Button("Voice Call") {
-//                    stateViewModel.audioCallToUser = false
-//                    calling(type: .AudioCall)
-//                }
-//            }
-//            if stateViewModel.videoCallToUser {
-//                Button("Video Call") {
-//                    stateViewModel.videoCallToUser = false
-//                    calling(type: .VideoCall)
-//                }
-//            }
-//        }
+        .onReceive(timer, perform: { firedDate in
+            print("timer fired")
+            timeElapsed = Int(firedDate.timeIntervalSince(startDate))
+            if stateViewModel.executeRepeatly == true && fromBroadCastFlow != true{
+                self.executeRepeatedly()
+            }
+        })
+        .onReceive(onlinetimer, perform: { firedtime in
+            if OnMessageList == true{
+                print("online timer fired")
+                timeElapsedForOnline = Int(firedtime.timeIntervalSince(startTimeForOnline))
+                if stateViewModel.executeRepeatlyForOfflineMessage == true{
+                    sendLocalMsg()
+                }
+            }
+        })
+        .alert("Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.", isPresented: $stateViewModel.showingNoInternetAlert) {
+            Button("OK", role: .cancel) { }
+        }
+        .alert("Call \(self.opponenDetail?.userName ?? "")", isPresented: $stateViewModel.showCallPopUp) {
+            Button("Cancel", role: .cancel) {
+                if stateViewModel.audioCallToUser == true{
+                    stateViewModel.audioCallToUser = false
+                }
+                if stateViewModel.videoCallToUser == true{
+                    stateViewModel.videoCallToUser = false
+                }
+            }
+            if stateViewModel.audioCallToUser {
+                Button("Voice Call") {
+                    stateViewModel.audioCallToUser = false
+                    calling(type: .AudioCall)
+                }
+            }
+            if stateViewModel.videoCallToUser {
+                Button("Video Call") {
+                    stateViewModel.videoCallToUser = false
+                    calling(type: .VideoCall)
+                }
+            }
+        }
         .onLoad {
             OnMessageList = true
             self.viewModelNew.messages.removeAll()
