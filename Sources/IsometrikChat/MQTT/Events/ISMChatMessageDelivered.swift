@@ -63,6 +63,8 @@ public struct ISMChatMessageDelivered: Codable {
             if let rawData = try? encoder.encode(rawMetaData),
                let jsonString = String(data: rawData, encoding: .utf8) {
                 metaDataJson = jsonString
+            }else{
+                metaDataJson = nil
             }
         } else {
             do {
