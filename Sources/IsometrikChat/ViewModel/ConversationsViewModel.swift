@@ -60,7 +60,12 @@ public class ConversationsViewModel: ObservableObject {
         do {
             let fetchedConversations = try await chatRepository.fetchConversations()
             DispatchQueue.main.async {
-                self.conversations = fetchedConversations
+                let sortedChats = fetchedConversations.sorted {
+                    guard let date1 = $0.lastMessageDetails?.sentAt else {return false}
+                    guard let date2 = $1.lastMessageDetails?.sentAt else {return false}
+                    return date1 > date2
+                }
+                self.conversations = sortedChats
                 self.otherConversations = self.getOtherConversation()
                 self.primaryConversations = self.getPrimaryConversation()
                 self.conversationData =  showOtherList == true ? self.primaryConversations : self.conversations
@@ -74,8 +79,12 @@ public class ConversationsViewModel: ObservableObject {
         do {
             let fetchedConversations = try await chatRepository.fetchConversationsLocal()
             DispatchQueue.main.async {
-               
-                self.conversations = fetchedConversations
+                let sortedChats = fetchedConversations.sorted {
+                    guard let date1 = $0.lastMessageDetails?.sentAt else {return false}
+                    guard let date2 = $1.lastMessageDetails?.sentAt else {return false}
+                    return date1 > date2
+                }
+                self.conversations = sortedChats
                 self.otherConversations = self.getOtherConversation()
                 self.primaryConversations = self.getPrimaryConversation()
                 self.conversationData =  showOtherList == true ? self.primaryConversations : self.conversations

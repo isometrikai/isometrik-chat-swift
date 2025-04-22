@@ -111,12 +111,12 @@ public class LocalStorageManager: ChatStorageManager {
                          conversation.isGroup == false)
             }
 
-            let sortedChats = filteredConversations.sorted {
-                guard let date1 = $0.lastMessageDetails?.updatedAt else {return false}
-                guard let date2 = $1.lastMessageDetails?.updatedAt else {return false}
-                return date1 > date2
-            }
-            return sortedChats
+//            let sortedChats = filteredConversations.sorted {
+//                guard let date1 = $0.lastMessageDetails?.updatedAt else {return false}
+//                guard let date2 = $1.lastMessageDetails?.updatedAt else {return false}
+//                return date1 > date2
+//            }
+            return filteredConversations
         } catch {
             print("❌ Fetch Error: \(error)")
             return []

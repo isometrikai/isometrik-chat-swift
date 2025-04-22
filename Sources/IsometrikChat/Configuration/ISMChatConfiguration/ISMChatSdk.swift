@@ -127,11 +127,14 @@ public class ISMChatSdk{
         //initializeCall
         initializeCallIsometrik(accountId: appConfig.accountId, projectId: appConfig.projectId, keysetId: appConfig.keySetId, licenseKey: appConfig.licensekey, appSecret: appConfig.appSecret, userSecret: appConfig.userSecret, isometricChatUserId: userConfig.userId, isometricUserToken: userConfig.userToken)
         self.chatInitialized = true
-        print("CHAT INITIALIZED")
+        
         
          
         let viewmodel = ChatsViewModel()
         viewmodel.getAllMessagesWhichWereSendToMeWhenOfflineMarkThemAsDelivered(myUserId: userConfiguration.userId)
+        
+        resetSwiftData()
+        print("CHAT INITIALIZED")
     }
     
     public func onTerminate(userId : String) {
