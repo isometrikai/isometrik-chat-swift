@@ -2825,7 +2825,7 @@ struct PaymentRequestUI: View {
                         .foregroundColor((status == .Rejected || status == .Expired) ? Color(hex: "#6A6C6A") : Color(hex: "#121511"))
                 }
                 var amount: AttributedString {
-                    let amountValue = String(format: "%.2f", message.metaData?.amount ?? 0)
+                    let amountValue = String(format: "%.2f", message.metaData?.amount ?? 0.0)
                     var attributedString = AttributedString("\(amountValue) \(message.metaData?.currencyCode ?? "")")
                     attributedString.kern = -1.5
                     // Style "clear chat"
