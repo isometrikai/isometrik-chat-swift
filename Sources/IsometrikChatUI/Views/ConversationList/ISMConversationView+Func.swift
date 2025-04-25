@@ -59,7 +59,7 @@ extension ISMConversationView{
             if ISMChatSdk.getInstance().getFramework() == .UIKit && ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true{
                 getBroadcastList()
                 
-                let chatcount = realmManager.getConversationCount()
+                let chatcount = ISMChatSdkUI.getInstance().getChatProperties().otherConversationList == true ? realmManager.getPrimaryConversationCount() : realmManager.getConversationCount()
                 let Info : [String: Int] = ["count": chatcount]
                 NotificationCenter.default.post(name: NSNotification.updateChatCount, object: nil, userInfo: Info)
             }
