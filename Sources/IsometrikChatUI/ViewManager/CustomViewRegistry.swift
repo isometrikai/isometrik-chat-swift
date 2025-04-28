@@ -56,9 +56,8 @@ public class CustomMessageBubbleViewRegistry {
     /// Retrieves the appropriate view for a given message
     /// - Parameter message: Message data from database
     /// - Returns: A type-erased SwiftUI view
-    public func view(for message: ISMChatMessagesDB) -> AnyView {
-        return viewBuilders[message.customType]?(message) ??
-        AnyView(Text(message.body ?? ""))
+    public func view(for message: ISMChatMessagesDB) -> AnyView? {
+        return viewBuilders[message.customType]?(message)
     }
 }
 
