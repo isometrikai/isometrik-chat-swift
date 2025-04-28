@@ -59,7 +59,7 @@ public struct ISMMessageView: View {
     // State properties for managing UI state and user interactions
     let columns = [GridItem(.flexible(minimum: 10))]
     let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
-    let onlinetimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
+    let onlinetimer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
     @State var OnMessageList: Bool = false
     @State var offset = CGSize.zero
     
@@ -863,9 +863,10 @@ public struct ISMMessageView: View {
             if OnMessageList == true{
                 print("online timer fired")
                 timeElapsedForOnline = Int(firedtime.timeIntervalSince(startTimeForOnline))
-                if stateViewModel.executeRepeatlyForOfflineMessage == true{
-                    sendLocalMsg()
-                }
+                sendLocalMsg()
+//                if stateViewModel.executeRepeatlyForOfflineMessage == true{
+//                    sendLocalMsg()
+//                }
             }
         })
         .alert("Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.", isPresented: $stateViewModel.showingNoInternetAlert) {
@@ -900,7 +901,11 @@ public struct ISMMessageView: View {
             if fromBroadCastFlow == true{
                 getBroadCastMessages()
             }else{
-                self.getMessages()
+                if networkMonitor.isConnected{
+                    self.getMessages()
+                }else{
+                    self.fetchMessagesLocally()
+                }
             }
             if chatFeatures.contains(.audiocall) == true || chatFeatures.contains(.videocall) == true || chatFeatures.contains(.audio) == true{
                 checkAudioPermission()
@@ -941,6 +946,7 @@ public struct ISMMessageView: View {
             await viewModelNew.fetchLinks(conversationId: self.conversationID ?? "")
             await viewModelNew.updateUnreadCountThroughConversation(conversationId: self.conversationID ?? "", count: 0, reset: true)
         }
+        self.sendLocalMsg()
     }
     
     func fetchMessagesLocally(){
@@ -953,6 +959,7 @@ public struct ISMMessageView: View {
             await viewModelNew.fetchLinks(conversationId: self.conversationID ?? "")
             await viewModelNew.updateUnreadCountThroughConversation(conversationId: self.conversationID ?? "", count: 0, reset: true)
         }
+        self.sendLocalMsg()
     }
     
     

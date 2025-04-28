@@ -279,6 +279,7 @@ public class ConversationsViewModel: ObservableObject {
                 if !mediaId.isEmpty{
                     allMessages[index].attachments?.first?.mediaId = mediaId
                 }
+                allMessages[index].msgSyncStatus = ISMChatSyncStatus.Synch.txt
             }
             
             // ✅ Manually update messages array (2D Array)
@@ -297,6 +298,7 @@ public class ConversationsViewModel: ObservableObject {
                     if !mediaId.isEmpty{
                         messages[sectionIndex][messageIndex].attachments?.first?.mediaId = mediaId
                     }
+                    messages[sectionIndex][messageIndex].msgSyncStatus = ISMChatSyncStatus.Synch.txt
                     break // No need to continue searching once updated
                 }
             }
@@ -465,4 +467,28 @@ public class ConversationsViewModel: ObservableObject {
             print("Unable to add last message on add and remove reaction : \(error)")
         }
     }
+    
+    public func getAllLocalMsgsWhichAreNotSync(conversationId: String) async -> [ISMChatMessagesDB] {
+        do {
+            let fetchedMessages = try await chatRepository.fetchMessages(conversationId: conversationId, lastMessageTimestamp: "", onlyLocal: true)
+            
+            let filteredMessages = fetchedMessages.filter { message in
+                return message.action != "clearConversation" &&
+                       message.action != "deleteConversationLocally" &&
+                       message.action != "reactionAdd" &&
+                       message.action != "reactionRemove" &&
+                       message.action != "messageDetailsUpdated" &&
+                       message.action != "conversationSettingsUpdated" &&
+                       message.action != "meetingCreated" &&
+                       message.msgSyncStatus == ISMChatSyncStatus.Local.txt &&
+                       message.isDeleted == false
+            }
+            
+            return filteredMessages
+        } catch {
+            print("Error loading conversations: \(error)")
+            return []
+        }
+    }
+
 }

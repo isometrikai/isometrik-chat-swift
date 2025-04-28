@@ -165,6 +165,45 @@ extension ISMMessageView{
     
     //MARK: - SEND LOCAL MESSAGE
     func sendLocalMsg() {
+        if networkMonitor.isConnected {
+            Task {
+                let messageslocal = await viewModelNew.getAllLocalMsgsWhichAreNotSync(conversationId: self.conversationID ?? "")
+                let group = DispatchGroup()
+                //need to handle for all messagekind
+                for obj in messageslocal {
+                    group.enter()
+                    chatViewModel.sendMessage(
+                        messageKind: ISMChatHelper.getMessageType(message: obj),
+                        customType: obj.customType,
+                        conversationId: obj.conversationId,
+                        message: obj.body,
+                        fileName: obj.attachments?.first?.name,
+                        fileSize: obj.attachments?.first?.size,
+                        mediaId: obj.attachments?.first?.mediaId ,
+                        objectId: obj.id.description,
+                        isGroup: self.isGroup,
+                        groupMembers: self.mentionUsers,
+                        isBroadCastMessage: self.fromBroadCastFlow,
+                        groupcastId: self.groupCastId
+                    ) { msgId, objId in
+                        // Wrap async call in Task
+                        Task {
+                            await viewModelNew.updateMessageId(
+                                objectId: obj.id,
+                                msgId: msgId,
+                                conversationId: self.conversationID ?? "",
+                                mediaUrl: "",
+                                thumbnailUrl: "",
+                                mediaSize: 0,
+                                mediaId: ""
+                            )
+                            group.leave()
+                        }
+                    }
+                }
+            }
+        }
+
 //        if networkMonitor.isConnected {
 //            realmManager.getAllLocalMsgs()
 //            let group = DispatchGroup()
@@ -209,7 +248,7 @@ extension ISMMessageView{
     func sendMessage(msgType: ISMChatMessageType) async {
         self.text = self.textFieldtxt
         clearTextField()
-        if !networkMonitor.isConnected{
+//        if !networkMonitor.isConnected{
             // save messages locally if internet not connected
 //            if msgType == .text {
 //                _ = realmManager.saveLocalMessage(sent: Date().timeIntervalSince1970 * 1000, txt: self.text.trimmingCharacters(in: .whitespacesAndNewlines), parentMessageId: "", initiatorIdentifier: "", conversationId: self.conversationID ?? "", customType: ISMChatMediaType.Text.value, msgSyncStatus: ISMChatSyncStatus.Local.txt)
@@ -217,7 +256,7 @@ extension ISMMessageView{
 //            self.getMessages()
 //            self.text = ""
 //            return
-        }else{
+//        }else{
             if self.fromBroadCastFlow == true{
                 sendMessageInBroadcast()
             }else if ISMChatSdkUI.getInstance().getChatProperties().isOneToOneGroup == true{
@@ -247,7 +286,7 @@ extension ISMMessageView{
                     }
                 }
             }
-        }
+//        }
     }
     
     func createConversation(completion:@escaping(Bool)->()){
@@ -723,7 +762,7 @@ extension ISMMessageView{
             }
         } else {
             // MARK: - TEXT MESSAGE
-            if networkMonitor.isConnected {
+//            if networkMonitor.isConnected {
                 
                 let text = self.text.trimmingCharacters(in: .whitespacesAndNewlines)
                 if !text.isEmpty{
@@ -797,12 +836,12 @@ extension ISMMessageView{
                         
                     }
                 }
-            }else {
+//            }else {
 //                let id = realmManager.saveLocalMessage(sent: Date().timeIntervalSince1970 * 1000, txt: self.text.trimmingCharacters(in: .whitespacesAndNewlines), parentMessageId: "", initiatorIdentifier: "", conversationId: self.conversationID ?? "", customType: ISMChatMediaType.Text.value, msgSyncStatus: ISMChatSyncStatus.Local.txt)
 //                parentMessageIdToScroll = id ?? ""
-                self.getMessages()
-                nilData()
-            }
+//                self.getMessages()
+//                nilData()
+//            }
         }
     }
     
