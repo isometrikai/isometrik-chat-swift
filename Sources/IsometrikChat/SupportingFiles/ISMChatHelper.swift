@@ -167,6 +167,7 @@ public class ISMChatHelper: NSObject {
     }
     
     //MARK: - GET Message Type
+    // always add new custom Type in ISMChatMessageType and ISMChatMediaType  messageType
     public class func getMessageType(message : MessagesDB) -> ISMChatMessageType{
         if message.customType == ISMChatMediaType.Video.value{
             return .video

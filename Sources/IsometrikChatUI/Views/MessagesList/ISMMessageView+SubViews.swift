@@ -25,7 +25,7 @@ extension ISMMessageView{
                 Section(header: sectionHeader(firstMessage: messages.first ?? MessagesDB(), color: appearance.colorPalette.userProfileSectionHeader, font: appearance.fonts.messageListSectionHeaderText)){
                     ForEach(messages) { message in
                         VStack{
-                            // Determine the type of message and display the appropriate header
+                            // Determine the type of message and display the appropriate header -> actions
                             if ISMChatHelper.getMessageType(message: message) == .blockUser{
                                 grpHeader(action: .userBlock, userName: message.userName, senderId: message.initiatorId)
                             }else if ISMChatHelper.getMessageType(message: message) == .unblockUser{

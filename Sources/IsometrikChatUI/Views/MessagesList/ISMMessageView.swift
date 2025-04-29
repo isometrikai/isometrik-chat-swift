@@ -203,6 +203,7 @@ public struct ISMMessageView: View {
             ZStack{
                 appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack(spacing: 0) {
+                    // remove this job card view and delegate after i add this code from app side
                     if ISMChatSdkUI.getInstance().getChatProperties().customJobCardInMessageList == true {
                         if let conversation = self.conversationDetail?.conversationDetails,
                            let metaData = conversation.metaData {
