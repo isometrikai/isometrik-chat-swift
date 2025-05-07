@@ -30,7 +30,7 @@ public protocol ISMMessageViewDelegate{
     func navigateToCollectionLink(collectionId : String,completeUrl: String)
     func backButtonAction()
     func navigateToShareContact(conversationId : String)
-    func viewDetailForPaymentRequest(orderId : String, paymentRequestId : String,isReceived : Bool,senderInfo : UserDB?,paymentRequestUserId : String)
+    func viewDetailForPaymentRequest(orderId : String, paymentRequestId : String,isReceived : Bool,senderInfo : UserDB?,paymentRequestUserId : String,metaData: MetaDataDB?)
     func declinePaymentRequest(paymentRequestUserId : String, paymentRequestId : String,completion:@escaping()->())
     func dineInInvite(inviteTitle : String,messageId : String, groupcastId : String,reason : String,createdByUserId : String,declineByUserId : String,inviteStatus : Int,inviteSenderIsometricId : String)
 }
@@ -431,7 +431,8 @@ public struct ISMMessageView: View {
                         paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",
                         isReceived: getIsReceived(message: viewDetailsForPaymentRequest),
                         senderInfo: viewDetailsForPaymentRequest.senderInfo,
-                        paymentRequestUserId: self.myAppUserId ?? ""
+                        paymentRequestUserId: self.myAppUserId ?? "",
+                        metaData: viewDetailsForPaymentRequest.metaData
                     )
                 }else{
                     self.delegate?.dineInInvite(inviteTitle: viewDetailsForPaymentRequest.metaData?.inviteTitle ?? "", messageId: viewDetailsForPaymentRequest.messageId ?? "", groupcastId: viewDetailsForPaymentRequest.metaData?.groupCastId ?? "", reason: "", createdByUserId: viewDetailsForPaymentRequest.senderInfo?.userIdentifier ?? "", declineByUserId: self.myAppUserId ?? "",inviteStatus: 1,inviteSenderIsometricId: viewDetailsForPaymentRequest.senderInfo?.userId ?? "" )
