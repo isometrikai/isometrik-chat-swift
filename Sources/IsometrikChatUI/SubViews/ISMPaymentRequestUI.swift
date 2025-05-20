@@ -47,7 +47,9 @@ struct ISMPaymentRequestUI: View {
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
             // Header and Payment Status
-            headerView.padding(.bottom,16)
+            headerView
+                .frame(height: 73)
+                .padding(.bottom,16)
             
             appearance.images.paymentLogo
                 .resizable()
@@ -242,7 +244,7 @@ struct ISMPaymentRequestUI: View {
                 Button(action: {
                     viewDetails()
                 }) {
-                    Text("View Details")
+                    Text("View details")
                         .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
                         .foregroundStyle(Color(hex: "#163300"))
                         .frame(width: 225, height: 32, alignment: .center)
@@ -253,7 +255,7 @@ struct ISMPaymentRequestUI: View {
             Button(action: {
                 viewDetails()
             }) {
-                Text("View Details")
+                Text("View details")
                     .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
                     .foregroundStyle(Color(hex: "#163300"))
                     .frame(width: 225, height: 32, alignment: .center)
@@ -276,7 +278,7 @@ struct ISMPaymentRequestUI: View {
                 Button(action: {
                     viewDetails()
                 }) {
-                    Text("View Details")
+                    Text("View details")
                         .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
                         .foregroundStyle(Color(hex: "#163300"))
                         .frame(width: 119, height: 32, alignment: .center)
@@ -287,7 +289,7 @@ struct ISMPaymentRequestUI: View {
             Button(action: {
                 viewDetails()
             }) {
-                Text("View Details")
+                Text("View details")
                     .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14))
                     .foregroundStyle(Color(hex: "#163300"))
                     .frame(width: 225, height: 32, alignment: .center)
@@ -305,7 +307,7 @@ struct ISMPaymentRequestUI: View {
                     .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
                     .foregroundColor(Color(hex: "#121511"))
                     .padding()
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color(hex: "#86EA5D"))
                     .cornerRadius(10, corners: [.topLeft, .topRight])
             }else{
@@ -313,7 +315,7 @@ struct ISMPaymentRequestUI: View {
                     .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
                     .foregroundColor(Color(hex: "#121511"))
                     .padding()
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color(hex: "#86EA5D"))
                     .cornerRadius(10, corners: [.topLeft, .topRight])
             }
@@ -322,7 +324,7 @@ struct ISMPaymentRequestUI: View {
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
                 .foregroundColor(Color(hex: "#121511"))
                 .padding()
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(hex: "#86EA5D"))
                 .cornerRadius(10, corners: [.topLeft, .topRight])
         } else if status == .PayedByOther {
@@ -331,7 +333,7 @@ struct ISMPaymentRequestUI: View {
                     .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
                     .foregroundColor(Color(hex: "#454745"))
                     .padding()
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color(hex: "#BDBDBA"))
                     .cornerRadius(10, corners: [.topLeft, .topRight])
             }else{
@@ -339,7 +341,7 @@ struct ISMPaymentRequestUI: View {
                     .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
                     .foregroundColor(Color(hex: "#121511"))
                     .padding()
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color(hex: "#86EA5D"))
                     .cornerRadius(10, corners: [.topLeft, .topRight])
             }
@@ -348,7 +350,7 @@ struct ISMPaymentRequestUI: View {
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
                 .foregroundColor(.white)
                 .padding()
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(hex: "#FF3B30"))
                 .cornerRadius(10, corners: [.topLeft, .topRight])
         } else if status == .Expired {
@@ -356,7 +358,7 @@ struct ISMPaymentRequestUI: View {
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
                 .foregroundColor(Color(hex: "#454745"))
                 .padding()
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(hex: "#BDBDBA"))
                 .cornerRadius(10, corners: [.topLeft, .topRight])
         }else if status == .Cancelled {
@@ -364,7 +366,7 @@ struct ISMPaymentRequestUI: View {
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
                 .foregroundColor(Color(hex: "#454745"))
                 .padding()
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(hex: "#BDBDBA"))
                 .cornerRadius(10, corners: [.topLeft, .topRight])
         }
