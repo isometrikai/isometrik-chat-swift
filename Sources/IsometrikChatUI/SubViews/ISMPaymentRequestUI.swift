@@ -54,7 +54,7 @@ struct ISMPaymentRequestUI: View {
             appearance.images.paymentLogo
                 .resizable()
                 .frame(width: 70, height: 60, alignment: .center)
-                .padding(.bottom,10)
+                .padding(.bottom,13)
             
             // Payment Amount
             VStack(spacing: 0) {
@@ -113,8 +113,10 @@ struct ISMPaymentRequestUI: View {
             Text(attributedTimerText)
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
                 .foregroundColor(Color(hex: "#3A341C")).padding(.bottom,16)
+                .frame(maxWidth: .infinity, alignment: .center)
         } else if status == .Rejected && isReceived == false{
             HStack{
+                Spacer()
                 Text("This payment request has been declined.")
                     .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 11))
                     .foregroundColor(Color(hex: "#6A6C6A")).padding(.bottom,16)
@@ -122,6 +124,7 @@ struct ISMPaymentRequestUI: View {
             }
         } else if status == .Expired {
             HStack{
+                Spacer()
                 Text("This payment request has expired.")
                     .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 12))
                     .foregroundColor(Color(hex: "#6A6C6A")).padding(.bottom,16)
@@ -129,6 +132,7 @@ struct ISMPaymentRequestUI: View {
             }
         }else if status == .Cancelled {
             HStack{
+                Spacer()
                 if isReceived{
                     if let otherUserName = message.metaData?.paymentRequestedMembers.first(where: { $0.userId != userData?.userId && $0.status == 4 }) {
                         Text("\(otherUserName.userName ?? "") cancelled the payment request.")
@@ -151,6 +155,7 @@ struct ISMPaymentRequestUI: View {
                 .multilineTextAlignment(.center)
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
                 .foregroundColor(Color(hex: "#6A6C6A")).padding(.bottom,16)
+                .frame(maxWidth: .infinity, alignment: .center)
         }
     }
     
@@ -284,7 +289,7 @@ struct ISMPaymentRequestUI: View {
                         .frame(width: 119, height: 32, alignment: .center)
                         .background(RoundedRectangle(cornerRadius: 16).stroke(Color(hex: "#163300"), lineWidth: 1))
                 }
-            }.padding(.horizontal, 24).padding(.bottom,15)
+            }.padding(.horizontal, 24)
         }else if status == .Expired || status == .Cancelled{
             Button(action: {
                 viewDetails()
@@ -309,7 +314,7 @@ struct ISMPaymentRequestUI: View {
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color(hex: "#86EA5D"))
-                    .cornerRadius(10, corners: [.topLeft, .topRight])
+                    .cornerRadius(22, corners: [.topLeft, .topRight])
             }else{
                 Text("Payment Request Sent")
                     .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
@@ -317,7 +322,7 @@ struct ISMPaymentRequestUI: View {
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color(hex: "#86EA5D"))
-                    .cornerRadius(10, corners: [.topLeft, .topRight])
+                    .cornerRadius(22, corners: [.topLeft, .topRight])
             }
         }else if status == .Accepted {
             Text("Payment Successful")
@@ -326,7 +331,7 @@ struct ISMPaymentRequestUI: View {
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(hex: "#86EA5D"))
-                .cornerRadius(10, corners: [.topLeft, .topRight])
+                .cornerRadius(22, corners: [.topLeft, .topRight])
         } else if status == .PayedByOther {
             if let member = message.metaData?.paymentRequestedMembers, member.contains(where: { $0.userId != userData?.userId && $0.status == 1 }) && message.senderInfo?.userId != userData?.userId{
                 Text("Request Closed")
@@ -335,7 +340,7 @@ struct ISMPaymentRequestUI: View {
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color(hex: "#BDBDBA"))
-                    .cornerRadius(10, corners: [.topLeft, .topRight])
+                    .cornerRadius(22, corners: [.topLeft, .topRight])
             }else{
                 Text("Payment Received")
                     .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
@@ -343,7 +348,7 @@ struct ISMPaymentRequestUI: View {
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color(hex: "#86EA5D"))
-                    .cornerRadius(10, corners: [.topLeft, .topRight])
+                    .cornerRadius(22, corners: [.topLeft, .topRight])
             }
         }else if status == .Rejected {
             Text(isReceived ? "Payment Request Declined" : "Payment Declined")
@@ -352,7 +357,7 @@ struct ISMPaymentRequestUI: View {
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(hex: "#FF3B30"))
-                .cornerRadius(10, corners: [.topLeft, .topRight])
+                .cornerRadius(22, corners: [.topLeft, .topRight])
         } else if status == .Expired {
             Text(isReceived ? "Payment Expired" : "Payment Request Expired")
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
@@ -360,7 +365,7 @@ struct ISMPaymentRequestUI: View {
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(hex: "#BDBDBA"))
-                .cornerRadius(10, corners: [.topLeft, .topRight])
+                .cornerRadius(22, corners: [.topLeft, .topRight])
         }else if status == .Cancelled {
             Text("Payment Request Cancelled")
                 .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 16))
@@ -368,7 +373,7 @@ struct ISMPaymentRequestUI: View {
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(hex: "#BDBDBA"))
-                .cornerRadius(10, corners: [.topLeft, .topRight])
+                .cornerRadius(22, corners: [.topLeft, .topRight])
         }
     }
 }

@@ -1534,7 +1534,7 @@ struct ISMMessageSubView: View {
                                             inGroupUserName()
                                         }
                                         
-                                        VStack(alignment: .trailing,spacing: 5){
+                                        VStack(alignment: .trailing,spacing: 10){
                                             ISMPaymentRequestUI(status: ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "", opponentId: opponentDeatil.userId ?? "", metaData: self.message.metaData, sentAt: self.message.sentAt), isReceived: self.isReceived,message: self.message) {
                                                 //view details
                                                 viewDetailsForPaymentRequest = self.message
@@ -1542,7 +1542,7 @@ struct ISMMessageSubView: View {
                                                 //decline request
                                                 declinePaymentRequest = self.message
                                             }
-                                            dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,5)
+                                            dateAndStatusView(onImage: false).padding(.trailing,16).padding(.bottom,14)
                                         }//:ZStack
                                         .frame(width: 303)
                                         .background(Color(hex: "#F5F5F2"))
@@ -2502,6 +2502,10 @@ struct ISMMessageSubView: View {
                         .resizable()
                         .frame(width: appearance.imagesSize.messagePending.width, height: appearance.imagesSize.messagePending.height)
                 }
+            }else{
+                Rectangle()
+                    .fill(Color.clear)
+                    .frame(width: 0, height: appearance.imagesSize.messagePending.height)
             }
         }//:HStack
     }
