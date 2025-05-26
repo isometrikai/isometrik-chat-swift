@@ -138,7 +138,7 @@ public class ISMChatHelper: NSObject {
         let videoExtensions: Set<String> = ["mov", "mp4"]
         
         // Extract the file extension and compare case-insensitively
-        let fileExtension = media.lastPathComponent.lowercased()
+        let fileExtension = media.pathExtension.lowercased()
         if videoExtensions.contains(fileExtension) {
             return true
         } else {
@@ -454,25 +454,36 @@ public class ISMChatHelper: NSObject {
         let imageGenerator = AVAssetImageGenerator(asset: asset)
         imageGenerator.appliesPreferredTrackTransform = true
         
-        let time = CMTimeMake(value: 1, timescale: 2) // You can change this time to get a different frame from the video
+        let time = CMTimeMake(value: 1, timescale: 2)
         
         do {
             let cgImage = try imageGenerator.copyCGImage(at: time, actualTime: nil)
             let uiImage = UIImage(cgImage: cgImage)
             
-            // You can save the thumbnail image to the document directory or any other location
             if let data = uiImage.jpegData(compressionQuality: 0.8) {
                 let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-                let imageURL = documentDirectory.appendingPathComponent("thumbnail.jpg")
+                
+                // Create thumbnails subdirectory
+                let thumbnailsDirectory = documentDirectory.appendingPathComponent("VideoThumbnails")
+                try? FileManager.default.createDirectory(at: thumbnailsDirectory, withIntermediateDirectories: true)
+                
+                // Generate unique filename based on video URL
+                let videoHash = String(videoURL.absoluteString.hashValue)
+                let timestamp = Int(Date().timeIntervalSince1970)
+                let uniqueFilename = "thumb_\(videoHash)_\(timestamp).jpg"
+                
+                let imageURL = thumbnailsDirectory.appendingPathComponent(uniqueFilename)
                 
                 do {
                     try data.write(to: imageURL)
+                    ISMChatHelper.print("Thumbnail saved successfully at: \(imageURL.path)")
                     completion(imageURL)
                 } catch {
                     ISMChatHelper.print("Error saving thumbnail image: \(error)")
                     completion(nil)
                 }
             } else {
+                ISMChatHelper.print("Error converting image to JPEG data")
                 completion(nil)
             }
         } catch {
@@ -480,6 +491,103 @@ public class ISMChatHelper: NSObject {
             completion(nil)
         }
     }
+
+    // MARK: - Enhanced version with duplicate checking
+    public class func generateThumbnailImageURLSmart(from videoURL: URL, completion: @escaping (URL?) -> Void) {
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let thumbnailsDirectory = documentDirectory.appendingPathComponent("VideoThumbnails")
+        
+        // Check if thumbnail already exists
+        let videoHash = String(videoURL.absoluteString.hashValue)
+        let expectedFilename = "thumb_\(videoHash).jpg"
+        let expectedURL = thumbnailsDirectory.appendingPathComponent(expectedFilename)
+        
+        // Return existing thumbnail if found
+        if FileManager.default.fileExists(atPath: expectedURL.path) {
+            ISMChatHelper.print("Using existing thumbnail: \(expectedURL.path)")
+            completion(expectedURL)
+            return
+        }
+        
+        // Generate new thumbnail
+        let asset = AVAsset(url: videoURL)
+        let imageGenerator = AVAssetImageGenerator(asset: asset)
+        imageGenerator.appliesPreferredTrackTransform = true
+        
+        let time = CMTimeMake(value: 1, timescale: 2)
+        
+        do {
+            let cgImage = try imageGenerator.copyCGImage(at: time, actualTime: nil)
+            let uiImage = UIImage(cgImage: cgImage)
+            
+            if let data = uiImage.jpegData(compressionQuality: 0.8) {
+                // Create directory if needed
+                try? FileManager.default.createDirectory(at: thumbnailsDirectory, withIntermediateDirectories: true)
+                
+                do {
+                    try data.write(to: expectedURL)
+                    ISMChatHelper.print("Thumbnail generated and saved: \(expectedURL.path)")
+                    completion(expectedURL)
+                } catch {
+                    ISMChatHelper.print("Error saving thumbnail image: \(error)")
+                    completion(nil)
+                }
+            } else {
+                ISMChatHelper.print("Error converting image to JPEG data")
+                completion(nil)
+            }
+        } catch {
+            ISMChatHelper.print("Error generating thumbnail image: \(error)")
+            completion(nil)
+        }
+    }
+
+    // MARK: - Utility methods for thumbnail management
+    // Get existing thumbnail URL without generating
+    private class func getExistingThumbnailURL(for videoURL: URL) -> URL? {
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let thumbnailsDirectory = documentDirectory.appendingPathComponent("VideoThumbnails")
+        let videoHash = String(videoURL.absoluteString.hashValue)
+        let thumbnailURL = thumbnailsDirectory.appendingPathComponent("thumb_\(videoHash).jpg")
+        
+        return FileManager.default.fileExists(atPath: thumbnailURL.path) ? thumbnailURL : nil
+    }
+    
+    // Clean up old thumbnails
+    private class func clearAllThumbnails() {
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let thumbnailsDirectory = documentDirectory.appendingPathComponent("VideoThumbnails")
+        
+        do {
+            try FileManager.default.removeItem(at: thumbnailsDirectory)
+            ISMChatHelper.print("All thumbnails cleared successfully")
+        } catch {
+            ISMChatHelper.print("Error clearing thumbnails: \(error)")
+        }
+    }
+    
+    // Get total size of all thumbnails
+    private class func getThumbnailsDirectorySize() -> Int64 {
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let thumbnailsDirectory = documentDirectory.appendingPathComponent("VideoThumbnails")
+        
+        guard let enumerator = FileManager.default.enumerator(at: thumbnailsDirectory, includingPropertiesForKeys: [.fileSizeKey]) else {
+            return 0
+        }
+        
+        var totalSize: Int64 = 0
+        for case let fileURL as URL in enumerator {
+            do {
+                let resourceValues = try fileURL.resourceValues(forKeys: [.fileSizeKey])
+                totalSize += Int64(resourceValues.fileSize ?? 0)
+            } catch {
+                continue
+            }
+        }
+        
+        return totalSize
+    }
+
     
     //MARK: - COMPRESS IMAGE
     public class func compressImage(image: URL) -> UIImage? {
@@ -847,5 +955,18 @@ extension ISMChatHelper{
         
         // Combine the formatted start and end dates into a single string
         return "\(formattedStartDate) - \(formattedEndDate)"
+    }
+}
+
+class ThumbnailCache {
+    static var shared = ThumbnailCache()
+    private var cache: [URL: URL] = [:]
+
+    func get(for videoUrl: URL) -> URL? {
+        return cache[videoUrl]
+    }
+
+    func set(thumbnail: URL, for videoUrl: URL) {
+        cache[videoUrl] = thumbnail
     }
 }
