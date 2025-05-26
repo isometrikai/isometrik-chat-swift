@@ -312,6 +312,16 @@ extension ChatsViewModel{
         case .post:
             notificationBody = "📷 Reels Post"
             messageInBody = "Reels Post"
+            if let url = URL(string: message) {
+                if ISMChatHelper.isVideo(media: url) {
+                    ISMChatHelper.generateThumbnailImageURL(from: url, completion: { imageUrl in
+                        if let generatedThumbnail = imageUrl?.absoluteString {
+                            metaData = ["thumbnailUrl": generatedThumbnail]
+                        }
+                     })
+                }
+            }
+            
             //searchable tags
             searchTags.append(ISMChatSearchTags.post.value)
             searchTags.append(message)

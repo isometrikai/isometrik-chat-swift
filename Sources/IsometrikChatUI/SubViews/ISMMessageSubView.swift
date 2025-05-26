@@ -2124,15 +2124,12 @@ struct ISMMessageSubView: View {
             }
             ZStack(alignment: .bottomTrailing){
                 ZStack(alignment: .topTrailing){
-                    ISMImageViewer(url: isPost == true ? (message.metaData?.post?.postUrl ?? "") : (message.metaData?.product?.productUrl ?? ""), size: isPost == true ? CGSizeMake(124, 249) : CGSizeMake(250, 300), cornerRadius: 8)
-                        .overlay(
-                            LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                                .frame(width: 124, height: 249)
-                                .mask(
-                                    RoundedRectangle(cornerRadius: 5)
-                                        .fill(Color.white)
-                                )
-                        )
+                    if let thumbnailUrl = message.metaData?.thumbnailUrl, !thumbnailUrl.isEmpty {
+                        imageViewer(isPost: isPost, thumbnail: thumbnailUrl)
+                    }else{
+                        imageViewer(isPost: isPost, thumbnail: isPost == true ? (message.metaData?.post?.postUrl ?? "") : (message.metaData?.product?.productUrl ?? ""))
+                    }
+                    
                     if isPost == true{
                         appearance.images.postIcon
                             .scaledToFill()
@@ -2159,6 +2156,18 @@ struct ISMMessageSubView: View {
                 }
             }
         }
+    }
+    
+    private func imageViewer(isPost : Bool, thumbnail: String) -> some View{
+        ISMImageViewer(url: thumbnail, size: isPost == true ? CGSizeMake(124, 249) : CGSizeMake(250, 300), cornerRadius: 8)
+            .overlay(
+                LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                    .frame(width: 124, height: 249)
+                    .mask(
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(Color.white)
+                    )
+            )
     }
     
     func repliedMessageView() -> some View{
