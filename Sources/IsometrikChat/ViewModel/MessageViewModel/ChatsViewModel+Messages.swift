@@ -131,9 +131,9 @@ extension ChatsViewModel{
         }
     }
     
-    public func sharePost(user: UserDB,postId : String,postURL : String,postCaption : String,completion:@escaping()->()){
+    public func sharePost(user: UserDB,postId : String,postURL : String,thumbnailURL : String? = "",postCaption : String,completion:@escaping()->()){
         self.createConversation(user: user,chatStatus: ISMChatStatus.Reject.value) { response,error  in
-            self.sendMessage(messageKind: .post, customType: ISMChatMediaType.Post.value, conversationId: response?.conversationId ?? "", message: postURL, fileName: "", fileSize: nil, mediaId: nil,caption: postCaption,postId: postId) { _, _ in
+            self.sendMessage(messageKind: .post, customType: ISMChatMediaType.Post.value, conversationId: response?.conversationId ?? "", message: postURL, fileName: "", fileSize: nil, mediaId: nil,thumbnailUrl: thumbnailURL,caption: postCaption,postId: postId) { _, _ in
                 completion()
             }
         }
@@ -314,11 +314,16 @@ extension ChatsViewModel{
             messageInBody = "Reels Post"
             if let url = URL(string: message) {
                 if ISMChatHelper.isVideo(media: url) {
-                    ISMChatHelper.generateThumbnailImageURL(from: url, completion: { imageUrl in
-                        if let generatedThumbnail = imageUrl?.absoluteString {
-                            metaData = ["thumbnailUrl": generatedThumbnail]
-                        }
-                     })
+                    if let thumbnailUrl, !thumbnailUrl.isEmpty {
+                        metaData = ["thumbnailUrl": thumbnailUrl]
+                    }else{
+                        ISMChatHelper.generateThumbnailImageURL(from: url, completion: { imageUrl in
+                            if let generatedThumbnail = imageUrl?.absoluteString {
+                                metaData = ["thumbnailUrl": generatedThumbnail]
+                            }
+                         })
+                    }
+                    
                 }
             }
             
