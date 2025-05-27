@@ -577,7 +577,7 @@ struct MainToolBarView : View {
     private var attachmentButton: some View {
         Button(action: {
             DispatchQueue.main.async {
-                showActionSheet = true // Show action sheet for attachments
+                showActionSheet = !showActionSheet // Show action sheet for attachments
             }
         }) {
             appearance.images.addAttcahment
