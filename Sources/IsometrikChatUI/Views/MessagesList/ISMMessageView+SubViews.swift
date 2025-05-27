@@ -176,10 +176,10 @@ extension ISMMessageView{
                 let text = senderId == userId ? "You unblocked this user".localized() : "You are unblocked".localized()
                 customText(text: text)
             }else if action == .conversationTitleUpdated{
-                let text = senderId == userId ? "You changed this group title".localized() : userName + "changed this group title".localized()
+                let text = senderId == userId ? "You changed this group title".localized() : userName + " " + "changed this group title".localized()
                 customText(text: text)
             }else if action == .conversationImageUpdated{
-                let text = senderId == userId ? "You changed this group image".localized() : userName + "changed this group image".localized()
+                let text = senderId == userId ? "You changed this group image".localized() : userName + " " + "changed this group image".localized()
                 customText(text: text)
             }else if action == .conversationCreated{
                 if let isGroup = isGroup{
@@ -187,7 +187,7 @@ extension ISMMessageView{
                         let text = appearance.constantStrings.endToEndEncrypted
                         customTextWithImage(text: text, image: appearance.images.messageLock)
                     }else{
-                        let text = senderId == userId ? "You created group".localized() : "\(userName)" + "created group".localized()
+                        let text = senderId == userId ? "You created group".localized() : "\(userName)" + " " +  "created group".localized()
                         customText(text: text)
                     }
                 }else{
@@ -199,20 +199,20 @@ extension ISMMessageView{
                 let text = senderId == userId ? "You added \(member ?? "")" : "\(userName) added \(memberName)"
                 customText(text: text)
             }else if action == .memberLeave{
-                let text = senderId == userId ? "You has left".localized() : userName + "has left"
+                let text = senderId == userId ? "You has left".localized() : userName + " " +  "has left"
                 customText(text: text)
             }else if action == .membersRemove{
                 let memberName = memberId == userId ? ConstantStrings.you.lowercased() : "\(member ?? "")"
-                let text = senderId == userName ? "You removed".localized() + (member ?? "") : userName + "removed".localized() + " \(memberName)"
+                let text = senderId == userName ? "You removed".localized() + (member ?? "") : userName + " " +  "removed".localized() + " \(memberName)"
                 customText(text: text)
             }else if action == .addAdmin{
-                let text = "\(userName)" + "added".localized() + "\(member ?? "")" + "as an Admin".localized()
+                let text = "\(userName)" + " " +  "added".localized() + "\(member ?? "")" + " " +  "as an Admin".localized()
                 customText(text: text)
             }else if action == .removeAdmin{
-                let text = "\(userName)" + "removed".localized() + "\(member ?? "")" + " as an Admin".localized()
+                let text = "\(userName)" + " " +  "removed".localized() + "\(member ?? "")" + " as an Admin".localized()
                 customText(text: text)
             }else if action == .conversationSettingsUpdated{
-                let text = senderId == userId ? "You updated notifications setting".localized() : "\(userName)" + "updated notifications setting".localized()
+                let text = senderId == userId ? "You updated notifications setting".localized() : "\(userName)" + " " +  "updated notifications setting".localized()
                 customText(text: text)
             }
         }
