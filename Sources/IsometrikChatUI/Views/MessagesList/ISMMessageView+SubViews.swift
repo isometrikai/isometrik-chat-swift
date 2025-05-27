@@ -203,13 +203,13 @@ extension ISMMessageView{
                 customText(text: text)
             }else if action == .membersRemove{
                 let memberName = memberId == userId ? ConstantStrings.you.lowercased() : "\(member ?? "")"
-                let text = senderId == userName ? "You removed".localized() + (member ?? "") : userName + " " +  "removed".localized() + " \(memberName)"
+                let text = senderId == userName ? "You removed".localized() + " " + (member ?? "") : userName + " " +  "removed".localized() + " \(memberName)"
                 customText(text: text)
             }else if action == .addAdmin{
-                let text = "\(userName)" + " " +  "added".localized() + "\(member ?? "")" + " " +  "as an Admin".localized()
+                let text = "\(userName)" + " " +  "added".localized() + " " + "\(member ?? "")" + " " +  "as an Admin".localized()
                 customText(text: text)
             }else if action == .removeAdmin{
-                let text = "\(userName)" + " " +  "removed".localized() + "\(member ?? "")" + " as an Admin".localized()
+                let text = "\(userName)" + " " +  "removed".localized() + " " +  "\(member ?? "")" + " " + " as an Admin".localized()
                 customText(text: text)
             }else if action == .conversationSettingsUpdated{
                 let text = senderId == userId ? "You updated notifications setting".localized() : "\(userName)" + " " +  "updated notifications setting".localized()
