@@ -28,88 +28,102 @@ struct ISMShareContactList: View {
     
     @State var contactSelected : [ISMChatContacts] = [] // State variable for currently selected contacts
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance // Appearance settings
+    @State private var isLoading = true // Add loading state
     
     //MARK: - BODY
     var body: some View {
         ZStack{
             NavigationStack {
                 VStack {
-                    ScrollViewReader { proxy in
-                        List {
-                            // Display header if any contacts are selected
-                            if contactSelected.count > 0 {
-                                HeaderView()
-                            }
-                            
-                            // Iterate through sorted keys of the contact section dictionary
-                            ForEach(contactSectionDictionary.keys.sorted(), id: \.self) { key in
-                                // Filter contacts based on the search query
-                                if let contacts = contactSectionDictionary[key]?.filter({ contact in
-                                    self.query.isEmpty ? true : "\(contact.contact)".lowercased().contains(self.query.lowercased())
-                                }), !contacts.isEmpty {
-                                    Section(header: Text("\(key)").font(.system(size: 14))) {
-                                        // Display each contact in the section
-                                        ForEach(contacts) { value in
-                                            ZStack {
-                                                HStack(spacing: 10) {
-                                                    // Display contact image or fallback avatar
-                                                    if value.contact.imageDataAvailable,
-                                                       let data = value.contact.imageData,
-                                                       let image = UIImage(data: data) {
-                                                        Image(uiImage: image)
-                                                            .resizable()
-                                                            .frame(width: 37, height: 37)
-                                                            .aspectRatio(contentMode: .fill)
-                                                            .clipShape(Circle())
-                                                    } else {
-                                                        UserAvatarView(avatar: "", showOnlineIndicator: false, userName: key)
-                                                            .frame(width: 37, height: 37)
-                                                            .clipShape(Circle())
-                                                    }
-                                                    
-                                                    // Display contact name and phone number
-                                                    VStack(alignment: .leading, spacing: 5) {
-                                                        Text("\(value.contact.givenName) \(value.contact.familyName)")
-                                                            .font(appearance.fonts.chatListUserName)
-                                                            .foregroundColor(appearance.colorPalette.chatListUserName)
-                                                            .lineLimit(nil)
+                    if isLoading {
+                        // Show loader while loading
+                        VStack {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle())
+                                .scaleEffect(1.5)
+                            Text("Loading contacts...")
+                                .font(appearance.fonts.chatListUserMessage)
+                                .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                .padding(.top, 10)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else {
+                        ScrollViewReader { proxy in
+                            List {
+                                // Display header if any contacts are selected
+                                if contactSelected.count > 0 {
+                                    HeaderView()
+                                }
+                                
+                                // Iterate through sorted keys of the contact section dictionary
+                                ForEach(contactSectionDictionary.keys.sorted(), id: \.self) { key in
+                                    // Filter contacts based on the search query
+                                    if let contacts = contactSectionDictionary[key]?.filter({ contact in
+                                        self.query.isEmpty ? true : "\(contact.contact)".lowercased().contains(self.query.lowercased())
+                                    }), !contacts.isEmpty {
+                                        Section(header: Text("\(key)").font(.system(size: 14))) {
+                                            // Display each contact in the section
+                                            ForEach(contacts) { value in
+                                                ZStack {
+                                                    HStack(spacing: 10) {
+                                                        // Display contact image or fallback avatar
+                                                        if value.contact.imageDataAvailable,
+                                                           let data = value.contact.imageData,
+                                                           let image = UIImage(data: data) {
+                                                            Image(uiImage: image)
+                                                                .resizable()
+                                                                .frame(width: 37, height: 37)
+                                                                .aspectRatio(contentMode: .fill)
+                                                                .clipShape(Circle())
+                                                        } else {
+                                                            UserAvatarView(avatar: "", showOnlineIndicator: false, userName: key)
+                                                                .frame(width: 37, height: 37)
+                                                                .clipShape(Circle())
+                                                        }
                                                         
-                                                        if let phoneNumber = value.contact.phoneNumbers.first?.value {
-                                                            Text(phoneNumber.stringValue)
-                                                                .font(appearance.fonts.chatListUserMessage)
-                                                                .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                                        // Display contact name and phone number
+                                                        VStack(alignment: .leading, spacing: 5) {
+                                                            Text("\(value.contact.givenName) \(value.contact.familyName)")
+                                                                .font(appearance.fonts.chatListUserName)
+                                                                .foregroundColor(appearance.colorPalette.chatListUserName)
+                                                                .lineLimit(nil)
+                                                            
+                                                            if let phoneNumber = value.contact.phoneNumbers.first?.value {
+                                                                Text(phoneNumber.stringValue)
+                                                                    .font(appearance.fonts.chatListUserMessage)
+                                                                    .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                                            }
+                                                        }
+                                                        
+                                                        Spacer()
+                                                        
+                                                        // Selection indicator
+                                                        if contactSelected.contains(where: { $0.id == value.id }) {
+                                                            appearance.images.selected
+                                                                .resizable()
+                                                                .frame(width: 20, height: 20)
+                                                        } else {
+                                                            appearance.images.deselected
+                                                                .resizable()
+                                                                .frame(width: 20, height: 20)
                                                         }
                                                     }
                                                     
-                                                    Spacer()
-                                                    
-                                                    // Selection indicator
-                                                    if contactSelected.contains(where: { $0.id == value.id }) {
-                                                        appearance.images.selected
-                                                            .resizable()
-                                                            .frame(width: 20, height: 20)
-                                                    } else {
-                                                        appearance.images.deselected
-                                                            .resizable()
-                                                            .frame(width: 20, height: 20)
+                                                    // Button to select/deselect contact
+                                                    Button {
+                                                        contactSelection(value: value)
+                                                    } label: {
+                                                        // Empty label for button tap area
+                                                        EmptyView()
                                                     }
-                                                }
-                                                
-                                                // Button to select/deselect contact
-                                                Button {
-                                                    contactSelection(value: value)
-                                                } label: {
-                                                    // Empty label for button tap area
-                                                    EmptyView()
                                                 }
                                             }
                                         }
                                     }
                                 }
                             }
-
+                            .listStyle(DefaultListStyle())
                         }
-                        .listStyle(DefaultListStyle())
                     }
                 }//:VStack
                 .navigationBarTitleDisplayMode(.inline)
@@ -251,25 +265,64 @@ struct ISMShareContactList: View {
     }
     
     public func fetchContacts() {
-        // Function to fetch contacts from the user's contact store
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .userInitiated).async { [self] in
             let store = CNContactStore()
             let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactImageDataAvailableKey, CNContactImageDataKey]
-            let request = CNContactFetchRequest(keysToFetch: keysToFetch as [CNKeyDescriptor])
             
             do {
-                try store.enumerateContacts(with: request) { (contact, _) in
-                    contacts.append(ISMChatContacts(id: UUID(), contact: contact)) // Append each contact to the contacts array
+                // Fetch contacts in batches
+                let batchSize = 100
+                var currentBatch: [ISMChatContacts] = []
+                
+                try store.enumerateContacts(with: CNContactFetchRequest(keysToFetch: keysToFetch as [CNKeyDescriptor])) { (contact, stop) in
+                    // Only process contacts that have valid phone numbers
+                    let validPhoneNumbers = contact.phoneNumbers.filter { phoneNumber in
+                        let number = phoneNumber.value.stringValue
+                        // Remove all non-digit characters
+                        let digitsOnly = number.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+                        // Check if the number has a reasonable length (between 7 and 15 digits)
+                        return digitsOnly.count >= 7 && digitsOnly.count <= 15
+                    }
+                    
+                    guard !validPhoneNumbers.isEmpty else { return }
+                    
+                    // Create a new contact with only valid phone numbers
+                    let validContact = CNMutableContact()
+                    validContact.givenName = contact.givenName
+                    validContact.familyName = contact.familyName
+                    validContact.phoneNumbers = validPhoneNumbers
+                    validContact.imageData = contact.imageData
+                    
+                    currentBatch.append(ISMChatContacts(id: UUID(), contact: validContact))
+                    
+                    // When batch is full, update UI and clear batch
+                    if currentBatch.count >= batchSize {
+                        let batchToAdd = currentBatch
+                        DispatchQueue.main.async {
+                            self.contacts.append(contentsOf: batchToAdd)
+                            self.contactSectionDictionary = self.viewModel.getContactDictionary(data: self.contacts)
+                        }
+                        currentBatch.removeAll(keepingCapacity: true)
+                    }
+                }
+                
+                // Process any remaining contacts
+                if !currentBatch.isEmpty {
+                    let finalBatch = currentBatch
+                    DispatchQueue.main.async {
+                        self.contacts.append(contentsOf: finalBatch)
+                        self.contactSectionDictionary = self.viewModel.getContactDictionary(data: self.contacts)
+                        self.isLoading = false // Hide loader after all contacts are loaded
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.isLoading = false // Hide loader if no contacts were loaded
+                    }
                 }
             } catch {
-                // Handle the error
                 print("Error fetching contacts: \(error)")
-            }
-            
-            // Update the UI on the main thread after fetching contacts
-            DispatchQueue.main.async {
-                if contacts.count > 0 {
-                    contactSectionDictionary = viewModel.getContactDictionary(data: contacts) // Organize contacts into sections
+                DispatchQueue.main.async {
+                    self.isLoading = false // Hide loader in case of error
                 }
             }
         }
