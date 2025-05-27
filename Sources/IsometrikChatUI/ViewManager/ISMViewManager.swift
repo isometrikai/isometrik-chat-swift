@@ -18,8 +18,9 @@ public class ISMViewManager{
     /// Creates and returns a conversation list view
     /// - Parameter delegate: Optional delegate to handle conversation view events
     /// - Returns: A SwiftUI view displaying the list of conversations
-    public func conversationList(delegete : ISMConversationViewDelegate? = nil) -> some View {
+    public func conversationList(delegete : ISMConversationViewDelegate? = nil, height: CGFloat? = nil) -> some View {
         return ISMConversationView(delegate: delegete)
+            .frame(height: height)
     }
     
     /// Creates and returns a message list view for a specific conversation
