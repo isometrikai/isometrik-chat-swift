@@ -432,13 +432,13 @@ public struct PaymentRequestedMembers : Codable{
     var declineReason : String?
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        userId = try? container.decode(String.self, forKey: .userId)
-        userName = try? container.decode(String.self, forKey: .userName)
-        status = try? container.decode(Int.self, forKey: .status)
-        statusText = try? container.decode(String.self, forKey: .statusText)
-        appUserId = try? container.decode(String.self, forKey: .appUserId)
-        userProfileImage = try? container.decode(String.self, forKey: .userProfileImage)
-        declineReason = try? container.decode(String.self, forKey: .declineReason)
+        userId = try? container.decodeIfPresent(String.self, forKey: .userId)
+        userName = try? container.decodeIfPresent(String.self, forKey: .userName)
+        status = try? container.decodeIfPresent(Int.self, forKey: .status)
+        statusText = try? container.decodeIfPresent(String.self, forKey: .statusText)
+        appUserId = try? container.decodeIfPresent(String.self, forKey: .appUserId)
+        userProfileImage = try? container.decodeIfPresent(String.self, forKey: .userProfileImage)
+        declineReason = try? container.decodeIfPresent(String.self, forKey: .declineReason)
     }
     public init(userId : String? = nil,userName : String? = nil,status : Int? = nil,statusText : String? = nil,appUserId : String? = nil,userProfileImage : String? = nil,declineReason : String? = nil){
         self.userId = userId

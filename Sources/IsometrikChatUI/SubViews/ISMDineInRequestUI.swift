@@ -127,16 +127,16 @@ struct ISMDineInRequestUI: View {
                     }
                     
                     if isReceived == false{
-                        Text("You've sent a Dine-in invite. Please wait for your friend's response.")
+                        Text("You sent a dine-in invite")
                             .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
                             .foregroundColor(Color(hex: "#3A341C"))
                     }
                     else if status == .Cancelled{
-                        Text(isReceived ? "This dine-in reservation is cancelled." : "You've cancelled the Dine-in reservation.")
+                        Text(isReceived ? "Dine-in invite cancelled" : "You cancelled the dine-in invite")
                             .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
                             .foregroundColor(Color(hex: "#3A341C"))
                     }else if status == .Rescheduled{
-                        Text(isReceived ? "Your friend has rescheduled Dine-in invite." : "You've rescheduled Dine-in invite. Please wait for your friend's response.")
+                        Text(isReceived ? "Reservation rescheduled" : "You rescheduled invite")
                             .font(Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().regular, size: 12))
                             .foregroundColor(Color(hex: "#3A341C"))
                     }

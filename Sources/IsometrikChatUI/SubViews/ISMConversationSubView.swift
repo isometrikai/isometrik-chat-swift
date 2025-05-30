@@ -150,10 +150,31 @@ struct ISMConversationSubView: View {
                         case ISMChatMediaType.PaymentRequest.value:
                             PaymentRequestUI()
                         case ISMChatMediaType.DineInInvite.value:
-                            if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
-                                getLabel(hideImage: true,text: "You have sent an invitation".localized(), image: "")
-                            }else{
-                                getLabel(hideImage: true,text: "Sent you an invitation".localized(), image: "")
+                            let sentAtSeconds = (chat.lastMessageDetails?.sentAt ?? 0) / 1000.0
+                            let expirationTimestamp = sentAtSeconds + Double((chat.lastMessageDetails?.metaData?.requestAPaymentExpiryTime ?? 0) * 60) // expireAt is in minutes
+                            let currentTimestamp = Date().timeIntervalSince1970
+
+                            // Check if the current time exceeds the expiration timestamp
+                            if currentTimestamp >= expirationTimestamp {
+                                getLabel(hideImage: true,text: "Dine-in invite expired".localized(), image: "")
+                            } else {
+                                if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
+                                    getLabel(hideImage: true,text: "You sent a dine-in invite".localized(), image: "")
+                                }else{
+                                    getLabel(hideImage: true,text: "invited you for dine-in".localized(), image: "")
+                                }
+                            }
+                            
+                        case ISMChatMediaType.DineInStatus.value:
+                            
+                            if let status = chat.lastMessageDetails?.metaData?.inviteMembers.first?.status{
+                                dineInPaymentStatus(status: status)
+                            }else if let status = chat.lastMessageDetails?.metaData?.paymentRequestedMembers.first?.status{
+                                dineInPaymentStatus(status: status)
+                            }else if let status = chat.lastMessageDetails?.metaData?.status{
+                                dineInPaymentStatus(status: status)
+                            }else {
+                                actionLabels()
                             }
                         default:
                             actionLabels()
@@ -161,11 +182,42 @@ struct ISMConversationSubView: View {
                     }else{
                         if chat.lastMessageDetails?.metaData?.paymentRequestId != nil{
                             PaymentRequestUI()
-                        }else{
+                        }else if chat.lastMessageDetails?.metaData?.paymentRequestId != nil{
+                            PaymentRequestUI()
+                        }
+                        else{
                             actionLabels()
                         }
                     }
                 }
+            }
+        }
+    }
+    
+    func dineInPaymentStatus(status:Int) -> some View {
+        if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId {
+            if status == 1 {
+                return AnyView(getLabel(hideImage: true,text: "You accepted dine-in invite".localized(), image: ""))
+            }else if status == 2 {
+                return AnyView(getLabel(hideImage: true,text: "You declined dine-in invite".localized(), image: ""))
+            }else if status == 3 {
+                return AnyView(getLabel(hideImage: true,text: "Dine-in invite expired".localized(), image: ""))
+            }else if status == 4 {
+                return AnyView(getLabel(hideImage: true,text: "You cancelled the dine-in invite".localized(), image: ""))
+            }else{
+                return AnyView(Text(""))
+            }
+        }else{
+            if status == 1 {
+                return AnyView(getLabel(hideImage: true,text: "Dine-in invite accepted".localized(), image: ""))
+            }else if status == 2 {
+                return AnyView(getLabel(hideImage: true,text: "Dine-in invite declined".localized(), image: ""))
+            }else if status == 3 {
+                return AnyView(getLabel(hideImage: true,text: "Dine-in invite expired".localized(), image: ""))
+            }else if status == 4 {
+                return AnyView(getLabel(hideImage: true,text: "Dine-in invite cancelled".localized(), image: ""))
+            }else{
+                return AnyView(Text(""))
             }
         }
     }
@@ -189,12 +241,15 @@ struct ISMConversationSubView: View {
             if chat.lastMessageDetails?.customType == ISMChatMediaType.PaymentRequest.value && ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "", opponentId: chat.opponentDetails?.userId ?? "", metaData: self.chat.lastMessageDetails?.metaData, sentAt: self.chat.lastMessageDetails?.sentAt ?? 0) == .ActiveRequest{
                 Spacer()
                 
-                Text("Pay Now")
-                    .foregroundColor(appearance.colorPalette.chatListUnreadMessageCount)
-                    .font(appearance.fonts.chatListUnreadMessageCount)
-                    .frame(width: 68, height: 22)
-                    .background(appearance.colorPalette.chatListUnreadMessageCountBackground)
-                    .cornerRadius(11)
+                if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId != userData?.userId{
+                    Text("Pay Now")
+                        .foregroundColor(appearance.colorPalette.chatListUnreadMessageCount)
+                        .font(appearance.fonts.chatListUnreadMessageCount)
+                        .frame(width: 68, height: 22)
+                        .background(appearance.colorPalette.chatListUnreadMessageCountBackground)
+                        .cornerRadius(11)
+                }
+                
             }else{
                 let count = chat.unreadMessagesCount
                 if count > 0{
@@ -356,6 +411,14 @@ struct ISMConversationSubView: View {
             }else if chat.lastMessageDetails?.action == ISMChatActionType.messageDetailsUpdated.value{
                 if let body = chat.lastMessageDetails?.body {
                     getLabel(hideImage: true, text: body, image: "")
+                }else{
+                    if let status = chat.lastMessageDetails?.metaData?.inviteMembers.first?.status{
+                        dineInPaymentStatus(status: status)
+                    }else if let status = chat.lastMessageDetails?.metaData?.paymentRequestedMembers.first?.status{
+                        dineInPaymentStatus(status: status)
+                    }else if let status = chat.lastMessageDetails?.metaData?.status{
+                        dineInPaymentStatus(status: status)
+                    }
                 }
             }
             else{
@@ -423,31 +486,33 @@ struct ISMConversationSubView: View {
     
     /// Gets the appropriate payment request status text
     func getPaymentRequestText() -> String{
-        let status = ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "", opponentId: chat.opponentDetails?.userId ?? "",metaData: self.chat.lastMessageDetails?.metaData, sentAt: self.chat.lastMessageDetails?.sentAt ?? 0)
+        let metaData = self.chat.lastMessageDetails?.metaData
+        let status = ISMChatHelper.getPaymentStatus(myUserId: userData?.userId ?? "", opponentId: chat.opponentDetails?.userId ?? "",metaData: metaData, sentAt: self.chat.lastMessageDetails?.sentAt ?? 0)
+        let amount = "\(metaData?.currencyCode ?? "") \(metaData?.amount?.rounded(to: 2) ?? 0)"
         if status == .ActiveRequest {
             if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
-                return "You have sent a payment request"
+                return "Payment request sent"
             }else{
-                return "\(chat.lastMessageDetails?.senderName ?? "") sent you a payment request"
+                return "sent you a payment request of \(amount)"
             }
         } else if status == .Rejected {
             if let otherUserName = self.chat.lastMessageDetails?.metaData?.paymentRequestedMembers.first(where: { $0.userId == userData?.userId && $0.status == 2 }) {
-                return "You declined the payment request"
+                return "You declined payment request"
             }else{
-                return "Declined the payment request"
+                return "payment request declined"
             }
         } else if status == .Expired {
-            return "This payment request has expired"
+            return "Request expired - \(amount)"
         }else if status == .Cancelled {
             if chat.lastMessageDetails?.senderId ?? chat.lastMessageDetails?.userId == userData?.userId{
-                return "You cancelled this order"
+                return "You cancelled payment request"
             }else{
-                return "Cancelled this order"
+                return "Request cancelled"
             }
         }else if status == .Accepted{
-            return "You have successfully paid for the order."
+            return "You paid \(amount)"
         }else if status == .PayedByOther{
-            return "The payment has already been made."
+            return "Paid \(amount)"
         }
         return ""
     }

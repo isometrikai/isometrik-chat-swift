@@ -195,6 +195,15 @@ public struct ISMChatLastMessage : Codable{
         customType = try? container.decode(String.self, forKey: .customType)
         action = try? container.decode(String.self, forKey: .action)
         metaData = try? container.decode(ISMChatMetaData.self, forKey: .metaData)
+        
+        // If not found, try decoding from details.metaData
+        if metaData == nil {
+            details = try? container.decode(ISMChatMessageUpdatedDetail.self, forKey: .details)
+            metaData = details?.metaData
+        } else {
+            details = try? container.decode(ISMChatMessageUpdatedDetail.self, forKey: .details)
+        }
+        
         deliveredTo = try? container.decode([ISMChatMessageDeliveryStatus].self, forKey: .deliveredTo)
         readBy = try? container.decode([ISMChatMessageDeliveryStatus].self, forKey: .readBy)
         conversationTitle = try? container.decode(String.self, forKey: .conversationTitle)
