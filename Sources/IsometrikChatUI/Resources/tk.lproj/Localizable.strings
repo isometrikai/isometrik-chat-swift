@@ -5,6 +5,17 @@
   Created by My Book on 18/02/25.
   
 */
+
+"last_seen" = "Soňky gezek görüldi";
+"chat" = "Söhbet";
+"block_user" = "Ulanyjyny blokla";
+"clear_chat" = "Söhbeti arassala";
+
+"Last_seen" = "Soňky gezek görüldi";
+"Chat" = "Söhbet";
+"Block_user" = "Ulanyjyny blokla";
+"Clear_chat" = "Söhbeti arassala";
+
 "Chats" = "Sohbetler";
 "New Chat" = "Yeni Sohbet";
 "tap here for more info" = "Daha fazla bilgi için buraya dokunun";

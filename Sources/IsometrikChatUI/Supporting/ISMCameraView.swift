@@ -169,9 +169,9 @@ struct CameraCaptureView: View {
                                 NotificationCenter.default.post(name: NSNotification.Name("ToggleFlash"), object: isFlashOn)
                         }) {
 //                            Image(systemName: isFlashOn ? "bolt.fill" : "bolt.slash")
-                            appearance.images.flash
+                            (isFlashOn ? appearance.images.flashOn : appearance.images.flashOff)
                                 .resizable()
-                                .frame(width: 24, height: 24, alignment: .center)
+                                .frame(width: 30, height: 30, alignment: .center)
                         }
                         
                         Spacer()
@@ -223,23 +223,23 @@ struct CameraCaptureView: View {
                     // Bottom controls
                     VStack(alignment: .center) {
                         // Zoom slider
-                        HStack(spacing: 24){
-                            Button(action: {
-                                // Filter action
-                            }) {
-                                appearance.images.filter
-                                    .resizable()
-                                    .frame(width: 30, height: 30, alignment: .center)
-                            }
-                            
-                            Button(action: {
-                                // Filter action
-                            }) {
-                                Text("1x")
-                                    .font(appearance.fonts.contactDetailsTitle)
-                                    .foregroundColor(.white)
-                            }
-                        }.padding(.bottom,30)
+//                        HStack(spacing: 24){
+//                            Button(action: {
+//                                // Filter action
+//                            }) {
+//                                appearance.images.filter
+//                                    .resizable()
+//                                    .frame(width: 30, height: 30, alignment: .center)
+//                            }
+//                            
+//                            Button(action: {
+//                                // Filter action
+//                            }) {
+//                                Text("1x")
+//                                    .font(appearance.fonts.contactDetailsTitle)
+//                                    .foregroundColor(.white)
+//                            }
+//                        }.padding(.bottom,30)
                         
                         CaptureButton(isRecording: $isRecording, isVideo: $isVideo) {
                             NotificationCenter.default.post(name: NSNotification.Name("CapturePhoto"), object: nil)
@@ -247,15 +247,15 @@ struct CameraCaptureView: View {
                         
                         HStack {
                             // Gallery button
-                            Button(action: {
-                                //                            showGallery = true
-                            }) {
-                                appearance.images.gallery
-                                    .resizable()
-                                    .frame(width: 40, height: 40, alignment: .center)
-                            }
-                            
-                            Spacer()
+//                            Button(action: {
+//                                //                            showGallery = true
+//                            }) {
+//                                appearance.images.gallery
+//                                    .resizable()
+//                                    .frame(width: 40, height: 40, alignment: .center)
+//                            }
+//                            
+//                            Spacer()
                             
                             // Capture button
                             

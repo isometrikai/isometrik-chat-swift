@@ -29,7 +29,7 @@ enum ISMChatReactionEndpoint : ISMChatURLConvertible {
         case .getReaction(let reaction):
             return "/chat/reaction" + "\(reaction)"
         case .removeReaction(let reaction):
-            return "/chat/reaction" + "\(reaction)"
+            return "/chat/reaction/" + "\(reaction)"
         }
     }
     

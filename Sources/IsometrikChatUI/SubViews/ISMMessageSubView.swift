@@ -2417,13 +2417,24 @@ struct ISMMessageSubView: View {
     }
 
     
-    func reactionsView() -> some View{
-        Button {
-            showReactionsDetail = true
-        } label: {
-            HStack(spacing : 5){
-                ForEach(message.reactions) { rec in
-                    HStack(spacing: 1){
+    func reactionsView() -> some View {
+        HStack(spacing: 5) {
+            ForEach(message.reactions) { rec in
+                let isMyReaction = rec.users.contains(userData?.userId ?? "")
+                Button {
+                    if isMyReaction {
+                        // Remove my reaction directly
+                        viewModel.removeReaction(conversationId: message.conversationId, messageId: message.messageId, emojiReaction: rec.reactionType) { _ in
+                            reactionRemoved = rec.reactionType
+                            // Optionally update UI or show feedback
+                            realmManager.addLastMessageOnAddAndRemoveReaction(conversationId: message.conversationId, action: ISMChatActionType.reactionRemove.value, emoji: rec.reactionType, userId: userData?.userId ?? "")
+                        }
+                    } else {
+                        // Show popup for others' reactions
+                        showReactionsDetail = true
+                    }
+                } label: {
+                    HStack(spacing: 1) {
                         Text(ISMChatHelper.getEmoji(valueString: rec.reactionType))
                             .font(appearance.fonts.messageListreactionCount)
                         Text("\(rec.users.count)")
@@ -2439,8 +2450,8 @@ struct ISMMessageSubView: View {
                             .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
                     )
                 }
-            }.offset(y: 14)
-        }
+            }
+        }.offset(y: 14)
     }
     
     func inGroupUserAvatarView() -> some View{
