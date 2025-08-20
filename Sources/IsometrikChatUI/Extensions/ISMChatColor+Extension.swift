@@ -61,23 +61,23 @@ extension Color {
 
 extension Color {
     //Login
-    static public let onboardingPlaceholder = Color(hex: "#9EA4C3")
+    static public let onboardingPlaceholder = Color("onboardingPlaceholder", bundle: .isometrikChat)
 //    static public let black = Color.black
-    static public let forgotpassword = Color(hex: "#294566")
-    static public let border = Color(hex: "#DBDBDB")
+    static public let forgotpassword = Color("forgotpassword", bundle: .isometrikChat)
+    static public let border = Color("border", bundle: .isometrikChat)
     
-    static public let login1 = Color(hex: "#A399F7")
-    static public let login2 = Color(hex: "#7062E9")
-    static public let redMessageCount = Color(hex: "#F15C46")
-    static public let backgroundView = Color(hex: "#F3F6FB")
-    static public let bluetype = Color(hex: "#00A2F3")
-    static public let blue1 = Color(hex: "#007AFF")
-    static public let header = Color(hex: "#E2E9F4")
-    static public let listBackground = Color(hex: "#E8EFF9")
-    static public let docBackground = Color(hex: "#E8EFF9")
-    static public let primarypurple = Color(hex: "#7062E9")
-    static public let audiobar = Color(hex: "#CBE3FF")
-    static public let redType = Color(hex: "#DD3719")
+    static public let login1 = Color("login1", bundle: .isometrikChat)
+    static public let login2 = Color("login2", bundle: .isometrikChat)
+    static public let redMessageCount = Color("redMessageCount", bundle: .isometrikChat)
+    static public let backgroundView = Color("backgroundView", bundle: .isometrikChat)
+    static public let bluetype = Color("bluetype", bundle: .isometrikChat)
+    static public let blue1 = Color("blue1", bundle: .isometrikChat)
+    static public let header = Color("header", bundle: .isometrikChat)
+    static public let listBackground = Color("listBackground", bundle: .isometrikChat)
+    static public let docBackground = Color("docBackground", bundle: .isometrikChat)
+    static public let primarypurple = Color("primarypurple", bundle: .isometrikChat)
+    static public let audiobar = Color("audiobar", bundle: .isometrikChat)
+    static public let redType = Color("redType", bundle: .isometrikChat)
 }
 
 extension Color {
