@@ -199,131 +199,44 @@ public struct ISMMessageView: View {
     
     // MARK: - BODY
     public var body: some View {
-        VStack{
-            ZStack{
+        // Build the base UI first, then apply modifiers in grouped, type-erased chunks
+        let base = AnyView(baseView())
+        let withDialogs = attachConfirmationDialogs(to: base)
+        let withUnblockDialogs = attachUnblockDialogs(to: withDialogs)
+        let withBlockClearDialogs = attachBlockAndClearDialogs(to: withUnblockDialogs)
+        let withOnChange = attachOnChangeHandlers(to: withBlockClearDialogs)
+        let withSheets = attachSheets(to: withOnChange)
+        let withFullScreens = attachFullScreenCovers(to: withSheets)
+        let withNavigation = attachNavigation(to: withFullScreens)
+        let withTimers = attachTimers(to: withNavigation)
+        let withAlerts = attachAlerts(to: withTimers)
+        return attachOnLoad(to: withAlerts)
+    }
+    
+    // MARK: - Base View split into small parts to reduce type-checker load
+    @ViewBuilder
+    private func baseView() -> some View {
+        VStack {
+            ZStack {
                 appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack(spacing: 0) {
-                    // remove this job card view and delegate after i add this code from app side
-                    if ISMChatSdkUI.getInstance().getChatProperties().customJobCardInMessageList == true {
-                        if let conversation = self.conversationDetail?.conversationDetails,
-                           let metaData = conversation.metaData {
-                            JobCardView(jobTitle: metaData.jobTitle ?? "", jobId: metaData.jobId ?? "", startDate: metaData.startDate ?? "", endDate: metaData.endDate ?? "")
-                                .onTapGesture {
-                                    self.delegate?.navigateToJobDetail(jobId: metaData.jobId ?? "")
-                                }
-                        }
-                    }
-                    if let conversationDetail = conversationDetail{
-                        CustomMessageViewHeaderRegistry.shared.view(for: conversationDetail, messages: self.realmManager.allMessages ?? [])
-                    }
-                    ZStack{
-                        GeometryReader{ reader in
-                            if let image = ISMChatSdkUI.getInstance().getAppAppearance().appearance.messageListBackgroundImage ,!image.isEmpty{
-                                ScrollView{
-                                    ScrollViewReader{ scrollReader in
-                                        getMessagesView(scrollReader: scrollReader, viewWidth: reader.size.width)
-                                            .padding(.horizontal)
-                                    }
-                                }.modifier(BackgroundImage())
-                                    .coordinateSpace(name: "scroll")
-                                    .coordinateSpace(name: "pullToRefresh")
-                                    .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
-                                    .gesture(
-                                        DragGesture()
-                                            .onChanged { value in
-                                                // Only handle vertical gestures above threshold
-                                                let verticalTranslation = abs(value.translation.height)
-                                                let horizontalTranslation = abs(value.translation.width)
-                                                
-                                                // Only process if primarily vertical movement
-                                                if verticalTranslation > horizontalTranslation {
-                                                    let velocity = value.predictedEndTranslation.height - value.translation.height
-                                                    let fastScrollThreshold: CGFloat = 65
-                                                    
-                                                    if velocity > fastScrollThreshold {
-                                                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                                                    }
-                                                }
-                                            }
-                                    )
-                            }else{
-                                ScrollView{
-                                    ScrollViewReader{ scrollReader in
-                                        getMessagesView(scrollReader: scrollReader, viewWidth: reader.size.width)
-                                            .padding(.horizontal)
-                                    }
-                                }
-                                .coordinateSpace(name: "scroll")
-                                .coordinateSpace(name: "pullToRefresh")
-                                .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
-                                .gesture(DragGesture().onChanged { value in
-                                    // Calculate the velocity
-                                    let velocity = value.predictedEndTranslation.height - value.translation.height
-                                    // Define a threshold value for fast scrolling
-                                    let fastScrollThreshold: CGFloat = 65
-                                    if velocity > fastScrollThreshold {
-                                        //--------FAST SCROLL---------//
-                                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                                    } else {
-                                        //--------SLOW SCROLL---------//
-                                    }
-                                    offset = value.translation
-                                }.onEnded { value in
-                                    offset = .zero
-                                    ISMChatHelper.print("value ",value.translation.width)
-                                    let direction = self.detectDirection(value: value)
-                                    if direction == .right {
-                                        self.backButtonAction()
-                                    }
-                                })
-                            }
-                        }.padding(.bottom,5)
-                        //No Message View
-                        if realmManager.allMessages?.count == 0 || realmManager.messages.count == 0{
-                            //
-                            if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true{
-                                appearance.placeholders.messageListPlaceholder
-                            }else{
-                                appearance.images.noMessagePlaceholder
-                                    .resizable()
-                                    .frame(width: 206, height: 144, alignment: .center)
-                            }
-                            
-                        }
-                    }.onTapGesture {
-                        stateViewModel.showActionSheet = false
-                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    }
-                    if stateViewModel.showActionSheet == true{
+                    headerSection()
+                    messagesSection()
+                    if stateViewModel.showActionSheet == true {
                         attachmentsView().padding(.horizontal,10)
                     }
                     bottomView()
-                }//VStack
-                .onAppear {
-                    OnMessageList = true
-                    setupOnAppear()
-                    stateViewModel.navigateToImageEditor = false
-                    addNotificationObservers()
-                    if fromBroadCastFlow == true{
-                        reloadBroadCastMessages()
-                    }else{
-                        getConversationDetail()
-                        reload()
-                    }
-                    self.textFieldtxt = self.realmManager.getLastInputTextInConversation(conversationId: self.conversationID ?? "")
                 }
-                .onDisappear{
-                    OnMessageList = false
-                    stateViewModel.executeRepeatly = false
-                    stateViewModel.executeRepeatlyForOfflineMessage = false
-                    stateViewModel.onLoad = false
+                .onTapGesture {
+                    stateViewModel.showActionSheet = false
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                 }
-                //zstack views
-                if chatViewModel.isBusy{
-                    //Custom Progress View
+                
+                // zstack overlays
+                if chatViewModel.isBusy {
                     ActivityIndicatorView(isPresented: $chatViewModel.isBusy)
                 }
-                if stateViewModel.messageCopied == true{
+                if stateViewModel.messageCopied == true {
                     Text("Message copied")
                         .font(appearance.fonts.alertText)
                         .padding()
@@ -337,559 +250,727 @@ public struct ISMMessageView: View {
                         }
                 }
             }
-        }//:vStack
+        }
         .padding(.top, 5)
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(leading: navigationBarLeadingButtons(), trailing: navigationBarTrailingButtons())
         .navigationBarBackButtonHidden(true)
-        .confirmationDialog("", isPresented: $stateViewModel.showDeleteActionSheet, titleVisibility: .hidden) {
-            deleteActionSheetButtons()
-        }
-        .confirmationDialog("", isPresented: $stateViewModel.showUnblockPopUp) {
-            unblockActionSheetButton()
-        } message: {
-            Text("Unblock contact to send a message")
-        }
-        .confirmationDialog("", isPresented: $stateViewModel.uAreBlock) {
-        } message: {
-            Text("Action not allowed, the user has already blocked You")
-        }
-        .confirmationDialog("", isPresented: $stateViewModel.clearThisChat) {
-            Button("Delete", role: .destructive) {
-                clearChat()
-            }
-        } message: {
-            Text("Clear all messages from \(conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "this chat")? \n This chat will be empty but will remain in your chat list.")
-        }
-        .confirmationDialog("", isPresented: $stateViewModel.blockThisChat) {
-            Button("Block", role: .destructive) {
-                blockChatFromUser(block: true)
-            }
-        } message: {
-            Text("Block \(conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")? \n Blocked user will be no longer be able to send you messages.")
-        }
-        .onChange(of: chatViewModel.documentSelectedFromPicker, { _, _ in
-            sendMessageIfDocumentSelected()
-        })
-        .onChange(of: navigateToDocumentUrl, { _, _ in
-            if navigateToDocumentUrl != ""{
-                stateViewModel.navigateToDocumentViewer = true
-            }
-        })
-        .onChange(of: navigateToChatList, { _, _ in
-            if navigateToChatList == true{
-                OndisappearOnBack()
-                //dismiss
-                delegate?.backButtonAction()
-                presentationMode.wrappedValue.dismiss()
-            }
-        })
-        .onChange(of: selectedReaction, { _, _ in
-            if selectedReaction != nil{
-                sendReaction()
-            }
-        })
-        .onChange(of: audioPermissionCheck, { _, _ in
-            if audioPermissionCheck == false{
-                showPermissionDeniedAlert()
-            }
-        })
-        .onChange(of: navigateToProductLink.messageId) { _, _ in
-            if !navigateToProductLink.messageId.isEmpty,let metaData = navigateToProductLink.metaData{
-                let childProductId = metaData.childProductId ?? ""
-                let parentProductId = metaData.parentProductId ?? ""
-                let productName = metaData.productName ?? ""
-                self.delegate?.navigateToProductLink(
-                    childProductId: childProductId,
-                    parentProductId: parentProductId,
-                    productName: productName
-                )
-                navigateToProductLink = MessagesDB()
-            }
-        }
-        .onChange(of: navigateToSocialLink.messageId) { _, _ in
-            if !navigateToSocialLink.messageId.isEmpty{
-                self.delegate?.navigateToSocialLink(
-                    socialLinkId: navigateToSocialLink.metaData?.socialPostId ?? ""
-                )
-                navigateToSocialLink = MessagesDB()
-            }
-        }
-        .onChange(of: navigateToCollectionLink.messageId) { _, _ in
-            if !navigateToCollectionLink.messageId.isEmpty{
-                self.delegate?.navigateToCollectionLink(
-                    collectionId: navigateToCollectionLink.metaData?.collectionId ?? "",
-                    completeUrl: navigateToCollectionLink.metaData?.url ?? ""
-                )
-                navigateToCollectionLink = MessagesDB()
-            }
-        }.onChange(of: viewDetailsForPaymentRequest.messageId) { _, _ in
-            if !viewDetailsForPaymentRequest.messageId.isEmpty{
-                if viewDetailsForPaymentRequest.customType == ISMChatMediaType.PaymentRequest.value{
-                    self.delegate?.viewDetailForPaymentRequest(
-                        orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "",
-                        paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",
-                        isReceived: getIsReceived(message: viewDetailsForPaymentRequest),
-                        senderInfo: viewDetailsForPaymentRequest.senderInfo,
-                        message: viewDetailsForPaymentRequest,
-                        paymentRequestUserId: self.myAppUserId ?? "",
-                        metaData: viewDetailsForPaymentRequest.metaData
-                    )
-                }else{
-                    self.delegate?.dineInInvite(inviteTitle: viewDetailsForPaymentRequest.metaData?.inviteTitle ?? "", messageId: viewDetailsForPaymentRequest.messageId ?? "", groupcastId: viewDetailsForPaymentRequest.metaData?.groupCastId ?? "", reason: "", createdByUserId: viewDetailsForPaymentRequest.senderInfo?.userIdentifier ?? "", declineByUserId: self.myAppUserId ?? "",inviteStatus: 1,inviteSenderIsometricId: viewDetailsForPaymentRequest.senderInfo?.userId ?? "" )
-                }
-                viewDetailsForPaymentRequest = MessagesDB()
-            }
-        }.onChange(of: declinePaymentRequest.messageId) { _, _ in
-            if !declinePaymentRequest.messageId.isEmpty{
-                stateViewModel.showDeclinePaymentRequestPopUp = true
-            }
-        }
-        .onChange(of: navigateToMediaSliderId, { _, _ in
-            if !navigateToMediaSliderId.isEmpty{
-                stateViewModel.navigateToMediaSlider = true
-            }
-        })
-        .onChange(of: showInviteeListInDineInRequest.messageId, { _, _ in
-            if !showInviteeListInDineInRequest.messageId.isEmpty{
-                stateViewModel.showInviteeDineInPopUp = true
-            }
-        })
-        .onChange(of: textFieldtxt, { _, newValue in
-            // Update showMentionList based on conditions
-            if newValue.last == "@" {
-                DispatchQueue.main.async {
-                    stateViewModel.showMentionList = true
-                }
-                
-            } else if !newValue.contains("@") || newValue.isEmpty {
-                DispatchQueue.main.async {
-                    stateViewModel.showMentionList = false
-                }
-            }
-        })
-        .onChange(of: textFieldtxt, { _, _ in
-            if isGroup == true{
-                let filterUserName = getMentionedString(inputString: textFieldtxt)
-                if !filterUserName.isEmpty {
-                    filteredUsers = mentionUsers.filter { user in
-                        let lowercasedUserName = (user.userName ?? "").lowercased()
-                        return lowercasedUserName.contains(filterUserName.lowercased())
-                    }
-                    // If there are no matching users, set filteredUsers to an empty array
-                    if filteredUsers.isEmpty {
-                        filteredUsers = []
-                        stateViewModel.showMentionList = false
-                    }
-                } else {
-                    filteredUsers = mentionUsers
-                }
-            }
-        })
-        .onChange(of: navigateToLocationDetail.title, { _, _ in
-            stateViewModel.navigateToLocation = true
-        })
-        .onChange(of: stateViewModel.audioCallToUser, { _, _ in
-            if stateViewModel.audioCallToUser == true{
-                stateViewModel.showCallPopUp = true
-            }
-        })
-        .onChange(of: stateViewModel.videoCallToUser, { _, _ in
-            if stateViewModel.videoCallToUser == true{
-                stateViewModel.showCallPopUp = true
-            }
-        })
-        .onChange(of: cameraImageToUse, { _, _ in
-            if cameraImageToUse != nil {
-                sendMessage(msgType: .photo)
-            }
-        })
-        .onChange(of: chatViewModel.audioUrl, { _, _ in
-            sendMessageIfAudioUrl()
-        })
-        .onChange(of: stateViewModel.keyboardFocused, { _, _ in
-            if stateViewModel.keyboardFocused == true{
-                if conversationDetail != nil{
-                    sendMessageTypingIndicator()
-                }
-            }
-        })
-        .onChange(of: selectedGIF, { _, _ in
-            if let selectedGIF = selectedGIF{
-                sendMessageIfGif()
-            }
-        })
-        .onChange(of: stateViewModel.sendMedia, { _, _ in
-            if stateViewModel.sendMedia == true{
-                stateViewModel.sendMedia = false
-                sendMessageIfUploadMedia()
-            }
-        })
-        .onChange(of: updateMessage.body, { _, _ in
-            self.textFieldtxt = updateMessage.body
-            stateViewModel.keyboardFocused = true
-        })
-        .onChange(of: self.placeId, { _, _ in
-            sendMessageIfPlaceId()
-        })
-        .onChange(of: stateViewModel.navigateToAddParticipantsInGroupViaDelegate, { _, _ in
-            if stateViewModel.navigateToAddParticipantsInGroupViaDelegate == true{
-                delegate?.navigateToAppMemberInGroup(
-                    conversationId: self.conversationID ?? "",
-                    groupMembers: self.conversationDetail?.conversationDetails?.members)
-                stateViewModel.navigateToAddParticipantsInGroupViaDelegate = false
-            }
-        })
-        .onChange(of: chatViewModel.timerValue, { _, _ in
-            withAnimation {
-                stateViewModel.isShowingRedTimerStart.toggle()
-            }
-        })
-        .onChange(of: navigateToSocialProfileId, { _, _ in
-            if !navigateToSocialProfileId.isEmpty {
-                delegate?.navigateToAppProfile(
-                    userId: navigateToSocialProfileId,
-                    storeId: "",
-                    userType: 0,
-                    conversationID: self.conversationID ?? "")
-                navigateToSocialProfileId = ""
-            }
-        })
-        .onChange(of: postIdToNavigate, { _, _ in
-            if !postIdToNavigate.isEmpty{
-                delegate?.navigateToPost(
-                    postId: postIdToNavigate
-                )
-                postIdToNavigate = ""
-            }
-        })
-        .onChange(of: forwardMessageSelectedToShow) { oldValue, newValue in
-            guard !newValue.messageId.isEmpty, newValue != oldValue else { return }
-            
-            self.forwardMessageView(message: newValue)
-            stateViewModel.showforwardMultipleMessage = true
-            forwardMessageSelectedToShow = MessagesDB()
-        }
-        .onChange(of: productIdToNavigate, { _, _ in
-            if let productId = productIdToNavigate.productId, !productId.isEmpty{
-                delegate?.navigateToProduct(
-                    productId: productId,
-                    productCategoryId: productIdToNavigate.productCategoryId ?? "")
-                productIdToNavigate = ProductDB()
-            }
-        })
-        .onChange(of: stateViewModel.shareContact, { _, _ in
-            if !self.selectedContactToShare.isEmpty {
-                sendMessage(msgType: .contact)
-                stateViewModel.shareContact = false
-            }
-        })
-        .sheet(isPresented: $stateViewModel.showGifPicker, content: {
-            ISMGiphyPicker { media in
-                if let media = media{
-                    selectedGIF = media
-                    stateViewModel.showGifPicker = false
-                }
-            }
-        })
-        .sheet(isPresented: $stateViewModel.showCustomMenu, content: {
-            ISMCustomMenu(
-                clearChatAction: {
-                    stateViewModel.showCustomMenu = false
-                    stateViewModel.showClearChatPopup = true
-                },
-                blockUserAction: {
-                    stateViewModel.showCustomMenu = false
-                    stateViewModel.showBlockUserPopup = true
-                },
-                initiatorId: realmManager.messages.last?.last?.initiatorId,
-                messagingDisabled: self.conversationDetail?.conversationDetails?.messagingDisabled)
-            .presentationDetents([.fraction(0.25)])
-            .presentationDragIndicator(.visible)
-        })
-        .sheet(isPresented: $stateViewModel.showInviteeDineInPopUp, content: {
-            InviteeListPopUpView(message: showInviteeListInDineInRequest) {
-                showInviteeListInDineInRequest = MessagesDB()
-                stateViewModel.showInviteeDineInPopUp = false
-            }.presentationDetents([.height(446)])
-                    .presentationDragIndicator(.visible)
-        })
-        .sheet(isPresented: $stateViewModel.showDeclinePaymentRequestPopUp, content: {
-            if declinePaymentRequest.customType == ISMChatMediaType.PaymentRequest.value{
-                ConfirmationPopup(
-                    title: "Decline Request?",
-                    message: "Are you sure you want to decline payment request?",
-                    confirmButtonTitle: "Decline request",
-                    cancelButtonTitle: "Cancel",
-                    confirmAction: {
-                            let paymentRequestId = declinePaymentRequest.metaData?.paymentRequestId ?? ""
-                            declinePaymentRequest = MessagesDB()
-                        self.delegate?.declinePaymentRequest(paymentRequestUserId: myAppUserId ?? "", paymentRequestId: paymentRequestId, completion: {
-                            })
-                            stateViewModel.showDeclinePaymentRequestPopUp = false
-                    },
-                    cancelAction: {
-                        declinePaymentRequest = MessagesDB()
-                        stateViewModel.showDeclinePaymentRequestPopUp = false
-                    },
-                    popUpType: .Menu,
-                    isPresented: $stateViewModel.showDeclinePaymentRequestPopUp,
-                    showCrossButton: true
-                )
-                .presentationDetents([.fraction(0.3)])
-                .presentationDragIndicator(.visible)
-            }else{
-                DeclineReasonPopUpView(selectedOption: $declineReasonOption){ reason in
-                    self.delegate?.dineInInvite(inviteTitle: declinePaymentRequest.metaData?.inviteTitle ?? "", messageId: declinePaymentRequest.messageId ?? "", groupcastId: declinePaymentRequest.metaData?.groupCastId ?? "", reason: reason, createdByUserId: declinePaymentRequest.senderInfo?.userIdentifier ?? "", declineByUserId: self.myAppUserId ?? "", inviteStatus: 2, inviteSenderIsometricId: declinePaymentRequest.senderInfo?.userId ?? "")
-                        declinePaymentRequest = MessagesDB()
-                        stateViewModel.showDeclinePaymentRequestPopUp = false
-                } cancelAction: {
-                    declinePaymentRequest = MessagesDB()
-                    stateViewModel.showDeclinePaymentRequestPopUp = false
-                }.presentationDetents([.height(declineReasonOption == "Other" ?  619 : 446)])
-                    .presentationDragIndicator(.visible)
-            }
-        })
-        .sheet(isPresented: $stateViewModel.showClearChatPopup, content: {
-            var attributedText: AttributedString {
-                var attributedString = AttributedString("Are you sure you want to clear chat? This action is undoable.")
-                
-                // Style "clear chat"
-                if let range = attributedString.range(of: "clear chat") {
-                    attributedString[range].foregroundColor = Color(hex: "#454745")
-                    attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
-                }
-                
-                return attributedString
-            }
-            ConfirmationPopup(
-                title: "Clear chat?",
-                message: attributedText,
-                confirmButtonTitle: "Yes, clear",
-                cancelButtonTitle: "Cancel",
-                confirmAction: {
-                    clearChat()
-                    stateViewModel.showClearChatPopup = false
-                },
-                cancelAction: {
-                    stateViewModel.showClearChatPopup = false
-                },
-                popUpType: .Menu,
-                isPresented: $stateViewModel.showClearChatPopup,
-                showCrossButton: false
-            )
-            .presentationDetents([.fraction(0.3)])
-            .presentationDragIndicator(.visible)
-        })
-        
-        .sheet(isPresented: $stateViewModel.showBlockUserPopup, content: {
-            var unBlock = self.conversationDetail?.conversationDetails?.messagingDisabled == true && realmManager.messages.last?.last?.initiatorId == userData?.userId
-            var attributedText: AttributedString {
-                var string = ""
-                var range = ""
-                if unBlock{
-                    string = "Are you sure you want to UnBlock \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?"
-                    range = "UnBlock \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")"
-                }else{
-                    string = "Are you sure you want to Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?"
-                    range = "Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")"
-                }
-                var attributedString = AttributedString(string)
-                
-                // Style "clear chat"
-                if let range = attributedString.range(of: range) {
-                    attributedString[range].foregroundColor = Color(hex: "#454745")
-                    attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
-                }
-                
-                return attributedString
-            }
-            ConfirmationPopup(
-                title: unBlock ?  "UnBlock User?" : "Block User?",
-                message: attributedText,
-                confirmButtonTitle: unBlock ? "UnBlock" : "Block",
-                cancelButtonTitle: "Cancel",
-                confirmAction: {
-                    blockChatFromUser(block: !unBlock)
-                    stateViewModel.showBlockUserPopup = false
-                },
-                cancelAction: {
-                    stateViewModel.showBlockUserPopup = false
-                },
-                popUpType: .Menu,
-                isPresented: $stateViewModel.showBlockUserPopup,
-                showCrossButton: false
-            )
-            .presentationDetents([.fraction(0.3)])
-            .presentationDragIndicator(.visible)
-        })
-        .sheet(isPresented: $stateViewModel.showDeleteSingleMessage, content:{
-            var attributedText: AttributedString {
-                var attributedString = AttributedString("Are you sure you want to permanently delete this message?")
-                
-                // Style "clear chat"
-                if let range = attributedString.range(of: "permanently delete") {
-                    attributedString[range].foregroundColor = Color(hex: "#454745")
-                    attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
-                }
-                
-                return attributedString
-            }
-            ConfirmationPopup(
-                title: "Delete Message",
-                message: attributedText,
-                confirmButtonTitle: "For everyone",
-                cancelButtonTitle: "For me",
-                confirmAction: {
-                    stateViewModel.showBlockUserPopup = false
-                    if let message = deleteMessage.first{
-                        if getIsReceived(message: message) == true{
-                            deleteMultipleMessages(otherUserMessage: true, type: .DeleteForYou)
-                        }else{
-                            deleteMultipleMessages(otherUserMessage: false, type: .DeleteForEveryone)
-                        }
-                    }
-                },
-                cancelAction: {
-                    stateViewModel.showBlockUserPopup = false
-                    if let message = deleteMessage.first{
-                        if getIsReceived(message: message) == true{
-                            deleteMultipleMessages(otherUserMessage: true, type: .DeleteForYou)
-                        }else{
-                            deleteMultipleMessages(otherUserMessage: false, type: .DeleteForYou)
-                        }
-                    }
-                },
-                popUpType: .Delete,
-                isPresented: $stateViewModel.showDeleteSingleMessage,
-                showCrossButton: true
-            )
-            .presentationDetents([.fraction(0.3)])
-            .presentationDragIndicator(.visible)
-        })
-        .fullScreenCover(isPresented: $stateViewModel.showSheet){
-            if selectedSheetIndex == 0 {
-                CameraCaptureView(isShown: $stateViewModel.showSheet,textFieldtxt: $cameraCaption, sendUrl: $cameraImageToUse)
-//                ISMCameraView(media : $cameraImageToUse, isShown: $stateViewModel.showSheet, uploadMedia: $stateViewModel.uploadMedia,mediaType: .both)
-            } else if selectedSheetIndex == 1 {
-                DocumentPicker(documents: $chatViewModel.documentSelectedFromPicker, isShown: self.$stateViewModel.showSheet)
-            } else{
-                ISMShareContactList(dissmiss: $stateViewModel.showSheet , selectedContact: self.$selectedContactToShare, shareContact: $stateViewModel.shareContact)
-            }
-        }.fullScreenCover(isPresented: $stateViewModel.showLocationSharing, content: {
-                ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId, placeName: $placeName, address: $placeAddress)
-        })
-        .fullScreenCover(isPresented: $stateViewModel.navigateToDocumentViewer, content: {
-            ISMDocumentViewer(url: navigateToDocumentUrl)
-        })
-        .sheet(isPresented: self.$stateViewModel.showVideoPicker) {
-            ISMMediaPicker(isPresented: self.$stateViewModel.showVideoPicker, sendMedias: $mediaSelectedFromPicker,opponenetName: isGroup == true ? (self.conversationDetail?.conversationDetails?.conversationTitle ?? "" ) : (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""),mediaCaption: $mediaCaption,sendMediaToMessage: $stateViewModel.sendMedia)
-        }
-        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToChatList: $navigateToChatList).environmentObject(RealmManager.shared)
-            .onAppear {
-                OnMessageList = false
-            }, isActive: $stateViewModel.navigateToUserProfile))
-//        .fullScreenCover(isPresented: $stateViewModel.navigateToUserProfile, onDismiss: {
-//            stateViewModel.navigateToUserProfile = false
-//        }, content: {
-//            ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToSocialProfileId: $navigateToSocialProfileId,navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate).environmentObject(RealmManager.shared)
-//                .onAppear {
-//                    OnMessageList = false
-//                }
-//        })
-        .fullScreenCover(isPresented: $stateViewModel.navigateToMediaSlider) {
-            let attachments = self.realmManager.medias ?? []
-            let currentMediaId = navigateToMediaSliderId
-            //reset value
-            let index = attachments.firstIndex { $0.messageId == currentMediaId } ?? 0
-            ISMChatMediaViewer(viewModel: ISMChatMediaViewerViewModel(attachments: attachments, index: index)) {
-                stateViewModel.navigateToMediaSlider = false
-            }
-            .onDisappear{
-                self.navigateToMediaSliderId = ""
-            }
-        }
-        .navigationDestination(isPresented: $stateViewModel.movetoForwardList, destination: {
-            ISMForwardToContactView(viewModel : self.chatViewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage)
-        })
-        .fullScreenCover(isPresented: $stateViewModel.navigateToLocation) {
-            ISMMapDetailView(data: navigateToLocationDetail)
-                .onDisappear {
-                    stateViewModel.navigateToLocation = false
-                }
-        }
-        //        .background(NavigationLink("", destination: ISMChatBroadCastInfo(broadcastTitle: (self.groupConversationTitle ?? ""),groupCastId: self.groupCastId ?? "").environmentObject(self.realmManager),isActive: $navigateToGroupCastInfo))
-//        .background(NavigationLink("", destination: ISMContactInfoView(conversationID: self.conversationID,conversationDetail : self.conversationDetail, viewModel:self.chatViewModel, isGroup: self.isGroup,navigateToAddParticipantsInGroupViaDelegate: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,navigateToSocialProfileId: $navigateToSocialProfileId).environmentObject(self.realmManager),isActive: $stateViewModel.navigateToProfile))
-        //        .background(NavigationLink("", destination: ISMMapDetailView(data: navigateToLocationDetail),isActive: $navigateToLocation))
-        .onReceive(timer, perform: { firedDate in
-            print("timer fired")
-            timeElapsed = Int(firedDate.timeIntervalSince(startDate))
-            if stateViewModel.executeRepeatly == true && fromBroadCastFlow != true{
-                self.executeRepeatedly()
-            }
-        })
-        .onReceive(onlinetimer, perform: { firedtime in
-            if OnMessageList == true{
-                print("online timer fired")
-                timeElapsedForOnline = Int(firedtime.timeIntervalSince(startTimeForOnline))
-                if stateViewModel.executeRepeatlyForOfflineMessage == true{
-                    sendLocalMsg()
-                }
-            }
-        })
-        .alert("Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.", isPresented: $stateViewModel.showingNoInternetAlert) {
-            Button("OK", role: .cancel) { }
-        }
-        .alert("Call \(self.opponenDetail?.userName ?? "")", isPresented: $stateViewModel.showCallPopUp) {
-            Button("Cancel", role: .cancel) {
-                if stateViewModel.audioCallToUser == true{
-                    stateViewModel.audioCallToUser = false
-                }
-                if stateViewModel.videoCallToUser == true{
-                    stateViewModel.videoCallToUser = false
-                }
-            }
-            if stateViewModel.audioCallToUser {
-                Button("Voice Call") {
-                    stateViewModel.audioCallToUser = false
-                    calling(type: .AudioCall)
-                }
-            }
-            if stateViewModel.videoCallToUser {
-                Button("Video Call") {
-                    stateViewModel.videoCallToUser = false
-                    calling(type: .VideoCall)
-                }
-            }
-        }
-        .onLoad {
+        .onAppear {
             OnMessageList = true
-            self.realmManager.clearMessages()
-            self.getMessages()
-            //added this from on appear
-            
-            
-            if chatFeatures.contains(.audiocall) == true || chatFeatures.contains(.videocall) == true || chatFeatures.contains(.audio) == true{
-                checkAudioPermission()
+            setupOnAppear()
+            stateViewModel.navigateToImageEditor = false
+            addNotificationObservers()
+            if fromBroadCastFlow == true {
+                reloadBroadCastMessages()
+            } else {
+                getConversationDetail()
+                reload()
             }
-            realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
-            realmManager.fetchFiles(conId: self.conversationID ?? "")
-            realmManager.fetchLinks(conId: self.conversationID ?? "")
-            
-            realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
-            let data : [String: Any] = ["conversationId" : self.conversationID ?? ""]
-            NotificationCenter.default.post(name: NSNotification.mqttUnreadCountReset, object: nil, userInfo: data)
-            
-            if !networkMonitor.isConnected {
-                stateViewModel.showingNoInternetAlert = true
-            }
-            //fix to don't show scroll to Bottom button when message count is zero
-            if realmManager.allMessages?.count == 0{
-                stateViewModel.showScrollToBottomView = false
-            }
-            stateViewModel.onLoad = true
-            forwardMessageSelected.removeAll()
+            self.textFieldtxt = self.realmManager.getLastInputTextInConversation(conversationId: self.conversationID ?? "")
         }
+        .onDisappear {
+            OnMessageList = false
+            stateViewModel.executeRepeatly = false
+            stateViewModel.executeRepeatlyForOfflineMessage = false
+            stateViewModel.onLoad = false
+        }
+    }
+    
+    @ViewBuilder
+    private func headerSection() -> some View {
+        if ISMChatSdkUI.getInstance().getChatProperties().customJobCardInMessageList == true {
+            if let conversation = self.conversationDetail?.conversationDetails,
+               let metaData = conversation.metaData {
+                JobCardView(jobTitle: metaData.jobTitle ?? "", jobId: metaData.jobId ?? "", startDate: metaData.startDate ?? "", endDate: metaData.endDate ?? "")
+                    .onTapGesture {
+                        self.delegate?.navigateToJobDetail(jobId: metaData.jobId ?? "")
+                    }
+            }
+        }
+        if let conversationDetail = conversationDetail {
+            CustomMessageViewHeaderRegistry.shared.view(for: conversationDetail, messages: self.realmManager.allMessages ?? [])
+        }
+    }
+    
+    @ViewBuilder
+    private func messagesSection() -> some View {
+        ZStack {
+            GeometryReader { reader in
+                if let image = ISMChatSdkUI.getInstance().getAppAppearance().appearance.messageListBackgroundImage, !image.isEmpty {
+                    messagesScrollViewWithBackground(viewWidth: reader.size.width)
+                        .modifier(BackgroundImage())
+                } else {
+                    messagesScrollViewPlain(viewWidth: reader.size.width)
+                }
+            }
+            .padding(.bottom, 5)
+            
+            // No Message View
+            if realmManager.allMessages?.count == 0 || realmManager.messages.count == 0 {
+                if ISMChatSdkUI.getInstance().getChatProperties().showCustomPlaceholder == true {
+                    appearance.placeholders.messageListPlaceholder
+                } else {
+                    appearance.images.noMessagePlaceholder
+                        .resizable()
+                        .frame(width: 206, height: 144, alignment: .center)
+                }
+            }
+        }
+    }
+    
+    // MARK: - ScrollView branches split and type-erased
+    private func messagesScrollViewWithBackground(viewWidth: CGFloat) -> some View {
+        ScrollView {
+            ScrollViewReader { scrollReader in
+                getMessagesView(scrollReader: scrollReader, viewWidth: viewWidth)
+                    .padding(.horizontal)
+            }
+        }
+        .coordinateSpace(name: "scroll")
+        .coordinateSpace(name: "pullToRefresh")
+        .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
+        .gesture(
+            DragGesture()
+                .onChanged { value in
+                    // Only handle vertical gestures above threshold
+                    let verticalTranslation = abs(value.translation.height)
+                    let horizontalTranslation = abs(value.translation.width)
+                    if verticalTranslation > horizontalTranslation {
+                        let velocity = value.predictedEndTranslation.height - value.translation.height
+                        let fastScrollThreshold: CGFloat = 65
+                        if velocity > fastScrollThreshold {
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        }
+                    }
+                }
+        )
+    }
+    
+    private func messagesScrollViewPlain(viewWidth: CGFloat) -> some View {
+        ScrollView {
+            ScrollViewReader { scrollReader in
+                getMessagesView(scrollReader: scrollReader, viewWidth: viewWidth)
+                    .padding(.horizontal)
+            }
+        }
+        .coordinateSpace(name: "scroll")
+        .coordinateSpace(name: "pullToRefresh")
+        .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
+        .gesture(
+            DragGesture()
+                .onChanged { value in
+                    let velocity = value.predictedEndTranslation.height - value.translation.height
+                    let fastScrollThreshold: CGFloat = 65
+                    if velocity > fastScrollThreshold {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
+                    offset = value.translation
+                }
+                .onEnded { value in
+                    offset = .zero
+                    ISMChatHelper.print("value ", value.translation.width)
+                    let direction = self.detectDirection(value: value)
+                    if direction == .right {
+                        self.backButtonAction()
+                    }
+                }
+        )
+    }
+    
+    // MARK: - Modifiers grouped and type-erased
+    
+    private func attachConfirmationDialogs(to view: AnyView) -> AnyView {
+        AnyView(
+            view
+                .confirmationDialog("", isPresented: $stateViewModel.showDeleteActionSheet, titleVisibility: .hidden) {
+                    deleteActionSheetButtons()
+                }
+        )
+    }
+    
+    private func attachUnblockDialogs(to view: AnyView) -> AnyView {
+        AnyView(
+            view
+                .confirmationDialog("", isPresented: $stateViewModel.showUnblockPopUp) {
+                } message: {
+                    Text("Unblock contact to send a message")
+                }
+                .confirmationDialog("", isPresented: $stateViewModel.uAreBlock) {
+                } message: {
+                    Text("Action not allowed, the user has already blocked You")
+                }
+        )
+    }
+    
+    private func attachBlockAndClearDialogs(to view: AnyView) -> AnyView {
+        AnyView(
+            view
+                .confirmationDialog("", isPresented: $stateViewModel.clearThisChat) {
+                    Button("Delete", role: .destructive) {
+                        clearChat()
+                    }
+                } message: {
+                    Text("Clear all messages from \(conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "this chat")? \n This chat will be empty but will remain in your chat list.")
+                }
+                .confirmationDialog("", isPresented: $stateViewModel.blockThisChat) {
+                    Button("Block", role: .destructive) {
+                        blockChatFromUser(block: true)
+                    }
+                } message: {
+                    Text("Block \(conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")? \n Blocked user will be no longer be able to send you messages.")
+                }
+        )
+    }
+    
+    private func attachOnChangeHandlers(to view: AnyView) -> AnyView {
+        AnyView(
+            view
+                .onChange(of: chatViewModel.documentSelectedFromPicker, { _, _ in
+                    sendMessageIfDocumentSelected()
+                })
+                .onChange(of: navigateToDocumentUrl, { _, _ in
+                    if navigateToDocumentUrl != "" {
+                        stateViewModel.navigateToDocumentViewer = true
+                    }
+                })
+                .onChange(of: navigateToChatList, { _, _ in
+                    if navigateToChatList == true {
+                        OndisappearOnBack()
+                        delegate?.backButtonAction()
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                })
+                .onChange(of: selectedReaction, { _, _ in
+                    if selectedReaction != nil {
+                        sendReaction()
+                    }
+                })
+                .onChange(of: audioPermissionCheck, { _, _ in
+                    if audioPermissionCheck == false {
+                        showPermissionDeniedAlert()
+                    }
+                })
+                .onChange(of: navigateToProductLink.messageId) { _, _ in
+                    if !navigateToProductLink.messageId.isEmpty, let metaData = navigateToProductLink.metaData {
+                        let childProductId = metaData.childProductId ?? ""
+                        let parentProductId = metaData.parentProductId ?? ""
+                        let productName = metaData.productName ?? ""
+                        self.delegate?.navigateToProductLink(
+                            childProductId: childProductId,
+                            parentProductId: parentProductId,
+                            productName: productName
+                        )
+                        navigateToProductLink = MessagesDB()
+                    }
+                }
+                .onChange(of: navigateToSocialLink.messageId) { _, _ in
+                    if !navigateToSocialLink.messageId.isEmpty {
+                        self.delegate?.navigateToSocialLink(
+                            socialLinkId: navigateToSocialLink.metaData?.socialPostId ?? ""
+                        )
+                        navigateToSocialLink = MessagesDB()
+                    }
+                }
+                .onChange(of: navigateToCollectionLink.messageId) { _, _ in
+                    if !navigateToCollectionLink.messageId.isEmpty {
+                        self.delegate?.navigateToCollectionLink(
+                            collectionId: navigateToCollectionLink.metaData?.collectionId ?? "",
+                            completeUrl: navigateToCollectionLink.metaData?.url ?? ""
+                        )
+                        navigateToCollectionLink = MessagesDB()
+                    }
+                }
+                .onChange(of: viewDetailsForPaymentRequest.messageId) { _, _ in
+                    if !viewDetailsForPaymentRequest.messageId.isEmpty {
+                        if viewDetailsForPaymentRequest.customType == ISMChatMediaType.PaymentRequest.value {
+                            self.delegate?.viewDetailForPaymentRequest(
+                                orderId: viewDetailsForPaymentRequest.metaData?.orderId ?? "",
+                                paymentRequestId: viewDetailsForPaymentRequest.metaData?.paymentRequestId ?? "",
+                                isReceived: getIsReceived(message: viewDetailsForPaymentRequest),
+                                senderInfo: viewDetailsForPaymentRequest.senderInfo,
+                                message: viewDetailsForPaymentRequest,
+                                paymentRequestUserId: self.myAppUserId ?? "",
+                                metaData: viewDetailsForPaymentRequest.metaData
+                            )
+                        } else {
+                            self.delegate?.dineInInvite(inviteTitle: viewDetailsForPaymentRequest.metaData?.inviteTitle ?? "", messageId: viewDetailsForPaymentRequest.messageId ?? "", groupcastId: viewDetailsForPaymentRequest.metaData?.groupCastId ?? "", reason: "", createdByUserId: viewDetailsForPaymentRequest.senderInfo?.userIdentifier ?? "", declineByUserId: self.myAppUserId ?? "",inviteStatus: 1,inviteSenderIsometricId: viewDetailsForPaymentRequest.senderInfo?.userId ?? "" )
+                        }
+                        viewDetailsForPaymentRequest = MessagesDB()
+                    }
+                }
+                .onChange(of: declinePaymentRequest.messageId) { _, _ in
+                    if !declinePaymentRequest.messageId.isEmpty {
+                        stateViewModel.showDeclinePaymentRequestPopUp = true
+                    }
+                }
+                .onChange(of: navigateToMediaSliderId, { _, _ in
+                    if !navigateToMediaSliderId.isEmpty {
+                        stateViewModel.navigateToMediaSlider = true
+                    }
+                })
+                .onChange(of: showInviteeListInDineInRequest.messageId, { _, _ in
+                    if !showInviteeListInDineInRequest.messageId.isEmpty {
+                        stateViewModel.showInviteeDineInPopUp = true
+                    }
+                })
+                .onChange(of: textFieldtxt, { _, newValue in
+                    if newValue.last == "@" {
+                        DispatchQueue.main.async {
+                            stateViewModel.showMentionList = true
+                        }
+                    } else if !newValue.contains("@") || newValue.isEmpty {
+                        DispatchQueue.main.async {
+                            stateViewModel.showMentionList = false
+                        }
+                    }
+                })
+                .onChange(of: textFieldtxt, { _, _ in
+                    if isGroup == true {
+                        let filterUserName = getMentionedString(inputString: textFieldtxt)
+                        if !filterUserName.isEmpty {
+                            filteredUsers = mentionUsers.filter { user in
+                                let lowercasedUserName = (user.userName ?? "").lowercased()
+                                return lowercasedUserName.contains(filterUserName.lowercased())
+                            }
+                            if filteredUsers.isEmpty {
+                                filteredUsers = []
+                                stateViewModel.showMentionList = false
+                            }
+                        } else {
+                            filteredUsers = mentionUsers
+                        }
+                    }
+                })
+                .onChange(of: navigateToLocationDetail.title, { _, _ in
+                    stateViewModel.navigateToLocation = true
+                })
+                .onChange(of: stateViewModel.audioCallToUser, { _, _ in
+                    if stateViewModel.audioCallToUser == true {
+                        stateViewModel.showCallPopUp = true
+                    }
+                })
+                .onChange(of: stateViewModel.videoCallToUser, { _, _ in
+                    if stateViewModel.videoCallToUser == true {
+                        stateViewModel.showCallPopUp = true
+                    }
+                })
+                .onChange(of: cameraImageToUse, { _, _ in
+                    if cameraImageToUse != nil {
+                        sendMessage(msgType: .photo)
+                    }
+                })
+                .onChange(of: chatViewModel.audioUrl, { _, _ in
+                    sendMessageIfAudioUrl()
+                })
+                .onChange(of: stateViewModel.keyboardFocused, { _, _ in
+                    if stateViewModel.keyboardFocused == true {
+                        if conversationDetail != nil {
+                            sendMessageTypingIndicator()
+                        }
+                    }
+                })
+                .onChange(of: selectedGIF, { _, _ in
+                    if let _ = selectedGIF {
+                        sendMessageIfGif()
+                    }
+                })
+                .onChange(of: stateViewModel.sendMedia, { _, _ in
+                    if stateViewModel.sendMedia == true {
+                        stateViewModel.sendMedia = false
+                        sendMessageIfUploadMedia()
+                    }
+                })
+                .onChange(of: updateMessage.body, { _, _ in
+                    self.textFieldtxt = updateMessage.body
+                    stateViewModel.keyboardFocused = true
+                })
+                .onChange(of: self.placeId, { _, _ in
+                    sendMessageIfPlaceId()
+                })
+                .onChange(of: stateViewModel.navigateToAddParticipantsInGroupViaDelegate, { _, _ in
+                    if stateViewModel.navigateToAddParticipantsInGroupViaDelegate == true {
+                        delegate?.navigateToAppMemberInGroup(
+                            conversationId: self.conversationID ?? "",
+                            groupMembers: self.conversationDetail?.conversationDetails?.members)
+                        stateViewModel.navigateToAddParticipantsInGroupViaDelegate = false
+                    }
+                })
+                .onChange(of: chatViewModel.timerValue, { _, _ in
+                    withAnimation {
+                        stateViewModel.isShowingRedTimerStart.toggle()
+                    }
+                })
+                .onChange(of: navigateToSocialProfileId, { _, _ in
+                    if !navigateToSocialProfileId.isEmpty {
+                        delegate?.navigateToAppProfile(
+                            userId: navigateToSocialProfileId,
+                            storeId: "",
+                            userType: 0,
+                            conversationID: self.conversationID ?? "")
+                        navigateToSocialProfileId = ""
+                    }
+                })
+                .onChange(of: postIdToNavigate, { _, _ in
+                    if !postIdToNavigate.isEmpty {
+                        delegate?.navigateToPost(
+                            postId: postIdToNavigate
+                        )
+                        postIdToNavigate = ""
+                    }
+                })
+                .onChange(of: forwardMessageSelectedToShow) { oldValue, newValue in
+                    guard !newValue.messageId.isEmpty, newValue != oldValue else { return }
+                    self.forwardMessageView(message: newValue)
+                    stateViewModel.showforwardMultipleMessage = true
+                    forwardMessageSelectedToShow = MessagesDB()
+                }
+                .onChange(of: productIdToNavigate, { _, _ in
+                    if let productId = productIdToNavigate.productId, !productId.isEmpty {
+                        delegate?.navigateToProduct(
+                            productId: productId,
+                            productCategoryId: productIdToNavigate.productCategoryId ?? "")
+                        productIdToNavigate = ProductDB()
+                    }
+                })
+                .onChange(of: stateViewModel.shareContact, { _, _ in
+                    if !self.selectedContactToShare.isEmpty {
+                        sendMessage(msgType: .contact)
+                        stateViewModel.shareContact = false
+                    }
+                })
+        )
+    }
+    
+    private func attachSheets(to view: AnyView) -> AnyView {
+        AnyView(
+            view
+                .sheet(isPresented: $stateViewModel.showGifPicker, content: {
+                    ISMGiphyPicker { media in
+                        if let media = media {
+                            selectedGIF = media
+                            stateViewModel.showGifPicker = false
+                        }
+                    }
+                })
+                .sheet(isPresented: $stateViewModel.showCustomMenu, content: {
+                    ISMCustomMenu(
+                        clearChatAction: {
+                            stateViewModel.showCustomMenu = false
+                            stateViewModel.showClearChatPopup = true
+                        },
+                        blockUserAction: {
+                            stateViewModel.showCustomMenu = false
+                            stateViewModel.showBlockUserPopup = true
+                        },
+                        initiatorId: realmManager.messages.last?.last?.initiatorId,
+                        messagingDisabled: self.conversationDetail?.conversationDetails?.messagingDisabled)
+                    .presentationDetents([.fraction(0.25)])
+                    .presentationDragIndicator(.visible)
+                })
+                .sheet(isPresented: $stateViewModel.showInviteeDineInPopUp, content: {
+                    InviteeListPopUpView(message: showInviteeListInDineInRequest) {
+                        showInviteeListInDineInRequest = MessagesDB()
+                        stateViewModel.showInviteeDineInPopUp = false
+                    }
+                    .presentationDetents([.height(446)])
+                    .presentationDragIndicator(.visible)
+                })
+                .sheet(isPresented: $stateViewModel.showDeclinePaymentRequestPopUp, content: {
+                    if declinePaymentRequest.customType == ISMChatMediaType.PaymentRequest.value {
+                        ConfirmationPopup(
+                            title: "Decline Request?",
+                            message: "Are you sure you want to decline payment request?",
+                            confirmButtonTitle: "Decline request",
+                            cancelButtonTitle: "Cancel",
+                            confirmAction: {
+                                let paymentRequestId = declinePaymentRequest.metaData?.paymentRequestId ?? ""
+                                declinePaymentRequest = MessagesDB()
+                                self.delegate?.declinePaymentRequest(paymentRequestUserId: myAppUserId ?? "", paymentRequestId: paymentRequestId, completion: {
+                                })
+                                stateViewModel.showDeclinePaymentRequestPopUp = false
+                            },
+                            cancelAction: {
+                                declinePaymentRequest = MessagesDB()
+                                stateViewModel.showDeclinePaymentRequestPopUp = false
+                            },
+                            popUpType: .Menu,
+                            isPresented: $stateViewModel.showDeclinePaymentRequestPopUp,
+                            showCrossButton: true
+                        )
+                        .presentationDetents([.fraction(0.3)])
+                        .presentationDragIndicator(.visible)
+                    } else {
+                        DeclineReasonPopUpView(selectedOption: $declineReasonOption){ reason in
+                            self.delegate?.dineInInvite(inviteTitle: declinePaymentRequest.metaData?.inviteTitle ?? "", messageId: declinePaymentRequest.messageId ?? "", groupcastId: declinePaymentRequest.metaData?.groupCastId ?? "", reason: reason, createdByUserId: declinePaymentRequest.senderInfo?.userIdentifier ?? "", declineByUserId: self.myAppUserId ?? "", inviteStatus: 2, inviteSenderIsometricId: declinePaymentRequest.senderInfo?.userId ?? "")
+                            declinePaymentRequest = MessagesDB()
+                            stateViewModel.showDeclinePaymentRequestPopUp = false
+                        } cancelAction: {
+                            declinePaymentRequest = MessagesDB()
+                            stateViewModel.showDeclinePaymentRequestPopUp = false
+                        }
+                        .presentationDetents([.height(declineReasonOption == "Other" ?  619 : 446)])
+                        .presentationDragIndicator(.visible)
+                    }
+                })
+                .sheet(isPresented: $stateViewModel.showClearChatPopup, content: {
+                    var attributedText: AttributedString {
+                        var attributedString = AttributedString("Are you sure you want to clear chat? This action is undoable.")
+                        if let range = attributedString.range(of: "clear chat") {
+                            attributedString[range].foregroundColor = Color(hex: "#454745")
+                            attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
+                        }
+                        return attributedString
+                    }
+                    ConfirmationPopup(
+                        title: "Clear chat?",
+                        message: attributedText,
+                        confirmButtonTitle: "Yes, clear",
+                        cancelButtonTitle: "Cancel",
+                        confirmAction: {
+                            clearChat()
+                            stateViewModel.showClearChatPopup = false
+                        },
+                        cancelAction: {
+                            stateViewModel.showClearChatPopup = false
+                        },
+                        popUpType: .Menu,
+                        isPresented: $stateViewModel.showClearChatPopup,
+                        showCrossButton: false
+                    )
+                    .presentationDetents([.fraction(0.3)])
+                    .presentationDragIndicator(.visible)
+                })
+                .sheet(isPresented: $stateViewModel.showBlockUserPopup, content: {
+                    var unBlock = self.conversationDetail?.conversationDetails?.messagingDisabled == true && realmManager.messages.last?.last?.initiatorId == userData?.userId
+                    var attributedText: AttributedString {
+                        var string = ""
+                        var range = ""
+                        if unBlock {
+                            string = "Are you sure you want to UnBlock \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?"
+                            range = "UnBlock \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")"
+                        } else {
+                            string = "Are you sure you want to Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")?"
+                            range = "Block \(self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")"
+                        }
+                        var attributedString = AttributedString(string)
+                        if let r = attributedString.range(of: range) {
+                            attributedString[r].foregroundColor = Color(hex: "#454745")
+                            attributedString[r].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
+                        }
+                        return attributedString
+                    }
+                    ConfirmationPopup(
+                        title: unBlock ?  "UnBlock User?" : "Block User?",
+                        message: attributedText,
+                        confirmButtonTitle: unBlock ? "UnBlock" : "Block",
+                        cancelButtonTitle: "Cancel",
+                        confirmAction: {
+                            blockChatFromUser(block: !unBlock)
+                            stateViewModel.showBlockUserPopup = false
+                        },
+                        cancelAction: {
+                            stateViewModel.showBlockUserPopup = false
+                        },
+                        popUpType: .Menu,
+                        isPresented: $stateViewModel.showBlockUserPopup,
+                        showCrossButton: false
+                    )
+                    .presentationDetents([.fraction(0.3)])
+                    .presentationDragIndicator(.visible)
+                })
+                .sheet(isPresented: $stateViewModel.showDeleteSingleMessage, content:{
+                    var attributedText: AttributedString {
+                        var attributedString = AttributedString("Are you sure you want to permanently delete this message?")
+                        if let range = attributedString.range(of: "permanently delete") {
+                            attributedString[range].foregroundColor = Color(hex: "#454745")
+                            attributedString[range].font = Font.custom(ISMChatSdkUI.getInstance().getCustomFontNames().semibold, size: 14)
+                        }
+                        return attributedString
+                    }
+                    ConfirmationPopup(
+                        title: "Delete Message",
+                        message: attributedText,
+                        confirmButtonTitle: "For everyone",
+                        cancelButtonTitle: "For me",
+                        confirmAction: {
+                            stateViewModel.showBlockUserPopup = false
+                            if let message = deleteMessage.first {
+                                if getIsReceived(message: message) == true {
+                                    deleteMultipleMessages(otherUserMessage: true, type: .DeleteForYou)
+                                } else {
+                                    deleteMultipleMessages(otherUserMessage: false, type: .DeleteForEveryone)
+                                }
+                            }
+                        },
+                        cancelAction: {
+                            stateViewModel.showBlockUserPopup = false
+                            if let message = deleteMessage.first {
+                                if getIsReceived(message: message) == true {
+                                    deleteMultipleMessages(otherUserMessage: true, type: .DeleteForYou)
+                                } else {
+                                    deleteMultipleMessages(otherUserMessage: false, type: .DeleteForYou)
+                                }
+                            }
+                        },
+                        popUpType: .Delete,
+                        isPresented: $stateViewModel.showDeleteSingleMessage,
+                        showCrossButton: true
+                    )
+                    .presentationDetents([.fraction(0.3)])
+                    .presentationDragIndicator(.visible)
+                })
+        )
+    }
+    
+    private func attachFullScreenCovers(to view: AnyView) -> AnyView {
+        AnyView(
+            view
+                .fullScreenCover(isPresented: $stateViewModel.showSheet){
+                    if selectedSheetIndex == 0 {
+                        CameraCaptureView(isShown: $stateViewModel.showSheet,textFieldtxt: $cameraCaption, sendUrl: $cameraImageToUse)
+                    } else if selectedSheetIndex == 1 {
+                        DocumentPicker(documents: $chatViewModel.documentSelectedFromPicker, isShown: self.$stateViewModel.showSheet)
+                    } else {
+                        ISMShareContactList(dissmiss: $stateViewModel.showSheet , selectedContact: self.$selectedContactToShare, shareContact: $stateViewModel.shareContact)
+                    }
+                }
+                .fullScreenCover(isPresented: $stateViewModel.showLocationSharing, content: {
+                    ISMLocationShareView(longitude: $longitude, latitude: $latitude, placeId: $placeId, placeName: $placeName, address: $placeAddress)
+                })
+                .fullScreenCover(isPresented: $stateViewModel.navigateToDocumentViewer, content: {
+                    ISMDocumentViewer(url: navigateToDocumentUrl)
+                })
+                .sheet(isPresented: self.$stateViewModel.showVideoPicker) {
+                    ISMMediaPicker(isPresented: self.$stateViewModel.showVideoPicker, sendMedias: $mediaSelectedFromPicker,opponenetName: isGroup == true ? (self.conversationDetail?.conversationDetails?.conversationTitle ?? "" ) : (self.conversationDetail?.conversationDetails?.opponentDetails?.userName ?? ""),mediaCaption: $mediaCaption,sendMediaToMessage: $stateViewModel.sendMedia)
+                }
+                .fullScreenCover(isPresented: $stateViewModel.navigateToMediaSlider) {
+                    let attachments = self.realmManager.medias ?? []
+                    let currentMediaId = navigateToMediaSliderId
+                    let index = attachments.firstIndex { $0.messageId == currentMediaId } ?? 0
+                    ISMChatMediaViewer(viewModel: ISMChatMediaViewerViewModel(attachments: attachments, index: index)) {
+                        stateViewModel.navigateToMediaSlider = false
+                    }
+                    .onDisappear{
+                        self.navigateToMediaSliderId = ""
+                    }
+                }
+                .fullScreenCover(isPresented: $stateViewModel.navigateToLocation) {
+                    ISMMapDetailView(data: navigateToLocationDetail)
+                        .onDisappear {
+                            stateViewModel.navigateToLocation = false
+                        }
+                }
+        )
+    }
+    
+    private func attachNavigation(to view: AnyView) -> AnyView {
+        AnyView(
+            view
+                .background(
+                    NavigationLink(
+                        "",
+                        destination:
+                            ISMContactInfoView(
+                                conversationID: self.conversationID,
+                                conversationDetail : self.conversationDetail,
+                                viewModel:self.chatViewModel,
+                                isGroup: self.isGroup,
+                                navigateToSocialProfileId: $navigateToSocialProfileId,
+                                navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,
+                                navigateToChatList: $navigateToChatList
+                            )
+                            .environmentObject(RealmManager.shared)
+                            .onAppear { OnMessageList = false },
+                        isActive: $stateViewModel.navigateToUserProfile
+                    )
+                )
+                .navigationDestination(isPresented: $stateViewModel.movetoForwardList, destination: {
+                    ISMForwardToContactView(viewModel : self.chatViewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage)
+                })
+        )
+    }
+    
+    private func attachTimers(to view: AnyView) -> AnyView {
+        AnyView(
+            view
+                .onReceive(timer, perform: { firedDate in
+                    print("timer fired")
+                    timeElapsed = Int(firedDate.timeIntervalSince(startDate))
+                    if stateViewModel.executeRepeatly == true && fromBroadCastFlow != true {
+                        self.executeRepeatedly()
+                    }
+                })
+                .onReceive(onlinetimer, perform: { firedtime in
+                    if OnMessageList == true {
+                        print("online timer fired")
+                        timeElapsedForOnline = Int(firedtime.timeIntervalSince(startTimeForOnline))
+                        if stateViewModel.executeRepeatlyForOfflineMessage == true {
+                            sendLocalMsg()
+                        }
+                    }
+                })
+        )
+    }
+    
+    private func attachAlerts(to view: AnyView) -> AnyView {
+        AnyView(
+            view
+                .alert("Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.", isPresented: $stateViewModel.showingNoInternetAlert) {
+                    Button("OK", role: .cancel) { }
+                }
+                .alert("Call \(self.opponenDetail?.userName ?? "")", isPresented: $stateViewModel.showCallPopUp) {
+                    Button("Cancel", role: .cancel) {
+                        if stateViewModel.audioCallToUser == true {
+                            stateViewModel.audioCallToUser = false
+                        }
+                        if stateViewModel.videoCallToUser == true {
+                            stateViewModel.videoCallToUser = false
+                        }
+                    }
+                    if stateViewModel.audioCallToUser {
+                        Button("Voice Call") {
+                            stateViewModel.audioCallToUser = false
+                            calling(type: .AudioCall)
+                        }
+                    }
+                    if stateViewModel.videoCallToUser {
+                        Button("Video Call") {
+                            stateViewModel.videoCallToUser = false
+                            calling(type: .VideoCall)
+                        }
+                    }
+                }
+        )
+    }
+    
+    private func attachOnLoad(to view: AnyView) -> AnyView {
+        AnyView(
+            view
+                .onLoad {
+                    OnMessageList = true
+                    self.realmManager.clearMessages()
+                    self.getMessages()
+                    if chatFeatures.contains(.audiocall) == true || chatFeatures.contains(.videocall) == true || chatFeatures.contains(.audio) == true {
+                        checkAudioPermission()
+                    }
+                    realmManager.fetchPhotosAndVideos(conId: self.conversationID ?? "")
+                    realmManager.fetchFiles(conId: self.conversationID ?? "")
+                    realmManager.fetchLinks(conId: self.conversationID ?? "")
+                    
+                    realmManager.updateUnreadCountThroughConId(conId: self.conversationID ?? "",count: 0,reset:true)
+                    let data : [String: Any] = ["conversationId" : self.conversationID ?? ""]
+                    NotificationCenter.default.post(name: NSNotification.mqttUnreadCountReset, object: nil, userInfo: data)
+                    
+                    if !networkMonitor.isConnected {
+                        stateViewModel.showingNoInternetAlert = true
+                    }
+                    if realmManager.allMessages?.count == 0 {
+                        stateViewModel.showScrollToBottomView = false
+                    }
+                    stateViewModel.onLoad = true
+                    forwardMessageSelected.removeAll()
+                }
+        )
     }
     
     
