@@ -252,9 +252,14 @@ public struct ISMMessageView: View {
             }
         }
         .padding(.top, 5)
-        .navigationBarTitle("", displayMode: .inline)
-        .navigationBarItems(leading: navigationBarLeadingButtons(), trailing: navigationBarTrailingButtons())
-        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                navigationBarLeadingButtons()
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                navigationBarTrailingButtons()
+            }
+        }
         .onAppear {
             OnMessageList = true
             setupOnAppear()
@@ -392,6 +397,7 @@ public struct ISMMessageView: View {
         AnyView(
             view
                 .confirmationDialog("", isPresented: $stateViewModel.showUnblockPopUp) {
+                    unblockActionSheetButton()
                 } message: {
                     Text("Unblock contact to send a message")
                 }
