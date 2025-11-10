@@ -25,6 +25,7 @@ public struct ISMBlockUserView: View {
     @State public var removedUser : [ISMChatUser] = []
     /// UI appearance configuration instance
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    var userData = ISMChatSdk.getInstance().getChatClient()?.getConfigurations().userConfig
     
     //MARK:  - BODY
     public var body: some View {
@@ -122,7 +123,7 @@ public struct ISMBlockUserView: View {
             if edit == true{
                 if removedUser.count > 0{
                     for obj in removedUser{
-                        self.conversationViewModel.blockUnBlockUser(opponentId: obj.id, needToBlock: false) { value in
+                        self.conversationViewModel.blockUnBlockUser(conversationId: "", initiatorId: userData?.userId ?? "", opponentId: obj.id, needToBlock: false) { value in
                             self.conversationViewModel.removeBlockUser(obj: obj)
                             NotificationCenter.default.post(name: NSNotification.refreshConvList,object: nil)
                             edit = false

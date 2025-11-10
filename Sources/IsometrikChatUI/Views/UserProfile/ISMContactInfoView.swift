@@ -336,13 +336,13 @@ struct ISMContactInfoView: View {
     func manageFlow() {
         if selectedOption == .BlockUser {
             // Block user logic
-            conversationViewModel.blockUnBlockUser(opponentId: (conversationDetail?.conversationDetails?.opponentDetails?.userId ?? selectedToShowInfo?.userId) ?? "", needToBlock: true) { obj in
+            conversationViewModel.blockUnBlockUser(conversationId: self.conversationID ?? "", initiatorId: userData?.userId ?? "",opponentId: (conversationDetail?.conversationDetails?.opponentDetails?.userId ?? selectedToShowInfo?.userId) ?? "", needToBlock: true) { obj in
                 print("Success")
                 presentationMode.wrappedValue.dismiss() // Dismiss the view
             }
         } else if selectedOption == .UnBlockUser {
             // Unblock user logic
-            conversationViewModel.blockUnBlockUser(opponentId: conversationDetail?.conversationDetails?.opponentDetails?.userId ?? (selectedToShowInfo?.userId ?? ""), needToBlock: false) { obj in
+            conversationViewModel.blockUnBlockUser(conversationId: self.conversationID ?? "", initiatorId: userData?.userId ?? "",opponentId: conversationDetail?.conversationDetails?.opponentDetails?.userId ?? (selectedToShowInfo?.userId ?? ""), needToBlock: false) { obj in
                 print("Success")
                 presentationMode.wrappedValue.dismiss() // Dismiss the view
             }

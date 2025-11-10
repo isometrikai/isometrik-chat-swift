@@ -203,17 +203,50 @@ extension ConversationViewModel{
     
     
     //MARK: - Block And Unblock User
-    public func blockUnBlockUser(opponentId : String,needToBlock:Bool,completion:@escaping(ISMChatUsers?)->()){
+    public func blockUnBlockUser(conversationId:String,initiatorId : String,opponentId : String,needToBlock:Bool,completion:@escaping(ISMChatUsers?)->()){
         let body = ["opponentId": opponentId]
         let endPoint = needToBlock == true ? ISMChatUsersEndpoint.blockUser : ISMChatUsersEndpoint.unBlockUser
         let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
         
-        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatUsers, ISMChatNewAPIError>) in
+        let blockedMessage = needToBlock == true ? ISMLastBlockedUser(userId: initiatorId, initiatorId: initiatorId) : ISMLastBlockedUser(userId: "", initiatorId: "")
+        if needToBlock == true{
+            self.updatelastblockedUserInConversationMetaData(conversationId: conversationId, blockedMessage: blockedMessage){_ in 
+                ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatUsers, ISMChatNewAPIError>) in
+                    switch result{
+                    case .success(let data,_) :
+                        completion(data)
+                    case .failure(_) :
+                        ISMChatHelper.print("get users Failed")
+                    }
+                }
+            }
+        }else{
+            ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatUsers, ISMChatNewAPIError>) in
+                switch result{
+                case .success(let data,_) :
+                    completion(data)
+                case .failure(_) :
+                    ISMChatHelper.print("get users Failed")
+                }
+            }
+        }
+    }
+    
+    public func updatelastblockedUserInConversationMetaData(conversationId : String,blockedMessage : ISMLastBlockedUser,completion:@escaping(ISMChatCreateConversationResponse?)->()){
+        var body : [String : Any]
+        let metaData = ["blockedMessage" : ["userId" : blockedMessage.userId  ,"initiatorId" : blockedMessage.initiatorId ]]
+        body = ["metaData" : metaData,"conversationId" : conversationId]  as [String : Any]
+        
+        let endPoint = ISMChatConversationEndpoint.updateConversationDetail
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: body)
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatCreateConversationResponse, ISMChatNewAPIError>) in
             switch result{
             case .success(let data,_) :
                 completion(data)
-            case .failure(_) :
-                ISMChatHelper.print("get users Failed")
+                ISMChatHelper.print("Meta data updated for blocked user in conversatiion")
+            case .failure(let error) :
+                ISMChatHelper.print("Meta data changed to allow message -----> \(String(describing: error))")
             }
         }
     }

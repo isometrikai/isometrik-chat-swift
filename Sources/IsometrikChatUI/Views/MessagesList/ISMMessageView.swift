@@ -1029,7 +1029,8 @@ public struct ISMMessageView: View {
     //checking if we are allowed to send message or not
     func isMessagingEnabled() -> Bool{
         if self.conversationDetail?.conversationDetails?.messagingDisabled == true{
-            if realmManager.messages.last?.last?.initiatorId != userData?.userId{
+//            if realmManager.messages.last?.last?.initiatorId != userData?.userId{
+                if self.conversationDetail?.conversationDetails?.metaData?.blockedMessage?.initiatorId != userData?.userId{
                 stateViewModel.uAreBlock = true
             }else{
                 stateViewModel.showUnblockPopUp = true

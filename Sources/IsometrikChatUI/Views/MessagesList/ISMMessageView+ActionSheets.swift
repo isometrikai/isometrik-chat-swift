@@ -221,7 +221,7 @@ extension ISMMessageView {
     /// Button to unblock a user in the conversation.
     func unblockActionSheetButton() -> some View {
         Button("Unblock") {
-            conversationViewModel.blockUnBlockUser(opponentId: self.conversationDetail?.conversationDetails?.opponentDetails?.id ?? "", needToBlock: false) { obj in
+            conversationViewModel.blockUnBlockUser(conversationId: self.conversationID ?? "", initiatorId: userData?.userId ?? "", opponentId: self.conversationDetail?.conversationDetails?.opponentDetails?.id ?? "", needToBlock: false) { obj in
                 print("Success")
                 self.conversationDetail?.conversationDetails?.messagingDisabled = false
                 self.delegate?.externalBlockMechanism(appUserId: self.conversationDetail?.conversationDetails?.opponentDetails?.metaData?.userId ?? "", block: false)

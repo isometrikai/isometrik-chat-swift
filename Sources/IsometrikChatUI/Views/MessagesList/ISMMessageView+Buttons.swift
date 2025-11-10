@@ -473,7 +473,7 @@ extension ISMMessageView{
         } label: {
             HStack(spacing: 10){
                 appearance.images.blockIcon
-                if self.conversationDetail?.conversationDetails?.messagingDisabled == true && realmManager.messages.last?.last?.initiatorId == userData?.userId{
+                if self.conversationDetail?.conversationDetails?.messagingDisabled == true && self.conversationDetail?.conversationDetails?.metaData?.blockedMessage?.initiatorId == userData?.userId{
                     Text("UnBlock User")
                 }else{
                     Text("Block User")

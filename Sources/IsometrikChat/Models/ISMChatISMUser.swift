@@ -82,6 +82,7 @@ public struct ISMChatUserMetaData: Codable, Hashable {
     public var endDate : String?
     
     public var appUserName : String?
+    public var blockedMessage : ISMLastBlockedUser?
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -108,8 +109,9 @@ public struct ISMChatUserMetaData: Codable, Hashable {
         startDate = try? container.decodeIfPresent(String.self, forKey: .startDate)
         endDate = try? container.decodeIfPresent(String.self, forKey: .endDate)
         appUserName = try? container.decodeIfPresent(String.self, forKey: .appUserName)
+        blockedMessage = try? container.decodeIfPresent(ISMLastBlockedUser.self, forKey: .blockedMessage)
     }
-    public init(about : String? = nil,showlastSeen : Bool? = nil,profilePic : String? = nil, userId : String? = nil,storeId : String? = nil,userType : Int? = nil,userTypeString : String? = nil,isStarUser : Bool? = nil,chatStatus : String? = nil,membersIds : [String]? = nil,users : [ISMChatCustomUsers]? = nil){
+    public init(about : String? = nil,showlastSeen : Bool? = nil,profilePic : String? = nil, userId : String? = nil,storeId : String? = nil,userType : Int? = nil,userTypeString : String? = nil,isStarUser : Bool? = nil,chatStatus : String? = nil,membersIds : [String]? = nil,users : [ISMChatCustomUsers]? = nil,blockedMessage : ISMLastBlockedUser? = nil){
         self.about = about
         self.showlastSeen = showlastSeen
         self.profilePic = profilePic
@@ -121,6 +123,24 @@ public struct ISMChatUserMetaData: Codable, Hashable {
         self.chatStatus = chatStatus
         self.membersIds = membersIds
         self.users = users
+        self.blockedMessage = blockedMessage
+    }
+}
+
+public struct ISMLastBlockedUser : Codable,Hashable{
+    public var userId: String?
+    public var initiatorId: String?
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        userId = try? container.decodeIfPresent(String.self, forKey: .userId)
+        initiatorId = try? container.decodeIfPresent(String.self, forKey: .initiatorId)
+    }
+    public init(userId : String? = nil,initiatorId : String? = nil){
+        self.userId = userId
+        self.initiatorId = initiatorId
+    }
+    public init(){
+        
     }
 }
 
