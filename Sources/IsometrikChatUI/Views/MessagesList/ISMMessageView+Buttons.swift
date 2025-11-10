@@ -103,14 +103,14 @@ extension ISMMessageView{
         HStack {
             backButtonView()
             
-            Spacer().frame(width: 8)
+//            Color.clear.frame(width: 8)
             
             if self.fromBroadCastFlow  == true{
                 broadcastButtonView()
             } else {
                 profileButtonView()
             }
-        }
+        }.fixedSize()
     }
     
     /// Saves the last input text if it has not been sent.
@@ -248,12 +248,14 @@ extension ISMMessageView{
                     .frame(width: 40, height: 40, alignment: .center)
                     .cornerRadius(20)
                     .padding(.trailing, 5)
+                    .fixedSize()
             }else if opponenDetail?.metaData?.userType == 1 && appearance.images.defaultImagePlaceholderForNormalUser != nil , let avatar =  opponenDetail?.userProfileImageUrl, ISMChatHelper.shouldShowPlaceholder(avatar: avatar){
                 appearance.images.defaultImagePlaceholderForNormalUser?
                     .resizable()
                     .frame(width: 40, height: 40, alignment: .center)
                     .cornerRadius(20)
                     .padding(.trailing, 5)
+                    .fixedSize()
             }else{
                 UserAvatarView(
                     avatar: getAvatarUrl(),
@@ -261,13 +263,13 @@ extension ISMMessageView{
                     size: CGSize(width: 40, height: 40),
                     userName: getProfileName(),
                     font: .regular(size: 14)
-                )
+                ).fixedSize()
                 .padding(.trailing, 5)
             }
             
             VStack(alignment: .leading) {
                 Text(getProfileTitle())
-                    .frame(width: chatFeatures.contains(.videocall) && self.fromBroadCastFlow == false ? 120 : 200,alignment: .leading)
+//                    .frame(width: chatFeatures.contains(.videocall) && self.fromBroadCastFlow == false ? 120 : 200,alignment: .leading)
                     .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                     .font(appearance.fonts.messageListHeaderTitle)
                 

@@ -22,7 +22,7 @@ extension String {
         
         do {
             let content = try String(contentsOfFile: localizationFilePath, encoding: .utf8)
-            print("Localization file content:\n\(content)")
+//            print("Localization file content:\n\(content)")
             let dict = parseLocalizableStrings(content: content)
             return dict[self] ?? self
         } catch {
