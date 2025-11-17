@@ -18,7 +18,7 @@ extension String {
             return self
         }
         
-        print("Localization file found at: \(localizationFilePath)")
+//        print("Localization file found at: \(localizationFilePath)")
         
         do {
             let content = try String(contentsOfFile: localizationFilePath, encoding: .utf8)

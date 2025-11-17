@@ -566,62 +566,65 @@ extension ISMChatMQTTManager{
                 
                 // 3. Save message and last message
                 let chatMessage = createChatMessage(from: messageInfo, body: bodyUpdated, customType: customType, metaData: metaData, members: membersArray, mentionedUsers: mentionedUserList)
-                DispatchQueue.main.async {
-                    self.realmManager.saveMessage(obj: [chatMessage])
-                    let lastMessage = ISMChatLastMessage(
-                        sentAt: messageInfo.sentAt,
-                        senderName: messageInfo.senderName,
-                        senderIdentifier: messageInfo.senderIdentifier,
-                        senderId: messageInfo.senderId,
-                        conversationId: messageInfo.conversationId,
-                        body: bodyUpdated,
-                        messageId: messageInfo.messageId,
-                        customType: customType,
-                        action: messageInfo.action,
-                        userId: messageInfo.userId,
-                        initiatorId: messageInfo.initiatorId, memberName: messageInfo.memberName, initiatorName: messageInfo.initiatorName, memberId: messageInfo.memberId, userName: messageInfo.userName,
-                        members: membersArray, userIdentifier: messageInfo.userIdentifier,
-                        userProfileImageUrl: messageInfo.userProfileImageUrl
-                    )
-                    self.realmManager.updateLastmsg(conId: messageInfo.conversationId ?? "", msg: lastMessage)
-                }
-                
-                // 4. Update unread counts and message delivery
-                let viewModel = ChatsViewModel()
-                if let conId = messageInfo.conversationId, let msgId = messageInfo.messageId {
-                    viewModel.deliveredMessageIndicator(conversationId: conId, messageId: msgId) { _ in
-                        ISMChatHelper.print("Message marked delivered")
+                if !isOwnMessage{
+                    DispatchQueue.main.async {
+                        self.realmManager.saveMessage(obj: [chatMessage])
+                        let lastMessage = ISMChatLastMessage(
+                            sentAt: messageInfo.sentAt,
+                            senderName: messageInfo.senderName,
+                            senderIdentifier: messageInfo.senderIdentifier,
+                            senderId: messageInfo.senderId,
+                            conversationId: messageInfo.conversationId,
+                            body: bodyUpdated,
+                            messageId: messageInfo.messageId,
+                            customType: customType,
+                            action: messageInfo.action,
+                            userId: messageInfo.userId,
+                            initiatorId: messageInfo.initiatorId, memberName: messageInfo.memberName, initiatorName: messageInfo.initiatorName, memberId: messageInfo.memberId, userName: messageInfo.userName,
+                            members: membersArray, userIdentifier: messageInfo.userIdentifier,
+                            userProfileImageUrl: messageInfo.userProfileImageUrl
+                        )
+                        self.realmManager.updateLastmsg(conId: messageInfo.conversationId ?? "", msg: lastMessage)
                     }
-                }
-                
-                if messageInfo.action == ISMChatActionType.conversationCreated.value {
-                    self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 0)
-                } else {
-                    self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 1)
-                }
-                
-                // 5. Local notification if in background and not own message
-                if UIApplication.shared.applicationState == .background,
-                   messageInfo.senderId != currentUserId {
-                    UserDefaults.standard.setValue("app is in background and i got mqtt event", forKey: "Chatsdk_1")
-                    DispatchQueue.global(qos: .background).async {
-                        self.whenInOtherScreen(messageInfo: messageInfo)
+                    
+                    
+                    // 4. Update unread counts and message delivery
+                    let viewModel = ChatsViewModel()
+                    if let conId = messageInfo.conversationId, let msgId = messageInfo.messageId {
+                        viewModel.deliveredMessageIndicator(conversationId: conId, messageId: msgId) { _ in
+                            ISMChatHelper.print("Message marked delivered")
+                        }
                     }
-                } else if let topViewController = UIApplication.topViewController(),
-                          let chatVC = self.viewcontrollers?.conversationListViewController,
-                          let messageVC = self.viewcontrollers?.messagesListViewController {
-                    // If not on chat or message screen, show notification if not own message
-                    let isNotChatVC = !(topViewController.isKind(of: chatVC))
-                    let isNotMessageVC = !(topViewController.isKind(of: messageVC))
-                    if isNotChatVC && isNotMessageVC && messageInfo.senderId != currentUserId {
-                        self.whenInOtherScreen(messageInfo: messageInfo)
+                    
+                    if messageInfo.action == ISMChatActionType.conversationCreated.value {
+                        self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 0)
+                    } else {
+                        self.realmManager.updateUnreadCountThroughConId(conId: messageInfo.conversationId ?? "", count: 1)
                     }
-                }
-                
-                // 6. Post notifications
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil, userInfo: ["data": messageInfo, "error": ""])
-                    NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
+                    
+                    // 5. Local notification if in background and not own message
+                    if UIApplication.shared.applicationState == .background,
+                       messageInfo.senderId != currentUserId {
+                        UserDefaults.standard.setValue("app is in background and i got mqtt event", forKey: "Chatsdk_1")
+                        DispatchQueue.global(qos: .background).async {
+                            self.whenInOtherScreen(messageInfo: messageInfo)
+                        }
+                    } else if let topViewController = UIApplication.topViewController(),
+                              let chatVC = self.viewcontrollers?.conversationListViewController,
+                              let messageVC = self.viewcontrollers?.messagesListViewController {
+                        // If not on chat or message screen, show notification if not own message
+                        let isNotChatVC = !(topViewController.isKind(of: chatVC))
+                        let isNotMessageVC = !(topViewController.isKind(of: messageVC))
+                        if isNotChatVC && isNotMessageVC && messageInfo.senderId != currentUserId {
+                            self.whenInOtherScreen(messageInfo: messageInfo)
+                        }
+                    }
+                    
+                    // 6. Post notifications
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageNewReceived.name, object: nil, userInfo: ["data": messageInfo, "error": ""])
+                        NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
+                    }
                 }
                 
             case .failure(let error):

@@ -170,7 +170,7 @@ public struct ISMConversationView : View {
                     ISMMessageView(conversationViewModel : self.viewModel,conversationID: "",opponenDetail: nil,myUserId: viewModel.userData?.userId ?? "", isGroup: false,fromBroadCastFlow: true,groupCastId: self.groupCastIdToNavigate, groupConversationTitle: nil, groupImage: nil).environmentObject(realmManager).onAppear{onConversationList = false}
                 }
                 .onAppear {
-                    addNotificationObservers()
+                    addNotificationObserversChatList()
                     onConversationList = true
                     self.viewModel.resetdata()
                     self.viewModel.clearMessages()
@@ -486,7 +486,7 @@ public struct ISMConversationView : View {
 
 
 extension ISMConversationView{
-    private func addNotificationObservers() {
+    private func addNotificationObserversChatList() {
         // List of notification types you want to observe
         let notificationTypes: [Notification.Name] = [
             ISMChatMQTTNotificationType.mqttConversationCreated.name,

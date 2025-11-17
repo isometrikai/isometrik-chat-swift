@@ -110,7 +110,7 @@ extension ISMMessageView{
             } else {
                 profileButtonView()
             }
-        }.fixedSize()
+        }
     }
     
     /// Saves the last input text if it has not been sent.
@@ -231,10 +231,14 @@ extension ISMMessageView{
                         self.stateViewModel.navigateToUserProfile = true
                     }
                 } label: {
-                    customView() // Your custom view for the button
+                    customView()
+                        .frame(maxWidth: 200, alignment: .leading)  // ⭐ LIMIT WIDTH
+                                            .layoutPriority(1) // Your custom view for the button
                 }
             } else {
-                customView() // No button, just the view for groups
+                customView()
+                    .frame(maxWidth: 200, alignment: .leading)  // ⭐ LIMIT WIDTH
+                                        .layoutPriority(1) // No button, just the view for groups
             }
         }
     }
@@ -248,14 +252,12 @@ extension ISMMessageView{
                     .frame(width: 40, height: 40, alignment: .center)
                     .cornerRadius(20)
                     .padding(.trailing, 5)
-                    .fixedSize()
             }else if opponenDetail?.metaData?.userType == 1 && appearance.images.defaultImagePlaceholderForNormalUser != nil , let avatar =  opponenDetail?.userProfileImageUrl, ISMChatHelper.shouldShowPlaceholder(avatar: avatar){
                 appearance.images.defaultImagePlaceholderForNormalUser?
                     .resizable()
                     .frame(width: 40, height: 40, alignment: .center)
                     .cornerRadius(20)
                     .padding(.trailing, 5)
-                    .fixedSize()
             }else{
                 UserAvatarView(
                     avatar: getAvatarUrl(),
@@ -263,12 +265,15 @@ extension ISMMessageView{
                     size: CGSize(width: 40, height: 40),
                     userName: getProfileName(),
                     font: .regular(size: 14)
-                ).fixedSize()
+                )
                 .padding(.trailing, 5)
             }
             
             VStack(alignment: .leading) {
                 Text(getProfileTitle())
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .layoutPriority(1)
 //                    .frame(width: chatFeatures.contains(.videocall) && self.fromBroadCastFlow == false ? 120 : 200,alignment: .leading)
                     .foregroundColor(appearance.colorPalette.messageListHeaderTitle)
                     .font(appearance.fonts.messageListHeaderTitle)
