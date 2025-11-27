@@ -79,13 +79,20 @@ extension ConversationViewModel{
         ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatUsers?, ISMChatNewAPIError>) in
             switch result{
             case .success(let data,_) :
-                if skip == 0 {
-                    self.users.removeAll()
+                DispatchQueue.main.async {
+                    if skip == 0 {
+                        self.users.removeAll()
+                    }
+                    let fetchedCount = data?.users?.count ?? 0
+                    self.moreDataAvailableForGetUsers = fetchedCount == self.getUsersLimit
+                    completion(data)
                 }
-                completion(data)
             case .failure(_) :
-                ISMChatHelper.print("get users Failed")
-                self.moreDataAvailableForGetUsers = false
+                DispatchQueue.main.async {
+                    ISMChatHelper.print("get users Failed")
+                    self.moreDataAvailableForGetUsers = false
+                    completion(nil)
+                }
             }
         }
     }

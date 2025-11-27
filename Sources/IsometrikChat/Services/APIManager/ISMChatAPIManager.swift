@@ -75,8 +75,18 @@ extension ISMChatURLConvertible {
 struct ISMChatNewAPIManager {
     // Configuration
     private static let maxRetries = 3
-    private static let timeoutInterval: TimeInterval = 30
+    private static let timeoutInterval: TimeInterval = 60
     private static let retryDelay: TimeInterval = 2
+    private static let session: URLSession = {
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = timeoutInterval
+        configuration.timeoutIntervalForResource = timeoutInterval
+        configuration.waitsForConnectivity = true
+        configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
+        configuration.httpMaximumConnectionsPerHost = 8
+        configuration.networkServiceType = .responsiveData
+        return URLSession(configuration: configuration)
+    }()
     
     static func sendRequest<T: Codable, R: Any>(
         request: ISMChatAPIRequest<R>,
@@ -124,77 +134,69 @@ struct ISMChatNewAPIManager {
             }
         }
         
-        // Create URLSession configuration
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = timeoutInterval
-        configuration.timeoutIntervalForResource = timeoutInterval
-        configuration.waitsForConnectivity = true
-        
-        let session = URLSession(configuration: configuration)
-        
         let task = session.dataTask(with: urlRequest) { data, response, error in
-            DispatchQueue.main.async {
-                // Handle network errors with retry logic
-                if let error = error as NSError? {
-                    // Network-related errors that warrant a retry
-                    let retryableErrors = [-1001, -1003, -1004, -1005, -1009]
+            // Handle network errors with retry logic
+            if let error = error as NSError? {
+                let retryableErrors = [-1001, -1003, -1004, -1005, -1009]
+                
+                if retryableErrors.contains(error.code) && retryCount < maxRetries {
+                    print("Retrying request (attempt \(retryCount + 1) of \(maxRetries))")
                     
-                    if retryableErrors.contains(error.code) && retryCount < maxRetries {
-                        print("Retrying request (attempt \(retryCount + 1) of \(maxRetries))")
-                        
-                        DispatchQueue.global().asyncAfter(deadline: .now() + retryDelay) {
-                            sendRequest(
-                                request: request,
-                                showLoader: showLoader,
-                                retryCount: retryCount + 1,
-                                completion: completion
-                            )
-                        }
-                        return
+                    DispatchQueue.global().asyncAfter(deadline: .now() + retryDelay) {
+                        sendRequest(
+                            request: request,
+                            showLoader: showLoader,
+                            retryCount: retryCount + 1,
+                            completion: completion
+                        )
                     }
-                    
-                    completion(.failure(.decodingError(error)))
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    completion(.failure(.networkError(error)))
                     if showLoader {
                         // ISMShowLoader.shared.stopLoading()
                     }
-                    return
                 }
-                
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    handleError(.invalidResponse, showLoader: showLoader, completion: completion)
-                    return
-                }
-                
-                guard let data = data else {
-                    handleError(.invalidResponse, showLoader: showLoader, completion: completion)
-                    return
-                }
-                
-                print("Response Status Code: \(httpResponse.statusCode)")
-                print(JSON(data))
-                
-                switch httpResponse.statusCode {
-                case 200, 201:
-                    do {
-                        let decoder = JSONDecoder()
-                        let responseObject = try decoder.decode(T.self, from: data)
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                handleError(.invalidResponse, showLoader: showLoader, completion: completion)
+                return
+            }
+            
+            guard let data = data else {
+                handleError(.invalidResponse, showLoader: showLoader, completion: completion)
+                return
+            }
+            
+            print("Response Status Code: \(httpResponse.statusCode)")
+            print(JSON(data))
+            
+            switch httpResponse.statusCode {
+            case 200, 201:
+                do {
+                    let decoder = JSONDecoder()
+                    let responseObject = try decoder.decode(T.self, from: data)
+                    DispatchQueue.main.async {
                         completion(.success(responseObject, nil))
-                    } catch {
-                        print("Decoding Error: \(error)")
-                        completion(.failure(.decodingError(error)))
+                        if showLoader {
+                            // ISMShowLoader.shared.stopLoading()
+                        }
                     }
-                case 404:
-                    completion(.failure(.httpError(httpResponse.statusCode)))
-                case 401, 406:
-                    // Handle refresh token
-                    handleTokenRefresh(request: request, completion: completion)
-                default:
-                    completion(.failure(.httpError(httpResponse.statusCode)))
+                } catch {
+                    print("Decoding Error: \(error)")
+                    handleError(.decodingError(error), showLoader: showLoader, completion: completion)
                 }
-                
-                if showLoader {
-                    // ISMShowLoader.shared.stopLoading()
-                }
+            case 404:
+                handleError(.httpError(httpResponse.statusCode), showLoader: showLoader, completion: completion)
+            case 401, 406:
+                // Handle refresh token
+                handleTokenRefresh(request: request, completion: completion)
+            default:
+                handleError(.httpError(httpResponse.statusCode), showLoader: showLoader, completion: completion)
             }
         }
         

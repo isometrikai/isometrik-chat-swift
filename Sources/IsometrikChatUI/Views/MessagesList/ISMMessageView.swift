@@ -220,6 +220,13 @@ public struct ISMMessageView: View {
             ZStack {
                 appearance.colorPalette.chatListBackground.edgesIgnoringSafeArea(.all)
                 VStack(spacing: 0) {
+                    HStack(){
+                        navigationBarLeadingButtons()
+                        Spacer()
+                        navigationBarTrailingButtons()
+                    }
+                    .padding(.horizontal,15)
+                    .frame(maxWidth: .infinity)
                     headerSection()
                     messagesSection()
                     if stateViewModel.showActionSheet == true {
@@ -253,14 +260,15 @@ public struct ISMMessageView: View {
         }
         .padding(.top, 5)
         .navigationBarBackButtonHidden()
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                navigationBarLeadingButtons()
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                navigationBarTrailingButtons()
-            }
-        }
+        .toolbar(.hidden)
+//        .toolbar {
+//            ToolbarItem(placement: .navigationBarLeading) {
+//                navigationBarLeadingButtons()
+//            }
+//            ToolbarItem(placement: .navigationBarTrailing) {
+//                navigationBarTrailingButtons()
+//            }
+//        }
         .onAppear {
             OnMessageList = true
             setupOnAppear()
@@ -875,21 +883,21 @@ public struct ISMMessageView: View {
             view
                 .background(
                     NavigationLink(
-                        "",
-                        destination:
-                            ISMContactInfoView(
-                                conversationID: self.conversationID,
-                                conversationDetail : self.conversationDetail,
-                                viewModel:self.chatViewModel,
-                                isGroup: self.isGroup,
-                                navigateToSocialProfileId: $navigateToSocialProfileId,
-                                navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,
-                                navigateToChatList: $navigateToChatList
-                            )
-                            .environmentObject(RealmManager.shared)
-                            .onAppear { OnMessageList = false },
-                        isActive: $stateViewModel.navigateToUserProfile
+                        destination: ISMContactInfoView(
+                            conversationID: self.conversationID,
+                            conversationDetail : self.conversationDetail,
+                            viewModel:self.chatViewModel,
+                            isGroup: self.isGroup,
+                            navigateToSocialProfileId: $navigateToSocialProfileId,
+                            navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,
+                            navigateToChatList: $navigateToChatList
+                        )
+                        .environmentObject(RealmManager.shared)
+                        .onAppear { OnMessageList = false },
+                        isActive: $stateViewModel.navigateToUserProfile,
+                        label: { EmptyView() }
                     )
+                    .hidden()
                 )
                 .navigationDestination(isPresented: $stateViewModel.movetoForwardList, destination: {
                     ISMForwardToContactView(viewModel : self.chatViewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage)

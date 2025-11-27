@@ -100,7 +100,7 @@ extension ISMMessageView{
     
     /// Returns a view containing navigation buttons on the leading side of the navigation bar.
     func navigationBarLeadingButtons() -> some View {
-        HStack {
+        HStack(spacing: 10) {
             backButtonView()
             
 //            Color.clear.frame(width: 8)
@@ -232,12 +232,12 @@ extension ISMMessageView{
                     }
                 } label: {
                     customView()
-                        .frame(maxWidth: 200, alignment: .leading)  // ⭐ LIMIT WIDTH
+//                        .frame(maxWidth: 200, alignment: .leading)  // ⭐ LIMIT WIDTH
                                             .layoutPriority(1) // Your custom view for the button
                 }
             } else {
                 customView()
-                    .frame(maxWidth: 200, alignment: .leading)  // ⭐ LIMIT WIDTH
+//                    .frame(maxWidth: 200, alignment: .leading)  // ⭐ LIMIT WIDTH
                                         .layoutPriority(1) // No button, just the view for groups
             }
         }
@@ -245,19 +245,19 @@ extension ISMMessageView{
     
     /// Returns a custom view for displaying user information.
     func customView() -> some View{
-        HStack{
+        HStack(spacing:8){
             if opponenDetail?.metaData?.userType == 9 && appearance.images.defaultImagePlaceholderForBussinessUser != nil, let avatar =  opponenDetail?.userProfileImageUrl, ISMChatHelper.shouldShowPlaceholder(avatar: avatar) {
                 appearance.images.defaultImagePlaceholderForBussinessUser?
                     .resizable()
                     .frame(width: 40, height: 40, alignment: .center)
                     .cornerRadius(20)
-                    .padding(.trailing, 5)
+                    
             }else if opponenDetail?.metaData?.userType == 1 && appearance.images.defaultImagePlaceholderForNormalUser != nil , let avatar =  opponenDetail?.userProfileImageUrl, ISMChatHelper.shouldShowPlaceholder(avatar: avatar){
                 appearance.images.defaultImagePlaceholderForNormalUser?
                     .resizable()
                     .frame(width: 40, height: 40, alignment: .center)
                     .cornerRadius(20)
-                    .padding(.trailing, 5)
+                    
             }else{
                 UserAvatarView(
                     avatar: getAvatarUrl(),
@@ -266,7 +266,7 @@ extension ISMMessageView{
                     userName: getProfileName(),
                     font: .regular(size: 14)
                 )
-                .padding(.trailing, 5)
+                
             }
             
             VStack(alignment: .leading) {
@@ -351,7 +351,7 @@ extension ISMMessageView{
     
     /// Returns a view containing navigation buttons on the trailing side of the navigation bar.
     func navigationBarTrailingButtons() -> some View {
-        HStack {
+        HStack(spacing: 10) {
             if stateViewModel.showforwardMultipleMessage || (stateViewModel.showDeleteMultipleMessage && chatProperties.multipleSelectionOfMessageForDelete == true){
                
             }else {

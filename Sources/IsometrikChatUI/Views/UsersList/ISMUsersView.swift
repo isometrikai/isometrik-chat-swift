@@ -94,9 +94,8 @@ public struct ISMUsersView: View {
                                 
                                 // Display users grouped by sections
                                 ForEach(viewModel.usersSectionDictionary.keys.sorted(), id:\.self) { key in
-                                    if let contacts = viewModel.usersSectionDictionary[key]?.filter({ (contact) -> Bool in
-                                        self.viewModel.searchedText.isEmpty ? true :
-                                        "\(contact)".lowercased().contains(self.viewModel.searchedText.lowercased())}), !contacts.isEmpty {
+                                    let contacts = filteredContacts(for: key)
+                                    if !contacts.isEmpty {
                                         Section(header: Text("\(key)")) {
                                             ForEach(contacts) { value in
                                                 ZStack {
@@ -133,13 +132,8 @@ public struct ISMUsersView: View {
                                                 .onAppear {
                                                     // Load more users if necessary
                                                     if viewModel.moreDataAvailableForGetUsers && viewModel.apiCalling == false {
-                                                        if let contactIndex = viewModel.usersSectionDictionary.values.flatMap({ $0 }).firstIndex(where: { $0.userId == value.userId }) {
-                                                            let totalCount = viewModel.usersSectionDictionary.values.flatMap({ $0 }).count
-                                                            // Check if this is the last contact and the total count is a multiple of 20
-                                                            if contactIndex == totalCount - 1 && totalCount % 20 == 0 {
-                                                                // Call the API to load more users
-                                                                self.getUsers()
-                                                            }
+                                                        if isLastVisibleUser(value) {
+                                                            self.getUsers()
                                                         }
                                                     }
                                                 }// For LoadMore
@@ -207,8 +201,10 @@ public struct ISMUsersView: View {
     
     // Function to fetch users based on search text
     func getUsers() {
+        guard viewModel.apiCalling == false else { return }
         viewModel.apiCalling = true
         viewModel.getUsers(search: viewModel.searchedText) { data in
+            viewModel.apiCalling = false
             viewModel.users.append(contentsOf: data?.users ?? [])
             viewModel.usersSectionDictionary = viewModel.getSectionedDictionary(data: viewModel.users)
         }
@@ -232,5 +228,35 @@ public struct ISMUsersView: View {
                 .resizable()
                 .frame(width: 17,height: 17)
         }
+    }
+    
+    private func filteredContacts(for key: String) -> [ISMChatUser] {
+        guard let contacts = viewModel.usersSectionDictionary[key] else {
+            return []
+        }
+        guard viewModel.searchedText.isEmpty == false else {
+            return contacts
+        }
+        return contacts.filter {
+            "\($0)".lowercased().contains(viewModel.searchedText.lowercased())
+        }
+    }
+    
+    private func lastVisibleContactId() -> String? {
+        let sortedKeys = viewModel.usersSectionDictionary.keys.sorted().reversed()
+        for key in sortedKeys {
+            let contacts = filteredContacts(for: key)
+            if let lastId = contacts.last?.userId {
+                return lastId
+            }
+        }
+        return nil
+    }
+    
+    private func isLastVisibleUser(_ user: ISMChatUser) -> Bool {
+        guard let lastId = lastVisibleContactId(), let userId = user.userId else {
+            return false
+        }
+        return lastId == userId
     }
 }
