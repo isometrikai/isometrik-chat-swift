@@ -252,6 +252,7 @@ public struct ISMMessageView: View {
             }
         }
         .padding(.top, 5)
+        .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 navigationBarLeadingButtons()
