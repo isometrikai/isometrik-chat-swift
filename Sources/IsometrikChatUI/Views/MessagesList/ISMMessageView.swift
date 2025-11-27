@@ -81,7 +81,7 @@ public struct ISMMessageView: View {
     @State var textFieldtxt : String = ""
     
     @State var conversationID : String?
-    public let opponenDetail : UserDB?
+    @State var opponenDetail : ISMChatUser?
     public var myUserId : String?
     public var myAppUserId : String?
     public let isGroup : Bool?
