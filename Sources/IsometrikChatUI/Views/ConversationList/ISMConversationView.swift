@@ -424,7 +424,7 @@ public struct ISMConversationView : View {
             conversationViewModel: viewModel,
             conversationID: data.lastMessageDetails?.conversationId,
             opponenDetail: data.opponentDetails,
-            myUserId: viewModel.userData?.userId ?? "",
+            myUserId: myUserData?.userId ?? "",
             isGroup: data.isGroup,
             fromBroadCastFlow: false,
             groupCastId: "",
