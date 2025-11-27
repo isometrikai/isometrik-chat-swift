@@ -81,7 +81,7 @@ public struct ISMMessageView: View {
     @State var textFieldtxt : String = ""
     
     @State var conversationID : String?
-    @State var opponenDetail : ISMChatUser?
+    public let opponenDetail : UserDB?
     public var myUserId : String?
     public var myAppUserId : String?
     public let isGroup : Bool?
@@ -924,7 +924,7 @@ public struct ISMMessageView: View {
                 .alert("Ooops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.", isPresented: $stateViewModel.showingNoInternetAlert) {
                     Button("OK", role: .cancel) { }
                 }
-                .alert("Call \(self.opponenDetail?.userName ?? "")", isPresented: $stateViewModel.showCallPopUp) {
+                .alert("Call \(conversationDetail?.conversationDetails?.opponentDetails?.userName ?? "")", isPresented: $stateViewModel.showCallPopUp) {
                     Button("Cancel", role: .cancel) {
                         if stateViewModel.audioCallToUser == true {
                             stateViewModel.audioCallToUser = false
@@ -1047,8 +1047,8 @@ public struct ISMMessageView: View {
             //GET CONVERSATION DETAIL API
             chatViewModel.getConversationDetail(conversationId: self.conversationID ?? "", isGroup: self.isGroup ?? false) { data in
                 self.conversationDetail = data
-                self.opponenDetail?.lastSeen = data?.conversationDetails?.opponentDetails?.lastSeen
-                self.opponenDetail?.online = data?.conversationDetails?.opponentDetails?.online
+//                self.opponenDetail?.lastSeen = data?.conversationDetails?.opponentDetails?.lastSeen
+//                self.opponenDetail?.online = data?.conversationDetails?.opponentDetails?.online
                 if isGroup == true{
                     if let members = data?.conversationDetails?.members {
                         if members.count >= 2{
@@ -1161,8 +1161,8 @@ public struct ISMMessageView: View {
     private func executeRepeatedly() {
         chatViewModel.getConversationDetail(conversationId: self.conversationID ?? "", isGroup: self.isGroup ?? false) { data in
             self.conversationDetail = data
-            self.opponenDetail?.lastSeen = data?.conversationDetails?.opponentDetails?.lastSeen
-            self.opponenDetail?.online = data?.conversationDetails?.opponentDetails?.online
+//            self.opponenDetail?.lastSeen = data?.conversationDetails?.opponentDetails?.lastSeen
+//            self.opponenDetail?.online = data?.conversationDetails?.opponentDetails?.online
         }
     }
 }
