@@ -13,24 +13,24 @@ import IsometrikChat
 
 /// A SwiftUI view that provides media picking functionality using YPImagePicker
 /// This view can be used for both profile picture selection and general media selection
-struct ISMMediaPickerView: View {
+public struct ISMMediaPickerView: View {
     
     //MARK:  - PROPERTIES
     /// Array of selected media URLs (for videos)
-    @Binding var selectedMedia: [URL]
+    @Binding public var selectedMedia: [URL]
     /// Array of selected profile pictures (for images)
-    @Binding var selectedProfilePicture: [UIImage]
+    @Binding public var selectedProfilePicture: [UIImage]
     /// Flag to handle cancellation
-    @State var cancel: Bool = false
+    @State public var cancel: Bool = false
     /// Environment variable to handle view dismissal
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) public var dismiss
+    @Environment(\.presentationMode) public var presentationMode
     /// Flag to determine if picker is being used for profile picture selection
-    var isProfile: Bool = false
+    public var isProfile: Bool = false
     /// UI appearance configuration
-    let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    public let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     //MARK:  - LIFECYCLE
-    var body: some View {
+    public var body: some View {
         ZStack{
             VStack{
                 YPImagePickerWrapper(selectedProfile: $selectedProfilePicture, selectedVideos: $selectedMedia, isProfile: isProfile) {
