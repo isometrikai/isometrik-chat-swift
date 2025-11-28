@@ -35,9 +35,20 @@ extension ISMConversationView{
     func getuserData(completion :@escaping (String?)->()){
         viewModel.getUserData { data in
             if let user = data {
-                viewModel.userData = user
+                self.viewModel.userData = user
+                // Update SDK's userConfig so it reflects everywhere in the app
+                if let chatClient = ISMChatSdk.getInstance().getChatClient() {
+                    chatClient.updateUserConfig(
+                        userName: user.userName ?? "",
+                        userEmail: user.userIdentifier ?? "",
+                        userProfileImage: user.userProfileImageUrl ?? "",
+                        userBio: user.metaData?.about ?? "",
+                        allowNotification: user.notification ?? true,
+                        showLastSeen: user.metaData?.showlastSeen ?? true
+                    )
+                }
+                completion(data?.userId)
             }
-            completion(data?.userId)
         }
     }
     

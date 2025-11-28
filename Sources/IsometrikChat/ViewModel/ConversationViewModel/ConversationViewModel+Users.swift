@@ -97,6 +97,35 @@ extension ConversationViewModel{
         }
     }
     
+    //MARK: - Get Users for Create Group/Broadcast
+    
+    public func getUsersForCreateGroup(search : String,completion:@escaping(ISMChatUsers?)->()){
+        let skip = self.createGroupUsers.count
+
+        let endPoint = ISMChatUsersEndpoint.allNonBlockUsers(searchTag: search, sort: 1, skip: skip, limit: getUsersLimit)
+        let request =  ISMChatAPIRequest(endPoint: endPoint, requestBody: [])
+        
+        ISMChatNewAPIManager.sendRequest(request: request) {  (result : ISMChatResult<ISMChatUsers?, ISMChatNewAPIError>) in
+            switch result{
+            case .success(let data,_) :
+                DispatchQueue.main.async {
+                    if skip == 0 {
+                        self.createGroupUsers.removeAll()
+                    }
+                    let fetchedCount = data?.users?.count ?? 0
+                    self.moreDataAvailableForCreateGroupUsers = fetchedCount == self.getUsersLimit
+                    completion(data)
+                }
+            case .failure(_) :
+                DispatchQueue.main.async {
+                    ISMChatHelper.print("get users for create group Failed")
+                    self.moreDataAvailableForCreateGroupUsers = false
+                    completion(nil)
+                }
+            }
+        }
+    }
+    
     //MARK: - Get User Detail
     
     public func getUserDetail(userId: String,userName : String,completion:@escaping(ISMChatUser?)->()){

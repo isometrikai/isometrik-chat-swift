@@ -206,12 +206,19 @@ public struct ISMProfileView: View {
         viewModel.getUserData { data in
             if let user = data {
                 self.viewModel.userData = user
-//                userData.userProfileImage = user.userProfileImageUrl ?? ""
-//                userData.userName =  user.userName ?? ""
-//                userData.userEmail =  user.userIdentifier ?? ""
-//                userData.userBio =  user.metaData?.about ?? ""
-//                userData.allowNotification = user.notification ?? true
-//                userData.showLastSeen = user.metaData?.showlastSeen ?? true
+                
+                // Update SDK's userConfig so it reflects everywhere in the app
+                if let chatClient = ISMChatSdk.getInstance().getChatClient() {
+                    chatClient.updateUserConfig(
+                        userName: user.userName ?? "",
+                        userEmail: user.userIdentifier ?? "",
+                        userProfileImage: user.userProfileImageUrl ?? "",
+                        userBio: user.metaData?.about ?? "",
+                        allowNotification: user.notification ?? true,
+                        showLastSeen: user.metaData?.showlastSeen ?? true
+                    )
+                }
+                
                 completion()
             }
         }

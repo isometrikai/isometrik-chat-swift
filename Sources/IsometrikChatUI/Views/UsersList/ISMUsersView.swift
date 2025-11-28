@@ -39,15 +39,18 @@ public struct ISMUsersView: View {
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
     @Binding public var groupCastIdToNavigate : String
     
+    // Track if view has initially appeared to avoid resetting data when navigating back
+    @State private var hasInitiallyAppeared = false
+    
     //MARK:  - LIFECYCLE
     public var body: some View {
         ZStack{
             NavigationStack{
                 VStack {
-                    // Show a loading indicator if no users are available
-                    if viewModel.users.count == 0{
+                    // Show a loading indicator if no users are available and we're currently fetching or on initial load
+                    if viewModel.users.isEmpty && (viewModel.apiCalling || !hasInitiallyAppeared) {
                         ProgressView()
-                    } else {
+                    } else if !viewModel.users.isEmpty {
                         ScrollViewReader { proxy in
                             List {
                                 // Display options for creating new group or broadcast if available
@@ -160,15 +163,40 @@ public struct ISMUsersView: View {
                     self.viewModel.resetGetUsersdata()
                     getUsers()
                 })
+                .onChange(of: navigatetoCreatGroup, { oldValue, newValue in
+                    // Track when returning from create group view
+                    if oldValue == true && newValue == false {
+                        // Just returned from create group, mark as appeared to prevent reset
+                        hasInitiallyAppeared = true
+                    }
+                })
+                .onChange(of: navigatetoCreatBroadCast, { oldValue, newValue in
+                    // Track when returning from create broadcast view
+                    if oldValue == true && newValue == false {
+                        // Just returned from create broadcast, mark as appeared to prevent reset
+                        hasInitiallyAppeared = true
+                    }
+                })
                 .onDisappear {
                     // Clear search text on view disappear
                     viewModel.searchedText = ""
                     viewModel.debounceSearchedText = ""
+                    // Reset flag only when view is completely dismissed (not just navigating to child)
+                    // This allows fresh load when view is reopened after being completely dismissed
+                    if !navigatetoCreatGroup && !navigatetoCreatBroadCast {
+                        hasInitiallyAppeared = false
+                    }
                 }
                 .onAppear {
-                    // Reset user data and fetch users on view appear
-                    self.viewModel.resetGetUsersdata()
-                    getUsers()
+                    // Only reset and fetch on initial appear, not when navigating back from child views
+                    if !hasInitiallyAppeared {
+                        hasInitiallyAppeared = true
+                        self.viewModel.resetGetUsersdata()
+                        getUsers()
+                    } else if viewModel.users.isEmpty && !viewModel.apiCalling {
+                        // If users are empty when coming back (edge case), fetch without resetting
+                        getUsers()
+                    }
                 }
                 .refreshable {
                     // Refresh user list

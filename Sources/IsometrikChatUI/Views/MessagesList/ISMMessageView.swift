@@ -890,7 +890,8 @@ public struct ISMMessageView: View {
                             isGroup: self.isGroup,
                             navigateToSocialProfileId: $navigateToSocialProfileId,
                             navigateToExternalUserListToAddInGroup: $stateViewModel.navigateToAddParticipantsInGroupViaDelegate,
-                            navigateToChatList: $navigateToChatList
+                            navigateToChatList: $navigateToChatList,
+                            navigateToUserProfile: $stateViewModel.navigateToUserProfile
                         )
                         .environmentObject(RealmManager.shared)
                         .onAppear { OnMessageList = false },
@@ -898,6 +899,7 @@ public struct ISMMessageView: View {
                         label: { EmptyView() }
                     )
                     .hidden()
+                    .frame(width: 0, height: 0)
                 )
                 .navigationDestination(isPresented: $stateViewModel.movetoForwardList, destination: {
                     ISMForwardToContactView(viewModel : self.chatViewModel, conversationViewModel : self.conversationViewModel, messages: $forwardMessageSelected, showforwardMultipleMessage: $stateViewModel.showforwardMultipleMessage)

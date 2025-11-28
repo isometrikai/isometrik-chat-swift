@@ -28,7 +28,17 @@ public struct ISMMediaPickerView: View {
     /// Flag to determine if picker is being used for profile picture selection
     public var isProfile: Bool = false
     /// UI appearance configuration
-    public let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+//    public let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
+    
+    public init(
+        selectedMedia: Binding<[URL]>,
+        selectedProfilePicture: Binding<[UIImage]>,
+        isProfile: Bool = false
+    ) {
+        self._selectedMedia = selectedMedia
+        self._selectedProfilePicture = selectedProfilePicture
+        self.isProfile = isProfile
+    }
     //MARK:  - LIFECYCLE
     public var body: some View {
         ZStack{
@@ -43,8 +53,8 @@ public struct ISMMediaPickerView: View {
                 ToolbarItem(placement: .principal) {
                     VStack {
                         Text("")
-                            .font(appearance.fonts.navigationBarTitle)
-                            .foregroundColor(appearance.colorPalette.navigationBarTitle)
+//                            .font(appearance.fonts.navigationBarTitle)
+//                            .foregroundColor(appearance.colorPalette.navigationBarTitle)
                     }
                 }
             }

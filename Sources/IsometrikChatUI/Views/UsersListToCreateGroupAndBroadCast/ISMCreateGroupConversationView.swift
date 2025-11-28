@@ -43,9 +43,9 @@ public struct ISMCreateGroupConversationView: View {
                             HeaderView()
                         }
                         // Iterate through user sections
-                        ForEach(viewModel.usersSectionDictionary.keys.sorted(), id:\.self) { key in
+                        ForEach(viewModel.createGroupUsersSectionDictionary.keys.sorted(), id:\.self) { key in
                             // Filter contacts based on search text
-                            if let contacts = viewModel.usersSectionDictionary[key]?.filter({ (contact) -> Bool in
+                            if let contacts = viewModel.createGroupUsersSectionDictionary[key]?.filter({ (contact) -> Bool in
                                 self.viewModel.searchedText.isEmpty ? true :
                                 "\(contact)".lowercased().contains(self.viewModel.searchedText.lowercased())}), !contacts.isEmpty{
                                 Section(header: Text("\(key)")) {
@@ -90,8 +90,8 @@ public struct ISMCreateGroupConversationView: View {
                                         }//:Zstack
                                         .onAppear {
                                             // Load more users if needed
-                                            if viewModel.moreDataAvailableForGetUsers && viewModel.apiCalling == false{
-                                                if self.viewModel.users.last?.userId == contacts.last?.userId {
+                                            if viewModel.moreDataAvailableForCreateGroupUsers && viewModel.createGroupApiCalling == false{
+                                                if self.viewModel.createGroupUsers.last?.userId == contacts.last?.userId {
                                                     self.getUsers()
                                                 }
                                             }
@@ -126,7 +126,7 @@ public struct ISMCreateGroupConversationView: View {
             }//:VStack
             .onAppear {
                 // Reset and fetch users on appear
-                self.viewModel.resetGetUsersdata()
+                self.viewModel.resetCreateGroupUsersdata()
                 getUsers()
             }
             .refreshable {
@@ -136,7 +136,7 @@ public struct ISMCreateGroupConversationView: View {
             .onChange(of: viewModel.debounceSearchedText, { _, _ in
                 // Handle search text changes
                 print("~~SEARCHING WITH DEBOUNCING \(viewModel.searchedText)")
-                self.viewModel.resetGetUsersdata()
+                self.viewModel.resetCreateGroupUsersdata()
                 getUsers()
             })
             .onDisappear {
@@ -260,27 +260,29 @@ public struct ISMCreateGroupConversationView: View {
     
     // Function to get users based on the selected type
     func getUsers(){
-        viewModel.apiCalling = true
+        viewModel.createGroupApiCalling = true
         if selectUserFor == .AddMemberInBroadcast{
             viewModel.getBroadCastEligibleUsers(groupCastId : self.groupCastId ?? "",search: viewModel.searchedText) { data in
-                viewModel.users.append(contentsOf: data?.groupcastEligibleMembers ?? [])
-                viewModel.usersSectionDictionary = viewModel.getSectionedDictionary(data: viewModel.users)
+                viewModel.createGroupUsers.append(contentsOf: data?.groupcastEligibleMembers ?? [])
+                viewModel.createGroupUsersSectionDictionary = viewModel.getSectionedDictionary(data: viewModel.createGroupUsers)
+                viewModel.createGroupApiCalling = false
             }
         }else{
-            viewModel.getUsers(search: viewModel.searchedText) { data in
-                viewModel.users.append(contentsOf: data?.users ?? [])
-                viewModel.usersSectionDictionary = viewModel.getSectionedDictionary(data: viewModel.users)
+            viewModel.getUsersForCreateGroup(search: viewModel.searchedText) { data in
+                viewModel.createGroupApiCalling = false
+                viewModel.createGroupUsers.append(contentsOf: data?.users ?? [])
+                viewModel.createGroupUsersSectionDictionary = viewModel.getSectionedDictionary(data: viewModel.createGroupUsers)
             }
         }
     }
     
     // Function to refresh the user list
     func refreshUsers(){
-        self.viewModel.resetGetUsersdata()
+        self.viewModel.resetCreateGroupUsersdata()
         viewModel.refreshGetUser() { users in
             if let appendUser = users?.users{
-                viewModel.users.append(contentsOf: appendUser)
-                viewModel.usersSectionDictionary = viewModel.getSectionedDictionary(data: viewModel.users)
+                viewModel.createGroupUsers.append(contentsOf: appendUser)
+                viewModel.createGroupUsersSectionDictionary = viewModel.getSectionedDictionary(data: viewModel.createGroupUsers)
             }
         }
     }

@@ -31,12 +31,17 @@ public class ConversationViewModel : NSObject ,ObservableObject{
     @Published public var contacts : [ISMChatContacts] = []
     @Published public var eligibleUsers : [ISMChatUser] = []
     @Published public var elogibleUsersSectionDictionary : Dictionary<String , [ISMChatUser]> = [:]
+    // Separate user lists for create group/broadcast screen
+    @Published public var createGroupUsers : [ISMChatUser] = []
+    @Published public var createGroupUsersSectionDictionary : Dictionary<String , [ISMChatUser]> = [:]
     @Published public var blockUser = [ISMChatUser]()
     @Published public var chatLimit = 10
     @Published public var moreDataAvailableForChatList = true
     @Published public var getUsersLimit = 20
     @Published public var moreDataAvailableForGetUsers = true
+    @Published public var moreDataAvailableForCreateGroupUsers = true
     @Published public var apiCalling = false
+    @Published public var createGroupApiCalling = false
     @Published public var profileSwitched : Bool = false
     
     public override init(){
@@ -261,6 +266,13 @@ extension ConversationViewModel {
         self.moreDataAvailableForGetUsers = true
         self.getUsersLimit = 20
         self.eligibleUsers.removeAll()
+    }
+    
+    public func resetCreateGroupUsersdata(){
+        self.moreDataAvailableForCreateGroupUsers = true
+        self.getUsersLimit = 20
+        self.createGroupUsers.removeAll()
+        self.createGroupUsersSectionDictionary.removeAll()
     }
 
 }

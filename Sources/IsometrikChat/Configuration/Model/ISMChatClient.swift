@@ -20,6 +20,25 @@ public class ISMChatClient {
     public func getConfigurations() -> ISMChatCommunicationConfiguration{
         return communicationConfig
     }
+    
+    public func updateUserConfig(userName: String, userEmail: String, userProfileImage: String, userBio: String, allowNotification: Bool, showLastSeen: Bool) {
+        var updatedUserConfig = communicationConfig.userConfig
+        updatedUserConfig.userName = userName
+        updatedUserConfig.userEmail = userEmail
+        updatedUserConfig.userProfileImage = userProfileImage
+        updatedUserConfig.userBio = userBio
+        updatedUserConfig.allowNotification = allowNotification
+        updatedUserConfig.showLastSeen = showLastSeen
+        
+        let updatedCommunicationConfig = ISMChatCommunicationConfiguration(
+            userConfig: updatedUserConfig,
+            projectConfig: communicationConfig.projectConfig,
+            mqttConfig: communicationConfig.mqttConfig,
+            username: communicationConfig.username,
+            password: communicationConfig.password
+        )
+        self.communicationConfig = updatedCommunicationConfig
+    }
 }
 
 

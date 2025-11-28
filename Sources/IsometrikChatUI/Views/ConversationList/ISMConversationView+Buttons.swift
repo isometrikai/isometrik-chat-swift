@@ -18,7 +18,7 @@ extension ISMConversationView {
                 showProfile = true
             } label: {
                 // Displays the user's avatar with a default image if none is available
-                UserAvatarView(avatar: myUserData?.userProfileImage ?? "", showOnlineIndicator: false, size: CGSize(width: 38, height: 38), userName: myUserData?.userName ?? "", font: .regular(size: 14))
+                UserAvatarView(avatar: viewModel.userData?.userProfileImageUrl ?? "", showOnlineIndicator: false, size: CGSize(width: 38, height: 38), userName: myUserData?.userName ?? "", font: .regular(size: 14))
             }
             // Displays the "Chats" label with bold font
             Text("Chats")

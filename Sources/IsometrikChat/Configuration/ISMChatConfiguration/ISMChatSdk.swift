@@ -159,6 +159,7 @@ public class ISMChatSdk{
         self.chatInitialized = nil
         
         self.appConfiguration(appConfig: appConfig, userConfig: userConfig, hostFrameworkType: hostFrameworkType, conversationListViewControllerName: conversationListViewControllerName, messagesListViewControllerName: messagesListViewControllerName)
+        // User data will be fetched automatically in appConfiguration via updateUserDataAfterInitialization
     }
     
     func initializeCallIsometrik(accountId : String,projectId : String,keysetId : String,licenseKey : String,appSecret : String,userSecret : String,isometricChatUserId : String,isometricUserToken : String){
