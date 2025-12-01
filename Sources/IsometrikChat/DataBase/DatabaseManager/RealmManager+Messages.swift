@@ -244,6 +244,7 @@ extension RealmManager{
                 let id = try ObjectId(string: objectId)
                 let message = localRealm.object(ofType: MessagesDB.self, forPrimaryKey: id)
                 try! localRealm.write {
+                    // Update the actual message row (used in message bubbles)
                     message?.messageId = msgId
                     message?.msgSyncStatus = ISMChatSyncStatus.Synch.txt
                     if let url = mediaUrl{
@@ -259,6 +260,7 @@ extension RealmManager{
                         message?.attachments.first?.mediaId = mediaId
                     }
                     
+                    // Update lastMessage in ConversationDB (used in conversation list row)
                     if let taskToUpdate = localRealm.objects(ConversationDB.self).where({ $0.conversationId == conversationId }).first {
                         taskToUpdate.lastMessageDetails?.msgSyncStatus = ISMChatSyncStatus.Synch.txt
                         taskToUpdate.lastMessageDetails?.messageId = msgId
@@ -266,6 +268,9 @@ extension RealmManager{
                         print("Conversation not found with the given conversationId: \(conversationId)")
                     }
                 }
+                
+                // Refresh published collections so SwiftUI updates the UI
+                self.getMsgsThroughConversationId(conversationId: conversationId)
             }catch {
                 print("ERROR UPDATE")
             }
@@ -325,6 +330,21 @@ extension RealmManager{
             do {
                 try localRealm.write {
                     for value in obj {
+                        // Avoid saving duplicate "conversationCreated" system messages for the same conversation
+                        if value.action == ISMChatActionType.conversationCreated.value {
+                            let existingEncryptionMsg = localRealm.objects(MessagesDB.self).filter(
+                                NSPredicate(
+                                    format: "conversationId == %@ AND action == %@ AND isDelete == %d",
+                                    value.conversationId ?? "",
+                                    ISMChatActionType.conversationCreated.value,
+                                    false
+                                )
+                            )
+                            if !existingEncryptionMsg.isEmpty {
+                                // We already have an encryption banner/system message for this conversation
+                                continue
+                            }
+                        }
                         
                         let obj = MessagesDB()
                         
