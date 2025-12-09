@@ -120,6 +120,9 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                         self.realmManager.updateLastmsgDeliver(conId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
                         self.realmManager.addDeliveredToUser(convId: messageInfo.conversationId ?? "", messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? -1)
                         self.realmManager.updateAllDeliveryStatus(conId: messageInfo.conversationId ?? "")
+                        // Notify UI to refresh messages and conversation list after delivery update
+                        NotificationCenter.default.post(name: NSNotification.refrestMessagesListLocally, object: nil)
+                        NotificationCenter.default.post(name: NSNotification.refreshConvList, object: nil)
                     }
                 case .failure(let error):
                     print("Error: \(error)")
@@ -136,6 +139,9 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                     self.realmManager.updateLastmsgRead(conId: messageInfo.conversationId ?? "",messageId: messageInfo.messageId ?? "", userId: messageInfo.userId ?? "", updatedAt: messageInfo.updatedAt ?? 0)
                     NotificationCenter.default.post(name: NSNotification.updateChatBadgeCount, object: nil, userInfo: nil)
 //                    NotificationCenter.default.post(name: ISMChatMQTTNotificationType.mqttMessageRead.name, object: nil,userInfo: ["data": data,"error" : ""])
+                    // Notify UI to refresh messages and conversation list after delivery update
+                    NotificationCenter.default.post(name: NSNotification.refrestMessagesListLocally, object: nil)
+                    NotificationCenter.default.post(name: NSNotification.refreshConvList, object: nil)
                 case .failure(let error):
                     print("Error: \(error)")
                 }
@@ -166,6 +172,9 @@ extension ISMChatMQTTManager: CocoaMQTTDelegate {
                                        "updatedAt": messageInfo.updatedAt ?? 0
                                    ]
                         NotificationCenter.default.post(name: NSNotification.mqttUpdateReadStatus, object: nil, userInfo: dataNew)
+                        // Notify UI to refresh messages and conversation list after delivery update
+                        NotificationCenter.default.post(name: NSNotification.refrestMessagesListLocally, object: nil)
+                        NotificationCenter.default.post(name: NSNotification.refreshConvList, object: nil)
                     }
                     
                 case .failure(let error):
