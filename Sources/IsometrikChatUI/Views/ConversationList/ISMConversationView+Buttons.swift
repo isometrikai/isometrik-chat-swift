@@ -12,17 +12,12 @@ extension ISMConversationView {
     /// Creates the leading navigation view with a user avatar and a "Chats" label.
     /// - Returns: A view containing the user avatar and the "Chats" text.
     func navigationLeading() -> some View {
-        HStack {
-            // Button to show the user's profile when tapped
-            Button {
-                showProfile = true
-            } label: {
-                // Displays the user's avatar with a default image if none is available
-                UserAvatarView(avatar: viewModel.userData?.userProfileImageUrl ?? "", showOnlineIndicator: false, size: CGSize(width: 38, height: 38), userName: myUserData?.userName ?? "", font: .regular(size: 14))
-            }
-            // Displays the "Chats" label with bold font
-            Text("Chats")
-                .font(Font.bold(size: 25))
+        // Button to show the user's profile when tapped
+        Button {
+            showProfile = true
+        } label: {
+            // Displays the user's avatar with a default image if none is available
+            UserAvatarView(avatar: viewModel.userData?.userProfileImageUrl ?? "", showOnlineIndicator: false, size: CGSize(width: 32, height: 32), userName: myUserData?.userName ?? "", font: .regular(size: 14))
         }
     }
     

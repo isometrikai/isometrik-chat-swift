@@ -188,10 +188,17 @@ extension ConversationViewModel{
                     if skip == 0 {
                         // Clear only when it's a fresh load
                         self.eligibleUsers.removeAll()
+                        self.elogibleUsersSectionDictionary.removeAll()
                     }
-                    self.eligibleUsers.append(contentsOf: data.conversationEligibleMembers ?? [])
-                    self.elogibleUsersSectionDictionary = self.getSectionedDictionary(data: self.eligibleUsers)
-                    self.moreDataAvailableForGetUsers = true
+                    let fetchedCount = data.conversationEligibleMembers?.count ?? 0
+                    let newUsers = data.conversationEligibleMembers ?? []
+                    ISMChatHelper.print("Fetched \(fetchedCount) eligible users, total now: \(self.eligibleUsers.count + newUsers.count)")
+                    self.eligibleUsers.append(contentsOf: newUsers)
+                    let newDictionary = self.getSectionedDictionary(data: self.eligibleUsers)
+                    ISMChatHelper.print("Dictionary sections: \(newDictionary.keys.sorted())")
+                    self.elogibleUsersSectionDictionary = newDictionary
+                    self.moreDataAvailableForGetUsers = fetchedCount == self.getUsersLimit
+                    ISMChatHelper.print("More data available: \(self.moreDataAvailableForGetUsers)")
                     completion(data)
                     
                 case .failure(_):

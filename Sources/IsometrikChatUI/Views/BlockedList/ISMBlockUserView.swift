@@ -68,9 +68,25 @@ public struct ISMBlockUserView: View {
                             }//:ZStack
                         }
                     }
-                }.navigationViewStyle(StackNavigationViewStyle())
-                    .navigationBarBackButtonHidden()
-                    .navigationBarItems(leading: Button {
+                }
+                .navigationViewStyle(StackNavigationViewStyle())
+                .navigationBarBackButtonHidden()
+            }
+            .listStyle(DefaultListStyle())
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Blocked".localized())
+                        .font(appearance.fonts.navigationBarTitle)
+                        .foregroundColor(appearance.colorPalette.navigationBarTitle)
+                }
+                if blockedUser.count > 0{
+                    ToolbarItem(placement: .topBarTrailing) {
+                        navigationTrailing()
+                    }
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
                         dismiss()
                     } label: {
                         appearance.images.CloseSheet
@@ -78,24 +94,15 @@ public struct ISMBlockUserView: View {
                             .tint(.black)
                             .foregroundColor(.black)
                             .frame(width: 17,height: 17)
-                    },trailing: navigationTrailing())
-            }.listStyle(DefaultListStyle())
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .principal) {
-                        VStack {
-                            Text("Blocked".localized())
-                                .font(appearance.fonts.navigationBarTitle)
-                                .foregroundColor(appearance.colorPalette.navigationBarTitle)
-                        }
                     }
                 }
-                .onAppear {
-                    refreshBlockUser()
-                }
-                .refreshable {
-                    refreshBlockUser()
-                }
+            }
+            .onAppear {
+                refreshBlockUser()
+            }
+            .refreshable {
+                refreshBlockUser()
+            }
             if self.conversationViewModel.getBlockUser().count == 0{
                 VStack{
                     Spacer()

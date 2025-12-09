@@ -193,15 +193,15 @@ public class ConversationViewModel : NSObject ,ObservableObject{
 extension ConversationViewModel {
     
     public func getSectionedDictionary(data : [ISMChatUser]) -> Dictionary <String , [ISMChatUser]> {
-        let sectionDictionary: Dictionary<String, [ISMChatUser]> = {
-            return Dictionary(grouping: data, by: {
-                let name = $0.userName
-                let normalizedName = name?.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
-                let firstChar = String((normalizedName?.first!)!).uppercased()
-                return firstChar
-            })
-        }()
-        return sectionDictionary
+        return Dictionary(grouping: data, by: { user in
+            // Safely derive a section key from the first character of the user name.
+            // Fall back to "#" for missing/empty names.
+            guard let name = user.userName, let first = name.trimmingCharacters(in: .whitespacesAndNewlines).first else {
+                return "#"
+            }
+            let normalized = String(first).folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
+            return normalized.uppercased()
+        })
     }
     
     public func getContactDictionary(data: [ISMChatContacts]) -> [String: [ISMChatContacts]] {
@@ -266,6 +266,7 @@ extension ConversationViewModel {
         self.moreDataAvailableForGetUsers = true
         self.getUsersLimit = 20
         self.eligibleUsers.removeAll()
+        self.elogibleUsersSectionDictionary.removeAll()
     }
     
     public func resetCreateGroupUsersdata(){

@@ -17,9 +17,9 @@ struct ISMAddParticipantsView: View {
     /// Array of selected users to be added to the group
     @State private var userSelected : [ISMChatUser] = []
     /// View model handling conversation-related operations
-    @ObservedObject var viewModel = ConversationViewModel()
+    @StateObject var viewModel = ConversationViewModel()
     /// View model handling chat-related operations
-    @ObservedObject var chatViewModel = ChatsViewModel()
+    @StateObject var chatViewModel = ChatsViewModel()
     /// ID of the existing conversation if adding members to an existing group
     var conversationId : String? = nil
     @EnvironmentObject var realmManager : RealmManager
@@ -35,38 +35,78 @@ struct ISMAddParticipantsView: View {
                         if userSelected.count > 0{
                             HeaderView()
                         }
-                        ForEach(viewModel.elogibleUsersSectionDictionary.keys.sorted(), id:\.self) { key in
-                            if let contacts = viewModel.elogibleUsersSectionDictionary[key]?.filter({ contact in
-                                self.viewModel.searchedText.isEmpty ? true : "\(contact)".lowercased().contains(self.viewModel.searchedText.lowercased())
-                            }), !contacts.isEmpty {
-                                Section(header: Text("\(key)")) {
-                                    ForEach(contacts){ value in
-                                        participantsSubView(value: value)
-                                            .onAppear {
-                                                if viewModel.moreDataAvailableForGetUsers && viewModel.apiCalling == false{
-                                                    if self.viewModel.eligibleUsers.last?.userId == value.userId {
-                                                        self.getUsers()
+                        if viewModel.elogibleUsersSectionDictionary.isEmpty {
+                            if viewModel.apiCalling {
+                                Section {
+                                    HStack {
+                                        Spacer()
+                                        ProgressView()
+                                            .padding()
+                                        Spacer()
+                                    }
+                                }
+                            } else {
+                                Section {
+                                    Text(viewModel.eligibleUsers.isEmpty ? "No users available" : "No users match your search")
+                                        .foregroundColor(appearance.colorPalette.chatListUserMessage)
+                                        .font(appearance.fonts.chatListUserMessage)
+                                        .frame(maxWidth: .infinity, alignment: .center)
+                                        .padding()
+                                }
+                            }
+                        } else {
+                            ForEach(viewModel.elogibleUsersSectionDictionary.keys.sorted(), id:\.self) { key in
+                                if let contacts = viewModel.elogibleUsersSectionDictionary[key]?.filter({ contact in
+                                    if self.viewModel.searchedText.isEmpty {
+                                        return true
+                                    }
+                                    let searchText = self.viewModel.searchedText.lowercased()
+                                    let userName = (contact.userName ?? "").lowercased()
+                                    let userIdentifier = (contact.userIdentifier ?? "").lowercased()
+                                    return userName.contains(searchText) || userIdentifier.contains(searchText)
+                                }), !contacts.isEmpty {
+                                    Section(header: Text("\(key)")) {
+                                        ForEach(contacts, id: \.id) { value in
+                                            participantsSubView(value: value)
+                                                .onAppear {
+                                                    // Pagination: Load more when reaching the last item in the last section
+                                                    if viewModel.moreDataAvailableForGetUsers && !viewModel.apiCalling {
+                                                        let sortedKeys = viewModel.elogibleUsersSectionDictionary.keys.sorted()
+                                                        if let lastKey = sortedKeys.last,
+                                                           let lastSectionContacts = viewModel.elogibleUsersSectionDictionary[lastKey],
+                                                           let lastContact = lastSectionContacts.last,
+                                                           value.id == lastContact.id {
+                                                            self.getUsers()
+                                                        }
                                                     }
                                                 }
-                                            }// For LoadMore
+                                        }
                                     }
                                 }
                             }
                         }
                     }//:LIST
+                    .listStyle(.plain)
+                    .refreshable {
+                        viewModel.resetEligibleUsersdata()
+                        getUsers()
+                    }
                     .searchable(text:  $viewModel.searchedText, placement: .navigationBarDrawer(displayMode: .always)) {}
                     .navigationBarBackButtonHidden(true)
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
-                            VStack {
-                                Text("Add members")
-                                    .font(appearance.fonts.navigationBarTitle)
-                                    .foregroundColor(appearance.colorPalette.navigationBarTitle)
-                            }
+                            Text("Add members")
+                                .font(appearance.fonts.navigationBarTitle)
+                                .foregroundColor(appearance.colorPalette.navigationBarTitle)
+                        }
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            navBarLeadingBtn
+                        }
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            navBarTrailingBtn
                         }
                     }
-                    .navigationBarItems(leading: navBarLeadingBtn,trailing: navBarTrailingBtn)
                 }
             }//:VStack
             .onChange(of: viewModel.debounceSearchedText){ 
@@ -79,8 +119,10 @@ struct ISMAddParticipantsView: View {
                 viewModel.debounceSearchedText = ""
             }
             .onAppear {
-                self.viewModel.resetEligibleUsersdata()
-                getUsers()
+                if viewModel.eligibleUsers.isEmpty {
+                    self.viewModel.resetEligibleUsersdata()
+                    getUsers()
+                }
             }
             if chatViewModel.isBusy{
                 //Custom Progress View

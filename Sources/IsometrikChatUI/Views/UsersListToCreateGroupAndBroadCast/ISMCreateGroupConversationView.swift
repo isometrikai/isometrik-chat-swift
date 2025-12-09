@@ -120,8 +120,15 @@ public struct ISMCreateGroupConversationView: View {
                                 }
                             }
                         }
+                        if userSelected.count > 0{
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                navBarTrailingBtn
+                            }
+                        }
+                        ToolbarItem(placement: .topBarLeading) {
+                            navBarLeadingBtn
+                        }
                     }
-                    .navigationBarItems(leading: navBarLeadingBtn, trailing: navBarTrailingBtn)
                 }
             }//:VStack
             .onAppear {
@@ -207,43 +214,39 @@ public struct ISMCreateGroupConversationView: View {
     // Navigation button for proceeding to the next step
     var navBarTrailingBtn: some View {
         VStack{
-            ZStack{
-                if userSelected.count > 0{
-                    if selectUserFor == .Group{
-                        NavigationLink {
-                            ISMGroupCreate(showSheetView: self.$showSheetView, userSelected: self.$userSelected,viewModel: self.viewModel, chatViewModel: self.chatViewModel)
-                        } label: {
-                            Text("Next")
-                                .font(appearance.fonts.messageListMessageText)
-                                .foregroundColor(userSelected.count > 0 ? appearance.colorPalette.userProfileEditText: .gray)
-                        }
-                    }else if selectUserFor == .AddMemberInBroadcast{
-                        Button {
-                            chatViewModel.addMemberInBroadCast(members: userSelected, groupcastId: self.groupCastId ?? "") { _ in
-                                ISMChatHelper.print("success")
-                                dismiss()
-                            }
-                        } label: {
-                            Text("Next")
-                                .font(appearance.fonts.messageListMessageText)
-                                .foregroundColor(userSelected.count > 0 ? appearance.colorPalette.userProfileEditText: .gray)
-                        }
-                    }else{
-                        Button {
-                            // Create broadcast with selected users
-                            chatViewModel.createBroadCast(users: self.userSelected) { data in
-                                if let groupcastId = data?.groupcastId{
-                                    groupCastIdToNavigate = groupcastId
-                                    showSheetView = false
-                                }
-                            }
-                            
-                        } label: {
-                            Text("Create")
-                                .font(appearance.fonts.messageListMessageText)
-                                .foregroundColor(userSelected.count > 0 ? appearance.colorPalette.userProfileEditText: .gray)
+            if selectUserFor == .Group{
+                NavigationLink {
+                    ISMGroupCreate(showSheetView: self.$showSheetView, userSelected: self.$userSelected,viewModel: self.viewModel, chatViewModel: self.chatViewModel)
+                } label: {
+                    Text("Next")
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(userSelected.count > 0 ? appearance.colorPalette.userProfileEditText: .gray)
+                }
+            }else if selectUserFor == .AddMemberInBroadcast{
+                Button {
+                    chatViewModel.addMemberInBroadCast(members: userSelected, groupcastId: self.groupCastId ?? "") { _ in
+                        ISMChatHelper.print("success")
+                        dismiss()
+                    }
+                } label: {
+                    Text("Next")
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(userSelected.count > 0 ? appearance.colorPalette.userProfileEditText: .gray)
+                }
+            }else{
+                Button {
+                    // Create broadcast with selected users
+                    chatViewModel.createBroadCast(users: self.userSelected) { data in
+                        if let groupcastId = data?.groupcastId{
+                            groupCastIdToNavigate = groupcastId
+                            showSheetView = false
                         }
                     }
+                    
+                } label: {
+                    Text("Create")
+                        .font(appearance.fonts.messageListMessageText)
+                        .foregroundColor(userSelected.count > 0 ? appearance.colorPalette.userProfileEditText: .gray)
                 }
             }
         }

@@ -203,13 +203,24 @@ struct ISMContactInfoView: View {
                         .foregroundColor(appearance.colorPalette.navigationBarTitle)
                 }
             }
+            if isGroup == true{
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    navBarTrailingBtn
+                }
+            }
+            ToolbarItem(placement: .navigationBarLeading) {
+                navBarLeadingBtn
+            }
         }
         .fullScreenCover(isPresented: $showEdit, content: {
             NavigationStack{
                 ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID)
             }
         })
-        .navigationBarItems(leading: navBarLeadingBtn, trailing: navBarTrailingBtn) // Set navigation bar items
+        .navigationDestination(isPresented: $navigatetoAddMember, destination: {
+            ISMAddParticipantsView(conversationId: self.conversationID ?? "")
+                .environmentObject(self.realmManager)
+        })
         // Navigation links for various views can be added here
         .onChange(of: selectedMember, { _, _ in
             // Show options if selected member is not the current user
@@ -564,49 +575,35 @@ struct ISMContactInfoView: View {
     
     // Navigation button for the trailing item in the navigation bar
     var navBarTrailingBtn: some View {
-        VStack {
-            if isGroup == true {
-                Button {
-                    showEdit = true
-                } label: {
-                    Text("Edit")
-                        .font(appearance.fonts.messageListMessageText)
-                        .foregroundColor(appearance.colorPalette.userProfileEditText)
-                }
-
-//                NavigationLink {
-//                    ISMEditGroupView(viewModel: self.viewModel, conversationViewModel: self.conversationViewModel, existingGroupName: conversationDetail?.conversationDetails?.conversationTitle ?? "", existingImage: conversationDetail?.conversationDetails?.conversationImageUrl ?? "", conversationId: self.conversationID)
-//                } label: {
-//                    
-//                }
-            } else {
-                Text("") // Placeholder for non-group case
-            }
+        Button {
+            showEdit = true
+        } label: {
+            Text("Edit")
+                .font(appearance.fonts.messageListMessageText)
+                .foregroundColor(appearance.colorPalette.userProfileEditText)
         }
     }
     
     // Navigation button for the leading item in the navigation bar
     var navBarLeadingBtn: some View {
-        HStack {
-            if showFullScreenImage == true {
-                Button {
-                    withAnimation {
-                        showFullScreenImage = false // Close full-screen image
-                    }
-                } label: {
-                    Text("Close")
-                        .font(appearance.fonts.messageListMessageText)
-                        .foregroundColor(appearance.colorPalette.userProfileEditText)
+        if showFullScreenImage == true {
+            Button {
+                withAnimation {
+                    showFullScreenImage = false // Close full-screen image
                 }
-            } else {
-                Button {
-                    // With NavigationLink(isActive:), setting the binding to false will dismiss the view
-                    navigateToUserProfile = false
-                } label: {
-                    appearance.images.backButton
-                        .resizable()
-                        .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
-                }
+            } label: {
+                appearance.images.CloseSheet
+                    .resizable()
+                    .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
+            }
+        } else {
+            Button {
+                // With NavigationLink(isActive:), setting the binding to false will dismiss the view
+                navigateToUserProfile = false
+            } label: {
+                appearance.images.backButton
+                    .resizable()
+                    .frame(width: appearance.imagesSize.backButton.width, height: appearance.imagesSize.backButton.height)
             }
         }
     }

@@ -86,12 +86,19 @@ public struct ISMBroadCastList: View {
 //            .background(NavigationLinksView())
             .navigationBarBackButtonHidden(true)
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(leading: navBarLeadingBtn, trailing: navBarTrailingBtn)
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text("Broadcast lists")
                         .font(appearance.fonts.navigationBarTitle)
                         .foregroundColor(appearance.colorPalette.navigationBarTitle)
+                }
+                ToolbarItem(placement: .topBarLeading) {
+                    navBarLeadingBtn
+                }
+                if let list = allBroadCasts, list.count > 0{
+                    ToolbarItem(placement: .topBarTrailing) {
+                        navBarTrailingBtn
+                    }
                 }
             }
             .onChange(of: query, { _, newValue in

@@ -135,8 +135,18 @@ public struct ISMConversationView : View {
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarTitle("")
                 .navigationBarHidden(hideNavigationBar)
-                .navigationBarItems(leading: navigationLeading(),
-                                    trailing: navigationTrailing())
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Text("Chats")
+                            .font(Font.bold(size: 20))
+                    }
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        navigationLeading()
+                    }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        navigationTrailing()
+                    }
+                }
                 .onChange(of: selectedUserToNavigate, { _, _ in
                     if ISMChatSdk.getInstance().getFramework() == .SwiftUI{
                         navigatetoSelectedUser = true
