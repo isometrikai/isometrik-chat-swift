@@ -67,6 +67,9 @@ public struct ISMMessageView: View {
     @State var navigateToMediaSliderId : String = ""
     @State var parentMessageIdToScroll : String = ""
     @State var isUserInitiatedScroll : Bool = false
+    @State var isUserScrolling : Bool = false
+    @State var lastScrollTime: Date = Date()
+    @State var lastScrolledMessageId: String = ""
     
     @State var mediaSelectedFromPicker : [ISMMediaUpload] = []
     @State var mediaCaption : String = ""
@@ -354,9 +357,12 @@ public struct ISMMessageView: View {
                     scrollToBottomAfterKeyboardDismiss()
                 }
         )
-        .gesture(
-            DragGesture()
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 10)
                 .onChanged { value in
+                    // Mark that user is manually scrolling
+                    isUserScrolling = true
+                    lastScrollTime = Date()
                     // Only handle vertical gestures above threshold
                     let verticalTranslation = abs(value.translation.height)
                     let horizontalTranslation = abs(value.translation.width)
@@ -366,6 +372,14 @@ public struct ISMMessageView: View {
                         if velocity > fastScrollThreshold {
                             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                         }
+                    }
+                }
+                .onEnded { _ in
+                    // Reset scrolling flag after a delay to allow scroll to complete
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        isUserScrolling = false
+                        // Reset lastScrolledMessageId so auto-scroll can work again if needed
+                        lastScrolledMessageId = ""
                     }
                 }
         )
@@ -391,9 +405,12 @@ public struct ISMMessageView: View {
                     scrollToBottomAfterKeyboardDismiss()
                 }
         )
-        .gesture(
-            DragGesture()
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 10)
                 .onChanged { value in
+                    // Mark that user is manually scrolling
+                    isUserScrolling = true
+                    lastScrollTime = Date()
                     let velocity = value.predictedEndTranslation.height - value.translation.height
                     let fastScrollThreshold: CGFloat = 65
                     if velocity > fastScrollThreshold {
@@ -407,6 +424,10 @@ public struct ISMMessageView: View {
                     let direction = self.detectDirection(value: value)
                     if direction == .right {
                         self.backButtonAction()
+                    }
+                    // Reset scrolling flag after a delay
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        isUserScrolling = false
                     }
                 }
         )
@@ -1188,20 +1209,41 @@ public struct ISMMessageView: View {
     
     //MARK: - SCROLL TO LAST MESSAGE
     
-    func scrollTo(messageId: String, anchor: UnitPoint? = nil, shouldAnimate: Bool, scrollReader: ScrollViewProxy) {
+    func scrollTo(messageId: String, anchor: UnitPoint? = nil, shouldAnimate: Bool, scrollReader: ScrollViewProxy, forceScroll: Bool = false) {
+        // Don't scroll if user is manually scrolling, unless forced (for user-initiated actions)
+        if !forceScroll {
+            guard !isUserScrolling else {
+                ISMChatHelper.print("Skipping scroll - user is manually scrolling")
+                return
+            }
+        }
+        
+        // Prevent redundant scrolls to the same message, unless forced
+        if !forceScroll {
+            guard messageId != lastScrolledMessageId else {
+                ISMChatHelper.print("Skipping scroll - already scrolled to messageId: \(messageId)")
+                return
+            }
+        }
+        
         DispatchQueue.main.async {
             ISMChatHelper.print("Scrolling to messageId: \(messageId)")
-            parentMessageIdToScroll = ""
-//            withAnimation(Animation.easeOut(duration: 0.2)) {
-                scrollReader.scrollTo(messageId, anchor: anchor)
-//            }
+            lastScrolledMessageId = messageId
+            // Don't reset parentMessageIdToScroll here to avoid triggering onChange again
+            scrollReader.scrollTo(messageId, anchor: anchor)
         }
     }
     
     /// Scrolls to the bottom after keyboard dismisses
     private func scrollToBottomAfterKeyboardDismiss() {
+        // Don't scroll if user is manually scrolling
+        guard !isUserScrolling else { return }
+        
         // Small delay to ensure layout has adjusted after keyboard dismissal
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            // Double check user isn't scrolling now
+            guard !isUserScrolling else { return }
+            
             if let lastMessageId = realmManager.messages.last?.last?.id.description {
                 isUserInitiatedScroll = true
                 parentMessageIdToScroll = lastMessageId

@@ -1122,7 +1122,8 @@ extension ISMMessageView{
             if message.metaData?.replyMessage?.parentMessageId != ""{
                 let id = getMatchingId(parentMessageId: message.metaData?.replyMessage?.parentMessageId ?? "",messages: realmManager.allMessages ?? [])
                 if id != ""{
-                    scrollTo(messageId: id, anchor: .center, shouldAnimate: true, scrollReader: scrollReader)
+                    // Force scroll for user-initiated action (tapping reply message)
+                    scrollTo(messageId: id, anchor: .center, shouldAnimate: true, scrollReader: scrollReader, forceScroll: true)
                 }
             }
         }

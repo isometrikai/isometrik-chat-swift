@@ -82,20 +82,42 @@ extension ISMMessageView{
                 // Scroll to the last message on load
                 if stateViewModel.onLoad == true{
                     if let messageIdToScroll =  realmManager.messages.last?.last?.id.description{
-                        scrollTo(messageId: messageIdToScroll, anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader)
+                        scrollTo(messageId: messageIdToScroll, anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader, forceScroll: true)
                     }
                 }
             })
-            .onChange(of: parentMessageIdToScroll, { _, _ in
-                // Scroll to a specific parent message if needed
+            .onChange(of: parentMessageIdToScroll, { oldValue, newValue in
+                // Extract messageId if it has timestamp appended (from button click)
+                let messageId = newValue.contains("_") ? String(newValue.split(separator: "_").first ?? "") : newValue
+                
+                // Only process if value is not empty
+                guard messageId != "" else { return }
+                
+                // For user-initiated scrolls, always process even if value appears the same
+                // For auto-scrolls, only process if value actually changed
+                let shouldProcess = isUserInitiatedScroll || (newValue != oldValue)
+                guard shouldProcess else { return }
+                
                 // Only auto-scroll if:
                 // 1. User-initiated scroll (e.g., clicking scroll-to-bottom button), OR
                 // 2. User is at the bottom (showScrollToBottomView == false)
                 // This prevents auto-scrolling when user has manually scrolled up
-                if parentMessageIdToScroll != "" && (isUserInitiatedScroll || !stateViewModel.showScrollToBottomView) {
-                    scrollTo(messageId: parentMessageIdToScroll,  anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader)
-                    // Reset the flag after scrolling
-                    isUserInitiatedScroll = false
+                if isUserInitiatedScroll || !stateViewModel.showScrollToBottomView {
+                    // For user-initiated scrolls (like button click), bypass debounce and scrolling checks
+                    if isUserInitiatedScroll {
+                        scrollTo(messageId: messageId, anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader, forceScroll: true)
+                        lastScrollTime = Date()
+                        // Reset the flag after scrolling
+                        isUserInitiatedScroll = false
+                    } else {
+                        // For auto-scrolls, check if user is manually scrolling and debounce
+                        guard !isUserScrolling else { return }
+                        let timeSinceLastScroll = Date().timeIntervalSince(lastScrollTime)
+                        if timeSinceLastScroll > 0.15 {
+                            scrollTo(messageId: messageId, anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader, forceScroll: false)
+                            lastScrollTime = Date()
+                        }
+                    }
                 }
             })
             .onChange(of: parentMsgToScroll, { _, _ in
