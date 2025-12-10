@@ -66,6 +66,7 @@ public struct ISMMessageView: View {
     
     @State var navigateToMediaSliderId : String = ""
     @State var parentMessageIdToScroll : String = ""
+    @State var isUserInitiatedScroll : Bool = false
     
     @State var mediaSelectedFromPicker : [ISMMediaUpload] = []
     @State var mediaCaption : String = ""

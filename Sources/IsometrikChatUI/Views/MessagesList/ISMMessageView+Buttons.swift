@@ -83,6 +83,8 @@ extension ISMMessageView{
     /// Returns a button that scrolls to the bottom of the message list.
     func scrollToBottomButton() -> some View {
         return Button(action: {
+            // Mark as user-initiated scroll so it always works
+            isUserInitiatedScroll = true
             parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
         }, label: {
             appearance.images.scrollToBottomArrow

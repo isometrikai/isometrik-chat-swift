@@ -88,8 +88,14 @@ extension ISMMessageView{
             })
             .onChange(of: parentMessageIdToScroll, { _, _ in
                 // Scroll to a specific parent message if needed
-                if parentMessageIdToScroll != ""{
+                // Only auto-scroll if:
+                // 1. User-initiated scroll (e.g., clicking scroll-to-bottom button), OR
+                // 2. User is at the bottom (showScrollToBottomView == false)
+                // This prevents auto-scrolling when user has manually scrolled up
+                if parentMessageIdToScroll != "" && (isUserInitiatedScroll || !stateViewModel.showScrollToBottomView) {
                     scrollTo(messageId: parentMessageIdToScroll,  anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader)
+                    // Reset the flag after scrolling
+                    isUserInitiatedScroll = false
                 }
             })
             .onChange(of: parentMsgToScroll, { _, _ in
