@@ -312,6 +312,9 @@ extension ISMMessageView{
                     var localIds = [String]()
                     let id = saveMessageToLocalDB(sentAt: Date().timeIntervalSince1970 * 1000, messageId: "", message: "Sticker", mentionUsers: [], fileName: filename, fileUrl: url, messageType: .sticker,customType: .sticker, messageKind: .normal)
                     localIds.append(id)
+                    // Mark as user-initiated scroll so we always scroll to show the sent message
+                    isUserInitiatedScroll = true
+                    parentMessageIdToScroll = id ?? ""
                     sendMediaMessage(messageKind: .sticker, customType: ISMChatMediaType.sticker.value, mediaId: mediaId, mediaName: filename, mediaUrl: url, mediaData: 1, thubnailUrl: url, sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
                     localIds.removeFirst()
                 }
@@ -327,6 +330,9 @@ extension ISMMessageView{
                     
                     let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Gif", mentionUsers: [], fileName: filename, fileUrl: url, messageType: .gif,customType: .gif, messageKind: .normal)
                     localIds.append(id)
+                    // Mark as user-initiated scroll so we always scroll to show the sent message
+                    isUserInitiatedScroll = true
+                    parentMessageIdToScroll = id ?? ""
                     sendMediaMessage(messageKind: .gif, customType: ISMChatMediaType.gif.value, mediaId: mediaId, mediaName: filename, mediaUrl: url, mediaData: 1, thubnailUrl: url, sentAt: sentAt, objectId: localIds.first ?? "", caption: "")
                     localIds.removeFirst()
                 }
@@ -346,6 +352,9 @@ extension ISMMessageView{
             let sentAt = Date().timeIntervalSince1970 * 1000
             let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: text, mentionUsers: [], fileName: "", fileUrl: "", messageType: .text,customType: .ReplyText, messageKind: .reply,parentMessage : selectedMsgToReply)
             localIds.append(id)
+            // Mark as user-initiated scroll so we always scroll to show the sent message
+            isUserInitiatedScroll = true
+            parentMessageIdToScroll = id ?? ""
             
             //3. reply message api
             chatViewModel.replyToMessage(customType: ISMChatMediaType.ReplyText.value, conversationId: self.conversationID ?? "", message: text, parentMessage: selectedMsgToReply) { messageId in
@@ -381,6 +390,9 @@ extension ISMMessageView{
             let sentAt = Date().timeIntervalSince1970 * 1000
             let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Contact", mentionUsers: [], fileName: "", fileUrl: "", messageType: .contact,contactInfo: selectedContactToShare,customType: .Contact, messageKind: .normal)
             localIds.append(id)
+            // Mark as user-initiated scroll so we always scroll to show the sent message
+            isUserInitiatedScroll = true
+            parentMessageIdToScroll = id ?? ""
             
             //3. send message api
             chatViewModel.sendMessage(messageKind: .contact, customType: ISMChatMediaType.Contact.value, conversationId: self.conversationID ?? "", message: "", fileName: nil, fileSize: nil, mediaId: nil,contactInfo: selectedContactToShare) { messageId, _ in
@@ -418,6 +430,9 @@ extension ISMMessageView{
             let sentAt = Date().timeIntervalSince1970 * 1000
             let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: msg, mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: messageKind,customType: messageKind == .video ? .Video : .Image, messageKind: .normal,mediaCaption: cameraCaption)
             localIds.append(id)
+            // Mark as user-initiated scroll so we always scroll to show the sent message
+            isUserInitiatedScroll = true
+            parentMessageIdToScroll = id ?? ""
             
             
             
@@ -490,6 +505,9 @@ extension ISMMessageView{
             let sentAt = Date().timeIntervalSince1970 * 1000
             let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Document", mentionUsers: [], fileName: mediaName, fileUrl: "", messageType: messageKind,customType: customType, messageKind: .normal)
             localIds.append(id)
+            // Mark as user-initiated scroll so we always scroll to show the sent message
+            isUserInitiatedScroll = true
+            parentMessageIdToScroll = id ?? ""
             
             
             if ISMChatSdk.getInstance().checkuploadOnExternalCDN() == true{
@@ -518,6 +536,9 @@ extension ISMMessageView{
             let sentAt = Date().timeIntervalSince1970 * 1000
             let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: "Audio", mentionUsers: [], fileName: mediaName, fileUrl: audioUrl.absoluteString, messageType: .audio,customType: .Voice, messageKind: .normal)
             localIds.append(id)
+            // Mark as user-initiated scroll so we always scroll to show the sent message
+            isUserInitiatedScroll = true
+            parentMessageIdToScroll = id ?? ""
             
             //3. send message api
             
@@ -623,6 +644,9 @@ extension ISMMessageView{
             var localIds = [String]()
             let id = saveMessageToLocalDB(sentAt: Date().timeIntervalSince1970 * 1000, messageId: "", message: text, mentionUsers: [],fileName: "",fileUrl: "", messageType: .location,customType: .Location, messageKind: .normal,longitude: longitude,latitude: latitude,placeName: name,placeAddress: placeAddress)
             localIds.append(id)
+            // Mark as user-initiated scroll so we always scroll to show the sent message
+            isUserInitiatedScroll = true
+            parentMessageIdToScroll = id ?? ""
             
             //3. send messaga api
             chatViewModel.sendMessage(messageKind: .location, customType: ISMChatMediaType.Location.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,latitude : latitude,longitude: longitude, placeName: name,placeAddress: placeAddress) { msgId,_ in
@@ -647,6 +671,8 @@ extension ISMMessageView{
                     let sentAt = Date().timeIntervalSince1970 * 1000
                     let id = saveMessageToLocalDB(sentAt: sentAt, messageId: "", message: text, mentionUsers: self.mentionUsers,fileName: "",fileUrl: "", messageType: .text,customType: .Text, messageKind: .normal)
                     localIds.append(id)
+                    // Mark as user-initiated scroll so we always scroll to show the sent message
+                    isUserInitiatedScroll = true
                     parentMessageIdToScroll = id ?? ""
                     //3. send message api
                     chatViewModel.sendMessage(messageKind: .text, customType: ISMChatMediaType.Text.value, conversationId: self.conversationID ?? "", message: text, fileName: nil, fileSize: nil, mediaId: nil,isGroup: self.isGroup,groupMembers: self.mentionUsers) { msgId,_ in
@@ -667,6 +693,8 @@ extension ISMMessageView{
                 }
             }else {
                 let id = realmManager.saveLocalMessage(sent: Date().timeIntervalSince1970 * 1000, txt: self.text.trimmingCharacters(in: .whitespacesAndNewlines), parentMessageId: "", initiatorIdentifier: "", conversationId: self.conversationID ?? "", customType: ISMChatMediaType.Text.value, msgSyncStatus: ISMChatSyncStatus.Local.txt)
+                // Mark as user-initiated scroll so we always scroll to show the sent message
+                isUserInitiatedScroll = true
                 parentMessageIdToScroll = id ?? ""
                 self.getMessages()
                 nilData()
@@ -681,6 +709,8 @@ extension ISMMessageView{
             //4. update messageId locally
             realmManager.updateMsgId(objectId: objectId, msgId: messageId, conversationId: self.conversationID ?? "",mediaUrl: mediaUrl,thumbnailUrl: thubnailUrl,mediaSize: mediaData,mediaId: mediaId)
             
+            // Mark as user-initiated scroll so we always scroll to show the sent message
+            isUserInitiatedScroll = true
             parentMessageIdToScroll = self.realmManager.messages.last?.last?.id.description ?? ""
             
             //5. we need to save media

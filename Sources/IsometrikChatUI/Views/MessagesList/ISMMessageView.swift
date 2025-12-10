@@ -344,6 +344,16 @@ public struct ISMMessageView: View {
         .coordinateSpace(name: "scroll")
         .coordinateSpace(name: "pullToRefresh")
         .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
+        .simultaneousGesture(
+            TapGesture()
+                .onEnded {
+                    stateViewModel.keyboardFocused = false
+                    // Dismiss keyboard when tapping on messages area
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    // Scroll to bottom after dismissing keyboard
+                    scrollToBottomAfterKeyboardDismiss()
+                }
+        )
         .gesture(
             DragGesture()
                 .onChanged { value in
@@ -371,6 +381,16 @@ public struct ISMMessageView: View {
         .coordinateSpace(name: "scroll")
         .coordinateSpace(name: "pullToRefresh")
         .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
+        .simultaneousGesture(
+            TapGesture()
+                .onEnded {
+                    stateViewModel.keyboardFocused = false
+                    // Dismiss keyboard when tapping on messages area
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    // Scroll to bottom after dismissing keyboard
+                    scrollToBottomAfterKeyboardDismiss()
+                }
+        )
         .gesture(
             DragGesture()
                 .onChanged { value in
@@ -578,13 +598,21 @@ public struct ISMMessageView: View {
                 .onChange(of: chatViewModel.audioUrl, { _, _ in
                     sendMessageIfAudioUrl()
                 })
-                .onChange(of: stateViewModel.keyboardFocused, { _, _ in
-                    if stateViewModel.keyboardFocused == true {
+                .onChange(of: stateViewModel.keyboardFocused, { oldValue, newValue in
+                    if newValue == true {
                         if conversationDetail != nil {
                             sendMessageTypingIndicator()
                         }
+                    } else if oldValue == true && newValue == false {
+                        // Keyboard dismissed - scroll to last message
+                        scrollToBottomAfterKeyboardDismiss()
                     }
                 })
+                .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardDidHideNotification)) { _ in
+                    // Listen to keyboard did hide notification (fires after keyboard is fully hidden)
+                    // This ensures layout has adjusted before scrolling
+                    scrollToBottomAfterKeyboardDismiss()
+                }
                 .onChange(of: selectedGIF, { _, _ in
                     if let _ = selectedGIF {
                         sendMessageIfGif()
@@ -1167,6 +1195,17 @@ public struct ISMMessageView: View {
 //            withAnimation(Animation.easeOut(duration: 0.2)) {
                 scrollReader.scrollTo(messageId, anchor: anchor)
 //            }
+        }
+    }
+    
+    /// Scrolls to the bottom after keyboard dismisses
+    private func scrollToBottomAfterKeyboardDismiss() {
+        // Small delay to ensure layout has adjusted after keyboard dismissal
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            if let lastMessageId = realmManager.messages.last?.last?.id.description {
+                isUserInitiatedScroll = true
+                parentMessageIdToScroll = lastMessageId
+            }
         }
     }
     
