@@ -10,6 +10,7 @@ import Alamofire
 import UIKit
 import SwiftUI
 import ISMSwiftCall
+import IsometrikChat
 
 
 public class ISMChatSdk{
@@ -126,6 +127,10 @@ public class ISMChatSdk{
         
         //initializeCall
         initializeCallIsometrik(accountId: appConfig.accountId, projectId: appConfig.projectId, keysetId: appConfig.keySetId, licenseKey: appConfig.licensekey, appSecret: appConfig.appSecret, userSecret: appConfig.userSecret, isometricChatUserId: userConfig.userId, isometricUserToken: userConfig.userToken)
+        
+        // Configure image caching for optimal performance
+        ISMChatImageCahcingManger.configureImageCache()
+        
         self.chatInitialized = true
         print("CHAT INITIALIZED")
         

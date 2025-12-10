@@ -83,8 +83,10 @@ extension ISMMessageView{
     /// Returns a button that scrolls to the bottom of the message list.
     func scrollToBottomButton() -> some View {
         return Button(action: {
-            // Reset scrolling flags to ensure button always works
-            isUserScrolling = false
+            // Hide button immediately when clicked
+            stateViewModel.showScrollToBottomView = false
+            
+            // Reset flags to ensure button always works
             lastScrollTime = Date.distantPast // Reset to allow immediate scroll
             lastScrolledMessageId = "" // Reset to allow scrolling to same message
             
@@ -174,14 +176,21 @@ extension ISMMessageView{
     }
     
     /// Detects the swipe direction based on the drag gesture value.
+    /// Only returns a direction if the gesture is clearly horizontal (not vertical scrolling).
     func detectDirection(value: DragGesture.Value) -> SwipeHVDirection {
-        if value.translation.width < -60 {
-            return .left
-        } else if value.translation.width > 60 {
-            return .right
-        } else {
-            return .none
+        let horizontalMovement = abs(value.translation.width)
+        let verticalMovement = abs(value.translation.height)
+        
+        // Only detect horizontal swipes if horizontal movement is significantly greater than vertical
+        // This prevents accidental back navigation during fast vertical scrolling
+        if horizontalMovement > verticalMovement * 2.5 {
+            if value.translation.width < -80 {
+                return .left
+            } else if value.translation.width > 80 {
+                return .right
+            }
         }
+        return .none
     }
     
     /// Returns a view for the broadcast button with appropriate actions.

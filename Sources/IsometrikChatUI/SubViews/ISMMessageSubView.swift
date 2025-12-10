@@ -447,28 +447,28 @@ struct ISMMessageSubView: View {
                                                         forwardedView()
                                                     }
                                                     
-                                                    Button {
-                                                        navigateToMediaSliderId = message.messageId
-                                                    } label: {
-                                                        ZStack(alignment: .bottomTrailing){
-                                                            ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 16)
-                                                                .overlay(
-                                                                    LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                                                                        .frame(width: 250, height: 300)
-                                                                        .mask(
-                                                                            RoundedRectangle(cornerRadius: 16)
-                                                                                .fill(Color.white)
-                                                                        )
-                                                                )
-                                                                .padding(isReceived ? .leading : .trailing,5)
-                                                            if appearance.timeInsideBubble == true{
-                                                                if message.metaData?.captionMessage == nil{
-                                                                    dateAndStatusView(onImage: true)
-                                                                        .padding(.bottom,5)
-                                                                        .padding(.trailing,5)
-                                                                }
+                                                    ZStack(alignment: .bottomTrailing){
+                                                        ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 16)
+                                                            .overlay(
+                                                                LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                                                                    .frame(width: 250, height: 300)
+                                                                    .mask(
+                                                                        RoundedRectangle(cornerRadius: 16)
+                                                                            .fill(Color.white)
+                                                                    )
+                                                            )
+                                                            .padding(isReceived ? .leading : .trailing,5)
+                                                        if appearance.timeInsideBubble == true{
+                                                            if message.metaData?.captionMessage == nil{
+                                                                dateAndStatusView(onImage: true)
+                                                                    .padding(.bottom,5)
+                                                                    .padding(.trailing,5)
                                                             }
                                                         }
+                                                    }
+                                                    .contentShape(Rectangle())
+                                                    .onTapGesture {
+                                                        navigateToMediaSliderId = message.messageId
                                                     }
                                                     
                                                     
@@ -508,21 +508,21 @@ struct ISMMessageSubView: View {
                                                         forwardedView()
                                                     }
                                                     
-                                                    Button {
+                                                    ZStack(alignment: .bottomTrailing){
+                                                        ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 16)
+                                                            .overlay(
+                                                                LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                                                                    .frame(width: 250, height: 300)
+                                                                    .mask(
+                                                                        RoundedRectangle(cornerRadius: 16)
+                                                                            .fill(Color.white)
+                                                                    )
+                                                            )
+                                                        
+                                                    }
+                                                    .contentShape(Rectangle())
+                                                    .onTapGesture {
                                                         navigateToMediaSliderId = message.messageId
-                                                    } label: {
-                                                        ZStack(alignment: .bottomTrailing){
-                                                            ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 16)
-                                                                .overlay(
-                                                                    LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                                                                        .frame(width: 250, height: 300)
-                                                                        .mask(
-                                                                            RoundedRectangle(cornerRadius: 16)
-                                                                                .fill(Color.white)
-                                                                        )
-                                                                )
-                                                            
-                                                        }
                                                     }
                                                     
                                                     dateAndStatusView(onImage: false)
@@ -540,27 +540,27 @@ struct ISMMessageSubView: View {
                                                     forwardedView()
                                                 }
                                                 
-                                                Button {
-                                                    navigateToMediaSliderId = message.messageId
-                                                } label: {
-                                                    ZStack(alignment: .bottomTrailing){
-                                                        ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
-                                                            .overlay(
-                                                                LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                                                                    .frame(width: 250, height: 300)
-                                                                    .mask(
-                                                                        RoundedRectangle(cornerRadius: 5)
-                                                                            .fill(Color.white)
-                                                                    )
-                                                            )
-                                                        if appearance.timeInsideBubble == true{
-                                                            if message.metaData?.captionMessage == nil{
-                                                                dateAndStatusView(onImage: true)
-                                                                    .padding(.bottom,5)
-                                                                    .padding(.trailing,5)
-                                                            }
+                                                ZStack(alignment: .bottomTrailing){
+                                                    ISMImageViewer(url: message.attachments.first?.mediaUrl ?? "", size: CGSizeMake(250, 300), cornerRadius: 5)
+                                                        .overlay(
+                                                            LinearGradient(gradient: Gradient(colors: [.clear,.clear,.clear, Color.black.opacity(0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                                                                .frame(width: 250, height: 300)
+                                                                .mask(
+                                                                    RoundedRectangle(cornerRadius: 5)
+                                                                        .fill(Color.white)
+                                                                )
+                                                        )
+                                                    if appearance.timeInsideBubble == true{
+                                                        if message.metaData?.captionMessage == nil{
+                                                            dateAndStatusView(onImage: true)
+                                                                .padding(.bottom,5)
+                                                                .padding(.trailing,5)
                                                         }
                                                     }
+                                                }
+                                                .contentShape(Rectangle())
+                                                .onTapGesture {
+                                                    navigateToMediaSliderId = message.messageId
                                                 }
                                                 
                                                 
@@ -1772,8 +1772,8 @@ struct ISMMessageSubView: View {
                     }
                 }
             )
-            .allowsHitTesting(true)
-            .contentShape(Rectangle())
+            // Removed contentShape to allow scroll gestures to pass through
+            // Tap gestures will still work on interactive elements (buttons, images, etc.)
         }
             if ISMChatSdkUI.getInstance().getChatProperties().messageInfoBelowMessage == true && showMessageInfoInsideMessage == true{
                 HStack{
@@ -1792,11 +1792,23 @@ struct ISMMessageSubView: View {
         .frame(maxWidth: .infinity, alignment: isReceived ? .leading : .trailing)
         .multilineTextAlignment(.leading) // Aligning the text based on message type
         
+        // Use simultaneousGesture to allow scrolling while supporting reply gesture
+        // Only activates for clearly horizontal gestures to avoid blocking vertical scrolling
         .simultaneousGesture(
-            DragGesture()
+            DragGesture(minimumDistance: 50)
                 .onChanged { gesture in
                     if !message.deletedMessage {
-                        offset = gesture.translation
+                        let horizontalMovement = abs(gesture.translation.width)
+                        let verticalMovement = abs(gesture.translation.height)
+                        
+                        // Only handle if it's clearly a horizontal gesture (3x threshold)
+                        // This ensures vertical scrolling is never blocked
+                        if horizontalMovement > verticalMovement * 3.0 && horizontalMovement > 50 {
+                            offset = CGSize(width: gesture.translation.width, height: 0)
+                        } else {
+                            // Don't interfere with vertical scrolling - reset offset
+                            offset = .zero
+                        }
                     }
                 }
                 .onEnded { value in
@@ -1804,8 +1816,8 @@ struct ISMMessageSubView: View {
                         offset = .zero
                         ISMChatHelper.print("value ", value.translation.width)
 
-                        // Ignore vertical scrolling by checking if horizontal movement is significantly larger
-                        if abs(value.translation.width) > abs(value.translation.height) {
+                        // Only trigger reply if it's clearly horizontal (3x threshold and minimum 80px)
+                        if abs(value.translation.width) > abs(value.translation.height) * 3.0 && abs(value.translation.width) > 80 {
                             let direction = self.detectDirection(value: value)
                             if direction == .left {
                                 if showReplyOption {

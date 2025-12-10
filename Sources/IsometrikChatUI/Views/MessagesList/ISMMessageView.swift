@@ -67,9 +67,9 @@ public struct ISMMessageView: View {
     @State var navigateToMediaSliderId : String = ""
     @State var parentMessageIdToScroll : String = ""
     @State var isUserInitiatedScroll : Bool = false
-    @State var isUserScrolling : Bool = false
     @State var lastScrollTime: Date = Date()
     @State var lastScrolledMessageId: String = ""
+    @State var lastAppearTime: Date = Date.distantPast
     
     @State var mediaSelectedFromPicker : [ISMMediaUpload] = []
     @State var mediaCaption : String = ""
@@ -342,28 +342,27 @@ public struct ISMMessageView: View {
             ScrollViewReader { scrollReader in
                 getMessagesView(scrollReader: scrollReader, viewWidth: viewWidth)
                     .padding(.horizontal)
+                    .contentShape(Rectangle()) // Ensure entire content area is tappable
+                    .simultaneousGesture(
+                        TapGesture()
+                            .onEnded {
+                                stateViewModel.keyboardFocused = false
+                                // Dismiss keyboard when tapping on messages area
+                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                // Scroll to bottom after dismissing keyboard
+                                scrollToBottomAfterKeyboardDismiss()
+                            }
+                    )
             }
         }
+        .scrollDismissesKeyboard(.interactively) // Better keyboard dismissal
         .coordinateSpace(name: "scroll")
         .coordinateSpace(name: "pullToRefresh")
         .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
         .simultaneousGesture(
-            TapGesture()
-                .onEnded {
-                    stateViewModel.keyboardFocused = false
-                    // Dismiss keyboard when tapping on messages area
-                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    // Scroll to bottom after dismissing keyboard
-                    scrollToBottomAfterKeyboardDismiss()
-                }
-        )
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 10)
+            DragGesture(minimumDistance: 20)
                 .onChanged { value in
-                    // Mark that user is manually scrolling
-                    isUserScrolling = true
-                    lastScrollTime = Date()
-                    // Only handle vertical gestures above threshold
+                    // Only handle fast scroll gestures for keyboard dismissal
                     let verticalTranslation = abs(value.translation.height)
                     let horizontalTranslation = abs(value.translation.width)
                     if verticalTranslation > horizontalTranslation {
@@ -374,14 +373,6 @@ public struct ISMMessageView: View {
                         }
                     }
                 }
-                .onEnded { _ in
-                    // Reset scrolling flag after a delay to allow scroll to complete
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        isUserScrolling = false
-                        // Reset lastScrolledMessageId so auto-scroll can work again if needed
-                        lastScrolledMessageId = ""
-                    }
-                }
         )
     }
     
@@ -390,44 +381,54 @@ public struct ISMMessageView: View {
             ScrollViewReader { scrollReader in
                 getMessagesView(scrollReader: scrollReader, viewWidth: viewWidth)
                     .padding(.horizontal)
+                    .contentShape(Rectangle()) // Ensure entire content area is tappable
+                    .simultaneousGesture(
+                        TapGesture()
+                            .onEnded {
+                                stateViewModel.keyboardFocused = false
+                                // Dismiss keyboard when tapping on messages area
+                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                // Scroll to bottom after dismissing keyboard
+                                scrollToBottomAfterKeyboardDismiss()
+                            }
+                    )
             }
         }
+        .scrollDismissesKeyboard(.interactively) // Better keyboard dismissal
         .coordinateSpace(name: "scroll")
         .coordinateSpace(name: "pullToRefresh")
         .overlay(stateViewModel.showScrollToBottomView ? scrollToBottomButton() : nil, alignment: Alignment.bottomTrailing)
         .simultaneousGesture(
-            TapGesture()
-                .onEnded {
-                    stateViewModel.keyboardFocused = false
-                    // Dismiss keyboard when tapping on messages area
-                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    // Scroll to bottom after dismissing keyboard
-                    scrollToBottomAfterKeyboardDismiss()
-                }
-        )
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 10)
+            DragGesture(minimumDistance: 30)
                 .onChanged { value in
-                    // Mark that user is manually scrolling
-                    isUserScrolling = true
-                    lastScrollTime = Date()
-                    let velocity = value.predictedEndTranslation.height - value.translation.height
-                    let fastScrollThreshold: CGFloat = 65
-                    if velocity > fastScrollThreshold {
-                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    // Only handle keyboard dismissal for clearly vertical scrolls
+                    let horizontalMovement = abs(value.translation.width)
+                    let verticalMovement = abs(value.translation.height)
+                    
+                    // Only process if it's clearly a vertical scroll (not horizontal swipe)
+                    if verticalMovement > horizontalMovement * 2.0 {
+                        let velocity = value.predictedEndTranslation.height - value.translation.height
+                        let fastScrollThreshold: CGFloat = 65
+                        if velocity > fastScrollThreshold {
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        }
                     }
-                    offset = value.translation
+                    
+                    // Only set offset for clearly horizontal gestures
+                    if horizontalMovement > verticalMovement * 2.5 {
+                        offset = value.translation
+                    } else {
+                        offset = .zero
+                    }
                 }
                 .onEnded { value in
                     offset = .zero
                     ISMChatHelper.print("value ", value.translation.width)
+                    
+                    // Only trigger back navigation for clearly horizontal right swipes
                     let direction = self.detectDirection(value: value)
                     if direction == .right {
                         self.backButtonAction()
-                    }
-                    // Reset scrolling flag after a delay
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        isUserScrolling = false
                     }
                 }
         )
@@ -1210,20 +1211,18 @@ public struct ISMMessageView: View {
     //MARK: - SCROLL TO LAST MESSAGE
     
     func scrollTo(messageId: String, anchor: UnitPoint? = nil, shouldAnimate: Bool, scrollReader: ScrollViewProxy, forceScroll: Bool = false) {
-        // Don't scroll if user is manually scrolling, unless forced (for user-initiated actions)
-        if !forceScroll {
-            guard !isUserScrolling else {
-                ISMChatHelper.print("Skipping scroll - user is manually scrolling")
-                return
-            }
-        }
-        
         // Prevent redundant scrolls to the same message, unless forced
         if !forceScroll {
             guard messageId != lastScrolledMessageId else {
                 ISMChatHelper.print("Skipping scroll - already scrolled to messageId: \(messageId)")
                 return
             }
+        }
+        
+        // Check if scrolling to last message - hide button immediately
+        if let lastMessageId = realmManager.messages.last?.last?.id.description,
+           messageId == lastMessageId {
+            stateViewModel.showScrollToBottomView = false
         }
         
         DispatchQueue.main.async {
@@ -1236,14 +1235,11 @@ public struct ISMMessageView: View {
     
     /// Scrolls to the bottom after keyboard dismisses
     private func scrollToBottomAfterKeyboardDismiss() {
-        // Don't scroll if user is manually scrolling
-        guard !isUserScrolling else { return }
+        // Hide button immediately when scrolling to bottom
+        stateViewModel.showScrollToBottomView = false
         
         // Small delay to ensure layout has adjusted after keyboard dismissal
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            // Double check user isn't scrolling now
-            guard !isUserScrolling else { return }
-            
             if let lastMessageId = realmManager.messages.last?.last?.id.description {
                 isUserInitiatedScroll = true
                 parentMessageIdToScroll = lastMessageId

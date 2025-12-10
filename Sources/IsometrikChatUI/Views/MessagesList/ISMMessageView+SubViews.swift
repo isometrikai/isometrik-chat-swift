@@ -24,6 +24,7 @@ extension ISMMessageView{
                 let messages = sectionMessages[index]
                 Section(header: sectionHeader(firstMessage: messages.first ?? MessagesDB(), color: appearance.colorPalette.userProfileSectionHeader, font: appearance.fonts.messageListSectionHeaderText)){
                     ForEach(messages) { message in
+                        // Use stable IDs for better LazyVGrid performance
                         VStack{
                             // Determine the type of message and display the appropriate header -> actions
                             if ISMChatHelper.getMessageType(message: message) == .blockUser{
@@ -64,15 +65,41 @@ extension ISMMessageView{
                             }
                         }.id(message.id.description)
                             .onAppear{
-                                //hide scroll to bottom button at last message
-                                if message.id ==  realmManager.messages.last?.last?.id{
+                                // Check if this is the last message - hide button immediately
+                                let isLastMessage = message.id == realmManager.messages.last?.last?.id
+                                if isLastMessage {
+                                    // Hide button immediately when last message appears
                                     stateViewModel.showScrollToBottomView = false
+                                }
+                                
+                                // Use async dispatch for other state updates to avoid blocking scroll
+                                DispatchQueue.main.async {
+                                    let currentTime = Date()
+                                    let timeSinceLastAppear = currentTime.timeIntervalSince(lastAppearTime)
+                                    
+                                    // Reduced debounce for better responsiveness
+                                    if timeSinceLastAppear > 0.05 {
+                                        lastAppearTime = currentTime
+                                    }
                                 }
                             }
                             .onDisappear{
-                                //show scroll to bottom button if not at last message
-                                if message.id.description ==  realmManager.messages.last?.last?.id.description{
+                                // Check if last message is disappearing - show button
+                                let isLastMessage = message.id == realmManager.messages.last?.last?.id
+                                if isLastMessage {
+                                    // Show button when last message disappears (user scrolled up)
                                     stateViewModel.showScrollToBottomView = true
+                                }
+                                
+                                // Use async dispatch for other state updates to avoid blocking scroll
+                                DispatchQueue.main.async {
+                                    let currentTime = Date()
+                                    let timeSinceLastAppear = currentTime.timeIntervalSince(lastAppearTime)
+                                    
+                                    // Reduced debounce for better responsiveness
+                                    if timeSinceLastAppear > 0.05 {
+                                        lastAppearTime = currentTime
+                                    }
                                 }
                             }
                     }
@@ -98,27 +125,7 @@ extension ISMMessageView{
                 let shouldProcess = isUserInitiatedScroll || (newValue != oldValue)
                 guard shouldProcess else { return }
                 
-                // Only auto-scroll if:
-                // 1. User-initiated scroll (e.g., clicking scroll-to-bottom button), OR
-                // 2. User is at the bottom (showScrollToBottomView == false)
-                // This prevents auto-scrolling when user has manually scrolled up
-                if isUserInitiatedScroll || !stateViewModel.showScrollToBottomView {
-                    // For user-initiated scrolls (like button click), bypass debounce and scrolling checks
-                    if isUserInitiatedScroll {
-                        scrollTo(messageId: messageId, anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader, forceScroll: true)
-                        lastScrollTime = Date()
-                        // Reset the flag after scrolling
-                        isUserInitiatedScroll = false
-                    } else {
-                        // For auto-scrolls, check if user is manually scrolling and debounce
-                        guard !isUserScrolling else { return }
-                        let timeSinceLastScroll = Date().timeIntervalSince(lastScrollTime)
-                        if timeSinceLastScroll > 0.15 {
-                            scrollTo(messageId: messageId, anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader, forceScroll: false)
-                            lastScrollTime = Date()
-                        }
-                    }
-                }
+                handleScrollToMessage(messageId: messageId, scrollReader: scrollReader)
             })
             .onChange(of: parentMsgToScroll, { _, _ in
                 // Scroll to parent message if tapped on reply message view
@@ -136,6 +143,31 @@ extension ISMMessageView{
                 }
             }
         }//:LazyVGrid
+    }
+    
+    /// Helper function to handle scrolling to a message with proper debouncing
+    private func handleScrollToMessage(messageId: String, scrollReader: ScrollViewProxy) {
+        // Only auto-scroll if:
+        // 1. User-initiated scroll (e.g., clicking scroll-to-bottom button), OR
+        // 2. User is at the bottom (showScrollToBottomView == false)
+        // This prevents auto-scrolling when user has manually scrolled up
+        guard isUserInitiatedScroll || !stateViewModel.showScrollToBottomView else { return }
+        
+        // For user-initiated scrolls (like button click), bypass debounce
+        if isUserInitiatedScroll {
+            scrollTo(messageId: messageId, anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader, forceScroll: true)
+            lastScrollTime = Date()
+            // Reset the flag after scrolling
+            isUserInitiatedScroll = false
+        } else {
+            // For auto-scrolls, use debounce to prevent rapid triggers
+            // Reduced debounce time for better responsiveness during scrolling
+            let timeSinceLastScroll = Date().timeIntervalSince(lastScrollTime)
+            if timeSinceLastScroll > 0.15 {
+                scrollTo(messageId: messageId, anchor: .bottom, shouldAnimate: false, scrollReader: scrollReader, forceScroll: false)
+                lastScrollTime = Date()
+            }
+        }
     }
     
     /// Displays the default message view for a given message.
