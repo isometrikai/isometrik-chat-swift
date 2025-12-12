@@ -49,7 +49,7 @@ struct ISMCustomMenu: View {
                         .resizable()
                         .frame(width: 48, height: 48, alignment: .center)
                     if messagingDisabled == true && initiatorId == userData?.userId{
-                        Text("UnBlock user")
+                        Text("Unblock user")
                             .foregroundColor(appearance.colorPalette.messageListMessageTextReceived)
                             .font(appearance.fonts.messageListMessageText)
                     }else{

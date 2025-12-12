@@ -823,7 +823,16 @@ struct ReplyToolBarView : View {
             }
             .padding()
         }.padding(.leading,10)
-        .background(appearance.colorPalette.messageListReplyToolBarBackground)
+            .background(
+                RoundedRectangle(cornerRadius: 2)
+                    .fill(appearance.colorPalette.messageListReplyToolBarBackground)
+            )
+            .overlay(
+                // 2. Define the border
+                RoundedRectangle(cornerRadius: 2)
+                    .stroke(appearance.colorPalette.messageListReplyToolBarBorder, lineWidth: 1)
+            )
+            .shadow(radius: 5)
         .frame(height: 50)
     }
 }

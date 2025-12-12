@@ -65,6 +65,7 @@ public struct ISMChatColorPalette {
     
     public var messageListToolBarBackground : Color = .ismChatSdkWhite
     public var messageListReplyToolBarBackground : Color = .ismChatSdkWhite
+    public var messageListReplyToolBarBorder : Color = .ismChatSdkWhite
     public var messageListTextViewBackground : Color = .clear
     public var messageListTextViewText : Color = Color.black
     public var messageListTextViewBoarder : Color = .ismChatSdkListSeperator
@@ -144,6 +145,7 @@ public struct ISMChatColorPalette {
             messageListMessageTimeReceived: Color = .ismChatSdkGray,
             messageListToolBarBackground: Color = .ismChatSdkWhite,
             messageListReplyToolBarBackground: Color = .ismChatSdkWhite,
+            messageListReplyToolBarBorder: Color = .ismChatSdkWhite,
             messageListTextViewBackground: Color = .clear,
             messageListTextViewText: Color = .black,
             messageListTextViewBoarder: Color = .ismChatSdkListSeperator,
@@ -211,6 +213,7 @@ public struct ISMChatColorPalette {
         self.messageListMessageTimeReceived = messageListMessageTimeReceived
         self.messageListToolBarBackground = messageListToolBarBackground
         self.messageListReplyToolBarBackground = messageListReplyToolBarBackground
+        self.messageListReplyToolBarBorder = messageListReplyToolBarBorder
         self.messageListTextViewBackground = messageListTextViewBackground
         self.messageListTextViewText = messageListTextViewText
         self.messageListTextViewBoarder = messageListTextViewBoarder
