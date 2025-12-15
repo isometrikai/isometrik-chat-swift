@@ -826,9 +826,9 @@ public struct ISMMessageView: View {
                         return attributedString
                     }
                     ConfirmationPopup(
-                        title: unBlock ?  "UnBlock User?" : "Block User?",
+                        title: unBlock ?  "Unblock User?" : "Block User?",
                         message: attributedText,
-                        confirmButtonTitle: unBlock ? "UnBlock" : "Block",
+                        confirmButtonTitle: unBlock ? "Unblock" : "Block",
                         cancelButtonTitle: "Cancel",
                         confirmAction: {
                             blockChatFromUser(block: !unBlock)

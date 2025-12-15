@@ -505,7 +505,7 @@ extension ISMMessageView{
             HStack(spacing: 10){
                 appearance.images.blockIcon
                 if self.conversationDetail?.conversationDetails?.messagingDisabled == true && self.conversationDetail?.conversationDetails?.metaData?.blockedMessage?.initiatorId == userData?.userId{
-                    Text("UnBlock User")
+                    Text("Unblock User")
                 }else{
                     Text("Block User")
                 }

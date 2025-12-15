@@ -302,8 +302,8 @@ struct ISMContactInfoView: View {
                             self.alertStr = "Delete Chat?"
                             self.buttonAlrtStr = "Delete"
                         } else if obj == .UnBlockUser {
-                            self.alertStr = "Do you want to UnBlock this User?"
-                            self.buttonAlrtStr = "UnBlock"
+                            self.alertStr = "Do you want to Unblock this User?"
+                            self.buttonAlrtStr = "Unblock"
                         } else if obj == .ExitGroup {
                             self.alertStr = "Do you want to exit this group?"
                             self.buttonAlrtStr = "Yes"
