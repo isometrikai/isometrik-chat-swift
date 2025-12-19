@@ -51,7 +51,7 @@ public struct ISMBroadCastList: View {
     @State public var query = ""
     @State var allBroadCasts : [ISMChatBroadCastDetail]? = []
     @State var storeBroadCasts : [ISMChatBroadCastDetail]? = []
-    
+    @StateObject public var realmManager = RealmManager.shared
     public init(delegate : ISMBroadCastListDelegate? = nil){
         self.delegate = delegate
     }
@@ -74,7 +74,7 @@ public struct ISMBroadCastList: View {
                 }
             }
             .onAppear {
-//                realmManager.getAllLocalBroadCasts()
+                realmManager.getAllLocalBroadCasts()
                 navigateToBrocastInfo = false
             }
             .onReceive(NotificationCenter.default.publisher(for: NSNotification.refreshBroadCastListNotification)) { _ in
@@ -83,7 +83,7 @@ public struct ISMBroadCastList: View {
             .refreshable {
                 getBroadcastList()
             }
-//            .background(NavigationLinksView())
+            .background(NavigationLinksView())
             .navigationBarBackButtonHidden(true)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -271,44 +271,44 @@ public struct ISMBroadCastList: View {
     }
     
    
-//    private func NavigationLinksView() -> some View {
-//        Group {
-//            NavigationLink("", isActive: $navigateToBrocastInfo) {
-//                ISMChatBroadCastInfo(
-//                    broadcastTitle: navigateToBrocastDetail?.groupcastTitle ?? "",
-//                    groupcastId: navigateToBrocastDetail?.groupcastId ?? ""
-//                )
-//                .environmentObject(realmManager)
-//            }
-//            
-//            NavigationLink("", isActive: $navigatetoCreatBroadCast) {
-//                ISMCreateGroupConversationView(
-//                    showSheetView: $navigatetoCreatGroup,
-//                    viewModel: self.conversationviewModel,
-//                    selectUserFor: .BroadCast,
-//                    groupCastId: "",
-//                    groupCastIdToNavigate: $groupCastIdToNavigate
-//                )
-//                .environmentObject(realmManager)
-//            }
-//            
-//            NavigationLink("", isActive: $navigateToMessageView) {
-//                ISMMessageView(
-//                    conversationViewModel: self.conversationviewModel,
-//                    conversationID: self.navigateToGroupCastId ?? "",
-//                    opponenDetail: nil,
-//                    myUserId: "",
-//                    isGroup: false,
-//                    fromBroadCastFlow: true,
-//                    groupCastId: self.navigateToGroupCastId ?? "",
-//                    groupConversationTitle: navigateToGroupCastTitle ?? "",
-//                    groupImage: nil
-//                )
-//                .environmentObject(realmManager)
-//                .environmentObject(networkMonitor)
-//            }
-//        }
-//    }
+    private func NavigationLinksView() -> some View {
+        Group {
+            NavigationLink("", isActive: $navigateToBrocastInfo) {
+                ISMChatBroadCastInfo(
+                    broadcastTitle: navigateToBrocastDetail?.groupcastTitle ?? "",
+                    groupcastId: navigateToBrocastDetail?.groupcastId ?? ""
+                )
+                .environmentObject(realmManager)
+            }
+            
+            NavigationLink("", isActive: $navigatetoCreatBroadCast) {
+                ISMCreateGroupConversationView(
+                    showSheetView: $navigatetoCreatGroup,
+                    viewModel: self.conversationviewModel,
+                    selectUserFor: .BroadCast,
+                    groupCastId: "",
+                    groupCastIdToNavigate: $groupCastIdToNavigate
+                )
+                .environmentObject(realmManager)
+            }
+            
+            NavigationLink("", isActive: $navigateToMessageView) {
+                ISMMessageView(
+                    conversationViewModel: self.conversationviewModel,
+                    conversationID: self.navigateToGroupCastId ?? "",
+                    opponenDetail: nil,
+                    myUserId: "",
+                    isGroup: false,
+                    fromBroadCastFlow: true,
+                    groupCastId: self.navigateToGroupCastId ?? "",
+                    groupConversationTitle: navigateToGroupCastTitle ?? "",
+                    groupImage: nil
+                )
+                .environmentObject(realmManager)
+                .environmentObject(networkMonitor)
+            }
+        }
+    }
     
    
     
