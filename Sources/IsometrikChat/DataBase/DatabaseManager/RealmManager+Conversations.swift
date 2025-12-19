@@ -584,6 +584,17 @@ extension RealmManager {
                     listToUpdate.first?.lastMessageDetails?.customType = obj.lastMessageDetails?.customType
                     listToUpdate.first?.lastMessageDetails?.action = obj.lastMessageDetails?.action
                     
+                    if let members = obj.lastMessageDetails?.members{
+                        for x in members{
+                            let mem = LastMessageMemberDB()
+                            mem.memberId = x.memberId
+                            mem.memberIdentifier = x.memberIdentifier
+                            mem.memberName = x.memberName
+                            mem.memberProfileImageUrl = x.memberProfileImageUrl
+                            listToUpdate.first?.lastMessageDetails?.members.append(mem)
+                        }
+                    }
+                    
                     if listToUpdate.first?.lastMessageDetails?.action == ISMChatActionType.messageDetailsUpdated.value{
                         listToUpdate.first?.lastMessageDetails?.body = obj.lastMessageDetails?.details?.body
                         listToUpdate.first?.lastMessageDetails?.customType = obj.lastMessageDetails?.details?.customType
@@ -900,6 +911,17 @@ extension RealmManager {
                     taskToUpdate.first?.lastMessageDetails?.readBy.removeAll()
                     taskToUpdate.first?.lastMessageDetails?.deliveredTo.removeAll()
                     
+                    if let members = msg.members{
+                        for x in members{
+                            let mem = LastMessageMemberDB()
+                            mem.memberId = x.memberId
+                            mem.memberIdentifier = x.memberIdentifier
+                            mem.memberName = x.memberName
+                            mem.memberProfileImageUrl = x.memberProfileImageUrl
+                            taskToUpdate.first?.lastMessageDetails?.members.append(mem)
+                        }
+                    }
+                    
                     taskToUpdate.first?.lastMessageDetails?.meetingId = msg.meetingId ?? ""
                     if let duration = msg.callDurations{
                         for x in duration{
@@ -953,6 +975,16 @@ extension RealmManager {
                     taskToUpdate.first?.lastMessageDetails?.userProfileImageUrl = msgObj.userProfileImageUrl
                     taskToUpdate.first?.lastMessageDetails?.reactionType = msgObj.reactionType
                     taskToUpdate.first?.lastMessageDetails?.initiatorId = msgObj.initiatorId
+                    
+                    for x in msgObj.members{
+                        let mem = LastMessageMemberDB()
+                        mem.memberId = x.memberId
+                        mem.memberIdentifier = x.memberIdentifier
+                        mem.memberName = x.memberName
+                        mem.memberProfileImageUrl = x.memberProfileImageUrl
+                        taskToUpdate.first?.lastMessageDetails?.members.append(mem)
+                    }
+                    
                 }
             }
         }
