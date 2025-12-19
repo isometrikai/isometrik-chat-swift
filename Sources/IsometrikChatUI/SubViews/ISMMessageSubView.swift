@@ -1738,6 +1738,13 @@ struct ISMMessageSubView: View {
                     contextMenuVC.modalPresentationStyle = .overFullScreen
                     contextMenuVC.view.backgroundColor = .clear
                     
+                    //new code, added blur
+                    let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
+                    blurView.frame = contextMenuVC.view.bounds
+                    blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                    blurView.alpha = 0.9 // 👈 makes blur feel lighter
+                    contextMenuVC.view.addSubview(blurView)
+                    
                     let hostingController = UIHostingController(rootView:
                         ISMCustomContextMenu(
                             conversationId: self.conversationId,
