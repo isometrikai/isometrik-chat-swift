@@ -35,7 +35,7 @@ public struct ISMBroadCastList: View {
     @ObservedObject public var conversationviewModel = ConversationViewModel()
 //    @EnvironmentObject public var realmManager : RealmManager
     let appearance = ISMChatSdkUI.getInstance().getAppAppearance().appearance
-    @State public var navigateToBrocastDetail : BroadCastListDB?
+    @State public var navigateToBrocastDetail : ISMChatBroadCastDetail?
     @State public var navigateToBrocastInfo : Bool = false
     @State public var navigatetoCreatBroadCast : Bool = false
     @State public var navigatetoCreatGroup : Bool = false
@@ -201,8 +201,8 @@ public struct ISMBroadCastList: View {
     private func BroadcastInfoButton(broadcast: ISMChatBroadCastDetail) -> some View {
         Button {
             if ISMChatSdk.getInstance().getFramework() == .SwiftUI {
-//                navigateToBrocastDetail = broadcast
-//                navigateToBrocastInfo = true
+                navigateToBrocastDetail = broadcast
+                navigateToBrocastInfo = true
             } else {
                 delegate?.navigateToBroadCastInfo(groupcastId: broadcast.groupcastId ?? "", groupcastTitle: broadcast.groupcastTitle ?? "", groupcastImage: broadcast.groupcastImageUrl ?? "")
             }
