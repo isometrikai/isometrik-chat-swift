@@ -39,17 +39,71 @@ public struct UserAvatarView: View {
     
     public var body: some View {
         HStack{
-            AvatarView(avatar: avatar, size: size, userName: userName,font: font)
-                .overlay(
-                    showOnlineIndicator ?
-                    BottomRightView {
-                        OnlineIndicatorView(indicatorSize: size.width * 0.3)
-                    }
-                        .offset(x: 3, y: -1)
-                    : nil
-                )
+            ZStack(alignment: .bottomTrailing) {
+                // Avatar view
+                AvatarView(avatar: avatar, size: size, userName: userName, font: font)
+                
+                // Online indicator positioned at bottom right corner of the avatar circle
+                if showOnlineIndicator {
+                    OnlineIndicatorView(indicatorSize: onlineIndicatorSize)
+                        // Position indicator on the circle edge by moving it inward from the corner
+                        .offset(x: indicatorOffset, y: indicatorOffset)
+                }
+            }
+            .frame(width: size.width, height: size.height)
         }
         .accessibilityIdentifier("ISMProfileImageView")
+    }
+    
+    /// Calculates the online indicator size based on avatar size
+    /// If avatar is too large, returns a default size to prevent the indicator from looking oversized
+    private var onlineIndicatorSize: CGFloat {
+        // Default size for online indicator (typically 12 points works well)
+        let defaultIndicatorSize: CGFloat = 12
+        
+        // Maximum threshold for avatar size where we still scale proportionally
+        // For avatars larger than this, we use the default size instead
+        let maxProportionalSize: CGFloat = 60
+        
+        // Calculate proportional size (30% of avatar width)
+        let proportionalSize = size.width * 0.3
+        
+        // If avatar is larger than threshold, use default size
+        // Otherwise, use the proportional size
+        if size.width > maxProportionalSize {
+            return defaultIndicatorSize
+        } else {
+            // Use proportional size, but ensure it doesn't exceed the default size
+            return min(proportionalSize, defaultIndicatorSize)
+        }
+    }
+    
+    /// Calculates the offset for positioning the online indicator on the circle edge
+    /// Positions the indicator so it sits on the circle's circumference at bottom-right
+    private var indicatorOffset: CGFloat {
+        // Calculate the radius of the avatar circle
+        let radius = size.width / 2
+        let indicatorRadius = onlineIndicatorSize / 2
+        
+        // At 45 degrees (bottom-right), distance from frame corner to circle edge
+        // Frame corner is at distance radius*√2 from center
+        // Circle edge at 45° is at distance radius from center
+        // Distance from corner to circle edge: radius * (√2 - 1) ≈ radius * 0.414
+        let distanceFromCornerToEdge = radius * (sqrt(2) - 1)
+        
+        // For large avatars (where indicator size is fixed at 12), use a more accurate calculation
+        // Since the indicator size is constant, we need to balance the offset
+        if size.width > 60 {
+            // Large avatars: calculate offset to position indicator on circle edge
+            // Move inward by distance to edge, but add back some to account for indicator size
+            // This positions the indicator so its edge touches the circle
+            let offset = distanceFromCornerToEdge - indicatorRadius * 2
+            return -offset
+        } else {
+            // Small avatars: use the full calculated offset
+            // Move inward by: (distance to edge - indicator radius)
+            return -(distanceFromCornerToEdge - indicatorRadius)
+        }
     }
 }
 
