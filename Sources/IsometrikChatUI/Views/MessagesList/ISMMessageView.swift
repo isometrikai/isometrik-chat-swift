@@ -91,6 +91,8 @@ public struct ISMMessageView: View {
     public let isGroup : Bool?
     public let fromBroadCastFlow : Bool?
     public let groupCastId : String?
+    
+    @State var unblockTitle : String = "Unblock contact to send a message"
 
     @State var textViewHeight : CGFloat = 32
     
@@ -451,7 +453,7 @@ public struct ISMMessageView: View {
                 .confirmationDialog("", isPresented: $stateViewModel.showUnblockPopUp) {
                     unblockActionSheetButton()
                 } message: {
-                    Text("Unblock contact to send a message")
+                    Text(unblockTitle)
                 }
                 .confirmationDialog("", isPresented: $stateViewModel.uAreBlock) {
                 } message: {
@@ -1095,6 +1097,7 @@ public struct ISMMessageView: View {
                 if self.conversationDetail?.conversationDetails?.metaData?.blockedMessage?.initiatorId != userData?.userId{
                 stateViewModel.uAreBlock = true
             }else{
+                unblockTitle = "Unblock contact to send a message"
                 stateViewModel.showUnblockPopUp = true
             }
             return false

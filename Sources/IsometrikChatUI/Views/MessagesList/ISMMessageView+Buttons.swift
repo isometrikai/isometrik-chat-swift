@@ -446,26 +446,38 @@ extension ISMMessageView{
     
     /// Initiates a call based on the specified type (audio or video).
     func calling(type : ISMLiveCallType){
-        self.endEditing(true)
-        if self.isGroup == true{
-            if let chatMembers = self.conversationDetail?.conversationDetails?.members {
-                let callMembers = chatMembers.map { member in
-                    ISMCallMember(
-                        memberName: member.userName ?? "",
-                        memberIdentifier: member.userIdentifier ?? "",
-                        memberId: member.userId ?? "",
-                        isPublishing: false,
-                        isAdmin: member.isAdmin,
-                        memberProfileImageURL: member.userProfileImageUrl ?? ""
-                    )
+        if self.conversationDetail?.conversationDetails?.messagingDisabled == false{
+            self.endEditing(true)
+            if self.isGroup == true{
+                if let chatMembers = self.conversationDetail?.conversationDetails?.members {
+                    let callMembers = chatMembers.map { member in
+                        ISMCallMember(
+                            memberName: member.userName ?? "",
+                            memberIdentifier: member.userIdentifier ?? "",
+                            memberId: member.userId ?? "",
+                            isPublishing: false,
+                            isAdmin: member.isAdmin,
+                            memberProfileImageURL: member.userProfileImageUrl ?? ""
+                        )
+                    }
+                    let callsdk = IsometrikCall()
+                    
+                    callsdk.startGroupCall(with: callMembers, conversationId: self.conversationID, callType: .GroupCall,groupName: self.conversationDetail?.conversationDetails?.conversationTitle ?? (self.groupConversationTitle ?? ""))
                 }
+            }else{
                 let callsdk = IsometrikCall()
-                
-                callsdk.startGroupCall(with: callMembers, conversationId: self.conversationID, callType: .GroupCall,groupName: self.conversationDetail?.conversationDetails?.conversationTitle ?? (self.groupConversationTitle ?? ""))
+                callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType: type)
             }
         }else{
-            let callsdk = IsometrikCall()
-            callsdk.startCall(with: [ISMCallMember(memberName: opponenDetail?.userName ?? "", memberIdentifier: opponenDetail?.userIdentifier ?? "", memberId: opponenDetail?.userId ?? "", isPublishing: false, isAdmin: false, memberProfileImageURL: opponenDetail?.userProfileImageUrl ?? "")], conversationId: self.conversationID, callType: type)
+            // show you are blocked or blocked by you popup.
+            if self.conversationDetail?.conversationDetails?.messagingDisabled == true && self.conversationDetail?.conversationDetails?.metaData?.blockedMessage?.initiatorId == userData?.userId{
+                print("blocked by you")
+                unblockTitle = "Unblock contact to call"
+                stateViewModel.showUnblockPopUp = true
+            }else{
+                stateViewModel.uAreBlock = true
+                print("blocked by other user")
+            }
         }
     }
     
