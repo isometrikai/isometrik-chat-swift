@@ -2437,40 +2437,85 @@ struct ISMMessageSubView: View {
 
     
     func reactionsView() -> some View {
-        HStack(spacing: 5) {
-            ForEach(message.reactions) { rec in
+        let visibleReactions = Array(message.reactions.prefix(2))
+        let remainingCount = max(message.reactions.count - 2, 0)
+
+        return HStack(spacing: 5) {
+
+            // Show only first 2 reactions
+            ForEach(visibleReactions) { rec in
                 let isMyReaction = rec.users.contains(userData?.userId ?? "")
+
                 Button {
                     if isMyReaction {
-                        // Remove my reaction directly
-                        viewModel.removeReaction(conversationId: message.conversationId, messageId: message.messageId, emojiReaction: rec.reactionType) { _ in
+                        viewModel.removeReaction(
+                            conversationId: message.conversationId,
+                            messageId: message.messageId,
+                            emojiReaction: rec.reactionType
+                        ) { _ in
                             reactionRemoved = rec.reactionType
-                            // Optionally update UI or show feedback
-                            realmManager.addLastMessageOnAddAndRemoveReaction(conversationId: message.conversationId, action: ISMChatActionType.reactionRemove.value, emoji: rec.reactionType, userId: userData?.userId ?? "")
+                            realmManager.addLastMessageOnAddAndRemoveReaction(
+                                conversationId: message.conversationId,
+                                action: ISMChatActionType.reactionRemove.value,
+                                emoji: rec.reactionType,
+                                userId: userData?.userId ?? ""
+                            )
                         }
                     } else {
-                        // Show popup for others' reactions
                         showReactionsDetail = true
                     }
                 } label: {
-                    HStack(spacing: 1) {
-                        Text(ISMChatHelper.getEmoji(valueString: rec.reactionType))
-                            .font(appearance.fonts.messageListreactionCount)
-                        Text("\(rec.users.count)")
-                            .foregroundColor(appearance.colorPalette.messageListreactionCount)
-                            .font(appearance.fonts.messageListreactionCount)
-                    }
-                    .padding(5)
-                    .background(Color.white)
-                    .cornerRadius(12)
-                    .frame(height: 24)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(appearance.colorPalette.messageListMessageBorderColor, lineWidth: 1)
-                    )
+                    reactionChip(rec)
                 }
             }
-        }.offset(y: 14)
+
+            // Show +N if there are more reactions
+            if remainingCount > 0 {
+                Button {
+                    showReactionsDetail = true
+                } label: {
+                    Text("+\(remainingCount)")
+                        .font(appearance.fonts.messageListreactionCount)
+                        .foregroundColor(appearance.colorPalette.messageListreactionCount)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 5)
+                        .background(Color.white)
+                        .cornerRadius(12)
+                        .frame(height: 24)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(
+                                    appearance.colorPalette.messageListMessageBorderColor,
+                                    lineWidth: 1
+                                )
+                        )
+                }
+            }
+        }
+        .offset(y: 14)
+    }
+    
+    @ViewBuilder
+    private func reactionChip(_ rec: ReactionDB) -> some View {
+        HStack(spacing: 1) {
+            Text(ISMChatHelper.getEmoji(valueString: rec.reactionType))
+                .font(appearance.fonts.messageListreactionCount)
+
+            Text("\(rec.users.count)")
+                .foregroundColor(appearance.colorPalette.messageListreactionCount)
+                .font(appearance.fonts.messageListreactionCount)
+        }
+        .padding(5)
+        .background(Color.white)
+        .cornerRadius(12)
+        .frame(height: 24)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(
+                    appearance.colorPalette.messageListMessageBorderColor,
+                    lineWidth: 1
+                )
+        )
     }
     
     func inGroupUserAvatarView() -> some View{
